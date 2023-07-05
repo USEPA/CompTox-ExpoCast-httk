@@ -536,13 +536,17 @@ invitro_mc <- function(parameters.dt=NULL,
       }      
       
       caco2.fit <- suppressWarnings(optim(c(Caco2.Pab, caco2.meas.sd), 
-                     function(x) (0.95 -
-                       pnorm(Caco2.Pab.u95, x[1], x[2]) +
-                       pnorm(Caco2.Pab.l95, x[1], x[2]))^2 +
+                     function(x) 
+                       # 97.5% of values should be less than the u95
+                       (0.975 - pnorm(Caco2.Pab.u95, x[1], x[2]))^2 +
+                       # 2.5% of values should be less than the l96
+                       (0.025 - pnorm(Caco2.Pab.l95, x[1], x[2]))^2 +
+                       # The median should be the median:
                        (Caco2.Pab - qnorm(0.5, x[1], x[2]))^2))
-      parameters.dt[, Caco2.Pab := rnorm(n = samples, 
+      parameters.dt[, Caco2.Pab := rtnorm(n = samples, 
                                      caco2.fit$par[1], 
-                                     caco2.fit$par[2])]
+                                     caco2.fit$par[2],
+                                     lower=0)]
       
       # If we don't have that, we use the default coefficient of variation to
       # generate confidence limits:
@@ -656,21 +660,23 @@ invitro_mc <- function(parameters.dt=NULL,
   {
     if (!is.null(caco2.pop.sd))
     {
-      #Draw Clint from a normal distribution if poor metabolizers excluded, or
+      #Draw Pab from a normal distribution if poor metabolizers excluded, or
       #Gaussian mixture distribution if poor metabolizers included.
       #Set the mean of the regular metabolizer distribution:
       parameters.dt[, Caco2.Pab.mu := Caco2.Pab]
       
-      #Draw Clint from a normal distribution with mean = measured Clint, and
+      #Draw Pab from a normal distribution with mean = measured Clint, and
       #coefficient of variation given by clint.pop.cv.
-      parameters.dt[, Caco2.Pab := truncnorm::rtruncnorm(n = 1, 
-                                                     a = -3,
-                                                     b = 3,
-                                                     mean = Caco2.Pab.mu,
-                                                     sd = abs(caco2.pop.sd))]
-      
+      # We use truncnorm::rtruncnorm becase mean can be a vector:
+      parameters.dt[, Caco2.Pab := truncnorm:::rtruncnorm(n = 1, 
+                                                          a = 0, 
+                                                          mean = Caco2.Pab.mu, 
+                                                          sd = abs(caco2.pop.sd))
+        ]
     }
   }
+  # Make sure Fgutabs gets recalculated:
+  parameters.dt[, Fgutabs := NA]
 
 # set precision:
   cols <- colnames(parameters.dt)
