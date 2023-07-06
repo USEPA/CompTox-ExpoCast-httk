@@ -1,11 +1,11 @@
-/* model_fetal_pbtk-raw.c for R deSolve package
+/* fetal/model_fetal_pbtk-raw.c for R deSolve package
    ___________________________________________________
 
-   Model File:  model_fetal_pbtk.model
+   Model File:  fetal/model_fetal_pbtk.model
 
-   Date:  Wed Mar 23 13:29:41 2022
+   Date:  Thu Jul 06 07:50:09 2023
 
-   Created by:  "mod v6.1.0"
+   Created by:  "C:/Users/sdavid01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/Git/httk-dev/models/mod.exe v6.1.0"
     -- a model preprocessor by Don Maszle
    ___________________________________________________
 
@@ -401,36 +401,36 @@ static double parms[134];
 #define Qfliver_percent parms[132]
 #define Qfthyroid_percent parms[133]
 
-/* Forcing (Input) functions */
-//static double forc[0];
-
-
-/* Function definitions for delay differential equations */
-//
-//int Nout=1;
-//int nr[1]={0};
-//double ytau[1] = {0.0};
-//
-//static double yini[24] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
-//
-//void lagvalue(double T, int *nr, int N, double *ytau) {
-//  static void(*fun)(double, int*, int, double*) = NULL;
-//  if (fun == NULL)
-//    fun = (void(*)(double, int*, int, double*))R_GetCCallable("deSolve", "lagvalue");
-//  return fun(T, nr, N, ytau);
-//}
-//
-//double CalcDelay(int hvar, double dTime, double delay) {
-//  double T = dTime-delay;
-//  if (dTime > delay){
-//    nr[0] = hvar;
-//    lagvalue( T, nr, Nout, ytau );
-//}
-//  else{
-//    ytau[0] = yini[hvar];
-//}
-//  return(ytau[0]);
-//}
+// /* Forcing (Input) functions */
+// static double forc[0];
+// 
+// 
+// /* Function definitions for delay differential equations */
+// 
+// int Nout=1;
+// int nr[1]={0};
+// double ytau[1] = {0.0};
+// 
+// static double yini[24] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
+// 
+// void lagvalue(double T, int *nr, int N, double *ytau) {
+//   static void(*fun)(double, int*, int, double*) = NULL;
+//   if (fun == NULL)
+//     fun = (void(*)(double, int*, int, double*))R_GetCCallable("deSolve", "lagvalue");
+//   return fun(T, nr, N, ytau);
+// }
+// 
+// double CalcDelay(int hvar, double dTime, double delay) {
+//   double T = dTime-delay;
+//   if (dTime > delay){
+//     nr[0] = hvar;
+//     lagvalue( T, nr, Nout, ytau );
+// }
+//   else{
+//     ytau[0] = yini[hvar];
+// }
+//   return(ytau[0]);
+// }
 
 /*----- Initializers */
 void initmodfetal_pbtk (void (* odeparms)(int *, double *))
@@ -439,24 +439,24 @@ void initmodfetal_pbtk (void (* odeparms)(int *, double *))
   odeparms(&N, parms);
 }
 
-/*void initforcfetal_pbtk (void (* odeforcs)(int *, double *))
+void initforcfetal_pbtk (void (* odeforcs)(int *, double *))
 {
   int N=0;
   odeforcs(&N, forc);
 }
-*/
 
-/* Calling R code will ensure that input y has same
-   dimension as yini */
-//void initState (double *y)
-//{
-//  int i;
-//
-//  for (i = 0; i < sizeof(yini) / sizeof(yini[0]); i++)
-//  {
-//    yini[i] = y[i];
-//  }
-//}
+
+// /* Calling R code will ensure that input y has same
+//    dimension as yini */
+// void initState (double *y)
+// {
+//   int i;
+// 
+//   for (i = 0; i < sizeof(yini) / sizeof(yini[0]); i++)
+//   {
+//     yini[i] = y[i];
+//   }
+// }
 
 void getParmsfetal_pbtk (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
@@ -614,7 +614,7 @@ void derivsfetal_pbtk (int *neq, double *pdTime, double *y, double *ydot, double
 
   Qliver = 0.01 * ( Qliver_percent_initial + ( Qliver_percent_terminal - Qliver_percent_initial ) / term * tw ) * Qcardiac ;
 
-  Qthyroid = 0.01 * ( Qthyroid_percent_initial + ( Qthyroid_percent_terminal - Qthyroid_percent_terminal ) / term * tw ) * Qcardiac ;
+  Qthyroid = 0.01 * ( Qthyroid_percent_initial + ( Qthyroid_percent_terminal - Qthyroid_percent_initial ) / term * tw ) * Qcardiac ;
 
   Qplacenta = 24 * Qplacenta_linear_theta1 * 1000 * Vplacenta ;
 
