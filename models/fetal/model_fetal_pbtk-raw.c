@@ -1,11 +1,11 @@
-/* model_fetal_pbtk-raw.c for R deSolve package
+/* fetal/model_fetal_pbtk-raw.c for R deSolve package
    ___________________________________________________
 
-   Model File:  model_fetal_pbtk.model
+   Model File:  fetal/model_fetal_pbtk.model
 
-   Date:  Wed Mar 23 13:29:41 2022
+   Date:  Thu Jul 06 07:50:09 2023
 
-   Created by:  "mod v6.1.0"
+   Created by:  "C:/Users/sdavid01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/Git/httk-dev/models/mod.exe v6.1.0"
     -- a model preprocessor by Don Maszle
    ___________________________________________________
 
@@ -614,7 +614,7 @@ void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, in
 
   Qliver = 0.01 * ( Qliver_percent_initial + ( Qliver_percent_terminal - Qliver_percent_initial ) / term * tw ) * Qcardiac ;
 
-  Qthyroid = 0.01 * ( Qthyroid_percent_initial + ( Qthyroid_percent_terminal - Qthyroid_percent_terminal ) / term * tw ) * Qcardiac ;
+  Qthyroid = 0.01 * ( Qthyroid_percent_initial + ( Qthyroid_percent_terminal - Qthyroid_percent_initial ) / term * tw ) * Qcardiac ;
 
   Qplacenta = 24 * Qplacenta_linear_theta1 * 1000 * Vplacenta ;
 
