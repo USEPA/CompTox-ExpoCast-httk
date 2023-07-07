@@ -212,8 +212,9 @@ create_mc_samples <- function(chem.cas=NULL,
                                         adjusted.Funbound.plasma=FALSE, # We want the unadjusted in vitro measured value
                                         adjusted.Clint=FALSE, # We want the unadjusted in vitro measured value
                                         suppress.messages=suppress.messages),
-                                        Caco2.options,
                                         parameterize.arg.list))
+  if (!is.null(Caco2.options)) parameterize.args[["Caco2.options"]] <- Caco2.options
+  
   # Check to see if we need to call the parameterize_MODEL function:
   if (is.null(parameters))
   {
@@ -489,15 +490,33 @@ Set species=\"Human\" to run httkpop model.')
         BW=parameters.dt$BW),
       restrictive.clearance=parameterize.arg.list[["restrictive.clearance"]])))]
   }
-#
-# Propagate any parameter changes into oral bioavailability:
-#
-  parameters.dt[,Fabsgut:=
-                  calc_fbio.oral(Params=parameters.dt)$fbio.oral]
-  parameters.dt[,Fabs:=
-                  calc_fbio.oral(Params=parameters.dt)$fabs.oral]
-  parameters.dt[,Fgut:=
-                  calc_fbio.oral(Params=parameters.dt)$fgut.oral]
+  
+  # If Caco2.options given use those, otherwise use defaults:
+  if ("keepit100" %in% names(Caco2.options)) keepit100 <- Caco2.options[["keepit100"]]
+  else keepit100 <- FALSE
+  if ("Caco2.Fgut" %in% names(Caco2.options)) Caco2.Fgut <- Caco2.options[["Caco2.Fgut"]]
+  else Caco2.Fgut <- TRUE
+  if ("Caco2.Fabs" %in% names(Caco2.options)) Caco2.Fabs <- Caco2.options[["Caco2.Fabs"]]
+  else Caco2.Fabs <- TRUE
+  #
+  # Propagate any parameter changes into oral bioavailability:
+  # (Note that we do not need to include Fhep since that is already accounted for
+  # by first pass metabolism)
+  #
+  if (!keepit100) 
+  {
+    bioavail <- calc_fbio.oral(Params=parameters.dt) 
+    if (Caco2.Fabs) parameters.dt[,Fabs:=
+                                   bioavail$fabs.oral]
+    if (Caco2.Fgut) parameters.dt[,Fgut:=
+                                   bioavail$fgut.oral]
+    parameters.dt[,Fabsgut:=Fabs*Fgut]
+  }
+  else {
+    parameters.dt[,Fabs:=1]
+    parameters.dt[,Fgut:=1]
+    parameters.dt[,Fabsgut:=1]
+  }
 #
 # Do any model-specific uncertainty propagation
 #
