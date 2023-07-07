@@ -24,7 +24,7 @@ the number of chemicals with sufficient data to run the steady_state model
 comparison of the output of \code{\link{calc_mc_css}} to the SimCyp outputs 
 reported in 
 the Wetmore et al. (2012,2015) papers is performed. A comparison between the
-ouput of \code{\link{calc_analytic_css}} (no Monte Carlo) to the median of the output of
+output of \code{\link{calc_analytic_css}} (no Monte Carlo) to the median of the output of
 \code{\link{calc_mc_css}} is also performed. (defaults to TRUE)}
 
 \item{in_vivo_stats.check}{Whether to compare the outputs of 
@@ -48,31 +48,34 @@ historical performance (defaults to TRUE)}
 named list, whose elements depend on the selected checks
 \tabular{ll}{
   basic \tab A list with four metrics:
-  \describe{
-    \item{N.steadystate}{Number of chemicals with sufficient data for steady-state IVIVE}
-    \item{calc_analytic.units}{Ratio of mg/L to uM * 1000 / molecular weight -- should be 1}
-    \item{calc_mc.units}{Ratio should be 1}
-    \item{solve_pbtk.units}{Ratio should be 1}
-  } \cr
+ N.steadystate -- Number of chemicals with sufficient data for steady-state IVIVE
+    calc_analytic.units -- Ratio of mg/L to uM * 1000 / molecular weight -- should be 1
+    calc_mc.units -- Ratio should be 1
+    solve_pbtk.units -- Ratio should be 1 \cr
 
   calc_mc_css \tab A list with four metrics:
-  \describe{
-    \item{RMSLE.Wetmore}{Root mean squared log10 error (RMSLE) in predicted Css between literature valuse (SimCyp, Wetmore et al. 2012,2015) and calc_mc_css}
-    \item{N.Wetmore}{Number of chemicals in Wetmore comparison}
-    \item{RMSLE.noMC}{RMSLE between calc_analytic_css and calc_mc_css}
-    \item{N.noMC}{Number of chemicals in noMC comparison}
-  } \cr
+RMSLE.Wetmore -- Root mean squared log10 error (RMSLE) in predicted Css between literature values (SimCyp, Wetmore et al. 2012,2015) and \code{\link{calc_mc_css}}
+N.Wetmore -- Number of chemicals in Wetmore comparison
+RMSLE.noMC -- RMSLE between \code{\link{calc_analytic_css}} and \code{\link{calc_mc_css}}
+    N.noMC -- Number of chemicals in noMC comparison \cr
 
   in_vivo_stats \tab A list with two metrics:
+<<<<<<< HEAD
   \describe{
     \item{RMSLE.InVivoCss}{RMSLE between the predictions of calc_analytic_css and in vivo estimates of Css}
     \item{N.InVivoCss}{Number of chemcials in comparison}
   } \cr                    
 
+=======
+RMSLE.InVivoCss -- RMSLE between the predictions of \code{\link{calc_analytic_css}} and in vivo estimates of Css
+N.InVivoCss -- Number of chemicals in comparison \cr                    
+  
+>>>>>>> 5e4ad7cb706e4efe45ee85761099db5413c937f0
   units.plot \tab A ggplot2 figure showing units tests of various functions. 
 Output is generated for mg/L and uM, and then the ratio mg/L/uM*1000/MW is
 calculated. If the units are correct the ratio should be 1 (within the 
 precision of the functions -- usually four significant figures). \cr
+<<<<<<< HEAD
 
   rmsle.plot \tab A ggplot2 figure showing RMSLE tests of various functions. 
 Output generated is the root mean square log10 error for parameters estimated
@@ -81,7 +84,16 @@ by the package. \cr
   count.plot \tab A ggplot2 figure showing count of chemicals of various functions. 
 Output generated is a count of the chemicals available for the each of the
 parameters estimated by and used for benchmarking the package. \cr
+=======
 
+  rmsle.plot \tab A ggplot2 figure showing RMSLE tests of various functions. 
+Output generated is the root mean square log10 error for parameters estimated
+by the package. \cr
+>>>>>>> 5e4ad7cb706e4efe45ee85761099db5413c937f0
+
+  count.plot \tab A ggplot2 figure showing count of chemicals of various functions. 
+Output generated is a count of the chemicals available for the each of the
+parameters estimated by and used for benchmarking the package. \cr
 }
 }
 \description{
@@ -93,13 +105,17 @@ httk.
 }
 \details{
 Historically some refinements made to one aspect of httk have unintentionally
+<<<<<<< HEAD
 impacted other aspects. Most notably errors have ocasionally been introduced 
+=======
+impacted other aspects. Most notably errors have occasionally been introduced 
+>>>>>>> 5e4ad7cb706e4efe45ee85761099db5413c937f0
 with respect to units (v1.9, v2.1.0). This benchmarking tool is intended to
-reduce the chance of these errors occuring in the future.
+reduce the chance of these errors occurring in the future.
 
 Past performance was retroactively evaluated by manually installing previous 
 versions of 
-the package from https://cran.r-project.org/src/contrib/Archive/httk/ and
+the package from \url{https://cran.r-project.org/src/contrib/Archive/httk/} and
 then adding the code for \code{benchmark_httk} at the command line
 interface. 
 
@@ -116,11 +132,11 @@ against the Css values calculated by SimCyp and reported in Wetmore et al.
 shifted to better describe non-pharmaceutical, commercial chemicals.
 
 The in vivo tests are in some ways the most important, as they establish the
-overall predictivity for httk for Cmax, AUC, and Css. The in vivo 
+overall predictability for httk for Cmax, AUC, and Css. The in vivo 
 statistics are currently based on comparisons to the in vivo
 data compiled by Wambaugh et al. (2018). We see that when the tissue
 partition coefficient calibrations were introduced in v1.6 that the
-overall predicivity for in vivo endpoints was reduced (increased RMSLE).
+overall predictability for in vivo endpoints was reduced (increased RMSLE).
 If this phenomena continues as new in vivo evaluation data become available,
 we may need to revisit whether evaluation against experimentally-derived 
 partition coefficients can actually be used for calibration, or just merely

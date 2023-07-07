@@ -1,5 +1,6 @@
 #' Lump tissue parameters into model compartments
 #'                                               
+#' @description
 #' This function takes the tissue:plasma partition coefficients from 
 #' \code{\link{predict_partitioning_schmitt}} along with the tissue-specific
 #' volumes and flows and aggregates (or "lumps") them
