@@ -674,9 +674,14 @@ invitro_mc <- function(parameters.dt=NULL,
                                                           sd = abs(caco2.pop.sd))
         ]
     }
+  } else if (keepit100 == TRUE)
+  {
+    parameters.dt[,Fabs:=1]
+    parameters.dt[,Fgut:=1]
   }
-  # Make sure Fgutabs gets recalculated:
-  parameters.dt[, Fgutabs := NA]
+  
+  # Make sure Fabsgut gets recalculated:
+  parameters.dt[, Fabsgut := NA]
 
 # set precision:
   cols <- colnames(parameters.dt)
