@@ -1,5 +1,6 @@
 #' Parameters for Schmitt's (2008) Tissue Partition Coefficient Method
 #' 
+#' @description
 #' This function provides the necessary parameters to run
 #' \code{\link{predict_partitioning_schmitt}}, excluding the data in table
 #' \code{\link{tissue.data}}. The model is based on the Schmitt (2008) method
