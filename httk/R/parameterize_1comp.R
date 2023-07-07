@@ -265,7 +265,6 @@ parameterize_1comp <- function(
   params[["Caco2.Pab"]] <- ss.params[['Caco2.Pab']]
   params[["Caco2.Pab.dist"]] <- ss.params[['Caco2.Pab.dist']]
   
-  params[['Fgutabs']] <- Fgutabs
   params[['hepatic.bioavailability']] <- 
     ss.params[['hepatic.bioavailability']]  
   params[['BW']] <- this.phys.data[["Average BW"]]

@@ -29,33 +29,33 @@
 #'
 #' @export get_fabsgut
 get_fabsgut <- function(
-  Params=NULL,
-  chem.cas=NULL,
-  chem.name=NULL,
-  dtxsid = NULL,
-  species = "Human",
-  default.to.human = FALSE,
-  Caco2.Pab.default = "1.6",
-  Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE,
-  overwrite.invivo = FALSE,
-  keepit100 = FALSE,
-  suppress.messages=FALSE)
+    Params=NULL,
+    chem.cas=NULL,
+    chem.name=NULL,
+    dtxsid = NULL,
+    species = "Human",
+    default.to.human = FALSE,
+    Caco2.Pab.default = "1.6",
+    Caco2.Fgut = TRUE,
+    Caco2.Fabs = TRUE,
+    overwrite.invivo = FALSE,
+    keepit100 = FALSE,
+    suppress.messages=FALSE)
 {
-# We need to describe the chemical to be simulated one way or another:
+  # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
       is.null(dtxsid)) 
     stop('chem.name, chem.cas, or dtxsid must be specified.')
-
-# Look up the chemical name/CAS, depending on what was provide:
-    chem.ids <- get_chem_id(
-            chem.cas=chem.cas,
-            chem.name=chem.name,
-            dtxsid=dtxsid)
-    chem.cas <- chem.ids$chem.cas
-    chem.name <- chem.ids$chem.name                                
-    dtxsid <- chem.ids$dtxsid
+  
+  # Look up the chemical name/CAS, depending on what was provide:
+  chem.ids <- get_chem_id(
+    chem.cas=chem.cas,
+    chem.name=chem.name,
+    dtxsid=dtxsid)
+  chem.cas <- chem.ids$chem.cas
+  chem.name <- chem.ids$chem.name                                
+  dtxsid <- chem.ids$dtxsid
   
   out <- list()
   
@@ -69,11 +69,11 @@ get_fabsgut <- function(
   } else {
     # Caco-2 Pab:
     Caco2.Pab.db <- try(get_invitroPK_param(
-        "Caco2.Pab", 
-        species = "Human", 
-        chem.cas=chem.cas,
-        chem.name=chem.name,
-        dtxsid=dtxsid), 
+      "Caco2.Pab", 
+      species = "Human", 
+      chem.cas=chem.cas,
+      chem.name=chem.name,
+      dtxsid=dtxsid), 
       silent = TRUE)
     if (is(Caco2.Pab.db,"try-error")){  
       Caco2.Pab.db <- as.character(Caco2.Pab.default)
@@ -101,7 +101,7 @@ get_fabsgut <- function(
                 silent=TRUE)
     if (is(Fabs,"try-error") | overwrite.invivo == TRUE){
       if (overwrite.invivo == TRUE | 
-        (Caco2.Fabs == TRUE & is(Fabs,"try-error")))
+          (Caco2.Fabs == TRUE & is(Fabs,"try-error")))
       {
         out[["Fabs"]] <- 1
         # Caco2 is a human cell line
@@ -122,7 +122,7 @@ get_fabsgut <- function(
     if (is(Fgut,"try-error") | overwrite.invivo == TRUE)
     {
       if (overwrite.invivo == TRUE | 
-        (Caco2.Fgut == TRUE & is(Fgut,"try-error")))
+          (Caco2.Fgut == TRUE & is(Fgut,"try-error")))
       {
         out[["Fgut"]] <- 1
         Fgut <- calc_fgut.oral(
@@ -140,5 +140,5 @@ get_fabsgut <- function(
     out[['Fgut']] <- Fgut
   }
   
-  return(out)
+  return(set_httk_precision(out))
 }
