@@ -60,36 +60,17 @@ RMSLE.noMC -- RMSLE between \code{\link{calc_analytic_css}} and \code{\link{calc
     N.noMC -- Number of chemicals in noMC comparison \cr
 
   in_vivo_stats \tab A list with two metrics:
-<<<<<<< HEAD
-  \describe{
-    \item{RMSLE.InVivoCss}{RMSLE between the predictions of calc_analytic_css and in vivo estimates of Css}
-    \item{N.InVivoCss}{Number of chemcials in comparison}
-  } \cr                    
-
-=======
 RMSLE.InVivoCss -- RMSLE between the predictions of \code{\link{calc_analytic_css}} and in vivo estimates of Css
 N.InVivoCss -- Number of chemicals in comparison \cr                    
   
->>>>>>> 5e4ad7cb706e4efe45ee85761099db5413c937f0
   units.plot \tab A ggplot2 figure showing units tests of various functions. 
 Output is generated for mg/L and uM, and then the ratio mg/L/uM*1000/MW is
 calculated. If the units are correct the ratio should be 1 (within the 
 precision of the functions -- usually four significant figures). \cr
-<<<<<<< HEAD
 
   rmsle.plot \tab A ggplot2 figure showing RMSLE tests of various functions. 
 Output generated is the root mean square log10 error for parameters estimated
 by the package. \cr
-
-  count.plot \tab A ggplot2 figure showing count of chemicals of various functions. 
-Output generated is a count of the chemicals available for the each of the
-parameters estimated by and used for benchmarking the package. \cr
-=======
-
-  rmsle.plot \tab A ggplot2 figure showing RMSLE tests of various functions. 
-Output generated is the root mean square log10 error for parameters estimated
-by the package. \cr
->>>>>>> 5e4ad7cb706e4efe45ee85761099db5413c937f0
 
   count.plot \tab A ggplot2 figure showing count of chemicals of various functions. 
 Output generated is a count of the chemicals available for the each of the
@@ -105,11 +86,7 @@ httk.
 }
 \details{
 Historically some refinements made to one aspect of httk have unintentionally
-<<<<<<< HEAD
-impacted other aspects. Most notably errors have ocasionally been introduced 
-=======
 impacted other aspects. Most notably errors have occasionally been introduced 
->>>>>>> 5e4ad7cb706e4efe45ee85761099db5413c937f0
 with respect to units (v1.9, v2.1.0). This benchmarking tool is intended to
 reduce the chance of these errors occurring in the future.
 
