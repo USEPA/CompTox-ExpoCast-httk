@@ -300,10 +300,12 @@ calc_fgut.oral <- function(Params = NULL,
     # and Qgut = 68.99 L/h (parameterize_pbtk)
     Qsmallintestinehuman <- 38.7 /1000*60*15.8757 # L/h
     Qsmallintestinef <- Qsmallintestinehuman / 68.99 # Works out to roughly 53%
-    if(!is.null(Params$Qtotal.liver)){
-      Qvilli <- Qsmallintestinef*68.99/86.96*Params$Qtotal.liverc*Params$BW^(3/4)
+    if(!is.null(Params$Qtotal.liverc)){
+      this.Qsmallintestinehuman <- Qsmallintestinef*68.99/86.96*Params$Qtotal.liverc*Params$BW^(3/4)
+      Qvilli <- 18/Qsmallintestinehuman*this.Qsmallintestinehuman
     } else if(!is.null(Params$Qgutf)){
-      Qvilli <- Qsmallintestinef*Params$Qgutf*Params$Qcardiacc*Params$BW^(3/4)
+      this.Qsmallintestinehuman <- Qsmallintestinef*Params$Qgutf*Params$Qcardiacc*Params$BW^(3/4)
+      Qvilli <- 18/Qsmallintestinehuman*this.Qsmallintestinehuman
     } else {
       warning("Because model used does not provide Qtotal.liver or Qgutf, the Yang et al. (2007) value of 18 L/h was used to calculate fraction absorbed by gut")
       Qvilli <- 18 # L/h blood flow to microvilli of intestinal lumen
