@@ -1,8 +1,7 @@
-# source("L:/Lab/NCCT_ExpoCast/ExpoCast2019/HTTKDataTable/load_package_data_tables-030719.R")
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
-SCRIPT.VERSION <- "feature/PFAS June2023"
+SCRIPT.VERSION <- "feature/PFAS July2023"
 
 ## R Packages ##
 library(reshape)
@@ -1699,6 +1698,24 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dawson.clint.2,CASRN!="")
                                  reference="Dawson 2023")                                   
 
 #
+# Create dawson2023 PFAS Half-Life Machine Learning Prediction Table
+#   we add this here because we need phys-chem for these chemicals
+dawson2023 <- read.csv("Dawson2023/S3_Dawsonetal_PFAS_HL_101122.csv")
+dawson2023 <- dawson2023[,c(
+                          "DTXSID",
+                          "Species",
+                          "Sex",
+                          "DosingAdj",
+                          "ClassPredFull",
+                          "ClassModDomain",
+                          "AMAD")]
+
+#
+# END dawson2023 Creation
+#
+
+
+#
 #
 #
 #
@@ -2192,6 +2209,8 @@ for (this.col in c("QSAR_Clint", "QSAR_Clint_SD", "QSAR_Fup"))
 # END dawson2021 Creation
 #
 
+
+
 #
 # Create pradeep2020 QSPR predictions table
 #
@@ -2238,7 +2257,6 @@ pradeep2020 <- dplyr::select(
 #
 # END pradeep2020 Creation
 #
-
 
 #
 #
@@ -2418,6 +2436,7 @@ save(chem.physical_and_invitro.data,
      chem.invivo.PK.summary.data,
      dawson2021,
      pradeep2020,
+     dawson2023,
      pfas.fup.predictions,
      sipes2017,
      physiology.data,
