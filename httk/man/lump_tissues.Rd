@@ -2,12 +2,7 @@
 % Please edit documentation in R/lump_tissues.R
 \name{lump_tissues}
 \alias{lump_tissues}
-\title{Lump tissue parameters into model compartments
-                                              
-This function takes the tissue:plasma partition coefficients from 
-\code{\link{predict_partitioning_schmitt}} along with the tissue-specific
-volumes and flows and aggregates (or "lumps") them
-according to the needed scheme of toxicokinetic model tissue comparments.}
+\title{Lump tissue parameters into model compartments}
 \usage{
 lump_tissues(
   Ktissue2pu.in,
@@ -61,6 +56,11 @@ flowing to the gut.} \item{Qkidneyf}{Fraction of cardiac output flowing to
 the kidneys.}
 }
 \description{
+This function takes the tissue:plasma partition coefficients from 
+\code{\link{predict_partitioning_schmitt}} along with the tissue-specific
+volumes and flows and aggregates (or "lumps") them
+according to the needed scheme of toxicokinetic model tissue comparments.
+
 \code{\link{predict_partitioning_schmitt}} makes tissue-specific predictions
 drawing from those tissues described in \code{\link{tissue.data}}. Since
 different physiologically-based toxicokinetic (PBTK) models use diffeent 
@@ -72,8 +72,7 @@ volumes, and partition coefficients are provided for the
 lumped tissue compartments. Flows and volumes are summed while
 partition coefficients is calculated using averaging weighted by 
 species-specific tissue volumes.
-}
-\details{
+
 The name of each entry in 'tissuelist' is its own compartment. The
 modelinfo_MODEL.R file corresponding to the model specified by argument
 'model' includes both a 'tissuelist' describing to the model's 
