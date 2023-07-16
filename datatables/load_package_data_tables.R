@@ -1685,7 +1685,7 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dawson.clint.1,CASRN!="")
                                  LogP="LogP_pred"
                                  ), species="Human",
                                  overwrite=FALSE,
-                                 reference="Dawson 2023")
+                                 reference="Dawson 2021")
                                  
 chem.physical_and_invitro.data <- add_chemtable(subset(dawson.clint.2,CASRN!=""),
                 current.table = chem.physical_and_invitro.data, 
@@ -1695,12 +1695,24 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dawson.clint.2,CASRN!="")
                                  LogP="LogP_pred"
                                  ), species="Human",
                                  overwrite=FALSE,
-                                 reference="Dawson 2023")                                   
+                                 reference="Dawson 2021")                                   
 
 #
 # Create dawson2023 PFAS Half-Life Machine Learning Prediction Table
 #   we add this here because we need phys-chem for these chemicals
 dawson2023 <- read.csv("Dawson2023/S3_Dawsonetal_PFAS_HL_101122.csv")
+
+
+chem.physical_and_invitro.data <- add_chemtable(subset(dawson2023,
+                                                       !duplicated(DTXSID)),
+                current.table = chem.physical_and_invitro.data, 
+                data.list = list(CAS = 'CASRN',
+                                 DTXSID='DTXSID',
+                                 LogP="LogP_pred"
+                                 ), species="Human",
+                                 overwrite=FALSE,
+                                 reference="Dawson 2023")
+                                 
 dawson2023 <- dawson2023[,c(
                           "DTXSID",
                           "Species",
@@ -1709,7 +1721,6 @@ dawson2023 <- dawson2023[,c(
                           "ClassPredFull",
                           "ClassModDomain",
                           "AMAD")]
-
 #
 # END dawson2023 Creation
 #
@@ -1913,7 +1924,18 @@ chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
 #
 #
 
-write.table(chem.physical_and_invitro.data[,c("SMILES.desalt","CAS")],
+good.smiles <- chem.physical_and_invitro.data[,c("SMILES.desalt","CAS")]
+# Get rid of NA values:
+good.smiles <- subset(good.smiles, !(SMILES.desalt %in% c("NA","N/A")))
+good.smiles <- subset(good.smiles, !is.na(SMILES.desalt))
+# Get rid of concatonated SMILES:
+good.smiles$SMILES.desalt <-
+  sapply(good.smiles$SMILES.desalt,function(x) strsplit(x,",")[[1]][1])
+# Get rid of quotation marks:
+good.smiles$SMILES.desalt <-
+  gsub("\"","",good.smiles$SMILES.desalt)
+
+write.table(good.smiles,
   file="HTTK-AllChems.smi",
   row.names=F,
   sep="\t",
@@ -1977,17 +1999,23 @@ chem.physical_and_invitro.data <- add_chemtable(cory.donor.overwrite,current.tab
 #Annotate important chemicals classes as concatonated list:
 chem.physical_and_invitro.data[,"Chemical.Class"] <- ""
 
-#PFAS:
+# Identify PFAS chemical class using CCD master list:
 PFAS <- read.csv("Dashboard-PFASMaster-091620.tsv",sep="\t")
 chem.physical_and_invitro.data[
   chem.physical_and_invitro.data[,"DTXSID"] %in% PFAS[,"DTXSID"],
   "Chemical.Class"] <- sapply(chem.physical_and_invitro.data[
     chem.physical_and_invitro.data[,"DTXSID"] %in% PFAS[,"DTXSID"],
     "Chemical.Class"], function(x) ifelse(x=="","PFAS",paste(x,"PFAS",sep=","))) 
-chem.physical_and_invitro.data[chem.physical_and_invitro.data$DTXSID%in%"DTXSID30395037",
+# Tris(2,2,2-trifluoroethyl)orthoformate is PFAS:
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$DTXSID %in%
+                               "DTXSID30395037",
                    "Chemical.Class"] <-"PFAS"
-
-#Remove chemicals with no DTXSID:
+# Chemicals from Dawson 2023 are PFAS:
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$DTXSID %in%
+                               unique(dawson2023$DTXSID),
+                   "Chemical.Class"] <-"PFAS"
+                   
+# Remove chemicals with no DTXSID:
 if (any(is.na(chem.physical_and_invitro.data$DTXSID)))
 {
   cat("There are chemicals missing DTXSID's that have been removed from the\n\
@@ -2258,6 +2286,7 @@ pradeep2020 <- dplyr::select(
 # END pradeep2020 Creation
 #
 
+
 #
 #
 #
@@ -2429,6 +2458,10 @@ sipes2017 <- sipes2017[,c(
                'CAS',
                'Human.Funbound.plasma',
                'Human.Clint')]
+               
+# Reduce file size:
+chem.invivo.PK.summary.data <- chem.invivo.PK.summary.data[,
+ !colnames(chem.invivo.PK.summary.data %in% c("SMILES"))]
                
 save(chem.physical_and_invitro.data,
      chem.invivo.PK.data,
