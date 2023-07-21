@@ -543,7 +543,9 @@ model.list[["fetal_pbtk"]]$derivative.output.names <- c(
   "Cfbrain",
   "Afplasma",
   "Cfplasma",
-  "Rfblood2plasma")
+  "Rfblood2plasma",
+  "Qcardiac",
+  "Qthyroid")
 
 #Which variables to track by default (should be able to build this from
 #state vars and outputs):
@@ -574,7 +576,9 @@ model.list[["fetal_pbtk"]]$default.monitor.vars <- c(
   "Cfkidney",
   "Cfbrain",
   "Cfplasma",
-  "Rfblood2plasma")
+  "Rfblood2plasma",
+  "Qcardiac",
+  "Qthyroid")
 
 # Allowable units assigned to dosing input:
 model.list[["fetal_pbtk"]]$allowed.units.input <- list(
@@ -686,7 +690,9 @@ model.list[["fetal_pbtk"]]$compartment.units <- c(
   "AUC" = "uM*days",
   "fAUC" = "uM*days",
   "Rblood2plasma" = "unitless",
-  "Rfblood2plasma" = "unitless")
+  "Rfblood2plasma" = "unitless",
+  "Qcardiac" = "L/h",
+  "Qthyroid" = "L/h")
 
        
 #Parameters needed to make a prediction (this is used by get_cheminfo):
