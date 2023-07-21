@@ -51,6 +51,10 @@ Cfbrain,
 Afplasma,
 Cfplasma,
 Rfblood2plasma,
+Qcardiac,
+Qthyroid,
+Qthyroid_percent_initial,
+Qthyroid_percent_terminal
 };
 
 pre_pregnant_BW = 0;
