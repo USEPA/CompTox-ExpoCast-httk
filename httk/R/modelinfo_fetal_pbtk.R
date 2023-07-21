@@ -588,9 +588,9 @@ model.list[["fetal_pbtk"]]$allowed.units.input <- list(
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[["fetal_pbtk"]]$allowed.units.output <- list(
   "oral" = c('uM','mg/L','umol','mg','uM*days',
-             'mg/L*days',"unitless","L/h"),
+             'mg/L*days',"unitless","L/d"),
   "iv" = c('uM','mg/L','umol','mg','uM*days',
-             'mg/L*days',"unitless","L/h"))
+             'mg/L*days',"unitless","L/d"))
 
 ## These parameters specify the exposure scenario simulated by the model:
 model.list[["fetal_pbtk"]]$routes <- list(
@@ -691,8 +691,8 @@ model.list[["fetal_pbtk"]]$compartment.units <- c(
   "fAUC" = "uM*days",
   "Rblood2plasma" = "unitless",
   "Rfblood2plasma" = "unitless",
-  "Qcardiac" = "L/h",
-  "Qthyroid" = "L/h")
+  "Qcardiac" = "L/d",
+  "Qthyroid" = "L/d")
 
        
 #Parameters needed to make a prediction (this is used by get_cheminfo):
