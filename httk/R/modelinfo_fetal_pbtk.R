@@ -588,9 +588,9 @@ model.list[["fetal_pbtk"]]$allowed.units.input <- list(
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[["fetal_pbtk"]]$allowed.units.output <- list(
   "oral" = c('uM','mg/L','umol','mg','uM*days',
-             'mg/L*days',"unitless"),
+             'mg/L*days',"unitless","L/h"),
   "iv" = c('uM','mg/L','umol','mg','uM*days',
-             'mg/L*days',"unitless"))
+             'mg/L*days',"unitless","L/h"))
 
 ## These parameters specify the exposure scenario simulated by the model:
 model.list[["fetal_pbtk"]]$routes <- list(
