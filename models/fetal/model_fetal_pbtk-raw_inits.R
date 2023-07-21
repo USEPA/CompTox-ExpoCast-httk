@@ -177,7 +177,9 @@ Outputs <- c(
     "Cfbrain",
     "Afplasma",
     "Cfplasma",
-    "Rfblood2plasma"
+    "Rfblood2plasma",
+    "Qcardiac",
+    "Qthyroid"
 )
 
 initStates <- function(parms, newStates = NULL) {
