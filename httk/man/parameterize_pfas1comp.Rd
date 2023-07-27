@@ -85,6 +85,15 @@ according to
 where compounds that are ionized at pH 7.4 (plasma) get a value of 0.5, while
 chemicals that are neutral get a value of 20.
 }
+\examples{
+# Human elimination rate for PFOA:
+parameterize_pfas1comp(dtxsid="DTXSID8031865")$kelim
+# Female rat is much faster than human:
+parameterize_pfas1comp(dtxsid="DTXSID8031865", species="rat")$kelim
+# Male rat is slower than female but faster than humans:
+parameterize_pfas1comp(dtxsid="DTXSID8031865", species="rat", sex="male")$kelim
+
+}
 \references{
 Dawson, Daniel E., et al. "A Machine Learning Model to Estimate 
 Toxicokinetic Half-Lives of Per-and Polyfluoro-Alkyl Substances (PFAS) in 
