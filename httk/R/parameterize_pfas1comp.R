@@ -100,6 +100,14 @@
 #'
 #' @seealso \code{\link{solve_1comp}}
 #'
+#' @examples
+#' # Human elimination rate for PFOA:
+#' parameterize_pfas1comp(dtxsid="DTXSID8031865")$kelim
+#' # Female rat is much faster than human:
+#' parameterize_pfas1comp(dtxsid="DTXSID8031865", species="rat")$kelim
+#' # Male rat is slower than female but faster than humans:
+#' parameterize_pfas1comp(dtxsid="DTXSID8031865", species="rat", sex="male")$kelim
+#'
 #' @export parameterize_pfas1comp
 parameterize_pfas1comp <- function(
                         chem.cas=NULL,
@@ -133,16 +141,16 @@ parameterize_pfas1comp <- function(
 # Check for valid argument values:
   if (!(tolower(dosingadj) %in% c("iv","oral","other")))
     stop("Argument dosingadj values are limited to \"IV\", \"Oral\", and \"Other\".")
-  if (!(tolower(sex) %in% c("iv","oral","other")))
+  if (!(tolower(sex) %in% c("female","male")))
     stop("Argument sex values are limited to \"female\" and \"male\".")
   avail.species <- unique(dawson2023$Species)
-  if (!(tolower(species) %in% avail.species))
+  if (!(tolower(species) %in% tolower(avail.species)))
     stop(paste("Available species are limited to ",
                paste(avail.species,collapse=", ")))
 
 # Check to see if we have a prediction from Dawson et al. (2023):
   this.subset <- subset(dawson2023,
-                        tolower(DTXSID)==tolower(DTXSID))
+                        tolower(DTXSID)==tolower(dtxsid))
   if (dim(this.subset)[1]==0)
       stop(paste("No predictions for chemical",
                  dtxsid,
@@ -160,7 +168,7 @@ parameterize_pfas1comp <- function(
                  "predictions for sex",
                  sex,
                  "available in table httk::dawson2023"))
-  if (!(dosingadj %in% tolower(this.subset$DosingAdh)))
+  if (!(tolower(dosingadj) %in% tolower(this.subset$DosingAdj)))
       stop(paste("No chemical",
                  dtxsid,
                  "predictions for dose route",
@@ -181,27 +189,26 @@ parameterize_pfas1comp <- function(
       stop("Chemical outside domain of applicability of one of the models used to estimate half-life.")
  
 # Median of the Dawson et al. training set bins in h:             
-  if (this.subset$CallPredFull==1) thalf <- 4.4 
-  else if (this.subset$CallPredFull==2) thalf <- 2.2*24
-  else if (this.subset$CallPredFull==3) thalf <- 33*24
+  if (this.subset$ClassPredFull==1) thalf <- 4.4 
+  else if (this.subset$ClassPredFull==2) thalf <- 2.2*24
+  else if (this.subset$ClassPredFull==3) thalf <- 33*24
   else thalf <- 3.3*365*24
     
-  params[['kelim']] <- ln(2)/thalf
+  params[['kelim']] <- log(2)/thalf
   
 # Average kgutabs value across 44 chemicals in Wambaugh et al. (2018):
   params[['kgutabs']] <- 2.18
   
 # Phys-chem properties:
-  params[['MW']] <- get_physchem_param("MW",chem.cas=chem.cas)
-  phys.params <-  suppressWarnings(parameterize_schmitt(chem.name=chem.name,
-                    chem.cas=chem.cas,
-                    species=species,
-                    default.to.human=default.to.human,
-                    minimum.Funbound.plasma=minimum.Funbound.plasma)) 
-  params[["pKa_Donor"]] <- phys.params[["pKa_Donor"]] 
-  params[["pKa_Accept"]] <- phys.params[["pKa_Accept"]]
+  params[['MW']] <- get_physchem_param("MW", dtxsid=dtxsid)
+  params[["pKa_Donor"]] <- suppressWarnings(get_physchem_param(
+                                    "pKa_Donor",
+                                    dtxsid=dtxsid))
+  params[["pKa_Accept"]] <- suppressWarnings(get_physchem_param(
+                                     "pKa_Accept",
+                                     dtxsid=dtxsid))
 
-  #Now let's use calc_ionization to estimate the chemical's charge profile:
+  # Now let's use calc_ionization to estimate the chemical's charge profile:
   ion <- calc_ionization(
     pH=7.4,
     pKa_Donor=params[["pKa_Donor"]],
@@ -243,7 +250,7 @@ parameterize_pfas1comp <- function(
     
 # First pass hepatic metabolism can only be estimated if we have fup and clint:
   if (estimate.firstpass &
-      dtxsid %in% get_cheminfo(info="dtxsid"))
+      dtxsid %in% get_cheminfo(info="dtxsid", suppress.messages=TRUE))
   {    
     ss.params <- suppressWarnings(parameterize_steadystate(dtxsid=dtxsid,
                                                            species=species))
