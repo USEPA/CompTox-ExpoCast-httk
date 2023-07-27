@@ -113,7 +113,11 @@ blood to the concentration in the plasma from available_rblood2plasma.}
 \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
 \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
-\item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
+\item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} 
+\item{pKa_Donor}{Ionization equilibria (if any) for hydrogen donation (acids).} 
+\item{pKa_Accept}{Ionization equilibria (if any) for hydrogen acceptance (bases).} 
+\item{Pow}{Octanol:Water equilibrium partition coefficient (hydrophobicity)}
+\item{MA}{Membrane affinity -- physopholipid bi-layer partition coefficient}
 }
 \description{
 Generate a chemical- and species-specific set of PBPK model parameters.
@@ -124,7 +128,10 @@ Tissure:(fraction unbound in) plasma partitition coefficients are predicted
 via Schmitt (2008)'s method as modified by Pearce et al. (2017) using
 \code{\link{predict_partitioning_schmitt}}. Organ volumes and flows are
 retrieved from table \code{\link{physiology.data}}.
-Tissues must be described in table \code{\link{tissue.data}}.
+Tissues must be described in table \code{\link{tissue.data}}. 
+The rate of oral absorption used
+is 2.2 L/h, the median rate observed across 44 chemicals by 
+\href{https://doi.org/10.1093/toxsci/kfy020}{Wambaugh et al. (2018)}.
 }
 \details{
 By default, this function initializes the parameters needed in the functions 

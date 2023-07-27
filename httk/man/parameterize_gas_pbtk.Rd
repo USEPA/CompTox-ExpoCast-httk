@@ -150,7 +150,11 @@ blood to the concentration in the plasma from available_rblood2plasma.}
 \item{vmax}{Michaelis-Menten maximum reaction velocity (1/min)}
 \item{Vmucc}{Unscaled mucosal volume (L/kg BW^0.75}
 \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
-\item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
+\item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} 
+\item{pKa_Donor}{Ionization equilibria (if any) for hydrogen donation (acids).} 
+\item{pKa_Accept}{Ionization equilibria (if any) for hydrogen acceptance (bases).} 
+\item{Pow}{Octanol:Water equilibrium partition coefficient (hydrophobicity)}
+\item{MA}{Membrane affinity -- physopholipid bi-layer partition coefficient}
 }
 \description{
 This function initializes the parameters needed for the model 'gas_pbtk', for
@@ -159,6 +163,9 @@ parameters are generated. These include tissue:plasma partition coefficients
 via Schmitt (2008)'s method as modified by Pearce et al. (2017). Organ volumes 
 and flows are retrieved from table \code{\link{physiology.data}}). This model
 was first described by Linakis et al. (2020).
+The rate of oral absorption used
+is 2.2 L/h, the median rate observed across 44 chemicals by 
+\href{https://doi.org/10.1093/toxsci/kfy020}{Wambaugh et al. (2018)}.
 }
 \examples{
 parameters <- parameterize_gas_pbtk(chem.cas='129-00-0')

@@ -9,6 +9,9 @@
 #' \code{\link{predict_partitioning_schmitt}}. Organ volumes and flows are
 #' retrieved from table \code{\link{physiology.data}}.
 #' Tissues must be described in table \code{\link{tissue.data}}. 
+#' The rate of oral absorption used
+#' is 2.2 L/h, the median rate observed across 44 chemicals by 
+#' \href{https://doi.org/10.1093/toxsci/kfy020}{Wambaugh et al. (2018)}.
 #'
 #' By default, this function initializes the parameters needed in the functions 
 #' \code{\link{solve_pbtk}}, \code{\link{calc_css}}, and others using the httk 

@@ -6,6 +6,9 @@
 #' via Schmitt (2008)'s method as modified by Pearce et al. (2017). Organ volumes 
 #' and flows are retrieved from table \code{\link{physiology.data}}). This model
 #' was first described by Linakis et al. (2020).
+#' The rate of oral absorption used
+#' is 2.2 L/h, the median rate observed across 44 chemicals by 
+#' \href{https://doi.org/10.1093/toxsci/kfy020}{Wambaugh et al. (2018)}.
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
 #' specified. 

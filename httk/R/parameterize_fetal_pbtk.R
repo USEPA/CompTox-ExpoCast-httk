@@ -2,6 +2,9 @@
 #' 
 #' This function initializes the parameters needed in the functions
 #' solve_fetal_pbtk by calling solve_pbtk and adding additional parameters.
+#' The rate of oral absorption used
+#' is 2.2 L/h, the median rate observed across 44 chemicals by 
+#' \href{https://doi.org/10.1093/toxsci/kfy020}{Wambaugh et al. (2018)}.
 #' 
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
