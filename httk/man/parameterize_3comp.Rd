@@ -89,6 +89,10 @@ of the chemical in the blood to the concentration in the plasma.}
 \item{Vgutc}{Volume of the gut per kg body weight, L/kg BW.}
 \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
+\item{pKa_Donor}{Ionization equilibria (if any) for hydrogen donation (acids).} 
+\item{pKa_Accept}{Ionization equilibria (if any) for hydrogen acceptance (bases).} 
+\item{Pow}{Octanol:Water equilibrium partition coefficient (hydrophobicity)}
+\item{MA}{Membrane affinity -- physopholipid bi-layer partition coefficient}
 }
 \description{
 This function generates the chemical- and species-specific parameters needed 
@@ -97,6 +101,9 @@ masde to \code{\link{parameterize_pbtk}} to use Schmitt (2008)'s method
 as modified by Pearce et al. (2017) to predict partition coefficients based
 on descriptions in \code{\link{tissue.data}}. Organ volumes and flows are
 retrieved from table \code{\link{physiology.data}}.
+The rate of oral absorption used
+is 2.2 L/h, the median rate observed across 44 chemicals by 
+\href{https://doi.org/10.1093/toxsci/kfy020}{Wambaugh et al. (2018)}.
 }
 \examples{
 

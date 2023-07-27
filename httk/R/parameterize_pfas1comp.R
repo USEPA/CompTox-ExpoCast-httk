@@ -51,6 +51,7 @@
 #' 
 #' @return 
 #' \item{Vdist}{Volume of distribution, units of L/kg BW.}
+#' \item{plasma.vol}{Volume of the plasma, L/kg BW.}
 #' \item{Fgutabs}{Fraction of the oral dose absorbed, that is, the fraction of the
 #' dose that enters the gutlumen.} 
 #' \item{kelim}{Elimination rate, units of 1/h.} 
@@ -187,24 +188,29 @@ parameterize_pfas1comp <- function(
     
   params[['kelim']] <- ln(2)/thalf
   
+# Average kgutabs value across 44 chemicals in Wambaugh et al. (2018):
+  params[['kgutabs']] <- 2.18
+  
+# Phys-chem properties:
+  params[['MW']] <- get_physchem_param("MW",chem.cas=chem.cas)
   phys.params <-  suppressWarnings(parameterize_schmitt(chem.name=chem.name,
                     chem.cas=chem.cas,
                     species=species,
                     default.to.human=default.to.human,
                     minimum.Funbound.plasma=minimum.Funbound.plasma)) 
-  params[["Pow"]] <- phys.params[["Pow"]]
   params[["pKa_Donor"]] <- phys.params[["pKa_Donor"]] 
   params[["pKa_Accept"]] <- phys.params[["pKa_Accept"]]
-  params[["MA"]] <- phys.params[["MA"]]
 
-  params[['kgutabs']] <- 2.18
+  #Now let's use calc_ionization to estimate the chemical's charge profile:
+  ion <- calc_ionization(
+    pH=7.4,
+    pKa_Donor=params[["pKa_Donor"]],
+    pKa_Accept=params[["pKa_Accept"]])
   
-  params[['Rblood2plasma']] <- 
-    available_rblood2plasma(chem.cas=chem.cas,chem.name=chem.name,
-        species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma)
+  fraction_neutral <- ion$fraction_neutral
   
-  params[['million.cells.per.gliver']] <- 110
-  params[["liver.density"]] <- 1.05 # g/mL
+  if (fraction_neutral < 0.5) params[['Rblood2plasma']] <- 0.5
+  else params[['Rblood2plasma']] <- 20
    
 # Check the species argument for capitalization problems and whether or not 
 # it is in the table:  
@@ -223,22 +229,27 @@ parameterize_pfas1comp <- function(
     
     params[['hematocrit']] <- this.phys.data[["Hematocrit"]]
     params[['plasma.vol']] <- this.phys.data[["Plasma Volume"]]/1000 # L/kg BW
-  
-    params[['MW']] <- get_physchem_param("MW",chem.cas=chem.cas)
-  
+    params[['BW']] <- this.phys.data[["Average BW"]] 
+   
+# Fraction absorbed in the gut either has been measured somewhere or defaults to 1:
     Fgutabs <- try(
                  get_invitroPK_param(
                    "Fgutabs",
                    species,
                    chem.cas=chem.cas),
                  silent=TRUE)
-
     if (is(Fgutabs,"try-error")) Fgutabs <- 1
-    
     params[['Fgutabs']] <- Fgutabs
+    
+# First pass hepatic metabolism can only be estimated if we have fup and clint:
+  if (estimate.firstpass &
+      dtxsid %in% get_cheminfo(info="dtxsid"))
+  {    
+    ss.params <- suppressWarnings(parameterize_steadystate(dtxsid=dtxsid,
+                                                           species=species))
     params[['hepatic.bioavailability']] <- 
       ss.params[['hepatic.bioavailability']]  
-    params[['BW']] <- this.phys.data[["Average BW"]]
+  } else params[['hepatic.bioavailability']] <- 1
   
   return(lapply(params[order(tolower(names(params)))],set_httk_precision))
 }

@@ -6,6 +6,9 @@
 #' as modified by Pearce et al. (2017) to predict partition coefficients based
 #' on descriptions in \code{\link{tissue.data}}. Organ volumes and flows are
 #' retrieved from table \code{\link{physiology.data}}.
+#' The rate of oral absorption used
+#' is 2.2 L/h, the median rate observed across 44 chemicals by 
+#' \href{https://doi.org/10.1093/toxsci/kfy020}{Wambaugh et al. (2018)}.
 #' 
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- the 
 #' chemical must be identified by either CAS, name, or DTXISD

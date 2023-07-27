@@ -84,6 +84,7 @@
 #'
 #' @return 
 #' \item{Vdist}{Volume of distribution, units of L/kg BW.}
+#' \item{plasma.vol}{Volume of the plasma, L/kg BW.}
 #' \item{Fgutabs}{Fraction of the oral dose absorbed, that is, the fraction of the
 #' dose that enters the gutlumen.} 
 #' \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte 
