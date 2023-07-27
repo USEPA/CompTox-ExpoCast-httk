@@ -2460,8 +2460,8 @@ sipes2017 <- sipes2017[,c(
                'Human.Clint')]
                
 # Reduce file size:
-chem.invivo.PK.summary.data <- chem.invivo.PK.summary.data[,
- !colnames(chem.invivo.PK.summary.data %in% c("SMILES"))]
+chem.physical_and_invitro.data <- chem.physical_and_invitro.data[,
+ !colnames(chem.physical_and_invitro.data) %in% c("SMILES.desalt")]
                
 save(chem.physical_and_invitro.data,
      chem.invivo.PK.data,
