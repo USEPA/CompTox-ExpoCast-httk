@@ -62,7 +62,11 @@
 #' tissue to unbound concentration in plasma.} \item{Kplacenta2pu}{Ratio of
 #' concentration of chemical in placental tissue to unbound concentration in
 #' maternal plasma.} \item{Kfplacenta2pu}{Ratio of concentration of chemical in
-#' placental tissue to unbound concentration in fetal plasma.} 
+#' placental tissue to unbound concentration in fetal plasma.}
+#' \item{pKa_Donor}{Ionization equilibria (if any) for hydrogen donation (acids).} 
+#' \item{pKa_Accept}{Ionization equilibria (if any) for hydrogen acceptance (bases).} 
+#' \item{Pow}{Octanol:Water equilibrium partition coefficient (hydrophobicity)}
+#' \item{MA}{Membrane affinity -- physopholipid bi-layer partition coefficient} 
 #'
 #' @author Robert Pearce, Mark Sfeir, John Wambaugh, and Dustin Kapraun
 #'

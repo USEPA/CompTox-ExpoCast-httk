@@ -1,6 +1,6 @@
 Package: httk
-Version: 99.12.7
-Date: 2023-07-13
+Version: 99.12.8
+Date: 2023-07-27
 Title: High-Throughput Toxicokinetics
 Description: Pre-made models that can be rapidly tailored to various chemicals
              and species using chemical-specific in vitro data and physiological 
@@ -37,7 +37,7 @@ Authors@R: c(
            person("John", "Wambaugh", email = "wambaugh.john@epa.gov", 
              role = c("aut", "cre"),
              comment = c(ORCID = "0000-0002-4024-534X")), 
-           person("Sarah", "Davidson", email = "davidson.sarah.e@epa.gov", 
+           person("Sarah", "Davidson-Fritz", email = "DavidsonFritz.Sarah@epa.gov", 
              role = c("aut"), comment = c(ORCID = "0000-0002-2891-9380")), 
            person("Robert", "Pearce", role = c("aut"),
              comment = c(ORCID = "0000-0003-3168-4049")), 
@@ -92,7 +92,7 @@ BugReports: https://github.com/USEPA/CompTox-ExpoCast-httk
 NeedsCompilation: yes
 Packaged: 2022-02-24 15:04:07 UTC; jwambaug
 Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>), 
-  Sarah Davidson [aut] (<https://orcid.org/0000-0002-2891-9380>),  
+  Sarah Davidson-Fritz [aut] (<https://orcid.org/0000-0002-2891-9380>),  
   Robert Pearce [aut] (<https://orcid.org/0000-0003-3168-4049>), 
   Caroline Ring [aut] (<https://orcid.org/0000-0002-0463-1251>),
   Greg Honda [aut] (<https://orcid.org/0000-0001-7713-9850>),
