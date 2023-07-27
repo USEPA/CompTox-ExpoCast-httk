@@ -128,6 +128,10 @@
 #' \item{Vmucc}{Unscaled mucosal volume (L/kg BW^0.75}
 #' \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
 #' \item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} 
+#' \item{pKa_Donor}{Ionization equilibria (if any) for hydrogen donation (acids).} 
+#' \item{pKa_Accept}{Ionization equilibria (if any) for hydrogen acceptance (bases).} 
+#' \item{Pow}{Octanol:Water equilibrium partition coefficient (hydrophobicity)}
+#' \item{MA}{Membrane affinity -- physopholipid bi-layer partition coefficient}
 #'
 #' @author Matt Linakis, Robert Pearce, John Wambaugh
 #'
