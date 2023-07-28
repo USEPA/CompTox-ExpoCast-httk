@@ -104,7 +104,8 @@ get_clint <- function(chem.cas=NULL,
                           chem.cas=chem.cas),
                       silent=TRUE)
 
-    warning(paste(species,"coerced to Human for metabolic clearance data."))
+    if (!suppress.messages) 
+      warning(paste(species,"coerced to Human for metabolic clearance data.\n"))
   }
   if (is(Clint.db,"try-error")) 
     stop("Missing metabolic clearance data for given species. \n\

@@ -1,0 +1,213 @@
+---
+title: "Crizer et al. (2023): Analysis of PFAS Hepatic Clearance Data"
+author: "David Crizer, Marci G. Smeltz, John F. Wambaugh, and Barbara A. Wetmore"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Crizer (2023): PFAS Clearance}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  *Please send questions to wambaugh.john@epa.gov*
+  
+  from "Category-Based Toxicokinetic Evaluations of Data-Poor Per and Polyfluoroalkyl Substances (PFAS) by Gas Chromatography Coupled with Mass Spectrometry"
+
+Anna Kreutz, Matthew Scott Clifton, W. Matthew Henderson, Marci G. Smeltz, John F. Wambaugh, and Barbara A. Wetmore
+
+## Abstract
+
+Concern over per- and polyfluoroalkyl substances (PFAS) has increased significantly as more is learned about their widespread environmental presence, persistence, and bioaccumulative potential. The limited measurement, monitoring, toxicokinetic (TK), and toxicologic data currently available is inadequate to inform risk evaluations across this diverse domain. In this study, 73 PFAS were selected for *in vitro* TK evaluation to expand our knowledge across lesser studied PFAS that include alcohol, amide, and acrylate functional groups. Targeted analytical methods were developed using gas chromatography coupled with tandem mass spectrometry (GC-MS/MS); ultracentrifugation was used to measure human plasma protein binding and human hepatocyte suspensions were used in a substrate depletion approach to measure in vitro clearance (Clint). Method development was successful in plasma for 43 PFAS, with fraction unbound in plasma ($f_{up}$) values ranging from 0.004 for 1,6-dibromododecafluorohexane and 1 for 2-aminohexafluoropropan-2-ol, With a median $f_{up}$ of 0.09 (i.e., 91% bound), these PFAS are highly bound, but exhibit 10-fold lower binding than that recently reported for legacy perfluoroalkyl acids (Smeltz et al., 2022). Physico-chemical property trends analyses revealed that increased binding was associated with increases in mass, van der Waals volumes, and values of Log Pow and Log D at pH 7.4. Thirty of the PFAS evaluated in the hepatocyte assay showed abiotic loss, with many exceeding 60% loss within 60 min of media addition. Metabolic clearance was noted for 11 of the 13 successfully evaluated, with rates up to 49.9 l/min/million cells for 1H,1H,10H,10H-Perfluorodecane-1,10-diol. The Chemical Transformation Simulator revealed potential metabolites and other transformation products to consider during *in vitro* assay data interpretation. This integration of quantitative analytic methods with *in vitro* toxicokinetics has provided critical learnings as New Approach Methods are considered to evaluate PFAS for which volatility, metabolism, and other routes of transformation are likely to modulate their environmental fate. 
+
+## HTTK Version
+
+This vignette was created with **httk** v2.3.0. Although we attempt to maintain 
+backward compatibility, if you encounter issues with the latest release of 
+**httk**
+  and cannot easily address the changes, historical versions of httk are 
+available from: https://cran.r-project.org/src/contrib/Archive/httk/
+  
+  ## Prepare for session
+```{r}
+knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+### Load the relevant libraries
+If you get the message "Error in library(X) : there is no package called 'X'"
+then you will need to install that package: 
+  
+  From the R command prompt:
+  
+  install.packages("X")
+
+Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
+
+```{r load_packages, eval = TRUE}
+# Clear the memory:
+rm(list=ls()) 
+#
+#
+# Setup
+#
+#
+library(ggplot2)
+library(httk)
+library(grid)
+library(scales)
+```
+
+### Function to format scientific notation 
+From https://stackoverflow.com/questions/10762287/how-can-i-format-axis-labels-with-exponents-with-ggplot2-and-scales
+```{R scientific.notation, eval = execute.vignette}
+scientific_10 <- function(x) {                                  
+  out <- gsub("1e", "10^", scientific_format()(x))              
+  out <- gsub("\\+","",out)                                     
+  out <- gsub("10\\^01","10",out)                               
+  out <- parse(text=gsub("10\\^00","1",out))                    
+}  
+```
+# Analysis of Crizer et al. (2023) $Cl_{int}$ data
+
+## Compare against in vivo clearance data:
+```{r invivoeval, eval=TRUE}
+cl.table <- httk::pfas.clearance
+
+for (this.chem in unique(cl.table$DTXSID))
+  if (this.chem %in% get_2023pfasinfo(info="dtxsid",
+                                      model="3compartmentss2",
+                                      suppress.messages=TRUE))
+  {
+    chem.subset <- subset(cl.table, DTXSID==this.chem)
+    for (this.species in unique(cl.table$Species))
+    {
+      params <- parameterize_steadystate2(dtxsid=this.chem,
+                                          species=this.species,
+                                          default.to.human=TRUE,
+                                          suppress.messages=TRUE)
+      params2 <- parameterize_schmitt(dtxsid=this.chem,
+                                          species=this.species,
+                                          default.to.human=TRUE,
+                                          suppress.messages=TRUE)
+      ion <- calc_ionization(
+        pH=7.4,
+        pKa_Donor=params2[["pKa_Donor"]],
+        pKa_Accept=params2[["pKa_Accept"]])
+      fraction_neutral <- ion$fraction_neutral
+      if (fraction_neutral < 0.5) params[['Rblood2plasma']] <- 0.5
+      else params[['Rblood2plasma']] <- 20
+      # Css in units of mg/L for 1 mg/kg/day
+      out <- calc_analytic_css(parameters=params,
+                               model="3compartmentss2",
+                               output.units="mg/L",
+                               suppress.messages=TRUE)
+      cl.table[cl.table$DTXSID==this.chem &
+               cl.table$Species==this.species,
+               "HTTK.Cltot.Lphpkgbw"] <-
+        1/out/24
+    }
+  }
+```
+Set the sizes of the labels and points in the figure (these settings impact the PNG differently than the figure within RStudio):
+```{r fig_properties, eval = TRUE}
+FONT.SIZE <- 18
+POINT.SIZE <- 3
+```
+
+```{r fig_clhttk, eval = TRUE}
+fig.clhttk.invivo  <- ggplot(data=cl.table) +
+  geom_point(aes(
+    x=HTTK.Cltot.Lphpkgbw,
+    y=ClLphpkgbw,
+    color=Species,
+    shape=Sex),
+    size=POINT.SIZE) +
+  geom_abline(slope=1,intercept=0,linetype="dashed")+
+#  geom_line(aes(x=logP,y=logPfit1),color="black") + 
+#  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
+  ylab("In Vivo Clearance (L/h/kg bw)") + 
+  xlab("HTTK Clearance (L/h/kg bw)") +
+  scale_x_log10(label=scientific_10)+
+  scale_y_log10(label=scientific_10)+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))
+
+print(fig.clhttk.invivo)
+```
+
+```{r invivoeval2, eval=TRUE}
+for (this.chem in unique(cl.table$DTXSID))
+  {
+    chem.subset <- subset(cl.table, DTXSID==this.chem)
+    for (this.species in unique(cl.table$Species))
+    {
+      p <- try(parameterize_pfas1comp(dtxsid=this.chem,
+                                  species=this.species,
+                                  suppress.messages=TRUE))
+      # Clearance in units of L/h/kgBW
+      if(!is(p, "try-error")) 
+        cl.table[cl.table$DTXSID==this.chem &
+               cl.table$Species==this.species,
+               "MachineLearning.Cltot.Lphpkgbw"] <- p$kelim*p$Vd
+    }
+  }
+```
+
+```{r fig_clml, eval = TRUE}
+fig.clml.invivo  <- ggplot(data=cl.table) +
+  geom_jitter(aes(
+    x=MachineLearning.Cltot.Lphpkgbw,
+    y=ClLphpkgbw,
+    color=Species,
+    shape=Sex),
+    size=POINT.SIZE,
+    height=0,width=0.1) +
+  geom_abline(slope=1,intercept=0,linetype="dashed")+
+#  geom_line(aes(x=logP,y=logPfit1),color="black") + 
+#  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
+  ylab("In Vivo Clearance (L/h/kg bw)") + 
+  xlab("Machine Learning Clearance (L/h/kg bw)") +
+  scale_x_log10(label=scientific_10)+
+  scale_y_log10(label=scientific_10)+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))
+
+print(fig.clml.invivo)
+```
+
+```{r firstpass, eval=TRUE}
+firstpass.table <- NULL
+for (this.chem in get_2023pfasinfo(info="dtxsid", suppress.messages=TRUE,
+                                   model="3compartmentss2"))
+{
+      params <- parameterize_steadystate(dtxsid=this.chem,
+                                          suppress.messages=TRUE)
+      params2 <- parameterize_schmitt(dtxsid=this.chem,
+                                          suppress.messages=TRUE)
+      ion <- calc_ionization(
+        pH=7.4,
+        pKa_Donor=params2[["pKa_Donor"]],
+        pKa_Accept=params2[["pKa_Accept"]])
+      fraction_neutral <- ion$fraction_neutral
+      if (fraction_neutral < 0.5) params[['Rblood2plasma']] <- 0.5
+      else params[['Rblood2plasma']] <- 20
+  params[["Clmetabolismc"]] <- calc_hep_clearance(parameters=params,
+          hepatic.model='unscaled',
+          suppress.messages=TRUE)#L/h/kg body weight
+  this.row <- data.frame(DTXSID=this.chem,
+                         Fsystemic=calc_hep_bioavailability(
+                           parameters=params)
+  )
+  firstpass.table <- rbind(firstpass.table, this.row)
+}
+```
+```{r firstpass_fig, eval=TRUE}
+fig.firstpass  <- ggplot(data=firstpass.table) +
+  geom_histogram(aes(
+    x=Fsystemic),bins=10) +
+  ylab("Number of Chemicals") + 
+  xlab("Fraction Systemically Available") +
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))
+
+print(fig.firstpass)
+```
