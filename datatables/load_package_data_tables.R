@@ -1712,7 +1712,8 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dawson2023,
                                  ), species="Human",
                                  overwrite=FALSE,
                                  reference="Dawson 2023")
-                                 
+
+# Save only needed columns:                                 
 dawson2023 <- dawson2023[,c(
                           "DTXSID",
                           "Species",
@@ -1724,6 +1725,9 @@ dawson2023 <- dawson2023[,c(
 #
 # END dawson2023 Creation
 #
+
+# Load in vivo clearances for evaluation:
+pfas.clearance <- read.csv("Dawson2023/PFAS-Clearance.txt")
 
 
 #
@@ -2470,6 +2474,7 @@ save(chem.physical_and_invitro.data,
      dawson2021,
      pradeep2020,
      dawson2023,
+     pfas.clearance,
      pfas.fup.predictions,
      sipes2017,
      physiology.data,
