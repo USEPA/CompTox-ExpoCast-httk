@@ -68,8 +68,8 @@ get_physchem_param <- function(
   }
   
   
-  if(!all(param %in% c("MW","logP","pKa_Donor","pKa_Accept",'logMA',"logP","logHenry","logWSol","MP"))){
-    stop(paste("Parameter",param,"not among \"MW\", \"logP\", \"logMA\", \"logHenry\", \"logWSol\", \"MP\", \"pKa_Donor\", and \"pKa_Accept\".\n"))
+  if(!all(param %in% c("MW","logP","pKa_Donor","pKa_Accept",'logMA',"logP","logHenry","logWSol","MP","Chemical.Class"))){
+    stop(paste("Parameter",param,"not among \"MW\", \"logP\", \"logMA\", \"logHenry\", \"logWSol\", \"MP\", \"pKa_Donor\", \"pKa_Accept\", or \"Chemical.Class\".\n"))
   }
   
   # Match to identifier containing all chemicals -- CHANGED BY AMEADE 2/9/2023
@@ -86,38 +86,52 @@ get_physchem_param <- function(
      any(param %in% c("pKa_Donor","pKa_Accept","logMA")))
   {
     values <- chem.physical_and_invitro.data[this.index,param]
-    if(any(!param %in% c("pKa_Accept", "pKa_Donor"))){
-      values.out <- lapply(as.list(values[!param %in% c("pKa_Accept", "pKa_Donor")]), as.numeric)
-    }else{
+    if (any(!param %in% c("pKa_Accept", "pKa_Donor", "Chemical.Class"))){
+      values.out <- lapply(as.list(values[!param %in% c(
+        "pKa_Accept", 
+        "pKa_Donor", 
+        "Chemical.Class")]), as.numeric)
+    } else{
       values.out <- list()
     }
-    if(any(param %in% c("pKa_Donor", "pKa_Accept"))){
-      
-      if(length(param) > 1){
-        if(length(chem.cas) > 1){
-          if("pKa_Donor" %in% param){
+    
+    if (any(param %in% c("Chemical.Class"))) values.out[["Chemical.Class"]] <-
+        values[,"Chemical.Class"]
+    
+    if (any(param %in% c("pKa_Donor", "pKa_Accept")))
+    {
+      if (length(param) > 1)
+      {
+        if (length(chem.cas) > 1)
+        {
+          if ("pKa_Donor" %in% param)
+          {
             values.out[["pKa_Donor"]] <- gsub(";",",",values[,"pKa_Donor"])
           }
-          if("pKa_Accept" %in% param){
+          if ("pKa_Accept" %in% param)
+          {
             values.out[["pKa_Accept"]] <- gsub(";",",",values[,"pKa_Accept"])
           }
-        }else{
-          if("pKa_Donor" %in% param){
+        } else {
+          if ("pKa_Donor" %in% param)
+          {
             values.out[["pKa_Donor"]] <- unlist(gsub(";",",",values[,"pKa_Donor"]))
           }
-          if("pKa_Accept" %in% param){
+          if ("pKa_Accept" %in% param)
+          {
             values.out[["pKa_Accept"]] <- unlist(gsub(";",",",values[,"pKa_Accept"]))
           }
         }
-      }else{
-        if("pKa_Donor" %in% param){
+      } else {
+        if ("pKa_Donor" %in% param)
+        {
           values.out[["pKa_Donor"]] <- gsub(";",",",values)
         }
-        if("pKa_Accept" %in% param){
+        if ("pKa_Accept" %in% param)
+        {
           values.out[["pKa_Accept"]] <- gsub(";",",",values)
         }
       }
-
     }
     
     if(length(this.index) == 1 & length(param) == 1){
