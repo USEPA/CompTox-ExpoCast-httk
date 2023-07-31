@@ -269,28 +269,23 @@ print(fig.firstpass)
 
 # Evaluate Ratio Blood:Plasma Predictions
 ```{r firstpass, eval=TRUE}
-firstpass.table <- NULL
-for (this.chem in get_2023pfasinfo(info="dtxsid", suppress.messages=TRUE,
-                                   model="3compartmentss2"))
+rb2p.table <- subset(chem.physical_and_invitro.data,
+                     Human.Rblood2plasma.Reference %in% "Poothong 2017")
+rb2p.table <- rb2p.table[,colnames(rb2p.table) %in%
+                                     c("Compound","DTXSID",
+                                       "Human.Rblood2plasma"
+                                     )]
+for (this.chem in rb2p.table$DTXSID)
 {
-      params <- parameterize_steadystate(dtxsid=this.chem,
-                                          suppress.messages=TRUE)
-      params2 <- parameterize_schmitt(dtxsid=this.chem,
-                                          suppress.messages=TRUE)
-      ion <- calc_ionization(
-        pH=7.4,
-        pKa_Donor=params2[["pKa_Donor"]],
-        pKa_Accept=params2[["pKa_Accept"]])
-      fraction_neutral <- ion$fraction_neutral
-      if (fraction_neutral < 0.5) params[['Rblood2plasma']] <- 0.5
-      else params[['Rblood2plasma']] <- 20
-  params[["Clmetabolismc"]] <- calc_hep_clearance(parameters=params,
-          hepatic.model='unscaled',
-          suppress.messages=TRUE)#L/h/kg body weight
-  this.row <- data.frame(DTXSID=this.chem,
-                         Fsystemic=calc_hep_bioavailability(
-                           parameters=params)
-  )
-  firstpass.table <- rbind(firstpass.table, this.row)
+  if (this.chem %in% get_2023pfasinfo(info="dtxsid", suppress.messages=TRUE,
+                                   model="3compartmentss2"))
+  {
+    rb2p.table[rb2p.table$DTXSID==this.chem,"HTTK.Rb2p"] <- 
+      calc_rblood2plasma(dtxsid=this.chem)
+  }
+  p <- try(parameterize_pfas1comp(dtxsid=this.chem))
+  if(!is(p, "try-error")) 
+    rb2p.table[rb2p.table$DTXSID==this.chem,"ML.Rb2p"] <- 
+    p$Rblood2plasma
 }
 ```
