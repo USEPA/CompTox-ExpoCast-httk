@@ -68,6 +68,12 @@ scientific_10 <- function(x) {
 ```
 # Analysis of Crizer et al. (2023) $Cl_{int}$ data
 
+## Remove Rat-specific HTTK data:
+```{r removeoldhttk}
+chem.physical_and_invitro.data$Rat.Clint <- NA
+chem.physical_and_invitro.data$Rat.Funbound.plasma <- NA
+```
+
 ## Compare against in vivo clearance data:
 ```{r invivoeval, eval=TRUE}
 cl.table <- httk::pfas.clearance
@@ -132,6 +138,54 @@ fig.clhttk.invivo  <- ggplot(data=cl.table) +
   theme( text  = element_text(size=FONT.SIZE))
 
 print(fig.clhttk.invivo)
+```
+```{r fig_clspecies_invivo, eval = TRUE}
+fig.clspecies.invivo  <- ggplot(data=cl.table) +
+  geom_point(aes(
+    x=Species,
+    y=ClLphpkgbw,
+    color=Species,
+    shape=Sex),
+    size=POINT.SIZE) +
+  geom_line(aes(x=Species,
+              y=ClLphpkgbw,
+              group = DTXSID)) +
+#  geom_line(aes(x=logP,y=logPfit1),color="black") + 
+#  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
+  ylab("In Vivo Clearance (L/h/kg bw)") + 
+  xlab("Species") +
+  scale_y_log10(label=scientific_10)+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))
+
+print(fig.clspecies.invivo)
+```
+
+```{r fig_clspecies_httk, eval = TRUE}
+fig.clspecies.httk  <- ggplot(data=cl.table) +
+  geom_point(aes(
+    x=Species,
+    y=HTTK.Cltot.Lphpkgbw,
+    color=Species,
+    shape=Sex),
+    size=POINT.SIZE) +
+#  geom_segment(color="#69b3a2", 
+#                  aes(
+#                    x=Species,
+#                    y=HTTK.Cltot.Lphpkgbw,
+#                    xend = c(tail(Species, n = -1), NA), 
+#                    yend = c(tail(HTTK.Cltot.Lphpkgbw, n = -1), NA)
+#                  ))+
+geom_line(aes(x=Species,
+              y=HTTK.Cltot.Lphpkgbw,
+              group = DTXSID)) +
+ylab("HTTK Clearance (L/h/kg bw)") +
+  xlab("Species") +
+  scale_y_log10(label=scientific_10)+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))
+
+print(fig.clspecies.httk)
 ```
 
 ```{r invivoeval2, eval=TRUE}

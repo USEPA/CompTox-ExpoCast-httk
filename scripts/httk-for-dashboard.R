@@ -114,7 +114,7 @@ make.ccd.table <- function(
           Data.Source.Species=ifelse(this.species=="Human" |
                                      default.to.human,"Human","Rat"))
   # Clint:
-        if (this.param == "Clint") {
+        if (this.param == "Clint" & !default.to.human) {
           clint.ref <- subset(chem.physical_and_invitro.data,DTXSID==this.id)[,
             paste(this.row["Data.Source.Species"],"Clint.Reference",sep=".")]
           if (is.na(clint.ref))
@@ -131,7 +131,7 @@ make.ccd.table <- function(
           this.row$Reference <- clint.ref
           dashboard.table <- rbind(dashboard.table, this.row)
   # Fup:
-        } else if (this.param == "Fup") {
+        } else if (this.param == "Fup" & !default.to.human) {
           fup.ref <- subset(chem.physical_and_invitro.data,DTXSID==this.id)[,
             paste(this.row["Data.Source.Species"],"Funbound.plasma.Reference",sep=".")]
           if (is.na(fup.ref)) {
