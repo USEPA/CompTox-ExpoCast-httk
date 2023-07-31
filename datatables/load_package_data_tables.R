@@ -1729,6 +1729,47 @@ dawson2023 <- dawson2023[,c(
 # Load in vivo clearances for evaluation:
 pfas.clearance <- read.csv("Dawson2023/PFAS-Clearance.txt")
 
+#
+# Poothong et al. (2017) PFAS Blood:Plasma Ratios
+#
+poothong2017 <- as.data.frame(read_excel("Poothong2017.xlsx",skip=1))
+poothong2017 <- as.data.frame(t(poothong2017[c(1,3,19:24),]))
+colnames(poothong2017) <- poothong2017[1,]
+poothong2017 <- poothong2017[2:15,]
+for (i in 1+c(2,5:7))
+{
+ poothong2017[,i] <- as.numeric(poothong2017[,i])
+}
+poothong2017$RB2P <- signif(1/poothong2017[,"Median concentration ratio"],3)
+
+chem.physical_and_invitro.data <- add_chemtable(poothong2017, 
+               current.table=chem.physical_and_invitro.data, 
+               species="Human",
+               reference="Poothong 2017",
+               data.list=list(
+                 CAS="CASRN",
+                 DTXSID="DTXSID",
+                 Rblood2plasma="RB2P"))
+#
+# END Poothong et al. (2017)
+#
+
+#
+# Droge (2019) PFAS Membran Affinities
+#
+droge2019 <- as.data.frame(read_excel("Droge2019.xlsx",skip=1))
+
+chem.physical_and_invitro.data <- add_chemtable(droge2019, 
+               current.table=chem.physical_and_invitro.data, 
+               reference="Droge 2019",
+               data.list=list(
+                 CAS="CASRN",
+                 DTXSID="DTXSID",
+                 logMA="log KMW (SSLM)"))
+#
+# 
+#
+
 
 #
 #
@@ -2433,6 +2474,7 @@ write.table(pearce2017regression,file = "Pearce_2017_Regression.txt",quote = F,s
 #
 #
 #
+
 
 #
 # HTTK Performance Benchmarks

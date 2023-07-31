@@ -214,9 +214,9 @@ parameterize_pfas1comp <- function(
     pKa_Donor=params[["pKa_Donor"]],
     pKa_Accept=params[["pKa_Accept"]])
   
-  # Poothong (2023)
+  # Poothong (2017)
   if (ion$fraction_negative > 0.9) params[['Rblood2plasma']] <- 0.5
-  else params[['Rblood2plasma']] <- 5
+  else params[['Rblood2plasma']] <- 10
    
 # Check the species argument for capitalization problems and whether or not 
 # it is in the table:  

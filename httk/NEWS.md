@@ -1,18 +1,24 @@
 ---
 title: "News for R package httk"
-date: "June, 2023"
+date: "July, 2023"
 output: html_document
 ---                                                 
 
-# version feauture/PFAS] (June, 2023)
+# version feature/PFAS] (July, 2023)
 ## Bug Fixes
 ## New Features
-* Added new chemical-specific in vitro data for Fup and Clint for PFAS chemicals measured in [Smeltz et al. (2023)](https://doi.org/10.1021/acs.chemrestox.3c00003)
-* Added new chemical-specific in vitro data for Fup and Clint for PFAS chemicals measured in [Kreutz et al. (2023)](https://doi.org/10.3390/toxics11050463)
-* Added new chemical-specific in vitro data for Clint for PFAS chemicals measured in Crizer et al. (submitted)
+* Added new chemical-specific *in vitro* data for Fup and Clint for PFAS chemicals measured in [Smeltz et al. (2023)](https://doi.org/10.1021/acs.chemrestox.3c00003)
+* Added new chemical-specific *in vitro* data for Fup and Clint for PFAS chemicals measured in [Kreutz et al. (2023)](https://doi.org/10.3390/toxics11050463)
+* Added new chemical-specific *in vitro* data for Clint for PFAS chemicals measured in Crizer et al. (submitted)
+* Added new chemical-specific *in vivo* Rblood2plasma data for 14 PFAS measured in [Poothong et al. (2017)](https://doi.org/10.1021/acs.est.7b03299)
+* Added new chemical-specific *in silico* predictions for 4136 PFAS half-life and clearance from [Dawson et al. (2023)](https://doi.org/10.3390/toxics11020098)
 * Added new function 'get_2023pfasinfo' to allow easy identification of newly measured PFAS chemicals
+* Added new model '3compartmentss2' that solves for steady-state plasma/blood concentration resulting from elimination by metabolism, renal excretion, and also exhalation since many PFAS have some volatility
+* Added new model 'pfas1compartment' that uses the [Dawson et al. (2023)](https://doi.org/10.3390/toxics11020098) to parameterize an empirical one compartment model for PFAS chemicals -- see 'parameterize_pfas1comp'
 * Added new vignette Kreutz describing analysis for [Kreutz et al. (2023)](https://doi.org/10.3390/toxics11050463) Figure 3 
+* Added new vignette Crizer describing analysis for Crizer et al. (submitted) Figures X, Y, and Z
 ## Enhancements
+* Revised documentation for 1compartment model
 
 # version 2.2.3 (June, 2023)
 ## Bug Fixes
