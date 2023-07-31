@@ -254,6 +254,7 @@ for (this.chem in get_2023pfasinfo(info="dtxsid", suppress.messages=TRUE,
   firstpass.table <- rbind(firstpass.table, this.row)
 }
 ```
+
 ```{r firstpass_fig, eval=TRUE}
 fig.firstpass  <- ggplot(data=firstpass.table) +
   geom_histogram(aes(
@@ -264,4 +265,32 @@ fig.firstpass  <- ggplot(data=firstpass.table) +
   theme( text  = element_text(size=FONT.SIZE))
 
 print(fig.firstpass)
+```
+
+# Evaluate Ratio Blood:Plasma Predictions
+```{r firstpass, eval=TRUE}
+firstpass.table <- NULL
+for (this.chem in get_2023pfasinfo(info="dtxsid", suppress.messages=TRUE,
+                                   model="3compartmentss2"))
+{
+      params <- parameterize_steadystate(dtxsid=this.chem,
+                                          suppress.messages=TRUE)
+      params2 <- parameterize_schmitt(dtxsid=this.chem,
+                                          suppress.messages=TRUE)
+      ion <- calc_ionization(
+        pH=7.4,
+        pKa_Donor=params2[["pKa_Donor"]],
+        pKa_Accept=params2[["pKa_Accept"]])
+      fraction_neutral <- ion$fraction_neutral
+      if (fraction_neutral < 0.5) params[['Rblood2plasma']] <- 0.5
+      else params[['Rblood2plasma']] <- 20
+  params[["Clmetabolismc"]] <- calc_hep_clearance(parameters=params,
+          hepatic.model='unscaled',
+          suppress.messages=TRUE)#L/h/kg body weight
+  this.row <- data.frame(DTXSID=this.chem,
+                         Fsystemic=calc_hep_bioavailability(
+                           parameters=params)
+  )
+  firstpass.table <- rbind(firstpass.table, this.row)
+}
 ```
