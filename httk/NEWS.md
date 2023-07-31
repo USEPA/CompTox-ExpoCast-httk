@@ -7,10 +7,11 @@ output: html_document
 # version feature/PFAS] (July, 2023)
 ## Bug Fixes
 ## New Features
-* Added new chemical-specific *in vitro* data for Fup and Clint for PFAS chemicals measured in [Smeltz et al. (2023)](https://doi.org/10.1021/acs.chemrestox.3c00003)
-* Added new chemical-specific *in vitro* data for Fup and Clint for PFAS chemicals measured in [Kreutz et al. (2023)](https://doi.org/10.3390/toxics11050463)
-* Added new chemical-specific *in vitro* data for Clint for PFAS chemicals measured in Crizer et al. (submitted)
+* Added new chemical-specific *in vitro* data for Fup and Clint for PFAS measured in [Smeltz et al. (2023)](https://doi.org/10.1021/acs.chemrestox.3c00003)
+* Added new chemical-specific *in vitro* data for Fup and Clint for PFAS measured in [Kreutz et al. (2023)](https://doi.org/10.3390/toxics11050463)
+* Added new chemical-specific *in vitro* data for Clint for PFAS measured in Crizer et al. (submitted)
 * Added new chemical-specific *in vivo* Rblood2plasma data for 14 PFAS measured in [Poothong et al. (2017)](https://doi.org/10.1021/acs.est.7b03299)
+* Added new chemical-specific measurements of membrane afinity (logMA) for 10 PFAS measured in [Droge et al. (2019)](https://doi.org/10.1021/acs.est.8b05052)
 * Added new chemical-specific *in silico* predictions for 4136 PFAS half-life and clearance from [Dawson et al. (2023)](https://doi.org/10.3390/toxics11020098)
 * Added new function 'get_2023pfasinfo' to allow easy identification of newly measured PFAS chemicals
 * Added new model '3compartmentss2' that solves for steady-state plasma/blood concentration resulting from elimination by metabolism, renal excretion, and also exhalation since many PFAS have some volatility
@@ -18,6 +19,8 @@ output: html_document
 * Added new vignette Kreutz describing analysis for [Kreutz et al. (2023)](https://doi.org/10.3390/toxics11050463) Figure 3 
 * Added new vignette Crizer describing analysis for Crizer et al. (submitted) Figures X, Y, and Z
 ## Enhancements
+* Revised 'calc_ma' to adjust membrane affinities for PFAS chemicals based on data from [Droge et al. (2019)](https://doi.org/10.1021/acs.est.8b05052) 
+* Can now use 'get_physchem_param' to retrieve "Chemical.Class" (only defined for PFAS to date)
 * Revised documentation for 1compartment model
 
 # version 2.2.3 (June, 2023)

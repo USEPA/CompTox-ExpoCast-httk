@@ -268,7 +268,7 @@ print(fig.firstpass)
 ```
 
 # Evaluate Ratio Blood:Plasma Predictions
-```{r firstpass, eval=TRUE}
+```{r rb2peval, eval=TRUE}
 rb2p.table <- subset(chem.physical_and_invitro.data,
                      Human.Rblood2plasma.Reference %in% "Poothong 2017")
 rb2p.table <- rb2p.table[,colnames(rb2p.table) %in%
@@ -288,4 +288,47 @@ for (this.chem in rb2p.table$DTXSID)
     rb2p.table[rb2p.table$DTXSID==this.chem,"ML.Rb2p"] <- 
     p$Rblood2plasma
 }
+```
+
+# Evaluate Membrane Affinity Predictions
+```{r MAeval, eval=TRUE}
+logma.table <- subset(chem.physical_and_invitro.data,
+                     logMA.Reference %in% "Droge 2019")
+logma.table <- logma.table[,colnames(logma.table) %in%
+                                     c("Compound","DTXSID",
+                                       "logMA"
+                                     )]
+for (this.chem in logma.table$DTXSID)
+{
+  logma.table[logma.table$DTXSID==this.chem,"HTTK.logMA"] <- 
+      signif(log10(calc_ma(dtxsid=this.chem)),3)
+}
+```
+
+```{r fit_logma eval = TRUE}
+fit.logma <- lm(logMA~HTTK.logMA,data=logma.table)
+summary(fit.logma)
+
+logma.table$Fit.logMA <- signif(fit.logma$coefficients[1] +
+  fit.logma$coefficients[2]*logma.table$HTTK.logMA,3)
+```
+
+```{r fig_logma eval = TRUE}
+fig.logma  <- ggplot(data=logma.table) +
+  geom_point(aes(
+    x=HTTK.logMA,
+    y=logMA
+    ),
+    size=POINT.SIZE) +
+  geom_abline(slope=1,intercept=0,linetype="dashed")+
+  geom_line(aes(x=HTTK.logMA,
+    y=Fit.logMA), color="red")+
+  ylab("Droge (2019) logMA)") + 
+  xlab("HTTK log Membrane Affinity") +
+  scale_x_log10(label=scientific_10)+
+  scale_y_log10(label=scientific_10)+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))
+
+print(fig.logma)
 ```
