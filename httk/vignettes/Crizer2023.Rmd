@@ -301,7 +301,8 @@ logma.table <- logma.table[,colnames(logma.table) %in%
 for (this.chem in logma.table$DTXSID)
 {
   logma.table[logma.table$DTXSID==this.chem,"HTTK.logMA"] <- 
-      signif(log10(calc_ma(dtxsid=this.chem)),3)
+      signif(log10(calc_ma(dtxsid=this.chem,
+                           pfas.calibration=FALSE)),3)
 }
 ```
 

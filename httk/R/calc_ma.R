@@ -24,6 +24,9 @@
 #' for the model indicated by argument model
 #'
 #' @param suppress.messages Whether or not the output message is suppressed.
+#' 
+#' @param pfas.calibration Whether MA for chemicals in class PFAS should be
+#' increased using the regression to the Droge (2019) dataset.
 #'
 #' @return A numeric fraction unpbound in plasma between zero and one
 #'
@@ -38,7 +41,11 @@
 #' tissue-to-plasma partition coefficients using readily available input 
 #' parameters." Xenobiotica 43.10 (2013): 839-852.
 #'
-#' @keywords in-vitro
+#' Droge, Steven TJ. "Membrane–water partition coefficients to aid risk 
+#' assessment of perfluoroalkyl anions and alkyl sulfates." Environmental 
+#' Science & Technology 53.2 (2018): 760-770.
+#' 
+#' @keywords parameters
 #'
 #' @export calc_ma
 #'
@@ -47,7 +54,8 @@ calc_ma <- function(
                  chem.name=NULL,
                  dtxsid = NULL,
                  parameters=NULL,
-                 suppress.messages=FALSE
+                 suppress.messages=FALSE,
+                 pfas.calibration=TRUE
                  ) 
 {
 # We need to describe the chemical to be simulated one way or another:
@@ -72,9 +80,18 @@ calc_ma <- function(
   }
   
   if (!suppress.messages) warning(
-      "Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.")  
+      "Membrane affinity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.\n")  
   
   MA <- 10^(1.294 + 0.304 * log10(Pow))
-        
+  
+  # Calibration for PFAS based on Droge (2019) data:
+  if (pfas.calibration & 
+      regexpr("PFAS",get_physchem_param("Chemical.Class",dtxsid=dtxsid)!=-1))
+  {
+    MA <- 10^(-2.59 + 2.61*log10(MA))
+    if (!suppress.messages) warning(
+      "Membrane affinity for PFAS increased according to regresion on Droge (2019) data.\n")  
+  }
+  
   return(set_httk_precision(MA)) 
 }
