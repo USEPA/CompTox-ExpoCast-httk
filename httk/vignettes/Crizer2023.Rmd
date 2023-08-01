@@ -106,10 +106,24 @@ for (this.chem in unique(cl.table$DTXSID))
                                model="3compartmentss2",
                                output.units="mg/L",
                                suppress.messages=TRUE)
-      cl.table[cl.table$DTXSID==this.chem &
+      if (any(cl.table$DTXSID==this.chem &
+               cl.table$Species==this.species))
+        cl.table[cl.table$DTXSID==this.chem &
                cl.table$Species==this.species,
                "HTTK.Cltot.Lphpkgbw"] <-
         1/out/24
+      else {
+        new.row <- cl.table[1,]
+        new.row[] <- NA
+        new.row[,"DTXSID"] <- this.chem
+        new.row[,"Species"] <- this.species
+        new.row[,"Sex"] <- "Female"
+        new.row[,"HTTK.Cltot.Lphpkgbw"] <-
+        1/out/24
+        cl.table <- rbind(cl.table,new.row)
+        new.row[,"Sex"] <- "Male"
+        cl.table <- rbind(cl.table,new.row)
+      }
     }
   }
 ```
@@ -324,7 +338,7 @@ fig.logma  <- ggplot(data=logma.table) +
   geom_abline(slope=1,intercept=0,linetype="dashed")+
   geom_line(aes(x=HTTK.logMA,
     y=Fit.logMA), color="red")+
-  ylab("Droge (2019) logMA)") + 
+  ylab("Droge (2019) logMA") + 
   xlab("HTTK log Membrane Affinity") +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+

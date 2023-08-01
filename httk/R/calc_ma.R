@@ -86,11 +86,11 @@ calc_ma <- function(
   
   # Calibration for PFAS based on Droge (2019) data:
   if (pfas.calibration & 
-      regexpr("PFAS",get_physchem_param("Chemical.Class",dtxsid=dtxsid)!=-1))
+      regexpr("PFAS", get_physchem_param("Chemical.Class",dtxsid=dtxsid)!=-1))
   {
-    MA <- 10^(-2.59 + 2.61*log10(MA))
+    MA <- 10^(-2.59 + 2.61 * log10(MA))
     if (!suppress.messages) warning(
-      "Membrane affinity for PFAS increased according to regresion on Droge (2019) data.\n")  
+      "Membrane affinity for PFAS increased according to regression on Droge (2019) data.\n")  
   }
   
   return(set_httk_precision(MA)) 
