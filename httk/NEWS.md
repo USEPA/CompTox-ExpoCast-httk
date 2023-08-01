@@ -19,7 +19,7 @@ output: html_document
 * Added new vignette Kreutz describing analysis for [Kreutz et al. (2023)](https://doi.org/10.3390/toxics11050463) Figure 3 
 * Added new vignette Crizer describing analysis for Crizer et al. (submitted) Figures X, Y, and Z
 ## Enhancements
-* Revised 'calc_ma' to adjust membrane affinities for PFAS chemicals based on data from [Droge et al. (2019)](https://doi.org/10.1021/acs.est.8b05052) 
+* Revised 'calc_ma' to increase membrane affinities for PFAS chemicals ~400x based on regression to data from [Droge et al. (2019)](https://doi.org/10.1021/acs.est.8b05052) (if new argument 'pfas.calibration==TRUE')
 * Can now use 'get_physchem_param' to retrieve "Chemical.Class" (only defined for PFAS to date)
 * Revised documentation for 1compartment model
 

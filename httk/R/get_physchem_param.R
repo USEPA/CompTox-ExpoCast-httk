@@ -81,12 +81,15 @@ get_physchem_param <- function(
   else if (length(chem.name) == num.chems) this.index <- 
     match(chem.name, chem.physical_and_invitro.data[,"Compound"])
   else stop("The chemical identifiers, dtxsid, chem.cas, or chem.name, were not all present in chem.physical_and_invitro.data.")
-  if(!any(is.na(suppressWarnings(chem.physical_and_invitro.data[this.index,
+  
+  # Make sure values are numeric unless they should be text:
+  if (!any(is.na(suppressWarnings(chem.physical_and_invitro.data[this.index,
                                   param[!param %in% c("pKa_Accept","pKa_Donor", "logMA")]]))) | 
      any(param %in% c("pKa_Donor","pKa_Accept","logMA")))
   {
     values <- chem.physical_and_invitro.data[this.index,param]
     if (any(!param %in% c("pKa_Accept", "pKa_Donor", "Chemical.Class"))){
+# Add numeric values to the values.out list to be returned:
       values.out <- lapply(as.list(values[!param %in% c(
         "pKa_Accept", 
         "pKa_Donor", 
@@ -95,9 +98,11 @@ get_physchem_param <- function(
       values.out <- list()
     }
     
+# Chemical class is text and should be added to values.out if requested:
     if (any(param %in% c("Chemical.Class"))) values.out[["Chemical.Class"]] <-
-        values[,"Chemical.Class"]
-    
+        values[param %in% c("Chemical.Class")]
+
+# Handle issues with pKa:    
     if (any(param %in% c("pKa_Donor", "pKa_Accept")))
     {
       if (length(param) > 1)
