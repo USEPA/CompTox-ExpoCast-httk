@@ -115,7 +115,18 @@
 #' @examples 
 #' 
 #' \donttest{
-#' sample_set = create_mc_samples(chem.name = 'bisphenol a')
+#' # We can use the Monte Carlo functions by passing a table
+#' # where each row represents a different Monte Carlo draw of parameters:
+#' p <- create_mc_samples(chem.cas="80-05-7")
+#' # Use data.table for steady-state plasma concentration (Css) Monte Carlo:
+#' calc_mc_css(parameters=p)
+#' # Using the same table gives the same answer:
+#' calc_mc_css(parameters=p)
+#' # Use Css for 1 mg/kg/day for simple reverse toxicokinetics 
+#' # in Vitro-In Vivo Extrapolation to convert 15 uM to mg/kg/day:
+#' 15/calc_mc_css(parameters=p, output.units="uM")
+#' # Can do the same with calc_mc_oral_equiv:
+#' calc_mc_oral_equiv(15, parameters=p)
 #' }
 #'
 #' @import stats

@@ -208,8 +208,21 @@
 #'                    samples=NSAMP,
 #'                    which.quantile=c(0.05,0.5,0.95), tissue='brain')
 #'  
+#' # We can also use the Monte Carlo functions by passing a table
+#' # where each row represents a different Monte Carlo draw of parameters:
+#' p <- create_mc_samples(chem.cas="80-05-7")
+#' # Use data.table for steady-state plasma concentration (Css) Monte Carlo:
+#' calc_mc_css(parameters=p)
+#' # Using the same table gives the same answer:
+#' calc_mc_css(parameters=p)
+#' # Use Css for 1 mg/kg/day for simple reverse toxicokinetics 
+#' # in Vitro-In Vivo Extrapolation to convert 15 uM to mg/kg/day:
+#' 15/calc_mc_css(parameters=p, output.units="uM")
+#' # Can do the same with calc_mc_oral_equiv:
+#' calc_mc_oral_equiv(15, parameters=p)
 #' }
 #' 
+#' @importFrom purrr compact 
 #' @export calc_mc_oral_equiv
 calc_mc_oral_equiv <- function(conc,
                                chem.name=NULL,
@@ -234,9 +247,10 @@ calc_mc_oral_equiv <- function(conc,
   if (!(tolower(input.units) %in% c('um','mg/l'))) 
     stop("Input units can only be uM or mg/L.")
   # check if the output units are in "amount / kg / day" - output error if TRUE
-  if(grepl(output.units,pattern = "pkgpday$")==FALSE){
+  if(grepl(output.units, pattern = "pkgpday$")==FALSE)
+  {
     stop("Output units can only be umolpkgpday or mgpkgpday.")
-  }else{
+  } else {
     # if the output units contain 'pkgpday' (i.e. '/kg/day'),
     # then remove this string from the output.units
     tmp.output.units <- gsub(x = output.units,
@@ -315,7 +329,8 @@ calc_mc_oral_equiv <- function(conc,
   # output units are in '<input.units>/mg/kg/day' for 'Css'
   # (i.e. 'mg/L / kg/day' or 'uM / kg/day')
   Css <- try(do.call(calc_mc_css,
-                        args=c(list(
+# we use purrr::compact to drop NULL values from arguments list:
+                        args=purrr::compact(c(list(
                           chem.name=chem.name,
                           chem.cas=chem.cas,
                           dtxsid=dtxsid,
@@ -324,7 +339,7 @@ calc_mc_oral_equiv <- function(conc,
                           which.quantile=which.quantile,
                           species=species,
                           output.units=input.units,
-                          suppress.messages=TRUE,
+                         # suppress.messages=TRUE,
                           tissue=tissue,
                           concentration=concentration,
                           calc.analytic.css.arg.list=list( 
@@ -334,7 +349,7 @@ calc_mc_oral_equiv <- function(conc,
                             well.stirred.correction=well.stirred.correction,
                             adjusted.Funbound.plasma=adjusted.Funbound.plasma),
                           return.samples=return.samples,
-                          ...))))
+                          ...)))))
                          
   if (is(Css,"try-error"))
   {
