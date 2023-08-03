@@ -97,6 +97,9 @@
 #' @param dtxsid EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #'
+#' @param parameters Parameters from the appropriate parameterization function
+#' for the model indicated by argument model
+#'
 #' @param suppress.messages Suppress text messages. 
 #'
 #' @param input.units Units of given concentration, default of uM but can also
@@ -212,6 +215,7 @@ calc_mc_oral_equiv <- function(conc,
                                chem.name=NULL,
                                chem.cas=NULL,
                                dtxsid=NULL,
+                               parameters=NULL,
                                which.quantile=0.95,
                                species="Human",
                                input.units='uM',
@@ -315,6 +319,7 @@ calc_mc_oral_equiv <- function(conc,
                           chem.name=chem.name,
                           chem.cas=chem.cas,
                           dtxsid=dtxsid,
+                          parameters=parameters,
                           model=model,
                           which.quantile=which.quantile,
                           species=species,
