@@ -9,6 +9,7 @@ calc_mc_oral_equiv(
   chem.name = NULL,
   chem.cas = NULL,
   dtxsid = NULL,
+  parameters = NULL,
   which.quantile = 0.95,
   species = "Human",
   input.units = "uM",
@@ -35,6 +36,9 @@ specified.}
 
 \item{dtxsid}{EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
+
+\item{parameters}{Parameters from the appropriate parameterization function
+for the model indicated by argument model}
 
 \item{which.quantile}{Which quantile from Monte Carlo steady-state
 simulation (\code{\link{calc_mc_css}}) is requested. Can be a vector. Note that 95th
