@@ -33,6 +33,7 @@ output: html_document
 * Fixed bugs that prevented using Monte Carlo with phys-chem parameters
 * Fixed error for species with missing in vitro data (thanks Lu En-Hsuan)
 * Fixed bug where `solve_model` returned other than requested times when argument times was specified (thanks Kimberly Truong)
+* Revised 'convert_units' to handle multiple molecular weights -- this enables 'convert_mc_oral_equivalent' to take a table of parameters for Monte Carlo
 
 ## New Features
 * Added updated vignette from [Pearce et al. (2017)](https://doi.org/10.18637%2Fjss.v079.i04): v79i04.R
