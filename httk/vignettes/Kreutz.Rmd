@@ -330,6 +330,7 @@ fig.logp  <- ggplot(data=kreutz) +
   ylab("Fraction unbound in plasma") + 
   #ylab("") +
   xlab(bquote("Log "~P[ow])) +
+    scale_y_log10() +
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE))
 
@@ -353,6 +354,7 @@ fig.logd  <- ggplot(data=kreutz) +
 #  ylab("Fraction unbound in plasma") +
   ylab("") +
   xlab("Log D, pH 7.4") +
+    scale_y_log10() +
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE))
 
@@ -373,6 +375,7 @@ fig.mw <- ggplot(data=kreutz) +
    #ylab("Fraction unbound in plasma") + 
   ylab("") +
   xlab("Molecular Weight (g/mol)") +
+    scale_y_log10() +
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE))
 
@@ -399,6 +402,7 @@ fig.wsol  <- ggplot(data=kreutz) +
   ylab("") +
   xlab("Log Water Solubility (mg/L)") +
   scale_x_continuous(labels = ~number(.x)) +
+  scale_y_log10() +
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE))
 
@@ -421,6 +425,7 @@ fig.henry  <- ggplot(data=kreutz) +
   ylab("") +
   xlab(bquote("Henry's Law Constant (Log atmospheres"%*%m^3/~"mole)")) +
   scale_x_continuous(labels = ~number(.x)) +
+  scale_y_log10() +
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE-2))
 
