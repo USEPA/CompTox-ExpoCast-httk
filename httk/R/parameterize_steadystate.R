@@ -11,6 +11,24 @@
 #' in plasma. However, we still use chemical properties to predict the 
 #' blood:plasma ratio for estimating first-pass hepatic metabolism for oral
 #' exposures.
+#'
+#' We model systemic oral bioavailability as 
+#' \ifelse{html}{\out{F<sub>bio</sub>=F<sub>abs</sub>*F<sub>gut</sub>*F<sub>hep</sub>}}{\eqn{F_{bio}=F_{abs}*F_{gut}*F_{hep}}}.
+#' \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}}
+#' is estimated from in vitro TK data using 
+#' \code{\link{calc_hep_bioavailability}}.
+#' If \ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}}
+#' has been measured in vivo and is found in
+#' table \code{\link{chem.physical_and_invitro.data)}} then we set 
+#' \ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{git}}} 
+#' to the measured value divided by 
+#' \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}} 
+#' Otherwise, if Caco2 membrane permeability data or predictions
+#' are available \ifelse{html}{\out{F<sub>abs</sub>}}{\eqn{F_{abs}}} is estimated
+#' using \code{\link{calc_fabs.oral}}.
+#' Intrinsic hepatic metabolism is used to very roughly estimate
+#' \ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}
+#' using \code{\link{calc_fgut.oral}}.
 #' 
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- the 
 #' chemical must be identified by either CAS, name, or DTXISD

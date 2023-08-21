@@ -1,7 +1,36 @@
-#' get_fabsgut
+#' Retrieve or caclulate fraction of chemical absorbed from the gut
 #' 
-#' This function uses Caco2 permeability to estimate oral absorption fraction.
+#' This function tetrieves or caclulates fraction of chemical absorbed from the gut.
+#' We assume that systemic oral bioavailability (\ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}})
+#' consists of three components: 
+#' 1) the fraction of chemical absorbed from intestinal lumen into enterocytes 
+#' (\ifelse{html}{\out{F<sub>abs</sub>}}{\eqn{F_{abs}}}, 
+#' 2) the fraction surviving intestinal metabolism 
+#' (\ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}), and 
+#' 3) the fraction surviving first-pass hepatic metabolism 
+#' (\ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}}). This function returns
+#' \ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{gut}}}
 #' 
+#' We model systemic oral bioavailability as 
+#' \ifelse{html}{\out{F<sub>bio</sub>=F<sub>abs</sub>*F<sub>gut</sub>*F<sub>hep</sub>}}{\eqn{F_{bio}=F_{abs}*F_{gut}*F_{hep}}}.
+#' \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}}
+#' is estimated from in vitro TK data using 
+#' \code{\link{calc_hep_bioavailability}}.
+#' If \ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}}
+#' has been measured in vivo and is found in
+#' table \code{\link{chem.physical_and_invitro.data)}} then we set 
+#' \ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{git}}} 
+#' to the measured value divided by 
+#' \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}} 
+#' Otherwise, if Caco2 membrane permeability data or predictions
+#' are available \ifelse{html}{\out{F<sub>abs</sub>}}{\eqn{F_{abs}}} is estimated
+#' using \code{\link{calc_fgut.oral}}.
+#' Intrinsic hepatic metabolism is used to very roughly estimate
+#' \ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}
+#' using \code{\link{calc_fgut.oral}}.
+#' If argument keepit100 is used then there is complete absorption from the gut
+#' (that is, \ifelse{html}{\out{F<sub>abs</sub>=F<sub>gut</sub>=1}}{\eqn{F_{abs}=F_{gut}=1}}). 
+#'                                                                               
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- the 
 #' chemical must be identified by either CAS, name, or DTXISD
 #' @param chem.name Chemical name (spaces and capitalization ignored) --  the 
@@ -96,7 +125,19 @@ get_fabsgut <- function(
     out[["Caco2.Pab"]] <- Caco2.Pab.point
     out[["Caco2.Pab.dist"]] <- Caco2.Pab.dist
     
-    # Select Fabs, optionally overwrite based on Caco2.Pab
+    # Get the in vivo measured sysemtic oral bioavailability if
+    # available, optionally overwriting based on Caco2.Pab
+    Fbio <- try(get_invitroPK_param("Fbio",species,chem.cas=chem.cas),
+                silent=TRUE)
+    if (!is(Fbio,"try-error") & !overwrite.invivo)
+    {
+      # Correct for hepatic first-pass metabolism:
+      Fhep <- calc_hep_bioavailability(dtxsid=dtxsid, species=species)
+      Fabsgut <- Fbio/Fhep
+    } else Fabsgut <- NA
+    
+    # Get the fraction absorbed from the gut, preferring in vivo measured data if
+    # available, otherwise attempt to use Caco2.Pab
     Fabs <- try(get_invitroPK_param("Fabs",species,chem.cas=chem.cas),
                 silent=TRUE)
     if (is(Fabs,"try-error") | overwrite.invivo == TRUE){
@@ -117,6 +158,8 @@ get_fabsgut <- function(
       }
     }
     
+    # We have a hard time with Fgut, if we don't have it measured we first
+    # try to set it with Fabsgut/Fabs:
     Fgut <- try(get_invitroPK_param("Fgut",species,chem.cas=chem.cas),
                 silent=TRUE)
     if (is(Fgut,"try-error") | overwrite.invivo == TRUE)
@@ -124,17 +167,19 @@ get_fabsgut <- function(
       if (overwrite.invivo == TRUE | 
           (Caco2.Fgut == TRUE & is(Fgut,"try-error")))
       {
-        out[["Fgut"]] <- 1
         Fgut <- calc_fgut.oral(
           Params = c(out, Params), 
           chem.cas = chem.cas,
           chem.name = chem.name,
           dtxsid = dtxsid,
           species = species) 
-      }else{
+      } else if (!is.na(Fgutabs) & !overwrite.invivo) {
+        Fgut <- Fabsgut/Fabs
+      } else {
         Fgut <- 1
       }
     }
+    
     out[['Fabsgut']] <- Fabs*Fgut
     out[['Fabs']] <- Fabs
     out[['Fgut']] <- Fgut

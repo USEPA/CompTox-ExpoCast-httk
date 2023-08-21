@@ -24,12 +24,12 @@ calc_mc_css(
   tissue = NULL,
   concentration = "plasma",
   output.units = "mg/L",
-  Caco2.options = list(),
   invitro.mc.arg.list = NULL,
   httkpop.generate.arg.list = list(method = "direct resampling"),
   convert.httkpop.arg.list = NULL,
   parameterize.arg.list = NULL,
-  calc.analytic.css.arg.list = NULL
+  calc.analytic.css.arg.list = NULL,
+  Caco2.options = NULL
 )
 }
 \arguments{
@@ -125,7 +125,11 @@ convert_httkpop_* function for the model.}
 parameterization function (that is, parameterize_MODEL) corresponding to
 argument "model". (Defaults to NULL.)}
 
-\item{calc.analytic.css.arg.list}{Additional parameters passed to 
+\item{calc.analytic.css.arg.list}{Additional parameters passed to}
+
+\item{Caco2.options}{Arguments describing how to handle Caco2 absorption data
+that are passed to \code{\line{invitro_mc}} and the parameterize_[MODEL] 
+functions
 
 \code{\link{calc_analytic_css}}.}
 }
