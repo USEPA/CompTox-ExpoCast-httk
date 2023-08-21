@@ -23,7 +23,7 @@ parameterize_pbtk(
   million.cells.per.gliver = 110,
   liver.density = 1.05,
   kgutabs = 2.18,
-  Caco2.options = list()
+  Caco2.options = NULL
 )
 }
 \arguments{
@@ -139,6 +139,25 @@ Tissues must be described in table \code{\link{tissue.data}}.
 By default, this function initializes the parameters needed in the functions 
 \code{\link{solve_pbtk}}, \code{\link{calc_css}}, and others using the httk 
 default generic PBTK model (for oral and intravenous dosing only).
+
+The default PBTK model includes an explicit first pass of the chemical through
+the liver before it becomes available to systemic blood. We model systemic oral bioavailability as 
+\ifelse{html}{\out{F<sub>bio</sub>=F<sub>abs</sub>*F<sub>gut</sub>*F<sub>hep</sub>}}{\eqn{F_{bio}=F_{abs}*F_{gut}*F_{hep}}}.
+Only if \ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}}
+has been measured in vivo and is found in
+table \code{\link{chem.physical_and_invitro.data)}} then we set 
+\ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{gut}}} 
+to the measured value divided by 
+\ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}} 
+where \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}}
+is estimated from in vitro TK data using 
+\code{\link{calc_hep_bioavailability}}.
+If Caco2 membrane permeability data or predictions
+are available \ifelse{html}{\out{F<sub>abs</sub>}}{\eqn{F_{abs}}} is estimated
+using \code{\link{calc_fabs.oral}}.
+Intrinsic hepatic metabolism is used to very roughly estimate
+\ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}
+using \code{\link{calc_fgut.oral}}.
 }
 \examples{
 
