@@ -391,7 +391,7 @@ chem.prop <- add_chemtable(Naritomi.table,
                  Clint="Clint,invitro (ul/min/10^6 cells)",
                  Funbound.plasma="fp",
                  Rblood2plasma="Rb",
-                 Fgutabs="Fa"))
+                 Foral="Fa"))
 
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
@@ -761,7 +761,7 @@ chem.prop <- add_chemtable(Paixao2012.table2,
                  Compound="Drug",
                  Funbound.plasma="fup",
                  Rblood2plasma="Rb",
-                 Fgutabs="Fabs"))
+                 Foral="Fabs"))
 # Table clint are units of L/h
 # 107 x 106 cell g-1 liver (Wilson et al., 2003) and it was also assumed that liver weighed
 # 20 g kg-1 of body weight.                 
@@ -1556,6 +1556,23 @@ chem.physical_and_invitro.data <- add_chemtable(subset(caco2.desc,!is.na(CASRN))
 # Load QSPR predictions:
 load("CACO-2/httk_qspr_preds.RData")    
 honda2023.qspr <- httk.caco2.qspr
+
+# Load In Vivo Data Collected by Honda2023:
+load("CACO-2/caco2-invivo-compare2.RData")
+chem.physical_and_invitro.data <- add_chemtable(
+  subset(invivo.table,!is.na(kim_fbioh)),
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(
+    CAS="casrn",
+    DTXSID="DTXSID",
+    MW='MolWeight',
+    logP="LogP_pred",
+    logHenry = "LogHL_pred",
+    logWSol = "LogWS_pred",
+    MP = "MP_pred"
+  ),                                                                        
+  reference="Kim 2014")   
+
 
 ## Load in Dawson 2021 Predictions ##
 dawson.clint.1 <- 
