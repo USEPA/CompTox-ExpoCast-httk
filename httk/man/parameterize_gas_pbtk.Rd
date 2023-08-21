@@ -25,6 +25,7 @@ parameterize_gas_pbtk(
   VD = 0.15,
   suppress.messages = FALSE,
   minimum.Funbound.plasma = 1e-04,
+  Caco2.options = NULL,
   ...
 )
 }

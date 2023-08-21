@@ -22,11 +22,11 @@ create_mc_samples(
   tissue = NULL,
   httkpop.dt = NULL,
   invitro.mc.arg.list = NULL,
-  Caco2.options = list(),
   httkpop.generate.arg.list = list(method = "direct resampling"),
   convert.httkpop.arg.list = NULL,
   propagate.invitrouv.arg.list = NULL,
-  parameterize.arg.list = NULL
+  parameterize.arg.list = NULL,
+  Caco2.options = NULL
 )
 }
 \arguments{
@@ -109,6 +109,10 @@ associated in vitro uncertainty and variability propagation function}
 
 \item{parameterize.arg.list}{Additional parameters passed to the 
 parameterize_* function for the model.}
+
+\item{Caco2.options}{Arguments describing how to handle Caco2 absorption data
+that are passed to \code{\line{invitro_mc}} and the parameterize_[MODEL] 
+functions}
 }
 \value{
 A data table where each column corresponds to parameters needed for the 

@@ -1,11 +1,11 @@
 #' Caco2 Oral Fraction Calculators
 #' 
+#' Caco2 is related to effective permeability based on Yang et al. (2007)
 #' These functions calculate the fraction absorbed (calc_fabs.oral -- 
 #' Darwich et al. (2010)), the fraction
 #' surviving first pass gut metabolism (calc_fgut.oral), and the oral bioavailability
 #' (calc_fbio.oral). Note that the first pass hepatic clearance is calculated within the
-#' parameterization and other functions. Options are set in the list Caco2.options.
-#' Caco2 is related to effective permeability based on Yang et al. (2007)
+#' parameterization and other functions. using \code{\link{calc_hep_bioavailability}} 
 #' 
 #' @param Params A list of the parameters (Caco2.Pab, Funbound.Plasma, Rblood2plasma,
 #' Clint, BW, Qsmallintestine, Fabs, Fgut) used in the calculation, either supplied by user
@@ -147,7 +147,7 @@ calc_fbio.oral <- function(Params = NULL,
 
 }
 
-# Calculate the fraction absorbed in the gut (Darwich et al., 2010)
+#' @describeIn calc_fbio.oral Calculate the fraction absorbed in the gut (Darwich et al., 2010)
 calc_fabs.oral <- function(Params = NULL,
   chem.cas = NULL,
   chem.name = NULL,
@@ -212,7 +212,7 @@ calc_fabs.oral <- function(Params = NULL,
   
 }
 
-# Calculate the fraction of chemical surviving first pass metabolism in the gut
+#' @describeIn calc_fbio.oral Calculate the fraction of chemical surviving first pass metabolism in the gut
 # Is this the Yang et al. (2007) QGut Model?
 calc_fgut.oral <- function(Params = NULL,
   chem.cas = NULL,

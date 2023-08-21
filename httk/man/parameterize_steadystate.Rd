@@ -18,7 +18,7 @@ parameterize_steadystate(
   fup.lod.default = 0.005,
   suppress.messages = FALSE,
   minimum.Funbound.plasma = 1e-04,
-  Caco2.options = list(),
+  Caco2.options = NULL,
   ...
 )
 }
@@ -102,6 +102,25 @@ in plasma. However, we still use chemical properties to predict the
 blood:plasma ratio for estimating first-pass hepatic metabolism for oral
 exposures.
 }
+\details{
+We model systemic oral bioavailability as 
+\ifelse{html}{\out{F<sub>bio</sub>=F<sub>abs</sub>*F<sub>gut</sub>*F<sub>hep</sub>}}{\eqn{F_{bio}=F_{abs}*F_{gut}*F_{hep}}}.
+\ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}}
+is estimated from in vitro TK data using 
+\code{\link{calc_hep_bioavailability}}.
+If \ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}}
+has been measured in vivo and is found in
+table \code{\link{chem.physical_and_invitro.data)}} then we set 
+\ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{git}}} 
+to the measured value divided by 
+\ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}} 
+Otherwise, if Caco2 membrane permeability data or predictions
+are available \ifelse{html}{\out{F<sub>abs</sub>}}{\eqn{F_{abs}}} is estimated
+using \code{\link{calc_fabs.oral}}.
+Intrinsic hepatic metabolism is used to very roughly estimate
+\ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}
+using \code{\link{calc_fgut.oral}}.
+}
 \examples{
 
  parameters <- parameterize_steadystate(chem.name='Bisphenol-A',species='Rat')
@@ -129,3 +148,4 @@ Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 \author{
 John Wambaugh and Greg Honda
 }
+\keyword{3compss2}

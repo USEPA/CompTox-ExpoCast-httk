@@ -80,9 +80,10 @@ augment.table <- function(
     "Clint",
     "Clint.pValue",
     "Funbound.plasma",
-    "Fgutabs",
-    "Rblood2plasma"
-    ,"Caco2.Pab")
+    "Foral",
+    "Fgut",
+    "Rblood2plasma",
+    "Caco2.Pab")
   # In the table we create, each word in most column names is capitalized:
   COLUMN.CAPITALIZATION.EXCEPTIONS <- c(
     "Clint.pValue",

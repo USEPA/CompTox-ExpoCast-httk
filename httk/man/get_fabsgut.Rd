@@ -2,7 +2,7 @@
 % Please edit documentation in R/get_fabsgut.R
 \name{get_fabsgut}
 \alias{get_fabsgut}
-\title{get_fabsgut}
+\title{Retrieve or caclulate fraction of chemical absorbed from the gut}
 \usage{
 get_fabsgut(
   Params = NULL,
@@ -51,7 +51,37 @@ regardless of other settings.}
 unavailable.}
 }
 \description{
-This function uses Caco2 permeability to estimate oral absorption fraction.
+This function tetrieves or caclulates fraction of chemical absorbed from the gut.
+We assume that systemic oral bioavailability (\ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}})
+consists of three components: 
+1) the fraction of chemical absorbed from intestinal lumen into enterocytes 
+(\ifelse{html}{\out{F<sub>abs</sub>}}{\eqn{F_{abs}}}, 
+2) the fraction surviving intestinal metabolism 
+(\ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}), and 
+3) the fraction surviving first-pass hepatic metabolism 
+(\ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}}). This function returns
+\ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{gut}}}
+}
+\details{
+We model systemic oral bioavailability as 
+\ifelse{html}{\out{F<sub>bio</sub>=F<sub>abs</sub>*F<sub>gut</sub>*F<sub>hep</sub>}}{\eqn{F_{bio}=F_{abs}*F_{gut}*F_{hep}}}.
+\ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}}
+is estimated from in vitro TK data using 
+\code{\link{calc_hep_bioavailability}}.
+If \ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}}
+has been measured in vivo and is found in
+table \code{\link{chem.physical_and_invitro.data)}} then we set 
+\ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{git}}} 
+to the measured value divided by 
+\ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}} 
+Otherwise, if Caco2 membrane permeability data or predictions
+are available \ifelse{html}{\out{F<sub>abs</sub>}}{\eqn{F_{abs}}} is estimated
+using \code{\link{calc_fgut.oral}}.
+Intrinsic hepatic metabolism is used to very roughly estimate
+\ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}
+using \code{\link{calc_fgut.oral}}.
+If argument keepit100 is used then there is complete absorption from the gut
+(that is, \ifelse{html}{\out{F<sub>abs</sub>=F<sub>gut</sub>=1}}{\eqn{F_{abs}=F_{gut}=1}}).
 }
 \author{
 Greg Honda and John Wambaugh
