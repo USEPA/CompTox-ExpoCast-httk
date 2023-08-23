@@ -1560,20 +1560,66 @@ honda2023.qspr <- httk.caco2.qspr
 # Load In Vivo Data Collected by Honda2023:
 load("CACO-2/caco2-invivo-compare2.RData")
 chem.physical_and_invitro.data <- add_chemtable(
-  subset(invivo.table,!is.na(kim_fbioh)),
+  subset(invivo.table, !is.na(kim_fbioh)),
   current.table = chem.physical_and_invitro.data,
   data.list=list(
     CAS="casrn",
     DTXSID="DTXSID",
-    MW='MolWeight',
-    logP="LogP_pred",
-    logHenry = "LogHL_pred",
-    logWSol = "LogWS_pred",
-    MP = "MP_pred"
+    Foral="kim_fbioh"
   ),                                                                        
   reference="Kim 2014")   
 
+chem.physical_and_invitro.data <- add_chemtable(
+  subset(invivo.table, !is.na(vo_F)),
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(
+    CAS="casrn",
+    DTXSID="DTXSID",
+    Foral="vo_F"
+  ),                                                                        
+  reference="Varma 2010")
+  
+chem.physical_and_invitro.data <- add_chemtable(
+  subset(invivo.table, !is.na(vo_Fh)),
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(
+    CAS="casrn",
+    DTXSID="DTXSID",
+    Fhep="vo_Fh"
+  ),                                                                        
+  reference="Varma 2010")
 
+chem.physical_and_invitro.data <- add_chemtable(
+  subset(invivo.table, !is.na(vo_Fg)),
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(
+    CAS="casrn",
+    DTXSID="DTXSID",
+    Fgut="vo_Fg"
+  ),                                                                        
+  reference="Varma 2010")
+
+chem.physical_and_invitro.data <- add_chemtable(
+  subset(invivo.table, !is.na(vo_Fa)),
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(
+    CAS="casrn",
+    DTXSID="DTXSID",
+    Fabs="vo_Fa"
+  ),                                                                        
+  reference="Varma 2010")
+      
+chem.physical_and_invitro.data <- add_chemtable(
+  subset(invivo.table, !is.na(pk_fbior)),
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(
+    CAS="casrn",
+    DTXSID="DTXSID",
+    Foral="pk_fbior"
+  ),
+  species="Rat",                                                                        
+  reference="Wambaugh 2018")
+ 
 ## Load in Dawson 2021 Predictions ##
 dawson.clint.1 <- 
   read.csv("Dawson2021/Novel_clint_predictions_with_AD_Main29_descs_from_Opera2.9.csv")
