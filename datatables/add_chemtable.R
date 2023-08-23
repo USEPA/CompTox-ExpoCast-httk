@@ -82,6 +82,8 @@ augment.table <- function(
     "Funbound.plasma",
     "Foral",
     "Fgut",
+    "Fabs",
+    "Fhep",
     "Rblood2plasma",
     "Caco2.Pab")
   # In the table we create, each word in most column names is capitalized:
