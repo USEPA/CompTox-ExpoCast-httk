@@ -201,15 +201,18 @@ calc_fabs.oral <- function(Params = NULL,
   
   # Detetermine Fabs.oral based on Caco2 data, or keep as Fabs
   if(Caco2.Fabs == TRUE){
-    peffh <- 10^(0.4926 * log10(Params$Caco2.Pab) - 0.1454) # Yang 2007 for Caco2 pH7.4
-    permh <- 0.66 * peffh * 3.6
+    # Yang 2007 equation 10 for Caco2 pH7.4
+    peff <- 10^(0.4926 * log10(Params$Caco2.Pab) - 0.1454) 
+    # Fagerholm 1996 -- Yang et al. (2007) equation 14
+    if (tolower(species) %in% c("rat"))
+      peff <- max((peff - 0.03)/3.6, 0)
     # Darwich et al. (2010) Equation 3
-    fabs.oral <- 1 - (1 + 0.54 * peffh)^-7
+    fabs.oral <- 1 - (1 + 0.54 * peff)^-7
   }else{
     fabs.oral <- Params$Fabs
   }
-  return(as.numeric(fabs.oral))
   
+  return(as.numeric(fabs.oral))
 }
 
 #' @describeIn calc_fbio.oral Calculate the fraction of chemical surviving first pass metabolism in the gut
@@ -275,8 +278,8 @@ calc_fgut.oral <- function(Params = NULL,
     clu_hep <- clu_hep*Params$BW # L/h 
     clu_gut <- clu_hep/100 # approximate ratio of cyp abundances
     
-    # Yang et al. (2007) equation 9:
-    peff <- (10^(0.6532 * Params$Caco2.Pab - 0.3036)) # peff dimensional 10-4 cm/s
+    # Yang et al. (2007) equation 10 (our data is at pH 7.4):
+    peff <- (10^(0.4926 * Params$Caco2.Pab - 0.1454)) # peff dimensional 10-4 cm/s
     
     if(tolower(species) == "rat")
     {
