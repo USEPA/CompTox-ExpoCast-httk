@@ -1567,7 +1567,8 @@ chem.physical_and_invitro.data <- add_chemtable(
     DTXSID="DTXSID",
     Foral="kim_fbioh"
   ),                                                                        
-  reference="Kim 2014")   
+  reference="Kim 2014",
+  species="Human")   
 
 chem.physical_and_invitro.data <- add_chemtable(
   subset(invivo.table, !is.na(vo_F)),
@@ -1577,7 +1578,8 @@ chem.physical_and_invitro.data <- add_chemtable(
     DTXSID="DTXSID",
     Foral="vo_F"
   ),                                                                        
-  reference="Varma 2010")
+  reference="Varma 2010",
+  species="Human")
   
 chem.physical_and_invitro.data <- add_chemtable(
   subset(invivo.table, !is.na(vo_Fh)),
@@ -1587,7 +1589,8 @@ chem.physical_and_invitro.data <- add_chemtable(
     DTXSID="DTXSID",
     Fhep="vo_Fh"
   ),                                                                        
-  reference="Varma 2010")
+  reference="Varma 2010",
+  species="Human")
 
 chem.physical_and_invitro.data <- add_chemtable(
   subset(invivo.table, !is.na(vo_Fg)),
@@ -1597,7 +1600,8 @@ chem.physical_and_invitro.data <- add_chemtable(
     DTXSID="DTXSID",
     Fgut="vo_Fg"
   ),                                                                        
-  reference="Varma 2010")
+  reference="Varma 2010",
+  species="Human")
 
 chem.physical_and_invitro.data <- add_chemtable(
   subset(invivo.table, !is.na(vo_Fa)),
@@ -1607,7 +1611,8 @@ chem.physical_and_invitro.data <- add_chemtable(
     DTXSID="DTXSID",
     Fabs="vo_Fa"
   ),                                                                        
-  reference="Varma 2010")
+  reference="Varma 2010",
+  species="Human")
       
 chem.physical_and_invitro.data <- add_chemtable(
   subset(invivo.table, !is.na(pk_fbior)),
