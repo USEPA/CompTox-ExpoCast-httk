@@ -127,12 +127,17 @@ get_fabsgut <- function(
     
     # Get the in vivo measured sysemtic oral bioavailability if
     # available, optionally overwriting based on Caco2.Pab
-    Fbio <- try(get_invitroPK_param("Fbio",species,chem.cas=chem.cas),
+    Fbio <- try(get_invitroPK_param("Foral",species,chem.cas=chem.cas),
                 silent=TRUE)
     if (!is(Fbio,"try-error") & !overwrite.invivo)
     {
       # Correct for hepatic first-pass metabolism:
-      Fhep <- calc_hep_bioavailability(dtxsid=dtxsid, species=species)
+      Fhep <- try(get_invitroPK_param("Fhep",species,chem.cas=chem.cas),
+                silent=TRUE)
+      if (is(Fhep,"try-error") | overwrite.invivo == TRUE)
+      {
+        Fhep <- calc_hep_bioavailability(dtxsid=dtxsid, species=species)
+      }
       Fabsgut <- Fbio/Fhep
     } else Fabsgut <- NA
     
