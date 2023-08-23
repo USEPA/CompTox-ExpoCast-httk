@@ -319,6 +319,8 @@ calc_fgut.oral <- function(Params = NULL,
     Qgut <- Qvilli * CLperm / (Qvilli + CLperm)
     # Qgut Model -- Yang et al. (2007) equation 5:
     fgut.oral <- Qgut / (Qgut + Params$Funbound.plasma*clu_gut/Params$Rblood2plasma) 
+    # Add competitive process (clearance of the gut lumen):
+    fgut.oral <- fgut.oral*(CLperm/(1+10*CLperm))
   } else {
     # if Caco2.options$Fgut.oral == FALSE, return 1
     fgut.oral <- Params$Fgut
