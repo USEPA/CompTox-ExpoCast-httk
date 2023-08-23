@@ -88,14 +88,12 @@ get_fabsgut <- function(
   
   out <- list()
   
-  if(keepit100 == TRUE)
-  {
-    out[["Fabs"]] <- 1
-    out[["Fgut"]] <- 1
-    out[["Fabsgut"]] <- 1
-    out[["Caco2.Pab"]] <- 10
-    out[["Caco2.Pab.dist"]] <- NA
-  } else {
+  out[["Fabs"]] <- 1
+  out[["Fgut"]] <- 1
+  out[["Fabsgut"]] <- 1
+  out[["Caco2.Pab"]] <- 10
+  out[["Caco2.Pab.dist"]] <- NA
+  if (!keepit100) {
     # Caco-2 Pab:
     Caco2.Pab.db <- try(get_invitroPK_param(
       "Caco2.Pab", 
@@ -136,7 +134,17 @@ get_fabsgut <- function(
                 silent=TRUE)
       if (is(Fhep,"try-error") | overwrite.invivo == TRUE)
       {
-        Fhep <- calc_hep_bioavailability(dtxsid=dtxsid, species=species)
+        if (!is.null(Params[['hepatic.bioavailability']]))
+        {
+          Fhep <- Params[['hepatic.bioavailability']] 
+        } else {
+          Fhep <- calc_hep_bioavailability(parameters = Params, 
+                                          chem.cas = chem.cas,
+                                          chem.name = chem.name,
+                                          dtxsid = dtxsid,
+                                          species = species, 
+                                          suppress.messages = suppress.messages)
+        }
       }
       Fabsgut <- Fbio/Fhep
     } else Fabsgut <- NA
@@ -146,8 +154,8 @@ get_fabsgut <- function(
     Fabs <- try(get_invitroPK_param("Fabs",species,chem.cas=chem.cas),
                 silent=TRUE)
     if (is(Fabs,"try-error") | overwrite.invivo == TRUE){
-      if (overwrite.invivo == TRUE | 
-          (Caco2.Fabs == TRUE & is(Fabs,"try-error")))
+      if (overwrite.invivo  | 
+          (Caco2.Fabs & is(Fabs,"try-error")))
       {
         out[["Fabs"]] <- 1
         # Caco2 is a human cell line
@@ -157,7 +165,8 @@ get_fabsgut <- function(
           chem.cas = chem.cas,
           chem.name = chem.name,
           dtxsid = dtxsid,
-          species = "Human") 
+          species = species,
+          suppress.messages=suppress.messages) 
       } else {
         Fabs <- 1
       }
@@ -169,15 +178,16 @@ get_fabsgut <- function(
                 silent=TRUE)
     if (is(Fgut,"try-error") | overwrite.invivo == TRUE)
     {
-      if (overwrite.invivo == TRUE | 
-          (Caco2.Fgut == TRUE & is(Fgut,"try-error")))
+      if (overwrite.invivo | 
+          (Caco2.Fgut & is(Fgut,"try-error")))
       {
         Fgut <- calc_fgut.oral(
           Params = c(out, Params), 
           chem.cas = chem.cas,
           chem.name = chem.name,
           dtxsid = dtxsid,
-          species = species) 
+          species = species,
+          suppress.messages=suppress.messages) 
       } else if (!is.na(Fgutabs) & !overwrite.invivo) {
         Fgut <- Fabsgut/Fabs
       } else {
