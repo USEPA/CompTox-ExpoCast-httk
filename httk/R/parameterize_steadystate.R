@@ -285,16 +285,6 @@ parameterize_steadystate <- function(
     fup.adjustment <- NA
   }
   
-# Look for a measured fraction absorbed from the gut (oral doses):
-  Fabsgut <- try(get_invitroPK_param("Fabsgut",
-                 species,
-                 chem.cas=chem.cas,
-                 chem.name=chem.name,
-                 dtxsid=dtxsid),
-                 silent=TRUE)
-# If no measured value is available default to one:                 
-  if (is(Fabsgut,"try-error")) Fabsgut <- 1
-
   Params <- list()
   Params[["Clint"]] <- Clint.point # uL/min/10^6
   Params[["Clint.dist"]] <- Clint.dist
@@ -323,19 +313,6 @@ parameterize_steadystate <- function(
   Params[["Rblood2plasma"]] <- Rb2p
   
 # Oral bioavailability parameters:
-  Params <- c(
-    Params, do.call(get_fabsgut, args=purrr::compact(c(
-    list(
-      Params=Params,
-      dtxsid=dtxsid,
-      chem.cas=chem.cas,
-      chem.name=chem.name,
-      species=species,
-      suppress.messages=suppress.messages
-      ),
-    Caco2.options))
-    ))
-
 # Need to have a parameter with this name to calculate clearance, but need 
 # clearance to calculate bioavailability:
   Params[["hepatic.bioavailability"]] <- NA
@@ -354,6 +331,19 @@ parameterize_steadystate <- function(
     restrictive.clearance=restrictive.clearance)
 
   if (is.na(Params[['hepatic.bioavailability']])) browser() 
+
+  Params <- c(
+    Params, do.call(get_fabsgut, args=purrr::compact(c(
+    list(
+      Params=Params,
+      dtxsid=dtxsid,
+      chem.cas=chem.cas,
+      chem.name=chem.name,
+      species=species,
+      suppress.messages=suppress.messages
+      ),
+    Caco2.options))
+    ))
   
   return(lapply(Params[order(tolower(names(Params)))],set_httk_precision))
 }
