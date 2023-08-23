@@ -42,7 +42,9 @@ calc_hep_bioavailability <- function(
                          dtxsid = NULL,
                          parameters=NULL,
                          restrictive.clearance=TRUE,
-                         flow.34=TRUE)
+                         flow.34=TRUE,
+                         suppress.messages=FALSE,
+                         species="Human")
 {
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -51,12 +53,17 @@ calc_hep_bioavailability <- function(
       is.null(parameters)) 
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
 
-  if (is.null(parameters))
+  # Required parameters
+  req.param <- c("BW", "Qtotal.liverc", "Clmetabolismc", "Funbound.plasma", "Rblood2plasma")
+    
+  if (is.null(parameters) | !all(req.param %in% names(parameters)))
   {
     parameters <- parameterize_pbtk(
                     chem.cas=chem.cas,
                     chem.name=chem.name,
-                    dtxsid=dtxsid)
+                    dtxsid=dtxsid,
+                    suppress.messages=suppress.messages,
+                    species=species)
   }
   
   if (!all(c("Qtotal.liverc","Funbound.plasma","Clmetabolismc","Rblood2plasma") 

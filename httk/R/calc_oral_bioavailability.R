@@ -113,12 +113,12 @@ calc_fbio.oral <- function(Params = NULL,
       ...)))
   }
 
-  if(keepit100 == TRUE){
+  if(keepit100){
     fabs.oral <- 1
     fgut.oral <- 1
   }else{
-    if (overwrite.invivo == TRUE | 
-      (Caco2.Fabs == TRUE & 
+    if (overwrite.invivo | 
+      (Caco2.Fabs & 
         class(try(get_invitroPK_param("Fabs",species,chem.cas=chem.cas),silent=T)) == "try-error"))
     {
       fabs.oral <- calc_fabs.oral(Params = Params) # Determine Fabs.oral
@@ -126,8 +126,8 @@ calc_fbio.oral <- function(Params = NULL,
       fabs.oral <- Params$Fabs
     }
     
-    if (overwrite.invivo == TRUE | 
-      (Caco2.Fgut == TRUE & 
+    if (overwrite.invivo | 
+      (Caco2.Fgut & 
         class(try(get_invitroPK_param("Fgut",species,chem.cas=chem.cas),silent=T)) == "try-error"))
     {
       fgut.oral <- calc_fgut.oral(Params = Params) # Determine Fgut.oral
@@ -164,7 +164,7 @@ calc_fabs.oral <- function(Params = NULL,
   )
 {
   # Required parameters
-  req.param <- c("Caco2.Pab", "Fabs")
+  req.param <- c("Caco2.Pab")
   
   # Header initialization  
   if(is.null(Params) | !all(req.param %in% names(Params))){
@@ -200,7 +200,7 @@ calc_fabs.oral <- function(Params = NULL,
   }
   
   # Detetermine Fabs.oral based on Caco2 data, or keep as Fabs
-  if(Caco2.Fabs == TRUE){
+  if(Caco2.Fabs){
     # Yang 2007 equation 10 for Caco2 pH7.4
     peff <- 10^(0.4926 * log10(Params$Caco2.Pab) - 0.1454) 
     # Fagerholm 1996 -- Yang et al. (2007) equation 14
@@ -209,7 +209,7 @@ calc_fabs.oral <- function(Params = NULL,
     # Darwich et al. (2010) Equation 3
     fabs.oral <- 1 - (1 + 0.54 * peff)^-7
   }else{
-    fabs.oral <- Params$Fabs
+    fabs.oral <- 1
   }
   
   return(as.numeric(fabs.oral))
@@ -233,10 +233,10 @@ calc_fgut.oral <- function(Params = NULL,
   )
 {
   
-  if (Caco2.Fgut == TRUE)
+  if (Caco2.Fgut)
   {
     # Required parameters
-    req.param <- c("BW", "Clint", "Caco2.Pab", "Fgut", "Funbound.plasma", "Rblood2plasma")
+    req.param <- c("BW", "Clint", "Caco2.Pab", "Funbound.plasma", "Rblood2plasma")
     
     # Header initialization  
     if(is.null(Params) | !all(req.param %in% names(Params))){
@@ -323,7 +323,7 @@ calc_fgut.oral <- function(Params = NULL,
     fgut.oral <- fgut.oral*(CLperm/(1+10*CLperm))
   } else {
     # if Caco2.options$Fgut.oral == FALSE, return 1
-    fgut.oral <- Params$Fgut
+    fgut.oral <- 1
   }
   return(set_httk_precision(as.numeric(fgut.oral)))
  
