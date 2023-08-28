@@ -75,6 +75,7 @@ calc_tkstats <-function(
                days=28,
                daily.dose=1,
                dose=NULL,
+               forcings = NULL,
                doses.per.day=1,
                output.units='uM',
                concentration='plasma',
@@ -162,7 +163,8 @@ calc_tkstats <-function(
         initial.dose=dose,
         dosing.matrix=NULL,
         daily.dose=daily.dose,
-        doses.per.day=doses.per.day)
+        doses.per.day=doses.per.day,
+        forcings=forcings)
 
     PKtimecourse <- solve_model(
                       chem.name=chem.name,
