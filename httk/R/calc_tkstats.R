@@ -25,6 +25,10 @@
 #' containing any combination).
 #' @param daily.dose Total daily dose, mg/kg BW.
 #' @param dose Amount of a single dose at time zero, mg/kg BW. 
+#' @param forcings Manual input of 'forcings' data series argument for ode
+#' integrator, defaults is NULL. Then other input parameters
+#' (see exp.start.time, exp.conc, exp.duration, and period) provide the
+#' necessary information to assemble a forcings data series. 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param doses.per.day Number of doses per day.
