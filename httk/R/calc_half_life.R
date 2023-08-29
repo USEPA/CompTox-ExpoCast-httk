@@ -50,7 +50,7 @@
 #' @export calc_half_life
 calc_half_life <- function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
                             parameters = NULL, species = "Human",
-                            suppress.messages = FALSE,
+                            suppress.messages = TRUE,
                             default.to.human = FALSE, restrictive.clearance = TRUE,
                             adjusted.Funbound.plasma = TRUE,
                             regression = TRUE, well.stirred.correction = TRUE,
