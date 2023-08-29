@@ -242,6 +242,8 @@ parameterize_1comp <- function(
     names(this.phys.data) <- physiology.data[,1]
     
     params[['hematocrit']] <- this.phys.data[["Hematocrit"]]
+    params[['plasma.vol']] <- this.phys.data[["Plasma Volume"]]/1000 # L/kg BW
+  
     params[['MW']] <- get_physchem_param("MW",chem.cas=chem.cas)
   
     Fgutabs <- try(
