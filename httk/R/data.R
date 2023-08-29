@@ -1004,15 +1004,20 @@
 #'  DTXSID.Reference \tab Reference for DTXSID \tab \cr               
 #'  Formula.Reference \tab Reference for chemical formulat \tab \cr             
 #'  [SPECIES].Clint \tab (Primary hepatocyte suspension) 
-#' intrinsic hepatic clearance \tab uL/min/10^6 hepatocytes \cr                   
-#'  [SPECIES].Clint.pValue \tab Probability that there is no clearance observed. \tab none \cr           
+#' intrinsic hepatic clearance. \emph{Entries with comma separated values are Bayesian estimates of
+#' the Clint distribution - displayed as the median, 95th credible interval
+#' (that is quantile 2.5 and 97.5, respectively), and p-value.} \tab uL/min/10^6 hepatocytes \cr                   
+#'  [SPECIES].Clint.pValue \tab Probability that there is no clearance observed.
+#'  Values close to 1 indicate clearance is not statistically significant. \tab none \cr           
 #'  [SPECIES].Clint.pValue.Ref \tab Reference for Clint pValue \tab  \cr   
 #'  [SPECIES].Clint.Reference \tab Reference for Clint \tab  \cr         
 #'  [SPECIES].Fgutabs \tab Fraction of chemical absorbed from the
 #' gut \tab unitless fraction \cr           
 #'  [SPECIES].Fgutabs.Reference \tab Reference for Fgutabs \tab \cr        
 #'  [SPECIES].Funbound.plasma \tab Chemical fraction unbound in presence of 
-#' plasma proteins \tab unitless fraction \cr         
+#' plasma proteins (fup). \emph{Entries with comma separated values are Bayesian estimates of
+#' the fup distribution - displayed as the median and 95th credible interval
+#' (that is quantile 2.5 and 97.5, respectively).} \tab unitless fraction \cr         
 #'  [SPECIES].Funbound.plasma.Ref\tab Reference for Funbound.plasma \tab \cr 
 #'  [SPECIES].Rblood2plasma \tab Chemical concentration blood to plasma ratio \tab unitless ratio \cr         
 #'  [SPECIES].Rblood2plasma.Ref \tab Reference for Rblood2plasma \tab  \cr  
