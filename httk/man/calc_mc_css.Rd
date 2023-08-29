@@ -222,6 +222,7 @@ currently ignored because analytical steady-state solutions are currently
 used by this function.
 }
 \examples{
+\donttest{
 # Set the number of samples (NSAMP) low for rapid testing, increase NSAMP 
 # for more stable results. Default value is 1000:
 NSAMP = 10
@@ -234,7 +235,6 @@ set.seed(1234)
 set.seed(1234)
 calc_mc_oral_equiv(chem.cas="2451-62-9", conc=3, samples=NSAMP)  
 
-\donttest{
  set.seed(1234)
  calc_mc_css(chem.name='Bisphenol A', output.units='uM',
              samples=NSAMP, return.samples=TRUE)
@@ -268,7 +268,6 @@ calc_mc_oral_equiv(chem.cas="2451-62-9", conc=3, samples=NSAMP)
  params <- parameterize_pbtk(chem.cas="80-05-7")
  set.seed(1234)
  calc_mc_css(parameters=params,model="pbtk", samples=NSAMP)
-}
 
  set.seed(1234)
  # Standard HTTK Monte Carlo 
@@ -312,6 +311,7 @@ calc_mc_oral_equiv(chem.cas="2451-62-9", conc=3, samples=NSAMP)
              httkpop=FALSE,
              invitrouv=FALSE,
              vary.params=list(Pow=0.3))
+}
 
 }
 \references{
