@@ -270,6 +270,8 @@ model.list[["gas_pbtk"]]$allowed.units.output <- list(
 # outputs (for example, concentrations calculated from amounts.)
 # AUC values should also be included.
 model.list[["gas_pbtk"]]$compartment.units <- c(
+                                          "Ainh"="umol",
+                                          "Aexh"="umol",
                                           "Aart"="umol",
                                           "Agut"="umol",
                                           "Agutlumen"="umol",

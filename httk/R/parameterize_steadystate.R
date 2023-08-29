@@ -94,6 +94,8 @@
 #'  parameters <- parameterize_steadystate(chem.name='Bisphenol-A',species='Rat')
 #'  parameters <- parameterize_steadystate(chem.cas='80-05-7')
 #' 
+#' @keywords 3compss
+#' 
 #' @export parameterize_steadystate
 parameterize_steadystate <- function(
                               chem.cas=NULL,

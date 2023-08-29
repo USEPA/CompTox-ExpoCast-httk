@@ -66,6 +66,7 @@ modeled.
 \examples{
 
 library(httk)
+\donttest{
 my.new.data <- as.data.frame(c("A","B","C"),stringsAsFactors=FALSE)
 my.new.data <- cbind(my.new.data,as.data.frame(c(
                      "111-11-2","222-22-0","333-33-5"),
@@ -128,6 +129,7 @@ chem.physical_and_invitro.data <- add_chemtable(my.new.data,
                                  reference="MyPaper 2015") 
 # Note that average and max change (relative to above):
 calc_css(chem.name="B")     
+}
 
 }
 \author{
