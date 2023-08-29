@@ -14,6 +14,7 @@ convert_units(
   dtxsid = NULL,
   parameters = NULL,
   temp = 25,
+  liquid.density = 1,
   state = "liquid"
 )
 }
