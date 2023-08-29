@@ -25,6 +25,10 @@
 #' containing any combination).
 #' @param daily.dose Total daily dose, mg/kg BW.
 #' @param dose Amount of a single dose at time zero, mg/kg BW. 
+#' @param forcings Manual input of 'forcings' data series argument for ode
+#' integrator, defaults is NULL. Then other input parameters
+#' (see exp.start.time, exp.conc, exp.duration, and period) provide the
+#' necessary information to assemble a forcings data series. 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param doses.per.day Number of doses per day.
@@ -75,6 +79,7 @@ calc_tkstats <-function(
                days=28,
                daily.dose=1,
                dose=NULL,
+               forcings = NULL,
                doses.per.day=1,
                output.units='uM',
                concentration='plasma',
@@ -162,7 +167,8 @@ calc_tkstats <-function(
         initial.dose=dose,
         dosing.matrix=NULL,
         daily.dose=daily.dose,
-        doses.per.day=doses.per.day)
+        doses.per.day=doses.per.day,
+        forcings=forcings)
 
     PKtimecourse <- solve_model(
                       chem.name=chem.name,
