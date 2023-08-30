@@ -1432,23 +1432,23 @@ caco2.unique <- subset(caco2.unique, !is.na(CAS))
 # Handle new chemical data first:
 epa.caco2 <- subset(caco2.unique, Data.Origin=="EPA")
 
-CV.low <- 0.68
-CV.high <- 0.25
+SD.low <- 0.31
+SD.high <- 0.13
 # Need a column of all numeric Pab's (no NA's) for calculations:
 epa.caco2$NumericPab <- epa.caco2$Pab
 epa.caco2[is.na(epa.caco2$Pab),"NumericPab"] <- 0
 # Assign all chems the low Pab standard deviation:
-epa.caco2$SD <- epa.caco2$Pab*CV.low
+epa.caco2$SD <- SD.low
 # Assign the chemicals with high Pab's the lower standard deviation
 # (Honda 2023 Figure 2):
-epa.caco2[epa.caco2$NumericPab >= 1, "SD"] <- epa.caco2$Pab*CV.high
+epa.caco2[epa.caco2$NumericPab >= 10, "SD"] <- SD.high
 # Calculate the confidence intervals (remembering the standard deviations are
 # on the log10 scale:
-epa.caco2$Pab.Low95 <- signif(epa.caco2$NumericPab -
-                                    1.96*epa.caco2$SD,
+epa.caco2$Pab.Low95 <- signif(10^(log10(epa.caco2$NumericPab) -
+                                    1.96*epa.caco2$SD),
                               3)
-epa.caco2$Pab.High95 <- signif(epa.caco2$NumericPab +
-                                     1.96*epa.caco2$SD,
+epa.caco2$Pab.High95 <- signif(10^(log10(epa.caco2$NumericPab) +
+                                     1.96*epa.caco2$SD),
                                3)
 # Concatenate the measured values and intervals using commas for use by
 # invitro_mc
@@ -1480,13 +1480,12 @@ lit.caco2.dt <- subset(caco2.unique, Data.Origin!="EPA")
 lit.caco2.dt$NumericPab <- lit.caco2.dt$Pab
 lit.caco2.dt[is.na(lit.caco2.dt$Pab),"NumericPab"] <- 0
 # Assign all chems the low Pab standard deviation (with 0.1 extra for literature):
-lit.caco2.dt$SD <- lit.caco2.dt$Pab*(CV.low + 0.1)
+lit.caco2.dt$SD <- (SD.low + 0.05)
 # Assign the chemicals with high Pab's the lower standard deviation
 # (Honda 2023 Figure 2):
-lit.caco2.dt[lit.caco2.dt$NumericPab >= 1, "SD"] <- 
-  lit.caco2.dt[lit.caco2.dt$NumericPab >= 1, "NumericPab"*(CV.high + 0.1)]
+lit.caco2.dt[lit.caco2.dt$NumericPab >= 10, "SD"] <- (SD.high + 0.05)
 # Calculate the confidence intervals (remembering the standard deviations are
-# on the log10 scale:
+# on the log10 scale):
 lit.caco2.dt$Pab.Low95 <- signif(10^(log10(lit.caco2.dt$NumericPab) -
                                     1.96*lit.caco2.dt$SD),
                               3)
