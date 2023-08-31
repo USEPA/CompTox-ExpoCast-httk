@@ -1403,7 +1403,7 @@ chem.physical_and_invitro.data <- check_duplicates(
 #
 
 # Add new Pab measurements from Honda2023:
-caco2.dt <- read.csv("CACO-2/AllCaco2PabData_10e-6cmps.txt",sep="\t")
+caco2.dt <- read.csv("CACO-2/TableAllCaco2PabData_10e-6cmps.txt",sep="\t")
 caco2.dt <- subset(caco2.dt,regexpr("DTXSID",dtxsid)!=-1)
 caco2.cas <- read.csv("CACO-2/CASRN-fromCCD.csv")
 
@@ -1434,6 +1434,7 @@ epa.caco2 <- subset(caco2.unique, Data.Origin=="EPA")
 
 SD.low <- 0.31
 SD.high <- 0.13
+SD.thresh <- 1 # 10^-6 cm/s
 # Need a column of all numeric Pab's (no NA's) for calculations:
 epa.caco2$NumericPab <- epa.caco2$Pab
 epa.caco2[is.na(epa.caco2$Pab),"NumericPab"] <- 0
@@ -1441,7 +1442,7 @@ epa.caco2[is.na(epa.caco2$Pab),"NumericPab"] <- 0
 epa.caco2$SD <- SD.low
 # Assign the chemicals with high Pab's the lower standard deviation
 # (Honda 2023 Figure 2):
-epa.caco2[epa.caco2$NumericPab >= 10, "SD"] <- SD.high
+epa.caco2[epa.caco2$NumericPab >= SD.thresh, "SD"] <- SD.high
 # Calculate the confidence intervals (remembering the standard deviations are
 # on the log10 scale:
 epa.caco2$Pab.Low95 <- signif(10^(log10(epa.caco2$NumericPab) -
@@ -1483,7 +1484,7 @@ lit.caco2.dt[is.na(lit.caco2.dt$Pab),"NumericPab"] <- 0
 lit.caco2.dt$SD <- (SD.low + 0.05)
 # Assign the chemicals with high Pab's the lower standard deviation
 # (Honda 2023 Figure 2):
-lit.caco2.dt[lit.caco2.dt$NumericPab >= 10, "SD"] <- (SD.high + 0.05)
+lit.caco2.dt[lit.caco2.dt$NumericPab >= SD.thresh, "SD"] <- (SD.high + 0.05)
 # Calculate the confidence intervals (remembering the standard deviations are
 # on the log10 scale):
 lit.caco2.dt$Pab.Low95 <- signif(10^(log10(lit.caco2.dt$NumericPab) -
