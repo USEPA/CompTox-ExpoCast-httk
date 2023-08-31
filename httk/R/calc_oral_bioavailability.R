@@ -320,9 +320,9 @@ calc_fgut.oral <- function(Params = NULL,
     # Qgut Model -- Yang et al. (2007) equation 5:
  #   fgut.oral <- Qgut / (Qgut + Params$Funbound.plasma*clu_gut/Params$Rblood2plasma) 
  # Metabolism of chemical in enterocyte, not blood:
-   fgut.oral <- Qgut / (Qgut + Params$Funbound.plasma*clu_gut-+) 
+   fgut.oral <- Qgut / (Qgut + Params$Funbound.plasma*clu_gut) 
     # Add competitive process (clearance of the gut lumen):
-    fgut.oral <- fgut.oral*(Qgut/(0.1+Qgut))
+    fgut.oral <- fgut.oral*(Qgut/(0.5+Qgut))
   } else {
     # if Caco2.options$Fgut.oral == FALSE, return 1
     fgut.oral <- 1
