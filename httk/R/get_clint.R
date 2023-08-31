@@ -78,6 +78,7 @@ get_clint <- function(chem.cas=NULL,
     dtxsid <- out$dtxsid
   }
 
+  # Assume that Clint exists for the combination of species specified
   # Clint has units of uL/min/10^6 cells
   Clint.db <- try(get_invitroPK_param(
                     "Clint",
@@ -90,9 +91,24 @@ get_clint <- function(chem.cas=NULL,
                         species,
                         chem.cas=chem.cas),
                     silent=TRUE)
-  if ((is(Clint.db,"try-error") & default.to.human) || 
-      force.human.clint) 
-  {
+  
+  # Temporary Report-outs
+  cat("Clint.db result: ",Clint.db,"\n")
+  cat("Species: ",species,"\n")
+  cat("Default to Human Option: ",default.to.human,"\n")
+  
+  # Need to check cases of missing data on Clint 
+  if((is(Clint.db,"try-error") & species == "Human")){ # Case 1: Human does not have Clint values in current HTTK data
+    cat("Check 1\n")
+    stop("Missing metabolic clearance data for Human. \n\
+          Check for complete invitro TK data using `<chem.id>%in%get_cheminfo(info='chem.id.col',model = 'MODEL')`.")
+  }else if(is(Clint.db,"try-error") & species !="Human" & !default.to.human & !force.human.clint){ # Case2: Species does not have Clint values in current HTTK data and default.to.human == FALSE
+    cat("Check 2\n")
+    stop("Missing metabolic clearance data for given species. \n\
+          Set default.to.human to true to substitute human value.")
+  }
+  
+  if ((is(Clint.db,"try-error") & default.to.human) || force.human.clint){
     Clint.db <- try(get_invitroPK_param(
                       "Clint",
                       "Human",
@@ -106,9 +122,13 @@ get_clint <- function(chem.cas=NULL,
 
     warning(paste(species,"coerced to Human for metabolic clearance data."))
   }
-  if (is(Clint.db,"try-error")) 
-    stop("Missing metabolic clearance data for given species. \n\
-         Set default.to.human to true to substitute human value.")
+  
+  if (is(Clint.db,"try-error")){
+    cat("Check 3\n")
+    stop("Missing metabolic clearance data for given species and human. \n\
+          Check for complete invitro TK data using <chem.id>%in%get_cheminfo(info='chem.id.col',model = 'MODEL').")
+  }
+    
   # Check if clint is a point value or a distribution, if a distribution, use the median:
   if (nchar(Clint.db) - nchar(gsub(",","",Clint.db))==3) 
   {
