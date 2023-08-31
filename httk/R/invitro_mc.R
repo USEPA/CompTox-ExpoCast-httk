@@ -668,10 +668,9 @@ invitro_mc <- function(parameters.dt=NULL,
       #Draw Pab from a normal distribution with mean = measured Clint, and
       #coefficient of variation given by clint.pop.cv.
       # We use truncnorm::rtruncnorm becase mean can be a vector:
-      parameters.dt[, Caco2.Pab := truncnorm:::rtruncnorm(n = 1, 
-                                                          a = 0, 
-                                                          mean = Caco2.Pab.mu, 
-                                                          sd = abs(caco2.pop.sd))
+      parameters.dt[, Caco2.Pab := 10^sapply(log10(Caco2.Pab.mu),
+                                             rnorm,n=1,
+                                             sd=caco2.pop.sd)
         ]
     }
   } else if (keepit100 == TRUE)
