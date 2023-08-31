@@ -85,6 +85,8 @@ load_honda2023 <- function(
                        data.list=list(
                          DTXSID='DTXSID',
                          CAS="CAS",
+# Confidence intervals were calculated in Honda Vignette 3 from the ranges
+# of the bins in the training set:
                          Caco2.Pab="Pab.Quant.Pred"),
                        reference = 'HondaUnpublished',
                        species="Human", 
