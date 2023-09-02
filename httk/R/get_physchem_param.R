@@ -33,6 +33,7 @@
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' 
 #' @seealso \code{\link{get_invitroPK_param}} 
+#' @seealso \code{\link{add_chemtable}} 
 #'
 #' @return The parameters, either a single value, a named list for a single chemical, or a list of lists
 #' 
