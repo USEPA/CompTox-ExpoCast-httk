@@ -15,6 +15,7 @@ calc_tkstats(
   days = 28,
   daily.dose = 1,
   dose = NULL,
+  forcings = NULL,
   doses.per.day = 1,
   output.units = "uM",
   concentration = "plasma",
@@ -53,6 +54,11 @@ default "Human").}
 \item{daily.dose}{Total daily dose, mg/kg BW.}
 
 \item{dose}{Amount of a single dose at time zero, mg/kg BW.}
+
+\item{forcings}{Manual input of 'forcings' data series argument for ode
+integrator, defaults is NULL. Then other input parameters
+(see exp.start.time, exp.conc, exp.duration, and period) provide the
+necessary information to assemble a forcings data series.}
 
 \item{doses.per.day}{Number of doses per day.}
 
