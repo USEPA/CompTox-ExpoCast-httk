@@ -57,8 +57,15 @@
 #'                                               Caco2.Fgut = FALSE))
 #'
 #' @references 
-#' Darwich, A. S., Neuhoff, S., Jamei, M., & Rostami-Hodjegan, A. (2010). Interplay of metabolism and transport in determining oral drug absorption and gut wall metabolism: a simulation assessment using the "Advanced Dissolution, Absorption, Metabolism (ADAM)" model. Curr Drug Metab, 11(9), 716-729. 
-#' Yang, J., Jamei, M., Yeo, K. R., Tucker, G. T., & Rostami-Hodjegan, A. (2007). Prediction of intestinal first-pass drug metabolism. Curr Drug Metab, 8(7), 676-684. 
+#' Darwich, A. S., Neuhoff, S., Jamei, M., & Rostami-Hodjegan, A. (2010). 
+#' Interplay of metabolism and transport in determining oral drug absorption 
+#' and gut wall metabolism: a simulation assessment using the 
+#' "Advanced Dissolution, Absorption, Metabolism (ADAM)" model. Curr Drug 
+#' Metab, 11(9), 716-729. 
+#'
+#' Yang, J., Jamei, M., Yeo, K. R., Tucker, G. T., & Rostami-Hodjegan, A. 
+#' (2007). Prediction of intestinal first-pass drug metabolism. Curr Drug 
+#' Metab, 8(7), 676-684. 
 #' 
 #' @export calc_fbio.oral
 #' @export calc_fabs.oral
