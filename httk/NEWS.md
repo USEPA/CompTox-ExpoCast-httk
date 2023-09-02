@@ -10,6 +10,7 @@ output: html_document
 * Added added default units for "Aexh" and "Ainh" state variables in gas_pbtk model so that calc_css works for accumulative chemcials
 * Corrected the [Linakis et al. (2020)](https://doi.org/10.1038/s41370-020-0238-y) vingette to reflect that all CvTdb data used there already are in uM
 * Corrected ppbv unit conversions in 'convert_units'
+* Precision of time output in 'solve_model' is no longer restricted to four significant figures
 
 ## New Features
 * Added new function `benchmark_httk` to compare current function of the package against historical performance

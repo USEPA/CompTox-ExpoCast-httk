@@ -51,6 +51,8 @@ Cfbrain,
 Afplasma,
 Cfplasma,
 Rfblood2plasma,
+Qcardiac,
+Qthyroid
 };
 
 pre_pregnant_BW = 0;
@@ -242,7 +244,7 @@ Qcardiac = 24 * ( Qcardiac_cubic_theta0 + Qcardiac_cubic_theta1 * tw + Qcardiac_
 Qgut= 0.01 * ( Qgut_percent_initial + ( Qgut_percent_terminal - Qgut_percent_initial ) / term * tw ) * Qcardiac ;
 Qkidney = 24 * ( Qkidney_cubic_theta0 + Qkidney_cubic_theta1 * tw + Qkidney_cubic_theta2 * pow ( tw , 2 ) + Qkidney_cubic_theta3 * pow ( tw , 3 ) ) ;
 Qliver = 0.01 * ( Qliver_percent_initial + ( Qliver_percent_terminal - Qliver_percent_initial ) / term * tw ) * Qcardiac ;
-Qthyroid = 0.01 * ( Qthyroid_percent_initial + ( Qthyroid_percent_terminal - Qthyroid_percent_terminal ) / term * tw ) * Qcardiac ;
+Qthyroid = 0.01 * ( Qthyroid_percent_initial + ( Qthyroid_percent_terminal - Qthyroid_percent_initial ) / term * tw ) * Qcardiac ;
 Qplacenta = 24 * Qplacenta_linear_theta1 * 1000 * Vplacenta ; 
 Qadipose = 0.01 * ( Qadipose_percent_initial + ( Qadipose_percent_terminal - Qadipose_percent_initial ) / term * tw ) * Qcardiac ;
 Qrest = Qcardiac - (Qgut + Qkidney + Qliver + Qthyroid + Qplacenta + Qadipose);
