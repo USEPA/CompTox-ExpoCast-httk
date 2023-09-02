@@ -251,11 +251,16 @@ compound data.table/data.frame or list.')
     conc_units_conversion_frame["ug/g","ppmw"] <- liquid.density
   } else if (state == "gas") {
   # Gas has density volidealgas L / mol:
+# volume per volume to volume per volume:
+    conc_units_conversion_frame["ppbv","ppmv"] <- 10^-3  
+    conc_units_conversion_frame["pptv","ppmv"] <- 10^-6  
 # density and volume per volume:
     conc_units_conversion_frame["mg/l","ppmv"] <- 10^3/MW*volidealgas  
     conc_units_conversion_frame["mg/l","ppbv"] <- 10^6/MW*volidealgas  
-    conc_units_conversion_frame["ug/l","ppmv"] <- 1/MW*volidealgas
+    conc_units_conversion_frame["ug/l","ppmv"] <- 10^0/MW*volidealgas
+    conc_units_conversion_frame["ng/l","ppmv"] <- 10^-3/MW*volidealgas
     conc_units_conversion_frame["ug/ml","ppmv"] <- 10^3/MW*volidealgas
+    conc_units_conversion_frame["ng/ml","ppmv"] <- 10^0/MW*volidealgas
     conc_units_conversion_frame["mcg/ml","ppmv"] <- 10^3/MW*volidealgas
     conc_units_conversion_frame["ug/dl","ppmv"] <- 1/10^2*10^3*MW*volidealgas
     conc_units_conversion_frame["mg/m3","ppmv"] <- 1/MW*volidealgas  
@@ -267,7 +272,8 @@ compound data.table/data.frame or list.')
     # ug/g -> uL/L for air not water    CHECK    
 # density and weight per weight:
     conc_units_conversion_frame["ug/g","ppmv"] <- 1.225/(MW/volidealgas*10^6) 
-# weight per weight and volume per volume:
+    conc_units_conversion_frame["mg/kg","ppmv"] <- 1.225/(MW/volidealgas*10^6) 
+    # weight per weight and volume per volume:
     conc_units_conversion_frame["ppmw","ppmv"] <- 1.225/(MW/volidealgas*10^6) 
   } 
   

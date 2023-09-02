@@ -85,7 +85,7 @@ calc_dow <- function(Pow=NULL,
         dtxsid <- out$dtxsid
       }
       Pow <- 
-        suppressWarnings(10^get_physchem_param("LogP", dtxsid=dtxsid))
+        suppressWarnings(10^get_physchem_param("logP", dtxsid=dtxsid))
     } else if (!all(c("Pow") %in% names(parameters)))
 # If not see if "parameters" was provided
     {
