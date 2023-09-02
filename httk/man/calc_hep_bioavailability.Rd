@@ -10,7 +10,9 @@ calc_hep_bioavailability(
   dtxsid = NULL,
   parameters = NULL,
   restrictive.clearance = TRUE,
-  flow.34 = TRUE
+  flow.34 = TRUE,
+  suppress.messages = FALSE,
+  species = "Human"
 )
 }
 \arguments{
