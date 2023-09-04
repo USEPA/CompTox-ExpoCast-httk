@@ -1,28 +1,59 @@
 #' Retrieve species-specific in vitro data from chem.physical_and_invitro.data table
 #'
-#' This function retrieves in vitro PK data (for example intrinsic metabolic clearance 
-#' or fraction unbound in plasma) from the main HTTK data. This function looks
-#' for species-specific values.
+#' This function retrieves in vitro PK data (for example, intrinsic metabolic clearance 
+#' or fraction unbound in plasma) for the the chemical specified by argument "chem.name", "dtxsid", 
+#' or chem.cas from the table \code{\link{chem.physical_and_invitro.data}}.
+#' This function looks for species-specific values based on the argument "species".
 #'
+#' @details 
 #' Note that this function works with a local version of the 
-#' get.physical_and_invitro.data table to allow users to add/modify chemical
-#' data (for example, via \code{\link{add_chemtable}} or 
-#' \code{\link{load_sipes2017}}).
-#'
-#' @param param The in vitro pharmacokinetic parameter needed.
-#' @param chem.name Either the chemical name, CAS number, or the parameters
-#' must be specified.
-#' @param chem.cas Either the chemical name, CAS number, or the parameters must
-#' be specified.
-#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
-#' the chemical must be identified by either CAS, name, or DTXSIDs
+#' \code{\link{chem.physical_and_invitro.data}} table to allow users to 
+#' add/modify chemical
+#' data (for example, adding new data via \code{\link{add_chemtable}} or 
+#' loading in silico predictions distributed with httk via
+#' \code{\link{load_sipes2017}}, \code{\link{load_pradeep2020}},
+#' \code{\link{load_dawson2021}}, or \code{\link{load_honda2023}}).
+#' 
+#' User can request via argument param (case-insensitive):
+#' | parameter | description | units | 
+#' | --- | --- | --- | 
+#'  [SPECIES].Clint |  (Primary hepatocyte suspension) 
+#' intrinsic hepatic clearance. \emph{Entries with comma separated values are Bayesian estimates of
+#' the Clint distribution - displayed as the median, 95th credible interval
+#' (that is quantile 2.5 and 97.5, respectively), and p-value.} |  uL/min/10^6 hepatocytes |                   
+#'  [SPECIES].Clint.pValue |  Probability that there is no clearance observed.
+#'  Values close to 1 indicate clearance is not statistically significant. |  none |            
+#'  [SPECIES].Caco2.Pab |  Caco-2 Apical-to-Basal Membrane Permeability |  10^-6 cm/s |            
+#'  [SPECIES].Fabs |  In vivo measured fraction of an oral dose of chemical 
+#' absorbed from the gut lumen into the gut |  unitless fraction |            
+#'  [SPECIES].Fgut |  In vivo measured fraction of an oral dose of chemical 
+#' that passes gut metabolism and clearance |  unitless fraction |            
+#'  [SPECIES].Foral |  In vivo measued fractional systemic bioavailability of 
+#' an oral dose, modeled as he product of Fabs * Fgut * Fhep (where Fhep is 
+#' first pass hepatic metabolism). |  unitless fraction |            
+#'  [SPECIES].Funbound.plasma |  Chemical fraction unbound in presence of 
+#' plasma proteins (fup). \emph{Entries with comma separated values are Bayesian estimates of
+#' the fup distribution - displayed as the median and 95th credible interval
+#' (that is quantile 2.5 and 97.5, respectively).} |  unitless fraction |          
+#'  [SPECIES].Rblood2plasma |  Chemical concentration blood to plasma ratio |  unitless ratio |          
+#' 
+#' @param param The desired parameters, a vector or single value.
+#' 
+#' @param chem.name The chemical names that you want parameters for, a vector or single value
+#' 
+#' @param chem.cas The chemical CAS numbers that you want parameters for, a vector or single value
+#' 
+#' @param dtxsid EPA's 'DSSTox Structure ID (https://comptox.epa.gov/dashboard)  
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human"). 
+#' 
+#' @seealso \code{\link{chem.physical_and_invitro.data}} 
+#' @seealso \code{\link{get_invitroPK_param}} 
+#' @seealso \code{\link{add_chemtable}} 
 #'
-#' @seealso \code{\link{get_physchem_param}} 
-#'
-#' @return The value of the parameter, if found
-#'
+#' @return The parameters, either a single value, a named list for a single chemical, or a list of lists
+#' 
 #' @author John Wambaugh and Robert Pearce
 #'
 #' @import utils
@@ -34,8 +65,9 @@ get_invitroPK_param <- function(
                     chem.cas=NULL,
                     dtxsid=NULL)
 {
+
   chem.physical_and_invitro.data <- chem.physical_and_invitro.data
-  
+
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
@@ -90,3 +122,4 @@ get_invitroPK_param <- function(
   stop(paste("Incomplete in vitro PK data for ",chem.name,
     " in ",species," -- missing ",param,".",sep=""))
 }
+
