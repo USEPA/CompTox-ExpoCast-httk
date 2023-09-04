@@ -1031,6 +1031,11 @@
 #'  [SPECIES].Rblood2plasma.Ref \tab Reference for Rblood2plasma \tab  \cr        
 #'  Chemical.Class \tab All classes to which the chemical has been assigned \tab \cr
 #' }
+#'
+#' @seealso \code{\link{get_physchem_param}} 
+#' @seealso \code{\link{get_invitroPK_param}} 
+#' @seealso \code{\link{add_chemtable}} 
+#'
 #' @author John Wambaugh
 #'
 #' @references CompTox Chemicals Dashboard (\url{http://comptox.epa.gov/dashboard})
