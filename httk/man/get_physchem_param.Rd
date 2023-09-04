@@ -21,7 +21,8 @@ The parameters, either a single value, a named list for a single chemical, or a 
 }
 \description{
 This function retrieves physico-chemical properties ("param") for the 
-chemical specified by chem.name or chem.cas from the vLiver tables. This 
+chemical specified by chem.name or chem.cas from the table
+\code{\link{chem.physical_and_invitro.data}}. This 
 function is distinguished from \code{\link{get_invitroPK_param}} in that
 there are no species-specific values. Physically meaningful values for 
 ionization equilibria are NA/none (that is, no ionization), a single value, 
@@ -31,20 +32,25 @@ functions.
 }
 \details{
 Note that this function works with a local version of the 
-get.physical_and_invitro.data table to allow users to add/modify chemical
-data (for example, via \code{\link{add_chemtable}} or 
+\code{\link{chem.physical_and_invitro.data}} table to allow users to 
+add/modify chemical
+data (for example, adding new data via \code{\link{add_chemtable}} or 
+loading in silico predictions distributed with httk via
+\code{\link{load_sipes2017}}, \code{\link{load_pradeep2020}},
+\code{\link{load_dawson2021}}, or \code{\link{load_honda2023}}).
 
 User can request via argument param (case-insensitive):
-| parameter | description |
-| --- | --- |
-| MW  | Molecular weight |
-| pKa_Donor | Hydrogen donor ionization equilibria (acidic pKa) |
-| pKa_Accept | Hyrdogen acceptor ionization equilibria (basic pKa |
-| logMA | log10 Membrane Affinity |
-| logP | log10 Octanol:Water Partition Coefficient (hydrophobicity) |
-| logHenry | log10 Henry's Law Constant (atm-m3/mole) |
-| logWSol | log10 Water Solubility (moles/L: Water solubility at 25C) |
-| MP | Melting point (deg C) |
+| parameter | description | units | 
+| --- | --- | --- | 
+| MW  | Molecular weight | g/mole | 
+| pKa_Donor | Hydrogen donor ionization equilibria (acidic pKa) | pH | 
+| pKa_Accept | Hyrdogen acceptor ionization equilibria (basic pKa | pH | 
+| logMA | log10 Membrane Affinity | unitless | 
+| logP | log10 Octanol:Water Partition Coefficient (hydrophobicity) | unitless | 
+| logPwa | log10 Water:Air Partition Coefficient | unitless | 
+| logHenry | log10 Henry's Law Constant | atm-m3/mole |
+| logWSol | log10 Water Solubility | moles/L: Water solubility at 25C |
+| MP | Melting point |  deg C |
 }
 \examples{
 
@@ -68,6 +74,8 @@ parameterize_steadystate(chem.cas="71751-41-2")
 
 }
 \seealso{
+\code{\link{chem.physical_and_invitro.data}}
+
 \code{\link{get_invitroPK_param}}
 
 \code{\link{add_chemtable}}

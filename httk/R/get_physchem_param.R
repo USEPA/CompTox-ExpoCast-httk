@@ -119,7 +119,7 @@ get_physchem_param <- function(
                        "logWSol","MP","logPwa"))){
     stop(paste("Parameter",
       param,
-      "not among \"MW\", \"logP\", \"logPwa\", "\"logMA\", \"logHenry\", \"logWSol\", \"MP\", \"pKa_Donor\", and \"pKa_Accept\".\n"))
+      "not among \"MW\", \"logP\", \"logPwa\", \"logMA\", \"logHenry\", \"logWSol\", \"MP\", \"pKa_Donor\", and \"pKa_Accept\".\n"))
   }
   
   # Match to identifier containing all chemicals -- CHANGED BY AMEADE 2/9/2023
