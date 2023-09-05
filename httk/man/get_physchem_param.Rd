@@ -40,17 +40,18 @@ loading in silico predictions distributed with httk via
 \code{\link{load_dawson2021}}, or \code{\link{load_honda2023}}).
 
 User can request via argument param (case-insensitive):
-| parameter | description | units | 
-| --- | --- | --- | 
-| MW  | Molecular weight | g/mole | 
-| pKa_Donor | Hydrogen donor ionization equilibria (acidic pKa) | pH | 
-| pKa_Accept | Hyrdogen acceptor ionization equilibria (basic pKa | pH | 
-| logMA | log10 Membrane Affinity | unitless | 
-| logP | log10 Octanol:Water Partition Coefficient (hydrophobicity) | unitless | 
-| logPwa | log10 Water:Air Partition Coefficient | unitless | 
-| logHenry | log10 Henry's Law Constant | atm-m3/mole |
-| logWSol | log10 Water Solubility | moles/L: Water solubility at 25C |
-| MP | Melting point |  deg C |
+\tabular{lll}{
+\strong{Parameter} \tab \strong{Description} \tab \strong{Units} \cr
+MW  \tab Molecular weight \tab g/mole \cr 
+pKa_Donor \tab Hydrogen donor ionization equilibria (acidic pKa) \tab pH \cr
+pKa_Accept \tab Hyrdogen acceptor ionization equilibria (basic pKa \tab pH \cr 
+logMA \tab log10 Membrane Affinity \tab unitless \cr
+logP \tab log10 Octanol:Water Partition Coefficient (hydrophobicity) \tab unitless \cr
+logPwa \tab log10 Water:Air Partition Coefficient \tab unitless \cr
+logHenry \tab log10 Henry's Law Constant \tab atm-m3/mole \cr
+logWSol \tab log10 Water Solubility \tab moles/L: Water solubility at 25C \cr
+MP \tab Melting point \tab  deg C \cr
+}
 }
 \examples{
 

@@ -43,27 +43,28 @@ loading in silico predictions distributed with httk via
 \code{\link{load_dawson2021}}, or \code{\link{load_honda2023}}).
 
 User can request via argument param (case-insensitive):
-| parameter | description | units | 
-| --- | --- | --- | 
- [SPECIES].Clint |  (Primary hepatocyte suspension) 
+\tabular{lll}{
+\strong{Parameter} \tab \strong{Description} \tab \strong{Units} \cr
+ [SPECIES].Clint \tab  (Primary hepatocyte suspension) 
 intrinsic hepatic clearance. \emph{Entries with comma separated values are Bayesian estimates of
 the Clint distribution - displayed as the median, 95th credible interval
-(that is quantile 2.5 and 97.5, respectively), and p-value.} |  uL/min/10^6 hepatocytes |                   
- [SPECIES].Clint.pValue |  Probability that there is no clearance observed.
- Values close to 1 indicate clearance is not statistically significant. |  none |            
- [SPECIES].Caco2.Pab |  Caco-2 Apical-to-Basal Membrane Permeability |  10^-6 cm/s |            
- [SPECIES].Fabs |  In vivo measured fraction of an oral dose of chemical 
-absorbed from the gut lumen into the gut |  unitless fraction |            
- [SPECIES].Fgut |  In vivo measured fraction of an oral dose of chemical 
-that passes gut metabolism and clearance |  unitless fraction |            
- [SPECIES].Foral |  In vivo measued fractional systemic bioavailability of 
+(that is quantile 2.5 and 97.5, respectively), and p-value.} \tab  uL/min/10^6 hepatocytes \cr                   
+ [SPECIES].Clint.pValue \tab  Probability that there is no clearance observed.
+ Values close to 1 indicate clearance is not statistically significant. \tab  none \cr       
+ [SPECIES].Caco2.Pab \tab  Caco-2 Apical-to-Basal Membrane Permeability \tab  10^-6 cm/s \cr            
+ [SPECIES].Fabs \tab  In vivo measured fraction of an oral dose of chemical 
+absorbed from the gut lumen into the gut \tab  unitless fraction \cr            
+ [SPECIES].Fgut \tab  In vivo measured fraction of an oral dose of chemical 
+that passes gut metabolism and clearance \tab  unitless fraction \cr          
+ [SPECIES].Foral \tab  In vivo measued fractional systemic bioavailability of 
 an oral dose, modeled as he product of Fabs * Fgut * Fhep (where Fhep is 
-first pass hepatic metabolism). |  unitless fraction |            
- [SPECIES].Funbound.plasma |  Chemical fraction unbound in presence of 
+first pass hepatic metabolism). \tab  unitless fraction \cr
+ [SPECIES].Funbound.plasma \tab  Chemical fraction unbound in presence of 
 plasma proteins (fup). \emph{Entries with comma separated values are Bayesian estimates of
 the fup distribution - displayed as the median and 95th credible interval
-(that is quantile 2.5 and 97.5, respectively).} |  unitless fraction |          
- [SPECIES].Rblood2plasma |  Chemical concentration blood to plasma ratio |  unitless ratio |
+(that is quantile 2.5 and 97.5, respectively).} \tab  unitless fraction \cr
+ [SPECIES].Rblood2plasma \tab  Chemical concentration blood to plasma ratio \tab  unitless ratio \cr       
+}
 }
 \seealso{
 \code{\link{chem.physical_and_invitro.data}}
