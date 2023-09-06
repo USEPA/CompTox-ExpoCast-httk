@@ -19,7 +19,7 @@
 #' \code{\link{load_sipes2017}}, \code{\link{load_pradeep2020}},
 #' \code{\link{load_dawson2021}}, or \code{\link{load_honda2023}}).
 #' 
-#' User can request via argument param (case-insensitive):
+#' User can request the following via argument param (case-insensitive):
 #' \tabular{lll}{
 #' \strong{Parameter} \tab \strong{Description} \tab \strong{Units} \cr
 #' MW  \tab Molecular weight \tab g/mole \cr 
@@ -123,8 +123,8 @@ get_physchem_param <- function(
                "pKa_Donor",
                "pKa_Accept",
                'logMA',
-               "logP","
-               logHenry",
+               "logP",
+               "logHenry",
                "logWSol",
                "MP",
                "logPwa"))))
