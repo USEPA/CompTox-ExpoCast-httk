@@ -135,7 +135,7 @@ We do not have a full set of *in vitro* parameters for rat for Triclosan,
 so we fill in the *in vitro* measured values with human-derived measurements and 
 use rat physiological parameters by setting "default.to.human = TRUE":
 ```{r rat_pbtk_parameters2, eval = execute.vignette}
-parameters <- , 
+parameters <- parameterize_pbtk(chem.name = "triclosan", 
                                 species = "rat", 
                                 default.to.human = TRUE)
 ```
