@@ -55,10 +55,21 @@ calc_hep_bioavailability <- function(
 
   # Required parameters
   req.param <- c("BW", "Qtotal.liverc", "Clmetabolismc", "Funbound.plasma", "Rblood2plasma")
-    
+  
+  # Qtotal.liverc is a total blood flow for simpler models without explicit
+  # first-pass hepatic metabolism. However, if we arecalling this function from
+  # a more complicated model we can still calculate Qtotal.liverc if we have 
+  # the appropriate other parameters:
+  if (!is.null(parameters))
+    if (all(c("Qcardiacc","Qliverf","Qgutf") %in% names(parameters)))
+    {
+      parameters["Qtotal.liverc"] <- parameters[["Qcardiacc"]] * (
+        parameters[["Qliverf"]] + parameters[["Qgutf"]])
+    }  
+  
   if (is.null(parameters) | !all(req.param %in% names(parameters)))
   {
-    parameters <- parameterize_pbtk(
+    parameters <- parameterize_steadystate(
                     chem.cas=chem.cas,
                     chem.name=chem.name,
                     dtxsid=dtxsid,

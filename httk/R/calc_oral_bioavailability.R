@@ -296,7 +296,8 @@ calc_fgut.oral <- function(Params = NULL,
 # IF not a rat, we assume human:
     } else {
       if (tolower(species) != "human") 
-        warning("Human intestinal permeability and micirofilli blood flow used to calculate fraction absorbed by gut")
+        if (!suppress.messages)
+          warning("Human intestinal permeability and microvilli blood flow used to calculate fraction absorbed by gut")
       
       # m2 area intestine -- Yang et al. (2007)
       Asmallintestine <- 0.66/70*Params$BW
