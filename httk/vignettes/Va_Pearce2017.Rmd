@@ -128,13 +128,14 @@ NSAMP <- 25
 # Examples
 To get a list of parameters for the pbtk model of Triclosan in a rat:
 ```{r rat_pbtk_parameters, eval = execute.vignette}
-parameters <- try(parameterize_pbtk(chem.name = "triclosan", species = "rat"))
+parameters <- try(parameterize_pbtk(chem.name = "triclosan", 
+                                    species = "rat"))
 ```
 We do not have a full set of *in vitro* parameters for rat for Triclosan,
 so we fill in the *in vitro* measured values with human-derived measurements and 
 use rat physiological parameters by setting "default.to.human = TRUE":
 ```{r rat_pbtk_parameters2, eval = execute.vignette}
-parameters <- parameterize_pbtk(chem.name = "triclosan", 
+parameters <- , 
                                 species = "rat", 
                                 default.to.human = TRUE)
 ```
@@ -489,7 +490,7 @@ knitr::kable(zoxtable, caption = "Zoxamide plasma concentration vs. time",
 Plot Monte Carlo analysis of concentration vs. time:
 ```{r monte_carlo_css_example_5, eval = execute.vignette}
 zoxamide1 <- ggplot(as.data.frame(zoxtable), aes(x=time,y=Cplasma)) +
-    geom_line(color = "dark blue",size=2) +
+    geom_line(color = "dark blue",linewidth=2) +
       geom_ribbon(aes(ymin=lcl, ymax=ucl), alpha = 0.3,
                   fill = "light blue", color="black", linetype="dotted")+
     ylab("Plasma concentration") +
