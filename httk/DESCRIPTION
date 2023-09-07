@@ -37,8 +37,8 @@ Authors@R: c(
            person("John", "Wambaugh", email = "wambaugh.john@epa.gov", 
              role = c("aut", "cre"),
              comment = c(ORCID = "0000-0002-4024-534X")), 
-           person("Sarah", "Davidson", email = "davidson.sarah.e@epa.gov", 
-             role = c("aut"), comment = c(ORCID = "0000-0002-2891-9380")), 
+           person("Sarah", "Davidson-Fritz", email = "davidsonfritz.sarah@epa.gov", 
+             role = c("aut"), comment = c(ORCID = "0000-0002-2891-9380")),
            person("Robert", "Pearce", role = c("aut"),
              comment = c(ORCID = "0000-0003-3168-4049")), 
            person("Caroline", "Ring", email = "Ring.Caroline@epa.gov", 
@@ -51,6 +51,8 @@ Authors@R: c(
              role = c("aut"), comment = c(ORCID = "0000-0003-0526-2395")), 
            person("Dustin", "Kapraun", email = "kapraun.dustin@epa.gov",
              role = c("aut"), comment = c(ORCID= "0000-0001-5570-6383")),
+           person("Nathan","Pollesch",email = "pollesch.nathan@epa.gov",
+             role = c("ctb"),comment = c(ORCID = "0000-0001-8992-9294")),
            person("Miyuki", "Breen", email = "breen.miyuki@epa.gov",
              role = c("ctb"), comment = c(ORCID= "0000-0001-8511-4653")),
            person("Shannon", "Bell", email="Shannon.bell@inotivco.com",
@@ -68,7 +70,7 @@ Authors@R: c(
              role = c("ctb"), comment = c(ORCID = "0000-0003-4203-6426")), 
            person("Barbara", "Wetmore", email = "wetmore.barbara@epa.gov", 
              role = c("ctb"), comment = c(ORCID = "0000-0002-6878-5348")), 
-           person("Woodrow", "Setzer", email = "setzer.woodrow@epa.gov",
+           person("Woodrow", "Setzer",
              role = c("ctb"), comment = c(ORCID = "0000-0002-6709-9186"))
            )
 Depends: R (>= 2.10)
@@ -92,13 +94,14 @@ BugReports: https://github.com/USEPA/CompTox-ExpoCast-httk
 NeedsCompilation: yes
 Packaged: 2022-02-24 15:04:07 UTC; jwambaug
 Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>), 
-  Sarah Davidson [aut] (<https://orcid.org/0000-0002-2891-9380>),  
+  Sarah Davidson-Fritz [aut] (<https://orcid.org/0000-0002-2891-9380>),  
   Robert Pearce [aut] (<https://orcid.org/0000-0003-3168-4049>), 
   Caroline Ring [aut] (<https://orcid.org/0000-0002-0463-1251>),
   Greg Honda [aut] (<https://orcid.org/0000-0001-7713-9850>),
   Mark Sfeir [aut], 
   Matt Linakis [aut] (<https://orcid.org/0000-0003-0526-2395>), 
   Dustin Kapraun [aut] (<https://orcid.org/0000-0001-5570-6383>), 
+  Nathan Pollesch [ctb] (<https://orcid.org/0000-0001-8992-9294>)
   Miyuki Breen [ctb] (<https://orcid.org/0000-0001-8511-4653>), 
   Shannon Bell [ctb] (<https://orcid.org/0000-0002-5754-6085>),
   Xiaoqing Chang [ctb] (<https://orcid.org/0000-0003-0752-1848>), 
