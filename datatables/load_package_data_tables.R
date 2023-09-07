@@ -2,7 +2,7 @@
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
-SCRIPT.VERSION <- "feature/DawsonUpdate"
+SCRIPT.VERSION <- "feature/oral"
 
 ## R Packages ##
 library(reshape)
@@ -391,7 +391,7 @@ chem.prop <- add_chemtable(Naritomi.table,
                  Clint="Clint,invitro (ul/min/10^6 cells)",
                  Funbound.plasma="fp",
                  Rblood2plasma="Rb",
-                 Fgutabs="Fa"))
+                 Foral="Fa"))
 
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
@@ -761,7 +761,7 @@ chem.prop <- add_chemtable(Paixao2012.table2,
                  Compound="Drug",
                  Funbound.plasma="fup",
                  Rblood2plasma="Rb",
-                 Fgutabs="Fabs"))
+                 Foral="Fabs"))
 # Table clint are units of L/h
 # 107 x 106 cell g-1 liver (Wilson et al., 2003) and it was also assumed that liver weighed
 # 20 g kg-1 of body weight.                 
@@ -839,7 +839,7 @@ CorypKaTable[regexpr(",",CorypKaTable$pKa)==-1&!is.na(CorypKaTable$pKa),"pKa"] <
 CorypKaTable[regexpr(",",CorypKaTable$pKb)==-1&!is.na(CorypKaTable$pKb),"pKb"] <- as.character(signif(as.numeric( CorypKaTable[regexpr(",",CorypKaTable$pKb)==-1&!is.na(CorypKaTable$pKb),"pKb"]),3))
 CorypKaTable <- CorypKaTable[CorypKaTable$CAS %in% chem.prop$CAS,]
 CorypKaTable$pKa.Reference[!is.na(CorypKaTable$pKa.Reference) & CorypKaTable$pKa.Reference=="SPARC"] <- "Strope 2018"
-CorypKaTable$pKb.Reference[!is.na(CorypKaTable$pKb.Reference) & CorypKaTable$pKb.Reference=="SPARC"] <- "Strope 201."
+CorypKaTable$pKb.Reference[!is.na(CorypKaTable$pKb.Reference) & CorypKaTable$pKb.Reference=="SPARC"] <- "Strope 2018"
 
 
 chem.prop <- add_chemtable(CorypKaTable,
@@ -1405,6 +1405,232 @@ chem.physical_and_invitro.data <- check_duplicates(
 #
 #
 
+# Add new Pab measurements from Honda2023:
+caco2.dt <- read.csv("CACO-2/TableAllCaco2PabData_10e-6cmps.txt",sep="\t")
+caco2.dt <- subset(caco2.dt,regexpr("DTXSID",dtxsid)!=-1)
+caco2.cas <- read.csv("CACO-2/CASRN-fromCCD.csv")
+
+caco2.unique <- NULL
+for (this.dtxsid in sort(unique(caco2.dt$dtxsid)))
+{
+  this.subset <- subset(caco2.dt, dtxsid==this.dtxsid)
+# Prefer our data over literature:
+  if ("EPA" %in% this.subset$Data.Origin)
+  {
+    this.subset <- subset(this.subset, Data.Origin=="EPA") 
+  }
+  this.row <- this.subset[1,]
+  this.row[,"Pab"] <- median(this.subset$Pab)
+  this.row[,"Data.Origin"] <- 
+    paste(unique(this.subset$Data.Origin),collapse=",")
+    
+  this.row[,"CAS"] <- unique(caco2.cas[caco2.cas$DTXSID==this.dtxsid,"CASRN"])
+  this.row[,"Compound"] <- unique(caco2.cas[caco2.cas$DTXSID==this.dtxsid,
+                                  "PREFERRED_NAME"])
+  caco2.unique <- rbind(caco2.unique, this.row)
+}
+caco2.unique$Pab <- signif(as.numeric(caco2.unique$Pab), 4)
+caco2.unique <- subset(caco2.unique, !is.na(CAS))
+
+# Handle new chemical data first:
+epa.caco2 <- subset(caco2.unique, Data.Origin=="EPA")
+
+SD.low <- 0.31
+SD.high <- 0.13
+SD.thresh <- 1 # 10^-6 cm/s
+# Need a column of all numeric Pab's (no NA's) for calculations:
+epa.caco2$NumericPab <- epa.caco2$Pab
+epa.caco2[is.na(epa.caco2$Pab),"NumericPab"] <- 0
+# Assign all chems the low Pab standard deviation:
+epa.caco2$SD <- SD.low
+# Assign the chemicals with high Pab's the lower standard deviation
+# (Honda 2023 Figure 2):
+epa.caco2[epa.caco2$NumericPab >= SD.thresh, "SD"] <- SD.high
+# Calculate the confidence intervals (remembering the standard deviations are
+# on the log10 scale:
+epa.caco2$Pab.Low95 <- signif(10^(log10(epa.caco2$NumericPab) -
+                                    1.96*epa.caco2$SD),
+                              3)
+epa.caco2$Pab.High95 <- signif(10^(log10(epa.caco2$NumericPab) +
+                                     1.96*epa.caco2$SD),
+                               3)
+# Concatenate the measured values and intervals using commas for use by
+# invitro_mc
+epa.caco2[,"PabInterval"] <- paste(
+  signif(epa.caco2$Pab,3),
+  epa.caco2$Pab.Low95,
+  epa.caco2$Pab.High95,
+  sep=",")
+# Return the NA Pab's to NA:
+epa.caco2[is.na(epa.caco2$Pab),"PabInterval"] <- NA
+
+chem.physical_and_invitro.data <- add_chemtable(epa.caco2,
+                                  current.table=chem.physical_and_invitro.data,
+                                  data.list = list(
+                                    Compound='Compound',
+                                    CAS = 'CAS',
+                                    DTXSID='dtxsid',
+                                    Caco2.Pab="PabInterval"),
+                                  overwrite=TRUE,
+                                  reference = 'HondaUnpublished',
+                                  species="Human") 
+
+#
+# Add literature Pab measurements compiled by Honda2023:
+#
+lit.caco2.dt <- subset(caco2.unique, Data.Origin!="EPA")
+
+# Need a column of all numeric Pab's (no NA's) for calculations:
+lit.caco2.dt$NumericPab <- lit.caco2.dt$Pab
+lit.caco2.dt[is.na(lit.caco2.dt$Pab),"NumericPab"] <- 0
+# Assign all chems the low Pab standard deviation (with 0.1 extra for literature):
+lit.caco2.dt$SD <- (SD.low + 0.05)
+# Assign the chemicals with high Pab's the lower standard deviation
+# (Honda 2023 Figure 2):
+lit.caco2.dt[lit.caco2.dt$NumericPab >= SD.thresh, "SD"] <- (SD.high + 0.05)
+# Calculate the confidence intervals (remembering the standard deviations are
+# on the log10 scale):
+lit.caco2.dt$Pab.Low95 <- signif(10^(log10(lit.caco2.dt$NumericPab) -
+                                    1.96*lit.caco2.dt$SD),
+                              3)
+lit.caco2.dt$Pab.High95 <- signif(10^(log10(lit.caco2.dt$NumericPab) +
+                                     1.96*lit.caco2.dt$SD),
+                               3)
+# Concatenate the measured values and intervals using commas for use by
+# invitro_mc
+lit.caco2.dt[,"PabInterval"] <- paste(
+  signif(lit.caco2.dt$Pab,3),
+  lit.caco2.dt$Pab.Low95,
+  lit.caco2.dt$Pab.High95,
+  sep=",")
+# Return the NA Pab's to NA:
+lit.caco2.dt[is.na(lit.caco2.dt$lit_pab),"PabInterval"] <- NA
+
+chem.physical_and_invitro.data <- add_chemtable(lit.caco2.dt,
+                                  current.table=chem.physical_and_invitro.data,
+                                  data.list = list(
+                                    Compound='Compound',
+                                    CAS = 'CAS',
+                                    DTXSID='dtxsid',
+                                    Caco2.Pab="PabInterval",
+                                    Reference="Data.Origin"),
+                                  overwrite=FALSE,
+                                  species="Human") 
+
+# Rename data for distribution with R package
+honda2023.data <- caco2.unique[,1:5]
+
+#
+# Add phys-chem for full library of chemicals both with data and qspr predictions:
+#
+caco2.desc <- read.csv("CACO-2/QSPRPrediction-smi_OPERA2.9Pred.csv")
+dim(caco2.desc)
+
+#for comparing data vs. qspr let's add in all the training/test chemicals:
+data.desc <- read.csv("CACO-2/trainset-smi_OPERA2.9Pred.csv")
+caco2.desc <- rbind(caco2.desc, data.desc)
+dim(caco2.desc)
+
+caco2.desc$MoleculeID <- gsub("\\|c:10\t","",caco2.desc$MoleculeID)
+
+caco2.desc <- subset(caco2.desc,!duplicated(MoleculeID))
+dim(caco2.desc)
+
+for (this.dtxsid in sort(unique(caco2.desc$MoleculeID)))
+  if (this.dtxsid %in% caco2.cas$DTXSID)
+{
+  caco2.desc[caco2.desc$MoleculeID%in%this.dtxsid, "CASRN"] <-
+    unique(caco2.cas[caco2.cas$DTXSID%in%this.dtxsid, "CASRN"])
+  caco2.desc[caco2.desc$MoleculeID%in%this.dtxsid, "Compound"] <- 
+    unique(caco2.cas[caco2.cas$DTXSID==this.dtxsid, "PREFERRED_NAME"])
+}
+                                       
+chem.physical_and_invitro.data <- add_chemtable(subset(caco2.desc,!is.na(CASRN)),
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(Compound='Compound',
+    CAS='CASRN',
+    DTXSID="MoleculeID",
+    MW='MolWeight',
+    logP="LogP_pred",
+    logHenry = "LogHL_pred",
+    logWSol = "LogWS_pred",
+    MP = "MP_pred"
+  ),                                                                        
+  reference="OPERA29",
+  overwrite=T)
+
+# Load QSPR predictions:
+load("CACO-2/httk_qspr_preds.RData")    
+honda2023.qspr <- httk.caco2.qspr
+
+# Load In Vivo Data Collected by Honda2023:
+load("CACO-2/caco2-invivo-compare2.RData")
+chem.physical_and_invitro.data <- add_chemtable(
+  subset(invivo.table, !is.na(kim_fbioh)),
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(
+    CAS="casrn",
+    DTXSID="DTXSID",
+    Foral="kim_fbioh"
+  ),                                                                        
+  reference="Kim 2014",
+  species="Human")   
+
+chem.physical_and_invitro.data <- add_chemtable(
+  subset(invivo.table, !is.na(vo_F)),
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(
+    CAS="casrn",
+    DTXSID="DTXSID",
+    Foral="vo_F"
+  ),                                                                        
+  reference="Varma 2010",
+  species="Human")
+  
+chem.physical_and_invitro.data <- add_chemtable(
+  subset(invivo.table, !is.na(vo_Fh)),
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(
+    CAS="casrn",
+    DTXSID="DTXSID",
+    Fhep="vo_Fh"
+  ),                                                                        
+  reference="Varma 2010",
+  species="Human")
+
+chem.physical_and_invitro.data <- add_chemtable(
+  subset(invivo.table, !is.na(vo_Fg)),
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(
+    CAS="casrn",
+    DTXSID="DTXSID",
+    Fgut="vo_Fg"
+  ),                                                                        
+  reference="Varma 2010",
+  species="Human")
+
+chem.physical_and_invitro.data <- add_chemtable(
+  subset(invivo.table, !is.na(vo_Fa)),
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(
+    CAS="casrn",
+    DTXSID="DTXSID",
+    Fabs="vo_Fa"
+  ),                                                                        
+  reference="Varma 2010",
+  species="Human")
+      
+chem.physical_and_invitro.data <- add_chemtable(
+  subset(invivo.table, !is.na(pk_fbior)),
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(
+    CAS="casrn",
+    DTXSID="DTXSID",
+    Foral="pk_fbior"
+  ),
+  species="Rat",                                                                        
+  reference="Wambaugh 2018")
+ 
 ## Load in Dawson 2021 Predictions ##
 dawson.clint.1 <- 
   read.csv("Dawson2021/Novel_clint_predictions_with_AD_Main29_descs_from_Opera2.9.csv")
@@ -1532,6 +1758,9 @@ dsstox[,"logWSol"] <- log10(as.numeric(dsstox[,
 # Set a reasonable precision for numbers:
 dsstox <- set.precision(dsstox)
 
+# No duplicated values:
+dsstox <- subset(dsstox, !duplicated(DTXSID))
+
 chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,
                                                        !is.na(CASRN) &
                                                        !(CASRN %in% "N/A")),
@@ -1579,7 +1808,13 @@ browser()
 dsstox <- read.csv("HTTK-NoCASMatch-DSSTox-output.tsv")
 
 # Get rid of the ones that weren't found:
-dsstox <- subset(dsstox,DTXSID!="-")
+dsstox <- subset(dsstox, DTXSID!="-")
+dsstox <- subset(dsstox, DTXSID!="N/A")
+dsstox <- subset(dsstox, !is.na(AVERAGE_MASS))
+dsstox <- subset(dsstox, AVERAGE_MASS != "N/A")
+dsstox <- subset(dsstox, !is.na(OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED))
+dsstox <- subset(dsstox, OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED != "N/A")
+
 # Calculate log10 Henry's law constnat:
 dsstox[,"logHenry"] <- log10(as.numeric(dsstox[,
   "HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED"]))
@@ -1601,6 +1836,15 @@ for (this.row in 1:dim(dsstox)[1])
       chem.physical_and_invitro.data$Compound ==
       dsstox[this.row,"PREFERRED_NAME"],"CAS"] <-
       dsstox[this.row,"CASRN"]
+}
+
+# Pick approved name when there are duplicates:
+for (this.name in unique(dsstox$INPUT[duplicated(dsstox$INPUT)]))
+{
+  not.this.name <- subset(dsstox, INPUT!=this.name)
+  this.subset <- subset(dsstox, INPUT==this.name)
+  this.row <- this.subset[regexpr("Approved",this.subset$FOUND_BY)!=-1,]
+  dsstox <- rbind(not.this.name,this.row)
 }
 
 chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,
@@ -2146,13 +2390,17 @@ save(chem.physical_and_invitro.data,
      chem.invivo.PK.data,
      chem.invivo.PK.aggregate.data,
      chem.invivo.PK.summary.data,
+     sipes2017,
      dawson2021,
      pradeep2020,
      sipes2017,
      physiology.data,
      pearce2017regression,
      kapraun2019,
+     honda2023.qspr,
+     honda2023.data,
      tissue.data,
+     httk.performance,
      Tables.Rdata.stamp,
      EPA.ref,
      file="Tables.RData",

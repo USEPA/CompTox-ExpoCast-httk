@@ -67,6 +67,14 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' 
+#' @param Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+#' 
+#' @param Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. 
+#' 
+#' @param keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' 
 #' @return A data.table with three columns: \code{Funbound.plasma} and
 #' \code{Clint}, containing the sampled values, and
 #' \code{Fhep.assay.correction}, containing the value for fraction unbound in
@@ -123,6 +131,11 @@ invitro_mc <- function(parameters.dt=NULL,
                            clint.meas.cv=0.3,                           
                            fup.pop.cv=0.3,
                            clint.pop.cv=0.3,
+                           caco2.meas.sd = 0.3,
+                           caco2.pop.sd = 0.3,
+                           Caco2.Fgut = TRUE,
+                           Caco2.Fabs = TRUE,
+                           keepit100 = FALSE,
                            poormetab=TRUE,
                            fup.lod=0.01,
                            fup.censored.dist=FALSE,
@@ -482,6 +495,85 @@ invitro_mc <- function(parameters.dt=NULL,
   #
   #
   #
+  # Caco-2 uncertainty Monte Carlo:
+  #
+  #
+  #
+  # If the default CV is set to NULL, we just use the point estimate with no
+  # uncertainty:
+  if(keepit100 == FALSE & 
+     (Caco2.Fgut == TRUE | Caco2.Fabs == TRUE))
+  {
+    if (is.null(caco2.meas.sd))
+    {
+      Caco2.Pab <- parameters.dt$Caco2.Pab
+      Caco2.Pab.l95 <- NULL
+      Caco2.Pab.u95 <- NULL
+      parameters.dt[, Caco2.Pab := Caco2.Pab]
+      # We need to determine what sort of information we have been provided about
+      # measurment uncertainty. We first check for a comma separated list with a
+      # median, lower, and upper 95th credible interval limits:
+    } else if(all(!is.na(parameters.dt$Caco2.Pab.dist)))
+    {
+      if (any(nchar(parameters.dt$Caco2.Pab.dist) - 
+          nchar(gsub(",","",parameters.dt$Caco2.Pab.dist[1]))!=2))
+      {
+        stop("Caco2.Pab distribution should be three values (median,low95th,high95th) separated by commas.")
+      }
+      temp <- strsplit(parameters.dt$Caco2.Pab.dist,",")
+      Caco2.Pab <- as.numeric(temp[[1]][1])
+      Caco2.Pab.l95 <- as.numeric(temp[[1]][2])
+      Caco2.Pab.u95 <- as.numeric(temp[[1]][3])
+      
+    # Shrink it down if all the values are the same
+      if (all(c(length(unique(Caco2.Pab))==1,
+        length(unique(Caco2.Pab.l95))==1,
+        length(unique(Caco2.Pab.u95))==1)))
+      {
+        Caco2.Pab <- Caco2.Pab[1]
+        Caco2.Pab.l95 <- Caco2.Pab.l95[1]
+        Caco2.Pab.u95 <- Caco2.Pab.u95[1]
+      }      
+      
+      caco2.fit <- suppressWarnings(optim(c(Caco2.Pab, caco2.meas.sd), 
+                     function(x) 
+                       # 97.5% of values should be less than the u95
+                       (0.975 - pnorm(Caco2.Pab.u95, x[1], x[2]))^2 +
+                       # 2.5% of values should be less than the l96
+                       (0.025 - pnorm(Caco2.Pab.l95, x[1], x[2]))^2 +
+                       # The median should be the median:
+                       (Caco2.Pab - qnorm(0.5, x[1], x[2]))^2))
+      parameters.dt[, Caco2.Pab := rtnorm(n = samples, 
+                                     caco2.fit$par[1], 
+                                     caco2.fit$par[2],
+                                     lower=0)]
+      
+      # If we don't have that, we use the default coefficient of variation to
+      # generate confidence limits:
+      
+    } else if(!is.null(caco2.meas.sd)) {
+      Caco2.Pab <- parameters.dt$Caco2.Pab
+      
+      # Shrink it down if all the values are the same
+      if (length(unique(Caco2.Pab))==1)
+      {
+        Caco2.Pab <- Caco2.Pab[1]
+      }   
+      
+      caco2.fit <- suppressWarnings(optim(Caco2.Pab, 
+                                          function(x) (Caco2.Pab - qnorm(0.5, x[1], abs(caco2.meas.sd)))^2))
+      caco2.fit$par[2] <- abs(caco2.meas.sd)
+      parameters.dt[, Caco2.Pab := rnorm(n = samples, caco2.fit$par[1], caco2.fit$par[2])]
+      
+    } 
+    
+    # Store NA so data.table doesn't convert everything to text:
+    parameters.dt[, Caco2.Pab.dist := NA]
+  }
+  
+  #
+  #
+  #
   # POPULATION VARIABILITY:
   #
   #
@@ -555,9 +647,44 @@ invitro_mc <- function(parameters.dt=NULL,
   parameters.dt[Funbound.plasma<minimum.Funbound.plasma,
     Funbound.plasma:=minimum.Funbound.plasma]
 
+  #
+  #
+  #
+  # Caco2.Pab variability Monte Carlo:
+  #
+  #
+  #
+  #do not sample if user said not to vary Caco2.Pab.
+  if(keepit100 == FALSE & 
+     (Caco2.Fgut == TRUE | Caco2.Fabs == TRUE))
+  {
+    if (!is.null(caco2.pop.sd))
+    {
+      #Draw Pab from a normal distribution if poor metabolizers excluded, or
+      #Gaussian mixture distribution if poor metabolizers included.
+      #Set the mean of the regular metabolizer distribution:
+      parameters.dt[, Caco2.Pab.mu := Caco2.Pab]
+      
+      #Draw Pab from a normal distribution with mean = measured Clint, and
+      #coefficient of variation given by clint.pop.cv.
+      # We use truncnorm::rtruncnorm becase mean can be a vector:
+      parameters.dt[, Caco2.Pab := 10^sapply(log10(Caco2.Pab.mu),
+                                             rnorm,n=1,
+                                             sd=caco2.pop.sd)
+        ]
+    }
+  } else if (keepit100 == TRUE)
+  {
+    parameters.dt[,Fabs:=1]
+    parameters.dt[,Fgut:=1]
+  }
+  
+  # Make sure Fabsgut gets recalculated:
+  parameters.dt[, Fabsgut := NA]
+
 # set precision:
   cols <- colnames(parameters.dt)
   parameters.dt[ , (cols) := lapply(.SD, set_httk_precision), .SDcols = cols]
-  
-  return(parameters.dt)
+ 
+   return(parameters.dt)
 }

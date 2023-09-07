@@ -184,9 +184,14 @@
 #' argument "model". (Defaults to NULL.)  
 #'
 #' @param calc.analytic.css.arg.list Additional parameters passed to 
-#' \code{\link{calc_analytic_css}}.
 #'
-#' @author Caroline Ring, Robert Pearce, John Wambaugh, Miyuki Breen
+#' @param Caco2.options Arguments describing how to handle Caco2 absorption data
+#' that are passed to \code{\line{invitro_mc}} and the parameterize_[MODEL] 
+#' functions
+#'
+#' \code{\link{calc_analytic_css}}.
+#' 
+#' @author Caroline Ring, Robert Pearce, John Wambaugh, Miyuki Breen, and Greg Honda
 #'
 #' @references 
 #' Wambaugh, John F., et al. "Toxicokinetic triage for 
@@ -345,7 +350,8 @@ calc_mc_css <- function(chem.cas = NULL,
                           list(method = "direct resampling"),
                         convert.httkpop.arg.list = NULL,
                         parameterize.arg.list = NULL,
-                        calc.analytic.css.arg.list = NULL
+                        calc.analytic.css.arg.list = NULL,
+                        Caco2.options=NULL
                         ) 
 {
 # We need to describe the chemical to be simulated one way or another:
@@ -416,7 +422,8 @@ calc_mc_css <- function(chem.cas = NULL,
                               invitro.mc.arg.list=invitro.mc.arg.list,
                               httkpop.generate.arg.list=httkpop.generate.arg.list,
                               convert.httkpop.arg.list=convert.httkpop.arg.list,
-                              parameterize.arg.list=parameterize.arg.list))))
+                              parameterize.arg.list=parameterize.arg.list,
+                              Caco2.options=Caco2.options))))
   else parameter.dt <- parameters
 #
 # HERE LIES THE ACTUAL MONTE CARLO STEP:
@@ -427,7 +434,8 @@ calc_mc_css <- function(chem.cas = NULL,
 
   parameter.dt[,Css:= do.call(calc_analytic_css,
 # we use purrr::compact to drop NULL values from arguments list:
-                              args=purrr::compact(c(list(parameters=.SD,
+                              args=purrr::compact(c(list(
+                              parameters=.SD,
                               model=model,
                               suppress.messages=TRUE,
                               chem.cas=chem.cas,

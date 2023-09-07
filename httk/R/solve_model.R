@@ -360,7 +360,7 @@ specification in compartment_units for model ", model)
 # necessarily need all parameters associated with a given model to do this:)
   if (is.null(parameters))
   {
-    parameters <- do.call(parameterize_function,args=purrr::compact(c(list(
+    parameters <- do.call(parameterize_function, args=purrr::compact(c(list(
       chem.cas=chem.cas,
       chem.name=chem.name,
       dtxsid=dtxsid,
