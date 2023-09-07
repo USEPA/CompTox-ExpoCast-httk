@@ -80,12 +80,17 @@ get_invitroPK_param <- function(
   {
     this.col.index <- which(tolower(colnames(chem.physical_and_invitro.data))==this.col.name)
     param.val <- chem.physical_and_invitro.data[chem.physical_and_invitro.data.index,this.col.index]
-    if (param=="Clint" & (nchar(param.val) -
-          nchar(gsub(",","",param.val)))==3) return(param.val)
-    else if (param=="Funbound.plasma" & (nchar(param.val) -
-          nchar(gsub(",","",param.val)))==2) return(param.val)
-    else if (param=="Clint.pValue") return(param.val)
-     else if (!is.na(as.numeric(param.val))) return(as.numeric(param.val))
+    if(is.na(param.val)){
+      stop(param," does not currently exist for ",species," in the `chem.physical_and_invitro.data`.")
+    } else if(param=="Clint" & (nchar(param.val) - nchar(gsub(",","",param.val)))==3){
+      return(param.val)
+    } else if (param=="Funbound.plasma" & (nchar(param.val) - nchar(gsub(",","",param.val)))==2){
+      return(param.val)
+    } else if (param=="Clint.pValue"){
+      return(param.val)
+    } else if (!is.na(as.numeric(param.val))){
+      return(as.numeric(param.val))
+    }
   }
   stop(paste("Incomplete in vitro PK data for ",chem.name,
     " in ",species," -- missing ",param,".",sep=""))
