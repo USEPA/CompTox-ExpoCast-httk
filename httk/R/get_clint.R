@@ -113,7 +113,7 @@ get_clint <- function(chem.cas=NULL,
                           chem.cas=chem.cas),
                       silent=TRUE)
 
-    warning(paste(species,"coerced to Human for metabolic clearance data."))
+    if (!suppress.messages) warning(paste(species,"coerced to Human for metabolic clearance data."))
   }
   
   if (is(Clint.db,"try-error") & !force.human.clint){ # Case 3: Species does not have Clint values in current HTTK data and default.to.human == TRUE; HTTK data also does not have Human data
