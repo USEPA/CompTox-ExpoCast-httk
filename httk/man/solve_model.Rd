@@ -45,8 +45,8 @@ be specified.}
 \item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
-\item{times}{Optional time sequence for specified number of days. Dosing
-sequence begins at the beginning of times.}
+\item{times}{Optional time sequence for specified number of output times (in days) to be returned by the function.
+The model is solved explicitly at the time sequence specified. Dosing sequence begins at the first time provided.}
 
 \item{parameters}{List of chemical parameters, as output by 
 parameterize_pbtk function. Overrides chem.name and chem.cas.}
