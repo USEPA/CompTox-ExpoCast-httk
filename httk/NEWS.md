@@ -12,6 +12,9 @@ output: html_document
 * Corrected ppbv unit conversions in 'convert_units'
 * Precision of time output in 'solve_model' is no longer restricted to four significant figures
 * Fixed bug with Monte Carlo functions (for example, 'calc_mc_oral_equiv') wherein you could not specify the argument parameters to be a table created by 'create_mc_samples' (thanks Jayme Coyle and Tyler Lalonde)
+* Revised 'convert_units' to handle multiple molecular weights -- this enables 'convert_mc_oral_equivalent' to take a table of parameters for Monte Carlo
+* Updated the checks and reported error messages in 'get_clint' and 'get_invtroPK_param' to be more informative
+* Updated 'get_physchem_param' to be case-insensitive
 
 ## New Features
 * Added new function `benchmark_httk` to compare current function of the package against historical performance
@@ -34,7 +37,6 @@ output: html_document
 * Fixed bugs that prevented using Monte Carlo with phys-chem parameters
 * Fixed error for species with missing in vitro data (thanks Lu En-Hsuan)
 * Fixed bug where `solve_model` returned other than requested times when argument times was specified (thanks Kimberly Truong)
-* Revised 'convert_units' to handle multiple molecular weights -- this enables 'convert_mc_oral_equivalent' to take a table of parameters for Monte Carlo
 
 ## New Features
 * Added updated vignette from [Pearce et al. (2017)](https://doi.org/10.18637%2Fjss.v079.i04): v79i04.R
