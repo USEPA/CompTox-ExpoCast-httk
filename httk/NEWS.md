@@ -11,6 +11,7 @@ output: html_document
 * Corrected the [Linakis et al. (2020)](https://doi.org/10.1038/s41370-020-0238-y) vingette to reflect that all CvTdb data used there already are in uM
 * Corrected ppbv unit conversions in 'convert_units'
 * Precision of time output in 'solve_model' is no longer restricted to four significant figures
+* Fixed bug with Monte Carlo functions (for example, 'calc_mc_oral_equiv') wherein you could not specify the argument parameters to be a table created by 'create_mc_samples' (thanks Jayme Coyle and Tyler Lalonde)
 
 ## New Features
 * Added new function `benchmark_httk` to compare current function of the package against historical performance
