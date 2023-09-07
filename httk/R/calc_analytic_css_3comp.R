@@ -54,6 +54,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
                                    tissue=NULL,
                                    restrictive.clearance=TRUE,
                                    bioactive.free.invivo = FALSE,
+                                   Caco2.options = list(),
                                    ...)
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -88,6 +89,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
     parameters <- parameterize_3comp(chem.cas=chem.cas,
                                     chem.name=chem.name,
                                     suppress.messages=suppress.messages,
+                                    Caco2.options = Caco2.options,
                                     ...)
     if (recalc.blood2plasma) 
     {
@@ -114,7 +116,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
   param.names.schmitt <- model.list[["schmitt"]]$param.names
 
 
-  hourly.dose <- hourly.dose * parameters$Fgutabs
+  hourly.dose <- hourly.dose * parameters$Fabsgut
   fup <- parameters$Funbound.plasma
   Rblood2plasma <- parameters$Rblood2plasma
   Clmetabolism <- parameters$Clmetabolismc
@@ -173,6 +175,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
     }
   }
   
+
   if(tolower(concentration) != 'tissue'){
     if (tolower(concentration)=='blood')
     {
@@ -184,5 +187,6 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
       
     } else if (tolower(concentration)!='plasma') stop("Only blood and plasma concentrations are calculated.")
   }
+  
   return(Css)
 }

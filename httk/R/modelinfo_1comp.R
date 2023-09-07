@@ -43,9 +43,11 @@ model.list[['1compartment']]$tissuelist <- NULL
 # how other parameters were calculated:
 model.list[["1compartment"]]$param.names <- c(
   "BW",
+  "Caco2.Pab",
+  "Caco2.Pab.dist",
   "Clint",
   "Clint.dist",
-  "Fgutabs",
+  "Fabsgut",
   "Fhep.assay.correction",
   "Funbound.plasma",
   "Funbound.plasma.dist",
@@ -180,7 +182,7 @@ model.list[["1compartment"]]$calc.standard.httkpop2httk <- TRUE
 # These are the model parameters that are impacted by httk-pop:
 model.list[["1compartment"]]$httkpop.params <- c(
   "BW",
-  "Fgutabs",
+  "Fabsgut",
   "hepatic.bioavailability",
   "hematocrit",
   "liver.density",
@@ -203,5 +205,3 @@ model.list[["1compartment"]]$css.dosing.params <- c("hourly.dose")
 
 # Filter out compounds belonging to select chemical classes
 model.list[["1compartment"]]$chem.class.filt <- c("PFAS")
-
-

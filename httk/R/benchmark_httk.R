@@ -120,7 +120,14 @@
 #' Bioinformatics and Public Health Risk Assessment",
 #' in preparation
 #'
-#' @import ggplot2
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 aes
+#' @importFrom ggplot2 geom_point
+#' @importFrom ggplot2 geom_line
+#' @importFrom ggplot2 xlab
+#' @importFrom ggplot2 ylab
+#' @importFrom ggplot2 theme
+#' @importFrom ggplot2 element_text
 #'
 #' @export benchmark_httk
 benchmark_httk <- function(
@@ -590,7 +597,7 @@ benchmark_httk <- function(
     plot.table$Benchmark <- as.factor(plot.table$Benchmark)
 
     units.plot <- 
-      ggplot(subset(plot.table, regexpr("units", Benchmark)!=-1),
+      ggplot2::ggplot(subset(plot.table, regexpr("units", Benchmark)!=-1),
              aes(x=Version, y=Value, color=Benchmark, group=Benchmark)) + 
       geom_point() +
       geom_line() +
@@ -600,7 +607,7 @@ benchmark_httk <- function(
     
 
     rmsle.plot <- 
-      ggplot(subset(plot.table, regexpr("RMSLE", Benchmark)!=-1),
+      ggplot2::ggplot(subset(plot.table, regexpr("RMSLE", Benchmark)!=-1),
              aes(x=Version, y=Value, color=Benchmark, group=Benchmark)) + 
       geom_point() +
       geom_line() +
@@ -609,7 +616,7 @@ benchmark_httk <- function(
     benchmarks[["rmsle.plot"]] <- rmsle.plot
     
     count.plot <- 
-      ggplot(subset(plot.table, regexpr("N.", Benchmark)!=-1),
+      ggplot2::ggplot(subset(plot.table, regexpr("N.", Benchmark)!=-1),
              aes(x=Version, y=Value, color=Benchmark, group=Benchmark)) + 
       geom_point() +
       geom_line() +

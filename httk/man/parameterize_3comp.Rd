@@ -63,7 +63,7 @@ dataset).}
 \value{
 \item{BW}{Body Weight, kg.} 
 \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
-\item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the 
+\item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the 
 fraction of the dose that enters the gutlumen.} 
 \item{Funbound.plasma}{Fraction of plasma that is not bound.} 
 \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte 
