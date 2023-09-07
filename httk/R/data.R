@@ -768,7 +768,7 @@
 #' This table includes 1 and 2 compartment fits of plasma concentration vs time
 #' data aggregated from chem.invivo.PK.data, performed in Wambaugh et al. 2018.
 #' Data includes volume of distribution (Vdist, L/kg), elimination rate (kelim,
-#' 1/h), gut absorption rate (kgutabs, 1/h), fraction absorbed (Fgutabs), and
+#' 1/h), gut absorption rate (kgutabs, 1/h), fraction absorbed (Fabsgut), and
 #' steady state concentration (Css, mg/L).
 #'
 #'
@@ -975,8 +975,6 @@
 #'  DTXSID \tab DSSTox Structure ID 
 #' (\url{http://comptox.epa.gov/dashboard}) \tab none \cr                  
 #'  Formula \tab The proportions of atoms within the chemical compound  \tab none \cr                   
-#'  SMILES.desalt \tab The simplified molecular-input line-entry system
-#' structure \tab none \cr                 
 #'  All.Compound.Names \tab All names of the chemical as they occured in the
 #' data \tab none \cr              
 #'  logHenry \tab The log10 Henry's law constant \tab 
@@ -988,7 +986,8 @@
 #'  logPwa.Reference \tab Reference for logPwa \tab \cr             
 #'  logMA \tab The log10 phospholipid:water PC or
 #' "Membrane affinity" \tab unitless ratio \cr                
-#'  logMA.Reference \tab Reference for membrane affinity \tab \cr   #'  logWSol \tab The log10 water solubility \tab log10(mole/L) \cr                  
+#'  logMA.Reference \tab Reference for membrane affinity \tab \cr   
+#'  logWSol \tab The log10 water solubility \tab log10(mole/L) \cr                  
 #'  logWSol.Reference \tab Reference for logWsol \tab \cr              
 #'  MP \tab The chemical compound melting point \tab degrees Celsius \cr                  
 #'  MP.Reference \tab Reference for melting point \tab \cr                   
@@ -1011,19 +1010,32 @@
 #'  Values close to 1 indicate clearance is not statistically significant. \tab none \cr           
 #'  [SPECIES].Clint.pValue.Ref \tab Reference for Clint pValue \tab  \cr   
 #'  [SPECIES].Clint.Reference \tab Reference for Clint \tab  \cr         
-#'  [SPECIES].Fgutabs \tab Fraction of chemical absorbed from the
-#' gut \tab unitless fraction \cr           
-#'  [SPECIES].Fgutabs.Reference \tab Reference for Fgutabs \tab \cr        
+#'  [SPECIES].Caco2.Pab \tab Caco-2 Apical-to-Basal Membrane Permeability \tab 10^-6 cm/s \cr           
+#'  [SPECIES].Caco2.Pab.Reference \tab Reference for Caco-2 Membrane Permeability \tab \cr
+#'  [SPECIES].Fabs \tab In vivo measured fraction of an oral dose of chemical 
+#' absorbed from the gut lumen into the gut \tab unitless fraction \cr           
+#'  [SPECIES].Fabs.Reference \tab Reference for Fabs \tab \cr        
+#'  [SPECIES].Fgut \tab In vivo measured fraction of an oral dose of chemical 
+#' that passes gut metabolism and clearance \tab unitless fraction \cr           
+#'  [SPECIES].Fgut.Reference \tab Reference for Fgut \tab \cr        
+#'  [SPECIES].Foral \tab In vivo measued fractional systemic bioavailability of 
+#' an oral dose, modeled as he product of Fabs * Fgut * Fhep (where Fhep is 
+#' first pass hepatic metabolism). \tab unitless fraction \cr           
+#'  [SPECIES].Foral.Reference \tab Reference for Foral \tab \cr        
 #'  [SPECIES].Funbound.plasma \tab Chemical fraction unbound in presence of 
 #' plasma proteins (fup). \emph{Entries with comma separated values are Bayesian estimates of
 #' the fup distribution - displayed as the median and 95th credible interval
 #' (that is quantile 2.5 and 97.5, respectively).} \tab unitless fraction \cr         
 #'  [SPECIES].Funbound.plasma.Ref\tab Reference for Funbound.plasma \tab \cr 
 #'  [SPECIES].Rblood2plasma \tab Chemical concentration blood to plasma ratio \tab unitless ratio \cr         
-#'  [SPECIES].Rblood2plasma.Ref \tab Reference for Rblood2plasma \tab  \cr  
-#'  SMILES.desalt.Reference"\tab Reference for SMILES structure \tab  \cr          
+#'  [SPECIES].Rblood2plasma.Ref \tab Reference for Rblood2plasma \tab  \cr        
 #'  Chemical.Class \tab All classes to which the chemical has been assigned \tab \cr
 #' }
+#'
+#' @seealso \code{\link{get_physchem_param}} 
+#' @seealso \code{\link{get_invitroPK_param}} 
+#' @seealso \code{\link{add_chemtable}} 
+#'
 #' @author John Wambaugh
 #'
 #' @references CompTox Chemicals Dashboard (\url{http://comptox.epa.gov/dashboard})

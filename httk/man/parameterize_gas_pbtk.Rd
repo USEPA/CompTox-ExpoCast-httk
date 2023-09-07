@@ -25,6 +25,7 @@ parameterize_gas_pbtk(
   VD = 0.15,
   suppress.messages = FALSE,
   minimum.Funbound.plasma = 1e-04,
+  Caco2.options = NULL,
   ...
 )
 }
@@ -97,7 +98,7 @@ dataset).}
 \item{Clint.dist}{Distribution of hepatic intrinsic clearance values
 (median, lower 95th, upper 95th, p value)} 
 \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
-\item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
+\item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of the
 dose that enters the gut lumen.}
 \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
 assay using the method of Kilford et al. (2008)} 

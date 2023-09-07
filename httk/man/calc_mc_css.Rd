@@ -28,7 +28,8 @@ calc_mc_css(
   httkpop.generate.arg.list = list(method = "direct resampling"),
   convert.httkpop.arg.list = NULL,
   parameterize.arg.list = NULL,
-  calc.analytic.css.arg.list = NULL
+  calc.analytic.css.arg.list = NULL,
+  Caco2.options = NULL
 )
 }
 \arguments{
@@ -124,7 +125,12 @@ convert_httkpop_* function for the model.}
 parameterization function (that is, parameterize_MODEL) corresponding to
 argument "model". (Defaults to NULL.)}
 
-\item{calc.analytic.css.arg.list}{Additional parameters passed to 
+\item{calc.analytic.css.arg.list}{Additional parameters passed to}
+
+\item{Caco2.options}{Arguments describing how to handle Caco2 absorption data
+that are passed to \code{\line{invitro_mc}} and the parameterize_[MODEL] 
+functions
+
 \code{\link{calc_analytic_css}}.}
 }
 \value{
@@ -347,7 +353,7 @@ pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 
 \code{\link{create_mc_samples}}
 }
 \author{
-Caroline Ring, Robert Pearce, John Wambaugh, Miyuki Breen
+Caroline Ring, Robert Pearce, John Wambaugh, Miyuki Breen, and Greg Honda
 }
 \keyword{Monte-Carlo}
 \keyword{Steady-State}

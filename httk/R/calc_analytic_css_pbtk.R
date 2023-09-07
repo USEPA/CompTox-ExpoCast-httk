@@ -78,6 +78,7 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
                                    tissue=NULL,
                                    restrictive.clearance=TRUE,
                                    bioactive.free.invivo = FALSE,
+                                   Caco2.options = list(),
                                    ...)
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -112,6 +113,7 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
     parameters <- parameterize_pbtk(chem.cas=chem.cas,
                                     chem.name=chem.name,
                                     suppress.messages=suppress.messages,
+                                    Caco2.options = Caco2.options,
                                     ...) 
     if (recalc.blood2plasma) 
     {
@@ -145,7 +147,7 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
   fup <- parameters[["Funbound.plasma"]]
   if (!restrictive.clearance) Clmetabolism <- Clmetabolism / fup
   
-  hourly.dose <- hourly.dose * parameters$Fgutabs
+  hourly.dose <- hourly.dose * parameters$Fabsgut
   
 # Css for venous blood:
   Cven.ss <- (hourly.dose * (Qliver + Qgut) / 
@@ -207,6 +209,7 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
       Css <- Css * pcs[[names(pcs)[substr(names(pcs),2,nchar(names(pcs))-3)==tissue]]] * fup   
     }
   }
+
 
   if(tolower(concentration != "tissue")){
     if (tolower(concentration)=='plasma')
