@@ -322,8 +322,12 @@ parameterize_schmitt <- function(chem.cas=NULL,
     fup.corrected <- NA
   } 
   
-  if (is.na(fup.corrected)) stop(
+  if (is.na(fup.corrected))
+  {
+    if (species=="Hyman") stop(
 "fup is NA, Schmitt's method for tissue partition cannot be used.")
+    else stop(
+"fup is NA, Schmitt's method for tissue partition cannot be used. Try setting default.to.human to TRUE.")
 
   outlist <- list(Funbound.plasma=fup.corrected,
                   unadjusted.Funbound.plasma=fup.point,
