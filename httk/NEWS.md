@@ -13,6 +13,10 @@ This version accompanies the submission of manuscript Honda et al. “Impact of Gu
 * Corrected the [Linakis et al. (2020)](https://doi.org/10.1038/s41370-020-0238-y) vingette to reflect that all CvTdb data used there already are in uM
 * Corrected ppbv unit conversions in 'convert_units'
 * Precision of time output in 'solve_model' is no longer restricted to four significant figures
+* Fixed bug with Monte Carlo functions (for example, 'calc_mc_oral_equiv') wherein you could not specify the argument parameters to be a table created by 'create_mc_samples' (thanks Jayme Coyle and Tyler Lalonde)
+* Revised 'convert_units' to handle multiple molecular weights -- this enables 'convert_mc_oral_equivalent' to take a table of parameters for Monte Carlo
+* Updated the checks and reported error messages in 'get_clint' and 'get_invtroPK_param' to be more informative
+* Updated 'get_physchem_param' to be case-insensitive
 
 ## New Features
 * Added in vitro measured Caco-2 membrane permeability data for 310 chemicals allowing characterization of oral bioavailability

@@ -9,6 +9,7 @@ calc_mc_oral_equiv(
   chem.name = NULL,
   chem.cas = NULL,
   dtxsid = NULL,
+  parameters = NULL,
   which.quantile = 0.95,
   species = "Human",
   input.units = "uM",
@@ -37,6 +38,9 @@ specified.}
 
 \item{dtxsid}{EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
+
+\item{parameters}{Parameters from the appropriate parameterization function
+for the model indicated by argument model}
 
 \item{which.quantile}{Which quantile from Monte Carlo steady-state
 simulation (\code{\link{calc_mc_css}}) is requested. Can be a vector. Note that 95th
@@ -211,6 +215,18 @@ calc_mc_oral_equiv(0.1,chem.cas="34256-82-1", model='pbtk',
                    samples=NSAMP,
                    which.quantile=c(0.05,0.5,0.95), tissue='brain')
  
+# We can also use the Monte Carlo functions by passing a table
+# where each row represents a different Monte Carlo draw of parameters:
+p <- create_mc_samples(chem.cas="80-05-7")
+# Use data.table for steady-state plasma concentration (Css) Monte Carlo:
+calc_mc_css(parameters=p)
+# Using the same table gives the same answer:
+calc_mc_css(parameters=p)
+# Use Css for 1 mg/kg/day for simple reverse toxicokinetics 
+# in Vitro-In Vivo Extrapolation to convert 15 uM to mg/kg/day:
+15/calc_mc_css(parameters=p, output.units="uM")
+# Can do the same with calc_mc_oral_equiv:
+calc_mc_oral_equiv(15, parameters=p)
 }
 
 }

@@ -307,10 +307,24 @@
 #'              httkpop=FALSE,
 #'              invitrouv=FALSE,
 #'              vary.params=list(Pow=0.3))
+#'  
+#' # We can also use the Monte Carlo functions by passing a table
+#' # where each row represents a different Monte Carlo draw of parameters:
+#' p <- create_mc_samples(chem.cas="80-05-7")
+#' # Use data.table for steady-state plasma concentration (Css) Monte Carlo:
+#' calc_mc_css(parameters=p)
+#' # Using the same table gives the same answer:
+#' calc_mc_css(parameters=p)
+#' # Use Css for 1 mg/kg/day for simple reverse toxicokinetics 
+#' # in Vitro-In Vivo Extrapolation to convert 15 uM to mg/kg/day:
+#' 15/calc_mc_css(parameters=p, output.units="uM")
+#' # Can do the same with calc_mc_oral_equiv:
+#' calc_mc_oral_equiv(15, parameters=p)
 #' }
 #'
 #' @import stats
-#' @importFrom purrr compact 
+#' @importFrom purrr compact
+#' @importform data.table is.data.dtable 
 #' @export calc_mc_css
 calc_mc_css <- function(chem.cas = NULL,
                         chem.name = NULL,
@@ -387,7 +401,8 @@ calc_mc_css <- function(chem.cas = NULL,
 # VALUES FOR WHICH Css SHOULD BE CALCULATED
 #
 #
-  parameter.dt <- do.call(create_mc_samples,
+  if (!(data.table::is.data.table(parameters)))
+    parameter.dt <- do.call(create_mc_samples,
 # we use purrr::compact to drop NULL values from arguments list:
                           args=purrr::compact(c(list(
                               chem.cas=chem.cas,
@@ -409,7 +424,7 @@ calc_mc_css <- function(chem.cas = NULL,
                               convert.httkpop.arg.list=convert.httkpop.arg.list,
                               parameterize.arg.list=parameterize.arg.list,
                               Caco2.options=Caco2.options))))
-
+  else parameter.dt <- parameters
 #
 # HERE LIES THE ACTUAL MONTE CARLO STEP:
 #
