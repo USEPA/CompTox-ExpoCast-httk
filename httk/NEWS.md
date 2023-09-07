@@ -33,6 +33,8 @@ output: html_document
 * Fixed bugs that prevented using Monte Carlo with phys-chem parameters
 * Fixed error for species with missing in vitro data (thanks Lu En-Hsuan)
 * Fixed bug where `solve_model` returned other than requested times when argument times was specified (thanks Kimberly Truong)
+* Updated the checks and reported error messages in 'get_clint' and 'get_invtroPK_param' to be more informative
+* Updated 'get_physchem_param' to be case-insensitive
 
 ## New Features
 * Added updated vignette from [Pearce et al. (2017)](https://doi.org/10.18637%2Fjss.v079.i04): v79i04.R
