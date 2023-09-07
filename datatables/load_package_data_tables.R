@@ -1234,6 +1234,9 @@ for (this.row in 1:dim(sipes.bad.cas)[1])
   sipes2017[index,"CAS"] <- sipes.bad.cas[this.row,"CASRN"]
 }
 
+# LogP of -27.9 is probably bad:
+sipes2017[sipes2017$CAS=="40077-57-4","logP"] <- NA
+
 # Store the chemical physprop, but don't add Fup and Clint yet:
 chem.physical_and_invitro.data <- add_chemtable(sipes2017,
                                   current.table=chem.physical_and_invitro.data,
