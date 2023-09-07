@@ -17,6 +17,7 @@ calc_analytic_css_3compss(
   tissue = NULL,
   restrictive.clearance = TRUE,
   bioactive.free.invivo = FALSE,
+  Caco2.options = list(),
   ...
 )
 }

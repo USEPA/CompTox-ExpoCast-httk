@@ -1,13 +1,15 @@
 ---
 title: "News for R package httk"
-date: "May, 2023"
+date: "September, 2023"
 output: html_document
 ---                                                 
 
-# version 2.2.3 (May, 2023)
+# version 2.3.0 (October, 2023)
+This version accompanies the submission of manuscript Honda et al. “Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals in Commerce and the Environment”
+
 ## Bug Fixes
 * Added parameter "plasma.vol" to one compartment model so that Monte Carlo works for non-human species
-* Added added default units for "Aexh" and "Ainh" state variables in gas_pbtk model so that calc_css works for accumulative chemcials
+* Added default units for "Aexh" and "Ainh" state variables in gas_pbtk model so that calc_css works for accumulative chemcials
 * Corrected the [Linakis et al. (2020)](https://doi.org/10.1038/s41370-020-0238-y) vingette to reflect that all CvTdb data used there already are in uM
 * Corrected ppbv unit conversions in 'convert_units'
 * Precision of time output in 'solve_model' is no longer restricted to four significant figures
@@ -17,6 +19,9 @@ output: html_document
 * Updated 'get_physchem_param' to be case-insensitive
 
 ## New Features
+* Added in vitro measured Caco-2 membrane permeability data for 310 chemicals allowing characterization of oral bioavailability
+* Added new functions `calc_fbio.oral`, ‘calc_fabs.oral’, and ‘calc_fgut.oral’ for calculating systemic bioavailability as Fbio = Fabs * Fgut * Fhep where first-pass hepatic metabolism was already available from ‘calc_hep_bioavailability’.
+* Integrated Fabs and Fgut into oral exposure for all TK models and integrated into population variability and uncertainty functions within ‘invitro_uv’
 * Added new function `benchmark_httk` to compare current function of the package against historical performance
 * We now skip over the first five minutes when calculating Cmax in calc_tkstats to allow PBTK model to distribute iv doses
 
