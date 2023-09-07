@@ -97,6 +97,7 @@ MW_pyrene <- get_physchem_param(param='MW', chem.name='pyrene')
 conversion_factor <- convert_units(input.units='mg/L', output.units ='uM',
   MW=MW_pyrene)
 
+calc_mc_oral_equiv(15, parameters=p)
 }
 \author{
 Mark Sfeir, John Wambaugh, and Sarah E. Davidson
