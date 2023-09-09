@@ -324,7 +324,7 @@
 #'
 #' @import stats
 #' @importFrom purrr compact
-#' @importFrom data.table is.data.dtable 
+#' @importFrom data.table is.data.table 
 #' @export calc_mc_css
 calc_mc_css <- function(chem.cas = NULL,
                         chem.name = NULL,
