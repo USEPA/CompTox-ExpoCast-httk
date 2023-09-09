@@ -79,7 +79,7 @@
 #'   MW=MW_pyrene)
 #'
 #' calc_mc_oral_equiv(15, parameters=p)
-#' @importFrom data.table is.data.dtable 
+#' @importFrom data.table is.data.table 
 #' @export convert_units
 convert_units <- function(input.units = NULL, 
                           output.units = NULL, 
