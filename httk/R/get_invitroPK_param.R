@@ -116,17 +116,31 @@ get_invitroPK_param <- function(
 
     if (is.na(param.val))
     {
-      stop(param," does not currently exist for ",species," in the `chem.physical_and_invitro.data`.")
-    } else if(param=="Clint" & (nchar(param.val) - nchar(gsub(",","",param.val)))==3){
+# We allow NA's for certain parameters
+      NA.invitro.params <- "Clint.pValue"
+      if (param %in% NA.invitro.params)
+      {
+        return(param.val)
+      } else stop(param,
+                  " does not currently exist for ",
+                  species,
+                  " in the `chem.physical_and_invitro.data`.")
+# Check to see if the parameter is a Clint value with four values separated by
+# commas (median, l95, u95, pvalue):
+    } else if(param=="Clint" & 
+              (nchar(param.val) - nchar(gsub(",","",param.val)))==3) {
       return(param.val)
-    } else if (param %in% c("Caco2.Pab","Funbound.plasma") & (nchar(param.val) - nchar(gsub(",","",param.val)))==2){
+# Check to see if the parameter is a Caco2.Pab or Funbound.plasma with three
+# values separated by commas (median, l95, u95):
+    } else if (param %in% c("Caco2.Pab","Funbound.plasma") & 
+               (nchar(param.val) - nchar(gsub(",","",param.val)))==2) {
       return(param.val)
-    } else if (param=="Clint.pValue"){
-      return(param.val)
+# Otherwise attempt to coerce the value to a numeric:
     } else if (!is.na(as.numeric(param.val))){
       return(as.numeric(param.val))
     }
   }
+  
   stop(paste("Incomplete in vitro PK data for ",chem.name,
     " in ",species," -- missing ",param,".",sep=""))
 }
