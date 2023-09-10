@@ -69,12 +69,17 @@ calc_hep_bioavailability <- function(
   
   if (is.null(parameters) | !all(req.param %in% names(parameters)))
   {
+# This function will get us the physiological parameters we need and then
+# recursively call calc_hep_bioavailability (most often we use the
+# following code when the function is run from the command line):
     parameters <- parameterize_steadystate(
                     chem.cas=chem.cas,
                     chem.name=chem.name,
                     dtxsid=dtxsid,
                     suppress.messages=suppress.messages,
                     species=species)
+    
+    return(parameters[['hepatic.bioavailability']])
   }
   
   if (!all(c("Qtotal.liverc","Funbound.plasma","Clmetabolismc","Rblood2plasma") 
