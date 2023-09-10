@@ -91,6 +91,7 @@ get_clint <- function(chem.cas=NULL,
                         species,
                         chem.cas=chem.cas),
                     silent=TRUE)
+  if (is(Clint.pValue, "try-error")) Clint.pValue <- NA
   
   # Need to check cases of missing data on Clint 
   if((is(Clint.db,"try-error") & species == "Human")){ # Case 1: Human does not have Clint values in current HTTK data
