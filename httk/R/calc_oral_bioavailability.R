@@ -14,12 +14,15 @@
 #' specified.
 #' @param chem.name Either the chemical name or the CAS number must be
 #' specified.
+#' @param dtxsid EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' @param clint.pvalue.threshold Hepatic clearances with clearance assays
 #' having p-values greater than the threshold are set to zero.
 #' @param default.to.human Substitutes missing rat values with human values if
 #' true.
+#' @param suppress.messages Whether or not the output message is suppressed.
 #' @param human.clint.fup Uses human hepatic intrinsic clearance and fraction
 #' of unbound plasma in calculation of partition coefficients for rats if true.
 #' @param adjusted.Funbound.plasma Returns adjusted Funbound.plasma when set to
