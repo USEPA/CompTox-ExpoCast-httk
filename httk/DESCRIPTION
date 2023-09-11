@@ -75,9 +75,9 @@ Authors@R: c(
            )
 Depends: R (>= 2.10)
 Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats,
-        graphics, utils, magrittr, purrr, methods, Rdpack
+        graphics, utils, magrittr, purrr, methods, Rdpack, ggplot2
 RdMacros: Rdpack
-Suggests: ggplot2, knitr, rmarkdown, R.rsp, GGally, gplots, scales,
+Suggests: knitr, rmarkdown, R.rsp, GGally, gplots, scales,
         EnvStats, MASS, RColorBrewer, TeachingDemos, classInt, ks,
         stringr, reshape, reshape2, viridis, gmodels,
         colorspace, cowplot, ggrepel, dplyr, forcats, smatr, gridExtra,
