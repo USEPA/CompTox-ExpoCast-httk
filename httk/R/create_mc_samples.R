@@ -116,7 +116,7 @@
 #' parameterize_* function for the model.
 #' 
 #' @param Caco2.options Arguments describing how to handle Caco2 absorption data
-#' that are passed to \code{\line{invitro_mc}} and the parameterize_[MODEL] 
+#' that are passed to \code{\link{invitro_mc}} and the parameterize_[MODEL] 
 #' functions
 #'
 #' @return

@@ -19,7 +19,7 @@
 #' \code{\link{calc_hep_bioavailability}}.
 #' If \ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}}
 #' has been measured in vivo and is found in
-#' table \code{\link{chem.physical_and_invitro.data)}} then we set 
+#' table \code{\link{chem.physical_and_invitro.data}} then we set 
 #' \ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{git}}} 
 #' to the measured value divided by 
 #' \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}} 
