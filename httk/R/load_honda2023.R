@@ -4,7 +4,7 @@
 #' \code{\link{chem.physical_and_invitro.data}}
 #' that includes Caco2 Pab predictions from the Random Forest quantitative 
 #' structure-property relationship (QSPR) models developed and
-#' presented in Honda et al. 2023, included in table \code{\link{honda2023}}.
+#' presented in Honda et al. 2023, included in table \code{\link{honda2023.qspr}}.
 #' 
 #' Note that because Pab is not required for most HTTK models, changing
 #' the number of chemicals for which a value is available will not change the

@@ -120,7 +120,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' @param tcdata A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
 #' v_total, v_working. Otherwise supply single values to this.params (e.g., this.sarea,
 #' this.v_total, etc.). Chemical parameters are taken from 
-#' \code{\link{chem.phisical_and_invitro.data}}.
+#' \code{\link{chem.physical_and_invitro.data}}.
 #' 
 #' @param this.sarea Surface area per well (m^2)
 #' 
