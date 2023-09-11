@@ -20,6 +20,9 @@
 #' @param restrictive.clearance Protein binding not taken into account (set to 1) in 
 #' liver clearance if FALSE.
 #' @param flow.34 A logical constraint
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human").
+#' @param suppress.messages Whether or not to suppress the output message.
 #'
 #'@return A data.table whose columns are the parameters of the HTTK model
 #'  specified in \code{model}.

@@ -1739,3 +1739,23 @@
 #' @format data.frame
 #' @keywords data
 "example.seem"
+
+#' <Honda 2023 Data Title>
+#' <DESCRIPTION NEEDED>
+#' @name honda2023.data
+"honda2023.data"
+
+#' <Honda 2023 QSPR Title>
+#' <DESCRIPTION NEEDED>
+#' @name honda2023.qspr
+"honda2023.qspr"
+
+#' <HTTK Benchmark Title>
+#' <DESCRIPTION NEEDED>
+#' @name httk.performance
+"httk.performance"
+
+#" <SIPES 2017 Title>
+#' <DESCRIPTION NEEDED>
+#' @name sipes2017
+"sipes2017"
