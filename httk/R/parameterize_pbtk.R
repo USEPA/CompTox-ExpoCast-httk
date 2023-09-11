@@ -19,7 +19,7 @@
 #' \ifelse{html}{\out{F<sub>bio</sub>=F<sub>abs</sub>*F<sub>gut</sub>*F<sub>hep</sub>}}{\eqn{F_{bio}=F_{abs}*F_{gut}*F_{hep}}}.
 #' Only if \ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}}
 #' has been measured in vivo and is found in
-#' table \code{\link{chem.physical_and_invitro.data)}} then we set 
+#' table \code{\link{chem.physical_and_invitro.data}} then we set 
 #' \ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{gut}}} 
 #' to the measured value divided by 
 #' \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}} 
