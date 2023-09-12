@@ -101,6 +101,9 @@ hematocrit, Funbound.plasma, and Krbc2pu.}
 \item{recalc.clearance}{Recalculates the the hepatic clearance
 (Clmetabolism) with new million.cells.per.gliver parameter.}
 
+\item{clint.pvalue.threshold}{Hepatic clearances with clearance assays
+having p-values greater than the threshold are set to zero.}
+
 \item{dosing.matrix}{Vector of dosing times or a matrix consisting of two
 columns or rows named "dose" and "time" containing the time and amount, in
 mg/kg BW, of each dose.}
