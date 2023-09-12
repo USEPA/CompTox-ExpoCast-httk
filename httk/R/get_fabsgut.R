@@ -30,7 +30,10 @@
 #' using \code{\link{calc_fgut.oral}}.
 #' If argument keepit100 is used then there is complete absorption from the gut
 #' (that is, \ifelse{html}{\out{F<sub>abs</sub>=F<sub>gut</sub>=1}}{\eqn{F_{abs}=F_{gut}=1}}). 
-#'                                                                               
+#'
+#' @param Params A list of the parameters (Caco2.Pab, Funbound.Plasma, Rblood2plasma,
+#' Clint, BW, Qsmallintestine, Fabs, Fgut) used in the calculation, either supplied by user
+#' or calculated in parameterize_steady_state.                                                                               
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- the 
 #' chemical must be identified by either CAS, name, or DTXISD
 #' @param chem.name Chemical name (spaces and capitalization ignored) --  the 
@@ -41,7 +44,7 @@
 #' default "Human").
 #' @param default.to.human Substitutes missing rat values with human values if
 #' true.
-#' @param Caco2.default sets the default value for  Caco2.Pab if Caco2.Pab is 
+#' @param Caco2.Pab.default sets the default value for  Caco2.Pab if Caco2.Pab is 
 #' unavailable. 
 #' @param Caco2.Fabs = TRUE uses Caco2.Pab to calculate
 #' fabs.oral, otherwise fabs.oral = \code{Fabs}. 
@@ -51,6 +54,7 @@
 #' literature with Caco2 derived values if available. 
 #' @param keepit100 TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) 
 #' regardless of other settings.
+#' @param suppress.messages Whether or not the output message is suppressed.
 #' 
 #' @author Greg Honda and John Wambaugh
 #'
