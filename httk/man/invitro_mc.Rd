@@ -60,6 +60,10 @@ Monte Carlo for \code{Clint} values (Default TRUE)}
 \item{clint.pop.cv}{Coefficient of variation of distribution of population
 \code{Clint} values.}
 
+\item{caco2.meas.sd}{Standard deviation of the measured oral absorption - numeric value (Default 0.3).}
+
+\item{caco2.pop.sd}{Standard deviation of the population level oral absorption - numeric value (Default 0.3).}
+
 \item{Caco2.Fgut}{= TRUE uses Caco2.Pab to calculate 
 fgut.oral, otherwise fgut.oral = \code{Fgut}.}
 
