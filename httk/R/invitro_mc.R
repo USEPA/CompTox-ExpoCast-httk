@@ -67,6 +67,10 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' 
+#' @param caco2.meas.sd Standard deviation of the measured oral absorption - numeric value (Default 0.3).
+#' 
+#' @param caco2.pop.sd Standard deviation of the population level oral absorption - numeric value (Default 0.3).
+#' 
 #' @param Caco2.Fabs = TRUE uses Caco2.Pab to calculate
 #' fabs.oral, otherwise fabs.oral = \code{Fabs}. 
 #' 
