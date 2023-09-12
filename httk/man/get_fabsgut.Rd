@@ -20,6 +20,10 @@ get_fabsgut(
 )
 }
 \arguments{
+\item{Params}{A list of the parameters (Caco2.Pab, Funbound.Plasma, Rblood2plasma,
+Clint, BW, Qsmallintestine, Fabs, Fgut) used in the calculation, either supplied by user
+or calculated in parameterize_steady_state.}
+
 \item{chem.cas}{Chemical Abstract Services Registry Number (CAS-RN) -- the 
 chemical must be identified by either CAS, name, or DTXISD}
 
@@ -35,6 +39,9 @@ default "Human").}
 \item{default.to.human}{Substitutes missing rat values with human values if
 true.}
 
+\item{Caco2.Pab.default}{sets the default value for  Caco2.Pab if Caco2.Pab is 
+unavailable.}
+
 \item{Caco2.Fgut}{= TRUE uses Caco2.Pab to calculate  fgut.oral, otherwise 
 fgut.oral = \code{Fgut}.}
 
@@ -47,8 +54,7 @@ literature with Caco2 derived values if available.}
 \item{keepit100}{TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) 
 regardless of other settings.}
 
-\item{Caco2.default}{sets the default value for  Caco2.Pab if Caco2.Pab is 
-unavailable.}
+\item{suppress.messages}{Whether or not the output message is suppressed.}
 }
 \description{
 This function tetrieves or caclulates fraction of chemical absorbed from the gut.
