@@ -128,7 +128,7 @@ argument "model". (Defaults to NULL.)}
 \item{calc.analytic.css.arg.list}{Additional parameters passed to}
 
 \item{Caco2.options}{Arguments describing how to handle Caco2 absorption data
-that are passed to \code{\line{invitro_mc}} and the parameterize_[MODEL] 
+that are passed to \code{\link{invitro_mc}} and the parameterize_[MODEL] 
 functions
 
 \code{\link{calc_analytic_css}}.}
@@ -139,7 +139,7 @@ steady-stae concentration (Css) from the Monte Carlo simulation
 }
 \description{
 For a given chemical and fixed dose rate this function determines a 
-distribution of steady-state concentrations reflecting measurment uncertainty
+distribution of steady-state concentrations reflecting measurement uncertainty
 an population variability. Uncertainty and variability are simulated via the
 Monte Carlo method -- many sets of model parameters are drawn according to
 probability distributions described in 
