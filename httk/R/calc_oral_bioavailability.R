@@ -18,28 +18,24 @@
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
-#' @param clint.pvalue.threshold Hepatic clearances with clearance assays
-#' having p-values greater than the threshold are set to zero.
+#' 
 #' @param default.to.human Substitutes missing rat values with human values if
 #' true.
 #' @param suppress.messages Whether or not the output message is suppressed.
-#' @param human.clint.fup Uses human hepatic intrinsic clearance and fraction
-#' of unbound plasma in calculation of partition coefficients for rats if true.
-#' @param adjusted.Funbound.plasma Returns adjusted Funbound.plasma when set to
-#' TRUE.
-#' @param restrictive.clearance In calculating hepatic.bioavailability, protein
-#' binding is not taken into account (set to 1) in liver clearance if FALSE.
-#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
-#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
-#' dataset).
-#' @param Caco2.options A list of options to use when working with Caco2 apical to
-#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
-#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
-#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#'  
+#' @param Caco2.Pab.default = "1.6" Caco2 apical to basolateral data
 #' 
+#' @param Caco2.Fgut = TRUE uses Caco2.Pab to calculate fgut.oral, otherwise fgut.oral = \code{Fgut}
+#' 
+#' @param Caco2.Fabs = TRUE uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}.
+#' 
+#' @param overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' 
+#' @param keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' 
+#' Caco2 derived values if available.
+#' 
+#' @param ... Other parameters
 #'
 #' @return \item{fbio.oral}{Oral bioavailability, the fraction of oral dose 
 #' reaching systemic distribution in the body.} \item{fabs.oral}{Fraction of dose absorbed, 
@@ -50,14 +46,14 @@
 #' @keywords Parameter
 #' @examples
 #' 
-#'  fbio1 <- calc_fbio.oral(chem.cas='80-05-7',
-#'                          Caco2.options = list(Caco2.Pab.default = 2,
-#'                                               Caco2.Fabs = TRUE,
-#'                                               Caco2.Fgut = TRUE))
-#'  fbio2 <- calc_fbio.oral(chem.cas='80-05-7',
-#'                          Caco2.options = list(Caco2.Pab.default = 2,
-#'                                               Caco2.Fabs = FALSE,
-#'                                               Caco2.Fgut = FALSE))
+#' fbio1 <- calc_fbio.oral(chem.cas='80-05-7',
+#'                         Caco2.Pab.default = 2,
+#'                         Caco2.Fabs = TRUE,
+#'                         Caco2.Fgut = TRUE)
+#' fbio2 <- calc_fbio.oral(chem.cas='80-05-7',
+#'                         Caco2.Pab.default = 2,
+#'                         Caco2.Fabs = FALSE,
+#'                         Caco2.Fgut = FALSE)
 #'
 #' @references 
 #' Darwich, A. S., Neuhoff, S., Jamei, M., & Rostami-Hodjegan, A. (2010). 
