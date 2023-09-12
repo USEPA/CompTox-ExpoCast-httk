@@ -43,7 +43,10 @@ includes MW (molecular weight) for our conversions}
 
 \item{temp}{Temperature for conversions (default = 25 degreees C)}
 
-\item{state}{Chemical state (gas or default liquid)}
+\item{liquid.density}{Density of the specified chemical in liquid state,
+numeric value, (default 1.0 g/mL).}
+
+\item{state}{Chemical state (gas or default liquid).}
 }
 \description{
 This function is designed to accept input units, output units, and the 
