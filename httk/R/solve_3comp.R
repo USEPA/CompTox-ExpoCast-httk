@@ -60,6 +60,8 @@
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
 #' hematocrit, Funbound.plasma, and Krbc2pu.
+#' @param clint.pvalue.threshold Hepatic clearances with clearance assays
+#' having p-values greater than the threshold are set to zero.
 #' @param recalc.clearance Recalculates the the hepatic clearance
 #' (Clmetabolism) with new million.cells.per.gliver parameter.
 #' @param dosing.matrix Vector of dosing times or a matrix consisting of two

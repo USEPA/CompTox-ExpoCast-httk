@@ -13,7 +13,7 @@
 #' (measured only) \code{\link{chem.physical_and_invitro.data}} (for all
 #' parameters).
 #' 
-#' #' @param overwrite Only matters if load.image=FALSE. If overwrite=TRUE then
+#' @param overwrite Only matters if load.image=FALSE. If overwrite=TRUE then
 #' existing data in chem.physical_and_invitro.data will be replaced by any
 #' predictions in Dawson et al. (2021) that is for the same chemical and
 #' property. If overwrite=FALSE (DEFAULT) then new data for the same chemical
