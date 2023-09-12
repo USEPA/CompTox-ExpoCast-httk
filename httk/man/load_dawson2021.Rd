@@ -7,6 +7,13 @@
 load_dawson2021(overwrite = FALSE, exclude_oad = TRUE, target.env = .GlobalEnv)
 }
 \arguments{
+\item{overwrite}{Only matters if load.image=FALSE. If overwrite=TRUE then
+existing data in chem.physical_and_invitro.data will be replaced by any
+predictions in Dawson et al. (2021) that is for the same chemical and
+property. If overwrite=FALSE (DEFAULT) then new data for the same chemical
+and property are ignored.  Funbound.plasma values of 0 (below limit of
+detection) are overwritten either way.}
+
 \item{exclude_oad}{Include the chemicals only within the applicability domain.
 If exclude_oad=TRUE (DEFAULT) chemicals outside the applicability domain do not
 have their predicted values loaded.}
@@ -32,13 +39,6 @@ the number of chemicals which are listed with the \code{\link{get_cheminfo}}
 command. Use the command \code{\link{reset_httk}} to return to the initial 
 (measured only) \code{\link{chem.physical_and_invitro.data}} (for all
 parameters).
-
-#' @param overwrite Only matters if load.image=FALSE. If overwrite=TRUE then
-existing data in chem.physical_and_invitro.data will be replaced by any
-predictions in Dawson et al. (2021) that is for the same chemical and
-property. If overwrite=FALSE (DEFAULT) then new data for the same chemical
-and property are ignored.  Funbound.plasma values of 0 (below limit of
-detection) are overwritten either way.
 }
 \examples{
 
