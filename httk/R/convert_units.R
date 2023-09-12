@@ -51,8 +51,11 @@
 #' includes MW (molecular weight) for our conversions
 #'
 #' @param temp Temperature for conversions (default = 25 degreees C)
+#' 
+#' @param liquid.density Density of the specified chemical in liquid state,
+#' numeric value, (default 1.0 g/mL).
 #'
-#' @param state Chemical state (gas or default liquid)
+#' @param state Chemical state (gas or default liquid).
 #' 
 #' @author Mark Sfeir, John Wambaugh, and Sarah E. Davidson
 #'
