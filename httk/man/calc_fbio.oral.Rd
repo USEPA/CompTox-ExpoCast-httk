@@ -65,11 +65,16 @@ specified.}
 \item{chem.name}{Either the chemical name or the CAS number must be
 specified.}
 
+\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
+the chemical must be identified by either CAS, name, or DTXSIDs}
+
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
 \item{default.to.human}{Substitutes missing rat values with human values if
 true.}
+
+\item{suppress.messages}{Whether or not the output message is suppressed.}
 
 \item{clint.pvalue.threshold}{Hepatic clearances with clearance assays
 having p-values greater than the threshold are set to zero.}
