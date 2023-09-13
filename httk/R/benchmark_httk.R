@@ -158,12 +158,16 @@ benchmark_httk <- function(
     } else {
       mc1 <- try(calc_mc_css(chem.cas="80-05-7",
                          output.units="mg/L",
-                         method="dr",
+                         httkpop.generate.arg.list = list(
+                           method="dr" 
+                         ),
                          suppress.messages=suppress.messages)[1])
       set.seed(1234)
       mc2 <- try(calc_mc_css(chem.cas="80-05-7",
                          output.units="uM",
-                         method="dr",
+                         httkpop.generate.arg.list = list(
+                           method="dr" 
+                         ),
                          suppress.messages=suppress.messages)[1])
     }
     benchmarks[["basic"]] <- list(
@@ -260,7 +264,9 @@ benchmark_httk <- function(
                         which.quantile = 0.50,
                         model = "3compartmentss",
                         output.units = "uM",
-                        method="dr",
+                        httkpop.generate.arg.list = list(
+                          method="dr" 
+                        ),
                         suppress.messages=suppress.messages)))
         }
         if (is(css.mc, "try-error")) css.mc <- NA
