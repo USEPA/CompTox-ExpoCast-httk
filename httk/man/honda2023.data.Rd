@@ -3,8 +3,7 @@
 \docType{data}
 \name{honda2023.data}
 \alias{honda2023.data}
-\title{<Honda 2023 Data Title>
-<DESCRIPTION NEEDED>}
+\title{Measured Caco-2 Apical-Basal Permeability Data}
 \format{
 An object of class \code{data.frame} with 634 rows and 5 columns.
 }
@@ -12,7 +11,26 @@ An object of class \code{data.frame} with 634 rows and 5 columns.
 honda2023.data
 }
 \description{
-<Honda 2023 Data Title>
-<DESCRIPTION NEEDED>
+In vitro Caco-2 membrane permeabilities characterize how readily absobed/transported
+a chemical is. These measurements are all for the apical-to-basal Caco-2
+orientation.
+These data were either measured by EPA or collected by other others, as
+indicated by the column 'Data Origin'.
+}
+\details{
+\tabular{lll}{
+\strong{Column Name} \tab \strong{Description} \tab \strong{Units} \cr
+DTXSID \tab EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard}) \tab \cr
+Pab \tab Apical-to-basal Caco-2 permeability \tab 10^-6 cm/s \cr
+Data Origin \tab The reference which collected/generated the measurement \tab \cr
+Test \tab Whether (1) or not (0) the data was withheld from model building to be used in the QSPR test set \tab \cr
+CAS \tab Chemical Abstracts Service Registry Number \tab \cr
+}
+}
+\references{
+\insertRef{obringer2016suitability}{httk}
+\insertRef{lanevskij2019physicochemical}{httk}
+\insertRef{gaulton2012chembl}{httk}
+\insertRef{HondaUnpublishedCaco2}{httk}
 }
 \keyword{datasets}
