@@ -1549,6 +1549,7 @@
 #' @references Pearce, Robert G., et al. "Evaluation and calibration of 
 #' high-throughput predictions of chemical distribution to tissues."
 #' Journal of pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
+#' @seealso \code{\link{predict_partioning_schmitt}} 
 #' @source Pearce et al. 2017 Regression Models
 #' @keywords data
 "pearce2017regression"
@@ -1568,10 +1569,9 @@
 #' @docType data
 #' @format data.frame
 #' @author Daniel E. Dawson
-#' @references Dawson, Daniel E. et al. "Designing QSARs for parameters
-#' of high-throughput toxicokinetic models using open-source descriptors."
-#' Environmental Science & Technology____. (2021):______.
-#' @source Dawson et al. 2021 Random Forest QSAR Model
+#' @seealso \code{\link{load_dawson2021}} 
+#' @references
+#' \insertRef{dawson2021qsar}{httk}
 #' @keywords data
 "dawson2021"
 
@@ -1590,7 +1590,8 @@
 #' @author Dustin F. Kapraun
 #' @references
 #' \insertRef{kapraun2019empirical}{httk}
-#' @source Kapraun et al. 2019 Fetal PBTK Model
+#' @source
+#' \insertRef{kapraun2022fetalmodel}{httk}
 #' @keywords data
 "kapraun2019"
 
@@ -1608,9 +1609,9 @@
 #' @aliases Pradeep2020
 #' @docType data
 #' @format data.frame
+#' @seealso \code{\link{load_pradeep2020}} 
 #' @references 
 #' \insertRef{pradeep2020chemstr}{httk}
-#' @source Pradeep et al. 2020 Chemical Structure Predictive Models for HTTK
 #' @keywords data
 "pradeep2020"
 
@@ -1628,7 +1629,8 @@
 #' @format data.frame
 #' @references
 #' \insertRef{Aylward2014matfet}{httk}
-#' @source Kapraun et al. 2021 (submitted)
+#' @source
+#' \insertRef{kapraun2022fetalmodel}{httk}
 #' @keywords data
 "aylward2014"
 
@@ -1647,7 +1649,8 @@
 #' @format data.frame
 #' @references
 #' \insertRef{dallmann2018pregpbtk}{httk}
-#' @source Kapraun et al. 2021 (submitted)
+#' @source
+#' \insertRef{kapraun2022fetalmodel}{httk}
 #' @keywords data
 "pregnonpregaucs"  
 
@@ -1662,7 +1665,8 @@
 #' @format data.frame
 #' @references
 #' \insertRef{dallmann2018pregpbtk}{httk}
-#' @source Kapraun et al. 2021 (submitted)
+#' @source
+#' \insertRef{kapraun2022fetalmodel}{httk}
 #' @keywords data
 "pksim.pcs"  
 
@@ -1686,7 +1690,8 @@
 #' \insertRef{Csanady2002fetalpc}{httk}
 #' \insertRef{Curley1969fetalpc}{httk}
 #' \insertRef{Weijs2013fetalpc}{httk}
-#' @source Kapraun et al. 2021 (submitted)
+#' @source
+#' \insertRef{kapraun2022fetalmodel}{httk}
 #' @keywords data
 "fetalpcs"
 
@@ -1702,7 +1707,8 @@
 #' @format data.frame
 #' @references
 #' \insertRef{Wang2018matbloodnta}{httk}
-#' @source Kapraun et al. 2021 (submitted)
+#' @source
+#' \insertRef{kapraun2022fetalmodel}{httk}
 #' @keywords data
 "wang2018"
 
@@ -1738,24 +1744,107 @@
 #' @docType data
 #' @format data.frame
 #' @keywords data
+#' @references
+#' \insertRef{Ring2017SEEM}{httk}
 "example.seem"
 
-#' <Honda 2023 Data Title>
-#' <DESCRIPTION NEEDED>
+#' Measured Caco-2 Apical-Basal Permeability Data
+#'
+#' In vitro Caco-2 membrane permeabilities characterize how readily absobed/transported
+#' a chemical is. These measurements are all for the apical-to-basal Caco-2
+#' orientation.
+#' These data were either measured by EPA or collected by other others, as
+#' indicated by the column 'Data Origin'.
+#'
+#' \tabular{lll}{
+#' \strong{Column Name} \tab \strong{Description} \tab \strong{Units} \cr
+#' DTXSID \tab EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard}) \tab \cr
+#' Pab \tab Apical-to-basal Caco-2 permeability \tab 10^-6 cm/s \cr
+#' Data Origin \tab The reference which collected/generated the measurement \tab \cr
+#' Test \tab Whether (1) or not (0) the data was withheld from model building to be used in the QSPR test set \tab \cr
+#' CAS \tab Chemical Abstracts Service Registry Number \tab \cr
+#' }
+#' @references
+#' \insertRef{obringer2016suitability}{httk}
+#' \insertRef{lanevskij2019physicochemical}{httk}
+#' \insertRef{gaulton2012chembl}{httk}
+#' \insertRef{HondaUnpublishedCaco2}{httk}
 #' @name honda2023.data
 "honda2023.data"
 
-#' <Honda 2023 QSPR Title>
-#' <DESCRIPTION NEEDED>
+#' Predicted Caco-2 Apical-Basal Permeabilities
+#'
+#' Honda et al. (2023) describes the construction of a machine-learning 
+#' quantitative structure-property relationship (QSPR )model for in vitro Caco-2 
+#' membrane permeabilites. That model was used to make chemical-specific 
+#' predictions provided in this table.
+#'
+#' \tabular{lll}{
+#' \strong{Column Name} \tab \strong{Description} \tab \strong{Units} \cr
+#' DTXSID \tab EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard}) \tab \cr
+#' Pab.Class.Pred \tab Predicted Pab rate of slow (1), moderate (2), or fast (3) \tab \cr
+#' Pab.Pred.AD \tab Whether (1) or not (0) the chemical is anticipated to be withing the QSPR domain of applicability \tab \cr
+#' CAS \tab Chemical Abstracts Service Registry Number \tab \cr
+#' Pab.Quant.Pred \tab Median and 95-percent interval for values within the predicted class's training data  moderate (2), or fast (3) \tab 10^-6 cm/s \cr
+#' }
+#' @references
+#' \insertRef{HondaUnpublishedCaco2}{httk}
+#' @seealso \code{\link{load_honda2023}} 
 #' @name honda2023.qspr
 "honda2023.qspr"
 
-#' <HTTK Benchmark Title>
-#' <DESCRIPTION NEEDED>
+#' Historical Performance of R Package httk
+#'
+#' This table records the historical performance and other metrics 
+#' of the R package "httk" as
+#' profiled with the function \code{\linke{benchmark_httk}}. There is a row for
+#' each version and a column for each benchmark or metric. This table is used
+#' to generate graphs comparing the current version to past performance in order
+#' to help identify unintended degradtion of package capabilities.
+#'
+#' \tabular{ll}{
+#' \strong{Column Name} \tab \strong{Description} \cr
+#'  Version \tab The release of httk (major.minor.patch) \cr                      
+#'  N.steadystate\tab The number of chemicals for which Css can be predicted for the steady-state model \cr
+#'  calc_analytic.units calc_mc.units solve_pbtk.units   
+#'  RMSLE.Wetmore \cr Root mean squared log10 error between Css predictions from httk and published values from Wetmore papers (both 95th percentile) \tab
+#'  N.Wetmore  \cr Number of chemicals used in RMSLE evaluation \tab         
+#'  RMSLE.noMC  \cr RMSLE between 95th percentile Css prediction and median prediction \tab
+#'  N.noMC  \cr Number of chemicals used in RMSLE evaluation \tab
+#'  RMSLE.InVivoCss  \cr RMSLE for predictions of in vivo measured Css \tab
+#'  N.InVivoCss  \crNumber of chemicals used in RMSLE evaluation  \tab
+#'  RMSLE.InVivoAUC   \cr RMSLE for predictions of in vivo measured AUCs \tab
+#'  N.InVivoAUC  \cr Number of chemicals used in RMSLE evaluation\tab
+#'  RMSLE.InVivoCmax \cr RMSLE for predictions of in vivo measured Cmax \tab
+#'  N.InVivoCmax  \cr Number of chemicals used in RMSLE evaluation \tab
+#'  RMSLE.TissuePC \cr RMSLE for predicted tissue:plasma partition coefficients\tab 
+#'  N.TissuePC  \cr Number of chemicals used in RMSLE evaluation \tab               
+#'  Notes  \cr Why benchmarks/metrics may have changed \tab       
+#' }
+#'
+#' @seealso \code{\link{benchmark_httk}} 
+#' @references
+#' \insertRef{DavidsonFritzUnpublishedModelAdding}{httk}
 #' @name httk.performance
 "httk.performance"
 
-#" <SIPES 2017 Title>
-#' <DESCRIPTION NEEDED>
+#' Sipes et al. 2017 data
+#'
+#' This table includes in silico predicted chemical-specifc plasma protein 
+#' unbound fraction (fup) and intrinsic hepatic clearance values for the entire
+#' Tox21 library 
+#' (see \url{https://www.epa.gov/chemical-research/toxicology-testing-21st-century-tox21}). 
+#' Predictions were made with Simulations Plus ADMET predictor,
+#' as reported in Sipes et al. (2017). 
+#'
 #' @name sipes2017
+#' @aliases Sipes2017
+#' @docType data
+#' @format data.frame
+#' @author Nisha Sipes
+#' @references
+#' \insertRef{sipes2017intuitive}{httk}
+#' @source ADMET, Simulations Plus
+#' @seealso \code{\link{load_sipes2017}} 
+#' @keywords data
 "sipes2017"

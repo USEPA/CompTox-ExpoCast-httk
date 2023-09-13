@@ -65,7 +65,7 @@ specified.}
 \item{chem.name}{Either the chemical name or the CAS number must be
 specified.}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -125,15 +125,9 @@ fbio2 <- calc_fbio.oral(chem.cas='80-05-7',
 
 }
 \references{
-Darwich, A. S., Neuhoff, S., Jamei, M., & Rostami-Hodjegan, A. (2010). 
-Interplay of metabolism and transport in determining oral drug absorption 
-and gut wall metabolism: a simulation assessment using the 
-"Advanced Dissolution, Absorption, Metabolism (ADAM)" model. Curr Drug 
-Metab, 11(9), 716-729. 
-
-Yang, J., Jamei, M., Yeo, K. R., Tucker, G. T., & Rostami-Hodjegan, A. 
-(2007). Prediction of intestinal first-pass drug metabolism. Curr Drug 
-Metab, 8(7), 676-684.
+\insertRef{darwich2010interplay}{httk}
+\insertRef{yang2007prediction}{httk}
+\insertRef{HondaUnpublishedCaco2}{httk}
 }
 \author{
 Gregory Honda

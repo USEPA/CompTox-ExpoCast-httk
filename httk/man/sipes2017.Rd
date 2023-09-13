@@ -3,14 +3,32 @@
 \docType{data}
 \name{sipes2017}
 \alias{sipes2017}
-\title{<DESCRIPTION NEEDED>}
+\alias{Sipes2017}
+\title{Sipes et al. 2017 data}
 \format{
-An object of class \code{data.frame} with 8758 rows and 3 columns.
+data.frame
+}
+\source{
+ADMET, Simulations Plus
 }
 \usage{
 sipes2017
 }
 \description{
-<DESCRIPTION NEEDED>
+This table includes in silico predicted chemical-specifc plasma protein 
+unbound fraction (fup) and intrinsic hepatic clearance values for the entire
+Tox21 library 
+(see \url{https://www.epa.gov/chemical-research/toxicology-testing-21st-century-tox21}). 
+Predictions were made with Simulations Plus ADMET predictor,
+as reported in Sipes et al. (2017).
 }
-\keyword{datasets}
+\references{
+\insertRef{sipes2017intuitive}{httk}
+}
+\seealso{
+\code{\link{load_sipes2017}}
+}
+\author{
+Nisha Sipes
+}
+\keyword{data}
