@@ -27,7 +27,7 @@ This function returns an updated version of
 that includes quantitative 
 structure-property relationship (QSPR) predictions from Simulations Plus' 
 ADMET predictor as 
-used in Sipes et al. 2017, included in \code{\link{admet.data}}.
+used in Sipes et al. 2017, included in \code{\link{sipes2017}}.
 }
 \details{
 Because Clint and Fup are the only measurements required for many HTTK models,
