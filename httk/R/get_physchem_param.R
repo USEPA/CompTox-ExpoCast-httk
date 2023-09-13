@@ -145,6 +145,7 @@ get_physchem_param <- function(
   else stop("The chemical identifiers, dtxsid, chem.cas, or chem.name, were not all present in chem.physical_and_invitro.data.")
 
   # Make code case insensitive:
+  PARAM <- colnames(chem.physical_and_invitro.data)[tolower(colnames(chem.physical_and_invitro.data))%in%tolower(param)]
   param <- tolower(param)
   
   # We allow "pKa_Donor","pKa_Accept", and "logMA" to have the value "NA"
@@ -152,14 +153,13 @@ get_physchem_param <- function(
   # For logMA we have a built-in predictor that can be used if logMA is NA
   if (!any(is.na(suppressWarnings(
     chem.physical_and_invitro.data[this.index,
-                                  param[!param %in% tolower(c(
+                                  PARAM[!param %in% tolower(c(
                                                       "pKa_Accept",
                                                       "pKa_Donor",
                                                       "logMA"))]]))) | 
      any(param %in% tolower(c("pKa_Donor","pKa_Accept","logMA"))))
   {
-    col.numbers <- which(tolower(colnames(chem.physical_and_invitro.data)) ==
-                         param)
+    col.numbers <- which(colnames(chem.physical_and_invitro.data) %in% PARAM)
     values <- chem.physical_and_invitro.data[this.index, col.numbers]
 # We want to make sure the values returned are numeric, unless they are pKa's
 # pKa's can be a comma separated list:
@@ -223,7 +223,7 @@ get_physchem_param <- function(
     {
       if (param %in% tolower(c("pKa_Accept", "pKa_Donor")))
       {
-        return(values.out[[param]])
+        return(values.out[[PARAM]])
       } else {
         return(unlist(values.out))
       }
@@ -236,14 +236,14 @@ get_physchem_param <- function(
                    param,"."))
     }else{
       missing.param <- which(is.na(chem.physical_and_invitro.data[
-        this.index,param[!param %in% c("pKa_Accept", "pKa_Donor", "logMA")]]), arr.ind = T)
+        this.index,PARAM[!param %in% tolower(c("pKa_Accept", "pKa_Donor", "logMA"))]]), arr.ind = T)
       
       if(length(this.index) >= 1 & length(param) > 1)
       {
         stop(paste0("Missing phys-chem data for combinations of: \n",
           paste(lapply(unique(missing.param[,1]), 
           function(x) paste0(chem.cas[x], ": ", 
-            paste(param[!param %in% 
+            paste(PARAM[!param %in% 
               tolower(c("pKa_Accept", 
                 "pKa_Donor", 
                 "logMA"))][
