@@ -30,7 +30,7 @@ CAS \tab Chemical Abstracts Service Registry Number \tab \cr
 \references{
 \insertRef{obringer2016suitability}{httk}
 \insertRef{lanevskij2019physicochemical}{httk}
-\insertRef{gaulton2012chembl}{httk}
+\insertRef{gaulton2011chembl}{httk}
 \insertRef{HondaUnpublishedCaco2}{httk}
 }
 \keyword{datasets}
