@@ -1549,7 +1549,7 @@
 #' @references Pearce, Robert G., et al. "Evaluation and calibration of 
 #' high-throughput predictions of chemical distribution to tissues."
 #' Journal of pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
-#' @seealso \code{\link{predict_partioning_schmitt}} 
+#' @seealso \code{\link{predict_partitioning_schmitt}} 
 #' @source Pearce et al. 2017 Regression Models
 #' @keywords data
 "pearce2017regression"
