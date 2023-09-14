@@ -9,7 +9,7 @@
 list
 }
 \source{
-Kapraun et al. 2019 Fetal PBTK Model
+\insertRef{kapraun2022fetalmodel}{httk}
 }
 \usage{
 kapraun2019
