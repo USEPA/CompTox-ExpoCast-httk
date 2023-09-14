@@ -29,7 +29,7 @@ high-throughput predictions of chemical distribution to tissues."
 Journal of pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
 }
 \seealso{
-\code{\link{predict_partioning_schmitt}}
+\code{\link{predict_partitioning_schmitt}}
 }
 \author{
 Robert G. Pearce
