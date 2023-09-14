@@ -3,8 +3,7 @@
 \docType{data}
 \name{httk.performance}
 \alias{httk.performance}
-\title{<HTTK Benchmark Title>
-<DESCRIPTION NEEDED>}
+\title{Historical Performance of R Package httk}
 \format{
 An object of class \code{data.frame} with 22 rows and 18 columns.
 }
@@ -12,7 +11,38 @@ An object of class \code{data.frame} with 22 rows and 18 columns.
 httk.performance
 }
 \description{
-<HTTK Benchmark Title>
-<DESCRIPTION NEEDED>
+This table records the historical performance and other metrics 
+of the R package "httk" as
+profiled with the function \code{\linke{benchmark_httk}}. There is a row for
+each version and a column for each benchmark or metric. This table is used
+to generate graphs comparing the current version to past performance in order
+to help identify unintended degradtion of package capabilities.
+}
+\details{
+\tabular{ll}{
+\strong{Column Name} \tab \strong{Description} \cr
+ Version \tab The release of httk (major.minor.patch) \cr                      
+ N.steadystate\tab The number of chemicals for which Css can be predicted for the steady-state model \cr
+ calc_analytic.units calc_mc.units solve_pbtk.units   
+ RMSLE.Wetmore \cr Root mean squared log10 error between Css predictions from httk and published values from Wetmore papers (both 95th percentile) \tab
+ N.Wetmore  \cr Number of chemicals used in RMSLE evaluation \tab         
+ RMSLE.noMC  \cr RMSLE between 95th percentile Css prediction and median prediction \tab
+ N.noMC  \cr Number of chemicals used in RMSLE evaluation \tab
+ RMSLE.InVivoCss  \cr RMSLE for predictions of in vivo measured Css \tab
+ N.InVivoCss  \crNumber of chemicals used in RMSLE evaluation  \tab
+ RMSLE.InVivoAUC   \cr RMSLE for predictions of in vivo measured AUCs \tab
+ N.InVivoAUC  \cr Number of chemicals used in RMSLE evaluation\tab
+ RMSLE.InVivoCmax \cr RMSLE for predictions of in vivo measured Cmax \tab
+ N.InVivoCmax  \cr Number of chemicals used in RMSLE evaluation \tab
+ RMSLE.TissuePC \cr RMSLE for predicted tissue:plasma partition coefficients\tab 
+ N.TissuePC  \cr Number of chemicals used in RMSLE evaluation \tab               
+ Notes  \cr Why benchmarks/metrics may have changed \tab       
+}
+}
+\references{
+\insertRef{DavidsonFritzUnpublishedModelAdding}{httk}
+}
+\seealso{
+\code{\link{benchmark_httk}}
 }
 \keyword{datasets}
