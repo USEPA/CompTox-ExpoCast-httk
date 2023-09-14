@@ -8,7 +8,7 @@
 data.frame
 }
 \source{
-Kapraun et al. 2021 (submitted)
+\insertRef{kapraun2022fetalmodel}{httk}
 }
 \usage{
 pksim.pcs
