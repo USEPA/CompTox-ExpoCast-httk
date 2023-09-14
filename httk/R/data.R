@@ -1767,7 +1767,7 @@
 #' @references
 #' \insertRef{obringer2016suitability}{httk}
 #' \insertRef{lanevskij2019physicochemical}{httk}
-#' \insertRef{gaulton2012chembl}{httk}
+#' \insertRef{gaulton2011chembl}{httk}
 #' \insertRef{HondaUnpublishedCaco2}{httk}
 #' @name honda2023.data
 "honda2023.data"
