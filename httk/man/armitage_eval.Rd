@@ -192,7 +192,7 @@ xcells \tab Fraction within cells \tab fraction \cr
 xplastic \tab Fraction bound to plastic \tab fraction \cr     
 xprecip \tab Fraction precipitated out of solution \tab fraction \cr       
 eta_free \tab Effective availability ratio \tab fraction \cr      
-\strong{cfree.invitro} \tab \strong{Free concentration in the in vitro media} (use for Honda1 and Honda2) \tab fraction (%) \cr
+\strong{cfree.invitro} \tab \strong{Free concentration in the in vitro media} (use for Honda1 and Honda2) \tab fraction \cr
 }
 }
 \description{
