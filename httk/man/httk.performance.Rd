@@ -13,7 +13,7 @@ httk.performance
 \description{
 This table records the historical performance and other metrics 
 of the R package "httk" as
-profiled with the function \code{\linke{benchmark_httk}}. There is a row for
+profiled with the function \code{\link{benchmark_httk}}. There is a row for
 each version and a column for each benchmark or metric. This table is used
 to generate graphs comparing the current version to past performance in order
 to help identify unintended degradtion of package capabilities.
@@ -29,7 +29,7 @@ to help identify unintended degradtion of package capabilities.
  RMSLE.noMC  \cr RMSLE between 95th percentile Css prediction and median prediction \tab
  N.noMC  \cr Number of chemicals used in RMSLE evaluation \tab
  RMSLE.InVivoCss  \cr RMSLE for predictions of in vivo measured Css \tab
- N.InVivoCss  \crNumber of chemicals used in RMSLE evaluation  \tab
+ N.InVivoCss  \cr Number of chemicals used in RMSLE evaluation  \tab
  RMSLE.InVivoAUC   \cr RMSLE for predictions of in vivo measured AUCs \tab
  N.InVivoAUC  \cr Number of chemicals used in RMSLE evaluation\tab
  RMSLE.InVivoCmax \cr RMSLE for predictions of in vivo measured Cmax \tab
