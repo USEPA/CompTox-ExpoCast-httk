@@ -372,7 +372,7 @@ specification in compartment_units for model ", model)
     if (!all(param_names %in% names(parameters)))
     {
       stop(paste("Missing parameters:",
-        paste(compiled_param_names[which(!param_names %in% 
+        paste(param_names[which(!param_names %in% 
         names(parameters))],collapse=', '),
         ". Use parameters from ",parameterize_function,".",sep="")) 
     }
