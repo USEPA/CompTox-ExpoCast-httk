@@ -448,8 +448,8 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
   if(!all(c("gkow","logHenry","gswat","MP","MW") %in% names(tcdata))){
   # If not, pull them:
     tcdata[, c("gkow","logHenry","gswat","MP","MW") := 
-             get_physchem_param(param = c("logP","logHenry","logWSol","MP","MW"), 
-                                chem.cas = casrn)]
+             as.data.frame(get_physchem_param(param = c("logP","logHenry","logWSol","MP","MW"), 
+                                chem.cas = casrn),row.names = casrn)]
   }
   tcdata[, "gkaw" := logHenry - log10(298.15*8.2057338e-5)] # log10 atm-m3/mol to (mol/m3)/(mol/m3) (unitless)
   
@@ -460,8 +460,8 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
     {
     # If not, pull them:
       tcdata[, c("pKa_Donor","pKa_Accept") := 
-               get_physchem_param(param = c("pKa_Donor","pKa_Accept"), 
-                                  chem.cas = casrn)]
+               as.data.frame(get_physchem_param(param = c("pKa_Donor","pKa_Accept"), 
+                                  chem.cas = casrn),row.names = casrn)]
     }
     # Calculate the fraction neutral:
     tcdata[, Fneutral := apply(.SD,1,function(x) calc_ionization(
@@ -477,8 +477,8 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
     {
     # If not, pull them:
       tcdata[, c("pKa_Donor","pKa_Accept") := 
-               get_physchem_param(param = c("pKa_Donor","pKa_Accept"), 
-                                  chem.cas = casrn)]
+               as.data.frame(get_physchem_param(param = c("pKa_Donor","pKa_Accept"), 
+                                  chem.cas = casrn),row.names = casrn)]
     }
     # Calculate the fraction neutral:
     tcdata[, Fneutral := apply(.SD,1,function(x) calc_ionization(
