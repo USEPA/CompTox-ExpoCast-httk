@@ -118,7 +118,8 @@ calc_fbio.oral <- function(Params = NULL,
   }else{
     if (overwrite.invivo | 
       (Caco2.Fabs & 
-        class(try(get_invitroPK_param("Fabs",species,chem.cas=chem.cas),silent=T)) == "try-error"))
+        is(try(get_invitroPK_param("Fabs",species,chem.cas=chem.cas),
+           silent=TRUE), "try-error")))
     {
       fabs.oral <- calc_fabs.oral(Params = Params) # Determine Fabs.oral
     } else {
@@ -127,7 +128,8 @@ calc_fbio.oral <- function(Params = NULL,
     
     if (overwrite.invivo | 
       (Caco2.Fgut & 
-        class(try(get_invitroPK_param("Fgut",species,chem.cas=chem.cas),silent=T)) == "try-error"))
+        is(try(get_invitroPK_param("Fgut",species,chem.cas=chem.cas),
+              silent=TRUE), "try-error")))
     {
       fgut.oral <- calc_fgut.oral(Params = Params) # Determine Fgut.oral
     } else {
