@@ -127,12 +127,9 @@
 #' @author Caroline Ring, Robert Pearce, and John Wambaugh
 #'
 #' @references 
-#' Wambaugh, John F., et al. "Toxicokinetic triage for 
-#' environmental chemicals." Toxicological Sciences 147.1 (2015): 55-67.
+#' \insertRef{ring2017identifying}{httk} 
 #'
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment international 106 (2017): 105-118. 
+#' \insertRef{breen2022simulating}{httk} 
 #'
 #' @keywords Monte-Carlo
 #' 
