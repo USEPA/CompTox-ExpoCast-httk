@@ -1549,7 +1549,7 @@
 #' @references Pearce, Robert G., et al. "Evaluation and calibration of 
 #' high-throughput predictions of chemical distribution to tissues."
 #' Journal of pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
-#' @seealso \code{\link{predict_partioning_schmitt}} 
+#' @seealso \code{\link{predict_partitioning_schmitt}} 
 #' @source Pearce et al. 2017 Regression Models
 #' @keywords data
 "pearce2017regression"
@@ -1767,7 +1767,7 @@
 #' @references
 #' \insertRef{obringer2016suitability}{httk}
 #' \insertRef{lanevskij2019physicochemical}{httk}
-#' \insertRef{gaulton2012chembl}{httk}
+#' \insertRef{gaulton2011chembl}{httk}
 #' \insertRef{HondaUnpublishedCaco2}{httk}
 #' @name honda2023.data
 "honda2023.data"
@@ -1797,7 +1797,7 @@
 #'
 #' This table records the historical performance and other metrics 
 #' of the R package "httk" as
-#' profiled with the function \code{\linke{benchmark_httk}}. There is a row for
+#' profiled with the function \code{\link{benchmark_httk}}. There is a row for
 #' each version and a column for each benchmark or metric. This table is used
 #' to generate graphs comparing the current version to past performance in order
 #' to help identify unintended degradtion of package capabilities.
@@ -1812,7 +1812,7 @@
 #'  RMSLE.noMC  \cr RMSLE between 95th percentile Css prediction and median prediction \tab
 #'  N.noMC  \cr Number of chemicals used in RMSLE evaluation \tab
 #'  RMSLE.InVivoCss  \cr RMSLE for predictions of in vivo measured Css \tab
-#'  N.InVivoCss  \crNumber of chemicals used in RMSLE evaluation  \tab
+#'  N.InVivoCss  \cr Number of chemicals used in RMSLE evaluation  \tab
 #'  RMSLE.InVivoAUC   \cr RMSLE for predictions of in vivo measured AUCs \tab
 #'  N.InVivoAUC  \cr Number of chemicals used in RMSLE evaluation\tab
 #'  RMSLE.InVivoCmax \cr RMSLE for predictions of in vivo measured Cmax \tab
