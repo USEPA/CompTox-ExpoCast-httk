@@ -22,21 +22,23 @@ to help identify unintended degradtion of package capabilities.
 \tabular{ll}{
 \strong{Column Name} \tab \strong{Description} \cr
  Version \tab The release of httk (major.minor.patch) \cr                      
- N.steadystate\tab The number of chemicals for which Css can be predicted for the steady-state model \cr
- calc_analytic.units calc_mc.units solve_pbtk.units   
- RMSLE.Wetmore \cr Root mean squared log10 error between Css predictions from httk and published values from Wetmore papers (both 95th percentile) \tab
- N.Wetmore  \cr Number of chemicals used in RMSLE evaluation \tab         
- RMSLE.noMC  \cr RMSLE between 95th percentile Css prediction and median prediction \tab
- N.noMC  \cr Number of chemicals used in RMSLE evaluation \tab
- RMSLE.InVivoCss  \cr RMSLE for predictions of in vivo measured Css \tab
- N.InVivoCss  \cr Number of chemicals used in RMSLE evaluation  \tab
- RMSLE.InVivoAUC   \cr RMSLE for predictions of in vivo measured AUCs \tab
- N.InVivoAUC  \cr Number of chemicals used in RMSLE evaluation\tab
- RMSLE.InVivoCmax \cr RMSLE for predictions of in vivo measured Cmax \tab
- N.InVivoCmax  \cr Number of chemicals used in RMSLE evaluation \tab
- RMSLE.TissuePC \cr RMSLE for predicted tissue:plasma partition coefficients\tab 
- N.TissuePC  \cr Number of chemicals used in RMSLE evaluation \tab               
- Notes  \cr Why benchmarks/metrics may have changed \tab       
+ N.steadystate \tab The number of chemicals for which Css can be predicted for the steady-state model \cr
+ calc_analytic.units \tab The ratio of the output of \code{\link{calc_analytic_css}} in mg/L to uM multiplied by 1000/MW (should be 1)\cr
+ calc_mc.units  \tab The ratio of the output of \code{\link{calc_mc_css}} in mg/L to uM multiplied by 1000/MW (should be 1) \cr
+ solve_pbtk.units  \tab The ratio of a Cplasma value from \code{\link{solve_pbtk}} in mg/L to uM multiplied by 1000/MW (should be 1) \cr  
+ RMSLE.Wetmore \tab Root mean squared log10 error between Css predictions from httk and published values from Wetmore papers (both 95th percentile) \cr
+ N.Wetmore  \tab  Number of chemicals used in RMSLE evaluation \cr          
+ RMSLE.noMC  \tab  RMSLE between 95th percentile Css prediction and median prediction \cr 
+ N.noMC  \tab Number of chemicals used in RMSLE evaluation \cr 
+ RMSLE.InVivoCss  \tab RMSLE for predictions of in vivo measured Css \cr 
+ N.InVivoCss  \tab Number of chemicals used in RMSLE evaluation  \cr 
+ RMSLE.InVivoAUC   \tab \RMSLE for predictions of in vivo measured AUCs \cr 
+ N.InVivoAUC  \tab Number of chemicals used in RMSLE evaluation \cr 
+ RMSLE.InVivoCmax \tab RMSLE for predictions of in vivo measured Cmax \cr 
+ N.InVivoCmax  \tab Number of chemicals used in RMSLE evaluation \cr 
+ RMSLE.TissuePC \tab RMSLE for predicted tissue:plasma partition coefficients \cr  
+ N.TissuePC  \tab Number of chemicals used in RMSLE evaluation \cr                
+ Notes  \tab Why benchmarks/metrics may have changed \cr       
 }
 }
 \references{
