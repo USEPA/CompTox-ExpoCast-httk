@@ -1,7 +1,8 @@
 # Add the human gestational PBTK model to the list of models:
 # 
-# Kapraun et al. "Evaluation of a Rapid, Multi-Chemical Human Gestational Dose Model"
-# in preparation
+# Kapraun, Dustin F., et al. 
+# "Evaluation of a rapid, generic human gestational dose model." 
+# Reproductive Toxicology 113 (2022): 172-188.
 
 
 #Analytic expression for steady-state plasma concentration.
