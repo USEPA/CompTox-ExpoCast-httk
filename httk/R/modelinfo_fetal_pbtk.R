@@ -66,7 +66,7 @@ model.list[["fetal_pbtk"]]$param.names <- c(
   "Clint",
   "Clint.dist",
   "Clmetabolismc",                
-  "Fgutabs",      
+  "Fabsgut",      
   "Fhep.assay.correction",
   "Fraction_unbound_plasma_fetus",
   "Funbound.plasma",              
