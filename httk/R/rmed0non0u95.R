@@ -20,7 +20,8 @@
 #' 
 #' @author John Wambaugh
 #' 
-#' @references Breen et al., in preparation
+#' @references 
+#' \insertRef{breen2022simulating}{httk}
 #'
 #' @examples
 #' Fup.95 <- 0.02

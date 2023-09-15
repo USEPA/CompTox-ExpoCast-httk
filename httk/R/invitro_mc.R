@@ -87,17 +87,11 @@
 #' @author Caroline Ring and John Wambaugh
 #'
 #' @references
-#' Wambaugh, John F., et al. "Assessing Toxicokinetic Uncertainty and 
-#' Variability in Risk Prioritization." Toxicological Sciences (2019).
+#' \insertRef{wambaugh2019assessing}{httk} 
 #'
-#' Kilford, Peter J., et al. "Hepatocellular binding of drugs: correction for 
-#' unbound fraction in hepatocyte incubations using microsomal binding or drug 
-#' lipophilicity data." Drug Metabolism and Disposition 36.7 (2008): 1194-1197.
+#' \insertRef{breen2022simulating}{httk} 
 #' 
-#' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-#' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
-#' and pharmacodynamics 44.6 (2017): 549-565.
-#' 
+#' \insertRef{kilford2008hepatocellular}{httk} 
 #' @examples
 #' \donttest{
 #' #Simply generate a virtual population of 100 individuals,
