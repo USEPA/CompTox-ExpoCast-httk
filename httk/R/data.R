@@ -1415,7 +1415,6 @@
 #' 10.1016/j.tiv.2007.09.010.
 #'
 #' ICRP. Report of the Task Group on Reference Man. ICRP Publication 23 1975
-#' @source Pearce et al. (2017), in preparation,
 #'
 #' Wambaugh, John F., et al. "Toxicokinetic triage for environmental
 #' chemicals." Toxicological Sciences (2015): 228-237.

@@ -28,13 +28,12 @@
 #' A data.table with a row for each individual in the sample and a column for
 #' each parater in the model.
 #' 
-#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
+#' @references 
+#' \insertRef{ring2017identifying}{httk} 
+#'
+#' \insertRef{breen2022simulating}{httk} 
 #' 
-#' Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts
-#' in pharmacokinetics." Journal of Pharmacokinetics and Biopharmaceutics 1.2
-#' (1973): 123-136. 
+#' \insertRef{rowland1973clearance}{httk} 
 #'
 #' @examples
 #' 
