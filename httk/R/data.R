@@ -1817,7 +1817,7 @@
 #'  N.noMC  \tab Number of chemicals used in RMSLE evaluation \cr 
 #'  RMSLE.InVivoCss  \tab RMSLE for predictions of in vivo measured Css \cr 
 #'  N.InVivoCss  \tab Number of chemicals used in RMSLE evaluation  \cr 
-#'  RMSLE.InVivoAUC   \tab \RMSLE for predictions of in vivo measured AUCs \cr 
+#'  RMSLE.InVivoAUC   \tab RMSLE for predictions of in vivo measured AUCs \cr 
 #'  N.InVivoAUC  \tab Number of chemicals used in RMSLE evaluation \cr 
 #'  RMSLE.InVivoCmax \tab RMSLE for predictions of in vivo measured Cmax \cr 
 #'  N.InVivoCmax  \tab Number of chemicals used in RMSLE evaluation \cr 
