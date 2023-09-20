@@ -66,10 +66,8 @@
 #'
 #' @author Robert Pearce, Mark Sfeir, John Wambaugh, and Dustin Kapraun
 #'
-#' @references Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
-#' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
-#' hepatocyte incubations using microsomal binding or drug lipophilicity data.
-#' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+#' @references 
+#' \insertRef{kilford2008hepatocellular}{httk}
 #' 
 #' McNamara PJ, Alcorn J. Protein binding predictions in infants. 
 #' AAPS PharmSci. 2002;4(1):E4. doi: 10.1208/ps040104. PMID: 12049488.

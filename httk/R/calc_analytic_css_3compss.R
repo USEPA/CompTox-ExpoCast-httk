@@ -40,8 +40,8 @@
 #'
 #'@author Robert Pearce and John Wambaugh
 #'
-#' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
-#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#' @references 
+#' \insertRef{pearce2017httk}{httk}
 #'
 #'@keywords 3compss
 calc_analytic_css_3compss <- function(chem.name=NULL,
