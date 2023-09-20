@@ -116,10 +116,7 @@
 #' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
 #' and pharmacodynamics 44.6 (2017): 549-565.
 #'
-#' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
-#' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
-#' hepatocyte incubations using microsomal binding or drug lipophilicity data.
-#' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+#' \insertRef{lkilford2008hepatocellular}{httk}
 #'
 #' Carlile, David J., Katayoun Zomorodi, and J. Brian Houston. "Scaling factors 
 #' to relate drug metabolic clearance in hepatic microsomes, isolated 
