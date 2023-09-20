@@ -78,9 +78,7 @@
 #' Wambaugh, John F., et al. "Assessing Toxicokinetic Uncertainty and 
 #' Variability in Risk Prioritization." Toxicological Sciences (2019).
 #'
-#' Kilford, Peter J., et al. "Hepatocellular binding of drugs: correction for 
-#' unbound fraction in hepatocyte incubations using microsomal binding or drug 
-#' lipophilicity data." Drug Metabolism and Disposition 36.7 (2008): 1194-1197.
+#' \insertRef{kilford2008hepatocellular}{httk} 
 #' 
 #' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
 #' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
