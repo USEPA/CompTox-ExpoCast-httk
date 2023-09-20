@@ -51,10 +51,7 @@
 #' predicting drug clearance using in vitro kinetic data from hepatic microsomes 
 #' and isolated hepatocytes." Pharmaceutical Tesearch, 21(5), 785-792.
 #'
-#' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
-#' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
-#' hepatocyte incubations using microsomal binding or drug lipophilicity data.
-#' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+#' \insertRef{kilford2008hepatocellular}{httk} 
 #'
 #' @examples
 #' 

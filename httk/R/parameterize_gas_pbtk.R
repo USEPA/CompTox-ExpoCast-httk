@@ -132,9 +132,7 @@
 #' @author Matt Linakis, Robert Pearce, John Wambaugh
 #'
 #' @references 
-#' Linakis, Matthew W., et al. "Development and evaluation of a high throughput 
-#' inhalation model for organic chemicals." Journal of exposure science & 
-#' environmental epidemiology 30.5 (2020): 866-877.
+#' \insertRef{linakis2020development}{httk}
 #'
 #' Schmitt, Walter. "General approach for the calculation of tissue 
 #' to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
@@ -143,10 +141,7 @@
 #' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
 #' and pharmacodynamics 44.6 (2017): 549-565.
 #'
-#' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
-#' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
-#' hepatocyte incubations using microsomal binding or drug lipophilicity data.
-#' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+#' \insertRef{lkilford2008hepatocellular}{httk}
 #'
 #' @keywords Parameter
 #'
