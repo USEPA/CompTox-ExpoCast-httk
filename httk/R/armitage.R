@@ -32,10 +32,8 @@
 #'
 #' @author Greg Honda
 #'
-#' @references
-#' Armitage, J. M., Arnot, J. A., Wania, F., & Mackay, D. (2013). Development 
-#' and evaluation of a mechanistic bioconcentration model for ionogenic organic 
-#' chemicals in fish. Environmental toxicology and chemistry, 32(1), 115-128.
+#' @references 
+#' \insertRef{armitage2013development}{httk} 
 #'
 #' @import magrittr
 #'
@@ -263,7 +261,8 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' @references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 
 #' 2014, 48, 9770-9779. https://doi.org/10.1021/es501955g
 #'
-#' Honda et al. PloS one 14.5 (2019): e0217564. https://doi.org/10.1371/journal.pone.0217564
+#' @references 
+#' \insertRef{honda2019using}{httk} 
 #'
 #' @import magrittr
 #'

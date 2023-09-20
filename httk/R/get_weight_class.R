@@ -40,9 +40,7 @@
 #'
 #'@references
 #'
-#'Ring, Caroline L., et al. "Identifying populations sensitive to environmental
-#'chemicals by simulating toxicokinetic variability." Environment International
-#'106 (2017): 105-118
+#'\insertRef{ring2017identifying}{httk}
 #'
 #'Barlow SE. Expert committee recommendations regarding the prevention,
 #'assessment, and treatment of child and adolescent overweight and obesity:
