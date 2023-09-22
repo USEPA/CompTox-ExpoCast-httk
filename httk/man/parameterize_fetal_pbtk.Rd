@@ -42,7 +42,7 @@ Kapraun et al. (2019) maternal-fetal growth parameters are provided.}
 }
 \value{
 \item{pre_pregnant_BW}{Body Weight before pregnancy, kg.}
-\item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} \item{Fgutabs}{Fraction
+\item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} \item{Fabsgut}{Fraction
 of the oral dose absorbed, i.e. the fraction of the dose that enters the
 gutlumen.} \item{Funbound.plasma}{Fraction of plasma that is not bound.}
 \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
