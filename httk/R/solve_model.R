@@ -425,7 +425,7 @@ specification in compartment_units for model ", model)
   if (!is.null(model.list[[model]]$do.first.pass))
     if (model.list[[model]]$do.first.pass)
   {
-    parameters$Fgutabs <- parameters$Fgutabs * parameters$hepatic.bioavailability
+    parameters$Fabsgut <- parameters$Fabsgut * parameters$hepatic.bioavailability
   }
 
 ### STATE VECTOR

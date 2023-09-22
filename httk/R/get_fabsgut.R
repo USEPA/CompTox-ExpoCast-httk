@@ -192,7 +192,7 @@ get_fabsgut <- function(
           dtxsid = dtxsid,
           species = species,
           suppress.messages=suppress.messages) 
-      } else if (!is.na(Fgutabs) & !overwrite.invivo) {
+      } else if (!is.na(Fabsgut) & !overwrite.invivo) {
         Fgut <- Fabsgut/Fabs
       } else {
         Fgut <- 1
