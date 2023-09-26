@@ -44,9 +44,7 @@ surface area of the bottom of the well in determining sarea.  Optionally
 include user values for working volume (v_working, m^3) and surface area.
 }
 \references{
-Armitage, J. M., Arnot, J. A., Wania, F., & Mackay, D. (2013). Development 
-and evaluation of a mechanistic bioconcentration model for ionogenic organic 
-chemicals in fish. Environmental toxicology and chemistry, 32(1), 115-128.
+\insertRef{armitage2013development}{httk}
 }
 \author{
 Greg Honda
