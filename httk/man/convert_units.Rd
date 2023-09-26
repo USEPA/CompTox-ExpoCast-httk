@@ -14,6 +14,7 @@ convert_units(
   dtxsid = NULL,
   parameters = NULL,
   temp = 25,
+  liquid.density = 1,
   state = "liquid"
 )
 }
@@ -42,7 +43,10 @@ includes MW (molecular weight) for our conversions}
 
 \item{temp}{Temperature for conversions (default = 25 degreees C)}
 
-\item{state}{Chemical state (gas or default liquid)}
+\item{liquid.density}{Density of the specified chemical in liquid state,
+numeric value, (default 1.0 g/mL).}
+
+\item{state}{Chemical state (gas or default liquid).}
 }
 \description{
 This function is designed to accept input units, output units, and the 
@@ -96,6 +100,7 @@ MW_pyrene <- get_physchem_param(param='MW', chem.name='pyrene')
 conversion_factor <- convert_units(input.units='mg/L', output.units ='uM',
   MW=MW_pyrene)
 
+calc_mc_oral_equiv(15, parameters=p)
 }
 \author{
 Mark Sfeir, John Wambaugh, and Sarah E. Davidson

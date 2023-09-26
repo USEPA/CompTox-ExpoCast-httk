@@ -76,12 +76,13 @@
 #' calc_elimination_rate(chem.cas="80-05-7")
 #' 
 #' @export calc_elimination_rate
+
 calc_elimination_rate <- function(chem.cas=NULL,
                                   chem.name=NULL,
                                   dtxsid=NULL,
                                   parameters=NULL,
                                   species="Human",
-                                  suppress.messages=FALSE,
+                                  suppress.messages=TRUE,
                                   default.to.human=FALSE,
                                   restrictive.clearance=TRUE,
                                   adjusted.Funbound.plasma=TRUE,
@@ -121,6 +122,7 @@ calc_elimination_rate <- function(chem.cas=NULL,
                     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                     clint.pvalue.threshold=clint.pvalue.threshold,
                     minimum.Funbound.plasma=minimum.Funbound.plasma)
+                    
     Vd <- calc_vdist(chem.cas=chem.cas,
                      chem.name=chem.name,
                      dtxsid=dtxsid,

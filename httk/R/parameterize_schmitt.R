@@ -1,5 +1,6 @@
 #' Parameters for Schmitt's (2008) Tissue Partition Coefficient Method
 #' 
+#' @description
 #' This function provides the necessary parameters to run
 #' \code{\link{predict_partitioning_schmitt}}, excluding the data in table
 #' \code{\link{tissue.data}}. The model is based on the Schmitt (2008) method
@@ -321,8 +322,14 @@ parameterize_schmitt <- function(chem.cas=NULL,
     fup.corrected <- NA
   } 
   
-  if (is.na(fup.corrected)) stop(
-"fup is NA, Schmitt's method for tissue partition cannot be used.")
+  if (is.na(fup.corrected))
+  {
+    if (species=="Human"){
+      stop("fup is NA, Schmitt's method for tissue partition cannot be used.")
+    }else{
+      stop("fup is NA, Schmitt's method for tissue partition cannot be used. Try setting default.to.human to TRUE.")
+    }
+  }
 
   outlist <- list(Funbound.plasma=fup.corrected,
                   unadjusted.Funbound.plasma=fup.point,

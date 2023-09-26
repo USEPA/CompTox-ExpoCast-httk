@@ -43,9 +43,11 @@ model.list[['1compartment']]$tissuelist <- NULL
 # how other parameters were calculated:
 model.list[["1compartment"]]$param.names <- c(
   "BW",
+  "Caco2.Pab",
+  "Caco2.Pab.dist",
   "Clint",
   "Clint.dist",
-  "Fgutabs",
+  "Fabsgut",
   "Fhep.assay.correction",
   "Funbound.plasma",
   "Funbound.plasma.dist",
@@ -59,6 +61,7 @@ model.list[["1compartment"]]$param.names <- c(
   "MA",
   "MW",
   "Rblood2plasma",
+  'plasma.vol',
   "Pow",
   "pKa_Donor",
   "pKa_Accept",
@@ -179,7 +182,7 @@ model.list[["1compartment"]]$calc.standard.httkpop2httk <- TRUE
 # These are the model parameters that are impacted by httk-pop:
 model.list[["1compartment"]]$httkpop.params <- c(
   "BW",
-  "Fgutabs",
+  "Fabsgut",
   "hepatic.bioavailability",
   "hematocrit",
   "liver.density",
@@ -200,10 +203,5 @@ model.list[["1compartment"]]$exclude.fup.zero <- TRUE
 # These are the parameter names needed to describe steady-state dosing:
 model.list[["1compartment"]]$css.dosing.params <- c("hourly.dose")
 
-# Filter out volatile compounds with Henry's Law Constant Threshold
-model.list[["1compartment"]]$log.henry.threshold <- c(-4.5)
-
 # Filter out compounds belonging to select chemical classes
 model.list[["1compartment"]]$chem.class.filt <- c("PFAS")
-
-

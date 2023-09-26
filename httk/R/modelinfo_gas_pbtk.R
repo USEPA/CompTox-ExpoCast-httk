@@ -49,7 +49,7 @@ model.list[["gas_pbtk"]]$param.names <- c(
   "Clint",
   "Clint.dist",
   "Clmetabolismc",
-  "Fgutabs",
+  "Fabsgut",
   "Fhep.assay.correction",
   "Funbound.plasma",
   "Funbound.plasma.adjustment",
@@ -270,6 +270,8 @@ model.list[["gas_pbtk"]]$allowed.units.output <- list(
 # outputs (for example, concentrations calculated from amounts.)
 # AUC values should also be included.
 model.list[["gas_pbtk"]]$compartment.units <- c(
+                                          "Ainh"="umol",
+                                          "Aexh"="umol",
                                           "Aart"="umol",
                                           "Agut"="umol",
                                           "Agutlumen"="umol",
@@ -381,7 +383,7 @@ model.list[["gas_pbtk"]]$calc.standard.httkpop2httk <- TRUE
 # These are the model parameters that are impacted by httk-pop:
 model.list[["gas_pbtk"]]$httkpop.params <- c(
   "BW",
-  "Fgutabs",
+  "Fabsgut",
   "hematocrit",
   "liver.density",
   "million.cells.per.gliver",

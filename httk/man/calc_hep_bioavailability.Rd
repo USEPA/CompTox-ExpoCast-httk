@@ -10,7 +10,9 @@ calc_hep_bioavailability(
   dtxsid = NULL,
   parameters = NULL,
   restrictive.clearance = TRUE,
-  flow.34 = TRUE
+  flow.34 = TRUE,
+  suppress.messages = FALSE,
+  species = "Human"
 )
 }
 \arguments{
@@ -33,6 +35,11 @@ for the model indicated by argument model}
 liver clearance if FALSE.}
 
 \item{flow.34}{A logical constraint}
+
+\item{suppress.messages}{Whether or not to suppress the output message.}
+
+\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+default "Human").}
 }
 \value{
 A data.table whose columns are the parameters of the HTTK model
