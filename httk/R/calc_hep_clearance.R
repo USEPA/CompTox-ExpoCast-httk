@@ -49,7 +49,12 @@
 #' @references
 #' Ito, K., & Houston, J. B. (2004). "Comparison of the use of liver models for 
 #' predicting drug clearance using in vitro kinetic data from hepatic microsomes 
-#' and isolated hepatocytes." Pharmaceutical Tesearch, 21(5), 785-792.
+#' and isolated hepatocytes." Pharmaceutical Research, 21(5), 785-792.
+#'
+#' Carlile, David J., Katayoun Zomorodi, and J. Brian Houston. "Scaling factors 
+#' to relate drug metabolic clearance in hepatic microsomes, isolated 
+#' hepatocytes, and the intact liver: studies with induced livers involving 
+#' diazepam." Drug metabolism and disposition 25.8 (1997): 903-911.
 #'
 #' \insertRef{kilford2008hepatocellular}{httk} 
 #'
