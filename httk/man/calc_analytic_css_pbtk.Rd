@@ -101,8 +101,7 @@ is the chemical- and tissue-specufic equilibrium partition coefficient
 and dose rate has  units of mg/kg/day.
 }
 \references{
-Pearce, Robert G., et al. "Httk: R package for high-throughput
-toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+\insertRef{pearce2017httk}{httk}
 }
 \seealso{
 \code{\link{calc_analytic_css}}

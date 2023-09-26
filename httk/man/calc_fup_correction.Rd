@@ -98,24 +98,13 @@ are truncated at 1:1,000,000 because greater partitioning would
 likely take longer than protein binding assay itself.
 }
 \references{
-Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-predictions of chemical distribution to tissues." Journal of pharmacokinetics 
-and pharmacodynamics 44.6 (2017): 549-565.
+\insertRef{pearce2017evaluation}{httk}
 
-Peyret, Thomas, Patrick Poulin, and Kannan Krishnan. "A unified algorithm 
-for predicting partition coefficients for PBPK modeling of drugs and 
-environmental chemicals." Toxicology and applied pharmacology 249.3 (2010): 
-197-207.
+\insertRef{peyret2010unified}{httk}
 
-Poulin, Patrick, and Sami Haddad. "Advancing prediction of tissue 
-distribution and volume of distribution of highly lipophilic compounds from 
-a simplified tissue-composition-based model as a mechanistic animal 
-alternative method." Journal of pharmaceutical sciences 101.6 (2012): 
-2250-2261.
-       
-Schmitt, Walter. "General approach for the calculation of 
-tissue to plasma partition coefficients." Toxicology in Vitro 22.2 (2008): 
-457-467.
+\insertRef{poulin2012advancing}{httk}
+
+\insertRef{schmitt2008general}{httk}
 
 Waters, Nigel J., et al. "Validation of a rapid equilibrium dialysis 
 approach for the measurement of plasma protein binding." Journal of 
