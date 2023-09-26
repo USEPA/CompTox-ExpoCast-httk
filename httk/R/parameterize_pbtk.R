@@ -136,29 +136,18 @@
 #' @author John Wambaugh and Robert Pearce
 #'
 #' @references 
-#' Pearce, Robert G., et al. "Httk: R package for high-throughput 
-#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 #'
-#' Schmitt, Walter. "General approach for the calculation of tissue 
-#' to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+#' \insertRef{pearce2017httk}{httk}
 #'
-#' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-#' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
-#' and pharmacodynamics 44.6 (2017): 549-565.
+#' \insertRef{schmitt2008general}{httk}
 #'
-#' \insertRef{lkilford2008hepatocellular}{httk}
+#' \insertRef{pearce2017evaluation}{httk}
 #'
-#' Carlile, David J., Katayoun Zomorodi, and J. Brian Houston. "Scaling factors 
-#' to relate drug metabolic clearance in hepatic microsomes, isolated 
-#' hepatocytes, and the intact liver: studies with induced livers involving 
-#' diazepam." Drug metabolism and disposition 25.8 (1997): 903-911.
+#' \insertRef{kilford2008hepatocellular}{httk}
 #' 
 #' International Commission on Radiological Protection. Report of the task 
 #' group on reference man. Vol. 23. Pergamon, Oxford. 1975.
 #'
-#' Wambaugh, John F., et al. "Evaluating in vitro-in vivo extrapolation of 
-#' toxicokinetics." Toxicological Sciences 163.1 (2018): 152-169.
-#' 
 #' @keywords Parameter pbtk
 #'
 #' @seealso \code{\link{solve_pbtk}}

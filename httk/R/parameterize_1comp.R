@@ -88,15 +88,12 @@
 #' @author John Wambaugh and Robert Pearce
 #'
 #' @references 
-#' Pearce, Robert G., et al. "Httk: R package for high-throughput 
-#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 #'
-#' Schmitt, Walter. "General approach for the calculation of tissue 
-#' to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+#' \insertRef{pearce2017httk}{httk}
 #'
-#' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-#' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
-#' and pharmacodynamics 44.6 (2017): 549-565.
+#' \insertRef{schmitt2008general}{httk}
+#'
+#' \insertRef{pearce2017evaluation}{httk}
 #'
 #' \insertRef{kilford2008hepatocellular}{httk} 
 #'
