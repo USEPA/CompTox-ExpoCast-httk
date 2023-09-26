@@ -44,14 +44,10 @@
 #'
 #' @author John Wambaugh and Robert Pearce
 #'
-#' @references Kilford, Peter J., et al. "Hepatocellular binding of drugs: 
-#' correction for unbound fraction in hepatocyte incubations using microsomal 
-#' binding or drug lipophilicity data." Drug Metabolism and Disposition 36.7 
-#' (2008): 1194-1197.
+#' @references 
+#' \insertRef{kilford2008hepatocellular}{httk} 
 #'
-#' Wetmore, Barbara A., et al. "Incorporating high-throughput exposure 
-#' predictions with dosimetry-adjusted in vitro bioactivity to inform chemical 
-#' toxicity testing." Toxicological Sciences 148.1 (2015): 121-136.
+#' \insertRef{wetmore2015incorporating}{httk}
 #'
 #' @keywords in-vitro
 #'

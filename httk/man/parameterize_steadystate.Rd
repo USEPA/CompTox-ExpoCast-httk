@@ -130,13 +130,9 @@ using \code{\link{calc_fgut.oral}}.
 
 }
 \references{
-Pearce, Robert G., et al. "Httk: R package for high-throughput 
-toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+\insertRef{pearce2017httk}{httk}
 
-Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
-(2008). Hepatocellular binding of drugs: correction for unbound fraction in
-hepatocyte incubations using microsomal binding or drug lipophilicity data.
-Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+\insertRef{kilford2008hepatocellular}{httk}
 }
 \seealso{
 \code{\link{calc_analytic_css_3compss}}

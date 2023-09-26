@@ -245,12 +245,7 @@ S. (2013). Relative Impact of Incorporating Pharmacokinetics on Predicting
 In Vivo Hazard and Mode of Action from High-Throughput In Vitro Toxicity
 Assays. Toxicological Sciences 132(2), 327-346, 10.1093/toxsci/kft012.
 
-Wetmore, B. A., Wambaugh, J. F., Allen, B., Ferguson, S. S., Sochaski, M.
-A., Setzer, R. W., Houck, K. A., Strope, C. L., Cantwell, K., Judson, R. S.,
-LeCluyse, E., Clewell, H.J. III, Thomas, R.S., and Andersen, M. E. (2015).
-"Incorporating High-Throughput Exposure Predictions with Dosimetry-Adjusted
-In Vitro Bioactivity to Inform Chemical Toxicity Testing" Toxicological
-Sciences, kfv171.
+\insertRef{wetmore2015incorporating}{httk}
 
 F. L. Wood, J. B. Houston and D. Hallifax
 'Drug Metabolism and Disposition November 1, 2017, 45 (11) 1178-1188; 
