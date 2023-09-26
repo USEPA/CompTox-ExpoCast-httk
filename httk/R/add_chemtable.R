@@ -115,9 +115,12 @@ augment.table <- function(
     "Clint",
     "Clint.pValue",
     "Funbound.plasma",
-    "Fgutabs",
-    "Rblood2plasma"
-    ,"Caco2.Pab")
+    "Foral",
+    "Fgut",
+    "Fabs",
+    "Fhep",
+    "Rblood2plasma",
+    "Caco2.Pab")
   # In the table we create, each word in most column names is capitalized:
   COLUMN.CAPITALIZATION.EXCEPTIONS <- c(
     "Clint.pValue",
@@ -136,6 +139,7 @@ augment.table <- function(
     "DTXSID",
     "Formula",
     "Caco2.Pab")
+
   # Many data are converted to numeric,but sometimes we want to preserve strings:
   AS.NUMERIC.EXCEPTIONS <- c(
     "pKa_Donor",
@@ -335,7 +339,7 @@ augment.table <- function(
 #' new.table. Valid names in the list are: 'Compound', 'CAS', 'DSSTox.GSID'
 #' 'SMILES.desalt', 'Reference', 'Species', 'MW', 'logP', 'pKa_Donor',
 #' 'pKa_Accept', 'logMA', 'Clint', 'Clint.pValue', 'Funbound.plasma',
-#' 'Fgutabs', 'Rblood2plasma'.
+#' 'Fabs', 'Fgut', 'Rblood2plasma'.
 #' 
 #' @param current.table This is the table to which data are being added.
 #' 

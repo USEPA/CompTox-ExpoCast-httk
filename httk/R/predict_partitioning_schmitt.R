@@ -1,8 +1,10 @@
 #' Predict partition coefficients using the method from Schmitt (2008).
-#'                                                                                                                        #' This function implements the method from Schmitt (2008) for predicting the 
+#'                                                                                                                        
+#' @description
+#' This function implements the method from Schmitt (2008) for predicting the 
 #' tissue to unbound plasma partition coefficients for the tissues contained 
-#' in the \code{\link{tissue.data}} table. The method has been modifed
-#' by Pearce et al. (2017) based on an evalaution using in vivo measured 
+#' in the \code{\link{tissue.data}} table. The method has been modified
+#' by Pearce et al. (2017) based on an evaluation using in vivo measured 
 #' partition coefficients.
 #' 
 #' To understand this method, it is 
