@@ -78,6 +78,7 @@ get_clint <- function(chem.cas=NULL,
     dtxsid <- out$dtxsid
   }
 
+  # Assume that Clint exists for the combination of species specified
   # Clint has units of uL/min/10^6 cells
   Clint.db <- try(get_invitroPK_param(
                     "Clint",
@@ -90,9 +91,18 @@ get_clint <- function(chem.cas=NULL,
                         species,
                         chem.cas=chem.cas),
                     silent=TRUE)
-  if ((is(Clint.db,"try-error") & default.to.human) || 
-      force.human.clint) 
-  {
+  if (is(Clint.pValue, "try-error")) Clint.pValue <- NA
+  
+  # Need to check cases of missing data on Clint 
+  if((is(Clint.db,"try-error") & species == "Human")){ # Case 1: Human does not have Clint values in current HTTK data
+    stop("Missing metabolic clearance data for Human. \n\
+          Check for complete invitro TK data using `<chem.id>%in%get_cheminfo(info='chem.id.col',model = 'MODEL',...)`.")
+  }else if(is(Clint.db,"try-error") & species !="Human" & !default.to.human & !force.human.clint){ # Case2: Species does not have Clint values in current HTTK data and default.to.human == FALSE
+    stop("Missing metabolic clearance data for given species. \n\
+          Set default.to.human to true to substitute human value.")
+  }
+  
+  if ((is(Clint.db,"try-error") & default.to.human) || force.human.clint){
     Clint.db <- try(get_invitroPK_param(
                       "Clint",
                       "Human",
@@ -104,11 +114,17 @@ get_clint <- function(chem.cas=NULL,
                           chem.cas=chem.cas),
                       silent=TRUE)
 
-    warning(paste(species,"coerced to Human for metabolic clearance data."))
+    if (!suppress.messages) warning(paste(species,"coerced to Human for metabolic clearance data."))
   }
-  if (is(Clint.db,"try-error")) 
-    stop("Missing metabolic clearance data for given species. \n\
-         Set default.to.human to true to substitute human value.")
+  
+  if (is(Clint.db,"try-error") & !force.human.clint){ # Case 3: Species does not have Clint values in current HTTK data and default.to.human == TRUE; HTTK data also does not have Human data
+    stop("Missing metabolic clearance data for given species and human. \n\
+          Check for complete invitro TK data using <chem.id>%in%get_cheminfo(info='chem.id.col',model = 'MODEL',...).")
+  }else if(is(Clint.db,"try-error") & force.human.clint){ # Case 4: The function is forced to obtain Human values, but HTTK data does not have any Human Clint values for specified compound
+    stop("Missing metabolic clearance data for Human. \n\
+          Check for complete Human invitro TK data using `<chem.id>%in%get_cheminfo(info='chem.id.col',model = 'MODEL')`.")
+  }
+    
   # Check if clint is a point value or a distribution, if a distribution, use the median:
   if (nchar(Clint.db) - nchar(gsub(",","",Clint.db))==3) 
   {

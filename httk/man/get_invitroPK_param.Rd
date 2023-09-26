@@ -13,36 +13,65 @@ get_invitroPK_param(
 )
 }
 \arguments{
-\item{param}{The in vitro pharmacokinetic parameter needed.}
+\item{param}{The desired parameters, a vector or single value.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
-\item{chem.name}{Either the chemical name, CAS number, or the parameters
-must be specified.}
+\item{chem.name}{The chemical names that you want parameters for, a vector or single value}
 
-\item{chem.cas}{Either the chemical name, CAS number, or the parameters must
-be specified.}
+\item{chem.cas}{The chemical CAS numbers that you want parameters for, a vector or single value}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
-the chemical must be identified by either CAS, name, or DTXSIDs}
+\item{dtxsid}{EPA's 'DSSTox Structure ID (https://comptox.epa.gov/dashboard)}
 }
 \value{
-The value of the parameter, if found
+The parameters, either a single value, a named list for a single chemical, or a list of lists
 }
 \description{
-This function retrieves in vitro PK data (for example intrinsic metabolic clearance 
-or fraction unbound in plasma) from the main HTTK data. This function looks
-for species-specific values.
+This function retrieves in vitro PK data (for example, intrinsic metabolic clearance 
+or fraction unbound in plasma) for the the chemical specified by argument "chem.name", "dtxsid", 
+or chem.cas from the table \code{\link{chem.physical_and_invitro.data}}.
+This function looks for species-specific values based on the argument "species".
 }
 \details{
 Note that this function works with a local version of the 
-get.physical_and_invitro.data table to allow users to add/modify chemical
-data (for example, via \code{\link{add_chemtable}} or 
-\code{\link{load_sipes2017}}).
+\code{\link{chem.physical_and_invitro.data}} table to allow users to 
+add/modify chemical
+data (for example, adding new data via \code{\link{add_chemtable}} or 
+loading in silico predictions distributed with httk via
+\code{\link{load_sipes2017}}, \code{\link{load_pradeep2020}},
+\code{\link{load_dawson2021}}, or \code{\link{load_honda2023}}).
+
+User can request via argument param (case-insensitive):
+\tabular{lll}{
+\strong{Parameter} \tab \strong{Description} \tab \strong{Units} \cr
+ [SPECIES].Clint \tab  (Primary hepatocyte suspension) 
+intrinsic hepatic clearance. \emph{Entries with comma separated values are Bayesian estimates of
+the Clint distribution - displayed as the median, 95th credible interval
+(that is quantile 2.5 and 97.5, respectively), and p-value.} \tab  uL/min/10^6 hepatocytes \cr                   
+ [SPECIES].Clint.pValue \tab  Probability that there is no clearance observed.
+ Values close to 1 indicate clearance is not statistically significant. \tab  none \cr       
+ [SPECIES].Caco2.Pab \tab  Caco-2 Apical-to-Basal Membrane Permeability \tab  10^-6 cm/s \cr            
+ [SPECIES].Fabs \tab  In vivo measured fraction of an oral dose of chemical 
+absorbed from the gut lumen into the gut \tab  unitless fraction \cr            
+ [SPECIES].Fgut \tab  In vivo measured fraction of an oral dose of chemical 
+that passes gut metabolism and clearance \tab  unitless fraction \cr          
+ [SPECIES].Foral \tab  In vivo measued fractional systemic bioavailability of 
+an oral dose, modeled as he product of Fabs * Fgut * Fhep (where Fhep is 
+first pass hepatic metabolism). \tab  unitless fraction \cr
+ [SPECIES].Funbound.plasma \tab  Chemical fraction unbound in presence of 
+plasma proteins (fup). \emph{Entries with comma separated values are Bayesian estimates of
+the fup distribution - displayed as the median and 95th credible interval
+(that is quantile 2.5 and 97.5, respectively).} \tab  unitless fraction \cr
+ [SPECIES].Rblood2plasma \tab  Chemical concentration blood to plasma ratio \tab  unitless ratio \cr       
+}
 }
 \seealso{
-\code{\link{get_physchem_param}}
+\code{\link{chem.physical_and_invitro.data}}
+
+\code{\link{get_invitroPK_param}}
+
+\code{\link{add_chemtable}}
 }
 \author{
 John Wambaugh and Robert Pearce

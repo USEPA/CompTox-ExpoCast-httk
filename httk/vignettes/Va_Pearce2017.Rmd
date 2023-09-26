@@ -14,7 +14,7 @@ Robert G Pearce, R Woodrow Setzer, Cory L Strope, Nisha S Sipes, and John F Wamb
 
 Journal of Statistical Software 2017 Jul 17; 79(4): 1-26.
 
-https://doi.org/10.18637%2Fjss.v079.i04
+https://doi.org/10.18637/jss.v079.i04
 
 *Please send questions to wambaugh.john@epa.gov*
 
@@ -44,7 +44,7 @@ high-throughput screening.
 This vignette was created from the 
 [R replication code v79i04.R](https://www.jstatsoft.org/index.php/jss/article/view/v079i04/3500) 
 for the 
-[2017 paper that introduced **httk**](https://doi.org/10.18637%2Fjss.v079.i04).
+[2017 paper that introduced **httk**](https://doi.org/10.18637/jss.v079.i04).
 
 ## HTTK Version
 
@@ -128,7 +128,8 @@ NSAMP <- 25
 # Examples
 To get a list of parameters for the pbtk model of Triclosan in a rat:
 ```{r rat_pbtk_parameters, eval = execute.vignette}
-parameters <- try(parameterize_pbtk(chem.name = "triclosan", species = "rat"))
+parameters <- try(parameterize_pbtk(chem.name = "triclosan", 
+                                    species = "rat"))
 ```
 We do not have a full set of *in vitro* parameters for rat for Triclosan,
 so we fill in the *in vitro* measured values with human-derived measurements and 
@@ -489,7 +490,7 @@ knitr::kable(zoxtable, caption = "Zoxamide plasma concentration vs. time",
 Plot Monte Carlo analysis of concentration vs. time:
 ```{r monte_carlo_css_example_5, eval = execute.vignette}
 zoxamide1 <- ggplot(as.data.frame(zoxtable), aes(x=time,y=Cplasma)) +
-    geom_line(color = "dark blue",size=2) +
+    geom_line(color = "dark blue",linewidth=2) +
       geom_ribbon(aes(ymin=lcl, ymax=ucl), alpha = 0.3,
                   fill = "light blue", color="black", linetype="dotted")+
     ylab("Plasma concentration") +
