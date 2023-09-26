@@ -15,6 +15,11 @@ invitro_mc(
   clint.meas.cv = 0.3,
   fup.pop.cv = 0.3,
   clint.pop.cv = 0.3,
+  caco2.meas.sd = 0.3,
+  caco2.pop.sd = 0.3,
+  Caco2.Fgut = TRUE,
+  Caco2.Fabs = TRUE,
+  keepit100 = FALSE,
   poormetab = TRUE,
   fup.lod = 0.01,
   fup.censored.dist = FALSE,
@@ -54,6 +59,18 @@ Monte Carlo for \code{Clint} values (Default TRUE)}
 
 \item{clint.pop.cv}{Coefficient of variation of distribution of population
 \code{Clint} values.}
+
+\item{caco2.meas.sd}{Standard deviation of the measured oral absorption - numeric value (Default 0.3).}
+
+\item{caco2.pop.sd}{Standard deviation of the population level oral absorption - numeric value (Default 0.3).}
+
+\item{Caco2.Fgut}{= TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \code{Fgut}.}
+
+\item{Caco2.Fabs}{= TRUE uses Caco2.Pab to calculate
+fabs.oral, otherwise fabs.oral = \code{Fabs}.}
+
+\item{keepit100}{= TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
 
 \item{poormetab}{Logical. Whether to include poor metabolizers in the Clint
 distribution or not.}
@@ -99,32 +116,33 @@ The Monte Carlo methods used here were recently updated and described by
 Breen et al. (submitted).
 }
 \examples{
+\donttest{
 #Simply generate a virtual population of 100 individuals,
 #using the direct-resampling method
 set.seed(42)
+
 # Pull mean vchemical=specific values:
 chem.props <- parameterize_pbtk(chem.name="bisphenolaf")
+
 # Convert to data.table with one row per sample:
 parameters.dt <- monte_carlo(chem.props,samples=100)
+
 # Use httk-pop to generate a population:
 pop <- httkpop_generate(method='direct resampling', nsamp=100)
+
 # Overwrite parameters specified by httk-pop:
 parameters.dt[,names(pop):=pop]
 # Vary in vitro parameters:
 parameters.dt <- invitro_mc(parameters.dt,samples=100)
+}
 
 }
 \references{
-Wambaugh, John F., et al. "Assessing Toxicokinetic Uncertainty and 
-Variability in Risk Prioritization." Toxicological Sciences (2019).
+\insertRef{wambaugh2019assessing}{httk} 
 
-Kilford, Peter J., et al. "Hepatocellular binding of drugs: correction for 
-unbound fraction in hepatocyte incubations using microsomal binding or drug 
-lipophilicity data." Drug Metabolism and Disposition 36.7 (2008): 1194-1197.
+\insertRef{breen2022simulating}{httk} 
 
-Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-predictions of chemical distribution to tissues." Journal of pharmacokinetics 
-and pharmacodynamics 44.6 (2017): 549-565.
+\insertRef{kilford2008hepatocellular}{httk}
 }
 \author{
 Caroline Ring and John Wambaugh

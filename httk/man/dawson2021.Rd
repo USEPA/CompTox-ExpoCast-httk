@@ -8,9 +8,6 @@
 \format{
 data.frame
 }
-\source{
-Dawson et al. 2021 Random Forest QSAR Model
-}
 \usage{
 dawson2021
 }
@@ -25,9 +22,10 @@ Predictions were made with a set of Random Forest QSAR models,
 as reported in Dawson et al. (2021).
 }
 \references{
-Dawson, Daniel E. et al. "Designing QSARs for parameters
-of high-throughput toxicokinetic models using open-source descriptors."
-Environmental Science & Technology____. (2021):______.
+\insertRef{dawson2021qsar}{httk}
+}
+\seealso{
+\code{\link{load_dawson2021}}
 }
 \author{
 Daniel E. Dawson
