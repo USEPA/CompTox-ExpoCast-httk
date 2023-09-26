@@ -23,9 +23,7 @@ Webber, Colin E., and Ronald D. Barr. "Age-and gender-dependent values of
 skeletal muscle mass in healthy children and adolescents." Journal of 
 cachexia, sarcopenia and muscle 3.1 (2012): 25-29.
 
-Ring, Caroline L., et al. "Identifying populations sensitive to
-environmental chemicals by simulating toxicokinetic variability."
-Environment International 106 (2017): 105-118
+\insertRef{ring2017identifying}{httk}
 }
 \author{
 Caroline Ring

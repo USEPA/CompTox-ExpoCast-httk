@@ -223,8 +223,7 @@ solve_pbtk(chem.name="Besonprodil",
 
 }
 \references{
-Pearce, Robert G., et al. "Httk: R package for high-throughput
-toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+\insertRef{pearce2017httk}{httk}
 }
 \author{
 John Wambaugh, Robert Pearce, Miyuki Breen, Mark Sfeir, and

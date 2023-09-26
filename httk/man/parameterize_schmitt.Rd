@@ -77,24 +77,15 @@ parameterize_schmitt(chem.name='bisphenola')
 
 }
 \references{
-Pearce, Robert G., et al. "Httk: R package for high-throughput 
-toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+\insertRef{pearce2017httk}{httk}
 
-Schmitt, Walter. "General approach for the calculation of 
-tissue to plasma partition coefficients." Toxicology in Vitro 22.2 (2008): 
-457-467.
+\insertRef{schmitt2008general}{httk}
 
-Schmitt, Walter. "Corrigendum to: General approach for the calculation of 
-tissue to plasma partition coefficients" Toxicology in Vitro 22.6 (2008): 1666.
+\insertRef{schmitt2008corrigendum}{httk}
 
-Peyret, Thomas, Patrick Poulin, and Kannan Krishnan. "A unified algorithm 
-for predicting partition coefficients for PBPK modeling of drugs and 
-environmental chemicals." Toxicology and applied pharmacology 249.3 (2010): 
-197-207.
+\insertRef{pearce2017evaluation}{httk}
 
-Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-predictions of chemical distribution to tissues." Journal of pharmacokinetics 
-and pharmacodynamics 44.6 (2017): 549-565.
+\insertRef{peyret2010unified}{httk}
 }
 \seealso{
 \code{\link{predict_partitioning_schmitt}}
