@@ -20,6 +20,9 @@
 #' @param restrictive.clearance Protein binding not taken into account (set to 1) in 
 #' liver clearance if FALSE.
 #' @param flow.34 A logical constraint
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human").
+#' @param suppress.messages Whether or not to suppress the output message.
 #'
 #'@return A data.table whose columns are the parameters of the HTTK model
 #'  specified in \code{model}.
@@ -42,7 +45,9 @@ calc_hep_bioavailability <- function(
                          dtxsid = NULL,
                          parameters=NULL,
                          restrictive.clearance=TRUE,
-                         flow.34=TRUE)
+                         flow.34=TRUE,
+                         suppress.messages=FALSE,
+                         species="Human")
 {
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -51,12 +56,33 @@ calc_hep_bioavailability <- function(
       is.null(parameters)) 
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
 
-  if (is.null(parameters))
+  # Required parameters
+  req.param <- c("BW", "Qtotal.liverc", "Clmetabolismc", "Funbound.plasma", "Rblood2plasma")
+  
+  # Qtotal.liverc is a total blood flow for simpler models without explicit
+  # first-pass hepatic metabolism. However, if we arecalling this function from
+  # a more complicated model we can still calculate Qtotal.liverc if we have 
+  # the appropriate other parameters:
+  if (!is.null(parameters))
+    if (all(c("Qcardiacc","Qliverf","Qgutf") %in% names(parameters)))
+    {
+      parameters["Qtotal.liverc"] <- parameters[["Qcardiacc"]] * (
+        parameters[["Qliverf"]] + parameters[["Qgutf"]])
+    }  
+  
+  if (is.null(parameters) | !all(req.param %in% names(parameters)))
   {
-    parameters <- parameterize_pbtk(
+# This function will get us the physiological parameters we need and then
+# recursively call calc_hep_bioavailability (most often we use the
+# following code when the function is run from the command line):
+    parameters <- parameterize_steadystate(
                     chem.cas=chem.cas,
                     chem.name=chem.name,
-                    dtxsid=dtxsid)
+                    dtxsid=dtxsid,
+                    suppress.messages=suppress.messages,
+                    species=species)
+    
+    return(parameters[['hepatic.bioavailability']])
   }
   
   if (!all(c("Qtotal.liverc","Funbound.plasma","Clmetabolismc","Rblood2plasma") 

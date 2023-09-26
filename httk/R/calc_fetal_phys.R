@@ -307,9 +307,9 @@ calc_fetal_phys <- function(
 {
   if (week < 0 | week > 41) stop("Functions only valid for gestational ages between 0 and 41 weeks")
 
-  params <- do.call("parameterize_fetal_pbtk", c(list(
+  params <- do.call("parameterize_fetal_pbtk", args=purrr::compact(c(list(
     chem.cas="80-05-7"),
-    ...))
+    ...)))
 
 # Function that transforms the parameters to those needed by the solver:
     compiled_parameters_init <- model.list[["fetal_pbtk"]]$compiled.parameters.init

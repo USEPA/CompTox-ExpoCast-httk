@@ -1,6 +1,7 @@
 #R CMD BATCH --no-timing --no-restore --no-save ivive_test.R ivive_test.Rout
 library(httk)
 
+options(warn=-1)
 NSAMP <- 10
 
 # From Honda et al. (2019) (currently only use mean conc's because steady-state 
@@ -35,72 +36,71 @@ params <- parameterize_steadystate(chem.name="bisphenol a")
 # This should be the same as calc_mc_oral_equiv:
 signif(3/Css,4)
 
-## Honda1:
-#set.seed(12345)
-#Css <- calc_mc_css(chem.name="bisphenol a",
-#  calc.analytic.css.arg.list=list(
-#    restrictive.clearance=TRUE,
-#    bioactive.free.invivo = T),
-#  output.units="uM",
-#  samples=NSAMP)
-#temp <- armitage_eval(
-#  casrn.vector = c("80-05-7"), 
-#  this.FBSf = 0.1,
-#  this.well_number = 384, 
-#  nomconc = 3)
-#cfree <- temp$cfree.invitro
-#set.seed(12345)
-#calc_mc_oral_equiv(cfree,chem.name="bisphenol a",
-#  calc.analytic.css.arg.list=list(IVIVE="Honda1"),
-#  samples=NSAMP)
-## This should be the same as calc_mc_oral_equiv:
-#signif(cfree/Css,4)
-#
-## Honda2:
-#set.seed(12345)
-#Css <- calc_mc_css(chem.name="bisphenol a",
-#  calc.analytic.css.arg.list=list(
-#    restrictive.clearance=TRUE,
-#    bioactive.free.invivo = T),
-#  output.units="uM",
-#  samples=NSAMP)
-#set.seed(12345)
-#calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
-#  calc.analytic.css.arg.list=list(IVIVE="Honda2"),
-#  samples=NSAMP)
-## This should be the same as calc_mc_oral_equiv:
-#signif(3/Css,4)
-#
-## Honda 3 (should be the same as degault HTTK):
-#set.seed(12345)
-#Css <- calc_mc_css(chem.name="bisphenol a",
-#  calc.analytic.css.arg.list=list(
-#    restrictive.clearance=TRUE,
-#    bioactive.free.invivo = F),
-#  output.units="uM",
-#  samples=NSAMP)
-#set.seed(12345)
-#calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
-#  calc.analytic.css.arg.list=list(IVIVE="Honda3"),
-#  samples=NSAMP)
-## This should be the same as calc_mc_oral_equiv:
-#signif(3/Css,4)
-#
-## Honda4:
-#set.seed(12345)
-#Css <- calc_mc_css(chem.name="bisphenol a",
-#  calc.analytic.css.arg.list=list(
-#    tissue="liver",
-#    restrictive.clearance=FALSE,
-#    bioactive.free.invivo = F),
-#  output.units="uM",
-#  samples=NSAMP)
-#set.seed(12345)
-#calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
-#  calc.analytic.css.arg.list=list(IVIVE="Honda4"),
-#  samples=NSAMP)
-## This should be the same as calc_mc_oral_equiv:
-#signif(3/Css,4)
+# Honda1:
+set.seed(12345)
+Css <- calc_mc_css(chem.name="bisphenol a",
+  calc.analytic.css.arg.list=list(
+    restrictive.clearance=T,
+    bioactive.free.invivo = T),
+  output.units="uM",
+  samples=NSAMP)
+temp <- armitage_eval(
+  casrn.vector = c("80-05-7"), 
+  this.FBSf = 0.1,
+  this.well_number = 384, 
+  nomconc = 3)
+cfree <- temp$cfree.invitro
+set.seed(12345)
+calc_mc_oral_equiv(cfree,chem.name="bisphenol a",
+  calc.analytic.css.arg.list=list(IVIVE="Honda1"),
+  samples=NSAMP)
+# This should be the same as calc_mc_oral_equiv:
+signif(cfree/Css,4)
 
+# Honda2:
+set.seed(12345)
+Css <- calc_mc_css(chem.name="bisphenol a",
+  calc.analytic.css.arg.list=list(
+    restrictive.clearance=T,
+    bioactive.free.invivo = T),
+  output.units="uM",
+  samples=NSAMP)
+set.seed(12345)
+calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
+  calc.analytic.css.arg.list=list(IVIVE="Honda2"),
+  samples=NSAMP)
+# This should be the same as calc_mc_oral_equiv:
+signif(3/Css,4)
+
+# Honda 3 (should be the same as degault HTTK):
+set.seed(12345)
+Css <- calc_mc_css(chem.name="bisphenol a",
+  calc.analytic.css.arg.list=list(
+    restrictive.clearance=T,
+    bioactive.free.invivo = F),
+  output.units="uM",
+  samples=NSAMP)
+set.seed(12345)
+calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
+  calc.analytic.css.arg.list=list(IVIVE="Honda3"),
+  samples=NSAMP)
+# This should be the same as calc_mc_oral_equiv:
+signif(3/Css,4)
+
+# Honda4:
+set.seed(12345)
+Css <- calc_mc_css(chem.name="bisphenol a",
+  calc.analytic.css.arg.list=list(
+    tissue="liver",
+    restrictive.clearance=F,
+    bioactive.free.invivo = F),
+  output.units="uM",
+  samples=NSAMP)
+set.seed(12345)
+calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
+  calc.analytic.css.arg.list=list(IVIVE="Honda4"),
+  samples=NSAMP)
+# This should be the same as calc_mc_oral_equiv:
+signif(3/Css,4)
 
 quit("no")
