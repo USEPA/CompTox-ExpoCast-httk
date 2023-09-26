@@ -180,8 +180,7 @@ solve_1comp(chem.name="Besonprodil", daily.dose=1, dose=NULL,
 
 }
 \references{
-Pearce, Robert G., et al. "Httk: R package for high-throughput
-toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+\insertRef{pearce2017httk}{httk}
 }
 \seealso{
 \code{\link{solve_model}}
