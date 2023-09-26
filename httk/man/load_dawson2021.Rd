@@ -2,44 +2,78 @@
 % Please edit documentation in R/load_dawson2021.R
 \name{load_dawson2021}
 \alias{load_dawson2021}
-\title{Load data from Dawson et al. 2021.}
+\title{Load CLint and Fup QSPR predictions from Dawson et al. 2021.}
 \usage{
 load_dawson2021(overwrite = FALSE, exclude_oad = TRUE, target.env = .GlobalEnv)
 }
 \arguments{
 \item{overwrite}{Only matters if load.image=FALSE. If overwrite=TRUE then
 existing data in chem.physical_and_invitro.data will be replaced by any
-data/predictions in Dawson et al. (2021) that is for the same chemical and
+predictions in Dawson et al. (2021) that is for the same chemical and
 property. If overwrite=FALSE (DEFAULT) then new data for the same chemical
 and property are ignored.  Funbound.plasma values of 0 (below limit of
 detection) are overwritten either way.}
 
 \item{exclude_oad}{Include the chemicals only within the applicability domain.
-If exlude_oad=TRUE (DEFAULT) chemicals outside the applicability domain do not
+If exclude_oad=TRUE (DEFAULT) chemicals outside the applicability domain do not
 have their predicted values loaded.}
 
 \item{target.env}{The environment where the new
-chem.physical_and_invitro.data is loaded. Defaults to global environment.}
+\code{\link{chem.physical_and_invitro.data}} is loaded. Defaults to global environment.}
 }
 \value{
 \item{data.frame}{An updated version of
-chem.physical_and_invitro.data.}
+\code{\link{chem.physical_and_invitro.data}}.}
 }
 \description{
-This function returns an updated version of chem.physical_and_invitro.data
-that includes data predicted with Random Forest QSAR models developed and
-presented in Dawson et al. 2021, included in dawson2021.
+This function returns an updated version of 
+\code{\link{chem.physical_and_invitro.data}}
+that includes Clint and Fup predictions from the Random Forest quantitative 
+structure-property relationship (QSPR) models developed and
+presented in Dawson et al. 2021, included in table \code{\link{dawson2021}}.
+}
+\details{
+Because Clint and Fup are the only measurements required for many HTTK models,
+changing the number of chemicals for which a value is available will change 
+the number of chemicals which are listed with the \code{\link{get_cheminfo}}
+command. Use the command \code{\link{reset_httk}} to return to the initial 
+(measured only) \code{\link{chem.physical_and_invitro.data}} (for all
+parameters).
 }
 \examples{
 
 \dontrun{
-chem.physical_and_invitro.data <- load_dawson2021()
-chem.physical_and_invitro.data <- load_dawson2021(overwrite=TRUE) 
+# Count how many chemicals for which HTTK is available without the QSPR:
+num.chems <- length(get_cheminfo())
+print(num.chems)
+
+# For chemicals with Dawson et al. (2021) Clint and Fup QSPR predictions, 
+# add them to our chemical information wherever measured values are 
+# unavailable:
+load_dawson2021()
+# For chemicals with Dawson et al. (2021) QSPR predictions, add them to
+# our chemical information -- overwriting measured values where we had them:
+load_dawson2021(overwrite=TRUE)
+
+# Let's see how many chemicals we have now with the Dawson et al. (2021) 
+# predictions loaded:
+length(get_cheminfo()) 
+
+# Now let us reset the chemical data to the initial version:
+reset_httk()
+
+# We should be back to our original number:
+num.chems == length(get_cheminfo())
 }                        
 
 }
 \references{
 \insertRef{dawson2021qsar}{httk}
+}
+\seealso{
+\code{\link{reset_httk}}
+
+\code{\link{get_cheminfo}}
 }
 \author{
 Sarah E. Davidson

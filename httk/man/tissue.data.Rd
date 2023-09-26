@@ -7,12 +7,6 @@
 \format{
 A data.frame containing 13 rows and 20 columns.
 }
-\source{
-Pearce et al. (2017), in preparation,
-
-Wambaugh, John F., et al. "Toxicokinetic triage for environmental
-chemicals." Toxicological Sciences (2015): 228-237.
-}
 \usage{
 tissue.data
 }
@@ -69,6 +63,9 @@ published in association with BIBRA 22(2), 457-67,
 10.1016/j.tiv.2007.09.010.
 
 ICRP. Report of the Task Group on Reference Man. ICRP Publication 23 1975
+
+Wambaugh, John F., et al. "Toxicokinetic triage for environmental
+chemicals." Toxicological Sciences (2015): 228-237.
 }
 \seealso{
 \code{\link{predict_partitioning_schmitt}}

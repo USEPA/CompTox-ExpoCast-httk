@@ -28,8 +28,10 @@
 #' A data.table with a row for each individual in the sample and a column for
 #' each parater in the model.
 #' 
-#' @references
-#'\insertRef{ring2017identifying}{httk} 
+#' @references 
+#' \insertRef{ring2017identifying}{httk} 
+#'
+#' \insertRef{breen2022simulating}{httk} 
 #' 
 #' \insertRef{rowland1973clearance}{httk} 
 #'

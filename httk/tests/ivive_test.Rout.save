@@ -1,13 +1,11 @@
 
-R version 4.1.3 (2022-03-10) -- "One Push-Up"
-Copyright (C) 2022 The R Foundation for Statistical Computing
+R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
+Copyright (C) 2020 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
-
-  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -19,7 +17,7 @@ Type 'q()' to quit R.
 
 > #R CMD BATCH --no-timing --no-restore --no-save ivive_test.R ivive_test.Rout
 > library(httk)
-> 
+> options(warn=-1)
 > NSAMP <- 10
 > 
 > # From Honda et al. (2019) (currently only use mean conc's because steady-state 
@@ -48,98 +46,108 @@ Type 'q()' to quit R.
 +   output.units="uM",
 +   samples=NSAMP)
 Human plasma concentration returned in uM units for 0.95 quantile.
-Warning messages:
-1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Clint is provided as a distribution.
-2: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Fraction unbound is provided as a distribution.
 > set.seed(12345)
 > calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
 +   samples=NSAMP)
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
    95% 
-0.3541 
+0.5591 
 > params <- parameterize_steadystate(chem.name="bisphenol a")
-Warning messages:
-1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Clint is provided as a distribution.
-2: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
-  Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
-3: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Fraction unbound is provided as a distribution.
-4: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
-  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
 > # This should be the same as calc_mc_oral_equiv:
 > signif(3/Css,4)
    95% 
-0.3541 
+0.5591 
 > 
-> ## Honda1:
-> #set.seed(12345)
-> #Css <- calc_mc_css(chem.name="bisphenol a",
-> #  calc.analytic.css.arg.list=list(
-> #    restrictive.clearance=TRUE,
-> #    bioactive.free.invivo = T),
-> #  output.units="uM",
-> #  samples=NSAMP)
-> #temp <- armitage_eval(
-> #  casrn.vector = c("80-05-7"), 
-> #  this.FBSf = 0.1,
-> #  this.well_number = 384, 
-> #  nomconc = 3)
-> #cfree <- temp$cfree.invitro
-> #set.seed(12345)
-> #calc_mc_oral_equiv(cfree,chem.name="bisphenol a",
-> #  calc.analytic.css.arg.list=list(IVIVE="Honda1"),
-> #  samples=NSAMP)
-> ## This should be the same as calc_mc_oral_equiv:
-> #signif(cfree/Css,4)
-> #
-> ## Honda2:
-> #set.seed(12345)
-> #Css <- calc_mc_css(chem.name="bisphenol a",
-> #  calc.analytic.css.arg.list=list(
-> #    restrictive.clearance=TRUE,
-> #    bioactive.free.invivo = T),
-> #  output.units="uM",
-> #  samples=NSAMP)
-> #set.seed(12345)
-> #calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
-> #  calc.analytic.css.arg.list=list(IVIVE="Honda2"),
-> #  samples=NSAMP)
-> ## This should be the same as calc_mc_oral_equiv:
-> #signif(3/Css,4)
-> #
-> ## Honda 3 (should be the same as degault HTTK):
-> #set.seed(12345)
-> #Css <- calc_mc_css(chem.name="bisphenol a",
-> #  calc.analytic.css.arg.list=list(
-> #    restrictive.clearance=TRUE,
-> #    bioactive.free.invivo = F),
-> #  output.units="uM",
-> #  samples=NSAMP)
-> #set.seed(12345)
-> #calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
-> #  calc.analytic.css.arg.list=list(IVIVE="Honda3"),
-> #  samples=NSAMP)
-> ## This should be the same as calc_mc_oral_equiv:
-> #signif(3/Css,4)
-> #
-> ## Honda4:
-> #set.seed(12345)
-> #Css <- calc_mc_css(chem.name="bisphenol a",
-> #  calc.analytic.css.arg.list=list(
-> #    tissue="liver",
-> #    restrictive.clearance=FALSE,
-> #    bioactive.free.invivo = F),
-> #  output.units="uM",
-> #  samples=NSAMP)
-> #set.seed(12345)
-> #calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
-> #  calc.analytic.css.arg.list=list(IVIVE="Honda4"),
-> #  samples=NSAMP)
-> ## This should be the same as calc_mc_oral_equiv:
-> #signif(3/Css,4)
+> # Honda1:
+> set.seed(12345)
+> Css <- calc_mc_css(chem.name="bisphenol a",
++   calc.analytic.css.arg.list=list(
++     restrictive.clearance=T,
++     bioactive.free.invivo = T),
++   output.units="uM",
++   samples=NSAMP)
+Human plasma concentration returned in uM units for 0.95 quantile.
+> temp <- armitage_eval(
++   casrn.vector = c("80-05-7"), 
++   this.FBSf = 0.1,
++   this.well_number = 384, 
++   nomconc = 3)
+> cfree <- temp$cfree.invitro
+> set.seed(12345)
+> calc_mc_oral_equiv(cfree,chem.name="bisphenol a",
++   calc.analytic.css.arg.list=list(IVIVE="Honda1"),
++   samples=NSAMP)
+uM concentration converted to mgpkgpday dose for 0.95 quantile.
+  95% 
+18.65 
+> # This should be the same as calc_mc_oral_equiv:
+> signif(cfree/Css,4)
+  95% 
+18.65 
+> 
+> # Honda2:
+> set.seed(12345)
+> Css <- calc_mc_css(chem.name="bisphenol a",
++   calc.analytic.css.arg.list=list(
++     restrictive.clearance=T,
++     bioactive.free.invivo = T),
++   output.units="uM",
++   samples=NSAMP)
+Human plasma concentration returned in uM units for 0.95 quantile.
+> set.seed(12345)
+> calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
++   calc.analytic.css.arg.list=list(IVIVE="Honda2"),
++   samples=NSAMP)
+uM concentration converted to mgpkgpday dose for 0.95 quantile.
+  95% 
+48.69 
+> # This should be the same as calc_mc_oral_equiv:
+> signif(3/Css,4)
+  95% 
+48.69 
+> 
+> # Honda 3 (should be the same as degault HTTK):
+> set.seed(12345)
+> Css <- calc_mc_css(chem.name="bisphenol a",
++   calc.analytic.css.arg.list=list(
++     restrictive.clearance=T,
++     bioactive.free.invivo = F),
++   output.units="uM",
++   samples=NSAMP)
+Human plasma concentration returned in uM units for 0.95 quantile.
+> set.seed(12345)
+> calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
++   calc.analytic.css.arg.list=list(IVIVE="Honda3"),
++   samples=NSAMP)
+uM concentration converted to mgpkgpday dose for 0.95 quantile.
+   95% 
+0.5591 
+> # This should be the same as calc_mc_oral_equiv:
+> signif(3/Css,4)
+   95% 
+0.5591 
+> 
+> # Honda4:
+> set.seed(12345)
+> Css <- calc_mc_css(chem.name="bisphenol a",
++   calc.analytic.css.arg.list=list(
++     tissue="liver",
++     restrictive.clearance=F,
++     bioactive.free.invivo = F),
++   output.units="uM",
++   samples=NSAMP)
+Human plasma concentration returned in uM units for 0.95 quantile.
+> set.seed(12345)
+> calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
++   calc.analytic.css.arg.list=list(IVIVE="Honda4"),
++   samples=NSAMP)
+uM concentration converted to mgpkgpday dose for 0.95 quantile.
+     95% 
+0.001854 
+> # This should be the same as calc_mc_oral_equiv:
+> signif(3/Css,4)
+     95% 
+0.001854 
 > 
 > 
 > quit("no")
