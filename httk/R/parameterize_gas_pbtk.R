@@ -142,14 +142,11 @@
 #' @references 
 #' \insertRef{linakis2020development}{httk}
 #'
-#' Schmitt, Walter. "General approach for the calculation of tissue 
-#' to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+#' \insertRef{schmitt2008general}{httk}
 #'
-#' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-#' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
-#' and pharmacodynamics 44.6 (2017): 549-565.
+#' \insertRef{pearce2017evaluation}{httk}
 #'
-#' \insertRef{lkilford2008hepatocellular}{httk}
+#' \insertRef{kilford2008hepatocellular}{httk}
 #'
 #' @keywords Parameter
 #'
