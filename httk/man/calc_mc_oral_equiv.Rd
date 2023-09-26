@@ -243,19 +243,13 @@ calc_mc_oral_equiv(15, parameters=p)
 
 }
 \references{
-Wetmore, Barbara A., et al. "Incorporating high-throughput 
-exposure predictions with dosimetry-adjusted in vitro bioactivity to inform 
-chemical toxicity testing." Toxicological Sciences 148.1 (2015): 121-136.
+\insertRef{ring2017identifying}{httk} 
 
-Ring, Caroline L., et al. "Identifying populations sensitive to
-environmental chemicals by simulating toxicokinetic variability."
-Environment international 106 (2017): 105-118. 
+\insertRef{wetmore2015incorporating}{httk}
 
-Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
-In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
+\insertRef{honda2019using}{httk}
 
-Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts in 
-pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
+\insertRef{rowland1973clearance}{httk}
 }
 \seealso{
 \code{\link{calc_mc_css}}
