@@ -100,10 +100,10 @@
 #' @author John Wambaugh and Greg Honda
 #'
 #' @references 
-#' Pearce, Robert G., et al. "Httk: R package for high-throughput 
-#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 #'
-#' \insertRef{lkilford2008hepatocellular}{httk}
+#' \insertRef{pearce2017httk}{httk}
+#'
+#' \insertRef{kilford2008hepatocellular}{httk}
 #'
 #' @seealso \code{\link{calc_analytic_css_3compss}}
 #'

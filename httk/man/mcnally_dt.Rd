@@ -29,9 +29,7 @@ Reference tissue masses, flows, and residual variance distributions from
 Tables 1, 4, and 5 of McNally et al. 2014.
 }
 \references{
-Ring, Caroline L., et al. "Identifying populations sensitive to
- environmental chemicals by simulating toxicokinetic variability."
- Environment International 106 (2017): 105-118
+\insertRef{ring2017identifying}{httk}
 }
 \author{
 Caroline Ring

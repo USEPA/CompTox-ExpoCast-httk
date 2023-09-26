@@ -76,8 +76,7 @@ This function calculates the analytic steady state plasma or venous blood
 concentrations as a result of infusion dosing.
 }
 \references{
-Pearce, Robert G., et al. "Httk: R package for high-throughput
-toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+\insertRef{pearce2017httk}{httk}
 }
 \seealso{
 \code{\link{calc_analytic_css}}
