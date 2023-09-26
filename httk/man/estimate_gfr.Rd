@@ -28,9 +28,7 @@ Predict GFR using CKD-EPI equation (for adults) or BSA-based equation (for child
 Add residual variability based on reported residuals for each equation.
 }
 \references{
-Ring, Caroline L., et al. "Identifying populations sensitive to 
-environmental chemicals by simulating toxicokinetic variability." Environment 
-International 106 (2017): 105-118
+\insertRef{ring2017identifying}{httk}
 }
 \author{
 Caroline Ring

@@ -31,9 +31,7 @@ age-based scaling factor, to account for loss of muscle mass with age
 Janssen, Ian, et al. "Skeletal muscle mass and distribution in 468 men and
 women aged 18-88 yer." Journal of Applied Physiology 89.1 (2000): 81-88
 
-Ring, Caroline L., et al. "Identifying populations sensitive to
-environmental chemicals by simulating toxicokinetic variability."
-Environment International 106 (2017): 105-118
+\insertRef{ring2017identifying}{httk}
 }
 \seealso{
 \code{\link{skeletal_muscle_mass_children}}
