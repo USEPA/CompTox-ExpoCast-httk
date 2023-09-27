@@ -5,7 +5,7 @@ output: html_document
 ---                                                 
 
 # version 2.3.0 (October, 2023)
-This version accompanies the submission of manuscript Honda et al. “Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals in Commerce and the Environment”
+This version accompanies the submission of manuscript Honda et al. ?Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals in Commerce and the Environment?
 
 ## Bug Fixes
 * Added parameter "plasma.vol" to one compartment model so that Monte Carlo works for non-human species
@@ -20,8 +20,8 @@ This version accompanies the submission of manuscript Honda et al. “Impact of Gu
 
 ## New Features
 * Added in vitro measured Caco-2 membrane permeability data for 310 chemicals allowing characterization of oral bioavailability
-* Added new functions `calc_fbio.oral`, ‘calc_fabs.oral’, and ‘calc_fgut.oral’ for calculating systemic bioavailability as Fbio = Fabs * Fgut * Fhep where first-pass hepatic metabolism was already available from ‘calc_hep_bioavailability’.
-* Integrated Fabs and Fgut into oral exposure for all TK models and integrated into population variability and uncertainty functions within ‘invitro_uv’
+* Added new functions `calc_fbio.oral`, ?calc_fabs.oral?, and ?calc_fgut.oral? for calculating systemic bioavailability as Fbio = Fabs * Fgut * Fhep where first-pass hepatic metabolism was already available from ?calc_hep_bioavailability?.
+* Integrated Fabs and Fgut into oral exposure for all TK models and integrated into population variability and uncertainty functions within ?invitro_uv?
 * Added new function `benchmark_httk` to compare current function of the package against historical performance
 * We now skip over the first five minutes when calculating Cmax in calc_tkstats to allow PBTK model to distribute iv doses
 
@@ -32,6 +32,7 @@ This version accompanies the submission of manuscript Honda et al. “Impact of Gu
 * Returned and updated the [Pearce et al. (2017)](https://doi.org/10.1007/s10928-017-9548-7) vignette on Evaluation of Tissue Partitioning
 * Revised function 'convert_units', expanding the variety of unit conversions available
 * Model "1compartment" allows volatile chemicals again since clearance is amorphous for that model (likely understimated without exhalation)
+* Manuscripts references listed in function documentation was converted to a BibTex format from manual insertion of the citations. (thanks Lily Whipple)
 
 # version 2.2.2 (February 20, 2023)
 ## Bug Fixes
