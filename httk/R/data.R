@@ -287,10 +287,11 @@
 #'@keywords data
 #'
 #'@author Greg Honda
-#'
 #'@references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
 #'2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
 #' \insertRef{honda2019using}{httk}
+"armitage_input"
+
 #' DRUGS|NORMAN: Pharmaceutical List with EU, Swiss, US Consumption Data
 #'
 #' SWISSPHARMA is a list of pharmaceuticals with consumption data from
