@@ -95,12 +95,14 @@ Css <- calc_mc_css(chem.name="bisphenol a",
     tissue="liver",
     restrictive.clearance = FALSE,
     bioactive.free.invivo = FALSE),
+  model="pbtk",
   output.units="uM",
   samples=NSAMP)
 set.seed(12345)
 calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
   calc.analytic.css.arg.list=list(IVIVE="Honda4"),
-  samples=NSAMP)
+  samples=NSAMP,
+  model="pbtk")
 # This should be the same as calc_mc_oral_equiv:
 signif(3/Css,4)
 
