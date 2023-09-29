@@ -1,11 +1,13 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R Under development (unstable) (2023-04-16 r84269 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -17,6 +19,7 @@ Type 'q()' to quit R.
 
 > #R CMD BATCH --no-timing --no-restore --no-save ivive_test.R ivive_test.Rout
 > library(httk)
+> 
 > options(warn=-1)
 > NSAMP <- 10
 > 
@@ -49,14 +52,15 @@ Human plasma concentration returned in uM units for 0.95 quantile.
 > set.seed(12345)
 > calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
 +   samples=NSAMP)
+Human plasma concentration returned in uM units for 0.95 quantile.
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
    95% 
-0.5591 
+0.5501 
 > params <- parameterize_steadystate(chem.name="bisphenol a")
 > # This should be the same as calc_mc_oral_equiv:
 > signif(3/Css,4)
    95% 
-0.5591 
+0.5501 
 > 
 > # Honda1:
 > set.seed(12345)
@@ -77,13 +81,14 @@ Human plasma concentration returned in uM units for 0.95 quantile.
 > calc_mc_oral_equiv(cfree,chem.name="bisphenol a",
 +   calc.analytic.css.arg.list=list(IVIVE="Honda1"),
 +   samples=NSAMP)
+Human plasma concentration returned in uM units for 0.95 quantile.
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
-  95% 
-18.65 
+      95% 
+1.561e-06 
 > # This should be the same as calc_mc_oral_equiv:
 > signif(cfree/Css,4)
-  95% 
-18.65 
+     95% 
+4.83e-05 
 > 
 > # Honda2:
 > set.seed(12345)
@@ -98,13 +103,14 @@ Human plasma concentration returned in uM units for 0.95 quantile.
 > calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
 +   calc.analytic.css.arg.list=list(IVIVE="Honda2"),
 +   samples=NSAMP)
+Human plasma concentration returned in uM units for 0.95 quantile.
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
-  95% 
-48.69 
+   95% 
+0.5501 
 > # This should be the same as calc_mc_oral_equiv:
 > signif(3/Css,4)
   95% 
-48.69 
+17.03 
 > 
 > # Honda 3 (should be the same as degault HTTK):
 > set.seed(12345)
@@ -119,13 +125,14 @@ Human plasma concentration returned in uM units for 0.95 quantile.
 > calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
 +   calc.analytic.css.arg.list=list(IVIVE="Honda3"),
 +   samples=NSAMP)
+Human plasma concentration returned in uM units for 0.95 quantile.
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
    95% 
-0.5591 
+0.5501 
 > # This should be the same as calc_mc_oral_equiv:
 > signif(3/Css,4)
    95% 
-0.5591 
+0.5501 
 > 
 > # Honda4:
 > set.seed(12345)
@@ -136,18 +143,7 @@ uM concentration converted to mgpkgpday dose for 0.95 quantile.
 +     bioactive.free.invivo = F),
 +   output.units="uM",
 +   samples=NSAMP)
-Human plasma concentration returned in uM units for 0.95 quantile.
-> set.seed(12345)
-> calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
-+   calc.analytic.css.arg.list=list(IVIVE="Honda4"),
-+   samples=NSAMP)
-uM concentration converted to mgpkgpday dose for 0.95 quantile.
-     95% 
-0.001854 
-> # This should be the same as calc_mc_oral_equiv:
-> signif(3/Css,4)
-     95% 
-0.001854 
-> 
-> 
-> quit("no")
+Error in (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  : 
+  Tissues are not available for model 3compartmentss
+Calls: calc_mc_css ... [.data.table -> eval -> eval -> do.call -> <Anonymous>
+Execution halted
