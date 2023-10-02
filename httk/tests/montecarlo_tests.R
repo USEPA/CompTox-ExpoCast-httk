@@ -1,4 +1,5 @@
-#R CMD BATCH --no-timing --no-restore --no-save montecarlo_tests.R montecarlo_tests.Rout
+# R CMD BATCH --no-timing --no-restore --no-save montecarlo_tests.R montecarlo_tests.Rout
+
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 

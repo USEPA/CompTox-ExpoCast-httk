@@ -137,8 +137,10 @@ Warning messages:
 5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
 > 
+> # Reduce the number of samples used by Monte Carlo to decrease runtime for
+> # CRAN checks (never use predictions with only ten draws):
+> NSAMP <- 10
 > 
-> NSAMP <- 100
 > set.seed(1234)
 > # Let's make sure that the monte carlo Css is also lower when some chemical
 > # is not absorbed:
@@ -147,7 +149,7 @@ Warning messages:
 +             samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-1.034 
+0.342 
 Warning messages:
 1: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
@@ -163,7 +165,7 @@ Warning messages:
 +             Caco2.options=list(keepit100=TRUE))
 Human plasma concentration returned in mg/L units for 0.95 quantile.
    95% 
-0.9155 
+0.8469 
 Warning messages:
 1: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
