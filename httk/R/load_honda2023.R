@@ -61,7 +61,7 @@ load_honda2023 <- function(
   #CHECK, a variable has to be created for each of these column names and set to
   #NULL. Note that within the data.table, these variables will not be NULL! Yes,
   #this is pointless and annoying.
-
+  Pab.Pred.AD <- NULL
   #End R CMD CHECK appeasement.
 
   cat(paste("Chemicals outside the applicabilty domain are",
