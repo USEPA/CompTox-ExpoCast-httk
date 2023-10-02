@@ -179,6 +179,10 @@ create_mc_samples <- function(chem.cas=NULL,
                         Caco2.options=NULL)
 {
 
+  ## Setting up binding for Global Variables ##
+  Fabs <- Fgut <- Fabsgut <- NULL
+  ####
+  
 #
 #
 # ERROR CHECKING AND INITIALIZATION:

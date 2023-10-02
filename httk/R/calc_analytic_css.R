@@ -256,7 +256,7 @@ calc_analytic_css <- function(chem.name=NULL,
       stop(paste("Missing parameters:",
         paste(model_param_names[which(!model_param_names %in% 
         names(parameters))],collapse=', '),
-        ". Use parameters from",parameterize_function,".",sep="")) 
+        ". Use parameters from ",parameterize_function,".",sep="")) 
     }
   }
 
