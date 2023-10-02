@@ -3,46 +3,25 @@
 \docType{data}
 \name{pharma}
 \alias{pharma}
-\title{Armitage et al. (2014) Model Inputs from Honda et al. (2019)}
+\title{DRUGS|NORMAN: Pharmaceutical List with EU, Swiss, US Consumption Data}
 \format{
-A data frame with 53940 rows and 10 variables:
-\describe{
-  \item{MP}{}
-  \item{MW}{}
-  \item{casrn}{}
-  \item{compound_name}{}
-  \item{gkaw}{}
-  \item{gkow}{}
-  \item{gswat}{}
-}
+An object of class \code{matrix} (inherits from \code{array}) with 14 rows and 954 columns.
 }
 \source{
-\url{https://www.diamondse.info/}
-
 \url{https://comptox.epa.gov/dashboard/chemical_lists/swisspharma}
 }
 \usage{
 pharma
 }
 \description{
-Armitage et al. (2014) Model Inputs from Honda et al. (2019)
-}
-\references{
-Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
-2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
-\insertRef{honda2019using}{httk}
-DRUGS|NORMAN: Pharmaceutical List with EU, Swiss, US Consumption Data
-
 SWISSPHARMA is a list of pharmaceuticals with consumption data from
 Switzerland, France, Germany and the USA, used for a suspect
 screening/exposure modelling approach described in
 Singer et al 2016, DOI: 10.1021/acs.est.5b03332. The original data is
 available on the NORMAN Suspect List Exchange.
-
+}
+\references{
 Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and
 Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
-}
-\author{
-Greg Honda
 }
 \keyword{data}
