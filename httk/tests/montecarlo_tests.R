@@ -1,9 +1,12 @@
 #R CMD BATCH --no-timing --no-restore --no-save montecarlo_tests.R montecarlo_tests.Rout
+# Get rid of anything in the workspace:
+rm(list=ls()) 
+
 library(httk)
 
+# Reduce the number of samples used by Monte Carlo to decrease runtime for
+# CRAN checks (never use predictions with only ten draws):
 NSAMP <- 10
-
-
 
 #
 #

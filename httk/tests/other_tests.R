@@ -1,4 +1,7 @@
 #R CMD BATCH --no-timing --no-restore --no-save other_tests.R other_tests.Rout
+# Get rid of anything in the workspace:
+rm(list=ls()) 
+
 library(httk)
 
 #calc_css(chem.name='nicotine')
