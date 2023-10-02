@@ -22,8 +22,10 @@ head(solve_pbtk(chem.cas="80-05-7"))
 head(solve_pbtk(chem.cas="80-05-7",
                 Caco2.options=list(keepit100=TRUE)))
 
+# Reduce the number of samples used by Monte Carlo to decrease runtime for
+# CRAN checks (never use predictions with only ten draws):
+NSAMP <- 10
 
-NSAMP <- 100
 set.seed(1234)
 # Let's make sure that the monte carlo Css is also lower when some chemical
 # is not absorbed:
