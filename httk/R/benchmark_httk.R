@@ -138,6 +138,10 @@ benchmark_httk <- function(
                            suppress.messages=TRUE,
                            make.plots=TRUE)
 {
+  ## Setting up binding for Global Variables ##
+  Compound <- Source <- Reference <- fu <- Exp_PC <- Tissue <- Species <- 
+    CAS <- logMA <- Benchmark <- Version <- Value <- NULL
+  ####
   benchmarks <- list()
 
   if (basic.check)
