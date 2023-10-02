@@ -1,4 +1,7 @@
 #R CMD BATCH --no-timing --no-restore --no-save 3compss_test.R 3compss_test.Rout
+# Get rid of anything in the workspace:
+rm(list=ls()) 
+
 library(httk)
 
 calc_analytic_css(chem.name="bisphenol a",model="3compartmentss")
