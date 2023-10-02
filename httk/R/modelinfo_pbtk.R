@@ -59,6 +59,7 @@ model.list[["pbtk"]]$param.names <- c(
   "Caco2.Pab",
   "Caco2.Pab.dist",
   "Clint",
+  "Clint.dist",
   "Clmetabolismc",
   "Funbound.plasma",
   "Funbound.plasma.dist",

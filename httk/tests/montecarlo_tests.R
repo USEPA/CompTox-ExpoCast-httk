@@ -73,4 +73,13 @@ set.seed(1234)
 # Do the calculation manually to make sure units are correct:
 signif(10/calc_mc_css(chem.name="bisphenol a",samples=NSAMP,output.units="uM"),4)
 
+# do test of passing data.table of parameters
+set.seed(1234)
+parameter.dt <- create_mc_samples(chem.cas="335104-84-2",
+                                    model="pbtk",
+                                    samples=NSAMP)
+calc_mc_oral_equiv(conc=100,
+                   parameters=parameter.dt,
+                   model="pbtk")
+                   
 quit("no")
