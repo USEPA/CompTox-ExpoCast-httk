@@ -206,7 +206,7 @@ benchmark_httk <- function(
   for (this.cas in wetmore.chems)
     if (this.cas %in% valid.chems)
     {
-        ids <- httk:::get_chem_id(chem.cas=this.cas)
+        ids <- httk::get_chem_id(chem.cas=this.cas)
         if (!("dtxsid" %in% names(ids)))
         {
           ids$dtxsid <- NA 
