@@ -298,6 +298,10 @@ model.list[["pbtk"]]$compartment.units <- c(
     "AUC"="uM*days"
   )
 
+# Compartment state of matter, needed for proper unit conversion, if all
+# comaprtments of the same only include one state and set it to "all":
+model.list[["pbtk"]]$compartment.state <- list(liquid="all")
+
 #Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[["pbtk"]]$required.params <- c(
   "Clint",
