@@ -151,6 +151,7 @@ invitro_mc <- function(parameters.dt=NULL,
   Parameter<-Funbound.plasma.adjustment<-fup.mean<-X<-Clint.dist<-Dow74<-NULL
   Funbound.plasma.dist<-fup.sd<-Fhep.assay.correction <- NULL
   PoorMetabolizer <- NULL
+  Caco2.Pab.dist <- Caco2.Pab.mu <- Fabs <- Fgut <- Fabsgut <- NULL
   #End R CMD CHECK appeasement.
 
   # Are we doing clint measurmement Monte Carlo?

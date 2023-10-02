@@ -270,4 +270,36 @@ Warning messages:
 3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
   Default value of 1.6 used for Caco2 permeability.
 > 
+> # do test of passing data.table of parameters
+> set.seed(1234)
+> parameter.dt <- create_mc_samples(chem.cas="335104-84-2",
++                                     model="pbtk",
++                                     samples=NSAMP)
+Warning messages:
+1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Clint is provided as a distribution.
+2: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+  Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
+3: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Fraction unbound is provided as a distribution.
+4: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+  Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
+5: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Fraction unbound is provided as a distribution.
+6: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
+  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
+7: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+  Rblood2plasma has been recalculated.
+8: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human Rblood2plasma calculated with calc_rblood2plasma.
+9: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+  Default value of 1.6 used for Caco2 permeability.
+> calc_mc_oral_equiv(conc=100,
++                    parameters=parameter.dt,
++                    model="pbtk")
+Human plasma concentration returned in uM units for 0.95 quantile.
+uM concentration converted to mgpkgpday dose for 0.95 quantile.
+  95% 
+1.395 
+>                    
 > quit("no")
