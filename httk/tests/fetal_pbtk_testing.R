@@ -1,4 +1,5 @@
-#R CMD BATCH --no-timing --no-restore --no-save fetal_pbtk_testing.R fetal_pbtk_testing.Rout
+# R CMD BATCH --no-timing --no-restore --no-save fetal_pbtk_testing.R fetal_pbtk_testing.Rout
+
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 

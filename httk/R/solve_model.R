@@ -779,9 +779,6 @@ specification in compartment_units for model ", model)
 # only give the requested times:
  if (!is.null(requested.times)) out <- out[out[,"time"] %in% requested.times, ]
 
-# Cannot guarantee arbitrary precision for deSolve:
-  out[,colnames(out)!="time"] <- set_httk_precision(out[,colnames(out)!="time"])
-
 ### MODEL OUTPUT
 
   
@@ -813,6 +810,9 @@ specification in compartment_units for model ", model)
                             suppress.messages=suppress.messages)
   # Re-assign 'out' with the new output from 'cu.out'
   out <- cu.out[['new.ouput.matrix']]
+
+# Cannot guarantee arbitrary precision for deSolve:
+  out[,colnames(out)!="time"] <- set_httk_precision(out[,colnames(out)!="time"])
   
 # Make a plot if asked for it (not the default behavior):
   if (plots==TRUE)
