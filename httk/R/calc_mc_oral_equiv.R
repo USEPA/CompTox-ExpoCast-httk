@@ -283,6 +283,24 @@ calc_mc_oral_equiv <- function(conc,
     concentration <- out[["concentration"]]
   }
   
+  # Unfortunately there are historically two ways to pass arguments to calc.analytic.css,
+  # Throw a warning if the user specifies them twice:
+  for (this.param in c("restrictive.clearance",
+                       "bioactive.free.invivo",
+                       "IVIVE",
+                       "well.stirred.correction",
+                       "adjusted.Funbound.plasma"))
+# Check if parameter specified both ways:
+    if (this.param %in% calc.analytic.css.arg.list)
+# Check if value differs:
+      if (eval(parse(text=this.param)) != calc.analytic.css.arg.list[[this.param]])
+      { 
+        warning(paste("Argument ", 
+                      this.param, 
+                      "overwrote same argument given in calc.analytic.css.arg.list"))
+        calc.analytic.css.arg.list[[this.param]] <- eval(parse(text=this.param))
+      }
+  
   if ((bioactive.free.invivo == TRUE & !is.null(tissue)) | 
      (bioactive.free.invivo == TRUE & tolower(concentration) != "plasma"))
   {
@@ -351,14 +369,9 @@ calc_mc_oral_equiv <- function(conc,
                          # suppress.messages=TRUE,
                           tissue=tissue,
                           concentration=concentration,
-                          calc.analytic.css.arg.list=list( 
-                            restrictive.clearance = restrictive.clearance,
-                            bioactive.free.invivo = bioactive.free.invivo,
-                            IVIVE = IVIVE,
-                            well.stirred.correction=well.stirred.correction,
-                            adjusted.Funbound.plasma=adjusted.Funbound.plasma),
-                         Caco2.options = Caco2.options,
-                         return.samples=return.samples,
+                          calc.analytic.css.arg.list=calc.analytic.css.arg.list,
+                          Caco2.options = Caco2.options,
+                          return.samples=return.samples,
                           ...)))))
                          
   if (is(Css,"try-error"))
