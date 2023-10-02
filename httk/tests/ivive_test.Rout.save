@@ -46,7 +46,7 @@ Type 'q()' to quit R.
 > 
 > # Default HTTK: 
 > set.seed(12345)
-> Css <- calc_mc_css(chem.name="bisphenol a",
+> Css0 <- calc_mc_css(chem.name="bisphenol a",
 +   output.units="uM",
 +   samples=NSAMP)
 Human plasma concentration returned in uM units for 0.95 quantile.
@@ -58,12 +58,14 @@ Warning messages:
 3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
   Default value of 1.6 used for Caco2 permeability.
 > set.seed(12345)
-> calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
-+   samples=NSAMP)
+> # This should be the same as calc_mc_oral_equiv:
+> signif(3/Css0,4) ==
++   calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
++     samples=NSAMP)
 Human plasma concentration returned in uM units for 0.95 quantile.
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
-   95% 
-0.5501 
+ 95% 
+TRUE 
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -71,26 +73,10 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
   Default value of 1.6 used for Caco2 permeability.
-> params <- parameterize_steadystate(chem.name="bisphenol a")
-Warning messages:
-1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Clint is provided as a distribution.
-2: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
-  Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
-3: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Fraction unbound is provided as a distribution.
-4: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
-  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-5: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
-  Default value of 1.6 used for Caco2 permeability.
-> # This should be the same as calc_mc_oral_equiv:
-> signif(3/Css,4)
-   95% 
-0.5501 
 > 
 > # Honda1:
 > set.seed(12345)
-> Css <- calc_mc_css(chem.name="bisphenol a",
+> Css1 <- calc_mc_css(chem.name="bisphenol a",
 +   calc.analytic.css.arg.list=list(
 +     restrictive.clearance = TRUE,
 +     bioactive.free.invivo = TRUE),
@@ -111,13 +97,15 @@ Warning messages:
 +   nomconc = 3)
 > cfree <- temp$cfree.invitro
 > set.seed(12345)
-> calc_mc_oral_equiv(cfree,chem.name="bisphenol a",
-+   calc.analytic.css.arg.list=list(IVIVE="Honda1"),
-+   samples=NSAMP)
+> # This should be the same as calc_mc_oral_equiv with IVIVE=="Honda1":
+> signif(cfree/Css1,4) ==
++   calc_mc_oral_equiv(cfree,chem.name="bisphenol a",
++     calc.analytic.css.arg.list=list(IVIVE="Honda1"),
++     samples=NSAMP)
 Human plasma concentration returned in uM units for 0.95 quantile.
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
-      95% 
-1.561e-06 
+ 95% 
+TRUE 
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -125,14 +113,17 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
   Default value of 1.6 used for Caco2 permeability.
-> # This should be the same as calc_mc_oral_equiv:
-> signif(cfree/Css,4)
-     95% 
-4.83e-05 
+4: In honda.ivive(method = IVIVE, tissue = tissue) :
+  Argument method ="Honda1" uses plasma concentration, restrictive clearance, and treats the unbound invivo concentration as bioactive.
+            For IVIVE, any input nominal concentration in vitro should be converted to cfree.invitro using armitage_eval(),
+            otherwise performance will be the same as "Honda2". Use show_honda.ivive() to print summary of Honda et al. 2019 results.
+> # Should be different from default:
+> !(Css1 %in% c(Css0))
+[1] TRUE
 > 
 > # Honda2:
 > set.seed(12345)
-> Css <- calc_mc_css(chem.name="bisphenol a",
+> Css2 <- calc_mc_css(chem.name="bisphenol a",
 +   calc.analytic.css.arg.list=list(
 +     restrictive.clearance = TRUE,
 +     bioactive.free.invivo = TRUE),
@@ -147,13 +138,15 @@ Warning messages:
 3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
   Default value of 1.6 used for Caco2 permeability.
 > set.seed(12345)
-> calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
-+   calc.analytic.css.arg.list=list(IVIVE="Honda2"),
-+   samples=NSAMP)
+> # This should be the same as calc_mc_oral_equiv with IVIVE=="Honda2":
+> signif(3/Css2,4) ==
++   calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
++     calc.analytic.css.arg.list=list(IVIVE="Honda2"),
++     samples=NSAMP)
 Human plasma concentration returned in uM units for 0.95 quantile.
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
-   95% 
-0.5501 
+ 95% 
+TRUE 
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -161,14 +154,15 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
   Default value of 1.6 used for Caco2 permeability.
-> # This should be the same as calc_mc_oral_equiv:
-> signif(3/Css,4)
-  95% 
-17.03 
+4: In honda.ivive(method = IVIVE, tissue = tissue) :
+  Argument method ="Honda2" uses plasma concentration, restrictive clearance, and treats the unbound concentration as bioactive.
+> # Should be different from previous:
+> !(Css2 %in% c(Css0))
+[1] TRUE
 > 
 > # Honda 3 (should be the same as degault HTTK):
 > set.seed(12345)
-> Css <- calc_mc_css(chem.name="bisphenol a",
+> Css3 <- calc_mc_css(chem.name="bisphenol a",
 +   calc.analytic.css.arg.list=list(
 +     restrictive.clearance = TRUE,
 +     bioactive.free.invivo = FALSE),
@@ -183,13 +177,15 @@ Warning messages:
 3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
   Default value of 1.6 used for Caco2 permeability.
 > set.seed(12345)
-> calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
-+   calc.analytic.css.arg.list=list(IVIVE="Honda3"),
-+   samples=NSAMP)
+> # This should be the same as calc_mc_oral_equiv with IVIVE=="Honda3":
+> signif(3/Css3,4) ==
++   calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
++     calc.analytic.css.arg.list=list(IVIVE="Honda3"),
++     samples=NSAMP)
 Human plasma concentration returned in uM units for 0.95 quantile.
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
-   95% 
-0.5501 
+ 95% 
+TRUE 
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -197,14 +193,20 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
   Default value of 1.6 used for Caco2 permeability.
-> # This should be the same as calc_mc_oral_equiv:
-> signif(3/Css,4)
-   95% 
-0.5501 
+4: In honda.ivive(method = IVIVE, tissue = tissue) :
+  Argument method ="Honda3" uses plasma concentration, restrictive clearance, and treats the total concentration as bioactive.
+            This is equivalent to the default httk assumptions.
+> # Should be same as default:
+> Css0 == Css3
+ 95% 
+TRUE 
+> # Should be different from previous:
+> !(Css3 %in% c(Css1, Css2))
+[1] TRUE
 > 
 > # Honda4:
 > set.seed(12345)
-> Css <- calc_mc_css(chem.name="bisphenol a",
+> Css4 <- calc_mc_css(chem.name="bisphenol a",
 +   calc.analytic.css.arg.list=list(
 +     tissue="liver",
 +     restrictive.clearance = FALSE,
@@ -223,14 +225,16 @@ Warning messages:
 4: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
   Default value of 1.6 used for Caco2 permeability.
 > set.seed(12345)
-> calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
-+   calc.analytic.css.arg.list=list(IVIVE="Honda4"),
-+   samples=NSAMP,
-+   model="pbtk")
+> # This should be the same as calc_mc_oral_equiv with IVIVE=="Honda4":
+> signif(3/Css4,4) ==
++   calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
++     calc.analytic.css.arg.list=list(IVIVE="Honda4"),
++     samples=NSAMP,
++     model="pbtk")
 Human plasma concentration returned in uM units for 0.95 quantile.
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
-   95% 
-0.7426 
+ 95% 
+TRUE 
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -240,10 +244,11 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 4: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
   Default value of 1.6 used for Caco2 permeability.
-> # This should be the same as calc_mc_oral_equiv:
-> signif(3/Css,4)
- 95% 
-21.9 
+5: In honda.ivive(method = IVIVE, tissue = tissue) :
+  Argument method ="Honda4" uses target tissue (liver) concentration, non-restrictive clearance, and treats the total concentration as bioactive.
+> # Should be different from previous:
+> !(Css4 %in% c(Css0, Css1, Css2, Css3))
+[1] TRUE
 > 
 > # Quit without saving or displaying messages:
 > quit("no")
