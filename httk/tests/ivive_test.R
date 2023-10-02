@@ -1,7 +1,8 @@
 #R CMD BATCH --no-timing --no-restore --no-save ivive_test.R ivive_test.Rout
+# Get rid of anything in the workspace:
+rm(list=ls()) 
 library(httk)
 
-options(warn=-1)
 NSAMP <- 10
 
 # From Honda et al. (2019) (currently only use mean conc's because steady-state 
@@ -40,8 +41,8 @@ signif(3/Css,4)
 set.seed(12345)
 Css <- calc_mc_css(chem.name="bisphenol a",
   calc.analytic.css.arg.list=list(
-    restrictive.clearance=T,
-    bioactive.free.invivo = T),
+    restrictive.clearance = TRUE,
+    bioactive.free.invivo = TRUE),
   output.units="uM",
   samples=NSAMP)
 temp <- armitage_eval(
@@ -61,8 +62,8 @@ signif(cfree/Css,4)
 set.seed(12345)
 Css <- calc_mc_css(chem.name="bisphenol a",
   calc.analytic.css.arg.list=list(
-    restrictive.clearance=T,
-    bioactive.free.invivo = T),
+    restrictive.clearance = TRUE,
+    bioactive.free.invivo = TRUE),
   output.units="uM",
   samples=NSAMP)
 set.seed(12345)
@@ -76,8 +77,8 @@ signif(3/Css,4)
 set.seed(12345)
 Css <- calc_mc_css(chem.name="bisphenol a",
   calc.analytic.css.arg.list=list(
-    restrictive.clearance=T,
-    bioactive.free.invivo = F),
+    restrictive.clearance = TRUE,
+    bioactive.free.invivo = FALSE),
   output.units="uM",
   samples=NSAMP)
 set.seed(12345)
@@ -92,15 +93,18 @@ set.seed(12345)
 Css <- calc_mc_css(chem.name="bisphenol a",
   calc.analytic.css.arg.list=list(
     tissue="liver",
-    restrictive.clearance=F,
-    bioactive.free.invivo = F),
+    restrictive.clearance = FALSE,
+    bioactive.free.invivo = FALSE),
+  model="pbtk",
   output.units="uM",
   samples=NSAMP)
 set.seed(12345)
 calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
   calc.analytic.css.arg.list=list(IVIVE="Honda4"),
-  samples=NSAMP)
+  samples=NSAMP,
+  model="pbtk")
 # This should be the same as calc_mc_oral_equiv:
 signif(3/Css,4)
 
+# Quit without saving or displaying messages:
 quit("no")
