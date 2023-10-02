@@ -1,11 +1,13 @@
 
-R version 3.6.3 (2020-02-29) -- "Holding the Windsock"
-Copyright (C) 2020 The R Foundation for Statistical Computing
+R Under development (unstable) (2023-04-16 r84269 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
 Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
 
 R is a collaborative project with many contributors.
 Type 'contributors()' for more information and
@@ -16,8 +18,10 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 Type 'q()' to quit R.
 
 > #R CMD BATCH --no-timing --no-restore --no-save ivive_test.R ivive_test.Rout
+> # Get rid of anything in the workspace:
+> rm(list=ls()) 
 > library(httk)
-> options(warn=-1)
+> 
 > NSAMP <- 10
 > 
 > # From Honda et al. (2019) (currently only use mean conc's because steady-state 
@@ -46,27 +50,60 @@ Type 'q()' to quit R.
 +   output.units="uM",
 +   samples=NSAMP)
 Human plasma concentration returned in uM units for 0.95 quantile.
+Warning messages:
+1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Clint is provided as a distribution.
+2: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Fraction unbound is provided as a distribution.
+3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+  Default value of 1.6 used for Caco2 permeability.
 > set.seed(12345)
 > calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
 +   samples=NSAMP)
+Human plasma concentration returned in uM units for 0.95 quantile.
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
    95% 
-0.5591 
+0.5501 
+Warning messages:
+1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Clint is provided as a distribution.
+2: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Fraction unbound is provided as a distribution.
+3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+  Default value of 1.6 used for Caco2 permeability.
 > params <- parameterize_steadystate(chem.name="bisphenol a")
+Warning messages:
+1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Clint is provided as a distribution.
+2: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
+  Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
+3: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Fraction unbound is provided as a distribution.
+4: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
+  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
+5: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+  Default value of 1.6 used for Caco2 permeability.
 > # This should be the same as calc_mc_oral_equiv:
 > signif(3/Css,4)
    95% 
-0.5591 
+0.5501 
 > 
 > # Honda1:
 > set.seed(12345)
 > Css <- calc_mc_css(chem.name="bisphenol a",
 +   calc.analytic.css.arg.list=list(
-+     restrictive.clearance=T,
-+     bioactive.free.invivo = T),
++     restrictive.clearance = TRUE,
++     bioactive.free.invivo = TRUE),
 +   output.units="uM",
 +   samples=NSAMP)
 Human plasma concentration returned in uM units for 0.95 quantile.
+Warning messages:
+1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Clint is provided as a distribution.
+2: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Fraction unbound is provided as a distribution.
+3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+  Default value of 1.6 used for Caco2 permeability.
 > temp <- armitage_eval(
 +   casrn.vector = c("80-05-7"), 
 +   this.FBSf = 0.1,
@@ -77,77 +114,136 @@ Human plasma concentration returned in uM units for 0.95 quantile.
 > calc_mc_oral_equiv(cfree,chem.name="bisphenol a",
 +   calc.analytic.css.arg.list=list(IVIVE="Honda1"),
 +   samples=NSAMP)
+Human plasma concentration returned in uM units for 0.95 quantile.
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
-  95% 
-18.65 
+      95% 
+1.561e-06 
+Warning messages:
+1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Clint is provided as a distribution.
+2: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Fraction unbound is provided as a distribution.
+3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+  Default value of 1.6 used for Caco2 permeability.
 > # This should be the same as calc_mc_oral_equiv:
 > signif(cfree/Css,4)
-  95% 
-18.65 
+     95% 
+4.83e-05 
 > 
 > # Honda2:
 > set.seed(12345)
 > Css <- calc_mc_css(chem.name="bisphenol a",
 +   calc.analytic.css.arg.list=list(
-+     restrictive.clearance=T,
-+     bioactive.free.invivo = T),
++     restrictive.clearance = TRUE,
++     bioactive.free.invivo = TRUE),
 +   output.units="uM",
 +   samples=NSAMP)
 Human plasma concentration returned in uM units for 0.95 quantile.
+Warning messages:
+1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Clint is provided as a distribution.
+2: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Fraction unbound is provided as a distribution.
+3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+  Default value of 1.6 used for Caco2 permeability.
 > set.seed(12345)
 > calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
 +   calc.analytic.css.arg.list=list(IVIVE="Honda2"),
 +   samples=NSAMP)
+Human plasma concentration returned in uM units for 0.95 quantile.
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
-  95% 
-48.69 
+   95% 
+0.5501 
+Warning messages:
+1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Clint is provided as a distribution.
+2: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Fraction unbound is provided as a distribution.
+3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+  Default value of 1.6 used for Caco2 permeability.
 > # This should be the same as calc_mc_oral_equiv:
 > signif(3/Css,4)
   95% 
-48.69 
+17.03 
 > 
 > # Honda 3 (should be the same as degault HTTK):
 > set.seed(12345)
 > Css <- calc_mc_css(chem.name="bisphenol a",
 +   calc.analytic.css.arg.list=list(
-+     restrictive.clearance=T,
-+     bioactive.free.invivo = F),
++     restrictive.clearance = TRUE,
++     bioactive.free.invivo = FALSE),
 +   output.units="uM",
 +   samples=NSAMP)
 Human plasma concentration returned in uM units for 0.95 quantile.
+Warning messages:
+1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Clint is provided as a distribution.
+2: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Fraction unbound is provided as a distribution.
+3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+  Default value of 1.6 used for Caco2 permeability.
 > set.seed(12345)
 > calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
 +   calc.analytic.css.arg.list=list(IVIVE="Honda3"),
 +   samples=NSAMP)
+Human plasma concentration returned in uM units for 0.95 quantile.
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
    95% 
-0.5591 
+0.5501 
+Warning messages:
+1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Clint is provided as a distribution.
+2: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Fraction unbound is provided as a distribution.
+3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+  Default value of 1.6 used for Caco2 permeability.
 > # This should be the same as calc_mc_oral_equiv:
 > signif(3/Css,4)
    95% 
-0.5591 
+0.5501 
 > 
 > # Honda4:
 > set.seed(12345)
 > Css <- calc_mc_css(chem.name="bisphenol a",
 +   calc.analytic.css.arg.list=list(
 +     tissue="liver",
-+     restrictive.clearance=F,
-+     bioactive.free.invivo = F),
++     restrictive.clearance = FALSE,
++     bioactive.free.invivo = FALSE),
++   model="pbtk",
 +   output.units="uM",
 +   samples=NSAMP)
 Human plasma concentration returned in uM units for 0.95 quantile.
+Warning messages:
+1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Clint is provided as a distribution.
+2: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Fraction unbound is provided as a distribution.
+3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo measured Rblood2plasma used.
+4: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+  Default value of 1.6 used for Caco2 permeability.
 > set.seed(12345)
 > calc_mc_oral_equiv(3.0,chem.name="bisphenol a",
 +   calc.analytic.css.arg.list=list(IVIVE="Honda4"),
-+   samples=NSAMP)
++   samples=NSAMP,
++   model="pbtk")
+Human plasma concentration returned in uM units for 0.95 quantile.
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
-     95% 
-0.001854 
+   95% 
+0.7426 
+Warning messages:
+1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Clint is provided as a distribution.
+2: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Fraction unbound is provided as a distribution.
+3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo measured Rblood2plasma used.
+4: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+  Default value of 1.6 used for Caco2 permeability.
 > # This should be the same as calc_mc_oral_equiv:
 > signif(3/Css,4)
-     95% 
-0.001854 
+ 95% 
+21.9 
 > 
-> 
+> # Quit without saving or displaying messages:
 > quit("no")
