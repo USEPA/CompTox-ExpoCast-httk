@@ -1,8 +1,12 @@
-#R CMD BATCH --no-timing --no-restore --no-save ivive_test.R ivive_test.Rout
+# R CMD BATCH --no-timing --no-restore --no-save ivive_test.R ivive_test.Rout
+
 # Get rid of anything in the workspace:
 rm(list=ls()) 
+
 library(httk)
 
+# Reduce the number of samples used by Monte Carlo to decrease runtime for
+# CRAN checks (never use predictions with only ten draws):
 NSAMP <- 10
 
 # From Honda et al. (2019) (currently only use mean conc's because steady-state 
