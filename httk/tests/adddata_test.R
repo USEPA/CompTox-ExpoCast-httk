@@ -1,4 +1,5 @@
-#R CMD BATCH --no-timing --no-restore --no-save adddata_test.R adddata_test.Rout
+# R CMD BATCH --no-timing --no-restore --no-save adddata_test.R adddata_test.Rout
+
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
