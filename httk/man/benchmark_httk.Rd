@@ -2,7 +2,7 @@
 % Please edit documentation in R/benchmark_httk.R
 \name{benchmark_httk}
 \alias{benchmark_httk}
-\title{Assess the curent performance of httk relative to historical benchmarks}
+\title{Assess the current performance of httk relative to historical benchmarks}
 \usage{
 benchmark_httk(
   basic.check = TRUE,
@@ -126,9 +126,7 @@ tissue composition and the ability to predict the ionization state of the
 compounds being modeled.
 }
 \references{
-Davidson-Fritz et al. "Transparent and Evaluated Toxicokinetic Models for 
-Bioinformatics and Public Health Risk Assessment",
-in preparation
+\insertRef{DavidsonFritzUnpublishedModelAdding}{httk}
 }
 \author{
 John Wambaugh
