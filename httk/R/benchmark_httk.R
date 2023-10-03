@@ -139,9 +139,9 @@ benchmark_httk <- function(
   ## Setting up binding for Global Variables ##
   Compound <- Source <- Reference <- fu <- Exp_PC <- Tissue <- Species <- 
     CAS <- logMA <- Benchmark <- Version <- Value <- NULL
-  ## Call the data from the package into 
-  chem.ivv.PK.agg <- chem.invivo.PK.aggregate.data
-  chem.ivv.PK.sum <- chem.invivo.PK.summary.data
+  ## Call a copy of the data.tables from httk - local copy from the package 
+  chem.ivv.PK.agg <- copy(chem.invivo.PK.aggregate.data)
+  chem.ivv.PK.sum <- copy(chem.invivo.PK.summary.data)
   ####
   benchmarks <- list()
 
