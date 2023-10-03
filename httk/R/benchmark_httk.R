@@ -1,9 +1,9 @@
 # When using this code in past versions of httk, we load the needed data tables
 # to assure we are evaluating against similar values:
-#load("NewInVivoTablesForHTTK.RData")
-#pc.data <- read.csv("Pearce2017-PC-data.txt")
+#   load("NewInVivoTablesForHTTK.RData")
+#   pc.data <- read.csv("Pearce2017-PC-data.txt")
 
-#' Assess the curent performance of httk relative to historical benchmarks
+#' Assess the current performance of httk relative to historical benchmarks
 #' 
 #' The function performs a series of "sanity checks" and predictive performance
 #' benchmarks so that the impact of changes to the data, models, and 
@@ -115,10 +115,8 @@
 #' 
 #' @author John Wambaugh
 #'
-#' @references
-#' Davidson-Fritz et al. "Transparent and Evaluated Toxicokinetic Models for 
-#' Bioinformatics and Public Health Risk Assessment",
-#' in preparation
+#' @references 
+#' \insertRef{DavidsonFritzUnpublishedModelAdding}{httk}
 #'
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 aes
