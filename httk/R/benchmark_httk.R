@@ -126,6 +126,7 @@
 #' @importFrom ggplot2 ylab
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 element_text
+#' @importFrom utils globalVariables  
 #'
 #' @export benchmark_httk
 benchmark_httk <- function(
