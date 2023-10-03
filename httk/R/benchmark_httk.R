@@ -140,8 +140,8 @@ benchmark_httk <- function(
   Compound <- Source <- Reference <- fu <- Exp_PC <- Tissue <- Species <- 
     CAS <- logMA <- Benchmark <- Version <- Value <- NULL
   ## Call a copy of the data.tables from httk - local copy from the package 
-  chem.ivv.PK.agg <- copy(chem.invivo.PK.aggregate.data)
-  chem.ivv.PK.sum <- copy(chem.invivo.PK.summary.data)
+  chem.ivv.PK.agg <- copy(httk::chem.invivo.PK.aggregate.data)
+  chem.ivv.PK.sum <- copy(httk::chem.invivo.PK.summary.data)
   ####
   benchmarks <- list()
 
