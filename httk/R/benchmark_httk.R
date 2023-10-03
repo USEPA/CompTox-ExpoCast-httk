@@ -126,7 +126,6 @@
 #' @importFrom ggplot2 ylab
 #' @importFrom ggplot2 theme
 #' @importFrom ggplot2 element_text
-#' @importFrom utils globalVariables  
 #'
 #' @export benchmark_httk
 benchmark_httk <- function(
@@ -138,9 +137,11 @@ benchmark_httk <- function(
                            make.plots=TRUE)
 {
   ## Setting up binding for Global Variables ##
-  utils::globalVariables(c("chem.invivo.PK.summary.data"))
   Compound <- Source <- Reference <- fu <- Exp_PC <- Tissue <- Species <- 
     CAS <- logMA <- Benchmark <- Version <- Value <- NULL
+  ## Call the data from the package into 
+  chem.ivv.PK.agg <- chem.invivo.PK.aggregate.data
+  chem.ivv.PK.sum <- chem.invivo.PK.summary.data
   ####
   benchmarks <- list()
 
@@ -303,7 +304,7 @@ benchmark_httk <- function(
   if (in_vivo_stats.check)
   {
     # Subset 'FitData' - exclude Bensulide for <justification for exclusion>
-    FitData <- subset(chem.invivo.PK.aggregate.data,
+    FitData <- subset(chem.ivv.PK.agg,
                       Compound!="Bensulide" |
                       Source=="Wambaugh et al. (2018), NHEERL/RTI")
     # Subset 'FitData' - exclude Propyzamide for <justification for exclusion>
@@ -352,7 +353,7 @@ benchmark_httk <- function(
                          na.rm=TRUE)^(1/2),4) 
     
     # Subset 'FitData2' - exclude Bensulide for <justification for exclusion>
-    FitData2 <- subset(chem.invivo.PK.summary.data,
+    FitData2 <- subset(chem.ivv.PK.sum,
                       Compound!="Bensulide" |
                       Reference %in% c("RTI 2015","NHEERL 2015"))
     # Subset 'FitData2' - exclude Propyzamide for <justification for exclusion>
