@@ -137,6 +137,8 @@ benchmark_httk <- function(
                            make.plots=TRUE)
 {
   ## Setting up binding for Global Variables ##
+  utils::globalVariables('chem.invivo.PK.summary.data',
+                         'chem.invivo.PK.aggregate.data')
   Compound <- Source <- Reference <- fu <- Exp_PC <- Tissue <- Species <- 
     CAS <- logMA <- Benchmark <- Version <- Value <- NULL
   ####
