@@ -695,6 +695,9 @@ model.list[["fetal_pbtk"]]$compartment.units <- c(
   "Qcardiac" = "L/d",
   "Qthyroid" = "L/d")
 
+# Compartment state of matter, needed for proper unit conversion, if all
+# comaprtments of the same only include one state and set it to "all":
+model.list[["fetal_pbtk"]]$compartment.state <- list(liquid="all")
        
 #Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[["fetal_pbtk"]]$required.params <- c(
