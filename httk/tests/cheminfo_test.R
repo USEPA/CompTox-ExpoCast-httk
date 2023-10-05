@@ -1,4 +1,5 @@
-#R CMD BATCH --no-timing --no-restore --no-save cheminfo_test.R cheminfo_test.Rout
+# R CMD BATCH --no-timing --no-restore --no-save cheminfo_test.R cheminfo_test.Rout
+
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
