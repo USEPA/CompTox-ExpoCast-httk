@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_hep_bioavailability.R
 \name{calc_hep_bioavailability}
 \alias{calc_hep_bioavailability}
-\title{Calculate first pass metabolism}
+\title{Calculate first pass heaptic metabolism}
 \usage{
 calc_hep_bioavailability(
   chem.cas = NULL,
@@ -49,13 +49,12 @@ A data.table whose columns are the parameters of the HTTK model
 For models that don't described first pass blood flow from the gut, need to
 cacluate a hepatic bioavailability, that is, the fraction of chemical 
 systemically available after metabolism during the first pass through the 
-liver (Rowland, 1973 Equaation 29, where k21 is blood flow through the liver
-and k23 is clearance from the liver in Figure 1).
+liver (Rowland, 1973 Equation 29, where k21 is blood flow through the liver
+and k23 is clearance from the liver in Figure 1 in that paper).
 }
 \references{
 Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. 
-"Clearance concepts in pharmacokinetics." Journal of pharmacokinetics and 
-biopharmaceutics 1.2 (1973): 123-136.
+\insertRef{rowland1973clearance}{httk}
 }
 \author{
 John Wambaugh
