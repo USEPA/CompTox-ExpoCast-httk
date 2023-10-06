@@ -182,6 +182,10 @@ model.list[["3compartment"]]$compartment.units <-c(
     "AUC"="uM*days"
   )
 
+# Compartment state of matter, needed for proper unit conversion, if all
+# comaprtments of the same only include one state and set it to "all":
+model.list[["3compartment"]]$compartment.state <- list(liquid="all")
+
 # These parameters specific the exposure scenario simulated by the model:
 model.list[["3compartment"]]$dosing.params <- c(
   "daily.dose",
