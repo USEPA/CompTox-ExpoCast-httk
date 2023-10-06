@@ -1,27 +1,34 @@
-#' Calculate first pass metabolism
+#' Calculate first pass heaptic metabolism
 #'
 #' For models that don't described first pass blood flow from the gut, need to
 #' cacluate a hepatic bioavailability, that is, the fraction of chemical 
 #' systemically available after metabolism during the first pass through the 
-#' liver (Rowland, 1973 Equaation 29, where k21 is blood flow through the liver
-#' and k23 is clearance from the liver in Figure 1).
+#' liver (Rowland, 1973 Equation 29, where k21 is blood flow through the liver
+#' and k23 is clearance from the liver in Figure 1 in that paper).
 #'
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- if
 #'  parameters is not specified then the chemical must be identified by either
 #'  CAS, name, or DTXISD
+#'
 #' @param chem.name Chemical name (spaces and capitalization ignored) --  if
 #'  parameters is not specified then the chemical must be identified by either
 #'  CAS, name, or DTXISD
+#'
 #' @param dtxsid EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #'  -- if parameters is not specified then the chemical must be identified by 
 #' either CAS, name, or DTXSIDs
+#'
 #' @param parameters Parameters from the appropriate parameterization function
 #' for the model indicated by argument model
+#'
 #' @param restrictive.clearance Protein binding not taken into account (set to 1) in 
 #' liver clearance if FALSE.
+#'
 #' @param flow.34 A logical constraint
+#'
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#'
 #' @param suppress.messages Whether or not to suppress the output message.
 #'
 #'@return A data.table whose columns are the parameters of the HTTK model
@@ -30,9 +37,8 @@
 #' @author John Wambaugh
 #'
 #'@references Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. 
-#'"Clearance concepts in pharmacokinetics." Journal of pharmacokinetics and 
-#'biopharmaceutics 1.2 (1973): 123-136.
-#'
+#' \insertRef{rowland1973clearance}{httk}
+#' 
 #' @keywords physiology 
 #'
 #' @import utils
