@@ -1,4 +1,5 @@
-#R CMD BATCH --no-timing --no-restore --no-save unit_test.R unit_test.Rout
+# R CMD BATCH --no-timing --no-restore --no-save unit_test.R unit_test.Rout
+
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
@@ -30,5 +31,10 @@ convert_units("ug/L","ppmv",
                 chem.name="styrene",
                 state="gas")
                 
+# Test that convert_solve_x doesn't throw any errors:
+head(solve_gas_pbtk(chem.name="bisphenol a",
+                    times=c(0,0.1,0.05),
+                    output.units=setNames("mg/m3","Cendexhppmv")))
+
 # Quit without saving or displaying messages:
 quit("no")

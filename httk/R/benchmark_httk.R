@@ -1,9 +1,9 @@
 # When using this code in past versions of httk, we load the needed data tables
 # to assure we are evaluating against similar values:
-#load("NewInVivoTablesForHTTK.RData")
-#pc.data <- read.csv("Pearce2017-PC-data.txt")
+#   load("NewInVivoTablesForHTTK.RData")
+#   pc.data <- read.csv("Pearce2017-PC-data.txt")
 
-#' Assess the curent performance of httk relative to historical benchmarks
+#' Assess the current performance of httk relative to historical benchmarks
 #' 
 #' The function performs a series of "sanity checks" and predictive performance
 #' benchmarks so that the impact of changes to the data, models, and 
@@ -115,10 +115,8 @@
 #' 
 #' @author John Wambaugh
 #'
-#' @references
-#' Davidson-Fritz et al. "Transparent and Evaluated Toxicokinetic Models for 
-#' Bioinformatics and Public Health Risk Assessment",
-#' in preparation
+#' @references 
+#' \insertRef{DavidsonFritzUnpublishedModelAdding}{httk}
 #'
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 aes
@@ -141,6 +139,9 @@ benchmark_httk <- function(
   ## Setting up binding for Global Variables ##
   Compound <- Source <- Reference <- fu <- Exp_PC <- Tissue <- Species <- 
     CAS <- logMA <- Benchmark <- Version <- Value <- NULL
+  ## Call a copy of the data.tables from httk - local copy from the package 
+  chem.ivv.PK.agg <- copy(httk::chem.invivo.PK.aggregate.data)
+  chem.ivv.PK.sum <- copy(httk::chem.invivo.PK.summary.data)
   ####
   benchmarks <- list()
 
@@ -303,7 +304,7 @@ benchmark_httk <- function(
   if (in_vivo_stats.check)
   {
     # Subset 'FitData' - exclude Bensulide for <justification for exclusion>
-    FitData <- subset(chem.invivo.PK.aggregate.data,
+    FitData <- subset(chem.ivv.PK.agg,
                       Compound!="Bensulide" |
                       Source=="Wambaugh et al. (2018), NHEERL/RTI")
     # Subset 'FitData' - exclude Propyzamide for <justification for exclusion>
@@ -352,7 +353,7 @@ benchmark_httk <- function(
                          na.rm=TRUE)^(1/2),4) 
     
     # Subset 'FitData2' - exclude Bensulide for <justification for exclusion>
-    FitData2 <- subset(chem.invivo.PK.summary.data,
+    FitData2 <- subset(chem.ivv.PK.sum,
                       Compound!="Bensulide" |
                       Reference %in% c("RTI 2015","NHEERL 2015"))
     # Subset 'FitData2' - exclude Propyzamide for <justification for exclusion>

@@ -303,6 +303,44 @@ model.list[["gas_pbtk"]]$compartment.units <- c(
                                           "Cven"="uM"
                                           )
 
+# Compartment state of matter, needed for proper unit conversion, if all
+# comaprtments of the same only include one state and set it to "all":
+model.list[["gas_pbtk"]]$compartment.state <- list(
+  liquid = c("Ainh",
+             "Aexh",
+             "Aart",
+             "Agut",
+             "Agutlumen",
+             "Akidney", 
+             "Aliver",
+             "Alung",
+             "Ametabolized",
+             "Amuc",
+             "Aplasma",
+             "Arest",
+             "Atubules",
+             "AUC",
+             "Aven",
+             "Cart",
+             "Cgut",
+             "Ckidney",
+             "Cliver",
+             "Clung",
+             "Cmuc",
+             "Cplasma",
+             "Crest",
+             "Cven"
+             ),
+  gas = c("Calv",
+          "Calvppmv",
+          "Cmixexh",
+          "Cmixexhppmv",
+          "Cinhppmv",
+          "Cendexh",
+          "Cendexhppmv"
+          )
+  )
+
 # These parameters specify the exposure scenario simulated by the model:
 model.list[["gas_pbtk"]]$dosing.params <- c(
   "initial.dose",

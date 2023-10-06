@@ -17,7 +17,11 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> #R CMD BATCH --no-timing --no-restore --no-save other_tests.R other_tests.Rout
+> # R CMD BATCH --no-timing --no-restore --no-save other_tests.R other_tests.Rout
+> 
+> # Get rid of anything in the workspace:
+> rm(list=ls()) 
+> 
 > library(httk)
 > 
 > #calc_css(chem.name='nicotine')
