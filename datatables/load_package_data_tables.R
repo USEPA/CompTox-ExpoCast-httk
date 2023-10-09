@@ -2386,6 +2386,10 @@ sipes2017 <- sipes2017[,c(
                'Human.Funbound.plasma',
                'Human.Clint')]
                
+# Drop SMILES for now to shrink package size:
+chem.physical_and_invitro.data <- chem.physical_and_invitro.data[,
+       !(colnames(chem.physical_and_invitro.data) %in% c("SMILES.desalt"))]
+
 save(chem.physical_and_invitro.data,
      chem.invivo.PK.data,
      chem.invivo.PK.aggregate.data,
