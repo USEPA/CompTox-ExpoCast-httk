@@ -85,5 +85,22 @@ parameter.dt <- create_mc_samples(chem.cas="335104-84-2",
 calc_mc_oral_equiv(conc=100,
                    parameters=parameter.dt,
                    model="pbtk")
+
+# If we turn off all the montecarlo the samples should all be the same and
+# give us the same result as calc_analytic_css:
+a <- calc_mc_css(
+  chem.cas = "80-05-7", 
+  output.units = "uM", 
+  model = "3compartmentss", 
+  species = "Human", 
+  httkpop=FALSE, 
+  invitrouv=FALSE, 
+  return.samples=TRUE)
+b <- calc_analytic_css(
+  chem.cas = "80-05-7", 
+  output.units = "uM", 
+  model = "3compartmentss", 
+  species = "Human")
+all(a/b==1) 
                    
 quit("no")

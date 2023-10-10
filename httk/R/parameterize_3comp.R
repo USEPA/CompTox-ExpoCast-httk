@@ -155,5 +155,6 @@ parameterize_3comp<- function(
                               
   parms$Qkidneyf <- parms$Vvenc <- parms$Vartc <- NULL
  
-  return(lapply(parms[order(tolower(names(parms)))],set_httk_precision))                     
+  return(lapply(parms[model.list[["3compartment"]]$param.names],
+                set_httk_precision))                   
 }

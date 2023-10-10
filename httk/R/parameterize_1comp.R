@@ -263,5 +263,6 @@ parameterize_1comp <- function(
     ss.params[['hepatic.bioavailability']]  
   params[['BW']] <- this.phys.data[["Average BW"]]
   
-  return(lapply(params[order(tolower(names(params)))],set_httk_precision))
+  return(lapply(params[model.list[["1compartment"]]$param.names],
+                set_httk_precision))
 }
