@@ -345,5 +345,6 @@ parameterize_steadystate <- function(
     Caco2.options))
     ))
   
-  return(lapply(Params[order(tolower(names(Params)))],set_httk_precision))
+  return(lapply(Params[model.list[["3compartmentss"]]$param.names],
+                set_httk_precision))
 }

@@ -397,6 +397,9 @@ parameterize_pbtk <- function(
     Caco2.options))
     ))
 
+  # Only include parameters specified in modelinfo:
+  outlist <- outlist[model.list[["pbtk"]]$param.names]
+
   # alphabetize:
   outlist <- outlist[order(tolower(names(outlist)))]
   
