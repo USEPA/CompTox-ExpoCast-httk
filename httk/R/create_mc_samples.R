@@ -119,6 +119,12 @@
 #' that are passed to \code{\link{invitro_mc}} and the parameterize_[MODEL] 
 #' functions
 #'
+#' @param adjusted.Funbound.plasma Uses Pearce et al. (2017) lipid binding adjustment
+#' for Funbound.plasma when set to TRUE (Default).
+#' 
+#' @param adjusted.Clint Uses Kilford et al. (2008) hepatocyte incubation
+#' binding adjustment for Clint when set to TRUE (Default).
+#'
 #' @return
 #' A data table where each column corresponds to parameters needed for the 
 #' specified model and each row represents a different Monte Carlo sample of
@@ -171,6 +177,8 @@ create_mc_samples <- function(chem.cas=NULL,
                         tissue=NULL,
                         httkpop.dt=NULL,
                         invitro.mc.arg.list=NULL,
+                        adjusted.Funbound.plasma=TRUE,
+                        adjusted.Clint=TRUE,
                         httkpop.generate.arg.list=
                           list(method = "direct resampling"),
                         convert.httkpop.arg.list=NULL,
@@ -357,12 +365,45 @@ Set species=\"Human\" to run httkpop model.')
                          parameters.dt=parameters.dt,
                          samples=samples),
                          invitro.mc.arg.list,
+                         adjusted.Clint = adjusted.Clint,
+                         adjusted.Funbound.plasma = adjusted.Funbound.plasma,
                          Caco2.options[names(Caco2.options)[
                            !names(Caco2.options) %in%
 # invitro_mc doesn't make use of these arguments because we've already called
 # parameterize_[MODEL]:
                              c("Caco2.Pab.default", "overwrite.invivo")]])))
+  } else {
+  # Clint and fup are adjusted within invitro_mc, if not called we need to adjust them here:
+  #
+  # Check to see if we are adjusting for differences between in vitro and 
+  # physiological lipid partitioning (Pearce, 2017):
+    if (adjusted.Funbound.plasma)
+    {
+      if (all(c("Pow","pKa_Donor","pKa_Accept") %in% names(parameters.dt)) | 
+          ("Dow74" %in% names(parameters.dt)))
+      {
+        # put the unadjusted fup where calc_fup_correction will look for it:
+        parameters.dt[, Funbound.plasma := unadjusted.Funbound.plasma]
+        parameters.dt[, Funbound.plasma.adjustment:=
+          calc_fup_correction(
+            parameters = parameters.dt)]
+        parameters.dt[, Funbound.plasma := Funbound.plasma *
+                      Funbound.plasma.adjustment]
+      } else stop("Missing phys-chem parameters in invitro_mc for calc_fup_correction.") 
+    } else {
+      parameters.dt[, Funbound.plasma.adjustment:=1]
+    }
+  
+  # Correct for fraction of chemical unbound in in vitro hepatocyte assay:
+    if (adjusted.Clint)
+    {
+      parameters.dt[, Clint := apply_clint_adjustment(
+                                 Clint,
+                                 Fu_hep=Fhep.assay.correction,
+                                 suppress.messages=TRUE)]
+    }
   }
+ 
 
 # CLEAN UP PARAMETER MATRIX (bug fix v1.10.1)
 #
@@ -453,8 +494,8 @@ Set species=\"Human\" to run httkpop model.')
     {
 # From Pearce et al. (2017):
       parameters.dt[, Krbc2pu:=calc_krbc2pu(Rb2p.invivo,
-                                            parameters.mean$Funbound.plasma,
-                                            parameters.mean$hematocrit)]
+                                            Funbound.plasma,
+                                            hematocrit)]
     } 
 # Calculate Rblood2plasma based on hematocrit, Krbc2plasma, and Funbound.plasma. 
 # This is the ratio of chemical in blood vs. in plasma.
@@ -475,7 +516,9 @@ Set species=\"Human\" to run httkpop model.')
                             suppress.messages=suppress.messages)]
     }
   }
-  
+
+# Calculate fraction of oral dose surviving first-pass hepatic metabolism before
+# reaching systemic blood (if needed):
   if (firstpass)
   {
   

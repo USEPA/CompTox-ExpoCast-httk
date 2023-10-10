@@ -334,6 +334,12 @@ parameterize_schmitt <- function(chem.cas=NULL,
                   Fprotein.plasma = Fprotein,
                   plasma.pH=plasma.pH,
                   alpha=alpha)
+                  
+  # Only include parameters specified in modelinfo:
+  outlist <- outlist[model.list[["schmitt"]]$param.names]
+
+  # alphabetize:
+  outlist <- outlist[order(tolower(names(outlist)))]
   
   return(lapply(outlist,set_httk_precision))                                
 }
