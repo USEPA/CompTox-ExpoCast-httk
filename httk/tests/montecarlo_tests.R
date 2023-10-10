@@ -92,7 +92,8 @@ a <- calc_mc_css(
   chem.cas = "80-05-7", 
   output.units = "uM", 
   model = "3compartmentss", 
-  species = "Human", 
+  species = "Human",
+  samples=NSAMP, 
   httkpop=FALSE, 
   invitrouv=FALSE, 
   return.samples=TRUE)

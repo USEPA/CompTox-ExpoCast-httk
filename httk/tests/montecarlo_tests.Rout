@@ -130,7 +130,7 @@ In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
 > calc_mc_css(chem.cas="101-05-3",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-15.69 
+22.39 
 Warning messages:
 1: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Fraction unbound below limit of detection.
@@ -138,8 +138,6 @@ Warning messages:
   Fraction unbound = 0, changed to 0.005.
 3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
   Default value of 1.6 used for Caco2 permeability.
-4: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
-  Average in vivo Human Rblood2plasma (0.846) substituted.
 > # well-behaved chemical with a measured Rblood2plasma:
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",samples=NSAMP)
@@ -312,7 +310,8 @@ uM concentration converted to mgpkgpday dose for 0.95 quantile.
 +   chem.cas = "80-05-7", 
 +   output.units = "uM", 
 +   model = "3compartmentss", 
-+   species = "Human", 
++   species = "Human",
++   samples=NSAMP, 
 +   httkpop=FALSE, 
 +   invitrouv=FALSE, 
 +   return.samples=TRUE)

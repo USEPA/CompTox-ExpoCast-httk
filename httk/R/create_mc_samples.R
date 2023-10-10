@@ -465,10 +465,14 @@ Set species=\"Human\" to run httkpop model.')
   {
 # Calculate Krbc2plasma from blood:plasma ratio (if available). We use the average
 # value because we want this to PC to be the same for all individuals since we 
-# don't have the phys-chem to recalculate:
+# don't have the phys-chem to recalculate. But we need the adjusted values:
+    parameterize.args$adjusted.Funbound.plasma <- TRUE
+    parameterize.args$suppress.messages=TRUE
+    adj.parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
+                         args=purrr::compact(parameterize.args))
     parameters.dt[,Krbc2pu:=calc_krbc2pu(
-      Rb2p = parameters$Rblood2plasma,
-      Funbound.plasma = parameters$Funbound.plasma)]
+      Rb2p = adj.parameters.mean$Rblood2plasma,
+      Funbound.plasma = adj.parameters.mean$Funbound.plasma)]
   }
 
 # If the model uses partion coefficients we need to lump each individual
