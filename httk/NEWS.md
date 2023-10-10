@@ -16,7 +16,8 @@ This version accompanies the submission of manuscript Honda et al. ?Impact of Gu
 * Fixed bug with Monte Carlo functions (for example, 'calc_mc_oral_equiv') wherein you could not specify the argument parameters to be a table created by 'create_mc_samples' (thanks Jayme Coyle and Tyler Lalonde)
 * Revised 'convert_units' to handle multiple molecular weights -- this enables 'convert_mc_oral_equivalent' to take a table of parameters for Monte Carlo
 * Updated the checks and reported error messages in 'get_clint' and 'get_invtroPK_param' to be more informative
-* Updated 'get_physchem_param' to be case-insensitive
+* Corrected calculation of mean blood:plasma partition coefficient when measured RBlood2plasma is avaialble
+* Clint and fup are now adjusted for in ivtro binding when invitrouv=FALSE (thanks cm16120)
 
 ## New Features
 * Added in vitro measured Caco-2 membrane permeability data for 310 chemicals allowing characterization of oral bioavailability
@@ -32,7 +33,8 @@ This version accompanies the submission of manuscript Honda et al. ?Impact of Gu
 * Returned and updated the [Pearce et al. (2017)](https://doi.org/10.1007/s10928-017-9548-7) vignette on Evaluation of Tissue Partitioning
 * Revised function 'convert_units', expanding the variety of unit conversions available
 * Model "1compartment" allows volatile chemicals again since clearance is amorphous for that model (likely understimated without exhalation)
-* Manuscripts references listed in function documentation was converted to a BibTex format from manual insertion of the citations. (thanks Lily Whipple)
+* Manuscript references listed in function documentation was converted to a BibTex format from manual insertion of the citations. (thanks Lily Whipple)
+* Updated 'get_physchem_param' to be case-insensitive
 
 # version 2.2.2 (February 20, 2023)
 ## Bug Fixes
