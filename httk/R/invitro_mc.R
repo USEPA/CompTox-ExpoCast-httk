@@ -303,9 +303,10 @@ invitro_mc <- function(parameters.dt=NULL,
   # First check that this model has phys-chem parameters:
   if (all(c("Pow","pKa_Donor","pKa_Accept")%in%colnames(parameters.dt)))
     parameters.dt[,Fhep.assay.correction:=calc_hep_fu(parameters=parameters.dt)]
+
+  # Correct for fraction of chemical unbound in in vitro hepatocyte assay:
   if (adjusted.Clint)
   {
-    # Correct for fraction of chemical unbound in in vitro hepatocyte assay:
     parameters.dt[, Clint := apply_clint_adjustment(
                                Clint,
                                Fu_hep=Fhep.assay.correction,
@@ -465,10 +466,10 @@ invitro_mc <- function(parameters.dt=NULL,
   # physiological lipid partitioning (Pearce, 2017):
   if (adjusted.Funbound.plasma)
   {
-    # We need the fraction of lipid in plasma:
-    Flipid <-subset(httk::physiology.data,
-               Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,
-               which(colnames(httk::physiology.data) == 'Human')]
+#    # We need the fraction of lipid in plasma:
+#    Flipid <-subset(httk::physiology.data,
+#               Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,
+#               which(colnames(httk::physiology.data) == 'Human')]
 
     if (all(c("Pow","pKa_Donor","pKa_Accept") %in% names(parameters.dt)) | 
         ("Dow74" %in% names(parameters.dt)))
