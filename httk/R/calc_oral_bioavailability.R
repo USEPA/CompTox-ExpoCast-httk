@@ -140,11 +140,17 @@ calc_fbio.oral <- function(Params = NULL,
   fhep.oral <- Params$hepatic.bioavailability # Determine Fhep.oral
   fbio.oral <- fabs.oral*fhep.oral*fgut.oral # Determine Fbio.oral
   
-  return(list("fbio.oral" = fbio.oral,
-              "fabs.oral" = fabs.oral,
-              "fgut.oral" = fgut.oral,
-              "fhep.oral" = fhep.oral
-              ))
+# create output list:
+  out <-list("fbio.oral" = fbio.oral,
+             "fabs.oral" = fabs.oral,
+             "fgut.oral" = fgut.oral,
+             "fhep.oral" = fhep.oral
+    )
+
+# Set precision:
+  out <- lapply(out, set_httk_precision)
+  
+  return(out)
 
 }
 
@@ -213,7 +219,7 @@ calc_fabs.oral <- function(Params = NULL,
     fabs.oral <- 1
   }
   
-  return(as.numeric(fabs.oral))
+  return(set_httk_precision(as.numeric(fabs.oral)))
 }
 
 #' @describeIn calc_fbio.oral Calculate the fraction of chemical surviving first pass metabolism in the gut
@@ -329,6 +335,6 @@ calc_fgut.oral <- function(Params = NULL,
     # if Caco2.options$Fgut.oral == FALSE, return 1
     fgut.oral <- 1
   }
+  
   return(set_httk_precision(as.numeric(fgut.oral)))
- 
 }
