@@ -78,9 +78,9 @@ calc_fbio.oral <- function(Params = NULL,
   ...
   )
 {
-  
   # Initialize parameters if null
-  if(is.null(Params)){
+  if(is.null(Params))
+  {
   # We need to describe the chemical to be simulated one way or another:
     if (is.null(chem.cas) & 
         is.null(chem.name) & 
@@ -108,34 +108,57 @@ calc_fbio.oral <- function(Params = NULL,
         Caco2.Fgut = Caco2.Fgut,
         Caco2.Fabs = Caco2.Fabs,
         overwrite.invivo = overwrite.invivo,
-        keepit100 = keepit100)),
+        keepit100 = TRUE)),
       ...)))
   }
 
-  if(keepit100){
+  if (keepit100)
+  {
     fabs.oral <- 1
     fgut.oral <- 1
-  }else{
+  } else {
+    
+# Handle fabs first:    
+    # Check if there is an in vivo value:
+    invivo.fabs <- try(get_invitroPK_param("Fabs",species,chem.cas=chem.cas),
+                       silent=TRUE)
+    # If Caco2.Fabs = TRUE then we have the go ahead to calculate Fgut if there
+    # is no in vivo data. 
+    # If overwrite.invivo = TRUE then we always try to overwrite invivo data.
     if (overwrite.invivo | 
-      (Caco2.Fabs & 
-        is(try(get_invitroPK_param("Fabs",species,chem.cas=chem.cas),
-           silent=TRUE), "try-error")))
+      (Caco2.Fabs & is(invivo.fabs, "try-error")))
     {
       fabs.oral <- calc_fabs.oral(Params = Params) # Determine Fabs.oral
+    # If we we aren't going to use Caco2 then revert to either 1 or in vivo value:
+    } else if (is(invivo.fabs, "try-error")) {
+      fabs.oral <- 1
     } else {
-      fabs.oral <- Params$Fabs
+      fabs.oral <- invivo.fabs  
     }
-    
+    # Require that the fractions be less than 1:
+    fabs.oral <- ifelse(fabs.oral>1.0,1.0,fabs.oral)
+
+# Now handle Fgut:
+    # Check if there is an in vivo value:
+    invivo.fgut <- try(get_invitroPK_param("Fgut",species,chem.cas=chem.cas),
+                       silent=TRUE)
+    # If Caco2.Fgut = TRUE then we have the go ahead to calculate Fgut if there
+    # is no in vivo data. 
+    # If overwrite.invivo = TRUE then we always try to overwrite invivo data.
     if (overwrite.invivo | 
-      (Caco2.Fgut & 
-        is(try(get_invitroPK_param("Fgut",species,chem.cas=chem.cas),
-              silent=TRUE), "try-error")))
+      (Caco2.Fgut & is(invivo.fgut, "try-error")))
     {
       fgut.oral <- calc_fgut.oral(Params = Params) # Determine Fgut.oral
+    # If we we aren't going to use Caco2 then revert to either 1 or in vivo value:
+    } else if (is(invivo.fgut, "try-error") | overwrite.invivo) {
+      fgut.oral <- 1
     } else {
-      fgut.oral <- Params$Fgut
+      fgut.oral <- invivo.fgut  
     }
   }
+  # Require that the fractions be less than 1:
+  fgut.oral <- ifelse(fgut.oral>1.0,1.0,fgut.oral)
+  
   
   fhep.oral <- Params$hepatic.bioavailability # Determine Fhep.oral
   fbio.oral <- fabs.oral*fhep.oral*fgut.oral # Determine Fbio.oral
@@ -218,7 +241,10 @@ calc_fabs.oral <- function(Params = NULL,
   }else{
     fabs.oral <- 1
   }
-  
+
+  # Require that the fraction is less than 1:
+  fabs.oral <- ifelse(fabs.oral > 1, 1.0, fabs.oral)
+    
   return(set_httk_precision(as.numeric(fabs.oral)))
 }
 
@@ -328,7 +354,7 @@ calc_fgut.oral <- function(Params = NULL,
     # Qgut Model -- Yang et al. (2007) equation 5:
  #   fgut.oral <- Qgut / (Qgut + Params$Funbound.plasma*clu_gut/Params$Rblood2plasma) 
  # Metabolism of chemical in enterocyte, not blood:
-   fgut.oral <- Qgut / (Qgut + Params$Funbound.plasma*clu_gut) 
+    fgut.oral <- Qgut / (Qgut + Params$Funbound.plasma*clu_gut) 
     # Add competitive process (clearance of the gut lumen):
     fgut.oral <- fgut.oral*(Qgut/(0.5+Qgut))
   } else {
@@ -336,5 +362,11 @@ calc_fgut.oral <- function(Params = NULL,
     fgut.oral <- 1
   }
   
-  return(set_httk_precision(as.numeric(fgut.oral)))
+  # Set reasonable precision:
+  fgut.oral <- set_httk_precision(as.numeric(fgut.oral))
+
+  # Require that the fraction is less than 1:
+  fgut.oral <- ifelse(fgut.oral > 1, 1.0, fgut.oral)
+  
+  return(fgut.oral)
 }
