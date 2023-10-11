@@ -108,7 +108,7 @@ calc_fbio.oral <- function(Params = NULL,
         Caco2.Fgut = Caco2.Fgut,
         Caco2.Fabs = Caco2.Fabs,
         overwrite.invivo = overwrite.invivo,
-        keepit100 = TRUE)),
+        keepit100 = TRUE)),  # We don't want to recursively calculate 
       ...)))
   }
 
@@ -225,7 +225,7 @@ calc_fabs.oral <- function(Params = NULL,
         Caco2.Fgut = Caco2.Fgut,
         Caco2.Fabs = Caco2.Fabs,
         overwrite.invivo = overwrite.invivo,
-        keepit100 = keepit100)),
+        keepit100 = TRUE)), # We don't want to recursively calculate 
       ...)))
   }
   
@@ -300,7 +300,7 @@ calc_fgut.oral <- function(Params = NULL,
         Caco2.Fgut = Caco2.Fgut,
         Caco2.Fabs = Caco2.Fabs,
         overwrite.invivo = overwrite.invivo,
-        keepit100 = keepit100)),
+        keepit100 = TRUE)),  # We don't want to recursively calculate 
       ...)))
     }
     
