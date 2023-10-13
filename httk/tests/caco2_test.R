@@ -29,14 +29,24 @@ NSAMP <- 10
 set.seed(1234)
 # Let's make sure that the monte carlo Css is also lower when some chemical
 # is not absorbed:
-calc_mc_css(chem.cas="15972-60-8",
+Css1.caco <- calc_mc_css(chem.cas="15972-60-8",
             model="3compartment",
             samples=NSAMP)
 # The monte carlo Css should be higher with keepit100-TRUE
 set.seed(1234)
-calc_mc_css(chem.cas="15972-60-8",
+Css1.100 calc_mc_css(chem.cas="15972-60-8",
             model="3compartment",
             samples=NSAMP,
             Caco2.options=list(keepit100=TRUE))
+Css1.caco < Css1.100
+
+Css2.caco <- calc_mc_css(dtxsid="DTXSID6034392",
+                         samples=NSAMP,
+                         which.quantile=0.5)
+Css2.100 <- calc_mc_css(dtxsid="DTXSID6034392",
+                        samples=NSAMP,
+                        Caco2.options = list(keepit100=TRUE),
+                        which.quantile=0.5)
+Css2.caco < Css2.100
 
 quit("no")
