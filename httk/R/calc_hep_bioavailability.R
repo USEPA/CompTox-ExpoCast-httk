@@ -63,7 +63,8 @@ calc_hep_bioavailability <- function(
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
 
   # Required parameters
-  req.param <- c("BW", "Qtotal.liverc", "Clmetabolismc", "Funbound.plasma", "Rblood2plasma")
+  req.param <- c("BW", "Qtotal.liverc", "Clmetabolismc", "Funbound.plasma", 
+                 "Rblood2plasma")
   
   # Qtotal.liverc is a total blood flow for simpler models without explicit
   # first-pass hepatic metabolism. However, if we arecalling this function from
@@ -78,18 +79,24 @@ calc_hep_bioavailability <- function(
   
   if (is.null(parameters) | !all(req.param %in% names(parameters)))
   {
-# This function will get us the physiological parameters we need and then
-# recursively call calc_hep_bioavailability (most often we use the
-# following code when the function is run from the command line):
-    parameters <- parameterize_steadystate(
-                    chem.cas=chem.cas,
-                    chem.name=chem.name,
-                    dtxsid=dtxsid,
-                    suppress.messages=suppress.messages,
-                    species=species)
-    
-    return(parameters[['hepatic.bioavailability']])
+# If we don't have parameters we can call parameterize_steadystate using the
+# chemical identifiers. Then that function will build up a list of parameters
+# so that when it calls this function a second time (recursively) we WILL have
+# a list of parameters defined. The key is to make sure that the call to this
+# function in parameterize_steadystate occurs after all parameters needed by
+# this function are defined (or we get stuck in a recursive loop).
+    parameters <- do.call(parameterize_steadystate,
+                          args=purrr::compact(c(list(
+                            chem.cas=chem.cas,
+                            chem.name=chem.name,
+                            dtxsid=dtxsid,
+                            suppress.messages=suppress.messages))))
   }
+  
+  if (!"Clmetabolismc" %in% names(parameters))
+    parameters[["Clmetabolismc"]] <- calc_hep_clearance(parameters=parameters,
+                                                           hepatic.model='unscaled',
+                                                           suppress.messages=TRUE)#L/h/kg body weight
   
   if (!all(c("Qtotal.liverc","Funbound.plasma","Clmetabolismc","Rblood2plasma") 
     %in% names(parameters))) 

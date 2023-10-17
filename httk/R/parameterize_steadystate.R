@@ -163,7 +163,7 @@ parameterize_steadystate <- function(
   chem.name <- out$chem.name                                
   dtxsid <- out$dtxsid
 
-  #Capitilize the first letter of species only:
+  #Capitalize the first letter of species only:
   species <- tolower(species)
   substring(species,1,1) <- toupper(substring(species,1,1))
 
@@ -335,7 +335,7 @@ parameterize_steadystate <- function(
   Params <- c(
     Params, do.call(get_fabsgut, args=purrr::compact(c(
     list(
-      Params=Params,
+      parameters=Params,
       dtxsid=dtxsid,
       chem.cas=chem.cas,
       chem.name=chem.name,
