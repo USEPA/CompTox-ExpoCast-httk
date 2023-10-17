@@ -1,13 +1,47 @@
-#' Caco2 Oral Fraction Calculators
+#' Functions for calculating the bioavaialble fractions from oral doses
 #' 
-#' Caco2 is related to effective permeability based on Yang et al. (2007)
+#' These functions calculate the fraction of chemical absorbed from the gut
+#' based upon in vitro measured Caco-2 membrane permeability data.
+#' Caco-2 permeabilities (10^-6 cm/s) are related to 
+#' effective permeability based on Yang et al. (2007)
 #' These functions calculate the fraction absorbed (calc_fabs.oral -- 
 #' Darwich et al. (2010)), the fraction
-#' surviving first pass gut metabolism (calc_fgut.oral), and the oral bioavailability
+#' surviving first pass gut metabolism (calc_fgut.oral), and the overall systemic
+#' oral bioavailability
 #' (calc_fbio.oral). Note that the first pass hepatic clearance is calculated within the
 #' parameterization and other functions. using \code{\link{calc_hep_bioavailability}} 
+
+#' We assume that systemic oral bioavailability (\ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}})
+#' consists of three components: 
+#' 1) the fraction of chemical absorbed from intestinal lumen into enterocytes 
+#' (\ifelse{html}{\out{F<sub>abs</sub>}}{\eqn{F_{abs}}}, 
+#' 2) the fraction surviving intestinal metabolism 
+#' (\ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}), and 
+#' 3) the fraction surviving first-pass hepatic metabolism 
+#' (\ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}}). This function returns
+#' \ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{gut}}}
 #' 
-#' @param Params A list of the parameters (Caco2.Pab, Funbound.Plasma, Rblood2plasma,
+#' We model systemic oral bioavailability as 
+#' \ifelse{html}{\out{F<sub>bio</sub>=F<sub>abs</sub>*F<sub>gut</sub>*F<sub>hep</sub>}}{\eqn{F_{bio}=F_{abs}*F_{gut}*F_{hep}}}.
+#' \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}}
+#' is estimated from in vitro TK data using 
+#' \code{\link{calc_hep_bioavailability}}.
+#' If \ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}}
+#' has been measured in vivo and is found in
+#' table \code{\link{chem.physical_and_invitro.data}} then we set 
+#' \ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{git}}} 
+#' to the measured value divided by 
+#' \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}} 
+#' Otherwise, if Caco2 membrane permeability data or predictions
+#' are available \ifelse{html}{\out{F<sub>abs</sub>}}{\eqn{F_{abs}}} is estimated
+#' using \code{\link{calc_fgut.oral}}.
+#' Intrinsic hepatic metabolism is used to very roughly estimate
+#' \ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}
+#' using \code{\link{calc_fgut.oral}}.
+#' If argument keepit100 is used then there is complete absorption from the gut
+#' (that is, \ifelse{html}{\out{F<sub>abs</sub>=F<sub>gut</sub>=1}}{\eqn{F_{abs}=F_{gut}=1}}). 
+#' 
+#' @param parameters A list of the parameters (Caco2.Pab, Funbound.Plasma, Rblood2plasma,
 #' Clint, BW, Qsmallintestine, Fabs, Fgut) used in the calculation, either supplied by user
 #' or calculated in parameterize_steady_state.
 #' @param chem.cas Either the chemical name or the CAS number must be
@@ -44,16 +78,6 @@
 #' surviving first pass hepatic clearance.}
 #' @author Gregory Honda
 #' @keywords Parameter
-#' @examples
-#' 
-#' fbio1 <- calc_fbio.oral(chem.cas='80-05-7',
-#'                         Caco2.Pab.default = 2,
-#'                         Caco2.Fabs = TRUE,
-#'                         Caco2.Fgut = TRUE)
-#' fbio2 <- calc_fbio.oral(chem.cas='80-05-7',
-#'                         Caco2.Pab.default = 2,
-#'                         Caco2.Fabs = FALSE,
-#'                         Caco2.Fgut = FALSE)
 #'
 #' @references 
 #' \insertRef{darwich2010interplay}{httk}
@@ -63,114 +87,50 @@
 #' @export calc_fabs.oral
 #' @export calc_fgut.oral
 #'
-calc_fbio.oral <- function(Params = NULL,
+calc_fbio.oral <- function(parameters = NULL,
   chem.cas = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
   default.to.human = FALSE,
-  suppress.messages = FALSE,
-  Caco2.Pab.default = "1.6",
-  Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE,
-  overwrite.invivo = FALSE,
-  keepit100 = FALSE,
-  ...
+  suppress.messages = FALSE
   )
 {
-  # Initialize parameters if null
-  if(is.null(Params))
-  {
-  # We need to describe the chemical to be simulated one way or another:
-    if (is.null(chem.cas) & 
-        is.null(chem.name) & 
-        is.null(dtxsid)) 
-      stop('chem.name, chem.cas, or dtxsid must be specified.')
-  
-  # Look up the chemical name/CAS, depending on what was provide:
-      out <- get_chem_id(
-              chem.cas=chem.cas,
-              chem.name=chem.name,
-              dtxsid=dtxsid)
-      chem.cas <- out$chem.cas
-      chem.name <- out$chem.name                                
-      dtxsid <- out$dtxsid
-    
-    Params <- do.call(parameterize_steadystate, args=purrr::compact(c(list(
-      chem.cas = chem.cas,
-      chem.name = chem.name,
-      dtxsid = dtxsid,
-      species = species,
-      default.to.human = default.to.human,
-      suppress.messages = suppress.messages,
-      Caco2.options = list(
-        Caco2.Pab.default = Caco2.Pab.default,
-        Caco2.Fgut = Caco2.Fgut,
-        Caco2.Fabs = Caco2.Fabs,
-        overwrite.invivo = overwrite.invivo,
-        keepit100 = TRUE)),  # We don't want to recursively calculate 
-      ...)))
-  }
+  # Handle fabs first:    
+  fabs.oral <- calc_fabs.oral(parameters = parameters,
+                              chem.cas=chem.cas,
+                              chem.name=chem.name,
+                              dtxsid=dtxsid,
+                              species=species,
+                              suppress.messages=suppress.messages) 
 
-  if (keepit100)
-  {
-    fabs.oral <- 1
-    fgut.oral <- 1
-  } else {
-    
-# Handle fabs first:    
-    # Check if there is an in vivo value:
-    invivo.fabs <- try(get_invitroPK_param("Fabs",species,chem.cas=chem.cas),
-                       silent=TRUE)
-    # If Caco2.Fabs = TRUE then we have the go ahead to calculate Fgut if there
-    # is no in vivo data. 
-    # If overwrite.invivo = TRUE then we always try to overwrite invivo data.
-    if (overwrite.invivo | 
-      (Caco2.Fabs & is(invivo.fabs, "try-error")))
-    {
-      fabs.oral <- calc_fabs.oral(Params = Params) # Determine Fabs.oral
-    # If we we aren't going to use Caco2 then revert to either 1 or in vivo value:
-    } else if (is(invivo.fabs, "try-error")) {
-      fabs.oral <- 1
-    } else {
-      fabs.oral <- invivo.fabs  
-    }
-    # Require that the fractions be less than 1:
-    fabs.oral <- ifelse(fabs.oral>1.0,1.0,fabs.oral)
+  # Now handle Fgut:
+  fgut.oral <- calc_fgut.oral(parameters = parameters,
+                            chem.cas=chem.cas,
+                            chem.name=chem.name,
+                            dtxsid=dtxsid,
+                            species=species,
+                            suppress.messages=suppress.messages)
 
-# Now handle Fgut:
-    # Check if there is an in vivo value:
-    invivo.fgut <- try(get_invitroPK_param("Fgut",species,chem.cas=chem.cas),
-                       silent=TRUE)
-    # If Caco2.Fgut = TRUE then we have the go ahead to calculate Fgut if there
-    # is no in vivo data. 
-    # If overwrite.invivo = TRUE then we always try to overwrite invivo data.
-    if (overwrite.invivo | 
-      (Caco2.Fgut & is(invivo.fgut, "try-error")))
-    {
-      fgut.oral <- calc_fgut.oral(Params = Params) # Determine Fgut.oral
-    # If we we aren't going to use Caco2 then revert to either 1 or in vivo value:
-    } else if (is(invivo.fgut, "try-error") | overwrite.invivo) {
-      fgut.oral <- 1
-    } else {
-      fgut.oral <- invivo.fgut  
-    }
-  }
-  # Require that the fractions be less than 1:
-  fgut.oral <- ifelse(fgut.oral>1.0,1.0,fgut.oral)
+  # Determine Fhep.oral
+  fhep.oral <- calc_hep_bioavailability(parameters = parameters,
+                                        chem.cas=chem.cas,
+                                        chem.name=chem.name,
+                                        dtxsid=dtxsid,
+                                        species=species,
+                                        suppress.messages=suppress.messages)
   
+  # Determine Fbio.oral
+  fbio.oral <- fabs.oral*fhep.oral*fgut.oral 
   
-  fhep.oral <- Params$hepatic.bioavailability # Determine Fhep.oral
-  fbio.oral <- fabs.oral*fhep.oral*fgut.oral # Determine Fbio.oral
-  
-# create output list:
+  # create output list:
   out <-list("fbio.oral" = fbio.oral,
              "fabs.oral" = fabs.oral,
              "fgut.oral" = fgut.oral,
              "fhep.oral" = fhep.oral
     )
 
-# Set precision:
+  # Set precision:
   out <- lapply(out, set_httk_precision)
   
   return(out)
@@ -178,26 +138,24 @@ calc_fbio.oral <- function(Params = NULL,
 }
 
 #' @describeIn calc_fbio.oral Calculate the fraction absorbed in the gut (Darwich et al., 2010)
-calc_fabs.oral <- function(Params = NULL,
+calc_fabs.oral <- function(parameters = NULL,
   chem.cas = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = FALSE,
   suppress.messages = FALSE,
-  Caco2.Pab.default = "1.6",
-  Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE,
-  overwrite.invivo = FALSE,
-  keepit100 = FALSE,
-  ...
+  Caco2.Pab.default = 1.6
   )
 {
   # Required parameters
   req.param <- c("Caco2.Pab")
   
   # Header initialization  
-  if(is.null(Params) | !all(req.param %in% names(Params))){
+  if(is.null(parameters) | !all(req.param %in% names(parameters)))
+  {
+    # Need a list called parameters:
+    if (is.null(parameters)) parameters <- list()
+    
   # We need to describe the chemical to be simulated one way or another:
       if (is.null(chem.cas) & 
           is.null(chem.name) & 
@@ -213,34 +171,22 @@ calc_fabs.oral <- function(Params = NULL,
         chem.name <- out$chem.name                                
         dtxsid <- out$dtxsid
       
-    Params <- do.call(parameterize_steadystate, args=purrr::compact(c(list(
-      chem.cas = chem.cas,
-      chem.name = chem.name,
-      dtxsid = dtxsid,
-      species = species,
-      default.to.human = default.to.human,
-      suppress.messages = suppress.messages,
-      Caco2.options = list(
-        Caco2.Pab.default = Caco2.Pab.default,
-        Caco2.Fgut = Caco2.Fgut,
-        Caco2.Fabs = Caco2.Fabs,
-        overwrite.invivo = overwrite.invivo,
-        keepit100 = TRUE)), # We don't want to recursively calculate 
-      ...)))
+      # Retrieve the chemical-specific Caco-2 value:
+      parameters <-  c(parameters, get_caco2(chem.cas=chem.cas,
+                              chem.name=chem.name,
+                              dtxsid=dtxsid,
+                              Caco2.Pab.default = Caco2.Pab.default,
+                              suppress.messages = suppress.messages))
   }
   
-  # Detetermine Fabs.oral based on Caco2 data, or keep as Fabs
-  if(Caco2.Fabs){
+  # Determine Fabs.oral based on Caco2 data
     # Yang 2007 equation 10 for Caco2 pH7.4
-    peff <- 10^(0.4926 * log10(Params$Caco2.Pab) - 0.1454) 
+    peff <- 10^(0.4926 * log10(parameters$Caco2.Pab) - 0.1454) 
     # Fagerholm 1996 -- Yang et al. (2007) equation 14
     if (tolower(species) %in% c("rat"))
       peff <- max((peff - 0.03)/3.6, 0)
     # Darwich et al. (2010) Equation 3
     fabs.oral <- 1 - (1 + 0.54 * peff)^-7
-  }else{
-    fabs.oral <- 1
-  }
 
   # Require that the fraction is less than 1:
   fabs.oral <- ifelse(fabs.oral > 1, 1.0, fabs.oral)
@@ -250,29 +196,30 @@ calc_fabs.oral <- function(Params = NULL,
 
 #' @describeIn calc_fbio.oral Calculate the fraction of chemical surviving first pass metabolism in the gut
 # Is this the Yang et al. (2007) QGut Model?
-calc_fgut.oral <- function(Params = NULL,
+calc_fgut.oral <- function(parameters = NULL,
   chem.cas = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
   default.to.human = FALSE,
   suppress.messages = FALSE,
-  Caco2.Pab.default = "1.6",
-  Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE,
-  overwrite.invivo = FALSE,
-  keepit100 = FALSE,
-  ...
+  Caco2.Pab.default = 1.6
   )
 {
-  
-  if (Caco2.Fgut)
+  if (!is.null(parameters))
   {
     # Required parameters
-    req.param <- c("BW", "Clint", "Caco2.Pab", "Funbound.plasma", "Rblood2plasma")
+    req.param <- c("BW", "Clint", "Funbound.plasma", "Rblood2plasma")
     
-    # Header initialization  
-    if(is.null(Params) | !all(req.param %in% names(Params))){
+    if (!all(req.param %in% names(parameters)))
+    {
+      missing <- req.param[!(req.param %in% names(parameters))]
+      stop(paste("Missing parameter",missing,"in function calc_fgut.oral."))
+    }
+  } else {  
+      # Need a list called parameters:
+      if (is.null(parameters)) parameters <- list()
+      
 # We need to describe the chemical to be simulated one way or another:
       if (is.null(chem.cas) & 
           is.null(chem.name) & 
@@ -288,31 +235,37 @@ calc_fgut.oral <- function(Params = NULL,
         chem.name <- out$chem.name                                
         dtxsid <- out$dtxsid
 
-    Params <- do.call(parameterize_steadystate, args=purrr::compact(c(list(
-      chem.cas = chem.cas,
-      chem.name = chem.name,
-      dtxsid = dtxsid,
-      species = species,
-      default.to.human = default.to.human,
-      suppress.messages = suppress.messages,
-      Caco2.options = list(
-        Caco2.Pab.default = Caco2.Pab.default,
-        Caco2.Fgut = Caco2.Fgut,
-        Caco2.Fabs = Caco2.Fabs,
-        overwrite.invivo = overwrite.invivo,
-        keepit100 = TRUE)),  # We don't want to recursively calculate 
-      ...)))
-    }
-    
+        # If we don't have parameters we can call parameterize_steadystate using the
+        # chemical identifiers. Then that function will build up a list of parameters
+        # so that when it calls this function a second time (recursively) we WILL have
+        # a list of parameters defined. The key is to make sure that the call to this
+        # function in parameterize_steadystate occurs after all parameters needed by
+        # this function are defined (or we get stuck in a recursive loop).
+        parameters <- do.call(parameterize_steadystate,
+                              args=purrr::compact(c(list(
+                                chem.cas=chem.cas,
+                                chem.name=chem.name,
+                                dtxsid=dtxsid,
+                                suppress.messages=suppress.messages))))
+  }
+  
+  # Retrieve the chemical-specific Caco-2 value:
+    if (!("Caco2.Pab" %in% names(parameters)))
+      parameters <-  c(parameters, get_caco2(chem.cas=chem.cas,
+                                   chem.name=chem.name,
+                                   dtxsid=dtxsid,
+                                   Caco2.Pab.default = Caco2.Pab.default,
+                                   suppress.messages = suppress.messages))
+
     # Scale up from in vitro Clint to a whole liver clearance:
-    clu_hep <- calc_hep_clearance(parameters=Params,
+    clu_hep <- calc_hep_clearance(parameters=parameters,
                              hepatic.model='unscaled',
                              suppress.messages=TRUE) #L/h/kg body weight
-    clu_hep <- clu_hep*Params$BW # L/h 
+    clu_hep <- clu_hep*parameters$BW # L/h 
     clu_gut <- clu_hep/100 # approximate ratio of cyp abundances
     
     # Yang et al. (2007) equation 10 (our data is at pH 7.4):
-    peff <- (10^(0.4926 * Params$Caco2.Pab - 0.1454)) # peff dimensional 10-4 cm/s
+    peff <- (10^(0.4926 * parameters$Caco2.Pab - 0.1454)) # peff dimensional 10-4 cm/s
     
     if(tolower(species) == "rat")
     {
@@ -326,7 +279,7 @@ calc_fgut.oral <- function(Params = NULL,
           warning("Human intestinal permeability and microvilli blood flow used to calculate fraction absorbed by gut")
       
       # m2 area intestine -- Yang et al. (2007)
-      Asmallintestine <- 0.66/70*Params$BW
+      Asmallintestine <- 0.66/70*parameters$BW
     }
     
     # Calculate Qvilli based on Qsmallintestine
@@ -337,11 +290,13 @@ calc_fgut.oral <- function(Params = NULL,
     # and Qgut = 68.99 L/h (parameterize_pbtk)
     Qsmallintestinehuman <- 38.7 /1000*60*15.8757 # L/h
     Qsmallintestinef <- Qsmallintestinehuman / 68.99 # Works out to roughly 53%
-    if(!is.null(Params$Qtotal.liverc)){
-      this.Qsmallintestinehuman <- Qsmallintestinef*68.99/86.96*Params$Qtotal.liverc*Params$BW^(3/4)
+    if(!is.null(parameters$Qtotal.liverc)){
+      this.Qsmallintestinehuman <- Qsmallintestinef *
+        68.99/86.96*parameters$Qtotal.liverc*parameters$BW^(3/4)
       Qvilli <- 18/Qsmallintestinehuman*this.Qsmallintestinehuman
-    } else if(!is.null(Params$Qgutf)){
-      this.Qsmallintestinehuman <- Qsmallintestinef*Params$Qgutf*Params$Qcardiacc*Params$BW^(3/4)
+    } else if(!is.null(parameters$Qgutf)){
+      this.Qsmallintestinehuman <- Qsmallintestinef *
+        parameters$Qgutf*parameters$Qcardiacc*parameters$BW^(3/4)
       Qvilli <- 18/Qsmallintestinehuman*this.Qsmallintestinehuman
     } else {
       warning("Because model used does not provide Qtotal.liver or Qgutf, the Yang et al. (2007) value of 18 L/h was used to calculate fraction absorbed by gut")
@@ -352,16 +307,12 @@ calc_fgut.oral <- function(Params = NULL,
     # Qgut "in terms of fundamental parameters" -- Yang et al. (2007) equation 6:
     Qgut <- Qvilli * CLperm / (Qvilli + CLperm)
     # Qgut Model -- Yang et al. (2007) equation 5:
- #   fgut.oral <- Qgut / (Qgut + Params$Funbound.plasma*clu_gut/Params$Rblood2plasma) 
+ #   fgut.oral <- Qgut / (Qgut + parameters$Funbound.plasma*clu_gut/parameters$Rblood2plasma) 
  # Metabolism of chemical in enterocyte, not blood:
-    fgut.oral <- Qgut / (Qgut + Params$Funbound.plasma*clu_gut) 
+    fgut.oral <- Qgut / (Qgut + parameters$Funbound.plasma*clu_gut) 
     # Add competitive process (clearance of the gut lumen):
     fgut.oral <- fgut.oral*(Qgut/(0.5+Qgut))
-  } else {
-    # if Caco2.options$Fgut.oral == FALSE, return 1
-    fgut.oral <- 1
-  }
-  
+
   # Set reasonable precision:
   fgut.oral <- set_httk_precision(as.numeric(fgut.oral))
 
