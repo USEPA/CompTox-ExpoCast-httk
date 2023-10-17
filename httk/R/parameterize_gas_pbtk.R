@@ -437,7 +437,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   outlist <- c(
     outlist, do.call(get_fabsgut, args=purrr::compact(c(
     list(
-      Params=outlist,
+      parameters=outlist,
       dtxsid=dtxsid,
       chem.cas=chem.cas,
       chem.name=chem.name,

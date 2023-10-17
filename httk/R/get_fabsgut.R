@@ -157,7 +157,7 @@ get_fabsgut <- function(
     out[['Fgut']] <- Fgut
 
   # Require that values are <= 1:
-  out <- lapply(out, function(x) ifelse(x>1, 1.0, x))
+  out <- lapply(out, function(x) suppressWarnings(ifelse(x>1, 1.0, x)))
 
   # Set a reasonable precision:
   out <- lapply(out, set_httk_precision)
