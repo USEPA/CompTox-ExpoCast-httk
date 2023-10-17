@@ -4,58 +4,41 @@
 \alias{calc_fbio.oral}
 \alias{calc_fabs.oral}
 \alias{calc_fgut.oral}
-\title{Caco2 Oral Fraction Calculators}
+\title{Functions for calculating the bioavaialble fractions from oral doses}
 \usage{
 calc_fbio.oral(
-  Params = NULL,
+  parameters = NULL,
   chem.cas = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
   default.to.human = FALSE,
-  suppress.messages = FALSE,
-  Caco2.Pab.default = "1.6",
-  Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE,
-  overwrite.invivo = FALSE,
-  keepit100 = FALSE,
-  ...
+  suppress.messages = FALSE
 )
 
 calc_fabs.oral(
-  Params = NULL,
+  parameters = NULL,
   chem.cas = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = FALSE,
   suppress.messages = FALSE,
-  Caco2.Pab.default = "1.6",
-  Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE,
-  overwrite.invivo = FALSE,
-  keepit100 = FALSE,
-  ...
+  Caco2.Pab.default = 1.6
 )
 
 calc_fgut.oral(
-  Params = NULL,
+  parameters = NULL,
   chem.cas = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
   default.to.human = FALSE,
   suppress.messages = FALSE,
-  Caco2.Pab.default = "1.6",
-  Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE,
-  overwrite.invivo = FALSE,
-  keepit100 = FALSE,
-  ...
+  Caco2.Pab.default = 1.6
 )
 }
 \arguments{
-\item{Params}{A list of the parameters (Caco2.Pab, Funbound.Plasma, Rblood2plasma,
+\item{parameters}{A list of the parameters (Caco2.Pab, Funbound.Plasma, Rblood2plasma,
 Clint, BW, Qsmallintestine, Fabs, Fgut) used in the calculation, either supplied by user
 or calculated in parameterize_steady_state.}
 
@@ -98,12 +81,46 @@ chemical surviving first pass metabolism in the gut.} \item{fhep.oral}{Fraction 
 surviving first pass hepatic clearance.}
 }
 \description{
-Caco2 is related to effective permeability based on Yang et al. (2007)
+These functions calculate the fraction of chemical absorbed from the gut
+based upon in vitro measured Caco-2 membrane permeability data.
+Caco-2 permeabilities (10^-6 cm/s) are related to 
+effective permeability based on Yang et al. (2007)
 These functions calculate the fraction absorbed (calc_fabs.oral -- 
 Darwich et al. (2010)), the fraction
-surviving first pass gut metabolism (calc_fgut.oral), and the oral bioavailability
+surviving first pass gut metabolism (calc_fgut.oral), and the overall systemic
+oral bioavailability
 (calc_fbio.oral). Note that the first pass hepatic clearance is calculated within the
-parameterization and other functions. using \code{\link{calc_hep_bioavailability}}
+parameterization and other functions. using \code{\link{calc_hep_bioavailability}} 
+We assume that systemic oral bioavailability (\ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}})
+consists of three components: 
+1) the fraction of chemical absorbed from intestinal lumen into enterocytes 
+(\ifelse{html}{\out{F<sub>abs</sub>}}{\eqn{F_{abs}}}, 
+2) the fraction surviving intestinal metabolism 
+(\ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}), and 
+3) the fraction surviving first-pass hepatic metabolism 
+(\ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}}). This function returns
+\ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{gut}}}
+}
+\details{
+We model systemic oral bioavailability as 
+\ifelse{html}{\out{F<sub>bio</sub>=F<sub>abs</sub>*F<sub>gut</sub>*F<sub>hep</sub>}}{\eqn{F_{bio}=F_{abs}*F_{gut}*F_{hep}}}.
+\ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}}
+is estimated from in vitro TK data using 
+\code{\link{calc_hep_bioavailability}}.
+If \ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}}
+has been measured in vivo and is found in
+table \code{\link{chem.physical_and_invitro.data}} then we set 
+\ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{git}}} 
+to the measured value divided by 
+\ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}} 
+Otherwise, if Caco2 membrane permeability data or predictions
+are available \ifelse{html}{\out{F<sub>abs</sub>}}{\eqn{F_{abs}}} is estimated
+using \code{\link{calc_fgut.oral}}.
+Intrinsic hepatic metabolism is used to very roughly estimate
+\ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}
+using \code{\link{calc_fgut.oral}}.
+If argument keepit100 is used then there is complete absorption from the gut
+(that is, \ifelse{html}{\out{F<sub>abs</sub>=F<sub>gut</sub>=1}}{\eqn{F_{abs}=F_{gut}=1}}).
 }
 \section{Functions}{
 \itemize{
@@ -112,18 +129,6 @@ parameterization and other functions. using \code{\link{calc_hep_bioavailability
 \item \code{calc_fgut.oral()}: Calculate the fraction of chemical surviving first pass metabolism in the gut
 
 }}
-\examples{
-
-fbio1 <- calc_fbio.oral(chem.cas='80-05-7',
-                        Caco2.Pab.default = 2,
-                        Caco2.Fabs = TRUE,
-                        Caco2.Fgut = TRUE)
-fbio2 <- calc_fbio.oral(chem.cas='80-05-7',
-                        Caco2.Pab.default = 2,
-                        Caco2.Fabs = FALSE,
-                        Caco2.Fgut = FALSE)
-
-}
 \references{
 \insertRef{darwich2010interplay}{httk}
 \insertRef{yang2007prediction}{httk}
