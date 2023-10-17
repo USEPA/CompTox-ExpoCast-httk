@@ -570,7 +570,7 @@ Set species=\"Human\" to run httkpop model.')
   #
   if (!keepit100) 
   {
-    bioavail <- calc_fbio.oral(Params=parameters.dt) 
+    bioavail <- calc_fbio.oral(parameters = parameters.dt) 
     if (Caco2.Fabs) parameters.dt[,Fabs:=
                                    bioavail$fabs.oral]
     if (Caco2.Fgut) parameters.dt[,Fgut:=
