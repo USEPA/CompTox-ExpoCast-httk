@@ -339,6 +339,6 @@ calc_fgut.oral <- function(parameters = NULL,
 
   # Require that the fraction is less than 1:
   fgut.oral <- ifelse(fgut.oral > 1, 1.0, fgut.oral)
-  
-  return(fgut.oral)
+   
+  return(set_httk_precision(as.numeric(fgut.oral)))
 }
