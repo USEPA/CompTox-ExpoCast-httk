@@ -1573,7 +1573,6 @@ chem.physical_and_invitro.data <- check_duplicates(
 #
 # ADD NEW DATA HERE:
 
-<<<<<<< HEAD
 # Add new Pab measurements from Honda2023:
 caco2.dt <- read.csv("CACO-2/TableAllCaco2PabData_10e-6cmps.txt",sep="\t")
 caco2.dt <- subset(caco2.dt,regexpr("DTXSID",dtxsid)!=-1)
@@ -1733,72 +1732,142 @@ load("CACO-2/httk_qspr_preds.RData")
 honda2023.qspr <- httk.caco2.qspr
 
 # Load In Vivo Data Collected by Honda2023:
-load("CACO-2/caco2-invivo-compare2.RData")
+load("CACO-2/all_gut_data.RData")
+
+#
+# Kim 2014 in vivo data:
+#
 chem.physical_and_invitro.data <- add_chemtable(
-  subset(invivo.table, !is.na(kim_fbioh)),
+  subset(gut.data, !is.na(kim_fbioh)),
   current.table = chem.physical_and_invitro.data,
   data.list=list(
     CAS="casrn",
-    DTXSID="DTXSID",
+    DTXSID="dtxsid",
     Foral="kim_fbioh"
   ),                                                                        
   reference="Kim 2014",
   species="Human")   
 
+#
+# Varma 2010 in vivo data:
+#
 chem.physical_and_invitro.data <- add_chemtable(
-  subset(invivo.table, !is.na(vo_F)),
+  subset(gut.data, !is.na(vo_F)),
   current.table = chem.physical_and_invitro.data,
   data.list=list(
     CAS="casrn",
-    DTXSID="DTXSID",
+    DTXSID="dtxsid",
     Foral="vo_F"
   ),                                                                        
   reference="Varma 2010",
   species="Human")
   
 chem.physical_and_invitro.data <- add_chemtable(
-  subset(invivo.table, !is.na(vo_Fh)),
+  subset(gut.data, !is.na(vo_Fh)),
   current.table = chem.physical_and_invitro.data,
   data.list=list(
     CAS="casrn",
-    DTXSID="DTXSID",
+    DTXSID="dtxsid",
     Fhep="vo_Fh"
   ),                                                                        
   reference="Varma 2010",
   species="Human")
 
 chem.physical_and_invitro.data <- add_chemtable(
-  subset(invivo.table, !is.na(vo_Fg)),
+  subset(gut.data, !is.na(vo_Fg)),
   current.table = chem.physical_and_invitro.data,
   data.list=list(
     CAS="casrn",
-    DTXSID="DTXSID",
+    DTXSID="dtxsid",
     Fgut="vo_Fg"
   ),                                                                        
   reference="Varma 2010",
   species="Human")
 
 chem.physical_and_invitro.data <- add_chemtable(
-  subset(invivo.table, !is.na(vo_Fa)),
+  subset(gut.data, !is.na(vo_Fa)),
   current.table = chem.physical_and_invitro.data,
   data.list=list(
     CAS="casrn",
-    DTXSID="DTXSID",
+    DTXSID="dtxsid",
     Fabs="vo_Fa"
   ),                                                                        
   reference="Varma 2010",
   species="Human")
       
+#
+# Wambaugh 2019 in vivo data:
+#
 chem.physical_and_invitro.data <- add_chemtable(
-  subset(invivo.table, !is.na(pk_fbior)),
+  subset(gut.data, !is.na(pk_fbior)),
   current.table = chem.physical_and_invitro.data,
   data.list=list(
     CAS="casrn",
-    DTXSID="DTXSID",
+    DTXSID="dtxsid",
     Foral="pk_fbior"
   ),
   species="Rat",                                                                        
   reference="Wambaugh 2018")
+  
+#
+# Musther 2014 in vivo data:
+#
+chem.physical_and_invitro.data <- add_chemtable(
+  subset(gut.data, !is.na(musther_Fbio_human)),
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(
+    CAS="casrn",
+    DTXSID="dtxsid",
+    Foral="musther_Fbio_human"
+  ),
+  species="Human",                                                                        
+  reference="Musther 2014")
+
+chem.physical_and_invitro.data <- add_chemtable(
+  subset(gut.data, !is.na(musther_Fbio_mouse)),
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(
+    CAS="casrn",
+    DTXSID="dtxsid",
+    Foral="musther_Fbio_mouse"
+  ),
+  species="Mouse",                                                                        
+  reference="Musther 2014")
+
+chem.physical_and_invitro.data <- add_chemtable(
+  subset(gut.data, !is.na(musther_Fbio_rat)),
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(
+    CAS="casrn",
+    DTXSID="dtxsid",
+    Foral="musther_Fbio_rat"
+  ),
+  species="Rat",                                                                        
+  reference="Musther 2014")
+
+  chem.physical_and_invitro.data <- add_chemtable(
+  subset(gut.data, !is.na(musther_Fbio_dog)),
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(
+    CAS="casrn",
+    DTXSID="dtxsid",
+    Foral="musther_Fbio_dog"
+  ),
+  species="Dog",                                                                        
+  reference="Musther 2014")
+
+  chem.physical_and_invitro.data <- add_chemtable(
+  subset(gut.data, !is.na(musther_Fbio_monkey)),
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(
+    CAS="casrn",
+    DTXSID="dtxsid",
+    Foral="musther_Fbio_monkey"
+  ),
+  species="Monkey",                                                                        
+  reference="Musther 2014")
+
+
  
 ## Load in Dawson 2021 Predictions ##
 dawson.clint.1 <- 
@@ -1984,55 +2053,58 @@ dsstox <- subset(dsstox, AVERAGE_MASS != "N/A")
 dsstox <- subset(dsstox, !is.na(OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED))
 dsstox <- subset(dsstox, OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED != "N/A")
 
-# Calculate log10 Henry's law constnat:
-dsstox[,"logHenry"] <- log10(as.numeric(dsstox[,
-  "HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED"]))
-# Calculate log10 water solubility:
-dsstox[,"logWSol"] <- log10(as.numeric(dsstox[,
-  "WATER_SOLUBILITY_MOL.L_OPERA_PRED"]))
-# Set a reasonable precision for numbers:
-dsstox <- set.precision(dsstox)
-
-#
-#
-# Replace any bad CASRN's:
-#
-#
-for (this.row in 1:dim(dsstox)[1])
-  if (!is.na(dsstox[this.row,"CASRN"]))
-  {
-    chem.physical_and_invitro.data[
-      chem.physical_and_invitro.data$Compound ==
-      dsstox[this.row,"PREFERRED_NAME"],"CAS"] <-
-      dsstox[this.row,"CASRN"]
-}
-
-# Pick approved name when there are duplicates:
-for (this.name in unique(dsstox$INPUT[duplicated(dsstox$INPUT)]))
+if (dim(dsstox)[1]>0)
 {
-  not.this.name <- subset(dsstox, INPUT!=this.name)
-  this.subset <- subset(dsstox, INPUT==this.name)
-  this.row <- this.subset[regexpr("Approved",this.subset$FOUND_BY)!=-1,]
-  dsstox <- rbind(not.this.name,this.row)
+  # Calculate log10 Henry's law constnat:
+  dsstox[,"logHenry"] <- log10(as.numeric(dsstox[,
+    "HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED"]))
+  # Calculate log10 water solubility:
+  dsstox[,"logWSol"] <- log10(as.numeric(dsstox[,
+    "WATER_SOLUBILITY_MOL.L_OPERA_PRED"]))
+  # Set a reasonable precision for numbers:
+  dsstox <- set.precision(dsstox)
+  
+  #
+  #
+  # Replace any bad CASRN's:
+  #
+  #
+  for (this.row in 1:dim(dsstox)[1])
+    if (!is.na(dsstox[this.row,"CASRN"]))
+    {
+      chem.physical_and_invitro.data[
+        chem.physical_and_invitro.data$Compound ==
+        dsstox[this.row,"PREFERRED_NAME"],"CAS"] <-
+        dsstox[this.row,"CASRN"]
+  }
+  
+  # Pick approved name when there are duplicates:
+  for (this.name in unique(dsstox$INPUT[duplicated(dsstox$INPUT)]))
+  {
+    not.this.name <- subset(dsstox, INPUT!=this.name)
+    this.subset <- subset(dsstox, INPUT==this.name)
+    this.row <- this.subset[regexpr("Approved",this.subset$FOUND_BY)!=-1,]
+    dsstox <- rbind(not.this.name,this.row)
+  }
+  
+  chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,
+                                                         !is.na(CASRN) &
+                                                         !(CASRN %in% "N/A")),
+    current.table = chem.physical_and_invitro.data,
+    data.list=list(Compound='PREFERRED_NAME',
+      CAS='CASRN',
+      DTXSID="DTXSID",
+      MW='AVERAGE_MASS',
+      SMILES.desalt='QSAR_READY_SMILES',
+      Formula="MOLECULAR_FORMULA",
+      logP="OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED",
+      logHenry = "logHenry",
+      logWSol = "logWSol",
+      MP = "MELTING_POINT_DEGC_OPERA_PRED"
+      ),
+    reference="EPA",
+    overwrite=T)
 }
-
-chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,
-                                                       !is.na(CASRN) &
-                                                       !(CASRN %in% "N/A")),
-  current.table = chem.physical_and_invitro.data,
-  data.list=list(Compound='PREFERRED_NAME',
-    CAS='CASRN',
-    DTXSID="DTXSID",
-    MW='AVERAGE_MASS',
-    SMILES.desalt='QSAR_READY_SMILES',
-    Formula="MOLECULAR_FORMULA",
-    logP="OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED",
-    logHenry = "logHenry",
-    logWSol = "logWSol",
-    MP = "MELTING_POINT_DEGC_OPERA_PRED"
-    ),
-  reference="EPA",
-  overwrite=T)
 
   # Make sure there are no duplicate rows after reading CAS and DTXSID from dashboard:
 chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
