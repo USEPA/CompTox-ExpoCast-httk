@@ -113,12 +113,33 @@ calc_fbio.oral <- function(parameters = NULL,
                             suppress.messages=suppress.messages)
 
   # Determine Fhep.oral
-  fhep.oral <- calc_hep_bioavailability(parameters = parameters,
-                                        chem.cas=chem.cas,
-                                        chem.name=chem.name,
-                                        dtxsid=dtxsid,
-                                        species=species,
-                                        suppress.messages=suppress.messages)
+  if (!"hepatic.bioavailability" %in% names(parameters))
+  {
+    # For models that don't described first pass blood flow from the gut, need the
+# unscaled hepatic clearance to cacluate a hepatic bioavailability 
+# (Rowland, 1973):      
+    cl <- calc_hep_clearance(parameters=parameters,
+                             chem.cas=chem.cas,
+                             chem.name=chem.name,
+                             dtxsid=dtxsid,
+                             species=species,
+                             hepatic.model='unscaled',
+                             suppress.messages=TRUE)#L/h/kg body weight
+
+    fhep.oral <- calc_hep_bioavailability(parameters = list(
+                                            Qtotal.liverc=parameters[["Qtotal.liverc"]], # L/h/kg^3/4
+                                            Funbound.plasma=parameters[["Funbound.plasma"]],
+                                            Clmetabolismc=cl, # L/h/kg
+                                            Rblood2plasma=parameters[["Rblood2plasma"]],
+                                            BW=parameters[["BW"]]),
+                                          chem.cas=chem.cas,
+                                          chem.name=chem.name,
+                                          dtxsid=dtxsid,
+                                          species=species,
+                                          suppress.messages=suppress.messages)
+  } else {
+    fhep.oral <- parameters[["hepatic.bioavailability"]]
+  }
   
   # Determine Fbio.oral
   fbio.oral <- fabs.oral*fhep.oral*fgut.oral 
@@ -318,6 +339,6 @@ calc_fgut.oral <- function(parameters = NULL,
 
   # Require that the fraction is less than 1:
   fgut.oral <- ifelse(fgut.oral > 1, 1.0, fgut.oral)
-  
-  return(fgut.oral)
+   
+  return(set_httk_precision(as.numeric(fgut.oral)))
 }
