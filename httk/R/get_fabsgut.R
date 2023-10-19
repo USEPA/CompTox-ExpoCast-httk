@@ -65,6 +65,16 @@ get_fabsgut <- function(
   chem.cas <- chem.ids$chem.cas
   chem.name <- chem.ids$chem.name                                
   dtxsid <- chem.ids$dtxsid
+
+  if (is.null(parameters))
+  {
+    # By using parameterize_steadystate to define the parameters vector we avoid
+    # a recursive loop (that is, the next time this function is called parameters
+    # will already be defined).
+    parameters <- parameterize_steadystate(chem.cas = chem.cas,
+                                           chem.name = chem.name,
+                                           dtxsid = dtxsid)  
+  }
   
   out <- list()
   
@@ -157,7 +167,9 @@ get_fabsgut <- function(
     out[['Fgut']] <- Fgut
 
   # Require that values are <= 1:
-  out <- lapply(out, function(x) suppressWarnings(ifelse(x>1, 1.0, x)))
+  out[names(out) %in% c("Fabsgut", "Fabs", "Fgut")] <- 
+    lapply(out[names(out) %in% c("Fabsgut", "Fabs", "Fgut")], 
+           function(x) suppressWarnings(ifelse(x>1, 1.0, x)))
 
   # Set a reasonable precision:
   out <- lapply(out, set_httk_precision)
