@@ -1,96 +1,88 @@
 #' Functions for calculating the bioavaialble fractions from oral doses
 #' 
-#' @description 
 #' These functions calculate the fraction of chemical absorbed from the gut
 #' based upon in vitro measured Caco-2 membrane permeability data.
-#' Caco-2 permeabilities (\eqn{10^{-6}} cm/s) are related to 
-#' effective permeability based on \insertCite{yang2007prediction;textual}{httk}.
-#' These functions calculate the fraction absorbed (calc_fabs.oral --
-#' \insertCite{darwich2010interplay;textual}{httk}), the fraction surviving first
-#' gut metabolism (calc_fgut.oral), and the overall systemic oral
-#' bioavailability (calc_fbio.oral). Note that the first pass hepatic clearance
-#' is calculated within the parameterization and other functions, using
+#' Caco-2 permeabilities (10^-6 cm/s) are related to 
+#' effective permeability based on Yang et al. (2007)
+#' These functions calculate the fraction absorbed (calc_fabs.oral -- 
+#' Darwich et al. (2010)), the fraction
+#' surviving first pass gut metabolism (calc_fgut.oral), and the overall systemic
+#' oral bioavailability
+#' (calc_fbio.oral). Note that the first pass hepatic clearance is calculated within the
+#' parameterization and other functions. using \code{\link{calc_hep_bioavailability}} 
+
+#' We assume that systemic oral bioavailability (\ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}})
+#' consists of three components: 
+#' 1) the fraction of chemical absorbed from intestinal lumen into enterocytes 
+#' (\ifelse{html}{\out{F<sub>abs</sub>}}{\eqn{F_{abs}}}, 
+#' 2) the fraction surviving intestinal metabolism 
+#' (\ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}), and 
+#' 3) the fraction surviving first-pass hepatic metabolism 
+#' (\ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}}). This function returns
+#' \ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{gut}}}
+#' 
+#' We model systemic oral bioavailability as 
+#' \ifelse{html}{\out{F<sub>bio</sub>=F<sub>abs</sub>*F<sub>gut</sub>*F<sub>hep</sub>}}{\eqn{F_{bio}=F_{abs}*F_{gut}*F_{hep}}}.
+#' \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}}
+#' is estimated from in vitro TK data using 
 #' \code{\link{calc_hep_bioavailability}}.
-#' 
-#' @details 
-#' We assume that systemic oral bioavailability \eqn{F_{bio}} consists of
-#' three components: 
-#' (1) the fraction of chemical absorbed from intestinal lumen into enterocytes
-#' -- \eqn{F_{abs}},
-#' (2) the fraction surviving intestinal metabolism -- \eqn{F_{gut}},
-#' and (3) the fraction surviving first-pass hepatic metabolism -- \eqn{F_{hep}}.
-#' 
-#' This function returns \eqn{(F_{abs}*F_{gut})}.
-#' 
-#' We model systemic oral bioavailability as \eqn{F_{bio}=(F_{abs}*F_{gut}*F_{hep})}.
-#' \eqn{F_{hep}} is estimated from in vitro TK data using
-#' \code{\link{calc_hep_bioavailability}}.
-#' If \eqn{F_{bio}} has been measured in vivo and is found in table
-#' \code{\link{chem.physical_and_invitro.data}} then we set
-#' \eqn{(F_{abs}*F_{gut})} to the measured value divided by \eqn{F_{hep}}.
+#' If \ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}}
+#' has been measured in vivo and is found in
+#' table \code{\link{chem.physical_and_invitro.data}} then we set 
+#' \ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{git}}} 
+#' to the measured value divided by 
+#' \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}} 
 #' Otherwise, if Caco2 membrane permeability data or predictions
-#' are available \eqn{F_{abs}} is estimated using \code{\link{calc_fgut.oral}}.
-#' Intrinsic hepatic metabolism is used to very roughly estimate \eqn{F_{gut}}
+#' are available \ifelse{html}{\out{F<sub>abs</sub>}}{\eqn{F_{abs}}} is estimated
 #' using \code{\link{calc_fgut.oral}}.
-#' 
+#' Intrinsic hepatic metabolism is used to very roughly estimate
+#' \ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}
+#' using \code{\link{calc_fgut.oral}}.
 #' If argument keepit100 is used then there is complete absorption from the gut
-#' (that is, \eqn{F_{abs}=F_{gut}=1}). 
+#' (that is, \ifelse{html}{\out{F<sub>abs</sub>=F<sub>gut</sub>=1}}{\eqn{F_{abs}=F_{gut}=1}}). 
 #' 
-#' @param parameters (List) A list of the parameters (Caco2.Pab, Funbound.Plasma, Rblood2plasma,
+#' @param parameters A list of the parameters (Caco2.Pab, Funbound.Plasma, Rblood2plasma,
 #' Clint, BW, Qsmallintestine, Fabs, Fgut) used in the calculation, either supplied by user
-#' or calculated in `parameterize_steady_state`.
-#' 
-#' @param chem.cas (Character) Either the chemical name or the CAS number must be
-#' specified. (Defaults to `NULL`)
-#' 
-#' @param chem.name (Character) Either the chemical name or the CAS number must be
-#' specified. (Defaults to `NULL`)
-#' 
-#' @param dtxsid (Character) EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
-#' the chemical must be identified by either CAS, name, or DTXSIDs.
-#' (Defaults to `NULL`)
-#' 
-#' @param species (Character) Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' or calculated in parameterize_steady_state.
+#' @param chem.cas Either the chemical name or the CAS number must be
+#' specified.
+#' @param chem.name Either the chemical name or the CAS number must be
+#' specified.
+#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' 
-#' @param default.to.human (Logical) Substitutes missing rat values with human values if
-#' TRUE. (Not applicable for `calc_fabs.oral`.) (Defaults to FALSE)
+#' @param default.to.human Substitutes missing rat values with human values if
+#' true.
+#' @param suppress.messages Whether or not the output message is suppressed.
+#'  
+#' @param Caco2.Pab.default = "1.6" Caco2 apical to basolateral data
 #' 
-#' @param suppress.messages (Logical) Whether or not the output message is suppressed.
-#' (Defaults to FALSE)
+#' @param Caco2.Fgut = TRUE uses Caco2.Pab to calculate fgut.oral, otherwise fgut.oral = \code{Fgut}
 #' 
-#' @param Caco2.Pab.default (Numeric) Caco2 apical to basolateral data
-#' (Defaults to 1.6) (Not applicable for `calc_fbio.oral`)
+#' @param Caco2.Fabs = TRUE uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}.
+#' 
+#' @param overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' 
+#' @param keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
 #' 
 #' Caco2 derived values if available.
-#'
-#' @return
-#' \item{fbio.oral}{Oral bioavailability, the fraction of oral dose reaching
-#' systemic distribution in the body.}
-#' \item{fabs.oral}{Fraction of dose absorbed, i.e. the fraction of the dose
-#' that enters the gutlumen.}
-#' \item{fgut.oral}{Fraction of chemical surviving first pass metabolism in the
-#' gut.}
-#' \item{fhep.oral}{Fraction of chemical surviving first pass hepatic clearance.}
 #' 
+#' @param ... Other parameters
+#'
+#' @return \item{fbio.oral}{Oral bioavailability, the fraction of oral dose 
+#' reaching systemic distribution in the body.} \item{fabs.oral}{Fraction of dose absorbed, 
+#' i.e. the fraction of the dose that enters the gutlumen.} \item{fgut.oral}{Fraction of 
+#' chemical surviving first pass metabolism in the gut.} \item{fhep.oral}{Fraction of chemical
+#' surviving first pass hepatic clearance.}
 #' @author Gregory Honda
 #' @keywords Parameter
 #'
-#' @examples 
-#' fbio.oral <- calc_fbio.oral(chem.cas = "80-05-7")
-#' fabs.oral <- calc_fabs.oral(chem.cas = "80-05-7")
-#' fgut.oral <- calc_fgut.oral(chem.cas = "80-05-7")
-#' 
-#' fabs.oral.2 <- calc_fabs.oral(chem.cas = "80-05-7",Caco2.Pab.default = 2)
-#' fgut.oral.2 <- calc_fgut.oral(chem.cas = "80-05-7",Caco2.Pab.default = 2)
-#'
 #' @references 
 #' \insertRef{darwich2010interplay}{httk}
-#' 
 #' \insertRef{yang2007prediction}{httk}
-#' 
 #' \insertRef{HondaUnpublishedCaco2}{httk}
-#' 
 #' @export calc_fbio.oral
 #' @export calc_fabs.oral
 #' @export calc_fgut.oral
@@ -121,33 +113,21 @@ calc_fbio.oral <- function(parameters = NULL,
                             suppress.messages=suppress.messages)
 
   # Determine Fhep.oral
-  if (!"hepatic.bioavailability" %in% names(parameters))
+  if (is.null(parameters))
   {
-    # For models that don't described first pass blood flow from the gut, need the
-    # unscaled hepatic clearance to calculate a hepatic bioavailability 
-    # (Rowland, 1973):      
-    cl <- calc_hep_clearance(parameters=parameters,
-                             chem.cas=chem.cas,
-                             chem.name=chem.name,
-                             dtxsid=dtxsid,
-                             species=species,
-                             hepatic.model='unscaled',
-                             suppress.messages=TRUE)#L/h/kg body weight
-
-    fhep.oral <- calc_hep_bioavailability(parameters = list(
-                                            Qtotal.liverc=parameters[["Qtotal.liverc"]], # L/h/kg^3/4
-                                            Funbound.plasma=parameters[["Funbound.plasma"]],
-                                            Clmetabolismc=cl, # L/h/kg
-                                            Rblood2plasma=parameters[["Rblood2plasma"]],
-                                            BW=parameters[["BW"]]),
-                                          chem.cas=chem.cas,
-                                          chem.name=chem.name,
-                                          dtxsid=dtxsid,
-                                          species=species,
-                                          suppress.messages=suppress.messages)
-  } else {
-    fhep.oral <- parameters[["hepatic.bioavailability"]]
+    # Note that the following call to parameterize_steadystate calls this
+    # function. However, because parameterize_steadystate creates and passes
+    # a list of parameters we will never reach this bit of this function
+    # recursively:
+    parameters <- parameterize_steadystate(
+                   chem.cas=chem.cas,
+                   chem.name=chem.name,
+                   dtxsid=dtxsid,
+                   species=species,
+                   suppress.messages=suppress.messages)
   }
+  
+  fhep.oral <- parameters[["hepatic.bioavailability"]]
   
   # Determine Fbio.oral
   fbio.oral <- fabs.oral*fhep.oral*fgut.oral 
@@ -165,7 +145,8 @@ calc_fbio.oral <- function(parameters = NULL,
   return(out)
 
 }
-#' @describeIn calc_fbio.oral Calculate the fraction absorbed in the gut \insertCite{darwich2010interplay}{httk}
+
+#' @describeIn calc_fbio.oral Calculate the fraction absorbed in the gut (Darwich et al., 2010)
 calc_fabs.oral <- function(parameters = NULL,
   chem.cas = NULL,
   chem.name = NULL,
@@ -223,7 +204,7 @@ calc_fabs.oral <- function(parameters = NULL,
 }
 
 #' @describeIn calc_fbio.oral Calculate the fraction of chemical surviving first pass metabolism in the gut
-# Is this the \insertCite{yang2007prediction}{httk} QGut Model?
+# Is this the Yang et al. (2007) QGut Model?
 calc_fgut.oral <- function(parameters = NULL,
   chem.cas = NULL,
   chem.name = NULL,
