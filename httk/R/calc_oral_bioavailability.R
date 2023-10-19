@@ -291,6 +291,10 @@ calc_fgut.oral <- function(parameters = NULL,
       Asmallintestine <- 0.66/70*parameters$BW
     }
     
+    # Define a rate of intestinal transport to compete with absorption for poorly
+    # absorbed chemicals:
+    Qintesttransport <- 0.5
+    
     # Calculate Qvilli based on Qsmallintestine
     # Tateishi 1997 -- Human Qsmallintestine = 38 ml/min/100 g
     # Weight small intestine -- 1.5875 kg -- 15.875 100 g
@@ -320,7 +324,7 @@ calc_fgut.oral <- function(parameters = NULL,
  # Metabolism of chemical in enterocyte, not blood:
     fgut.oral <- Qgut / (Qgut + parameters$Funbound.plasma*clu_gut) 
     # Add competitive process (clearance of the gut lumen):
-    fgut.oral <- fgut.oral*(Qgut/(0.5+Qgut))
+    fgut.oral <- fgut.oral*(Qgut/(Qintesttransport + Qgut))
 
   # Set reasonable precision:
   fgut.oral <- set_httk_precision(as.numeric(fgut.oral))
