@@ -385,6 +385,10 @@ Set species=\"Human\" to run httkpop model.')
   # physiological lipid partitioning (Pearce, 2017):
     if (adjusted.Funbound.plasma)
     {
+      if (!"unadjusted.Funbound.plasma" %in% colnames(parameters.dt))
+      {
+        parameters.dt[, unadjusted.Funbound.plasma:=Funbound.plasma]
+      }
       if (all(c("Pow","pKa_Donor","pKa_Accept") %in% names(parameters.dt)) | 
           ("Dow74" %in% names(parameters.dt)))
       {
