@@ -19,17 +19,17 @@
 #' (\ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}), and 
 #' 3) the fraction surviving first-pass hepatic metabolism 
 #' (\ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}}). This function returns
-#' \ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{gut}}}}
+#' \ifelse{html}{\out{(F<sub>abs</sub>)(F<sub>gut</sub>)}}{\eqn{(F_{abs})(F_{gut})}}}
 #' 
 #' We model systemic oral bioavailability as 
-#' \ifelse{html}{\out{F<sub>bio</sub>=F<sub>abs</sub>*F<sub>gut</sub>*F<sub>hep</sub>}}{\eqn{F_{bio}=F_{abs}*F_{gut}*F_{hep}}}.
+#' \ifelse{html}{\out{F<sub>bio</sub>=(F<sub>abs</sub>)(F<sub>gut</sub>)(F<sub>hep</sub>)}}{\eqn{F_{bio}=(F_{abs})(F_{gut})(F_{hep})}}.
 #' \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}}
 #' is estimated from in vitro TK data using 
 #' \code{\link{calc_hep_bioavailability}}.
 #' If \ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}}
 #' has been measured in vivo and is found in
 #' table \code{\link{chem.physical_and_invitro.data}} then we set 
-#' \ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{git}}} 
+#' \ifelse{html}{\out{(F<sub>abs</sub>)(F<sub>gut</sub>)}}{\eqn{(F_{abs})(F_{gut})}} 
 #' to the measured value divided by 
 #' \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}} 
 #' Otherwise, if Caco2 membrane permeability data or predictions
