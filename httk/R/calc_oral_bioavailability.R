@@ -4,10 +4,11 @@
 #' based upon in vitro measured Caco-2 membrane permeability data.
 #' Caco-2 permeabilities (10^-6 cm/s) are related to 
 #' effective permeability based on \insertCite{yang2007prediction;textual}{httk}.
-#' These functions calculate the fraction absorbed (`calc_fabs.oral` -- 
-#' \insertCite{darwich2010interplay;textual}{httk}), the fraction
-#' surviving first pass gut metabolism (`calc_fgut.oral`), and the overall systemic
-#' oral bioavailability (`calc_fbio.oral`).
+#' 
+#' `calc_fbio.oral`: Calculate the overall systemic oral bioavailability
+#' `calc_fabs.oral`: Calculate the fraction absorbed in the gut \insertCite{darwich2010interplay}{httk}
+#' `calc_fgut.oral`: Calculate the fraction of chemical surviving first pass metabolism in the gut
+#' 
 #' Note that the first pass hepatic clearance is calculated within the
 #' parameterization and other functions, using \code{\link{calc_hep_bioavailability}} 
 
@@ -63,11 +64,15 @@
 #' 
 #' Caco2 derived values if available.
 #'
-#' @return \item{fbio.oral}{Oral bioavailability, the fraction of oral dose 
-#' reaching systemic distribution in the body.} \item{fabs.oral}{Fraction of dose absorbed, 
-#' i.e. the fraction of the dose that enters the gutlumen.} \item{fgut.oral}{Fraction of 
-#' chemical surviving first pass metabolism in the gut.} \item{fhep.oral}{Fraction of chemical
-#' surviving first pass hepatic clearance.}
+#' @return
+#' \item{fbio.oral}{Oral bioavailability, the fraction of oral dose reaching
+#' systemic distribution in the body.}
+#' \item{fabs.oral}{Fraction of dose absorbed, i.e. the fraction of the dose
+#' that enters the gutlumen.}
+#' \item{fgut.oral}{Fraction of chemical surviving first pass metabolism in the
+#' gut.}
+#' \item{fhep.oral}{Fraction of chemical surviving first pass hepatic clearance.}
+#' 
 #' @author Gregory Honda
 #' @keywords Parameter
 #'
@@ -159,8 +164,6 @@ calc_fbio.oral <- function(parameters = NULL,
 
 }
 
-#' @describeIn calc_fbio.oral Calculate the fraction absorbed in the gut
-#'   \insertCite{darwich2010interplay}{httk}
 calc_fabs.oral <- function(parameters = NULL,
   chem.cas = NULL,
   chem.name = NULL,
@@ -217,8 +220,6 @@ calc_fabs.oral <- function(parameters = NULL,
   return(set_httk_precision(as.numeric(fabs.oral)))
 }
 
-#' @describeIn calc_fbio.oral Calculate the fraction of chemical surviving
-#'   first pass metabolism in the gut
 # Is this the \insertCite{yang2007prediction}{httk} QGut Model?
 calc_fgut.oral <- function(parameters = NULL,
   chem.cas = NULL,
