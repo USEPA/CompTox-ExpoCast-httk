@@ -4,129 +4,134 @@
 \alias{calc_fbio.oral}
 \alias{calc_fabs.oral}
 \alias{calc_fgut.oral}
-\title{Caco2 Oral Fraction Calculators}
+\title{Functions for calculating the bioavaialble fractions from oral doses}
 \usage{
 calc_fbio.oral(
-  Params = NULL,
+  parameters = NULL,
   chem.cas = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
   default.to.human = FALSE,
-  suppress.messages = FALSE,
-  Caco2.Pab.default = "1.6",
-  Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE,
-  overwrite.invivo = FALSE,
-  keepit100 = FALSE,
-  ...
+  suppress.messages = FALSE
 )
 
 calc_fabs.oral(
-  Params = NULL,
+  parameters = NULL,
   chem.cas = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = FALSE,
   suppress.messages = FALSE,
-  Caco2.Pab.default = "1.6",
-  Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE,
-  overwrite.invivo = FALSE,
-  keepit100 = FALSE,
-  ...
+  Caco2.Pab.default = 1.6
 )
 
 calc_fgut.oral(
-  Params = NULL,
+  parameters = NULL,
   chem.cas = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
   default.to.human = FALSE,
   suppress.messages = FALSE,
-  Caco2.Pab.default = "1.6",
-  Caco2.Fgut = TRUE,
-  Caco2.Fabs = TRUE,
-  overwrite.invivo = FALSE,
-  keepit100 = FALSE,
-  ...
+  Caco2.Pab.default = 1.6
 )
 }
 \arguments{
-\item{Params}{A list of the parameters (Caco2.Pab, Funbound.Plasma, Rblood2plasma,
+\item{parameters}{(List) A list of the parameters (Caco2.Pab, Funbound.Plasma, Rblood2plasma,
 Clint, BW, Qsmallintestine, Fabs, Fgut) used in the calculation, either supplied by user
-or calculated in parameterize_steady_state.}
+or calculated in `parameterize_steady_state`.}
 
-\item{chem.cas}{Either the chemical name or the CAS number must be
-specified.}
+\item{chem.cas}{(Character) Either the chemical name or the CAS number must be
+specified. (Defaults to `NULL`)}
 
-\item{chem.name}{Either the chemical name or the CAS number must be
-specified.}
+\item{chem.name}{(Character) Either the chemical name or the CAS number must be
+specified. (Defaults to `NULL`)}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
-the chemical must be identified by either CAS, name, or DTXSIDs}
+\item{dtxsid}{(Character) EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
+the chemical must be identified by either CAS, name, or DTXSIDs.
+(Defaults to `NULL`)}
 
-\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+\item{species}{(Character) Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
-\item{default.to.human}{Substitutes missing rat values with human values if
-true.}
+\item{default.to.human}{(Logical) Substitutes missing rat values with human values if
+TRUE. (Not applicable for `calc_fabs.oral`.) (Defaults to FALSE)}
 
-\item{suppress.messages}{Whether or not the output message is suppressed.}
+\item{suppress.messages}{(Logical) Whether or not the output message is suppressed.
+(Defaults to FALSE)}
 
-\item{Caco2.Pab.default}{= "1.6" Caco2 apical to basolateral data}
-
-\item{Caco2.Fgut}{= TRUE uses Caco2.Pab to calculate fgut.oral, otherwise fgut.oral = \code{Fgut}}
-
-\item{Caco2.Fabs}{= TRUE uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}.}
-
-\item{overwrite.invivo}{= TRUE overwrites Fabs and Fgut in vivo values from literature with}
-
-\item{keepit100}{= TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+\item{Caco2.Pab.default}{(Numeric) Caco2 apical to basolateral data
+(Defaults to 1.6) (Not applicable for `calc_fbio.oral`)
 
 Caco2 derived values if available.}
-
-\item{...}{Other parameters}
 }
 \value{
-\item{fbio.oral}{Oral bioavailability, the fraction of oral dose 
-reaching systemic distribution in the body.} \item{fabs.oral}{Fraction of dose absorbed, 
-i.e. the fraction of the dose that enters the gutlumen.} \item{fgut.oral}{Fraction of 
-chemical surviving first pass metabolism in the gut.} \item{fhep.oral}{Fraction of chemical
-surviving first pass hepatic clearance.}
+\item{fbio.oral}{Oral bioavailability, the fraction of oral dose reaching
+systemic distribution in the body.}
+\item{fabs.oral}{Fraction of dose absorbed, i.e. the fraction of the dose
+that enters the gutlumen.}
+\item{fgut.oral}{Fraction of chemical surviving first pass metabolism in the
+gut.}
+\item{fhep.oral}{Fraction of chemical surviving first pass hepatic clearance.}
 }
 \description{
-Caco2 is related to effective permeability based on Yang et al. (2007)
-These functions calculate the fraction absorbed (calc_fabs.oral -- 
-Darwich et al. (2010)), the fraction
-surviving first pass gut metabolism (calc_fgut.oral), and the oral bioavailability
-(calc_fbio.oral). Note that the first pass hepatic clearance is calculated within the
-parameterization and other functions. using \code{\link{calc_hep_bioavailability}}
+These functions calculate the fraction of chemical absorbed from the gut
+based upon in vitro measured Caco-2 membrane permeability data.
+Caco-2 permeabilities (\eqn{10^{-6}} cm/s) are related to 
+effective permeability based on \insertCite{yang2007prediction;textual}{httk}.
+These functions calculate the fraction absorbed (calc_fabs.oral --
+\insertCite{darwich2010interplay;textual}{httk}), the fraction surviving first
+gut metabolism (calc_fgut.oral), and the overall systemic oral
+bioavailability (calc_fbio.oral). Note that the first pass hepatic clearance
+is calculated within the parameterization and other functions, using
+\code{\link{calc_hep_bioavailability}}.
+}
+\details{
+We assume that systemic oral bioavailability \eqn{F_{bio}} consists of
+three components: 
+(1) the fraction of chemical absorbed from intestinal lumen into enterocytes
+-- \eqn{F_{abs}},
+(2) the fraction surviving intestinal metabolism -- \eqn{F_{gut}},
+and (3) the fraction surviving first-pass hepatic metabolism -- \eqn{F_{hep}}.
+
+This function returns \eqn{(F_{abs}*F_{gut})}.
+
+We model systemic oral bioavailability as \eqn{F_{bio}=(F_{abs}*F_{gut}*F_{hep})}.
+\eqn{F_{hep}} is estimated from in vitro TK data using
+\code{\link{calc_hep_bioavailability}}.
+If \eqn{F_{bio}} has been measured in vivo and is found in table
+\code{\link{chem.physical_and_invitro.data}} then we set
+\eqn{(F_{abs}*F_{gut})} to the measured value divided by \eqn{F_{hep}}.
+Otherwise, if Caco2 membrane permeability data or predictions
+are available \eqn{F_{abs}} is estimated using \code{\link{calc_fgut.oral}}.
+Intrinsic hepatic metabolism is used to very roughly estimate \eqn{F_{gut}}
+using \code{\link{calc_fgut.oral}}.
+
+If argument keepit100 is used then there is complete absorption from the gut
+(that is, \eqn{F_{abs}=F_{gut}=1}).
 }
 \section{Functions}{
 \itemize{
-\item \code{calc_fabs.oral()}: Calculate the fraction absorbed in the gut (Darwich et al., 2010)
+\item \code{calc_fabs.oral()}: Calculate the fraction absorbed in the gut \insertCite{darwich2010interplay}{httk}
 
 \item \code{calc_fgut.oral()}: Calculate the fraction of chemical surviving first pass metabolism in the gut
 
 }}
 \examples{
+fbio.oral <- calc_fbio.oral(chem.cas = "80-05-7")
+fabs.oral <- calc_fabs.oral(chem.cas = "80-05-7")
+fgut.oral <- calc_fgut.oral(chem.cas = "80-05-7")
 
-fbio1 <- calc_fbio.oral(chem.cas='80-05-7',
-                        Caco2.Pab.default = 2,
-                        Caco2.Fabs = TRUE,
-                        Caco2.Fgut = TRUE)
-fbio2 <- calc_fbio.oral(chem.cas='80-05-7',
-                        Caco2.Pab.default = 2,
-                        Caco2.Fabs = FALSE,
-                        Caco2.Fgut = FALSE)
+fabs.oral.2 <- calc_fabs.oral(chem.cas = "80-05-7",Caco2.Pab.default = 2)
+fgut.oral.2 <- calc_fgut.oral(chem.cas = "80-05-7",Caco2.Pab.default = 2)
 
 }
 \references{
 \insertRef{darwich2010interplay}{httk}
+
 \insertRef{yang2007prediction}{httk}
+
 \insertRef{HondaUnpublishedCaco2}{httk}
 }
 \author{
