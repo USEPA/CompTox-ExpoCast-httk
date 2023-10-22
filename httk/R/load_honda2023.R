@@ -66,7 +66,7 @@ load_honda2023 <- function(
 
   cat(paste("Chemicals outside the applicabilty domain are",
             ifelse(exclude_oad,""," not"),
-            " excluded in the prediction load.\n",sep=""))
+            " excluded when predictions were loaded.\n",sep=""))
   if (exclude_oad)
   {
     tmp_honda2023 <- subset(httk::honda2023.qspr, Pab.Pred.AD == 1)
