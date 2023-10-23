@@ -5,11 +5,12 @@
 #' user specifications on the assumed distributions of Funbound.plasma and
 #' Clint, draw "individual" values of Funbound.plasma and Clint from those
 #' distributions. The methodology for this function was developed and described
-#' by Wambaugh et al. (2019) (\doi{10.1093/toxsci/kfz205}).
+#' by \insertCite{wambaugh2019assessing;textual}{httk}
+#' (\doi{10.1093/toxsci/kfz205}).
 #'
 #' @details
 #' The Monte Carlo methods used here were recently updated and described by
-#' Breen et al. (submitted).
+#' \insertCite{breen2022simulating;textual}{httk}.
 #' 
 #' @param parameters.dt A data table of physiological and chemical-specific parameters
 #' 
@@ -53,10 +54,12 @@
 #' @param fup.censored.dist Logical. Whether to draw \code{Funbound.plasma} from a
 #' censored distribution or not.
 #' 
-#' @param adjusted.Funbound.plasma Uses Pearce et al. (2017) lipid binding adjustment
+#' @param adjusted.Funbound.plasma Uses the
+#' \insertCite{pearce2017evaluation;textual}{httk} lipid binding adjustment
 #' for Funbound.plasma when set to TRUE (Default).
 #' 
-#' @param adjusted.Clint Uses Kilford et al. (2008) hepatocyte incubation
+#' @param adjusted.Clint Uses \insertCite{kilford2008hepatocellular;textual}{httk}
+#' hepatocyte incubation
 #' binding adjustment for Clint when set to TRUE (Default).
 #' 
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
@@ -87,11 +90,9 @@
 #' @author Caroline Ring and John Wambaugh
 #'
 #' @references
-#' \insertRef{wambaugh2019assessing}{httk} 
 #'
-#' \insertRef{breen2022simulating}{httk} 
-#' 
-#' \insertRef{kilford2008hepatocellular}{httk} 
+#' \insertAllCited{}
+#'
 #' @examples
 #' \donttest{
 #' #Simply generate a virtual population of 100 individuals,
@@ -303,9 +304,10 @@ invitro_mc <- function(parameters.dt=NULL,
   # First check that this model has phys-chem parameters:
   if (all(c("Pow","pKa_Donor","pKa_Accept")%in%colnames(parameters.dt)))
     parameters.dt[,Fhep.assay.correction:=calc_hep_fu(parameters=parameters.dt)]
+
+  # Correct for fraction of chemical unbound in in vitro hepatocyte assay:
   if (adjusted.Clint)
   {
-    # Correct for fraction of chemical unbound in in vitro hepatocyte assay:
     parameters.dt[, Clint := apply_clint_adjustment(
                                Clint,
                                Fu_hep=Fhep.assay.correction,
@@ -465,10 +467,10 @@ invitro_mc <- function(parameters.dt=NULL,
   # physiological lipid partitioning (Pearce, 2017):
   if (adjusted.Funbound.plasma)
   {
-    # We need the fraction of lipid in plasma:
-    Flipid <-subset(httk::physiology.data,
-               Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,
-               which(colnames(httk::physiology.data) == 'Human')]
+#    # We need the fraction of lipid in plasma:
+#    Flipid <-subset(httk::physiology.data,
+#               Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,
+#               which(colnames(httk::physiology.data) == 'Human')]
 
     if (all(c("Pow","pKa_Donor","pKa_Accept") %in% names(parameters.dt)) | 
         ("Dow74" %in% names(parameters.dt)))
