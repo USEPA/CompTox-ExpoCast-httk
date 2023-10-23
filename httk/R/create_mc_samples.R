@@ -12,19 +12,23 @@
 #' using truncated normal distributions by the function 
 #' \code{\link{monte_carlo}}. Then,
 #' physiological parameters can be varied in a correlated manner according to
-#' the Ring et al. (2017) (\doi{10.1016/j.envint.2017.06.004}) \emph{httk-pop} 
+#' the \insertCite{ring2017identifying;textual}{httk} 
+#' (\doi{10.1016/j.envint.2017.06.004}) \emph{httk-pop} 
 #' approach by the function \code{\link{httkpop_mc}}. Next, both uncertainty
 #' and variability of in vitro HTTK parameters can be simulated by the function
-#' \code{\link{invitro_mc}} as described by Wambaugh et al. (2019) 
+#' \code{\link{invitro_mc}} as described by 
+#' \insertCite{wambaugh2019assessing;textual}{httk} 
 #' (\doi{10.1093/toxsci/kfz205}). Finally, tissue-specific partition 
-#' coefficients are predicted for each draw using the Schmitt (2008)
+#' coefficients are predicted for each draw using the 
+#' \insertCite{schmitt2008general;textual}{httk}
 #' (\doi{10.1016/j.tiv.2007.09.010}) method as calibrated to \emph{in vivo}
-#' data by Pearce et al. (2017) (\doi{10.1007/s10928-017-9548-7}) and 
+#' data by \insertCite{pearce2017evaluation;textual}{httk} 
+#' (\doi{10.1007/s10928-017-9548-7}) and 
 #' implemented in \code{\link{predict_partitioning_schmitt}}.  
 #'
 #' @details
 #' The Monte Carlo methods used here were recently updated and described by
-#' Breen et al. (submitted).
+#' \insertCite{breen2022simulating;textual}{httk}.
 #' 
 #' We aim to make any function that uses chemical identifiers 
 #' (name, CAS, DTXSID) 
@@ -63,7 +67,8 @@
 #' compartment model.  This only applies when httkpop=TRUE and species="Human",
 #' otherwise '3compartmentss' is used.
 #' 
-#' @param httkpop Whether or not to use the Ring et al. (2017) "httkpop"
+#' @param httkpop Whether or not to use the 
+#' \insertCite{ring2017identifying;textual}{httk} "httkpop"
 #' population generator. Species must be 'Human'.
 #' 
 #' @param invitrouv Logical to indicate whether to include in vitro parameters
@@ -119,6 +124,14 @@
 #' that are passed to \code{\link{invitro_mc}} and the parameterize_[MODEL] 
 #' functions
 #'
+#' @param adjusted.Funbound.plasma Uses 
+#' \insertCite{pearce2017evaluation;textual}{httk} lipid binding adjustment
+#' for Funbound.plasma when set to TRUE (Default).
+#' 
+#' @param adjusted.Clint Uses 
+#' \insertCite{kilford2008hepatocellular;textual}{httk} hepatocyte incubation
+#' binding adjustment for Clint when set to TRUE (Default).
+#'
 #' @return
 #' A data table where each column corresponds to parameters needed for the 
 #' specified model and each row represents a different Monte Carlo sample of
@@ -127,9 +140,8 @@
 #' @author Caroline Ring, Robert Pearce, and John Wambaugh
 #'
 #' @references 
-#' \insertRef{ring2017identifying}{httk} 
 #'
-#' \insertRef{breen2022simulating}{httk} 
+#' \insertAllCited{}
 #'
 #' @keywords Monte-Carlo
 #' 
@@ -171,6 +183,8 @@ create_mc_samples <- function(chem.cas=NULL,
                         tissue=NULL,
                         httkpop.dt=NULL,
                         invitro.mc.arg.list=NULL,
+                        adjusted.Funbound.plasma=TRUE,
+                        adjusted.Clint=TRUE,
                         httkpop.generate.arg.list=
                           list(method = "direct resampling"),
                         convert.httkpop.arg.list=NULL,
@@ -357,12 +371,49 @@ Set species=\"Human\" to run httkpop model.')
                          parameters.dt=parameters.dt,
                          samples=samples),
                          invitro.mc.arg.list,
+                         adjusted.Clint = adjusted.Clint,
+                         adjusted.Funbound.plasma = adjusted.Funbound.plasma,
                          Caco2.options[names(Caco2.options)[
                            !names(Caco2.options) %in%
 # invitro_mc doesn't make use of these arguments because we've already called
 # parameterize_[MODEL]:
                              c("Caco2.Pab.default", "overwrite.invivo")]])))
+  } else {
+  # Clint and fup are adjusted within invitro_mc, if not called we need to adjust them here:
+  #
+  # Check to see if we are adjusting for differences between in vitro and 
+  # physiological lipid partitioning (Pearce, 2017):
+    if (adjusted.Funbound.plasma)
+    {
+      if (!"unadjusted.Funbound.plasma" %in% colnames(parameters.dt))
+      {
+        parameters.dt[, unadjusted.Funbound.plasma:=Funbound.plasma]
+      }
+      if (all(c("Pow","pKa_Donor","pKa_Accept") %in% names(parameters.dt)) | 
+          ("Dow74" %in% names(parameters.dt)))
+      {
+        # put the unadjusted fup where calc_fup_correction will look for it:
+        parameters.dt[, Funbound.plasma := unadjusted.Funbound.plasma]
+        parameters.dt[, Funbound.plasma.adjustment:=
+          calc_fup_correction(
+            parameters = parameters.dt)]
+        parameters.dt[, Funbound.plasma := Funbound.plasma *
+                      Funbound.plasma.adjustment]
+      } else stop("Missing phys-chem parameters in invitro_mc for calc_fup_correction.") 
+    } else {
+      parameters.dt[, Funbound.plasma.adjustment:=1]
+    }
+  
+  # Correct for fraction of chemical unbound in in vitro hepatocyte assay:
+    if (adjusted.Clint)
+    {
+      parameters.dt[, Clint := apply_clint_adjustment(
+                                 Clint,
+                                 Fu_hep=Fhep.assay.correction,
+                                 suppress.messages=TRUE)]
+    }
   }
+ 
 
 # CLEAN UP PARAMETER MATRIX (bug fix v1.10.1)
 #
@@ -424,10 +475,14 @@ Set species=\"Human\" to run httkpop model.')
   {
 # Calculate Krbc2plasma from blood:plasma ratio (if available). We use the average
 # value because we want this to PC to be the same for all individuals since we 
-# don't have the phys-chem to recalculate:
+# don't have the phys-chem to recalculate. But we need the adjusted values:
+    parameterize.args$adjusted.Funbound.plasma <- TRUE
+    parameterize.args$suppress.messages=TRUE
+    adj.parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
+                         args=purrr::compact(parameterize.args))
     parameters.dt[,Krbc2pu:=calc_krbc2pu(
-      Rb2p = parameters$Rblood2plasma,
-      Funbound.plasma = parameters$Funbound.plasma)]
+      Rb2p = adj.parameters.mean$Rblood2plasma,
+      Funbound.plasma = adj.parameters.mean$Funbound.plasma)]
   }
 
 # If the model uses partion coefficients we need to lump each individual
@@ -453,8 +508,8 @@ Set species=\"Human\" to run httkpop model.')
     {
 # From Pearce et al. (2017):
       parameters.dt[, Krbc2pu:=calc_krbc2pu(Rb2p.invivo,
-                                            parameters.mean$Funbound.plasma,
-                                            parameters.mean$hematocrit)]
+                                            Funbound.plasma,
+                                            hematocrit)]
     } 
 # Calculate Rblood2plasma based on hematocrit, Krbc2plasma, and Funbound.plasma. 
 # This is the ratio of chemical in blood vs. in plasma.
@@ -475,7 +530,9 @@ Set species=\"Human\" to run httkpop model.')
                             suppress.messages=suppress.messages)]
     }
   }
-  
+
+# Calculate fraction of oral dose surviving first-pass hepatic metabolism before
+# reaching systemic blood (if needed):
   if (firstpass)
   {
   
@@ -517,7 +574,7 @@ Set species=\"Human\" to run httkpop model.')
   #
   if (!keepit100) 
   {
-    bioavail <- calc_fbio.oral(Params=parameters.dt) 
+    bioavail <- calc_fbio.oral(parameters = parameters.dt) 
     if (Caco2.Fabs) parameters.dt[,Fabs:=
                                    bioavail$fabs.oral]
     if (Caco2.Fgut) parameters.dt[,Fgut:=
