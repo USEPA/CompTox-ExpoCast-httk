@@ -1,37 +1,13 @@
-#' Retrieve or caclulate fraction of chemical absorbed from the gut
+#' Retrieve or calculate fraction of chemical absorbed from the gut
 #' 
-#' This function tetrieves or caclulates fraction of chemical absorbed from the gut.
-#' We assume that systemic oral bioavailability (\ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}})
-#' consists of three components: 
-#' 1) the fraction of chemical absorbed from intestinal lumen into enterocytes 
-#' (\ifelse{html}{\out{F<sub>abs</sub>}}{\eqn{F_{abs}}}, 
-#' 2) the fraction surviving intestinal metabolism 
-#' (\ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}), and 
-#' 3) the fraction surviving first-pass hepatic metabolism 
-#' (\ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}}). This function returns
-#' \ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{gut}}}
+#' This function checks for chemical-specific in vivo measurements of the 
+#' fraction absorbed from the
+#' gut in the \code{\link{chem.physical_and_invitro.data}} table. If in vivo
+#' data are unavailable (or \code{keepit100 == TRUE}) we attempt to use 
+#' in vitro Caco-2 membrane permeability to predict the fractions according to
+#' \code{\link{calc_oral_bioavailability}}.
 #' 
-#' We model systemic oral bioavailability as 
-#' \ifelse{html}{\out{F<sub>bio</sub>=F<sub>abs</sub>*F<sub>gut</sub>*F<sub>hep</sub>}}{\eqn{F_{bio}=F_{abs}*F_{gut}*F_{hep}}}.
-#' \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}}
-#' is estimated from in vitro TK data using 
-#' \code{\link{calc_hep_bioavailability}}.
-#' If \ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}}
-#' has been measured in vivo and is found in
-#' table \code{\link{chem.physical_and_invitro.data}} then we set 
-#' \ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{git}}} 
-#' to the measured value divided by 
-#' \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}} 
-#' Otherwise, if Caco2 membrane permeability data or predictions
-#' are available \ifelse{html}{\out{F<sub>abs</sub>}}{\eqn{F_{abs}}} is estimated
-#' using \code{\link{calc_fgut.oral}}.
-#' Intrinsic hepatic metabolism is used to very roughly estimate
-#' \ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}
-#' using \code{\link{calc_fgut.oral}}.
-#' If argument keepit100 is used then there is complete absorption from the gut
-#' (that is, \ifelse{html}{\out{F<sub>abs</sub>=F<sub>gut</sub>=1}}{\eqn{F_{abs}=F_{gut}=1}}). 
-#'
-#' @param Params A list of the parameters (Caco2.Pab, Funbound.Plasma, Rblood2plasma,
+#' @param parameters A list of the parameters (Caco2.Pab, Funbound.Plasma, Rblood2plasma,
 #' Clint, BW, Qsmallintestine, Fabs, Fgut) used in the calculation, either supplied by user
 #' or calculated in parameterize_steady_state.                                                                               
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- the 
@@ -62,13 +38,13 @@
 #'
 #' @export get_fabsgut
 get_fabsgut <- function(
-    Params=NULL,
+    parameters=NULL,
     chem.cas=NULL,
     chem.name=NULL,
     dtxsid = NULL,
     species = "Human",
     default.to.human = FALSE,
-    Caco2.Pab.default = "1.6",
+    Caco2.Pab.default = 1.6,
     Caco2.Fgut = TRUE,
     Caco2.Fabs = TRUE,
     overwrite.invivo = FALSE,
@@ -89,45 +65,32 @@ get_fabsgut <- function(
   chem.cas <- chem.ids$chem.cas
   chem.name <- chem.ids$chem.name                                
   dtxsid <- chem.ids$dtxsid
+
+  if (is.null(parameters))
+  {
+    # By using parameterize_steadystate to define the parameters vector we avoid
+    # a recursive loop (that is, the next time this function is called parameters
+    # will already be defined).
+    parameters <- parameterize_steadystate(chem.cas = chem.cas,
+                                           chem.name = chem.name,
+                                           dtxsid = dtxsid)  
+  }
   
   out <- list()
   
+  # Start with dummy values (100 percent)
   out[["Fabs"]] <- 1
   out[["Fgut"]] <- 1
   out[["Fabsgut"]] <- 1
-  out[["Caco2.Pab"]] <- 10
-  out[["Caco2.Pab.dist"]] <- NA
-  if (!keepit100) {
-    # Caco-2 Pab:
-    Caco2.Pab.db <- try(get_invitroPK_param(
-      "Caco2.Pab", 
-      species = "Human", 
-      chem.cas=chem.cas,
-      chem.name=chem.name,
-      dtxsid=dtxsid), 
-      silent = TRUE)
-    if (is(Caco2.Pab.db,"try-error")){  
-      Caco2.Pab.db <- as.character(Caco2.Pab.default)
-      if (!suppress.messages) warning(paste0(
-        "Default value of ", 
-        Caco2.Pab.default, 
-        " used for Caco2 permeability."))
-    }
-    # Check if Caco2 a point value or a distribution, if a distribution, use the median:
-    if (nchar(Caco2.Pab.db) - nchar(gsub(",","",Caco2.Pab.db)) == 2) 
-    {
-      Caco2.Pab.dist <- Caco2.Pab.db
-      Caco2.Pab.point <- as.numeric(strsplit(Caco2.Pab.db,",")[[1]][1])
-      if (!suppress.messages) warning("Clint is provided as a distribution.")
-    } else {
-      Caco2.Pab.point <- as.numeric(Caco2.Pab.db)
-      Caco2.Pab.dist <- NA
-    }
-    
-    out[["Caco2.Pab"]] <- Caco2.Pab.point
-    out[["Caco2.Pab.dist"]] <- Caco2.Pab.dist
-    
-    # Get the in vivo measured sysemtic oral bioavailability if
+  
+  # Retrieve the chemical-specific Caco-2 value:
+  out <- c(out, get_caco2(chem.cas=chem.cas,
+                          chem.name=chem.name,
+                          dtxsid=dtxsid,
+                          Caco2.Pab.default = Caco2.Pab.default,
+                          suppress.messages = suppress.messages))
+
+    # Get the in vivo measured systemic oral bioavailability if
     # available, optionally overwriting based on Caco2.Pab
     Fbio <- try(get_invitroPK_param("Foral",species,chem.cas=chem.cas),
                 silent=TRUE)
@@ -138,11 +101,11 @@ get_fabsgut <- function(
                 silent=TRUE)
       if (is(Fhep,"try-error") | overwrite.invivo == TRUE)
       {
-        if (!is.null(Params[['hepatic.bioavailability']]))
+        if (!is.null(parameters[['hepatic.bioavailability']]))
         {
-          Fhep <- Params[['hepatic.bioavailability']] 
+          Fhep <- parameters[['hepatic.bioavailability']] 
         } else {
-          Fhep <- calc_hep_bioavailability(parameters = Params, 
+          Fhep <- calc_hep_bioavailability(parameters = parameters, 
                                           chem.cas = chem.cas,
                                           chem.name = chem.name,
                                           dtxsid = dtxsid,
@@ -165,7 +128,7 @@ get_fabsgut <- function(
         # Caco2 is a human cell line
         # only calculable for human, assume the same across species
         Fabs <- calc_fabs.oral(
-          Params = c(out, Params), 
+          parameters = c(out, parameters), 
           chem.cas = chem.cas,
           chem.name = chem.name,
           dtxsid = dtxsid,
@@ -186,7 +149,7 @@ get_fabsgut <- function(
           (Caco2.Fgut & is(Fgut,"try-error")))
       {
         Fgut <- calc_fgut.oral(
-          Params = c(out, Params), 
+          parameters = c(out, parameters), 
           chem.cas = chem.cas,
           chem.name = chem.name,
           dtxsid = dtxsid,
@@ -202,7 +165,14 @@ get_fabsgut <- function(
     out[['Fabsgut']] <- Fabs*Fgut
     out[['Fabs']] <- Fabs
     out[['Fgut']] <- Fgut
-  }
+
+  # Require that values are <= 1:
+  out[names(out) %in% c("Fabsgut", "Fabs", "Fgut")] <- 
+    lapply(out[names(out) %in% c("Fabsgut", "Fabs", "Fgut")], 
+           function(x) suppressWarnings(ifelse(x>1, 1.0, x)))
+
+  # Set a reasonable precision:
+  out <- lapply(out, set_httk_precision)
   
-  return(set_httk_precision(out))
+  return(out)
 }

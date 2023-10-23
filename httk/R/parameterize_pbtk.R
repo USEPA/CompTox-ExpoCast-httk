@@ -387,7 +387,7 @@ parameterize_pbtk <- function(
   outlist <- c(
     outlist, do.call(get_fabsgut, args=purrr::compact(c(
     list(
-      Params=outlist,
+      parameters=outlist,
       dtxsid=dtxsid,
       chem.cas=chem.cas,
       chem.name=chem.name,
@@ -396,6 +396,9 @@ parameterize_pbtk <- function(
       ),
     Caco2.options))
     ))
+
+  # Only include parameters specified in modelinfo:
+  outlist <- outlist[model.list[["pbtk"]]$param.names]
 
   # alphabetize:
   outlist <- outlist[order(tolower(names(outlist)))]
