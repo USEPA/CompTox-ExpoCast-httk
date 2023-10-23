@@ -437,7 +437,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   outlist <- c(
     outlist, do.call(get_fabsgut, args=purrr::compact(c(
     list(
-      Params=outlist,
+      parameters=outlist,
       dtxsid=dtxsid,
       chem.cas=chem.cas,
       chem.name=chem.name,
@@ -447,6 +447,6 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
     Caco2.options))
     ))
             
-# Alphabetize and set precision:
-  return(lapply(outlist[order(tolower(names(outlist)))],set_httk_precision))
+  return(lapply(outlist[model.list[["gas_pbtk"]]$param.names],
+                set_httk_precision)) 
 }
