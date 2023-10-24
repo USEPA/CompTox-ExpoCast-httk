@@ -29,6 +29,15 @@
 #'@param bioactive.free.invivo If FALSE (default), then the total concentration is treated
 #' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 #' bioactive in vivo. Only works with tissue = NULL in current implementation.
+#' 
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' 
 #'@param ... Additional parameters passed to parameterize function if 
 #'parameters is NULL.
 #'  
@@ -40,8 +49,8 @@
 #'
 #'@author Robert Pearce and John Wambaugh
 #'
-#' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
-#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#' @references 
+#' \insertRef{pearce2017httk}{httk}
 #'
 #'@keywords 3compss
 calc_analytic_css_3compss <- function(chem.name=NULL,
@@ -55,6 +64,7 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
                                    tissue=NULL,
                                    restrictive.clearance=TRUE,
                                    bioactive.free.invivo = FALSE,
+                                   Caco2.options = list(),
                                    ...)
 {
 
@@ -85,6 +95,15 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
 # Fetch some parameters using parameterize_steadstate, if needed:
   if (is.null(parameters))
   {
+  # Look up the chemical name/CAS, depending on what was provide:
+    out <- get_chem_id(
+            chem.cas=chem.cas,
+            chem.name=chem.name,
+            dtxsid=dtxsid)
+    chem.cas <- out$chem.cas
+    chem.name <- out$chem.name                                
+    dtxsid <- out$dtxsid
+
     if (recalc.blood2plasma) 
     {
       warning("Argument recalc.blood2plasma=TRUE ignored because parameters is NULL.")
@@ -96,6 +115,7 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
                                     dtxsid=dtxsid,
                                     suppress.messages=suppress.messages,
                                     restrictive.clearance=restrictive.clearance,
+                                    Caco2.options = Caco2.options,
                                     ...)
 
   } else {
@@ -132,7 +152,7 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
   if (!restrictive.clearance) cl <- cl*Fup
 
 # Calculate steady-state blood Css, Pearce et al. (2017) equation section 2.2:
-  Css_blood <- parameters$Fgutabs * 
+   Css_blood <- parameters$Fabsgut * 
     parameters$hepatic.bioavailability *
     hourly.dose / (
     parameters$Qgfrc/BW^0.25 * Fup + 
@@ -140,7 +160,6 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
     (Qtotalliver + Fup*cl/Rb2p))
   # Convert from blood to plasma:
   Css <- Css_blood/Rb2p
-    
     
 # Check to see if a specific tissue was asked for:
   if (!is.null(tissue))

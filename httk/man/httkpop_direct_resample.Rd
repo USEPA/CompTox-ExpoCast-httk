@@ -73,9 +73,7 @@ column represents a demographic, anthropometric, or physiological parameter.
 Generate a virtual population by directly resampling the NHANES data.
 }
 \references{
-Ring, Caroline L., et al. "Identifying populations sensitive to
-environmental chemicals by simulating toxicokinetic variability."
-Environment International 106 (2017): 105-118
+\insertRef{ring2017identifying}{httk}
 }
 \author{
 Caroline Ring

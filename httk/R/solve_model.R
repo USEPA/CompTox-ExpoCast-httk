@@ -53,8 +53,8 @@
 #' be specified.
 #' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
-#' @param times Optional time sequence for specified number of days. Dosing
-#' sequence begins at the beginning of times.
+#' @param times Optional time sequence for specified number of output times (in days) to be returned by the function.
+#' The model is solved explicitly at the time sequence specified. Dosing sequence begins at the first time provided.
 #' @param parameters List of chemical parameters, as output by 
 #' parameterize_pbtk function. Overrides chem.name and chem.cas.
 #' @param model Specified model to use in simulation: "pbtk", "3compartment",
@@ -117,8 +117,8 @@
 #' @author John Wambaugh, Robert Pearce, Miyuki Breen, Mark Sfeir, and
 #' Sarah E. Davidson
 #' 
-#' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
-#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#' @references
+#' \insertRef{pearce2017httk}{httk}
 #' 
 #' @keywords Solve
 #'
@@ -360,7 +360,7 @@ specification in compartment_units for model ", model)
 # necessarily need all parameters associated with a given model to do this:)
   if (is.null(parameters))
   {
-    parameters <- do.call(parameterize_function,args=purrr::compact(c(list(
+    parameters <- do.call(parameterize_function, args=purrr::compact(c(list(
       chem.cas=chem.cas,
       chem.name=chem.name,
       dtxsid=dtxsid,
@@ -372,7 +372,7 @@ specification in compartment_units for model ", model)
     if (!all(param_names %in% names(parameters)))
     {
       stop(paste("Missing parameters:",
-        paste(compiled_param_names[which(!param_names %in% 
+        paste(param_names[which(!param_names %in% 
         names(parameters))],collapse=', '),
         ". Use parameters from ",parameterize_function,".",sep="")) 
     }
@@ -425,7 +425,7 @@ specification in compartment_units for model ", model)
   if (!is.null(model.list[[model]]$do.first.pass))
     if (model.list[[model]]$do.first.pass)
   {
-    parameters$Fgutabs <- parameters$Fgutabs * parameters$hepatic.bioavailability
+    parameters$Fabsgut <- parameters$Fabsgut * parameters$hepatic.bioavailability
   }
 
 ### STATE VECTOR
@@ -726,7 +726,7 @@ specification in compartment_units for model ", model)
       eventdata$time,
       eventdata$time+SMALL.TIME)))
   }  
-  
+ 
 ### MODEL PARAMETERS FOR DESOLVE
 
   # Map the R parameters onto the names for the C code:
@@ -756,7 +756,7 @@ specification in compartment_units for model ", model)
   names(parameters) <- compiled_param_names
 
 ### RUNNING DESOLVE
-
+  
 # We use the events argument with deSolve to do multiple doses:
   out <- ode(
     y = state, 
@@ -778,9 +778,6 @@ specification in compartment_units for model ", model)
 
 # only give the requested times:
  if (!is.null(requested.times)) out <- out[out[,"time"] %in% requested.times, ]
-
-# Cannot guarantee arbitrary precision for deSolve:
-  out <- set_httk_precision(out)
 
 ### MODEL OUTPUT
 
@@ -813,6 +810,9 @@ specification in compartment_units for model ", model)
                             suppress.messages=suppress.messages)
   # Re-assign 'out' with the new output from 'cu.out'
   out <- cu.out[['new.ouput.matrix']]
+
+# Cannot guarantee arbitrary precision for deSolve:
+  out[,colnames(out)!="time"] <- set_httk_precision(out[,colnames(out)!="time"])
   
 # Make a plot if asked for it (not the default behavior):
   if (plots==TRUE)
@@ -899,5 +899,5 @@ Set recalc.clearance to TRUE if desired.")
     cat("\n")
   }
     
-  return(set_httk_precision(out)) 
+  return(out) 
 }

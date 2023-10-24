@@ -1,9 +1,9 @@
 # When using this code in past versions of httk, we load the needed data tables
 # to assure we are evaluating against similar values:
-#load("NewInVivoTablesForHTTK.RData")
-#pc.data <- read.csv("Pearce2017-PC-data.txt")
+#   load("NewInVivoTablesForHTTK.RData")
+#   pc.data <- read.csv("Pearce2017-PC-data.txt")
 
-#' Assess the curent performance of httk relative to historical benchmarks
+#' Assess the current performance of httk relative to historical benchmarks
 #' 
 #' The function performs a series of "sanity checks" and predictive performance
 #' benchmarks so that the impact of changes to the data, models, and 
@@ -115,12 +115,17 @@
 #' 
 #' @author John Wambaugh
 #'
-#' @references
-#' Davidson-Fritz et al. "Transparent and Evaluated Toxicokinetic Models for 
-#' Bioinformatics and Public Health Risk Assessment",
-#' in preparation
+#' @references 
+#' \insertRef{DavidsonFritzUnpublishedModelAdding}{httk}
 #'
-#' @import ggplot2
+#' @importFrom ggplot2 ggplot
+#' @importFrom ggplot2 aes
+#' @importFrom ggplot2 geom_point
+#' @importFrom ggplot2 geom_line
+#' @importFrom ggplot2 xlab
+#' @importFrom ggplot2 ylab
+#' @importFrom ggplot2 theme
+#' @importFrom ggplot2 element_text
 #'
 #' @export benchmark_httk
 benchmark_httk <- function(
@@ -131,6 +136,13 @@ benchmark_httk <- function(
                            suppress.messages=TRUE,
                            make.plots=TRUE)
 {
+  ## Setting up binding for Global Variables ##
+  Compound <- Source <- Reference <- fu <- Exp_PC <- Tissue <- Species <- 
+    CAS <- logMA <- Benchmark <- Version <- Value <- NULL
+  ## Call a copy of the data.tables from httk - local copy from the package 
+  chem.ivv.PK.agg <- copy(httk::chem.invivo.PK.aggregate.data)
+  chem.ivv.PK.sum <- copy(httk::chem.invivo.PK.summary.data)
+  ####
   benchmarks <- list()
 
   if (basic.check)
@@ -151,12 +163,16 @@ benchmark_httk <- function(
     } else {
       mc1 <- try(calc_mc_css(chem.cas="80-05-7",
                          output.units="mg/L",
-                         method="dr",
+                         httkpop.generate.arg.list = list(
+                           method="dr" 
+                         ),
                          suppress.messages=suppress.messages)[1])
       set.seed(1234)
       mc2 <- try(calc_mc_css(chem.cas="80-05-7",
                          output.units="uM",
-                         method="dr",
+                         httkpop.generate.arg.list = list(
+                           method="dr" 
+                         ),
                          suppress.messages=suppress.messages)[1])
     }
     benchmarks[["basic"]] <- list(
@@ -195,7 +211,7 @@ benchmark_httk <- function(
   for (this.cas in wetmore.chems)
     if (this.cas %in% valid.chems)
     {
-        ids <- httk:::get_chem_id(chem.cas=this.cas)
+        ids <- httk::get_chem_id(chem.cas=this.cas)
         if (!("dtxsid" %in% names(ids)))
         {
           ids$dtxsid <- NA 
@@ -253,7 +269,9 @@ benchmark_httk <- function(
                         which.quantile = 0.50,
                         model = "3compartmentss",
                         output.units = "uM",
-                        method="dr",
+                        httkpop.generate.arg.list = list(
+                          method="dr" 
+                        ),
                         suppress.messages=suppress.messages)))
         }
         if (is(css.mc, "try-error")) css.mc <- NA
@@ -286,7 +304,7 @@ benchmark_httk <- function(
   if (in_vivo_stats.check)
   {
     # Subset 'FitData' - exclude Bensulide for <justification for exclusion>
-    FitData <- subset(chem.invivo.PK.aggregate.data,
+    FitData <- subset(chem.ivv.PK.agg,
                       Compound!="Bensulide" |
                       Source=="Wambaugh et al. (2018), NHEERL/RTI")
     # Subset 'FitData' - exclude Propyzamide for <justification for exclusion>
@@ -335,7 +353,7 @@ benchmark_httk <- function(
                          na.rm=TRUE)^(1/2),4) 
     
     # Subset 'FitData2' - exclude Bensulide for <justification for exclusion>
-    FitData2 <- subset(chem.invivo.PK.summary.data,
+    FitData2 <- subset(chem.ivv.PK.sum,
                       Compound!="Bensulide" |
                       Reference %in% c("RTI 2015","NHEERL 2015"))
     # Subset 'FitData2' - exclude Propyzamide for <justification for exclusion>
@@ -590,7 +608,7 @@ benchmark_httk <- function(
     plot.table$Benchmark <- as.factor(plot.table$Benchmark)
 
     units.plot <- 
-      ggplot(subset(plot.table, regexpr("units", Benchmark)!=-1),
+      ggplot2::ggplot(subset(plot.table, regexpr("units", Benchmark)!=-1),
              aes(x=Version, y=Value, color=Benchmark, group=Benchmark)) + 
       geom_point() +
       geom_line() +
@@ -600,7 +618,7 @@ benchmark_httk <- function(
     
 
     rmsle.plot <- 
-      ggplot(subset(plot.table, regexpr("RMSLE", Benchmark)!=-1),
+      ggplot2::ggplot(subset(plot.table, regexpr("RMSLE", Benchmark)!=-1),
              aes(x=Version, y=Value, color=Benchmark, group=Benchmark)) + 
       geom_point() +
       geom_line() +
@@ -609,7 +627,7 @@ benchmark_httk <- function(
     benchmarks[["rmsle.plot"]] <- rmsle.plot
     
     count.plot <- 
-      ggplot(subset(plot.table, regexpr("N.", Benchmark)!=-1),
+      ggplot2::ggplot(subset(plot.table, regexpr("N.", Benchmark)!=-1),
              aes(x=Version, y=Value, color=Benchmark, group=Benchmark)) + 
       geom_point() +
       geom_line() +
