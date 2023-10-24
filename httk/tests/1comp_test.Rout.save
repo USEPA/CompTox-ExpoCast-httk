@@ -137,7 +137,7 @@ Warning messages:
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
 6: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
-7: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+7: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > calc_vdist(parameters=params)
 Volume of distribution returned in units of L/kg BW.
@@ -156,7 +156,7 @@ Warning messages:
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
 6: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
-7: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+7: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > calc_vdist(parameters=params)
 Volume of distribution returned in units of L/kg BW.
@@ -179,14 +179,8 @@ $Clint
 $Clint.dist
 [1] NA
 
-$Fabs
-[1] 0.9378
-
 $Fabsgut
 [1] 0.8719
-
-$Fgut
-[1] 0.9297
 
 $Fhep.assay.correction
 [1] 0.9482
@@ -194,17 +188,17 @@ $Fhep.assay.correction
 $Funbound.plasma
 [1] 0.7498
 
-$Funbound.plasma.adjustment
-[1] 0.9998
-
 $Funbound.plasma.dist
 [1] NA
 
-$hematocrit
-[1] 0.44
+$Funbound.plasma.adjustment
+[1] 0.9998
 
 $hepatic.bioavailability
 [1] 1
+
+$hematocrit
+[1] 0.44
 
 $kelim
 [1] 0.1346
@@ -215,22 +209,17 @@ $kgutabs
 $liver.density
 [1] 1.05
 
-$MA
-[1] 7.082
-
 $million.cells.per.gliver
 [1] 110
+
+$MA
+[1] 7.082
 
 $MW
 [1] 440.4
 
-$pKa_Accept
-pKa_Accept 
-    "8.09" 
-
-$pKa_Donor
-pKa_Donor 
-   "2.81" 
+$Rblood2plasma
+[1] 0.8046
 
 $plasma.vol
 [1] 0.04286
@@ -238,8 +227,13 @@ $plasma.vol
 $Pow
 [1] 0.03467
 
-$Rblood2plasma
-[1] 0.8046
+$pKa_Donor
+pKa_Donor 
+   "2.81" 
+
+$pKa_Accept
+pKa_Accept 
+    "8.09" 
 
 $Vdist
 [1] 0.5966

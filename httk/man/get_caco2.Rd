@@ -26,12 +26,6 @@ chemical must be identified by either CAS, name, or DTXISD}
 unavailable.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
-
-\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human").}
-
-\item{default.to.human}{Substitutes missing rat values with human values if
-true.}
 }
 \description{
 This function checks for chemical-specific in vitro measurements of the 
