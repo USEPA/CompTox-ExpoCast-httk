@@ -1,6 +1,6 @@
 ---
 title: "News for R package httk"
-date: "September, 2023"
+date: "October, 2023"
 output: html_document
 ---                                                 
 
