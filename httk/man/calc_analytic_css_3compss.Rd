@@ -17,6 +17,7 @@ calc_analytic_css_3compss(
   tissue = NULL,
   restrictive.clearance = TRUE,
   bioactive.free.invivo = FALSE,
+  Caco2.options = list(),
   ...
 )
 }
@@ -57,6 +58,14 @@ to rapid off-binding).}
 as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 bioactive in vivo. Only works with tissue = NULL in current implementation.}
 
+\item{Caco2.options}{A list of options to use when working with Caco2 apical to
+basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
+
 \item{...}{Additional parameters passed to parameterize function if 
 parameters is NULL.}
 }
@@ -68,8 +77,7 @@ This function calculates the analytic steady state plasma or venous blood
 concentrations as a result of infusion dosing.
 }
 \references{
-Pearce, Robert G., et al. "Httk: R package for high-throughput
-toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+\insertRef{pearce2017httk}{httk}
 }
 \seealso{
 \code{\link{calc_analytic_css}}

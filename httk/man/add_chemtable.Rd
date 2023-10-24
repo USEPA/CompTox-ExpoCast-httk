@@ -25,7 +25,7 @@ the table. Each item in the list should point to a column in the table
 new.table. Valid names in the list are: 'Compound', 'CAS', 'DSSTox.GSID'
 'SMILES.desalt', 'Reference', 'Species', 'MW', 'logP', 'pKa_Donor',
 'pKa_Accept', 'logMA', 'Clint', 'Clint.pValue', 'Funbound.plasma',
-'Fgutabs', 'Rblood2plasma'.}
+'Fabs', 'Fgut', 'Rblood2plasma'.}
 
 \item{current.table}{This is the table to which data are being added.}
 

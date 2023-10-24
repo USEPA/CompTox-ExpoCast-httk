@@ -10,7 +10,7 @@ calc_half_life(
   dtxsid = NULL,
   parameters = NULL,
   species = "Human",
-  suppress.messages = FALSE,
+  suppress.messages = TRUE,
   default.to.human = FALSE,
   restrictive.clearance = TRUE,
   adjusted.Funbound.plasma = TRUE,

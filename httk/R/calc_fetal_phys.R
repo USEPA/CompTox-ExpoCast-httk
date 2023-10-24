@@ -293,10 +293,8 @@
 #' \item{Qfrest}{Fetal blood flow to rest, L/day}
 #' \item{Qfbypass}{Fetal blood flow to Qfbypass, L/day}
 #'
-#' @references
-#' Kapraun, Dustin F., et al. "Empirical models for anatomical and physiological 
-#' changes in a human mother and fetus during pregnancy and gestation." 
-#' PloS one 14.5 (2019): e0215906.
+#' @references 
+#' \insertRef{kapraun2019empirical}{httk} 
 #'
 #' @keywords Parameter
 #' 
@@ -309,9 +307,9 @@ calc_fetal_phys <- function(
 {
   if (week < 0 | week > 41) stop("Functions only valid for gestational ages between 0 and 41 weeks")
 
-  params <- do.call("parameterize_fetal_pbtk", c(list(
+  params <- do.call("parameterize_fetal_pbtk", args=purrr::compact(c(list(
     chem.cas="80-05-7"),
-    ...))
+    ...)))
 
 # Function that transforms the parameters to those needed by the solver:
     compiled_parameters_init <- model.list[["fetal_pbtk"]]$compiled.parameters.init

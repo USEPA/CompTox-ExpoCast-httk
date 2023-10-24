@@ -67,6 +67,14 @@
 #' @param VD Anatomical dead space (L), to be modulated especially as part of
 #' simulating the state of exercise
 #' 
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' 
 #' @param ... Other parameters
 #' 
 #' @return \item{BW}{Body Weight, kg.} 
@@ -74,7 +82,7 @@
 #' \item{Clint.dist}{Distribution of hepatic intrinsic clearance values
 #' (median, lower 95th, upper 95th, p value)} 
 #' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
-#' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
+#' \item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of the
 #' dose that enters the gut lumen.}
 #' \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
 #' assay using the method of Kilford et al. (2008)} 
@@ -132,21 +140,13 @@
 #' @author Matt Linakis, Robert Pearce, John Wambaugh
 #'
 #' @references 
-#' Linakis, Matthew W., et al. "Development and evaluation of a high throughput 
-#' inhalation model for organic chemicals." Journal of exposure science & 
-#' environmental epidemiology 30.5 (2020): 866-877.
+#' \insertRef{linakis2020development}{httk}
 #'
-#' Schmitt, Walter. "General approach for the calculation of tissue 
-#' to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+#' \insertRef{schmitt2008general}{httk}
 #'
-#' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-#' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
-#' and pharmacodynamics 44.6 (2017): 549-565.
+#' \insertRef{pearce2017evaluation}{httk}
 #'
-#' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
-#' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
-#' hepatocyte incubations using microsomal binding or drug lipophilicity data.
-#' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+#' \insertRef{kilford2008hepatocellular}{httk}
 #'
 #' @keywords Parameter
 #'
@@ -209,6 +209,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                               VD = 0.15,
                               suppress.messages=FALSE,
                               minimum.Funbound.plasma=0.0001,
+                              Caco2.options=NULL,
                               ...)
 {
   physiology.data <- physiology.data
@@ -299,8 +300,8 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
 # Restrict the value of fup:
   if (fup < minimum.Funbound.plasma) fup <- minimum.Funbound.plasma
 
-  Fgutabs <- try(get_invitroPK_param("Fgutabs",species,chem.cas=chem.cas),silent=TRUE)
-  if (is(Fgutabs,"try-error")) Fgutabs <- 1
+  Fabsgut <- try(get_invitroPK_param("Fabsgut",species,chem.cas=chem.cas),silent=TRUE)
+  if (is(Fabsgut,"try-error")) Fabsgut <- 1
   
  # Check the species argument for capitilization problems and whether or not it is in the table:  
   if (!(species %in% colnames(physiology.data)))
@@ -356,15 +357,17 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
     MA=schmitt.params[["MA"]],
     kUrtc = 11.0, #Added MWL 9-20-19
     Vmucc = 0.0001)) #Added MWL 9-20-19
+# Fraction unbound lipid correction: 
+  if (adjusted.Funbound.plasma) 
+  {
+    outlist["Funbound.plasma.adjustment"] <- schmitt.params$Funbound.plasma.adjustment
+  } else outlist["Funbound.plasma.adjustment"] <- NA
+    
+# Liver metabolism properties:
+  # Unbound fraction of chemical in the hepatocyte intrinsic clearance assay:
+  outlist["Fhep.assay.correction"] <- Fu_hep # fraction 
   
-  # Correct for unbound fraction of chemical in the hepatocyte intrinsic clearance assay (Kilford et al., 2008)
-  outlist <- c(outlist,list(
-    Fhep.assay.correction=calc_hep_fu(
-      parameters = list(Pow = schmitt.params$Pow,
-      pKa_Donor=schmitt.params$pKa_Donor,
-      pKa_Accept=schmitt.params$pKa_Accept,
-      suppress.messages=suppress.messages))))  # fraction 
-
+  # Check if saturable metabolism included:
   if (vmax==0)
   {
     if (!suppress.messages) 
@@ -388,8 +391,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
           Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),
         suppress.messages=TRUE)), #L/h/kg BW
       million.cells.per.gliver=110, # 10^6 cells/g-liver
-      liver.density=1.05, # g/mL
-      Fgutabs=Fgutabs)) #L/h/kg BW
+      liver.density=1.05)) # g/mL
   } else {
     outlist <- c(outlist,list(
       vmax=vmax,km=km,
@@ -397,45 +399,54 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
       Clint.dist = Clint.dist, 
       Clmetabolismc=0,                       
       million.cells.per.gliver=110, # 10^6 cells/g-liver
-      liver.density=1.05, # g/mL
-      Fgutabs=Fgutabs))#ML added Km = km 9-19-19
+      liver.density=1.05)) # g/mL
   }
  
- 
- if (adjusted.Funbound.plasma) 
-  {
-    outlist["Funbound.plasma.adjustment"] <- schmitt.params$Funbound.plasma.adjustment
-  } else outlist["Funbound.plasma.adjustment"] <- NA
-   
-    outlist <- c(outlist,
-      Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
-        species=species,
-        adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-        suppress.messages=TRUE))
+# Blood to plasma ratio:
+  outlist <- c(outlist,
+    Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
+      species=species,
+      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+      suppress.messages=TRUE))
     
 # Get the blood:air and mucus:air partition coefficients:
-    Kx2air <- calc_kair(chem.name=chem.name,
-                        chem.cas=chem.cas,
-                        dtxsid=dtxsid,
-                        species=species,
-                        default.to.human=default.to.human,
-                        adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                        suppress.messages=suppress.messages)
-    
-    Kwater2air <- Kx2air$Kwater2air
-    Kblood2air <- Kx2air$Kblood2air
-    Kmuc2air <- Kx2air$Kmuc2air
+  Kx2air <- calc_kair(chem.name=chem.name,
+                      chem.cas=chem.cas,
+                      dtxsid=dtxsid,
+                      species=species,
+                      default.to.human=default.to.human,
+                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                      suppress.messages=suppress.messages)
+  
+  Kwater2air <- Kx2air$Kwater2air
+  Kblood2air <- Kx2air$Kblood2air
+  Kmuc2air <- Kx2air$Kmuc2air
         
-    if(exercise){
-      Qalvc = ((fR*60) * (VT - VD))/outlist$BW^0.75 #L/h/kg^0.75, 
-      #Added 4-30-19 to allow user-input respiratory and/or work values,
-      #assumes input units of L and min^-1
-    } else {
-      Vdot <- this.phys.data["Pulmonary Ventilation Rate"]
-      Qalvc <- Vdot * (0.67) #L/h/kg^0.75
-    }
-    outlist <- c(outlist,Kblood2air =  Kblood2air,Kmuc2air = Kmuc2air,Qalvc=as.numeric(Qalvc))
+# Set airflow based on whether exercising:
+  if(exercise){
+    Qalvc = ((fR*60) * (VT - VD))/outlist$BW^0.75 #L/h/kg^0.75, 
+    #Added 4-30-19 to allow user-input respiratory and/or work values,
+    #assumes input units of L and min^-1
+  } else {
+    Vdot <- this.phys.data["Pulmonary Ventilation Rate"]
+    Qalvc <- Vdot * (0.67) #L/h/kg^0.75
+  }
+  outlist <- c(outlist,Kblood2air =  Kblood2air,Kmuc2air = Kmuc2air,Qalvc=as.numeric(Qalvc))
     
-        
-  return(lapply(outlist[order(tolower(names(outlist)))],set_httk_precision))
+# Oral bioavailability parameters:
+  outlist <- c(
+    outlist, do.call(get_fabsgut, args=purrr::compact(c(
+    list(
+      parameters=outlist,
+      dtxsid=dtxsid,
+      chem.cas=chem.cas,
+      chem.name=chem.name,
+      species=species,
+      suppress.messages=suppress.messages
+      ),
+    Caco2.options))
+    ))
+            
+  return(lapply(outlist[model.list[["gas_pbtk"]]$param.names],
+                set_httk_precision)) 
 }

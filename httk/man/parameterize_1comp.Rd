@@ -17,7 +17,8 @@ parameterize_1comp(
   well.stirred.correction = TRUE,
   suppress.messages = FALSE,
   clint.pvalue.threshold = 0.05,
-  minimum.Funbound.plasma = 1e-04
+  minimum.Funbound.plasma = 1e-04,
+  Caco2.options = list()
 )
 }
 \arguments{
@@ -63,10 +64,21 @@ set to zero.}
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
+
+\item{Caco2.options}{A list of options to use when working with Caco2 apical to
+basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
 }
 \value{
 \item{Vdist}{Volume of distribution, units of L/kg BW.}
-\item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
+\item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, i.e. the 
+fraction of the dose that enters the gutlumen.} \item{kelim}{Elimination rate, units of
+1/h.} \item{hematocrit}{Percent volume of red blood cells in the blood.}
+\item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of the
 dose that enters the gutlumen.} 
 \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte 
 assay using the method of Kilford et al. (2008)} 
@@ -110,20 +122,13 @@ for tissue i.
 
 }
 \references{
-Pearce, Robert G., et al. "Httk: R package for high-throughput 
-toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+\insertRef{pearce2017httk}{httk}
 
-Schmitt, Walter. "General approach for the calculation of tissue 
-to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+\insertRef{schmitt2008general}{httk}
 
-Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-predictions of chemical distribution to tissues." Journal of pharmacokinetics 
-and pharmacodynamics 44.6 (2017): 549-565.
+\insertRef{pearce2017evaluation}{httk}
 
-Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
-(2008). Hepatocellular binding of drugs: correction for unbound fraction in
-hepatocyte incubations using microsomal binding or drug lipophilicity data.
-Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+\insertRef{kilford2008hepatocellular}{httk}
 }
 \seealso{
 \code{\link{solve_1comp}}

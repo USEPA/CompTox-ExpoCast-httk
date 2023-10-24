@@ -47,13 +47,15 @@ model.list[['3compartment']]$tissuelist = list(
 # how other parameters were calculated:
 model.list[["3compartment"]]$param.names <- c(
   "BW",
+  "Caco2.Pab",
+  "Caco2.Pab.dist",
   "Clint",
   "Clint.dist",
   "Clmetabolismc",
   "Funbound.plasma",
   "Funbound.plasma.dist",
   "Funbound.plasma.adjustment",
-  "Fgutabs",
+  "Fabsgut",
   "Fhep.assay.correction",
   "hematocrit",
   "Kgut2pu",
@@ -179,6 +181,10 @@ model.list[["3compartment"]]$compartment.units <-c(
     "Csyscomp"="uM",
     "AUC"="uM*days"
   )
+
+# Compartment state of matter, needed for proper unit conversion, if all
+# comaprtments of the same only include one state and set it to "all":
+model.list[["3compartment"]]$compartment.state <- list(liquid="all")
 
 # These parameters specific the exposure scenario simulated by the model:
 model.list[["3compartment"]]$dosing.params <- c(

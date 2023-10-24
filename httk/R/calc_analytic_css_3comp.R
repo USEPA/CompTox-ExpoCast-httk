@@ -28,6 +28,15 @@
 #'@param bioactive.free.invivo If FALSE (default), then the total concentration is treated
 #' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 #' bioactive in vivo. Only works with \code{tissue = NULL} in current implementation.
+#' 
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' 
 #'@param ... Additional parameters passed to parameterize function if 
 #' parameters is NULL.
 #'  
@@ -39,8 +48,8 @@
 #'
 #'@author Robert Pearce and John Wambaugh
 #'
-#' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
-#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#' @references 
+#' \insertRef{pearce2017httk}{httk} 
 #'
 #'@keywords 3compartment
 calc_analytic_css_3comp <- function(chem.name=NULL,
@@ -54,6 +63,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
                                    tissue=NULL,
                                    restrictive.clearance=TRUE,
                                    bioactive.free.invivo = FALSE,
+                                   Caco2.options = list(),
                                    ...)
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -88,6 +98,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
     parameters <- parameterize_3comp(chem.cas=chem.cas,
                                     chem.name=chem.name,
                                     suppress.messages=suppress.messages,
+                                    Caco2.options = Caco2.options,
                                     ...)
     if (recalc.blood2plasma) 
     {
@@ -114,7 +125,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
   param.names.schmitt <- model.list[["schmitt"]]$param.names
 
 
-  hourly.dose <- hourly.dose * parameters$Fgutabs
+  hourly.dose <- hourly.dose * parameters$Fabsgut
   fup <- parameters$Funbound.plasma
   Rblood2plasma <- parameters$Rblood2plasma
   Clmetabolism <- parameters$Clmetabolismc
@@ -173,6 +184,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
     }
   }
   
+
   if(tolower(concentration) != 'tissue'){
     if (tolower(concentration)=='blood')
     {
@@ -184,5 +196,6 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
       
     } else if (tolower(concentration)!='plasma') stop("Only blood and plasma concentrations are calculated.")
   }
+  
   return(Css)
 }
