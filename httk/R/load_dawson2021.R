@@ -83,7 +83,7 @@ load_dawson2021 <- function(
 
   cat(paste("Chemicals outside the applicabilty domain are",
             ifelse(exclude_oad,""," not"),
-            " excluded in the prediction load.\n",sep=""))
+            " excluded when predictions were loaded.\n",sep=""))
   if(exclude_oad){
     tmp_dawson2021 <- httk::dawson2021 %>%
       dplyr::filter(`Clint QSAR AD Outlier`==0) %>%
