@@ -195,7 +195,7 @@ create_mc_samples <- function(chem.cas=NULL,
 
   ## Setting up binding for Global Variables ##
   Fabs <- Fgut <- Fabsgut <- NULL
-  unadjusted.Funbound.plasam <- Funbound.plasma.adjustment  <- NULL
+  unadjusted.Funbound.plasma <- Funbound.plasma.adjustment  <- NULL
   Fhep.assay.correction <- Clint <- NULL
   ####
   
