@@ -59,7 +59,7 @@ Warning messages:
   Clint is provided as a distribution.
 2: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Fraction unbound is provided as a distribution.
-3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > set.seed(12345)
 > # This should be the same as calc_mc_oral_equiv:
@@ -75,7 +75,7 @@ Warning messages:
   Clint is provided as a distribution.
 2: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Fraction unbound is provided as a distribution.
-3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > 
 > # Honda1:
@@ -92,7 +92,7 @@ Warning messages:
   Clint is provided as a distribution.
 2: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Fraction unbound is provided as a distribution.
-3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > temp <- armitage_eval(
 +   casrn.vector = c("80-05-7"), 
@@ -115,7 +115,7 @@ Warning messages:
   Clint is provided as a distribution.
 2: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Fraction unbound is provided as a distribution.
-3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 4: In honda.ivive(method = IVIVE, tissue = tissue) :
   Argument method ="Honda1" uses plasma concentration, restrictive clearance, and treats the unbound invivo concentration as bioactive.
@@ -139,7 +139,7 @@ Warning messages:
   Clint is provided as a distribution.
 2: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Fraction unbound is provided as a distribution.
-3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > set.seed(12345)
 > # This should be the same as calc_mc_oral_equiv with IVIVE=="Honda2":
@@ -156,7 +156,7 @@ Warning messages:
   Clint is provided as a distribution.
 2: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Fraction unbound is provided as a distribution.
-3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 4: In honda.ivive(method = IVIVE, tissue = tissue) :
   Argument method ="Honda2" uses plasma concentration, restrictive clearance, and treats the unbound concentration as bioactive.
@@ -178,7 +178,7 @@ Warning messages:
   Clint is provided as a distribution.
 2: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Fraction unbound is provided as a distribution.
-3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > set.seed(12345)
 > # This should be the same as calc_mc_oral_equiv with IVIVE=="Honda3":
@@ -195,7 +195,7 @@ Warning messages:
   Clint is provided as a distribution.
 2: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Fraction unbound is provided as a distribution.
-3: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 4: In honda.ivive(method = IVIVE, tissue = tissue) :
   Argument method ="Honda3" uses plasma concentration, restrictive clearance, and treats the total concentration as bioactive.
@@ -226,7 +226,7 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
-4: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+4: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > set.seed(12345)
 > # This should be the same as calc_mc_oral_equiv with IVIVE=="Honda4":
@@ -246,7 +246,7 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
-4: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+4: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 5: In honda.ivive(method = IVIVE, tissue = tissue) :
   Argument method ="Honda4" uses target tissue (liver) concentration, non-restrictive clearance, and treats the total concentration as bioactive.

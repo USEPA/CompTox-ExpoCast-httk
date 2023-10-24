@@ -36,7 +36,7 @@
 #' 
 #' @param parameters (List) A list of the parameters (Caco2.Pab, Funbound.Plasma, Rblood2plasma,
 #' Clint, BW, Qsmallintestine, Fabs, Fgut) used in the calculation, either supplied by user
-#' or calculated in \code{\link{parameterize_steady_state}}.
+#' or calculated in \code{\link{parameterize_steadystate}}.
 #' 
 #' @param chem.cas (Character) Chemical CAS number. (Defaults to `NULL`.)
 #' (Note: Either the chemical name, CAS number, or EPA's DSSTox Structure ID

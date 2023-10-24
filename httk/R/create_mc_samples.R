@@ -367,7 +367,7 @@ Set species=\"Human\" to run httkpop model.')
   if (invitrouv) 
   {
     parameters.dt <- do.call(invitro_mc,
-                       args=purrr::compact(c(list(
+                       args=unique(purrr::compact(c(list(
                          parameters.dt=parameters.dt,
                          samples=samples),
                          invitro.mc.arg.list,
@@ -377,7 +377,7 @@ Set species=\"Human\" to run httkpop model.')
                            !names(Caco2.options) %in%
 # invitro_mc doesn't make use of these arguments because we've already called
 # parameterize_[MODEL]:
-                             c("Caco2.Pab.default", "overwrite.invivo")]])))
+                             c("Caco2.Pab.default", "overwrite.invivo")]]))))
   } else {
   # Clint and fup are adjusted within invitro_mc, if not called we need to adjust them here:
   #
