@@ -35,6 +35,8 @@ This version accompanies the submission of manuscript Honda et al. ?Impact of Gu
 * Model "1compartment" allows volatile chemicals again since clearance is amorphous for that model (likely understimated without exhalation)
 * Manuscript references listed in function documentation was converted to a BibTex format from manual insertion of the citations. (thanks Lily Whipple)
 * Updated 'get_physchem_param' to be case-insensitive
+* New Clint and Fup data curated from literature by ICF from [Black et al. (2021)](https://doi.org/10.1016/j.tox.2021.152819), [Williamson et al. (2020)](https://doi.org/10.1124/dmd.120.000131), [Zanelli et al. (2012)](https://doi.org/10.1124/dmd.111.042309), [Yamagata et al. (2017)](https://doi.org/10.1080/00498254.2016.1222639), and [Zanelli et al. (2019)](https://doi.org/10.1080/00498254.2018.1451010) (thank you Noelle Sinski and Colin Guider)
+
 
 # version 2.2.2 (February 20, 2023)
 ## Bug Fixes
