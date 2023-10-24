@@ -82,6 +82,13 @@
 #' @param output.units Plasma concentration units, either uM or default mg/L.
 #' @param solvemodel.arg.list Additional arguments ultimately passed to 
 #' \code{\link{solve_model}}
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
 #' @param invitro.mc.arg.list List of additional parameters passed to 
 #' \code{\link{invitro_mc}}
 #' @param httkpop.generate.arg.list Additional parameters passed to 
@@ -155,6 +162,7 @@ calc_mc_tk<- function(chem.cas=NULL,
                         output.units="mg/L",
                         solvemodel.arg.list=list(
                           times=c(0,0.25,0.5,0.75,1,1.5,2,2.5,3,4,5)),
+                        Caco2.options=list(),
                         invitro.mc.arg.list=NULL,
                         httkpop.generate.arg.list = list(
                           method='direct resampling'),
@@ -202,6 +210,7 @@ calc_mc_tk<- function(chem.cas=NULL,
                             invitrouv=invitrouv,
                             calcrb2p=calcrb2p,
                             censored.params=censored.params,
+                            Caco2.options = Caco2.options,
                             vary.params=vary.params,
                             return.samples=FALSE,
                             invitro.mc.arg.list=invitro.mc.arg.list,

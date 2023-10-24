@@ -2,7 +2,7 @@
 #' 
 #' This function transforms the dose (in mg/kg) into the appropriate units. It
 #' handles single doses, matrices of doses, or daily repeated doses at varying
-#' intervals. Gut absorption is also factored in through the parameter Fgutabs,
+#' intervals. Gut absorption is also factored in through the parameter Fabsgut,
 #' and scaling is currently avoided in the inhalation exposure case with a 
 #' scale factor of 1
 #' 
@@ -45,8 +45,8 @@ scale_dosing <- function(
   vol = NULL)# add volume conversion update for amount to conc (or vice versa)
              # then update solve_model
 {
-  if (!all(c("BW","MW","Fgutabs")%in%names(parameters))) 
-    stop("Argument \"parameters\" must specify, and MW, and Fgutabs.")
+  if (!all(c("BW","MW","Fabsgut")%in%names(parameters))) 
+    stop("Argument \"parameters\" must specify BW, MW, and Fabsgut.")
 
   BW <- as.numeric(parameters[["BW"]]) # kg
   MW <- as.numeric(parameters[["MW"]]) # mol/g
@@ -71,10 +71,10 @@ scale_dosing <- function(
 # We currently model absorption processes as just diminishing overall dose:
   if (route=="oral")
   {
-    if (!("Fgutabs"%in%names(parameters))) 
+    if (!("Fabsgut"%in%names(parameters))) 
       stop(
-"Argument \"parameters\" to scale_dosing must specify Fgutabs for oral route.")
-    scale.factor <- scale.factor*as.numeric(parameters[['Fgutabs']])
+"Argument \"parameters\" to scale_dosing must specify Fabsgut for oral route.")
+    scale.factor <- scale.factor*as.numeric(parameters[['Fabsgut']])
   }
   
   if (!is.null(dosing$initial.dose)) dosing$initial.dose <- 

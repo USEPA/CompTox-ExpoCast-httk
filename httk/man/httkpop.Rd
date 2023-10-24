@@ -181,9 +181,7 @@ To generate a population and then run an
 }
 
 \references{
-Ring, Caroline L., et al. "Identifying populations sensitive to 
-environmental chemicals by simulating toxicokinetic variability." Environment 
-International 106 (2017): 105-118     
+\insertRef{ring2017identifying}{httk}     
 
 Levey, A.S., Stevens, L.A., Schmid, C.H., Zhang, Y.L., Castro, A.F., Feldman, H.I., et al.,
 2009. A new equation to estimate glomerular filtration rate. Ann. Intern. Med. 150,

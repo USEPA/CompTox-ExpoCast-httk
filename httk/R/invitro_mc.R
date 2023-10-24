@@ -5,11 +5,12 @@
 #' user specifications on the assumed distributions of Funbound.plasma and
 #' Clint, draw "individual" values of Funbound.plasma and Clint from those
 #' distributions. The methodology for this function was developed and described
-#' by Wambaugh et al. (2019) (\doi{10.1093/toxsci/kfz205}).
+#' by \insertCite{wambaugh2019assessing;textual}{httk}
+#' (\doi{10.1093/toxsci/kfz205}).
 #'
 #' @details
 #' The Monte Carlo methods used here were recently updated and described by
-#' Breen et al. (submitted).
+#' \insertCite{breen2022simulating;textual}{httk}.
 #' 
 #' @param parameters.dt A data table of physiological and chemical-specific parameters
 #' 
@@ -53,10 +54,12 @@
 #' @param fup.censored.dist Logical. Whether to draw \code{Funbound.plasma} from a
 #' censored distribution or not.
 #' 
-#' @param adjusted.Funbound.plasma Uses Pearce et al. (2017) lipid binding adjustment
+#' @param adjusted.Funbound.plasma Uses the
+#' \insertCite{pearce2017evaluation;textual}{httk} lipid binding adjustment
 #' for Funbound.plasma when set to TRUE (Default).
 #' 
-#' @param adjusted.Clint Uses Kilford et al. (2008) hepatocyte incubation
+#' @param adjusted.Clint Uses \insertCite{kilford2008hepatocellular;textual}{httk}
+#' hepatocyte incubation
 #' binding adjustment for Clint when set to TRUE (Default).
 #' 
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
@@ -67,6 +70,18 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' 
+#' @param caco2.meas.sd Standard deviation of the measured oral absorption - numeric value (Default 0.3).
+#' 
+#' @param caco2.pop.sd Standard deviation of the population level oral absorption - numeric value (Default 0.3).
+#' 
+#' @param Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+#' 
+#' @param Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. 
+#' 
+#' @param keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' 
 #' @return A data.table with three columns: \code{Funbound.plasma} and
 #' \code{Clint}, containing the sampled values, and
 #' \code{Fhep.assay.correction}, containing the value for fraction unbound in
@@ -75,17 +90,9 @@
 #' @author Caroline Ring and John Wambaugh
 #'
 #' @references
-#' Wambaugh, John F., et al. "Assessing Toxicokinetic Uncertainty and 
-#' Variability in Risk Prioritization." Toxicological Sciences (2019).
 #'
-#' Kilford, Peter J., et al. "Hepatocellular binding of drugs: correction for 
-#' unbound fraction in hepatocyte incubations using microsomal binding or drug 
-#' lipophilicity data." Drug Metabolism and Disposition 36.7 (2008): 1194-1197.
-#' 
-#' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-#' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
-#' and pharmacodynamics 44.6 (2017): 549-565.
-#' 
+#' \insertAllCited{}
+#'
 #' @examples
 #' \donttest{
 #' #Simply generate a virtual population of 100 individuals,
@@ -123,6 +130,11 @@ invitro_mc <- function(parameters.dt=NULL,
                            clint.meas.cv=0.3,                           
                            fup.pop.cv=0.3,
                            clint.pop.cv=0.3,
+                           caco2.meas.sd = 0.3,
+                           caco2.pop.sd = 0.3,
+                           Caco2.Fgut = TRUE,
+                           Caco2.Fabs = TRUE,
+                           keepit100 = FALSE,
                            poormetab=TRUE,
                            fup.lod=0.01,
                            fup.censored.dist=FALSE,
@@ -140,6 +152,7 @@ invitro_mc <- function(parameters.dt=NULL,
   Parameter<-Funbound.plasma.adjustment<-fup.mean<-X<-Clint.dist<-Dow74<-NULL
   Funbound.plasma.dist<-fup.sd<-Fhep.assay.correction <- NULL
   PoorMetabolizer <- NULL
+  Caco2.Pab.dist <- Caco2.Pab.mu <- Fabs <- Fgut <- Fabsgut <- NULL
   #End R CMD CHECK appeasement.
 
   # Are we doing clint measurmement Monte Carlo?
@@ -291,9 +304,10 @@ invitro_mc <- function(parameters.dt=NULL,
   # First check that this model has phys-chem parameters:
   if (all(c("Pow","pKa_Donor","pKa_Accept")%in%colnames(parameters.dt)))
     parameters.dt[,Fhep.assay.correction:=calc_hep_fu(parameters=parameters.dt)]
+
+  # Correct for fraction of chemical unbound in in vitro hepatocyte assay:
   if (adjusted.Clint)
   {
-    # Correct for fraction of chemical unbound in in vitro hepatocyte assay:
     parameters.dt[, Clint := apply_clint_adjustment(
                                Clint,
                                Fu_hep=Fhep.assay.correction,
@@ -453,10 +467,10 @@ invitro_mc <- function(parameters.dt=NULL,
   # physiological lipid partitioning (Pearce, 2017):
   if (adjusted.Funbound.plasma)
   {
-    # We need the fraction of lipid in plasma:
-    Flipid <-subset(httk::physiology.data,
-               Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,
-               which(colnames(httk::physiology.data) == 'Human')]
+#    # We need the fraction of lipid in plasma:
+#    Flipid <-subset(httk::physiology.data,
+#               Parameter=='Plasma Effective Neutral Lipid Volume Fraction')[,
+#               which(colnames(httk::physiology.data) == 'Human')]
 
     if (all(c("Pow","pKa_Donor","pKa_Accept") %in% names(parameters.dt)) | 
         ("Dow74" %in% names(parameters.dt)))
@@ -479,6 +493,85 @@ invitro_mc <- function(parameters.dt=NULL,
       unadjusted.Funbound.plasma*Funbound.plasma.adjustment]
   }
 
+  #
+  #
+  #
+  # Caco-2 uncertainty Monte Carlo:
+  #
+  #
+  #
+  # If the default CV is set to NULL, we just use the point estimate with no
+  # uncertainty:
+  if(keepit100 == FALSE & 
+     (Caco2.Fgut == TRUE | Caco2.Fabs == TRUE))
+  {
+    if (is.null(caco2.meas.sd))
+    {
+      Caco2.Pab <- parameters.dt$Caco2.Pab
+      Caco2.Pab.l95 <- NULL
+      Caco2.Pab.u95 <- NULL
+      parameters.dt[, Caco2.Pab := Caco2.Pab]
+      # We need to determine what sort of information we have been provided about
+      # measurment uncertainty. We first check for a comma separated list with a
+      # median, lower, and upper 95th credible interval limits:
+    } else if(all(!is.na(parameters.dt$Caco2.Pab.dist)))
+    {
+      if (any(nchar(parameters.dt$Caco2.Pab.dist) - 
+          nchar(gsub(",","",parameters.dt$Caco2.Pab.dist[1]))!=2))
+      {
+        stop("Caco2.Pab distribution should be three values (median,low95th,high95th) separated by commas.")
+      }
+      temp <- strsplit(parameters.dt$Caco2.Pab.dist,",")
+      Caco2.Pab <- as.numeric(temp[[1]][1])
+      Caco2.Pab.l95 <- as.numeric(temp[[1]][2])
+      Caco2.Pab.u95 <- as.numeric(temp[[1]][3])
+      
+    # Shrink it down if all the values are the same
+      if (all(c(length(unique(Caco2.Pab))==1,
+        length(unique(Caco2.Pab.l95))==1,
+        length(unique(Caco2.Pab.u95))==1)))
+      {
+        Caco2.Pab <- Caco2.Pab[1]
+        Caco2.Pab.l95 <- Caco2.Pab.l95[1]
+        Caco2.Pab.u95 <- Caco2.Pab.u95[1]
+      }      
+      
+      caco2.fit <- suppressWarnings(optim(c(Caco2.Pab, caco2.meas.sd), 
+                     function(x) 
+                       # 97.5% of values should be less than the u95
+                       (0.975 - pnorm(Caco2.Pab.u95, x[1], x[2]))^2 +
+                       # 2.5% of values should be less than the l96
+                       (0.025 - pnorm(Caco2.Pab.l95, x[1], x[2]))^2 +
+                       # The median should be the median:
+                       (Caco2.Pab - qnorm(0.5, x[1], x[2]))^2))
+      parameters.dt[, Caco2.Pab := rtnorm(n = samples, 
+                                     caco2.fit$par[1], 
+                                     caco2.fit$par[2],
+                                     lower=0)]
+      
+      # If we don't have that, we use the default coefficient of variation to
+      # generate confidence limits:
+      
+    } else if(!is.null(caco2.meas.sd)) {
+      Caco2.Pab <- parameters.dt$Caco2.Pab
+      
+      # Shrink it down if all the values are the same
+      if (length(unique(Caco2.Pab))==1)
+      {
+        Caco2.Pab <- Caco2.Pab[1]
+      }   
+      
+      caco2.fit <- suppressWarnings(optim(Caco2.Pab, 
+                                          function(x) (Caco2.Pab - qnorm(0.5, x[1], abs(caco2.meas.sd)))^2))
+      caco2.fit$par[2] <- abs(caco2.meas.sd)
+      parameters.dt[, Caco2.Pab := rnorm(n = samples, caco2.fit$par[1], caco2.fit$par[2])]
+      
+    } 
+    
+    # Store NA so data.table doesn't convert everything to text:
+    parameters.dt[, Caco2.Pab.dist := NA]
+  }
+  
   #
   #
   #
@@ -555,9 +648,44 @@ invitro_mc <- function(parameters.dt=NULL,
   parameters.dt[Funbound.plasma<minimum.Funbound.plasma,
     Funbound.plasma:=minimum.Funbound.plasma]
 
+  #
+  #
+  #
+  # Caco2.Pab variability Monte Carlo:
+  #
+  #
+  #
+  #do not sample if user said not to vary Caco2.Pab.
+  if(keepit100 == FALSE & 
+     (Caco2.Fgut == TRUE | Caco2.Fabs == TRUE))
+  {
+    if (!is.null(caco2.pop.sd))
+    {
+      #Draw Pab from a normal distribution if poor metabolizers excluded, or
+      #Gaussian mixture distribution if poor metabolizers included.
+      #Set the mean of the regular metabolizer distribution:
+      parameters.dt[, Caco2.Pab.mu := Caco2.Pab]
+      
+      #Draw Pab from a normal distribution with mean = measured Clint, and
+      #coefficient of variation given by clint.pop.cv.
+      # We use truncnorm::rtruncnorm becase mean can be a vector:
+      parameters.dt[, Caco2.Pab := 10^sapply(log10(Caco2.Pab.mu),
+                                             rnorm,n=1,
+                                             sd=caco2.pop.sd)
+        ]
+    }
+  } else if (keepit100 == TRUE)
+  {
+    parameters.dt[,Fabs:=1]
+    parameters.dt[,Fgut:=1]
+  }
+  
+  # Make sure Fabsgut gets recalculated:
+  parameters.dt[, Fabsgut := NA]
+
 # set precision:
   cols <- colnames(parameters.dt)
   parameters.dt[ , (cols) := lapply(.SD, set_httk_precision), .SDcols = cols]
-  
-  return(parameters.dt)
+ 
+   return(parameters.dt)
 }

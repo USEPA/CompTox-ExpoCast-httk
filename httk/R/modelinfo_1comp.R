@@ -43,9 +43,11 @@ model.list[['1compartment']]$tissuelist <- NULL
 # how other parameters were calculated:
 model.list[["1compartment"]]$param.names <- c(
   "BW",
+  "Caco2.Pab",
+  "Caco2.Pab.dist",
   "Clint",
   "Clint.dist",
-  "Fgutabs",
+  "Fabsgut",
   "Fhep.assay.correction",
   "Funbound.plasma",
   "Funbound.plasma.dist",
@@ -129,6 +131,10 @@ model.list[["1compartment"]]$compartment.units <- c(
     "Ccompartment"="uM",
     "AUC" = "uM*days")
 
+# Compartment state of matter, needed for proper unit conversion, if all
+# comaprtments of the same only include one state and set it to "all":
+model.list[["1compartment"]]$compartment.state <- list(liquid="all")
+
 # These parameters specific the exposure scenario simulated by the model:
 model.list[["1compartment"]]$dosing.params <- c(
   "daily.dose",
@@ -180,7 +186,7 @@ model.list[["1compartment"]]$calc.standard.httkpop2httk <- TRUE
 # These are the model parameters that are impacted by httk-pop:
 model.list[["1compartment"]]$httkpop.params <- c(
   "BW",
-  "Fgutabs",
+  "Fabsgut",
   "hepatic.bioavailability",
   "hematocrit",
   "liver.density",
@@ -203,5 +209,3 @@ model.list[["1compartment"]]$css.dosing.params <- c("hourly.dose")
 
 # Filter out compounds belonging to select chemical classes
 model.list[["1compartment"]]$chem.class.filt <- c("PFAS")
-
-

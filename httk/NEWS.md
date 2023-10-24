@@ -1,17 +1,28 @@
 ---
 title: "News for R package httk"
-date: "May, 2023"
+date: "September, 2023"
 output: html_document
 ---                                                 
 
-# version 2.2.3 (May, 2023)
+# version 2.3.0 (October, 2023)
+This version accompanies the submission of manuscript Honda et al. ?Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals in Commerce and the Environment?
+
 ## Bug Fixes
 * Added parameter "plasma.vol" to one compartment model so that Monte Carlo works for non-human species
-* Added added default units for "Aexh" and "Ainh" state variables in gas_pbtk model so that calc_css works for accumulative chemcials
+* Added default units for "Aexh" and "Ainh" state variables in gas_pbtk model so that calc_css works for accumulative chemcials
 * Corrected the [Linakis et al. (2020)](https://doi.org/10.1038/s41370-020-0238-y) vingette to reflect that all CvTdb data used there already are in uM
 * Corrected ppbv unit conversions in 'convert_units'
+* Precision of time output in 'solve_model' is no longer restricted to four significant figures
+* Fixed bug with Monte Carlo functions (for example, 'calc_mc_oral_equiv') wherein you could not specify the argument parameters to be a table created by 'create_mc_samples' (thanks Jayme Coyle and Tyler Lalonde)
+* Revised 'convert_units' to handle multiple molecular weights -- this enables 'convert_mc_oral_equivalent' to take a table of parameters for Monte Carlo
+* Updated the checks and reported error messages in 'get_clint' and 'get_invtroPK_param' to be more informative
+* Corrected calculation of mean blood:plasma partition coefficient when measured RBlood2plasma is avaialble
+* Clint and fup are now adjusted for in ivtro binding when invitrouv=FALSE (thanks cm16120)
 
 ## New Features
+* Added in vitro measured Caco-2 membrane permeability data for 310 chemicals allowing characterization of oral bioavailability
+* Added new functions `calc_fbio.oral`, ?calc_fabs.oral?, and ?calc_fgut.oral? for calculating systemic bioavailability as Fbio = Fabs * Fgut * Fhep where first-pass hepatic metabolism was already available from ?calc_hep_bioavailability?.
+* Integrated Fabs and Fgut into oral exposure for all TK models and integrated into population variability and uncertainty functions within ?invitro_uv?
 * Added new function `benchmark_httk` to compare current function of the package against historical performance
 * We now skip over the first five minutes when calculating Cmax in calc_tkstats to allow PBTK model to distribute iv doses
 
@@ -22,6 +33,10 @@ output: html_document
 * Returned and updated the [Pearce et al. (2017)](https://doi.org/10.1007/s10928-017-9548-7) vignette on Evaluation of Tissue Partitioning
 * Revised function 'convert_units', expanding the variety of unit conversions available
 * Model "1compartment" allows volatile chemicals again since clearance is amorphous for that model (likely understimated without exhalation)
+* Manuscript references listed in function documentation was converted to a BibTex format from manual insertion of the citations. (thanks Lily Whipple)
+* Updated 'get_physchem_param' to be case-insensitive
+* New Clint and Fup data curated from literature by ICF from [Black et al. (2021)](https://doi.org/10.1016/j.tox.2021.152819), [Williamson et al. (2020)](https://doi.org/10.1124/dmd.120.000131), [Zanelli et al. (2012)](https://doi.org/10.1124/dmd.111.042309), [Yamagata et al. (2017)](https://doi.org/10.1080/00498254.2016.1222639), and [Zanelli et al. (2019)](https://doi.org/10.1080/00498254.2018.1451010) (thank you Noelle Sinski and Colin Guider)
+
 
 # version 2.2.2 (February 20, 2023)
 ## Bug Fixes
