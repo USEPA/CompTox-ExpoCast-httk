@@ -62,7 +62,7 @@ fraction absorbed from the
 gut in the \code{\link{chem.physical_and_invitro.data}} table. If in vivo
 data are unavailable (or \code{keepit100 == TRUE}) we attempt to use 
 in vitro Caco-2 membrane permeability to predict the fractions according to
-\code{\link{calc_oral_bioavailability}}.
+\code{\link{calc_fbio.oral}}.
 }
 \author{
 Greg Honda and John Wambaugh

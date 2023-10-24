@@ -34,15 +34,17 @@ Css1.caco <- calc_mc_css(chem.cas="15972-60-8",
             samples=NSAMP)
 # The monte carlo Css should be higher with keepit100-TRUE
 set.seed(1234)
-Css1.100 calc_mc_css(chem.cas="15972-60-8",
+Css1.100 <- calc_mc_css(chem.cas="15972-60-8",
             model="3compartment",
             samples=NSAMP,
             Caco2.options=list(keepit100=TRUE))
 Css1.caco < Css1.100
 
+set.seed(1234)
 Css2.caco <- calc_mc_css(dtxsid="DTXSID6034392",
                          samples=NSAMP,
                          which.quantile=0.5)
+set.seed(1234)
 Css2.100 <- calc_mc_css(dtxsid="DTXSID6034392",
                         samples=NSAMP,
                         Caco2.options = list(keepit100=TRUE),
