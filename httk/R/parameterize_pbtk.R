@@ -13,6 +13,25 @@
 #' By default, this function initializes the parameters needed in the functions 
 #' \code{\link{solve_pbtk}}, \code{\link{calc_css}}, and others using the httk 
 #' default generic PBTK model (for oral and intravenous dosing only).
+#'
+#' The default PBTK model includes an explicit first pass of the chemical through
+#' the liver before it becomes available to systemic blood. We model systemic oral bioavailability as 
+#' \ifelse{html}{\out{F<sub>bio</sub>=F<sub>abs</sub>*F<sub>gut</sub>*F<sub>hep</sub>}}{\eqn{F_{bio}=F_{abs}*F_{gut}*F_{hep}}}.
+#' Only if \ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}}
+#' has been measured in vivo and is found in
+#' table \code{\link{chem.physical_and_invitro.data}} then we set 
+#' \ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{gut}}} 
+#' to the measured value divided by 
+#' \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}} 
+#' where \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}}
+#' is estimated from in vitro TK data using 
+#' \code{\link{calc_hep_bioavailability}}.
+#' If Caco2 membrane permeability data or predictions
+#' are available \ifelse{html}{\out{F<sub>abs</sub>}}{\eqn{F_{abs}}} is estimated
+#' using \code{\link{calc_fabs.oral}}.
+#' Intrinsic hepatic metabolism is used to very roughly estimate
+#' \ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}
+#' using \code{\link{calc_fgut.oral}}.
 #' 
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- the 
 #' chemical must be identified by either CAS, name, or DTXISD
@@ -56,6 +75,17 @@
 #' binding is not taken into account (set to 1) in liver clearance if FALSE.
 #' 
 #' @param minimum.Funbound.plasma \eqn{f_{up}} is not allowed to drop below
+#' this value (default is 0.0001).      
+#' 
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' 
+#' @param minimum.Funbound.plasma \eqn{f_{up}} is not allowed to drop below
 #' this value (default is 0.0001).                                
 #'                                                                                             
 #' @param million.cells.per.gliver Hepatocellularity (defaults to 110 10^6 cells/g-liver, from Carlile et al. (1997))
@@ -66,7 +96,7 @@
 #' 
 #' @return \item{BW}{Body Weight, kg.} 
 #' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
-#' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
+#' \item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of
 #' the dose that enters the gutlumen.} 
 #' \item{Funbound.plasma}{Fraction of plasma that is not bound.}
 #' \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
@@ -106,32 +136,18 @@
 #' @author John Wambaugh and Robert Pearce
 #'
 #' @references 
-#' Pearce, Robert G., et al. "Httk: R package for high-throughput 
-#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 #'
-#' Schmitt, Walter. "General approach for the calculation of tissue 
-#' to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+#' \insertRef{pearce2017httk}{httk}
 #'
-#' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-#' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
-#' and pharmacodynamics 44.6 (2017): 549-565.
+#' \insertRef{schmitt2008general}{httk}
 #'
-#' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
-#' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
-#' hepatocyte incubations using microsomal binding or drug lipophilicity data.
-#' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+#' \insertRef{pearce2017evaluation}{httk}
 #'
-#' Carlile, David J., Katayoun Zomorodi, and J. Brian Houston. "Scaling factors 
-#' to relate drug metabolic clearance in hepatic microsomes, isolated 
-#' hepatocytes, and the intact liver: studies with induced livers involving 
-#' diazepam." Drug metabolism and disposition 25.8 (1997): 903-911.
+#' \insertRef{kilford2008hepatocellular}{httk}
 #' 
 #' International Commission on Radiological Protection. Report of the task 
 #' group on reference man. Vol. 23. Pergamon, Oxford. 1975.
 #'
-#' Wambaugh, John F., et al. "Evaluating in vitro-in vivo extrapolation of 
-#' toxicokinetics." Toxicological Sciences 163.1 (2018): 152-169.
-#' 
 #' @keywords Parameter pbtk
 #'
 #' @seealso \code{\link{solve_pbtk}}
@@ -179,7 +195,8 @@ parameterize_pbtk <- function(
                        minimum.Funbound.plasma=0.0001,
                        million.cells.per.gliver= 110, # 10^6 cells/g-liver Carlile et al. (1997)
                        liver.density= 1.05, # g/mL International Commission on Radiological Protection (1975)
-                       kgutabs = 2.18 # 1/h, Wambaugh et al. (2018)
+                       kgutabs = 2.18, # 1/h, Wambaugh et al. (2018)
+                       Caco2.options = NULL
                        )
 {
   #Give a binding to the physiology.data
@@ -270,14 +287,6 @@ parameterize_pbtk <- function(
     model="pbtk",
     suppress.messages=suppress.messages)
 
-  Fgutabs <- try(get_invitroPK_param(
-                   "Fgutabs",
-                   species,
-                   chem.cas=chem.cas),
-               silent=TRUE)
-
-  if (is(Fgutabs,"try-error")) Fgutabs <- 1
-  
 # Check the species argument for capitalization problems and whether or not 
 # it is in the table:  
 
@@ -336,12 +345,21 @@ parameterize_pbtk <- function(
                             pKa_Accept=pKa_Accept,
                             MA=schmitt.params[["MA"]]))
   
+  # Fraction unbound lipid correction:
+  if (adjusted.Funbound.plasma) 
+  {
+    outlist["Funbound.plasma.adjustment"] <- 
+      schmitt.params$Funbound.plasma.adjustment
+  } else outlist["Funbound.plasma.adjustment"] <- NA
+   
+# Blood to plasma ratio:
   outlist <- c(outlist,
     Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
       species=species,
       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
       suppress.messages=suppress.messages))
 
+# Liver metabolism properties:
   outlist <- c(
     outlist,
     list(Clint=Clint.point,
@@ -362,18 +380,29 @@ parameterize_pbtk <- function(
                (lumped_params$Qtotal.liverf*as.numeric(Qcardiacc))/1000*60),
            suppress.messages=TRUE,
            restrictive.clearance=restrictive.clearance)), #L/h/kg BW
-         million.cells.per.gliver = million.cells.per.gliver, # 10^6 cells/g-liver
-         liver.density = liver.density, # g/mL
-         Fgutabs=Fgutabs)) 
-  
-  if (adjusted.Funbound.plasma) 
-  {
-    outlist["Funbound.plasma.adjustment"] <- 
-      schmitt.params$Funbound.plasma.adjustment
-  } else outlist["Funbound.plasma.adjustment"] <- NA
+      million.cells.per.gliver=110, # 10^6 cells/g-liver
+      liver.density=1.05)) # g/mL
    
+# Oral bioavailability parameters:
+  outlist <- c(
+    outlist, do.call(get_fabsgut, args=purrr::compact(c(
+    list(
+      parameters=outlist,
+      dtxsid=dtxsid,
+      chem.cas=chem.cas,
+      chem.name=chem.name,
+      species=species,
+      suppress.messages=suppress.messages
+      ),
+    Caco2.options))
+    ))
+
+  # Only include parameters specified in modelinfo:
+  outlist <- outlist[model.list[["pbtk"]]$param.names]
+
   # alphabetize:
   outlist <- outlist[order(tolower(names(outlist)))]
   
+# Set precision:
   return(lapply(outlist, set_httk_precision))
 }

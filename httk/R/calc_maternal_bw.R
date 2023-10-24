@@ -12,10 +12,8 @@
 #'
 #' @return \item{BW}{Maternal Body Weight, kg.}
 #'
-#' @references
-#' Kapraun, Dustin F., et al. "Empirical models for anatomical and physiological 
-#' changes in a human mother and fetus during pregnancy and gestation." 
-#' PloS one 14.5 (2019): e0215906.
+#' @references 
+#' \insertRef{kapraun2019empirical}{httk} 
 #'
 #' @keywords Parameter
 #' 

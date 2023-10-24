@@ -11,25 +11,27 @@
 #' @return A list of tissue, bioactive.free.invivo, and restrictive.clearance assumptions.
 #' 
 #' @details
-#' "Honda1" - tissue = NULL, restrictive.clearance = TRUE, bioactive.free.invivo = TRUE
-#'       This assumption assumes restrictive hepatic clearance, and treats the free concentration in plasma as 
-#'       the bioactive concentration in vivo. This option must be used in combination with the concentration in vitro 
-#'       predicted by armitage_eval(), otherwise the result will be the same as "Honda2". This option corresponds to the result 
-#'       in Figure 8 panel c) restrictive, mean free plasma conc., Armitage in Honda et al. 2019.
-#' "Honda2" - tissue = NULL, restrictive.clearance = TRUE, bioactive.free.invivo = TRUE
-#'       This assumption assumes restrictive hepatic clearance, and treats the free concentration in plasma as 
-#'       the bioactive concentration in vivo. This option corresponds to the result 
-#'       in Figure 8 panel b) restrictive, mean free plasma conc. in Honda et al. 2019.
-#' "Honda3" - tissue = NULL, restrictive.clearance = TRUE, bioactive.free.invivo = TRUE
-#'       This assumption assumes restrictive hepatic clearance, and treats the free concentration in plasma as 
-#'       the bioactive concentration in vivo. This option corresponds to the result 
-#'       in Figure 8 panel a) restrictive, mean total plasma conc. in Honda et al. 2019.
-#' "Honda4" - tissue = tissue, restrictive.clearance = FALSE, bioactive.free.invivo = TRUE
-#'       This assumption assumes restrictive hepatic clearance, and treats the free concentration in plasma as 
-#'       the bioactive concentration in vivo. The input tissue should be relevant to the in vitro assay endpoint used as input or that
-#'       the result is being compared to. This option corresponds to the result 
-#'       in Figure 8 panel d) nonrestrictive, mean tissue conc. in Honda et al. 2019.
-#'       
+#'
+#' Only four sets of IVIVE assumptions that performed well in Honda et al. 
+#' (2019) are currently included:
+#' "Honda1" through "Honda4". The use of max (peak)  
+#' concentration can not be currently be calculated with \code{\link{calc_analytic_css}}. 
+#' The httk default settings correspond to "Honda3":
+#' 
+#'\tabular{lrrrrr}{
+#' \tab \emph{In Vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical Conc. \emph{In Vivo} \tab TK Statistic Used* \tab Bioactive Chemical Conc. \emph{In Vitro} \cr
+#'Honda1 \tab Veinous (Plasma) \tab Restrictive \tab Free \tab Mean Conc. In Vivo \tab Free Conc. In Vitro \cr
+#'Honda2 \tab Veinous \tab Restrictive \tab Free \tab Mean Conc. In Vivo \tab Nominal Conc. In Vitro \cr
+#'Honda3 \tab Veinous \tab Restrictive \tab Total \tab Mean Conc. In Vivo \tab Nominal Conc. In Vitro \cr
+#'Honda4 \tab Target Tissue \tab Non-restrictive \tab Total \tab Mean Conc. In Vivo \tab Nominal Conc. In Vitro \cr
+#'}
+#'
+#' "Honda1" uses plasma concentration, restrictive clearance, and treats the 
+#' unbound invivo concentration as bioactive. For IVIVE, any input nominal 
+#' concentration in vitro should be converted to cfree.invitro using 
+#' \code{\link{armitage_eval}}, otherwise performance will be the same as 
+#' "Honda2". 
+#'
 #' @examples
 #' honda.ivive(method = "Honda1", tissue = NULL)
 #' 
@@ -37,8 +39,8 @@
 #' 
 #' @keywords Solve
 #' 
-#' @references Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
-#' In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
+#' @references 
+#' \insertRef{honda2019using}{httk} 
 #' 
 #' @export honda.ivive
 #' 

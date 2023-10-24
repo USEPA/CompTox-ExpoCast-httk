@@ -32,10 +32,8 @@
 #'
 #' @author Greg Honda
 #'
-#' @references
-#' Armitage, J. M., Arnot, J. A., Wania, F., & Mackay, D. (2013). Development 
-#' and evaluation of a mechanistic bioconcentration model for ionogenic organic 
-#' chemicals in fish. Environmental toxicology and chemistry, 32(1), 115-128.
+#' @references 
+#' \insertRef{armitage2013development}{httk} 
 #'
 #' @import magrittr
 #'
@@ -100,9 +98,9 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 
 #' Evaluate the updated Armitage model
 #' 
-#' Evaluate the Armitage model for chemical distributon in vitro. Takes input
+#' Evaluate the Armitage model for chemical distributon \emph{in vitro}. Takes input
 #' as data table or vectors of values. Outputs a data table. Updates over
-#' the model published in Armitage et al. 2014 include binding to plastic walls
+#' the model published in Armitage et al. (2014) include binding to plastic walls
 #' and lipid and protein compartments in cells.
 #' 
 #' 
@@ -120,7 +118,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' @param tcdata A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
 #' v_total, v_working. Otherwise supply single values to this.params (e.g., this.sarea,
 #' this.v_total, etc.). Chemical parameters are taken from 
-#' \code{\link{chem.phisical_and_invitro.data}}.
+#' \code{\link{chem.physical_and_invitro.data}}.
 #' 
 #' @param this.sarea Surface area per well (m^2)
 #' 
@@ -266,7 +264,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' xplastic \tab Fraction bound to plastic \tab fraction \cr     
 #' xprecip \tab Fraction precipitated out of solution \tab fraction \cr       
 #' eta_free \tab Effective availability ratio \tab fraction \cr      
-#' \strong{cfree.invitro} \tab \strong{Free concentration in the in vitro media} (use for Honda1 and Honda2) \tab fraction (%) \cr
+#' \strong{cfree.invitro} \tab \strong{Free concentration in the in vitro media} (use for Honda1 and Honda2) \tab fraction \cr
 #' }
 #'
 #' @author Greg Honda
@@ -274,7 +272,8 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' @references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 
 #' 2014, 48, 9770-9779. https://doi.org/10.1021/es501955g
 #'
-#' Honda et al. PloS one 14.5 (2019): e0217564. https://doi.org/10.1371/journal.pone.0217564
+#' @references 
+#' \insertRef{honda2019using}{httk} 
 #'
 #' @import magrittr
 #'
@@ -395,6 +394,7 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
   ccells<-eta_free <- cfree.invitro <- nomconc <- well_number <- NULL
   logHenry <- logWSol <- NULL
   conc_ser_alb <- conc_ser_lip <- Vbm <- NULL
+  Fneutral <- NULL
   #End R CMD CHECK appeasement.
   
   if(all(is.na(tcdata))){
@@ -448,8 +448,8 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
   if(!all(c("gkow","logHenry","gswat","MP","MW") %in% names(tcdata))){
   # If not, pull them:
     tcdata[, c("gkow","logHenry","gswat","MP","MW") := 
-             get_physchem_param(param = c("logP","logHenry","logWSol","MP","MW"), 
-                                chem.cas = casrn)]
+             as.data.frame(get_physchem_param(param = c("logP","logHenry","logWSol","MP","MW"), 
+                                chem.cas = casrn),row.names = casrn)]
   }
   tcdata[, "gkaw" := logHenry - log10(298.15*8.2057338e-5)] # log10 atm-m3/mol to (mol/m3)/(mol/m3) (unitless)
   
@@ -460,8 +460,8 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
     {
     # If not, pull them:
       tcdata[, c("pKa_Donor","pKa_Accept") := 
-               get_physchem_param(param = c("pKa_Donor","pKa_Accept"), 
-                                  chem.cas = casrn)]
+               as.data.frame(get_physchem_param(param = c("pKa_Donor","pKa_Accept"), 
+                                  chem.cas = casrn),row.names = casrn)]
     }
     # Calculate the fraction neutral:
     tcdata[, Fneutral := apply(.SD,1,function(x) calc_ionization(
@@ -477,8 +477,8 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
     {
     # If not, pull them:
       tcdata[, c("pKa_Donor","pKa_Accept") := 
-               get_physchem_param(param = c("pKa_Donor","pKa_Accept"), 
-                                  chem.cas = casrn)]
+               as.data.frame(get_physchem_param(param = c("pKa_Donor","pKa_Accept"), 
+                                  chem.cas = casrn),row.names = casrn)]
     }
     # Calculate the fraction neutral:
     tcdata[, Fneutral := apply(.SD,1,function(x) calc_ionization(
