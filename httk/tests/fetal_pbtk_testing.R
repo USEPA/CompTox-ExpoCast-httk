@@ -1,6 +1,9 @@
-#R CMD BATCH --no-timing --no-restore --no-save fetal_pbtk_testing.R fetal_pbtk_testing.Rout
+# R CMD BATCH --no-timing --no-restore --no-save fetal_pbtk_testing.R fetal_pbtk_testing.Rout
+
+# Get rid of anything in the workspace:
+rm(list=ls()) 
+
 library(httk)
-options(warn=-1)
 
 head(solve_fetal_pbtk(chem.name = 'bisphenol a', daily.dose = 1,
                                              doses.per.day = 3))

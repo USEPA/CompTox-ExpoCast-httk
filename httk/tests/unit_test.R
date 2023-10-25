@@ -1,4 +1,8 @@
-#R CMD BATCH --no-timing --no-restore --no-save unit_test.R unit_test.Rout
+# R CMD BATCH --no-timing --no-restore --no-save unit_test.R unit_test.Rout
+
+# Get rid of anything in the workspace:
+rm(list=ls()) 
+
 library(httk)
 #
 # MW BPA is 228.29 g/mol
@@ -8,12 +12,29 @@ convert_units("mg/L","uM",chem.cas="80-05-7")
 # MW Diclofenac is 296.148 g/mol
 # 1 uM -> 296.148/1000 =  0.296
 convert_units("uM","mg/L",chem.name="diclofenac")
+
 #
-convert_units("uM","ppmv",chem.name="styrene")
+# Compare with 
+#   https://www.eurofinsus.com/environment-testing/services/air-and-vapor/unit-conversion-calculator/
+# STP assumes 24.45 = (25°C and 1 atm)
+# 1 ug/L Toluene -> 0.26539 ppmv
+convert_units("ug/L","ppmv",
+                chem.name="toluene",
+                state="gas")
 #
-# Compare with https://www3.epa.gov/ceampubl/learn2model/part-two/onsite/ia_unit_conversion.html
-# 1 ug/L Toluene -> 0.263 ppmv
-convert_units("ug/L","ppmv",chem.name="toluene")
-#
-# 1 pppmv Toluene, 0.0038 mg/L
-convert_units("ppmv","mg/L",chem.name="toluene")
+# 1 ppmv Toluene -> 0.0038 mg/L
+convert_units("ppmv","mg/L",
+              chem.name="toluene",
+              state="gas")
+# 1 ug/L Styrene ->  0.23478 ppmv
+convert_units("ug/L","ppmv",
+                chem.name="styrene",
+                state="gas")
+                
+# Test that convert_solve_x doesn't throw any errors:
+head(solve_gas_pbtk(chem.name="bisphenol a",
+                    times=c(0,0.1,0.05),
+                    output.units=setNames("mg/m3","Cendexhppmv")))
+
+# Quit without saving or displaying messages:
+quit("no")

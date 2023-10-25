@@ -9,7 +9,8 @@ calc_ma(
   chem.name = NULL,
   dtxsid = NULL,
   parameters = NULL,
-  suppress.messages = FALSE
+  suppress.messages = FALSE,
+  pfas.calibration = TRUE
 )
 }
 \arguments{
@@ -29,6 +30,9 @@ either CAS, name, or DTXSIDs}
 for the model indicated by argument model}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
+
+\item{pfas.calibration}{Whether MA for chemicals in class PFAS should be
+increased using the regression to the Droge (2019) dataset.}
 }
 \value{
 A numeric fraction unpbound in plasma between zero and one
@@ -50,8 +54,12 @@ and pharmacodynamics 44.6 (2017): 549-565.
 Yun, Y. E., and A. N. Edginton. "Correlation-based prediction of 
 tissue-to-plasma partition coefficients using readily available input 
 parameters." Xenobiotica 43.10 (2013): 839-852.
+
+Droge, Steven TJ. "Membrane–water partition coefficients to aid risk 
+assessment of perfluoroalkyl anions and alkyl sulfates." Environmental 
+Science & Technology 53.2 (2018): 760-770.
 }
 \author{
 John Wambaugh
 }
-\keyword{in-vitro}
+\keyword{parameters}

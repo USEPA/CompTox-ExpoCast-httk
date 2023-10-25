@@ -2,7 +2,7 @@
 #' 
 #' @description
 #' For a given chemical and fixed dose rate this function determines a 
-#' distribution of steady-state concentrations reflecting measurment uncertainty
+#' distribution of steady-state concentrations reflecting measurement uncertainty
 #' an population variability. Uncertainty and variability are simulated via the
 #' Monte Carlo method -- many sets of model parameters are drawn according to
 #' probability distributions described in 
@@ -184,23 +184,24 @@
 #' argument "model". (Defaults to NULL.)  
 #'
 #' @param calc.analytic.css.arg.list Additional parameters passed to 
-#' \code{\link{calc_analytic_css}}.
 #'
-#' @author Caroline Ring, Robert Pearce, John Wambaugh, Miyuki Breen
+#' @param Caco2.options Arguments describing how to handle Caco2 absorption data
+#' that are passed to \code{\link{invitro_mc}} and the parameterize_[MODEL] 
+#' functions
+#'
+#' \code{\link{calc_analytic_css}}.
+#' 
+#' @author Caroline Ring, Robert Pearce, John Wambaugh, Miyuki Breen, and Greg Honda
 #'
 #' @references 
 #' Wambaugh, John F., et al. "Toxicokinetic triage for 
 #' environmental chemicals." Toxicological Sciences 147.1 (2015): 55-67.
 #'
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment international 106 (2017): 105-118. 
+#' \insertRef{ring2017identifying}{httk}
 #' 
-#' Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
-#' In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
+#' \insertRef{honda2019using}{httk} 
 #'                                                       
-#' Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts in 
-#' pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
+#'\insertRef{rowland1973clearance}{httk}
 #'
 #' @keywords Monte-Carlo Steady-State
 #'
@@ -302,10 +303,24 @@
 #'              httkpop=FALSE,
 #'              invitrouv=FALSE,
 #'              vary.params=list(Pow=0.3))
+#'  
+#' # We can also use the Monte Carlo functions by passing a table
+#' # where each row represents a different Monte Carlo draw of parameters:
+#' p <- create_mc_samples(chem.cas="80-05-7")
+#' # Use data.table for steady-state plasma concentration (Css) Monte Carlo:
+#' calc_mc_css(parameters=p)
+#' # Using the same table gives the same answer:
+#' calc_mc_css(parameters=p)
+#' # Use Css for 1 mg/kg/day for simple reverse toxicokinetics 
+#' # in Vitro-In Vivo Extrapolation to convert 15 uM to mg/kg/day:
+#' 15/calc_mc_css(parameters=p, output.units="uM")
+#' # Can do the same with calc_mc_oral_equiv:
+#' calc_mc_oral_equiv(15, parameters=p)
 #' }
 #'
 #' @import stats
-#' @importFrom purrr compact 
+#' @importFrom purrr compact
+#' @importFrom data.table is.data.table 
 #' @export calc_mc_css
 calc_mc_css <- function(chem.cas = NULL,
                         chem.name = NULL,
@@ -331,7 +346,8 @@ calc_mc_css <- function(chem.cas = NULL,
                           list(method = "direct resampling"),
                         convert.httkpop.arg.list = NULL,
                         parameterize.arg.list = NULL,
-                        calc.analytic.css.arg.list = NULL
+                        calc.analytic.css.arg.list = NULL,
+                        Caco2.options=NULL
                         ) 
 {
 # We need to describe the chemical to be simulated one way or another:
@@ -374,14 +390,15 @@ calc_mc_css <- function(chem.cas = NULL,
   {
     stop("Concentration must be one of blood, tissue, or plasma")
   }
-    
+              
 #
 #
 # CREATE A TABLE OF PARAMETER VALUES WHERE EACH ROW IS A SEPARATE SET OF 
 # VALUES FOR WHICH Css SHOULD BE CALCULATED
 #
 #
-  parameter.dt <- do.call(create_mc_samples,
+  if (!(data.table::is.data.table(parameters)))
+    parameter.dt <- do.call(create_mc_samples,
 # we use purrr::compact to drop NULL values from arguments list:
                           args=purrr::compact(c(list(
                               chem.cas=chem.cas,
@@ -401,8 +418,9 @@ calc_mc_css <- function(chem.cas = NULL,
                               invitro.mc.arg.list=invitro.mc.arg.list,
                               httkpop.generate.arg.list=httkpop.generate.arg.list,
                               convert.httkpop.arg.list=convert.httkpop.arg.list,
-                              parameterize.arg.list=parameterize.arg.list))))
-
+                              parameterize.arg.list=parameterize.arg.list,
+                              Caco2.options=Caco2.options))))
+  else parameter.dt <- parameters
 #
 # HERE LIES THE ACTUAL MONTE CARLO STEP:
 #
@@ -412,7 +430,8 @@ calc_mc_css <- function(chem.cas = NULL,
 
   parameter.dt[,Css:= do.call(calc_analytic_css,
 # we use purrr::compact to drop NULL values from arguments list:
-                              args=purrr::compact(c(list(parameters=.SD,
+                              args=purrr::compact(c(list(
+                              parameters=.SD,
                               model=model,
                               suppress.messages=TRUE,
                               chem.cas=chem.cas,

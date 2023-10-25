@@ -71,10 +71,10 @@ scale_dosing <- function(
 # We currently model absorption processes as just diminishing overall dose:
   if (route=="oral")
   {
-    if (!("Fgutabs"%in%names(parameters))) 
+    if (!("Fabsgut"%in%names(parameters))) 
       stop(
-"Argument \"parameters\" to scale_dosing must specify Fgutabs for oral route.")
-    scale.factor <- scale.factor*as.numeric(parameters[['Fgutabs']])
+"Argument \"parameters\" to scale_dosing must specify Fabsgut for oral route.")
+    scale.factor <- scale.factor*as.numeric(parameters[['Fabsgut']])
   }
   
   if (!is.null(dosing$initial.dose)) dosing$initial.dose <- 

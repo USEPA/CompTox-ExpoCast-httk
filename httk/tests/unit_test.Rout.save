@@ -1,6 +1,6 @@
 
-R version 4.1.3 (2022-03-10) -- "One Push-Up"
-Copyright (C) 2022 The R Foundation for Statistical Computing
+R Under development (unstable) (2023-04-16 r84269 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -17,7 +17,11 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> #R CMD BATCH --no-timing --no-restore --no-save unit_test.R unit_test.Rout
+> # R CMD BATCH --no-timing --no-restore --no-save unit_test.R unit_test.Rout
+> 
+> # Get rid of anything in the workspace:
+> rm(list=ls()) 
+> 
 > library(httk)
 > #
 > # MW BPA is 228.29 g/mol
@@ -29,16 +33,66 @@ Type 'q()' to quit R.
 > # 1 uM -> 296.148/1000 =  0.296
 > convert_units("uM","mg/L",chem.name="diclofenac")
 [1] 0.2962
+> 
 > #
-> convert_units("uM","ppmv",chem.name="styrene")
-[1] 24.45
-> #
-> # Compare with https://www3.epa.gov/ceampubl/learn2model/part-two/onsite/ia_unit_conversion.html
-> # 1 ug/L Toluene -> 0.263 ppmv
-> convert_units("ug/L","ppmv",chem.name="toluene")
+> # Compare with 
+> #   https://www.eurofinsus.com/environment-testing/services/air-and-vapor/unit-conversion-calculator/
+> # STP assumes 24.45 = (25°C and 1 atm)
+> # 1 ug/L Toluene -> 0.26539 ppmv
+> convert_units("ug/L","ppmv",
++                 chem.name="toluene",
++                 state="gas")
 [1] 0.2655
 > #
-> # 1 pppmv Toluene, 0.0038 mg/L
-> convert_units("ppmv","mg/L",chem.name="toluene")
+> # 1 ppmv Toluene -> 0.0038 mg/L
+> convert_units("ppmv","mg/L",
++               chem.name="toluene",
++               state="gas")
 [1] 0.003766
+> # 1 ug/L Styrene ->  0.23478 ppmv
+> convert_units("ug/L","ppmv",
++                 chem.name="styrene",
++                 state="gas")
+[1] 0.2348
+>                 
+> # Test that convert_solve_x doesn't throw any errors:
+> head(solve_gas_pbtk(chem.name="bisphenol a",
++                     times=c(0,0.1,0.05),
++                     output.units=setNames("mg/m3","Cendexhppmv")))
+            output.unit conversion.factor
+Cendexhppmv       mg/m3             9.332
+AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
+The model outputs are provided in the following units:
+	uM: Cgut, Cliver, Cven, Clung, Cart, Crest, Ckidney, Cplasma, Cmuc
+	ppmv: Calvppmv, Cmixexhppmv
+	mg/m3: Cendexhppmv
+	umol: Atubules, Ametabolized
+	uM*days: AUC
+
+     time   Cgut Cliver    Cven  Clung    Cart  Crest Ckidney Cplasma Calvppmv
+[1,] 0.00 0.0000 0.0000 0.00000 0.0000 0.00000 0.0000   0.000 0.00000        0
+[2,] 0.05 0.5881 0.1674 0.01696 0.2847 0.03926 0.1007   0.941 0.02133        0
+[3,] 0.10 0.7285 0.2085 0.02505 0.3882 0.04737 0.1958   1.142 0.03152        0
+     Cendexhppmv Cmixexhppmv Cmuc Atubules Ametabolized       AUC
+[1,]   0.000e+00     0.01227    0 0.000000        0.000 0.0000000
+[2,]   9.890e-07     0.01227 1866 0.009153        2.026 0.0006988
+[3,]   1.975e-06     0.01227 3733 0.021120        5.476 0.0020270
+Warning messages:
+1: In solve_gas_pbtk(chem.name = "bisphenol a", times = c(0, 0.1, 0.05),  :
+  Henry's constant, as a measure of volatility, is smaller for the
+    queried chemical than for glycerol, a chemical generally considered
+    nonvolatile. Please proceed after having considered whether the inhalation
+    exposure route is nonetheless relevant.
+2: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Clint is provided as a distribution.
+3: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
+  Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
+4: In parameterize_gas_pbtk(chem.cas = "80-05-7", chem.name = "bisphenol a",  :
+  Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
+5: In parameterize_gas_pbtk(chem.cas = "80-05-7", chem.name = "bisphenol a",  :
+  Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.
+6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+  Default value of 1.6 used for Caco2 permeability.
 > 
+> # Quit without saving or displaying messages:
+> quit("no")

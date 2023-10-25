@@ -25,6 +25,7 @@ parameterize_gas_pbtk(
   VD = 0.15,
   suppress.messages = FALSE,
   minimum.Funbound.plasma = 1e-04,
+  Caco2.options = NULL,
   ...
 )
 }
@@ -89,6 +90,14 @@ simulating the state of exercise}
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 
+\item{Caco2.options}{A list of options to use when working with Caco2 apical to
+basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
+
 \item{...}{Other parameters}
 }
 \value{
@@ -97,7 +106,7 @@ dataset).}
 \item{Clint.dist}{Distribution of hepatic intrinsic clearance values
 (median, lower 95th, upper 95th, p value)} 
 \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
-\item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
+\item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of the
 dose that enters the gut lumen.}
 \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
 assay using the method of Kilford et al. (2008)} 
@@ -150,11 +159,7 @@ blood to the concentration in the plasma from available_rblood2plasma.}
 \item{vmax}{Michaelis-Menten maximum reaction velocity (1/min)}
 \item{Vmucc}{Unscaled mucosal volume (L/kg BW^0.75}
 \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
-\item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} 
-\item{pKa_Donor}{Ionization equilibria (if any) for hydrogen donation (acids).} 
-\item{pKa_Accept}{Ionization equilibria (if any) for hydrogen acceptance (bases).} 
-\item{Pow}{Octanol:Water equilibrium partition coefficient (hydrophobicity)}
-\item{MA}{Membrane affinity -- physopholipid bi-layer partition coefficient}
+\item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
 }
 \description{
 This function initializes the parameters needed for the model 'gas_pbtk', for
@@ -163,9 +168,6 @@ parameters are generated. These include tissue:plasma partition coefficients
 via Schmitt (2008)'s method as modified by Pearce et al. (2017). Organ volumes 
 and flows are retrieved from table \code{\link{physiology.data}}). This model
 was first described by Linakis et al. (2020).
-The rate of oral absorption used
-is 2.2 L/h, the median rate observed across 44 chemicals by 
-\href{https://doi.org/10.1093/toxsci/kfy020}{Wambaugh et al. (2018)}.
 }
 \examples{
 parameters <- parameterize_gas_pbtk(chem.cas='129-00-0')
@@ -184,21 +186,13 @@ parameterize_gas_pbtk(chem.name="Bisphenol a",species="Rat",default.to.human=TRU
 
 }
 \references{
-Linakis, Matthew W., et al. "Development and evaluation of a high throughput 
-inhalation model for organic chemicals." Journal of exposure science & 
-environmental epidemiology 30.5 (2020): 866-877.
+\insertRef{linakis2020development}{httk}
 
-Schmitt, Walter. "General approach for the calculation of tissue 
-to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+\insertRef{schmitt2008general}{httk}
 
-Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-predictions of chemical distribution to tissues." Journal of pharmacokinetics 
-and pharmacodynamics 44.6 (2017): 549-565.
+\insertRef{pearce2017evaluation}{httk}
 
-Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
-(2008). Hepatocellular binding of drugs: correction for unbound fraction in
-hepatocyte incubations using microsomal binding or drug lipophilicity data.
-Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+\insertRef{kilford2008hepatocellular}{httk}
 }
 \seealso{
 \code{\link{solve_gas_pbtk}}

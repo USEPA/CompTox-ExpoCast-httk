@@ -47,13 +47,11 @@ httk_param <- httkpop_mc(httkpop.dt=indiv_examp,
 
 }
 \references{
-Ring, Caroline L., et al. "Identifying populations sensitive to
-environmental chemicals by simulating toxicokinetic variability."
-Environment International 106 (2017): 105-118
+\insertRef{ring2017identifying}{httk} 
 
-Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts
-in pharmacokinetics." Journal of Pharmacokinetics and Biopharmaceutics 1.2
-(1973): 123-136.
+\insertRef{breen2022simulating}{httk} 
+
+\insertRef{rowland1973clearance}{httk}
 }
 \author{
 Caroline Ring and John Wambaugh

@@ -22,7 +22,8 @@ parameterize_pbtk(
   minimum.Funbound.plasma = 1e-04,
   million.cells.per.gliver = 110,
   liver.density = 1.05,
-  kgutabs = 2.18
+  kgutabs = 2.18,
+  Caco2.options = NULL
 )
 }
 \arguments{
@@ -74,11 +75,19 @@ this value (default is 0.0001).}
 \item{liver.density}{Liver density (defaults to 1.05 g/mL from International Commission on Radiological Protection (1975))}
 
 \item{kgutabs}{Oral absorption rate from gut (defaults to 2.18 1/h from Wambaugh et al. (2018))}
+
+\item{Caco2.options}{A list of options to use when working with Caco2 apical to
+basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
 }
 \value{
 \item{BW}{Body Weight, kg.} 
 \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
-\item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of
+\item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of
 the dose that enters the gutlumen.} 
 \item{Funbound.plasma}{Fraction of plasma that is not bound.}
 \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
@@ -113,11 +122,7 @@ blood to the concentration in the plasma from available_rblood2plasma.}
 \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
 \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
-\item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.} 
-\item{pKa_Donor}{Ionization equilibria (if any) for hydrogen donation (acids).} 
-\item{pKa_Accept}{Ionization equilibria (if any) for hydrogen acceptance (bases).} 
-\item{Pow}{Octanol:Water equilibrium partition coefficient (hydrophobicity)}
-\item{MA}{Membrane affinity -- physopholipid bi-layer partition coefficient}
+\item{Vvenc}{Volume of the veins per kg body weight, L/kg BW.}
 }
 \description{
 Generate a chemical- and species-specific set of PBPK model parameters.
@@ -128,15 +133,31 @@ Tissure:(fraction unbound in) plasma partitition coefficients are predicted
 via Schmitt (2008)'s method as modified by Pearce et al. (2017) using
 \code{\link{predict_partitioning_schmitt}}. Organ volumes and flows are
 retrieved from table \code{\link{physiology.data}}.
-Tissues must be described in table \code{\link{tissue.data}}. 
-The rate of oral absorption used
-is 2.2 L/h, the median rate observed across 44 chemicals by 
-\href{https://doi.org/10.1093/toxsci/kfy020}{Wambaugh et al. (2018)}.
+Tissues must be described in table \code{\link{tissue.data}}.
 }
 \details{
 By default, this function initializes the parameters needed in the functions 
 \code{\link{solve_pbtk}}, \code{\link{calc_css}}, and others using the httk 
 default generic PBTK model (for oral and intravenous dosing only).
+
+The default PBTK model includes an explicit first pass of the chemical through
+the liver before it becomes available to systemic blood. We model systemic oral bioavailability as 
+\ifelse{html}{\out{F<sub>bio</sub>=F<sub>abs</sub>*F<sub>gut</sub>*F<sub>hep</sub>}}{\eqn{F_{bio}=F_{abs}*F_{gut}*F_{hep}}}.
+Only if \ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}}
+has been measured in vivo and is found in
+table \code{\link{chem.physical_and_invitro.data}} then we set 
+\ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{gut}}} 
+to the measured value divided by 
+\ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}} 
+where \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}}
+is estimated from in vitro TK data using 
+\code{\link{calc_hep_bioavailability}}.
+If Caco2 membrane permeability data or predictions
+are available \ifelse{html}{\out{F<sub>abs</sub>}}{\eqn{F_{abs}}} is estimated
+using \code{\link{calc_fabs.oral}}.
+Intrinsic hepatic metabolism is used to very roughly estimate
+\ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}
+using \code{\link{calc_fgut.oral}}.
 }
 \examples{
 
@@ -151,31 +172,16 @@ default generic PBTK model (for oral and intravenous dosing only).
                    tissuelist=compartments) 
 }
 \references{
-Pearce, Robert G., et al. "Httk: R package for high-throughput 
-toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+\insertRef{pearce2017httk}{httk}
 
-Schmitt, Walter. "General approach for the calculation of tissue 
-to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+\insertRef{schmitt2008general}{httk}
 
-Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-predictions of chemical distribution to tissues." Journal of pharmacokinetics 
-and pharmacodynamics 44.6 (2017): 549-565.
+\insertRef{pearce2017evaluation}{httk}
 
-Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
-(2008). Hepatocellular binding of drugs: correction for unbound fraction in
-hepatocyte incubations using microsomal binding or drug lipophilicity data.
-Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
-
-Carlile, David J., Katayoun Zomorodi, and J. Brian Houston. "Scaling factors 
-to relate drug metabolic clearance in hepatic microsomes, isolated 
-hepatocytes, and the intact liver: studies with induced livers involving 
-diazepam." Drug metabolism and disposition 25.8 (1997): 903-911.
+\insertRef{kilford2008hepatocellular}{httk}
 
 International Commission on Radiological Protection. Report of the task 
 group on reference man. Vol. 23. Pergamon, Oxford. 1975.
-
-Wambaugh, John F., et al. "Evaluating in vitro-in vivo extrapolation of 
-toxicokinetics." Toxicological Sciences 163.1 (2018): 152-169.
 }
 \seealso{
 \code{\link{solve_pbtk}}

@@ -17,7 +17,8 @@ parameterize_1comp(
   well.stirred.correction = TRUE,
   suppress.messages = FALSE,
   clint.pvalue.threshold = 0.05,
-  minimum.Funbound.plasma = 1e-04
+  minimum.Funbound.plasma = 1e-04,
+  Caco2.options = list()
 )
 }
 \arguments{
@@ -36,15 +37,10 @@ default "Human").}
 \item{default.to.human}{Substitutes missing rat values with human values if
 true.}
 
-\item{adjusted.Funbound.plasma}{Uses 
-\href{https://doi.org/10.1007/s10928-017-9548-7}{Pearce et al. (2017)} 
-lipid binding adjustment
-for Funbound.plasma (which impacts volume of distribution) when set to TRUE 
-(Default).}
+\item{adjusted.Funbound.plasma}{Uses Pearce et al. (2017) lipid binding adjustment
+for Funbound.plasma (which impacts volume of distribution) when set to TRUE (Default).}
 
-\item{adjusted.Clint}{Uses 
-\href{https://doi.org/10.1124/dmd.108.020834}{Kilford et al. (2008)} 
-hepatocyte incubation
+\item{adjusted.Clint}{Uses Kilford et al. (2008) hepatocyte incubation
 binding adjustment for Clint when set to TRUE (Default).}
 
 \item{regression}{Whether or not to use the regressions in calculating
@@ -68,11 +64,21 @@ set to zero.}
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
+
+\item{Caco2.options}{A list of options to use when working with Caco2 apical to
+basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
 }
 \value{
 \item{Vdist}{Volume of distribution, units of L/kg BW.}
-\item{plasma.vol}{Volume of the plasma, L/kg BW.}
-\item{Fgutabs}{Fraction of the oral dose absorbed, that is, the fraction of the
+\item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, i.e. the 
+fraction of the dose that enters the gutlumen.} \item{kelim}{Elimination rate, units of
+1/h.} \item{hematocrit}{Percent volume of red blood cells in the blood.}
+\item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of the
 dose that enters the gutlumen.} 
 \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte 
 assay using the method of Kilford et al. (2008)} 
@@ -86,36 +92,13 @@ blood to the concentration in the plasma. Not used in calculations but
 included for the conversion of plasma outputs.} 
 \item{hepatic.bioavailability}{Fraction of dose remaining after
 first pass clearance, calculated from the corrected well-stirred model.}
-\item{BW}{Body Weight, kg.} 
-\item{pKa_Donor}{Ionization equilibria (if any) for hydrogen donation (acids).} 
-\item{pKa_Accept}{Ionization equilibria (if any) for hydrogen acceptance (bases).} 
-\item{Pow}{Octanol:Water equilibrium partition coefficient (hydrophobicity)}
-\item{MA}{Membrane affinity -- physopholipid bi-layer partition coefficient}
+\item{BW}{Body Weight, kg.}
 }
 \description{
 This function initializes the parameters needed in the function solve_1comp.
-The toxiokinetic model is of the form of an
-empirical, single compartment in which all tissues are well mixed. 
-The route of exposure can be oral or intravenous. 
-For oral exposures a hepatic extraction factor (first-pass 
-metabolism) is estimated using
-chemical-specific \emph{in vitro}-measured intrinsic hepatic 
-clearance and fraction
-unbound in plasma.
-The rate of oral absorption used
-is 2.2 L/h, the median rate observed across 44 chemicals by 
-\href{https://doi.org/10.1093/toxsci/kfy020}{Wambaugh et al. (2018)}.
-There is a single, unspecified route of elimination (clearance). 
-Clearance of the chemical from the blood is estimated from 
-\emph{in vitro}-measured chemical-specific parameters as described by
-\href{https://doi.org/10.1080/17425255.2021.1935867}{Breen et al. (2021)}.  
-Volume of distribution is estimated from \emph{in vitro}-measured 
-chemical-specific plasma protein binding and physico-chemical parameters
-using a modified 
-\href{https://doi.org/10.1016/j.tiv.2007.09.010}{Schmitt (2008)} method
-to predict tissue-specific particition coefficients 
-(\href{https://doi.org/10.1007/s10928-017-9548-7}{Pearce et al. (2017)}) and 
-then lumping the tissues into a single compartment weighted by tissue volume:
+Volume of distribution is estimated by using a modified Schmitt (2008) method
+to predict tissue particition coefficients (Pearce et al., 2017) and then
+lumping the compartments weighted by tissue volume:
 }
 \details{
 \if{latex}{
@@ -139,20 +122,13 @@ for tissue i.
 
 }
 \references{
-Pearce, Robert G., et al. "Httk: R package for high-throughput 
-toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+\insertRef{pearce2017httk}{httk}
 
-Schmitt, Walter. "General approach for the calculation of tissue 
-to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+\insertRef{schmitt2008general}{httk}
 
-Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-predictions of chemical distribution to tissues." Journal of pharmacokinetics 
-and pharmacodynamics 44.6 (2017): 549-565.
+\insertRef{pearce2017evaluation}{httk}
 
-Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
-(2008). Hepatocellular binding of drugs: correction for unbound fraction in
-hepatocyte incubations using microsomal binding or drug lipophilicity data.
-Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+\insertRef{kilford2008hepatocellular}{httk}
 }
 \seealso{
 \code{\link{solve_1comp}}

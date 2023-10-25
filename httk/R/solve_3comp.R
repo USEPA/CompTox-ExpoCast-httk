@@ -60,6 +60,8 @@
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
 #' hematocrit, Funbound.plasma, and Krbc2pu.
+#' @param clint.pvalue.threshold Hepatic clearances with clearance assays
+#' having p-values greater than the threshold are set to zero.
 #' @param recalc.clearance Recalculates the the hepatic clearance
 #' (Clmetabolism) with new million.cells.per.gliver parameter.
 #' @param dosing.matrix Vector of dosing times or a matrix consisting of two
@@ -85,8 +87,8 @@
 #'
 #' @author John Wambaugh and Robert Pearce
 #'
-#' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
-#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#' @references 
+#' \insertRef{pearce2017httk}{httk}
 #'
 #' @keywords Solve 3compartment
 #'
@@ -147,6 +149,7 @@ solve_3comp <- function(chem.name = NULL,
                     default.to.human=FALSE,
                     recalc.blood2plasma=FALSE,
                     recalc.clearance=FALSE,
+                    clint.pvalue.threshold=0.05,
                     dosing.matrix=NULL,
                     adjusted.Funbound.plasma=TRUE,
                     regression=TRUE,
@@ -186,6 +189,12 @@ solve_3comp <- function(chem.name = NULL,
     regression=regression,
     restrictive.clearance = restrictive.clearance,
     minimum.Funbound.plasma=minimum.Funbound.plasma,
+    parameterize.arg.list=list(
+                      default.to.human=default.to.human,
+                      clint.pvalue.threshold=clint.pvalue.threshold,
+                      restrictive.clearance = restrictive.clearance,
+                      regression=regression,
+                      Caco2.options=Caco2.options),
     ...)
   
   out <- cbind(out,out[,"Csyscomp"])
