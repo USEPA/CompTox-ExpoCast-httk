@@ -54,6 +54,8 @@ library(ggplot2)
 library(httk)
 library(grid)
 library(scales)
+library(viridis)
+library(ggpubr)
 ```
 
 ### Function to format scientific notation 
@@ -72,6 +74,92 @@ scientific_10 <- function(x) {
 ```{r removeoldhttk}
 chem.physical_and_invitro.data$Rat.Clint <- NA
 chem.physical_and_invitro.data$Rat.Funbound.plasma <- NA
+```
+
+```{r plot_clint_fup}
+new.pfas <- get_2023pfasinfo(info="dtxsid",
+                                      model="3compartmentss2",
+                                      suppress.messages=TRUE)
+clint.fup <- subset(chem.physical_and_invitro.data,
+                    !is.na(Human.Funbound.plasma) &
+                    !is.na(Human.Clint) &
+                    (regexpr("PFAS",Chemical.Class)==-1 |
+                    DTXSID %in% new.pfas))
+clint.fup$Human.Clint <- sapply(clint.fup$Human.Clint, 
+                                function(x) as.numeric(strsplit(x,",")[[1]][1]))
+clint.fup$Human.Funbound.plasma <- sapply(clint.fup$Human.Funbound.plasma, 
+                                function(x) as.numeric(strsplit(x,",")[[1]][1]))
+clint.fup[clint.fup$Chemical.Class=="","Chemical.Class"] <- "Non-PFAS"
+clint.fup[clint.fup$Chemical.Class=="PFAS","Chemical.Class"] <- "Newly Measured PFAS"
+
+
+fig.clint.fup  <- ggplot(data=clint.fup) +
+  geom_point(aes(
+    x=Human.Funbound.plasma,
+    y=Human.Clint,
+    colour=Chemical.Class,
+    shape=Chemical.Class),
+    size=POINT.SIZE) +
+  ylab("In Vitro Measured Clint (uL/min/106 hepatocytes)") + 
+  xlab("In Vitro Measured Fup") +
+  scale_x_log10(label=scientific_10)+
+  scale_y_log10(label=scientific_10)+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))+
+        scale_color_viridis(discrete=2)
+
+print(fig.clint.fup)
+
+fig.fup.hist <- ggplot(data=clint.fup) +
+  geom_histogram(aes(
+    x=Human.Funbound.plasma,
+    colour=Chemical.Class,
+    fill=Chemical.Class)) +
+  xlab("In Vitro Measured Fup") +
+  scale_x_log10(label=scientific_10)+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))+
+        scale_fill_viridis(discrete=2)+
+        scale_color_viridis(discrete=2)
+
+print(fig.fup.hist)
+
+fig.clint.hist <- ggplot(data=clint.fup) +
+  geom_histogram(aes(
+    x=Human.Clint+10^-5,
+    colour=Chemical.Class,
+    fill=Chemical.Class)) +
+  xlab("In Vitro Measured Clint (uL/min/106 hepatocytes)") +
+  scale_x_log10(label=scientific_10)+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))+
+        scale_fill_viridis(discrete=2)+
+        scale_color_viridis(discrete=2)+
+  coord_flip()
+
+print(fig.clint.hist)
+
+fig.henry.hist <- ggplot(data=clint.fup) +
+  geom_histogram(aes(
+    x=10^logHenry,
+    colour=Chemical.Class,
+    fill=Chemical.Class)) +
+  xlab("Henry's Law Constant") +
+  scale_x_log10(label=scientific_10)+
+  geom_vline(xintercept =10^-4.5,linetype="dashed",color="blue")+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))+
+        scale_fill_viridis(discrete=2)+
+        scale_color_viridis(discrete=2)
+
+print(fig.henry.hist)
+```
+
+```{r multipanelrefchemdatafigureforpaper}
+ggarrange(fig.clint.fup, fig.clint.hist, fig.fup.hist, fig.henry.hist, 
+          labels = c("A", "B", "C", "D"),
+          ncol = 2, nrow = 2,
+          common.legend = TRUE, legend = "bottom")
 ```
 
 ## Compare against in vivo clearance data:
