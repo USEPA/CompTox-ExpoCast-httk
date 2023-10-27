@@ -56,6 +56,15 @@ library(grid)
 library(scales)
 library(viridis)
 library(ggpubr)
+library(readxl)
+
+LOC.WD <- "c:/users/jwambaug/"
+```
+
+Set the sizes of the labels and points in the figure (these settings impact the PNG differently than the figure within RStudio):
+```{r fig_properties, eval = TRUE}
+FONT.SIZE <- 18
+POINT.SIZE <- 3
 ```
 
 ### Function to format scientific notation 
@@ -91,8 +100,9 @@ clint.fup$Human.Funbound.plasma <- sapply(clint.fup$Human.Funbound.plasma,
                                 function(x) as.numeric(strsplit(x,",")[[1]][1]))
 clint.fup[clint.fup$Chemical.Class=="","Chemical.Class"] <- "Non-PFAS"
 clint.fup[clint.fup$Chemical.Class=="PFAS","Chemical.Class"] <- "Newly Measured PFAS"
+```
 
-
+```{r clint.fup.figures}
 fig.clint.fup  <- ggplot(data=clint.fup) +
   geom_point(aes(
     x=Human.Funbound.plasma,
@@ -100,8 +110,8 @@ fig.clint.fup  <- ggplot(data=clint.fup) +
     colour=Chemical.Class,
     shape=Chemical.Class),
     size=POINT.SIZE) +
-  ylab("In Vitro Measured Clint (uL/min/106 hepatocytes)") + 
-  xlab("In Vitro Measured Fup") +
+  ylab(expression(italic("In Vitro")~"Measured Cl"[int]~"("*mu*"L/min/10"^'6'~"hepatocytes)")) +
+  xlab(expression(italic("In Vitro")~"Measured f"[up])) +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
   theme_bw()  +
@@ -115,7 +125,7 @@ fig.fup.hist <- ggplot(data=clint.fup) +
     x=Human.Funbound.plasma,
     colour=Chemical.Class,
     fill=Chemical.Class)) +
-  xlab("In Vitro Measured Fup") +
+  xlab(expression(italic("In Vitro")~"Measured f"[up])) +
   scale_x_log10(label=scientific_10)+
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE))+
@@ -129,7 +139,7 @@ fig.clint.hist <- ggplot(data=clint.fup) +
     x=Human.Clint+10^-5,
     colour=Chemical.Class,
     fill=Chemical.Class)) +
-  xlab("In Vitro Measured Clint (uL/min/106 hepatocytes)") +
+  xlab(expression(italic("In Vitro")~"Measured Cl"[int]~"("*mu*"L/min/10"^'6'~"hepatocytes)")) +
   scale_x_log10(label=scientific_10)+
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE))+
@@ -144,7 +154,7 @@ fig.henry.hist <- ggplot(data=clint.fup) +
     x=10^logHenry,
     colour=Chemical.Class,
     fill=Chemical.Class)) +
-  xlab("Henry's Law Constant") +
+  xlab(expression("Henry's Law Constant (Atm.-m"^"3"*"/mole)")) +
   scale_x_log10(label=scientific_10)+
   geom_vline(xintercept =10^-4.5,linetype="dashed",color="blue")+
   theme_bw()  +
@@ -155,11 +165,18 @@ fig.henry.hist <- ggplot(data=clint.fup) +
 print(fig.henry.hist)
 ```
 
-```{r multipanelrefchemdatafigureforpaper}
+```{r multipanelnewclintfupdata}
 ggarrange(fig.clint.fup, fig.clint.hist, fig.fup.hist, fig.henry.hist, 
           labels = c("A", "B", "C", "D"),
           ncol = 2, nrow = 2,
           common.legend = TRUE, legend = "bottom")
+tiff(file = paste0(LOC.WD,"Fig_NewClintFup.tiff"),
+         height = 5*200, width = 5*200, compression = "lzw")
+ggarrange(fig.clint.fup, fig.clint.hist, fig.fup.hist, fig.henry.hist, 
+          labels = c("A", "B", "C", "D"),
+          ncol = 2, nrow = 2,
+          common.legend = TRUE, legend = "bottom")
+dev.off()
 ```
 
 ## Compare against in vivo clearance data:
@@ -214,11 +231,6 @@ for (this.chem in unique(cl.table$DTXSID))
       }
     }
   }
-```
-Set the sizes of the labels and points in the figure (these settings impact the PNG differently than the figure within RStudio):
-```{r fig_properties, eval = TRUE}
-FONT.SIZE <- 18
-POINT.SIZE <- 3
 ```
 
 ```{r fig_clhttk, eval = TRUE}
@@ -290,6 +302,8 @@ ylab("HTTK Clearance (L/h/kg bw)") +
 print(fig.clspecies.httk)
 ```
 
+
+
 ```{r invivoeval2, eval=TRUE}
 for (this.chem in unique(cl.table$DTXSID))
   {
@@ -328,6 +342,115 @@ fig.clml.invivo  <- ggplot(data=cl.table) +
   theme( text  = element_text(size=FONT.SIZE))
 
 print(fig.clml.invivo)
+```
+
+```{r multipanelrefchemdatafigureforpaper}
+ggarrange(fig.clhttk.invivo, fig.clml.invivo, 
+          labels = c("A", "B"),
+          ncol = 1, nrow = 2,
+          common.legend = TRUE, legend = "bottom")
+tiff(file = paste0(LOC.WD,"Fig_PFASClearanceEval.tiff"),
+         height = 5*200, width = 3*200, compression = "lzw")
+ggarrange(fig.clhttk.invivo, fig.clml.invivo, 
+          labels = c("A", "B"),
+          ncol = 1, nrow = 2,
+          common.legend = TRUE, legend = "top")
+dev.off()
+```
+```{r invivo_interspecies_eval_scaling, eval=TRUE}
+cl.table <- as.data.frame(cl.table)
+for (this.sex in c("Female","Male"))
+{
+  human.data <- subset(cl.table, Species=="Human" &
+                            Sex==this.sex)
+  for (this.species in unique(cl.table$Species))
+  if (this.species != "Human")
+  {
+    species.data <- subset(cl.table, Species==this.species &
+                                     Sex==this.sex)
+    for (this.chem in union(human.data$DTXSID, species.data$DTXSID))
+    {
+      cl.table.index <- cl.table$Sex==this.sex &
+               cl.table$Species==this.species &
+               cl.table$DTXSID==this.chem
+      human.table.index <- human.data$Sex==this.sex &
+               human.data$DTXSID==this.chem
+      species.table.index <- species.data$Sex==this.sex &
+               species.data$DTXSID==this.chem
+      if (any(human.table.index) & any(species.table.index))
+      {
+        cl.table[cl.table.index, "TK.Ratio.InVivo"] <- 
+        species.data[species.table.index, "ClLphpkgbw"] /
+        human.data[human.table.index, "ClLphpkgbw"] 
+        
+        cl.table[cl.table.index, "TK.Ratio.HTTK"] <- 
+        species.data[species.table.index, "HTTK.Cltot.Lphpkgbw"] /
+        human.data[human.table.index, "HTTK.Cltot.Lphpkgbw"] 
+        
+        cl.table[cl.table.index, "TK.Ratio.ML"] <- 
+        species.data[species.table.index, "MachineLearning.Cltot.Lphpkgbw"] /
+        human.data[human.table.index, "MachineLearning.Cltot.Lphpkgbw"]
+      }
+    }
+  }
+}  
+```
+
+```{r fig_ratio_httk, eval = TRUE}
+fig.ratio.httk  <- ggplot(data=subset(cl.table, Species!="Human")) +
+  geom_point(aes(
+    x=TK.Ratio.HTTK,
+    y=TK.Ratio.InVivo,
+    color=Species,
+    shape=Sex),
+    size=POINT.SIZE) +
+  geom_abline(slope=1,intercept=0,linetype="dashed")+
+#  geom_line(aes(x=logP,y=logPfit1),color="black") + 
+#  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
+  ylab("In Vivo Observed Clearance Ratio") + 
+  xlab("HTTK Predicted Clearance Ratio") +
+  scale_x_log10(label=scientific_10)+
+  scale_y_log10(label=scientific_10)+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))
+
+print(fig.ratio.httk)
+```
+
+```{r fig_ratio_ml, eval = TRUE}
+fig.ratio.ml  <- ggplot(data=subset(cl.table, Species!="Human")) +
+  geom_point(aes(
+    x=TK.Ratio.ML,
+    y=TK.Ratio.InVivo,
+    color=Species,
+    shape=Sex),
+    size=POINT.SIZE) +
+  geom_abline(slope=1,intercept=0,linetype="dashed")+
+#  geom_line(aes(x=logP,y=logPfit1),color="black") + 
+#  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
+  ylab("In Vivo Observed Clearance Ratio") + 
+  xlab("Machine Learning Predicted Clearance Ratio") +
+  scale_x_log10(label=scientific_10)+
+  scale_y_log10(label=scientific_10)+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))
+
+print(fig.ratio.ml)
+```
+
+
+```{r multipanelrefchemdatafigureforpaper}
+ggarrange(fig.ratio.httk, fig.ratio.ml, 
+          labels = c("A", "B"),
+          ncol = 2, nrow = 1,
+          common.legend = TRUE, legend = "bottom")
+tiff(file = paste0(LOC.WD,"Fig_PFASRatioEval.tiff"),
+         height = 3*200, width = 5*200, compression = "lzw")
+ggarrange(fig.ratio.httk, fig.ratio.ml, 
+          labels = c("A", "B"),
+          ncol = 2, nrow = 1,
+          common.legend = TRUE, legend = "top")
+dev.off()
 ```
 
 ```{r firstpass, eval=TRUE}
@@ -434,4 +557,85 @@ fig.logma  <- ggplot(data=logma.table) +
   theme( text  = element_text(size=FONT.SIZE))
 
 print(fig.logma)
+```
+
+```{r rat_human_scaling}
+half.lives <- NULL
+for (this.chem in new.pfas)
+{
+  new.row <- data.frame(DTXSID=this.chem,
+                        Human.HL=calc_half_life(dtxsid=this.chem,species="human"),
+                        Rat.HL=calc_half_life(dtxsid=this.chem,species="rat",
+                                              default.to.human=TRUE))
+  new.row$Type <- "HTTK"
+  half.lives <- rbind(half.lives, new.row)
+  param.human <- try(parameterize_pfas1comp(dtxsid=this.chem,
+                                  species="human",
+                                  suppress.messages=TRUE))
+  param.rat <- try(parameterize_pfas1comp(dtxsid=this.chem,
+                                  species="rat",
+                                  suppress.messages=TRUE))
+  if ("kelim" %in% names(param.human) &
+      "kelim" %in% names(param.rat))
+    new.row <- data.frame(DTXSID=this.chem,
+                        Human.HL=log(2)/param.human$kelim,
+                        Rat.HL=log(2)/param.rat$kelim)
+  new.row$Type <- "ML"
+  half.lives <- rbind(half.lives, new.row)
+}
+half.lives$Ratio <- half.lives$Human.HL / half.lives$Rat.HL
+```
+
+```{r half_life_fig}
+fig.species.scaling <- ggplot(data=half.lives) +
+  geom_histogram(aes(
+    x=Ratio,
+    colour=Type,
+    fill=Type),
+    bins=10) +
+  xlab("Human:Rat PK Half-Life Ratio") +
+  scale_x_log10(label=scientific_10)+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))+
+        scale_fill_viridis(discrete=2)+
+        scale_color_viridis(discrete=2)
+
+print(fig.species.scaling)
+```
+
+```{r wallis_2023_halflives}
+LOC.WD <- "c:/users/jwambaug/"
+wallis <- as.data.frame(read_excel(paste0(LOC.WD,"Wallis-2023-PFASHL.xlsx")))
+wallis$HL.Low <- sapply(wallis[,4],function(x) as.numeric(strsplit(x,", ")[[1]][1]))
+wallis$HL.High <- sapply(wallis[,4],function(x) as.numeric(strsplit(x,", ")[[1]][2]))
+for (this.chem in wallis$DTXSID)
+{
+  param.human <- try(parameterize_pfas1comp(dtxsid=this.chem,
+                                  species="human",
+                                  suppress.messages=TRUE,
+                                  restrict.doa="none"))
+  if ("kelim" %in% names(param.human))
+    wallis[wallis$DTXSID == this.chem, "HL.ML"] <- log(2)/param.human$kelim/24
+}
+```
+```{r wallis_2023_fig}
+wallis.fig <- ggplot(data=wallis) +
+  geom_segment(aes(
+    x=HL.ML,
+    xend=HL.ML,
+    y=HL.Low,
+    yend=HL.High,
+    colour=Status),
+    position = "jitter",
+    linewidth=2) +
+    geom_abline(slope=1,intercept=0,linetype="dashed")+
+  xlab("Machine Learning Half-Life Prediction") +
+  ylab("Wallis et al. (2023) Estimate") +
+  scale_x_log10(label=scientific_10)+
+  scale_y_log10(label=scientific_10)+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))+
+        scale_color_viridis(discrete=2)
+
+print(wallis.fig)
 ```
