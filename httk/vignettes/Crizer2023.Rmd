@@ -191,25 +191,12 @@ for (this.chem in unique(cl.table$DTXSID))
     chem.subset <- subset(cl.table, DTXSID==this.chem)
     for (this.species in unique(cl.table$Species))
     {
-      params <- parameterize_steadystate2(dtxsid=this.chem,
-                                          species=this.species,
-                                          default.to.human=TRUE,
-                                          suppress.messages=TRUE)
-      params2 <- parameterize_schmitt(dtxsid=this.chem,
-                                          species=this.species,
-                                          default.to.human=TRUE,
-                                          suppress.messages=TRUE)
-      ion <- calc_ionization(
-        pH=7.4,
-        pKa_Donor=params2[["pKa_Donor"]],
-        pKa_Accept=params2[["pKa_Accept"]])
-      fraction_neutral <- ion$fraction_neutral
-      if (fraction_neutral < 0.5) params[['Rblood2plasma']] <- 0.5
-      else params[['Rblood2plasma']] <- 20
       # Css in units of mg/L for 1 mg/kg/day
-      out <- calc_analytic_css(parameters=params,
+      out <- calc_analytic_css(dtxsid=this.chem,
+                               species=this.species,
                                model="3compartmentss2",
                                output.units="mg/L",
+                               parameterize.args=list(default.to.human=TRUE),
                                suppress.messages=TRUE)
       if (any(cl.table$DTXSID==this.chem &
                cl.table$Species==this.species))
@@ -357,6 +344,7 @@ ggarrange(fig.clhttk.invivo, fig.clml.invivo,
           common.legend = TRUE, legend = "top")
 dev.off()
 ```
+
 ```{r invivo_interspecies_eval_scaling, eval=TRUE}
 cl.table <- as.data.frame(cl.table)
 for (this.sex in c("Female","Male"))
@@ -396,13 +384,56 @@ for (this.sex in c("Female","Male"))
 }  
 ```
 
+```{r cl_lit_Data}
+huh.data <- as.data.frame(read_excel(paste0(LOC.WD,"Huh-2011-HumanCL.xlsx")))
+huh.data$Human.CL.Lphpkg <- as.numeric(huh.data[,4])*60/1000
+huh.data$Rat.CL.Lphpkg <- as.numeric(huh.data$a)*(0.25)^as.numeric(huh.data$b)*60/1000
+
+httk.chem.list <- get_cheminfo(model="3compartmentss2", info="DTXSID")
+for (this.chem in huh.data[,"DTXSID"])
+  if (!is.na(this.chem))
+  {
+  this.row <- which(huh.data[,"DTXSID"]==this.chem)
+  new.row <- cl.table[1,]
+  new.row[1,] <- NA
+  new.row[1, "DTXSID"] <- huh.data[this.row, "DTXSID"]
+  new.row[1, "Species"] <- "Rat"
+  new.row[1, "Sex"] <- "Female"
+  new.row[1, "ClLphpkgbw"] <- huh.data[this.row, "Human.CL.Lphpkg"]
+
+  new.row[1, "TK.Ratio.InVivo"] <- huh.data[this.row, "Rat.CL.Lphpkg"] /
+    huh.data[this.row, "Human.CL.Lphpkg"]
+  if (this.chem %in% httk.chem.list)
+  {
+    print(this.chem)
+    human.css <- calc_analytic_css(dtxsid = this.chem,
+                               model="3compartmentss2",
+                               output.units="mg/L",
+                               species="Human",
+                               suppress.messages=TRUE)
+    new.row[1, "HTTK.Cltot.Lphpkgbw"] <-
+        1/human.css/24
+    rat.css <- calc_analytic_css(dtxsid = this.chem,
+                               model="3compartmentss2",
+                               output.units="mg/L",
+                               species="Rat",
+                               parameterize.args=list(default.to.human=TRUE),
+                               suppress.messages=TRUE)
+    new.row[1, "TK.Ratio.HTTK"] <-human.css/rat.css
+    cl.table <- rbind(cl.table,new.row)
+  }
+  }
+cl.table$Class <- "PFAS"
+cl.table[!(cl.table$DTXSID %in% new.pfas), "Class"] <- "Other"
+```
+
 ```{r fig_ratio_httk, eval = TRUE}
-fig.ratio.httk  <- ggplot(data=subset(cl.table, Species!="Human")) +
+fig.ratio.httk  <- ggplot(data=subset(cl.table, Species=="Rat")) +
   geom_point(aes(
     x=TK.Ratio.HTTK,
     y=TK.Ratio.InVivo,
-    color=Species,
-    shape=Sex),
+    color=Class,
+    shape=Class),
     size=POINT.SIZE) +
   geom_abline(slope=1,intercept=0,linetype="dashed")+
 #  geom_line(aes(x=logP,y=logPfit1),color="black") + 
@@ -412,9 +443,13 @@ fig.ratio.httk  <- ggplot(data=subset(cl.table, Species!="Human")) +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
   theme_bw()  +
-  theme( text  = element_text(size=FONT.SIZE))
+  theme( text  = element_text(size=FONT.SIZE)) +
+  scale_color_viridis(discrete=2)
 
 print(fig.ratio.httk)
+  ggsave(paste0(LOC.WD,
+    "Fig_rat_cl_ratio.tiff"),
+         height =8, width =8, dpi = 600, compression = "lzw")
 ```
 
 ```{r fig_ratio_ml, eval = TRUE}
@@ -436,6 +471,9 @@ fig.ratio.ml  <- ggplot(data=subset(cl.table, Species!="Human")) +
   theme( text  = element_text(size=FONT.SIZE))
 
 print(fig.ratio.ml)
+  ggsave(paste0(LOC.WD,
+    "Fig_ml_cl_ratio.tiff"),
+         height = 8, width = 8, dpi = 600, compression = "lzw")
 ```
 
 
@@ -618,6 +656,7 @@ for (this.chem in wallis$DTXSID)
     wallis[wallis$DTXSID == this.chem, "HL.ML"] <- log(2)/param.human$kelim/24
 }
 ```
+
 ```{r wallis_2023_fig}
 wallis.fig <- ggplot(data=wallis) +
   geom_segment(aes(
