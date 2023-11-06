@@ -18,6 +18,7 @@ This version accompanies the submission of manuscript Honda et al. ?Impact of Gu
 * Updated the checks and reported error messages in 'get_clint' and 'get_invtroPK_param' to be more informative
 * Corrected calculation of mean blood:plasma partition coefficient when measured RBlood2plasma is avaialble
 * Clint and fup are now adjusted for in ivtro binding when invitrouv=FALSE (thanks cm16120)
+* Corrected an insidious bug in get_physchem_param that sometimes reordered the paramters when multiple parameters were specified
 
 ## New Features
 * Added in vitro measured Caco-2 membrane permeability data for 310 chemicals allowing characterization of oral bioavailability
