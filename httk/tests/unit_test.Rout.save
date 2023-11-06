@@ -91,7 +91,7 @@ Warning messages:
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
 5: In parameterize_gas_pbtk(chem.cas = "80-05-7", chem.name = "bisphenol a",  :
   Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.
-6: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > 
 > # Quit without saving or displaying messages:
