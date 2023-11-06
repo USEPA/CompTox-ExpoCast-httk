@@ -36,7 +36,7 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 4: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-5: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+5: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > calc_analytic_css(chem.cas="80-05-7",model="3compartmentss")
 Plasma concentration returned in uM units.
@@ -50,7 +50,7 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 4: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-5: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+5: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > calc_analytic_css(parameters=parameterize_steadystate(chem.cas="80-05-7"),model="3compartmentss")
 Plasma concentration returned in uM units.
@@ -64,7 +64,7 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 4: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-5: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+5: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > 
 > quit("no")

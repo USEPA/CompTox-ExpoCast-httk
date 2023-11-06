@@ -29,13 +29,13 @@ Type 'q()' to quit R.
 > calc_css(chem.name='nicotine', model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 $avg
-[1] 0.5648
+[1] 0.5756
 
 $frac
 [1] 0.7682
 
 $max
-[1] 1.35
+[1] 1.376
 
 $the.day
 [1] 0
@@ -50,13 +50,13 @@ Warning messages:
 > 
 > calc_css(chem.name='nicotine', model="3compartment")
 $avg
-[1] 0.3385
+[1] 0.345
 
 $frac
 [1] 0.449
 
 $max
-[1] 1.092
+[1] 1.113
 
 $the.day
 [1] 0
@@ -72,7 +72,7 @@ Warning messages:
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
 5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
-6: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > 
 > calc_css(chem.name="endrin")
@@ -103,59 +103,59 @@ Warning messages:
   Rblood2plasma has been recalculated.
 7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
-8: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+8: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > 
 > calc_tkstats(chem.name='nicotine',days=10)
 Human plasma concentrations returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.8238 .
 $AUC
-[1] 5.889
+[1] 6.002
 
 $peak
-[1] 3.864
+[1] 3.938
 
 $mean
-[1] 0.5889
+[1] 0.6002
 
 > 
 > calc_tkstats(dtxsid="DTXSID0020442",days=1)
 Plasma values returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
 $AUC
-[1] 9.211
+[1] 9.227
 
 $peak
-[1] 10.31
+[1] 10.32
 
 $mean
-[1] 9.211
+[1] 9.227
 
 > 
 > calc_tkstats(dtxsid="DTXSID0020442",days=10)
 Plasma values returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
 $AUC
-[1] 286.9
+[1] 287.4
 
 $peak
-[1] 43.29
+[1] 43.37
 
 $mean
-[1] 28.69
+[1] 28.74
 
 > 
 > calc_tkstats(dtxsid="DTXSID0020442",days=100)
 Plasma values returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
 $AUC
-[1] 4111
+[1] 4119
 
 $peak
-[1] 47.27
+[1] 47.35
 
 $mean
-[1] 41.11
+[1] 41.19
 
 > 
 > calc_analytic_css(
@@ -187,9 +187,9 @@ Warning messages:
   Human fractional tissue volumes used in calculating partition coefficients.
 8: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma substituted.
-9: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+9: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
-10: In calc_fgut.oral(Params = c(out, Params), chem.cas = chem.cas,  :
+10: In calc_fgut.oral(parameters = c(out, parameters), chem.cas = chem.cas,  :
   Human intestinal permeability and microvilli blood flow used to calculate fraction absorbed by gut
 > 
 > predict_partitioning_schmitt(chem.name='nicotine')

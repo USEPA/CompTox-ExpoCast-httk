@@ -49,7 +49,7 @@ Warning messages:
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
 3: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "pyrene",  :
   Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.
-4: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+4: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > head(solve_gas_pbtk(chem.cas="129-00-0",times=c(0,0.1,0.05)))
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
@@ -76,7 +76,7 @@ Warning messages:
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
 3: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "Pyrene",  :
   Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.
-4: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+4: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > head(solve_gas_pbtk(
 +   parameters=parameterize_gas_pbtk(chem.cas="129-00-0"),
@@ -105,7 +105,7 @@ Warning messages:
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
 3: In parameterize_gas_pbtk(chem.cas = "129-00-0") :
   Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.
-4: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+4: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 5: In solve_model(chem.name = chem.name, chem.cas = chem.cas, dtxsid = dtxsid,  :
   Rblood2plasma not recalculated. 
@@ -118,12 +118,6 @@ Set recalc.clearance to TRUE if desired.
 $BW
 [1] 70
 
-$Caco2.Pab
-[1] 1.6
-
-$Caco2.Pab.dist
-[1] NA
-
 $Clint
 [1] 56.4
 
@@ -133,14 +127,8 @@ $Clint.dist
 $Clmetabolismc
 [1] 9.568
 
-$Fabs
-[1] 0.9378
-
 $Fabsgut
 [1] 0.8043
-
-$Fgut
-[1] 0.8576
 
 $Fhep.assay.correction
 [1] 0.7622
@@ -234,9 +222,6 @@ $Qliverf
 $Qlungf
 [1] 0.025
 
-$Qrestf
-[1] 0.4757
-
 $Rblood2plasma
 [1] 0.7098
 
@@ -274,7 +259,7 @@ Warning messages:
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
 3: In parameterize_gas_pbtk(chem.name = "styrene") :
   Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.
-4: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+4: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > 
 > quit("no")

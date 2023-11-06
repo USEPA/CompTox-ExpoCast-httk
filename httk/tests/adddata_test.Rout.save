@@ -92,7 +92,7 @@ Warning messages:
   Rblood2plasma has been recalculated.
 7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
-8: In (function (Params = NULL, chem.cas = NULL, chem.name = NULL,  :
+8: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > 
 > #load_sipes2017()
