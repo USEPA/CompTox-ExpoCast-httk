@@ -1,5 +1,5 @@
 Package: httk
-Version: 99.20.2
+Version: 99.20.3
 Date: 2023-10-24
 Title: High-Throughput Toxicokinetics
 Description: Pre-made models that can be rapidly tailored to various chemicals
@@ -80,11 +80,11 @@ Depends: R (>= 2.10)
 Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats,
         graphics, utils, magrittr, purrr, methods, Rdpack, ggplot2
 RdMacros: Rdpack
-Suggests: knitr, rmarkdown, R.rsp, GGally, gplots, scales,
-        EnvStats, MASS, RColorBrewer, TeachingDemos, classInt, ks,
-        stringr, reshape, reshape2, viridis, gmodels,
+Suggests: knitr, rmarkdown, R.rsp, gplots, scales,
+        EnvStats, MASS, RColorBrewer, TeachingDemos, 
+        stringr, reshape, viridis, gmodels,
         colorspace, cowplot, ggrepel, dplyr, forcats, smatr, gridExtra,
-        testthat, readxl
+        readxl
 License: GPL-3
 LazyData: true
 LazyDataCompression: xz
