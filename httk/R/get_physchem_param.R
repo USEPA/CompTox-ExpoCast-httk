@@ -159,7 +159,9 @@ get_physchem_param <- function(
                                                       "logMA"))]]))) | 
      any(param %in% tolower(c("pKa_Donor","pKa_Accept","logMA"))))
   {
-    col.numbers <- which(colnames(chem.physical_and_invitro.data) %in% PARAM)
+    col.numbers <- NULL
+    for (this.param in param) col.numbers <- c(col.numbers,
+         which(tolower(colnames(chem.physical_and_invitro.data)) == this.param))
     values <- chem.physical_and_invitro.data[this.index, col.numbers]
 # We want to make sure the values returned are numeric, unless they are pKa's
 # pKa's can be a comma separated list:
