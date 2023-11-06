@@ -2629,7 +2629,9 @@ sipes2017 <- sipes2017[,c(
                
 # Drop SMILES for now to shrink package size:
 chem.physical_and_invitro.data <- chem.physical_and_invitro.data[,
-       !(colnames(chem.physical_and_invitro.data) %in% c("SMILES.desalt"))]
+       !(colnames(chem.physical_and_invitro.data) %in% c(
+         "SMILES.desalt",
+         "SMILES.desalt.Reference"))]
 
 save(chem.physical_and_invitro.data,
      chem.invivo.PK.data,
