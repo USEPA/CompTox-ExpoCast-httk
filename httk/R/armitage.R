@@ -169,7 +169,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' 
 #' @param this.pH 7.0, pH of cell culture
 #' 
-#' @param neutral.only FALSE, Should we restrict the partitioning concentration to neutral only?
+#' @param restrict.ion.partitioning FALSE, Should we restrict the chemical available to partition to only the neutral fraction?
 #'
 #' @return
 #' \tabular{lll}{
@@ -357,7 +357,7 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
                           this.conc_ser_lip = 1.9, # g/L mass concentration of lipids in serum
                           this.Vdom = 0, # L the volume of dissolved organic matter (DOM)
                           this.pH = 7.0, # pH of cell culture
-                          neutral.only = FALSE # Should we restrict the partitioning concentration to neutral only?
+                          restrict.ion.partitioning = FALSE # Should we restrict the partitioning concentration to neutral only?
                           )
 {
   # this.Tsys <- 37
@@ -453,8 +453,9 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
   }
   tcdata[, "gkaw" := logHenry - log10(298.15*8.2057338e-5)] # log10 atm-m3/mol to (mol/m3)/(mol/m3) (unitless)
   
-  # Check if considering charge:
-  if (neutral.only)
+  # Check if we allowed ionized molecules to partition into various in vitro
+  # components:
+  if (restrict.ion.partitioning)
   {
     if (!all(c("pKa_Donor","pKa_Accept") %in% names(tcdata)))
     {
@@ -467,24 +468,8 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
     tcdata[, Fneutral := apply(.SD,1,function(x) calc_ionization(
         pH = this.pH,    
         pKa_Donor = x["pKa_Donor"], 
-        pKa_Accept = x["pKa_Accept"])[["fraction_neutral"]])] 
-  } else tcdata[, Fneutral := 1]
-  
-  # Check if considering charge:
-  if (neutral.only)
-  {
-    if (!all(c("pKa_Donor","pKa_Accept") %in% names(tcdata)))
-    {
-    # If not, pull them:
-      tcdata[, c("pKa_Donor","pKa_Accept") := 
-               as.data.frame(get_physchem_param(param = c("pKa_Donor","pKa_Accept"), 
-                                  chem.cas = casrn),row.names = casrn)]
-    }
-    # Calculate the fraction neutral:
-    tcdata[, Fneutral := apply(.SD,1,function(x) calc_ionization(
-        pH = this.pH,    
-        pKa_Donor = x["pKa_Donor"], 
-        pKa_Accept = x["pKa_Accept"])[["fraction_neutral"]])] 
+        pKa_Accept = x["pKa_Accept"])[["fraction_neutral"]])]
+  # Otherwise allow all of the chemical to partition:
   } else tcdata[, Fneutral := 1]
   
   manual.input.list <- list(Tsys=this.Tsys, Tref=this.Tref,
@@ -566,7 +551,7 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
   tcdata[option.kbsa2==FALSE & is.na(gkbsa),kbsa:=10^(0.71*gkow+0.42)]
 
 # Change partition coefficients to account for only "neutral" chemical 
-# (could be 100% depending on value of "neutral.only"):
+# (could be 100% depending on value of "restrict.ion.partitioning"):
   tcdata[is.na(ksalt),ksalt:=0.04*gkow+0.114] %>%
     .[,swat:=swat*10^(-1*ksalt*csalt)] %>%
     .[,s1.GSE:=s1.GSE*10^(-1*ksalt*csalt)] %>%
