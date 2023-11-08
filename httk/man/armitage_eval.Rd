@@ -32,7 +32,7 @@ armitage_eval(
   this.conc_ser_lip = 1.9,
   this.Vdom = 0,
   this.pH = 7,
-  neutral.only = FALSE
+  restrict.ion.partitioning = FALSE
 )
 }
 \arguments{
@@ -97,7 +97,7 @@ model}
 
 \item{this.pH}{7.0, pH of cell culture}
 
-\item{neutral.only}{FALSE, Should we restrict the partitioning concentration to neutral only?}
+\item{restrict.ion.partitioning}{FALSE, Should we restrict the chemical available to partition to only the neutral fraction?}
 }
 \value{
 \tabular{lll}{
