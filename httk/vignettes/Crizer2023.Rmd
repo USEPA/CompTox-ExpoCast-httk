@@ -677,4 +677,6 @@ wallis.fig <- ggplot(data=wallis) +
         scale_color_viridis(discrete=2)
 
 print(wallis.fig)
+
+subset(wallis, is.na(HL.ML))
 ```
