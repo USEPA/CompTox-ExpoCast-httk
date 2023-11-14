@@ -84,9 +84,6 @@
 #' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 #' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-#' 
-#' @param minimum.Funbound.plasma \eqn{f_{up}} is not allowed to drop below
-#' this value (default is 0.0001).                                
 #'                                                                                             
 #' @param million.cells.per.gliver Hepatocellularity (defaults to 110 10^6 cells/g-liver, from Carlile et al. (1997))
 #'
@@ -174,35 +171,37 @@
 #'  parameterize_pbtk(chem.name="Bisphenol a",species="Rat",default.to.human=TRUE,
 #'                    tissuelist=compartments) 
 #' @export parameterize_pbtk
-parameterize_pbtk <- function(
-                       chem.cas=NULL,
-                       chem.name=NULL,
-                       dtxsid=NULL,
-                       species="Human",
-                       default.to.human=FALSE,
-                       tissuelist=list(
-                         liver=c("liver"),
-                         kidney=c("kidney"),
-                         lung=c("lung"),
-                         gut=c("gut")),
-                       force.human.clint.fup = FALSE,
-                       clint.pvalue.threshold=0.05,
-                       adjusted.Funbound.plasma=TRUE,
-                       adjusted.Clint=TRUE,
-                       regression=TRUE,
-                       suppress.messages=FALSE,
-                       restrictive.clearance=TRUE,
-                       minimum.Funbound.plasma=0.0001,
-                       million.cells.per.gliver= 110, # 10^6 cells/g-liver Carlile et al. (1997)
-                       liver.density= 1.05, # g/mL International Commission on Radiological Protection (1975)
-                       kgutabs = 2.18, # 1/h, Wambaugh et al. (2018)
-                       Caco2.options = NULL
-                       )
+parameterize_pbtk <- 
+  function(
+    chem.cas=NULL,
+    chem.name=NULL,
+    dtxsid=NULL,
+    species="Human",
+    default.to.human=FALSE,
+    tissuelist=list(
+      liver=c("liver"),
+      kidney=c("kidney"),
+      lung=c("lung"),
+      gut=c("gut")
+      ),
+    force.human.clint.fup = FALSE,
+    clint.pvalue.threshold=0.05,
+    adjusted.Funbound.plasma=TRUE,
+    adjusted.Clint=TRUE,
+    regression=TRUE,
+    suppress.messages=FALSE,
+    restrictive.clearance=TRUE,
+    minimum.Funbound.plasma=0.0001,
+    million.cells.per.gliver= 110, # 10^6 cells/g-liver Carlile et al. (1997)
+    liver.density= 1.05, # g/mL International Commission on Radiological Protection (1975)
+    kgutabs = 2.18, # 1/h, Wambaugh et al. (2018)
+    Caco2.options = NULL
+    )
 {
-  #Give a binding to the physiology.data
+  # Give a binding to the physiology.data
   physiology.data <- physiology.data
   
-  #We need to describe the chemical to be simulated one way or another:
+  # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
       is.null(dtxsid))
@@ -215,8 +214,11 @@ parameterize_pbtk <- function(
   chem.cas <- out$chem.cas
   chem.name <- out$chem.name
   dtxsid <- out$dtxsid
-  
-# Get the intrinsic hepatic clearance:  
+   
+  if(class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
+
+  # Get the intrinsic hepatic clearance:
+  # Clint has units of uL/min/10^6 cells
   Clint.list <- get_clint(
       dtxsid=dtxsid,
       chem.name=chem.name,
@@ -229,7 +231,7 @@ parameterize_pbtk <- function(
   Clint.point <- Clint.list$Clint.point
   Clint.dist <- Clint.list$Clint.dist
 
-# Get phys-chemical properties:
+  # Get phys-chemical properties:
   MW <- get_physchem_param("MW",chem.cas=chem.cas) #g/mol
   # acid dissociation constants
   pKa_Donor <- suppressWarnings(get_physchem_param(
@@ -244,21 +246,21 @@ parameterize_pbtk <- function(
     "logP",
     chem.cas=chem.cas) 
     
-# Calculate unbound fraction of chemical in the hepatocyte intrinsic 
-# clearance assay (Kilford et al., 2008)
+  # Calculate unbound fraction of chemical in the hepatocyte intrinsic 
+  # clearance assay (Kilford et al., 2008)
   Fu_hep <- calc_hep_fu(parameters=list(
     Pow=Pow,
     pKa_Donor=pKa_Donor,
     pKa_Accept=pKa_Accept)) # fraction 
 
-# Correct for unbound fraction of chemical in the hepatocyte intrinsic 
-# clearance assay (Kilford et al., 2008)
+  # Correct for unbound fraction of chemical in the hepatocyte intrinsic 
+  # clearance assay (Kilford et al., 2008)
   if (adjusted.Clint) Clint.point <- apply_clint_adjustment(
-                               Clint.point,
-                               Fu_hep=Fu_hep,
-                               suppress.messages=suppress.messages)
-                                   
-# Predict the PCs for all tissues in the tissue.data table:
+            Clint.point,
+            Fu_hep=Fu_hep,
+            suppress.messages=suppress.messages)
+                
+  # Predict the PCs for all tissues in the tissue.data table:
   schmitt.params <- parameterize_schmitt(
                       chem.cas=chem.cas,
                       species=species,
@@ -266,30 +268,36 @@ parameterize_pbtk <- function(
                       force.human.fup=force.human.clint.fup,
                       suppress.messages=suppress.messages,
                       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                      minimum.Funbound.plasma=minimum.Funbound.plasma)
-       
-  fup <- schmitt.params$Funbound.plasma
-  
+                      minimum.Funbound.plasma=minimum.Funbound.plasma
+                      )
+
+  # Check to see if we should use the in vitro fup assay correction:
+  if(adjusted.Funbound.plasma){
+    fup <- schmitt.params$Funbound.plasma
+    if (!suppress.messages) warning('Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.')
+  } else fup <- schmitt.params$unadjusted.Funbound.plasma
+  # Restrict the value of fup:
+  if (fup < minimum.Funbound.plasma) fup <- minimum.Funbound.plasma
+
   PCs <- predict_partitioning_schmitt(
-    parameters=schmitt.params,
-    species=species,
-    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-    regression=regression,
-    minimum.Funbound.plasma=minimum.Funbound.plasma,
-    model="pbtk",
-    suppress.messages=suppress.messages)
+           parameters=schmitt.params,
+           species=species,
+           adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+           regression=regression,
+           minimum.Funbound.plasma=minimum.Funbound.plasma,
+           model="pbtk",
+           suppress.messages=suppress.messages)
 
   # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
   lumped_params <- lump_tissues(
-    PCs,
-    tissuelist=tissuelist,
-    species=species,
-    model="pbtk",
-    suppress.messages=suppress.messages)
-
-# Check the species argument for capitalization problems and whether or not 
-# it is in the table:  
-
+                     PCs,
+                     tissuelist=tissuelist,
+                     species=species,
+                     model="pbtk",
+                     suppress.messages=suppress.messages)
+  
+  # Check the species argument for capitalization problems and whether or not 
+  # it is in the table:  
   if (!(species %in% colnames(physiology.data)))
   {
     if (toupper(species) %in% toupper(colnames(physiology.data)))
@@ -303,13 +311,15 @@ parameterize_pbtk <- function(
   this.phys.data <- physiology.data[,phys.species]
   names(this.phys.data) <- physiology.data[,1]
   
+  #INITIALIZE outlist
   outlist <- list()
+
   # Begin flows:
   #mL/min/kgBW^(3/4) converted to L/h/kgBW^(3/4):
   QGFRc <- this.phys.data["GFR"]/1000*60 
   Qcardiacc = this.phys.data["Cardiac Output"]/1000*60 
   flows <- unlist(lumped_params[substr(names(lumped_params),1,1) == 'Q'])
-  
+
   outlist <- c(outlist,c(
     Qcardiacc = as.numeric(Qcardiacc),
     flows[!names(flows) %in% c('Qlungf','Qtotal.liverf')],
@@ -329,21 +339,20 @@ parameterize_pbtk <- function(
                Vvenc = as.numeric(Vvenc),
                lumped_params[substr(names(lumped_params),1,1) == 'V'],
                lumped_params[substr(names(lumped_params),1,1) == 'K'])
-  
-
+ 
   # Create the list of parameters:
   BW <- this.phys.data["Average BW"]
   hematocrit = this.phys.data["Hematocrit"]
   outlist <- c(outlist,list(BW = as.numeric(BW),
-                            kgutabs = kgutabs, # 1/h
-                            Funbound.plasma = fup, # unitless fraction
-                            Funbound.plasma.dist = schmitt.params$Funbound.plasma.dist,
-                            hematocrit = as.numeric(hematocrit), # unitless ratio
-                            MW = MW, #g/mol
-                            Pow = Pow,
-                            pKa_Donor=pKa_Donor,
-                            pKa_Accept=pKa_Accept,
-                            MA=schmitt.params[["MA"]]))
+         kgutabs = kgutabs, # 1/h
+         Funbound.plasma = fup, # unitless fraction
+         Funbound.plasma.dist = schmitt.params$Funbound.plasma.dist,
+         hematocrit = as.numeric(hematocrit), # unitless ratio
+         MW = MW, #g/mol
+         Pow = Pow,
+         pKa_Donor=pKa_Donor,
+         pKa_Accept=pKa_Accept,
+         MA=schmitt.params[["MA"]]))
   
   # Fraction unbound lipid correction:
   if (adjusted.Funbound.plasma) 
@@ -352,14 +361,14 @@ parameterize_pbtk <- function(
       schmitt.params$Funbound.plasma.adjustment
   } else outlist["Funbound.plasma.adjustment"] <- NA
    
-# Blood to plasma ratio:
+  # Blood to plasma ratio:
   outlist <- c(outlist,
     Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
       species=species,
       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
       suppress.messages=suppress.messages))
 
-# Liver metabolism properties:
+  # Liver metabolism properties:
   outlist <- c(
     outlist,
     list(Clint=Clint.point,
@@ -383,7 +392,7 @@ parameterize_pbtk <- function(
       million.cells.per.gliver=110, # 10^6 cells/g-liver
       liver.density=1.05)) # g/mL
    
-# Oral bioavailability parameters:
+  # Oral bioavailability parameters:
   outlist <- c(
     outlist, do.call(get_fabsgut, args=purrr::compact(c(
     list(
@@ -403,6 +412,6 @@ parameterize_pbtk <- function(
   # alphabetize:
   outlist <- outlist[order(tolower(names(outlist)))]
   
-# Set precision:
+  # Set precision:
   return(lapply(outlist, set_httk_precision))
 }
