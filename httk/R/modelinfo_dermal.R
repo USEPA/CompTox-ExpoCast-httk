@@ -81,7 +81,7 @@ model.list[["dermal"]]$Rtosolvermap <- list(
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
-model.list[["pbtk"]]$param.names <- c(
+model.list[["dermal"]]$param.names <- c(
   "BW",
   "Caco2.Pab",
   "Caco2.Pab.dist",
@@ -133,7 +133,9 @@ model.list[["pbtk"]]$param.names <- c(
   "Ksc2ed",
   "Vskin_scc",
   "Vskin_edc",
-  "InfiniteDose"
+  "InfiniteDose",
+  "Kskin2vehicle",
+  "P"
   )
 
 

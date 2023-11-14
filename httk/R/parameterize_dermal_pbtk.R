@@ -588,8 +588,11 @@ parameterize_dermal_pbtk <-
                    #Ked2pu = outlist$Kskin2pu, #partition coefficient
                    Vskin_scc = outlist$Vskinc*Fskin_depth_sc,
                    Vskin_edc=outlist$Vskinc*(1-Fskin_depth_sc),
-                   InfiniteDose=InfiniteDose)
-    } else if (model.type=="dermal_1subcomp"){
+                   InfiniteDose=InfiniteDose,
+                   # Only used by 1subcomp model:              
+                   Kskin2vehicle = NA,
+                   P = NA)
+    } else if (model.type=="dermal_1subcomp") {
       outlist <- c(outlist,
                    totalSA = totalSA,
                    skin_depth=skin_depth,
@@ -597,7 +600,17 @@ parameterize_dermal_pbtk <-
                    Fskin_exposed=0.1,
                    P = P,
                    Kskin2vehicle = Ked2m,
-                   InfiniteDose = InfiniteDose) 
+                   InfiniteDose = InfiniteDose,
+                   # Only used by standard dermal model:
+                   Fskin_depth_sc = NA,
+                   Fskin_depth_ed = NA,
+                   Pvehicle2sc = NA,
+                   Psc2ed = NA,
+                   Ksc2vehicle = NA,
+                   Ksc2ed = NA,
+                   Vskin_scc = NA,
+                   Vskin_edc = NA,
+                   ) 
     }
     
   # Oral bioavailability parameters:
