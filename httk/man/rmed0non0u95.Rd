@@ -43,7 +43,7 @@ hist(rmed0non0u95(1000,x.u95=0.005,x.min=10^-4,x.LOD=0.01))
 
 }
 \references{
-Breen et al., in preparation
+\insertRef{breen2022simulating}{httk}
 }
 \author{
 John Wambaugh

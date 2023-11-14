@@ -1,6 +1,6 @@
 
-R version 4.1.3 (2022-03-10) -- "One Push-Up"
-Copyright (C) 2022 The R Foundation for Statistical Computing
+R Under development (unstable) (2023-04-16 r84269 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -17,7 +17,11 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> #R CMD BATCH --no-timing --no-restore --no-save adddata_test.R adddata_test.Rout
+> # R CMD BATCH --no-timing --no-restore --no-save adddata_test.R adddata_test.Rout
+> 
+> # Get rid of anything in the workspace:
+> rm(list=ls()) 
+> 
 > library(httk)
 > 
 > # Number of chemicals distributed with the package:
@@ -62,13 +66,13 @@ For model 3compartmentss each chemical must have non-NA values for:Human.Clint, 
 > 
 > calc_css(chem.name="Tester")
 $avg
-[1] 50.76
+[1] 44.27
 
 $frac
-[1] 0.9793
+[1] 0.9792
 
 $max
-[1] 51.34
+[1] 44.75
 
 $the.day
 [1] 101
@@ -88,6 +92,8 @@ Warning messages:
   Rblood2plasma has been recalculated.
 7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
+8: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+  Default value of 1.6 used for Caco2 permeability.
 > 
 > #load_sipes2017()
 > 

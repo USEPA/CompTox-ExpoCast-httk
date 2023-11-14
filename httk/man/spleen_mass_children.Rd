@@ -28,9 +28,7 @@ Price, Paul S., et al. "Modeling interindividual variation in physiological
 factors used in PBPK models of humans." Critical reviews in toxicology 33.5 
 (2003): 469-503.
 
-Ring, Caroline L., et al. "Identifying populations sensitive to
-environmental chemicals by simulating toxicokinetic variability."
-Environment International 106 (2017): 105-118
+\insertRef{ring2017identifying}{httk}
 }
 \author{
 Caroline Ring

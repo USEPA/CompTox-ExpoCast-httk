@@ -32,7 +32,7 @@ armitage_eval(
   this.conc_ser_lip = 1.9,
   this.Vdom = 0,
   this.pH = 7,
-  neutral.only = FALSE
+  restrict.ion.partitioning = FALSE
 )
 }
 \arguments{
@@ -50,7 +50,7 @@ if is.na(tcdata)==TRUE. This value chooses default surface area settings for
 \item{tcdata}{A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
 v_total, v_working. Otherwise supply single values to this.params (e.g., this.sarea,
 this.v_total, etc.). Chemical parameters are taken from 
-\code{\link{chem.phisical_and_invitro.data}}.}
+\code{\link{chem.physical_and_invitro.data}}.}
 
 \item{this.sarea}{Surface area per well (m^2)}
 
@@ -97,7 +97,7 @@ model}
 
 \item{this.pH}{7.0, pH of cell culture}
 
-\item{neutral.only}{FALSE, Should we restrict the partitioning concentration to neutral only?}
+\item{restrict.ion.partitioning}{FALSE, Should we restrict the chemical available to partition to only the neutral fraction?}
 }
 \value{
 \tabular{lll}{
@@ -192,13 +192,13 @@ xcells \tab Fraction within cells \tab fraction \cr
 xplastic \tab Fraction bound to plastic \tab fraction \cr     
 xprecip \tab Fraction precipitated out of solution \tab fraction \cr       
 eta_free \tab Effective availability ratio \tab fraction \cr      
-\strong{cfree.invitro} \tab \strong{Free concentration in the in vitro media} (use for Honda1 and Honda2) \tab fraction (%) \cr
+\strong{cfree.invitro} \tab \strong{Free concentration in the in vitro media} (use for Honda1 and Honda2) \tab fraction \cr
 }
 }
 \description{
-Evaluate the Armitage model for chemical distributon in vitro. Takes input
+Evaluate the Armitage model for chemical distributon \emph{in vitro}. Takes input
 as data table or vectors of values. Outputs a data table. Updates over
-the model published in Armitage et al. 2014 include binding to plastic walls
+the model published in Armitage et al. (2014) include binding to plastic walls
 and lipid and protein compartments in cells.
 }
 \examples{
@@ -258,7 +258,7 @@ print(out)
 Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 
 2014, 48, 9770-9779. https://doi.org/10.1021/es501955g
 
-Honda et al. PloS one 14.5 (2019): e0217564. https://doi.org/10.1371/journal.pone.0217564
+\insertRef{honda2019using}{httk}
 }
 \author{
 Greg Honda

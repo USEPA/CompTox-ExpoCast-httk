@@ -28,7 +28,8 @@ calc_mc_css(
   httkpop.generate.arg.list = list(method = "direct resampling"),
   convert.httkpop.arg.list = NULL,
   parameterize.arg.list = NULL,
-  calc.analytic.css.arg.list = NULL
+  calc.analytic.css.arg.list = NULL,
+  Caco2.options = NULL
 )
 }
 \arguments{
@@ -124,7 +125,12 @@ convert_httkpop_* function for the model.}
 parameterization function (that is, parameterize_MODEL) corresponding to
 argument "model". (Defaults to NULL.)}
 
-\item{calc.analytic.css.arg.list}{Additional parameters passed to 
+\item{calc.analytic.css.arg.list}{Additional parameters passed to}
+
+\item{Caco2.options}{Arguments describing how to handle Caco2 absorption data
+that are passed to \code{\link{invitro_mc}} and the parameterize_[MODEL] 
+functions
+
 \code{\link{calc_analytic_css}}.}
 }
 \value{
@@ -133,7 +139,7 @@ steady-stae concentration (Css) from the Monte Carlo simulation
 }
 \description{
 For a given chemical and fixed dose rate this function determines a 
-distribution of steady-state concentrations reflecting measurment uncertainty
+distribution of steady-state concentrations reflecting measurement uncertainty
 an population variability. Uncertainty and variability are simulated via the
 Monte Carlo method -- many sets of model parameters are drawn according to
 probability distributions described in 
@@ -311,6 +317,19 @@ calc_mc_oral_equiv(chem.cas="2451-62-9", conc=3, samples=NSAMP)
              httkpop=FALSE,
              invitrouv=FALSE,
              vary.params=list(Pow=0.3))
+ 
+# We can also use the Monte Carlo functions by passing a table
+# where each row represents a different Monte Carlo draw of parameters:
+p <- create_mc_samples(chem.cas="80-05-7")
+# Use data.table for steady-state plasma concentration (Css) Monte Carlo:
+calc_mc_css(parameters=p)
+# Using the same table gives the same answer:
+calc_mc_css(parameters=p)
+# Use Css for 1 mg/kg/day for simple reverse toxicokinetics 
+# in Vitro-In Vivo Extrapolation to convert 15 uM to mg/kg/day:
+15/calc_mc_css(parameters=p, output.units="uM")
+# Can do the same with calc_mc_oral_equiv:
+calc_mc_oral_equiv(15, parameters=p)
 }
 
 }
@@ -318,15 +337,11 @@ calc_mc_oral_equiv(chem.cas="2451-62-9", conc=3, samples=NSAMP)
 Wambaugh, John F., et al. "Toxicokinetic triage for 
 environmental chemicals." Toxicological Sciences 147.1 (2015): 55-67.
 
-Ring, Caroline L., et al. "Identifying populations sensitive to
-environmental chemicals by simulating toxicokinetic variability."
-Environment international 106 (2017): 105-118. 
+\insertRef{ring2017identifying}{httk}
 
-Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
-In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
+\insertRef{honda2019using}{httk} 
                                                       
-Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts in 
-pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
+\insertRef{rowland1973clearance}{httk}
 }
 \seealso{
 \code{\link{calc_analytic_css}}
@@ -334,7 +349,7 @@ pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 
 \code{\link{create_mc_samples}}
 }
 \author{
-Caroline Ring, Robert Pearce, John Wambaugh, Miyuki Breen
+Caroline Ring, Robert Pearce, John Wambaugh, Miyuki Breen, and Greg Honda
 }
 \keyword{Monte-Carlo}
 \keyword{Steady-State}
