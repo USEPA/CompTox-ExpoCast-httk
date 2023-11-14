@@ -97,6 +97,7 @@ model.list[["dermal_1subcomp"]]$param.names <- c(
   "Klung2pu",
   "Krbc2pu",
   "Krest2pu",
+  "Kskin2pu",
   "liver.density",
   "million.cells.per.gliver",
   "MW",
