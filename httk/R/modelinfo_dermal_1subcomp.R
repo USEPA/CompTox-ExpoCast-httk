@@ -77,7 +77,7 @@ model.list[["dermal_1subcomp"]]$Rtosolvermap <- list(
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
-model.list[["dermal"]]$param.names <- c(
+model.list[["dermal_1subcomp"]]$param.names <- c(
   "BW",
   "Caco2.Pab",
   "Caco2.Pab.dist",
