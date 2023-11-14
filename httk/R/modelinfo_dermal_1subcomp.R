@@ -74,6 +74,58 @@ model.list[["dermal_1subcomp"]]$Rtosolvermap <- list(
   Rblood2plasma = "Rblood2plasma"
 )
 
+# These are all the parameters returned by the R model parameterization function.
+# Some of these parameters are not directly used to solve the model, but describe
+# how other parameters were calculated:
+model.list[["dermal"]]$param.names <- c(
+  "BW",
+  "Caco2.Pab",
+  "Caco2.Pab.dist",
+  "Clint",
+  "Clint.dist",
+  "Clmetabolismc",
+  "Funbound.plasma",
+  "Funbound.plasma.dist",
+  "Funbound.plasma.adjustment",
+  "Fabsgut",
+  "Fhep.assay.correction",
+  "hematocrit",
+  "Kgut2pu",
+  "kgutabs",
+  "Kkidney2pu",
+  "Kliver2pu",
+  "Klung2pu",
+  "Krbc2pu",
+  "Krest2pu",
+  "liver.density",
+  "million.cells.per.gliver",
+  "MW",
+  "Pow",
+  "pKa_Donor",
+  "pKa_Accept",
+  "MA",
+  "Qcardiacc",
+  "Qgfrc",
+  "Qgutf",
+  "Qkidneyf",
+  "Qliverf",
+  "Rblood2plasma",
+  "Vartc",
+  "Vgutc",
+  "Vkidneyc",
+  "Vliverc",
+  "Vlungc",
+  "Vrestc",
+  "Vvenc",
+# Added by AEM:
+  "totalSA",
+  "skin_depth",
+  "Fskin_exposed",
+  "InfiniteDose",
+  "Kskin2vehicle",
+  "P"
+  )
+
 # This function translates the R model parameters into the compiled model
 # parameters:
 model.list[["dermal_1subcomp"]]$compiled.parameters.init <- "getParms_dermal_1subcomp" #in .c file

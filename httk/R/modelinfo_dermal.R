@@ -133,9 +133,7 @@ model.list[["dermal"]]$param.names <- c(
   "Ksc2ed",
   "Vskin_scc",
   "Vskin_edc",
-  "InfiniteDose",
-  "Kskin2vehicle",
-  "P"
+  "InfiniteDose"
   )
 
 

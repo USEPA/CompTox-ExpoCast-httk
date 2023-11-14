@@ -589,9 +589,7 @@ parameterize_dermal_pbtk <-
                    Vskin_scc = outlist$Vskinc*Fskin_depth_sc,
                    Vskin_edc=outlist$Vskinc*(1-Fskin_depth_sc),
                    InfiniteDose=InfiniteDose,
-                   # Only used by 1subcomp model:              
-                   Kskin2vehicle = NA,
-                   P = NA)
+                   )
     } else if (model.type=="dermal_1subcomp") {
       outlist <- c(outlist,
                    totalSA = totalSA,
@@ -600,16 +598,7 @@ parameterize_dermal_pbtk <-
                    Fskin_exposed=0.1,
                    P = P,
                    Kskin2vehicle = Ked2m,
-                   InfiniteDose = InfiniteDose,
-                   # Only used by standard dermal model:
-                   Fskin_depth_sc = NA,
-                   Fskin_depth_ed = NA,
-                   Pvehicle2sc = NA,
-                   Psc2ed = NA,
-                   Ksc2vehicle = NA,
-                   Ksc2ed = NA,
-                   Vskin_scc = NA,
-                   Vskin_edc = NA,
+                   InfiniteDose = InfiniteDose
                    ) 
     }
     
@@ -628,7 +617,7 @@ parameterize_dermal_pbtk <-
     ))
 
   # Only include parameters specified in modelinfo:
-  outlist <- outlist[model.list[["dermal"]]$param.names]
+  outlist <- outlist[model.list[[model.type]]$param.names]
 
   # alphabetize:
   outlist <- outlist[order(tolower(names(outlist)))]
