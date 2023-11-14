@@ -254,7 +254,7 @@ parameterize_dermal_pbtk <-
       kidney=c("kidney"),
       lung=c("lung"),
       gut=c("gut"),
-      skin="skin")
+      skin=c("skin")
       ),
     force.human.clint.fup = FALSE,
     clint.pvalue.threshold=0.05,
@@ -269,7 +269,6 @@ parameterize_dermal_pbtk <-
     height = 175,
     totalSA = NULL,
     Kvehicle2water = "water",
-    restrictive.clearance = TRUE,
     InfiniteDose = 0,
     million.cells.per.gliver= 110, # 10^6 cells/g-liver Carlile et al. (1997)
     liver.density= 1.05, # g/mL International Commission on Radiological Protection (1975)
