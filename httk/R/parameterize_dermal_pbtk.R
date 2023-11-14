@@ -615,7 +615,7 @@ parameterize_dermal_pbtk <-
     ))
 
   # Only include parameters specified in modelinfo:
-  outlist <- outlist[model.list[["pbtk"]]$param.names]
+  outlist <- outlist[model.list[["dermal"]]$param.names]
 
   # alphabetize:
   outlist <- outlist[order(tolower(names(outlist)))]
