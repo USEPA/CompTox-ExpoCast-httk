@@ -124,7 +124,9 @@ model.list[["dermal_1subcomp"]]$param.names <- c(
   "Fskin_exposed",
   "InfiniteDose",
   "Kskin2vehicle",
-  "P"
+  "P",
+  "Kblood2air",
+  "Qalvc"
   )
 
 # This function translates the R model parameters into the compiled model
