@@ -296,6 +296,10 @@ model.list[["dermal_1subcomp"]]$compartment.units <- c(
   "Cvehicle"="uM",
   "AUC"="uM*days")
 
+# Compartment state of matter, needed for proper unit conversion, if all
+# comaprtments of the same only include one state and set it to "all":
+model.list[["dermal_1subcomp"]]$compartment.state <- list(liquid="all")
+
 model.list[["dermal_1subcomp"]]$routes <- list( 
   "oral" = list( 
     # We need to know which compartment gets the dose
@@ -317,7 +321,6 @@ model.list[["dermal_1subcomp"]]$routes <- list(
     "entry.compartment" = "Cvehicle_infinite",
     "dose.type" = "replace")  
 )
-
 
 # These parameters specify the exposure scenario simulated by the model:
 model.list[["dermal_1subcomp"]]$dosing.params <- c(

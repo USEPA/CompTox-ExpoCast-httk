@@ -131,6 +131,7 @@ model.list[["dermal"]]$param.names <- c(
   "Psc2ed",
   "Ksc2vehicle",
   "Ksc2ed",
+  "Ked2pu",
   "Vskin_scc",
   "Vskin_edc",
   "InfiniteDose",
@@ -323,6 +324,10 @@ model.list[["dermal"]]$compartment.units <- c(
   "Cskin_ed_unexposed"="uM",
   "Cvehicle"="uM",
   "AUC"="uM*days")
+  
+# Compartment state of matter, needed for proper unit conversion, if all
+# comaprtments of the same only include one state and set it to "all":
+model.list[["dermal"]]$compartment.state <- list(liquid="all")
 
 model.list[["dermal"]]$routes <- list( 
   "oral" = list( # not used? - AEM, March 2022

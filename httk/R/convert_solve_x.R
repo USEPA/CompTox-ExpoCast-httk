@@ -78,6 +78,17 @@ convert_solve_x <- function(model.output.mat,
   compartment_units <- model.list[[model]]$compartment.units
   # determine the state of matter (liquid or gas) for each compartment:
   compartment_state <- model.list[[model]]$compartment.state
+  
+  if (is.null(compartment_units)) stop(paste0(
+"Units for each compartment must be specified with list compartment.units in the modelinfo file for model ", 
+    model,
+    "."))
+
+  if (is.null(compartment_state)) stop(paste0(
+"State of matter for each compartment must be specified with list compartment.state in the modelinfo file for model ", 
+    model, 
+    "."))
+  
   # If there is only one state set all compartments to that state:
   if (length(names(compartment_state))==1)
   {
