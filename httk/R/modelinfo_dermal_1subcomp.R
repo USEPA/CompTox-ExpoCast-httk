@@ -97,7 +97,6 @@ model.list[["dermal_1subcomp"]]$param.names <- c(
   "Klung2pu",
   "Krbc2pu",
   "Krest2pu",
-  "Kskin2pu",
   "liver.density",
   "million.cells.per.gliver",
   "MW",
@@ -119,6 +118,7 @@ model.list[["dermal_1subcomp"]]$param.names <- c(
   "Vrestc",
   "Vvenc",
 # Added by AEM:
+  "Kskin2pu",
   "totalSA",
   "skin_depth",
   "Fskin_exposed",
@@ -126,7 +126,9 @@ model.list[["dermal_1subcomp"]]$param.names <- c(
   "Kskin2vehicle",
   "P",
   "Kblood2air",
-  "Qalvc"
+  "Qalvc",
+  "Qskinf",
+  "Vskinc"
   )
 
 # This function translates the R model parameters into the compiled model

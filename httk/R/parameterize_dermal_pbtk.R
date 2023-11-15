@@ -587,7 +587,7 @@ parameterize_dermal_pbtk <-
                    #Ked2pu = outlist$Kskin2pu, #partition coefficient
                    Vskin_scc = outlist$Vskinc*Fskin_depth_sc,
                    Vskin_edc=outlist$Vskinc*(1-Fskin_depth_sc),
-                   InfiniteDose=InfiniteDose,
+                   InfiniteDose=InfiniteDose
                    )
     } else if (model.type=="dermal_1subcomp") {
       outlist <- c(outlist,
