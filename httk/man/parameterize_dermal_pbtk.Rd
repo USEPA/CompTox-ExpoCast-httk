@@ -2,7 +2,7 @@
 % Please edit documentation in R/parameterize_dermal_pbtk.R
 \name{parameterize_dermal_pbtk}
 \alias{parameterize_dermal_pbtk}
-\title{Parameterize_dermal_PBTK}
+\title{Parameterizea generic PBTK model with dermal exposure}
 \usage{
 parameterize_dermal_pbtk(
   chem.cas = NULL,
@@ -11,23 +11,27 @@ parameterize_dermal_pbtk(
   model.type = "dermal_1subcomp",
   method.permeability = "UK-Surrey",
   species = "Human",
-  default.to.human = F,
+  default.to.human = FALSE,
   tissuelist = list(liver = c("liver"), kidney = c("kidney"), lung = c("lung"), gut =
-    c("gut"), skin = "skin"),
-  force.human.clint.fup = F,
+    c("gut"), skin = c("skin")),
+  force.human.clint.fup = FALSE,
   clint.pvalue.threshold = 0.05,
-  adjusted.Funbound.plasma = T,
-  regression = T,
-  suppress.messages = F,
+  adjusted.Funbound.plasma = TRUE,
+  adjusted.Clint = TRUE,
+  regression = TRUE,
+  suppress.messages = FALSE,
+  restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04,
   skin_depth = 0.12,
   skin.pH = 7,
   height = 175,
   totalSA = NULL,
   Kvehicle2water = "water",
-  restrictive.clearance = TRUE,
   InfiniteDose = 0,
-  ...
+  million.cells.per.gliver = 110,
+  liver.density = 1.05,
+  kgutabs = 2.18,
+  Caco2.options = NULL
 )
 }
 \arguments{
@@ -35,7 +39,38 @@ parameterize_dermal_pbtk(
 specified.}
 
 \item{chem.name}{Either the chemical name or the CAS number must be
-specified.}
+specified. 
+Parameters include 
+tissue:plasma partition coefficients, organ volumes, and flows 
+for the tissue lumping scheme specified by argument tissuelist.
+Tissure:(fraction unbound in) plasma partitition coefficients are predicted
+via Schmitt (2008)'s method as modified by Pearce et al. (2017) using
+\code{\link{predict_partitioning_schmitt}}. Organ volumes and flows are
+retrieved from table \code{\link{physiology.data}}.
+Tissues must be described in table \code{\link{tissue.data}}. 
+
+By default, this function initializes the parameters needed in the functions 
+\code{\link{solve_pbtk}}, \code{\link{calc_css}}, and others using the httk 
+default generic PBTK model (for oral and intravenous dosing only).
+
+The default PBTK model includes an explicit first pass of the chemical through
+the liver before it becomes available to systemic blood. We model systemic oral bioavailability as 
+\ifelse{html}{\out{F<sub>bio</sub>=F<sub>abs</sub>*F<sub>gut</sub>*F<sub>hep</sub>}}{\eqn{F_{bio}=F_{abs}*F_{gut}*F_{hep}}}.
+Only if \ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}}
+has been measured in vivo and is found in
+table \code{\link{chem.physical_and_invitro.data}} then we set 
+\ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{gut}}} 
+to the measured value divided by 
+\ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}} 
+where \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}}
+is estimated from in vitro TK data using 
+\code{\link{calc_hep_bioavailability}}.
+If Caco2 membrane permeability data or predictions
+are available \ifelse{html}{\out{F<sub>abs</sub>}}{\eqn{F_{abs}}} is estimated
+using \code{\link{calc_fabs.oral}}.
+Intrinsic hepatic metabolism is used to very roughly estimate
+\ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}
+using \code{\link{calc_fgut.oral}}.}
 
 \item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs.}
@@ -59,21 +94,28 @@ if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 
 \item{tissuelist}{Specifies compartment names and tissues groupings.
 Remaining tissues in tissue.data are lumped in the rest of the body.
-However, solve_dermal_pbtk only works with the default parameters.}
+However, \code{\link{solve_dermal_pbtk}} only works with the default parameters.}
 
 \item{force.human.clint.fup}{Forces use of human values for hepatic
 intrinsic clearance and fraction of unbound plasma if true.}
 
-\item{clint.pvalue.threshold}{Hepatic clearances with clearance assays
-having p-values greater than the threshold are set to zero.}
+\item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
+vitro clearance assay result has a p-values greater than the threshold are
+set to zero.}
 
-\item{adjusted.Funbound.plasma}{Returns adjusted Funbound.plasma when set to
-TRUE along with parition coefficients calculated with this value.}
+\item{adjusted.Funbound.plasma}{Uses Pearce et al. (2017) lipid binding adjustment
+for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).}
+
+\item{adjusted.Clint}{Uses Kilford et al. (2008) hepatocyte incubation
+binding adjustment for Clint when set to TRUE (Default).}
 
 \item{regression}{Whether or not to use the regressions in calculating
 partition coefficients.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
+
+\item{restrictive.clearance}{In calculating hepatic.bioavailability, protein
+binding is not taken into account (set to 1) in liver clearance if FALSE.}
 
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
@@ -92,6 +134,20 @@ Other optional inputs are "octanol", "olive oil", or a numeric value.}
 \item{InfiniteDose}{If TRUE, we assume infinite dosing (i.e., a constant unchanging concentration
 of chemical in the vehicle is considered) and Cvehicle is a constant. If
 FALSE (default), dosing is finite and Cvehicle changes over time.}
+
+\item{million.cells.per.gliver}{Hepatocellularity (defaults to 110 10^6 cells/g-liver, from Carlile et al. (1997))}
+
+\item{liver.density}{Liver density (defaults to 1.05 g/mL from International Commission on Radiological Protection (1975))}
+
+\item{kgutabs}{Oral absorption rate from gut (defaults to 2.18 1/h from Wambaugh et al. (2018))}
+
+\item{Caco2.options}{A list of options to use when working with Caco2 apical to
+basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
 }
 \value{
 \item{BW}{Body Weight, kg.} 
@@ -189,18 +245,12 @@ method.permeability="Potts-Guy")
 params <- parameterize_dermal_pbtk(chem.cas="80-05-7", model.type="dermal", 
 Kvehicle2water = "octanol")
 
-
- 
-
 }
 \references{
 Chen, L., Han, L., Saib, O. and Lian, G. (2015). In Silico Prediction of Percutaneous
 Absorption and Disposition Kinetics of Chemicals. Pharmaceutical Research 32, 1779-93, 10.1007/s11095-014-1575-0
 
-Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
-(2008). Hepatocellular binding of drugs: correction for unbound fraction in
-hepatocyte incubations using microsomal binding or drug lipophilicity data.
-Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+\insertRef{kilford2008hepatocellular}{httk}
 
 Potts, R. O., Guy, R. H. (1992). Predicting skin permeability. Pharmaceutical 
 research 9(5), 663-9, 10.1002/ajim.4700230505.
@@ -210,7 +260,22 @@ C. R., Croom, E. L., Pegram, R. A. (2016). Development of a human physiologicall
 based pharmacokinetic (PBPK) model for dermal permeability for lindane. Toxicology
 Letters 245, 106-9, 10.1016/j.toxlet.2016.01.008
 }
+\seealso{
+\code{\link{solve_dermal_pbtk}}
+
+\code{\link{predict_partitioning_schmitt}}
+
+\code{\link{apply_clint_adjustment}}
+
+\code{\link{tissue.data}}
+
+\code{\link{physiology.data}}
+}
 \author{
 Annabel Meade, John Wambaugh, and Robert Pearce
 }
 \keyword{Parameter}
+\keyword{dermal}
+\keyword{intravenous}
+\keyword{oral}
+\keyword{pbtk}
