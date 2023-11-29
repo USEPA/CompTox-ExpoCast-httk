@@ -266,6 +266,7 @@ parameterize_dermal_pbtk <-
     minimum.Funbound.plasma = 1e-04, #added copying parameterize_gas_pbtk, AEM 1/13/2022
     skin_depth=0.12,
     skin.pH=7,
+    BW = NULL,
     height = 175,
     totalSA = NULL,
     Kvehicle2water = "water",
@@ -421,7 +422,7 @@ parameterize_dermal_pbtk <-
   }
 
   # Create the list of parameters:
-  BW <- this.phys.data["Average BW"]
+  if (is.nullB(BW)) BW <- this.phys.data["Average BW"]
   hematocrit = this.phys.data["Hematocrit"]
   outlist <- c(outlist,list(BW = as.numeric(BW),
          kgutabs = kgutabs, # 1/h
