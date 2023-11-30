@@ -422,7 +422,7 @@ parameterize_dermal_pbtk <-
   }
 
   # Create the list of parameters:
-  if (is.nullB(BW)) BW <- this.phys.data["Average BW"]
+  if (is.null(BW)) BW <- this.phys.data["Average BW"]
   hematocrit = this.phys.data["Hematocrit"]
   outlist <- c(outlist,list(BW = as.numeric(BW),
          kgutabs = kgutabs, # 1/h
