@@ -72,9 +72,11 @@ mg/\ifelse{html}{\out{m<sup>3</sup>}}{\eqn{m^3}} or umol/L), and
 in the context of gases assumed to be ideal, ppmv. 
 
 \emph{Andersen and Clewell's Rules of PBPK Modeling:}
-\item{1}{Check Your Units}
-\item{2}{\strong{Check Your Units}}
-\item{3}{Check Mass Balance}
+\itemize{
+\item{"1"}{Check Your Units}
+\item{"2"}{\strong{Check Your Units}}
+\item{"3"}{Check Mass Balance}
+}
 }
 \examples{
 
