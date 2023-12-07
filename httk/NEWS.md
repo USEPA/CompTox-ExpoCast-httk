@@ -1,10 +1,4 @@
----
-title: "News for R package httk"
-date: "December, 2023"
-output: html_document
----                                                 
-
-# version 2.3.0 (December 5, 2023)
+# httk 2.3.0 (December 5, 2023)
 This version accompanies the submission of manuscript Honda et al. "Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals in Commerce and the Environment"
 
 ## Bug Fixes
@@ -38,7 +32,7 @@ This version accompanies the submission of manuscript Honda et al. "Impact of Gu
 * New Clint and Fup data curated from literature by ICF from [Black et al. (2021)](https://doi.org/10.1016/j.tox.2021.152819), [Williamson et al. (2020)](https://doi.org/10.1124/dmd.120.000131), [Zanelli et al. (2012)](https://doi.org/10.1124/dmd.111.042309), [Yamagata et al. (2017)](https://doi.org/10.1080/00498254.2016.1222639), and [Zanelli et al. (2019)](https://doi.org/10.1080/00498254.2018.1451010) (thank you Noelle Sinski and Colin Guider)
 
 
-# version 2.2.2 (February 20, 2023)
+# httk 2.2.2 (February 20, 2023)
 ## Bug Fixes
 * Corrected analytic steady-state functions for PBTK, 3-compartment, and 3-compartment steady-state models to return plasma, not blood concentrations (via blood:plasma ratio)
 * Removed inappropriate second adjustment for binding in intrinsic hepatic clearance assay from `cal_hep_clearance` -- [Kilford (2008)](https://doi.org/10.1124/dmd.108.020834) adjustment now only occurs in parameterization functions. Added new function `apply_clint_adjustment` to standardize implementation of adjustment (thanks Todor Antonijevic)
@@ -49,7 +43,7 @@ This version accompanies the submission of manuscript Honda et al. "Impact of Gu
 * Fixed bug where `solve_model` returned other than requested times when argument times was specified (thanks Kimberly Truong)
 
 ## New Features
-* Added updated vignette from [Pearce et al. (2017)](https://doi.org/10.18637%2Fjss.v079.i04): v79i04.R
+   * Added updated vignette from [Pearce et al. (2017)](https://doi.org/10.18637%2Fjss.v079.i04): v79i04.R
 * Added new vignette on "Introduction to IVIVE"
 * Added functions `calc_fup_correction` and `apply_fup_adjustment` to consolidate and make uniform application of the [Pearce et al. (2017)](https://doi.org/10.1007/s10928-017-9548-7) lipid binding adjustment to in vitro measured fup
 * We now export function `calc_dow` for the distribution coefficient
@@ -67,13 +61,13 @@ This version accompanies the submission of manuscript Honda et al. "Impact of Gu
 * Added option class.exclude to `get_cheminfo` -- defaults to TRUE, but if FALSE then chemical classes are not excluded on the basis of specified model
 * Updated various function documentation
 
-# version 2.2.1 (September 24, 2022)
+# httk 2.2.1 (September 24, 2022)
 
 This minor update removes UTF-8 characters from the package and changes the
 calculation of 'kUrt' on line 292 of 'model_gas_pbtk.c' to reduce vulnerability
 to machine precision errors.
 
-# version 2.2.0 (September 8, 2022)
+# httk 2.2.0 (September 8, 2022)
 This version accompanies the submission of the Breen et al. manuscript 
 "Simulating Toxicokinetic Variability to Identify Susceptible and Highly 
 Exposed Populations"
@@ -139,7 +133,7 @@ units unaffected, but this will have impacted equivalent doses calculated with
 being based to `parameterize_schmitt`
 
 
-# version 2.1.0 (March 26, 2022)
+# httk 2.1.0 (March 26, 2022)
 This version accompanies the submission of the Kapraun et al. manuscript "Evaluation of a Rapid, Generic Human Gestational Dose Model"
 
 ## New Features
@@ -171,7 +165,7 @@ This version accompanies the submission of the Kapraun et al. manuscript "Evalua
 * Corrected monkey cardiac output (thank you Peter Egeghy)
 * Corrected rabbit plasma volume and total body water (thank you Johanna Nyffeler)
 
-# version 2.0.4 (May 10, 2021)
+# httk 2.0.4 (May 10, 2021)
 
 ## Enhancements
 * Sarah Davidson is new lead HTTK software engineer (thank you Mark Sfeir!)
@@ -190,7 +184,7 @@ This version accompanies the submission of the Kapraun et al. manuscript "Evalua
 * Fixed problems with Clint values reported from [Wood et al. 2017](<https://doi.org/10.1124/dmd.117.077040>), fraction unbound in hepatocyte assay adjustment was being applied twice (thank you Xiaoqing Chang)
 * Fixed problems with clearance from source "Ito/Riley": "not determined" was mistakenly being interpreted as "0" rather than not measured (thank you Xiaoqing Chang)
 
-# version 2.0.3 (September 25, 2020)
+# httk 2.0.3 (September 25, 2020)
 
 ## Enhancements
 * Updated literature chemical-specific human and rat in vitro data:
@@ -214,7 +208,7 @@ This version accompanies the submission of the Kapraun et al. manuscript "Evalua
 * Output for `calc_tkstats` corrected to display "Rblood2plasma"
 * Minor fix with argument "suppress.messages" in `parameterize_pbtk`
 
-# version 2.0.2 (July 19, 2020)
+# httk 2.0.2 (July 19, 2020)
 
 ## Enhancements
 * Updated default dosing scheme so that a single-time, initial "dose" comes into effect if no other dosing information is specified, and any dosing info that is specified using whatever dosing arguments overrides the default. Combinations of dosing arguments can still be specified. 
@@ -223,7 +217,7 @@ This version accompanies the submission of the Kapraun et al. manuscript "Evalua
 ## Bug Fixes 
 * Fixed errors in the different models' steady state solver functions to support parameter input of key object types, especially lists and compound data.tables/data.frames. (thank you, Nisha Sipes)
 
-# version 2.0.1 (March 2, 2020)
+# httk 2.0.1 (March 2, 2020)
 
 ## New Features
 * New function `set_httk_precision` is now used throughout code to enforce a standard set of significant figures (4) and precision (nothing less than 1e-9).
@@ -236,7 +230,7 @@ This version accompanies the submission of the Kapraun et al. manuscript "Evalua
 ## Bug Fixes 
 * Fixed output of `calc_mc_oral_equivalent` (was sometimes returning all samples unasked, thank you Dan Dawson)
 
-# version 2.0.0 (February 17, 2020)
+# httk 2.0.0 (February 17, 2020)
 This version is consistent with consistent with Linakis et al. (submitted) "Development and Evaluation of a High Throughput Inhalation Model for Organic Chemicals"
 
 ## New Features
@@ -270,7 +264,7 @@ This version is consistent with consistent with Linakis et al. (submitted) "Deve
 * To decrease package size the load image option of load_sipes2017 was eliminated
  * Added vignette for Figure 6 from [Frank, et al. "Defining toxicological tipping points in neuronal network development."](<https://doi.org/10.1016/j.taap.2018.01.017>)
    
-# version 1.10.1 (Septmeber 10, 2019)
+# httk 1.10.1 (Septmeber 10, 2019)
 
 ## Enhancements
 * Changed all file name starting letters to lowercase.
@@ -312,17 +306,17 @@ clint.meas.cv=0.3, fup.pop.cv=0.3, clint.pop.cv=0.3, (from Wambaugh et al, submi
 * Shyam Patel (Sciome) identified an error in how flow means were scaled by age in httk-pop Monte Carlo sampler.
 * Fixed calc_mc_css warnings
   
-# version 1.9.2 (April 22, 2019)
+# httk 1.9.2 (April 22, 2019)
 ## Bug Fixes 
 * Updated tests to reflect correct model predictions.
 * Fixed errors that was causing the 3compartmentss and 1compartment models to not work with Monte Carlo. (thank you Johanna Nyffeler for bug report).
 
-# version 1.9.1 (April 15, 2019)
+# httk 1.9.1 (April 15, 2019)
 
 ## Bug Fixes 
 * Fixed significant errors in `calc_analytic_css` that were causing Css to be over-estimated roughly 10x, therefore reducing the oral equivalent dose 10x (thank you Nisha Sipes for bug report).
    
-# version 1.9 (February 4, 2019)
+# httk 1.9 (February 4, 2019)
 This version is consistent with the submitted version of Honda et al. "Using the Concordance of In Vitro and In Vivo Data to Evaluate Extrapolation Assumptions"
 
 ## New Features
@@ -353,8 +347,7 @@ This version is consistent with the submitted version of Honda et al. "Using the
 * Corrected (thank you Jason Phillips), updated, and added pKa values from [Strope et al. (2018)](<https://doi.org/10.1016/j.scitotenv.2017.09.033>)
 * Corrected calc_mc_css bug: species passed to monte_carlo function
 
-
-# version 1.8 (January 23, 2018)
+# httk 1.8 (January 23, 2018)
 This version is consistent with the published version of Pearce et al. "Evaluation and calibration of high-throughput predictions of chemical distribution to tissues". This version contains calibrations for tissue:plasma partition coefficient calibration predictions. 
 
 ## New Features
@@ -381,7 +374,7 @@ This version is consistent with the published version of Pearce et al. "Evaluati
 ## Bug Fixes 
 * Corrected calc_mc_css bug: daily.dose now working as an argument (previously only running as 1).
 
-# version 1.7 (July 15, 2017)
+# httk 1.7 (July 15, 2017)
 This version is consistent with the JSS publication of [Pearce et al. "httk: R Package for High-Throughput Toxicokinetics"](https://doi.org/10.18637%2Fjss.v079.i04).
 
 ## Bug Fixes 
@@ -389,7 +382,7 @@ This version is consistent with the JSS publication of [Pearce et al. "httk: R P
 * Corrected Funbound.plasma used for predicting partitioning into interstitial protein (negligible difference in predictions)
 * Corrected bug in calculating Rblood2plasma in calc_mc_css, and added faster method for calculating Rblood2plasma for 3compartmentss.
 
-# version 1.6 (June 8, 2017)
+# httk 1.6 (June 8, 2017)
 This version includes data and modifications as reported in the recently submitted Pearce et al. paper "Evaluation and Calibration of High-Throughput Predictions of Chemical Distribution to Tissues". 
 
 ## Enhancements
@@ -418,7 +411,7 @@ chem.physical_and_invitro.data
 ## Bug Fixes
 * corrected parameterize_3comp default.to.human bug: always set to false
 
-# version 1.5 (March 3, 2017)
+# httk 1.5 (March 3, 2017)
 This version is consistent with  Ring et al. "Identifying populations sensitive 
 to environmental chemicals by simulating toxicokinetic variability", which is 
 accepted for publication at Environment International. Revisions include models, 
@@ -442,18 +435,18 @@ Nutrition Examination Survey.
 * Corrected minor bug for `get_cheminfo`
 * Corrected bug in `monte_carlo`: Upper bound placed at limit of detection for censored params truncated normal distribution.  However, this has no impact on the default case where the limit of detection is .01 the mean .005 because of the small standard deviation size (.0015). Only large coefficients of variation or `Funbound.plasma` values close to the limit of detection would be affected.
 
-# version: 1.4 (February 3, 2016)
+# httk 1.4 (February 3, 2016)
 This revision incorporates changes suggested by the reviewers of Pearce et al. "httk: R Package for High-Throughput Toxicokinetics", which was accepted, pending minor revision, in the Journal of Statistical Software (now included in vignettes). 
 * Table name "PK.physiology.data" changed to "physiology.data".
 
-# version 1.3 (October 14, 2015)
+# httk 1.3 (October 14, 2015)
 This revision adds ~200 more chemicals (from two recent publications including [Wetmore et al. (2015)](https://doi.org/10.1093/toxsci/kfv171) and make several small changes to improve usability and stability. 
 
-# version 1.2 (May 11, 2015)
+# httk 1.2 (May 11, 2015)
 This version is consistent with a newly submitted article Pearce et al. "httk: R Package for High-Throughput Toxicokinetics" to the Journal of Statistical SoftwareJ describing use of this package.
 
 * This revision changes some model parameter names to follow a more systematic naming convention. 
 * Minor bugs have been corrected. 
 
-# Version 1.1
+# httk 1.1
 Initial public (CRAN) release (March 6, 2015).
