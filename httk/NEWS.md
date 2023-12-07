@@ -1,11 +1,10 @@
 ---
 title: "News for R package httk"
-<<<<<<< HEAD
-date: "July, 2023"
+date: "DEcember, 2023"
 output: html_document
 ---                                                 
 
-# version feature/PFAS] (July, 2023)
+# version feature/PFAS (July, 2023)
 ## Bug Fixes
 ## New Features
 * Added new chemical-specific *in vitro* data for Fup and Clint for PFAS measured in [Smeltz et al. (2023)](https://doi.org/10.1021/acs.chemrestox.3c00003)
@@ -25,15 +24,11 @@ output: html_document
 * Revised documentation for 1compartment model
 
 # version 2.2.3 (June, 2023)
-=======
-date: "October, 2023"
-output: html_document
----                                                 
+date: "December, 2023"
 
-# version 2.3.0 (October, 2023)
-This version accompanies the submission of manuscript Honda et al. ?Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals in Commerce and the Environment?
+# version 2.3.0 (December 5, 2023)
+This version accompanies the submission of manuscript Honda et al. "Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals in Commerce and the Environment"
 
->>>>>>> feature/oral
 ## Bug Fixes
 * Added parameter "plasma.vol" to one compartment model so that Monte Carlo works for non-human species
 * Added default units for "Aexh" and "Ainh" state variables in gas_pbtk model so that calc_css works for accumulative chemcials
@@ -63,7 +58,6 @@ This version accompanies the submission of manuscript Honda et al. ?Impact of Gu
 * Manuscript references listed in function documentation was converted to a BibTex format from manual insertion of the citations. (thanks Lily Whipple)
 * Updated 'get_physchem_param' to be case-insensitive
 * New Clint and Fup data curated from literature by ICF from [Black et al. (2021)](https://doi.org/10.1016/j.tox.2021.152819), [Williamson et al. (2020)](https://doi.org/10.1124/dmd.120.000131), [Zanelli et al. (2012)](https://doi.org/10.1124/dmd.111.042309), [Yamagata et al. (2017)](https://doi.org/10.1080/00498254.2016.1222639), and [Zanelli et al. (2019)](https://doi.org/10.1080/00498254.2018.1451010) (thank you Noelle Sinski and Colin Guider)
-
 
 # version 2.2.2 (February 20, 2023)
 ## Bug Fixes

@@ -319,105 +319,40 @@ Warning messages:
 Aintestine 
      150.3 
 > 
-> parameterize_3comp(chem.name="Aminopterin")[sort(names(parameterize_3comp(chem.name="Aminopterin")))]
-$BW
-[1] 70
-
-$Caco2.Pab
-[1] 1.6
-
-$Caco2.Pab.dist
-[1] NA
-
-$Clint
-[1] 0
-
-$Clint.dist
-[1] NA
-
-$Clmetabolismc
-[1] 0
-
-$Fabsgut
-[1] 0.8719
-
-$Fhep.assay.correction
-[1] 0.9482
-
-$Funbound.plasma
-[1] 0.7498
-
-$Funbound.plasma.adjustment
-[1] 0.9998
-
-$Funbound.plasma.dist
-[1] NA
-
-$hematocrit
-[1] 0.44
-
-$Kgut2pu
-[1] 1.373
-
-$kgutabs
-[1] 2.18
-
-$Kliver2pu
-[1] 3.221
-
-$Krbc2pu
-[1] 0.7415
-
-$Krest2pu
-[1] 0.778
-
-$liver.density
-[1] 1.05
-
-$MA
-[1] 7.082
-
-$million.cells.per.gliver
-[1] 110
-
-$MW
-[1] 440.4
-
-$pKa_Accept
-pKa_Accept 
-    "8.09" 
-
-$pKa_Donor
-pKa_Donor 
-   "2.81" 
-
-$Pow
-[1] 0.03467
-
-$Qcardiacc
-[1] 13.88
-
-$Qgfrc
-[1] 0.3099
-
-$Qgutf
-[1] 0.2054
-
-$Qliverf
-[1] 0.0535
-
-$Rblood2plasma
-[1] 0.8046
-
-$Vgutc
-[1] 0.0158
-
-$Vliverc
-[1] 0.02448
-
-$Vrestc
-[1] 0.7879
-
+> p <- parameterize_3comp(chem.name="Aminopterin")[sort(names(parameterize_3comp(chem.name="Aminopterin")))]
 There were 16 warnings (use warnings() to see them)
+> for (this.param in sort(names(p))) cat(paste(this.param,": ",p[[this.param]],"\n"))
+BW :  70 
+Caco2.Pab :  1.6 
+Caco2.Pab.dist :  NA 
+Clint :  0 
+Clint.dist :  NA 
+Clmetabolismc :  0 
+Fabsgut :  0.8719 
+Fhep.assay.correction :  0.9482 
+Funbound.plasma :  0.7498 
+Funbound.plasma.adjustment :  0.9998 
+Funbound.plasma.dist :  NA 
+hematocrit :  0.44 
+Kgut2pu :  1.373 
+kgutabs :  2.18 
+Kliver2pu :  3.221 
+Krbc2pu :  0.7415 
+Krest2pu :  0.778 
+liver.density :  1.05 
+MA :  7.082 
+million.cells.per.gliver :  110 
+MW :  440.4 
+pKa_Accept :  8.09 
+pKa_Donor :  2.81 
+Pow :  0.03467 
+Qcardiacc :  13.88 
+Qgfrc :  0.3099 
+Qgutf :  0.2054 
+Qliverf :  0.0535 
+Rblood2plasma :  0.8046 
+Vgutc :  0.0158 
+Vliverc :  0.02448 
+Vrestc :  0.7879 
 > 
 > quit("no")

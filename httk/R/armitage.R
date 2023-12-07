@@ -169,7 +169,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' 
 #' @param this.pH 7.0, pH of cell culture
 #' 
-#' @param neutral.only FALSE, Should we restrict the partitioning concentration to neutral only?
+#' @param restrict.ion.partitioning FALSE, Should we restrict the chemical available to partition to only the neutral fraction?
 #'
 #' @return
 #' \tabular{lll}{
@@ -182,20 +182,20 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' v_working \tab Filled volume of well \tab uL \cr     
 #' cell_yield \tab Number of cells \tab cells \cr    
 #' gkow \tab The log10 octanol to water (PC) (logP)\tab log10 unitless ratio \cr          
-#' logHenry \tab The log10 Henry's law constant '\tab log10(atmosphers*m^3/mole) \cr      
-#' gswat \tab The log10 water solubility (logWSol) \tab log10 M=mole/L \cr         
-#' MP \tab The chemical compound melting point \tab degrees Celsius \cr           
+#' logHenry \tab The log10 Henry's law constant '\tab log10 unitless ratio \cr      
+#' gswat \tab The log10 water solubility (logWSol) \tab log10 mg/L \cr         
+#' MP \tab The chemical compound melting point \tab degrees Kelvin \cr           
 #' MW \tab The chemical compound molecular weight \tab g/mol \cr            
 #' gkaw \tab The air to water PC \tab unitless ratio \cr          
 #' dsm \tab \tab \cr           
 #' duow \tab \tab \cr          
 #' duaw \tab \tab \cr          
 #' dumw \tab \tab \cr          
-#' gkmw \tab \tab \cr          
+#' gkmw \tab log10 \tab \cr          
 #' gkcw \tab The log10 cell/tissue to water PC \tab log10 unitless ratio\cr          
-#' gkbsa \tab \tab \cr         
-#' gkpl \tab \tab \cr          
-#' ksalt \tab \tab \cr        
+#' gkbsa \tab The log10 bovine serum albumin to water partitiion coefficient \tab unitless \cr         
+#' gkpl \tab log10\tab \cr          
+#' ksalt \tab Setschenow constant \tab L/mol \cr        
 #' Tsys \tab System temperature \tab degrees C \cr          
 #' Tref \tab Reference temperature\tab degrees K \cr          
 #' option.kbsa2 \tab Use alternative bovine-serum-albumin partitioning model \tab logical \cr  
@@ -228,10 +228,10 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' kmw \tab \tab \cr           
 #' kow \tab The octanol to water PC (i.e., 10^gkow) \tab unitless \cr           
 #' kaw \tab The air to water PC (i.e., 10^gkaw) \tab unitless \cr           
-#' swat \tab The water solubility (i.e., 10^gswat*1e6) \tab uM=umol/L \cr         
+#' swat \tab The water solubility (i.e., 10^gswat) \tab mg/L \cr         
 #' kpl \tab \tab \cr           
 #' kcw \tab The cell/tissue to water PC (i.e., 10^gkcw) \tab unitless \cr           
-#' kbsa \tab \tab \cr          
+#' kbsa \tab The bovine serum albumin to water PC \tab unitless \cr          
 #' swat_L \tab \tab \cr        
 #' soct_L \tab \tab \cr        
 #' scell_L \tab \tab \cr       
@@ -357,7 +357,7 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
                           this.conc_ser_lip = 1.9, # g/L mass concentration of lipids in serum
                           this.Vdom = 0, # L the volume of dissolved organic matter (DOM)
                           this.pH = 7.0, # pH of cell culture
-                          neutral.only = FALSE # Should we restrict the partitioning concentration to neutral only?
+                          restrict.ion.partitioning = FALSE # Should we restrict the partitioning concentration to neutral only?
                           )
 {
   # this.Tsys <- 37
@@ -394,7 +394,7 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
   ccells<-eta_free <- cfree.invitro <- nomconc <- well_number <- NULL
   logHenry <- logWSol <- NULL
   conc_ser_alb <- conc_ser_lip <- Vbm <- NULL
-  Fneutral <- NULL
+  Fneutral <- MW <- NULL
   #End R CMD CHECK appeasement.
   
   if(all(is.na(tcdata))){
@@ -447,14 +447,18 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
   # Check if required phys-chem parameters are provided:
   if(!all(c("gkow","logHenry","gswat","MP","MW") %in% names(tcdata))){
   # If not, pull them:
-    tcdata[, c("gkow","logHenry","gswat","MP","MW") := 
+    tcdata[, c("gkow","logHenry","logWSol","MP","MW") := 
              as.data.frame(get_physchem_param(param = c("logP","logHenry","logWSol","MP","MW"), 
                                 chem.cas = casrn),row.names = casrn)]
   }
+
+  # Convevert from chem.physical_and_invitro.data units to Armitage model units:
   tcdata[, "gkaw" := logHenry - log10(298.15*8.2057338e-5)] # log10 atm-m3/mol to (mol/m3)/(mol/m3) (unitless)
+  tcdata[, "gswat" := logWSol + log10(MW*1000)] # log10 mol/L to log10 mg/L
   
-  # Check if considering charge:
-  if (neutral.only)
+  # Check if we allowed ionized molecules to partition into various in vitro
+  # components:
+  if (restrict.ion.partitioning)
   {
     if (!all(c("pKa_Donor","pKa_Accept") %in% names(tcdata)))
     {
@@ -467,24 +471,8 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
     tcdata[, Fneutral := apply(.SD,1,function(x) calc_ionization(
         pH = this.pH,    
         pKa_Donor = x["pKa_Donor"], 
-        pKa_Accept = x["pKa_Accept"])[["fraction_neutral"]])] 
-  } else tcdata[, Fneutral := 1]
-  
-  # Check if considering charge:
-  if (neutral.only)
-  {
-    if (!all(c("pKa_Donor","pKa_Accept") %in% names(tcdata)))
-    {
-    # If not, pull them:
-      tcdata[, c("pKa_Donor","pKa_Accept") := 
-               as.data.frame(get_physchem_param(param = c("pKa_Donor","pKa_Accept"), 
-                                  chem.cas = casrn),row.names = casrn)]
-    }
-    # Calculate the fraction neutral:
-    tcdata[, Fneutral := apply(.SD,1,function(x) calc_ionization(
-        pH = this.pH,    
-        pKa_Donor = x["pKa_Donor"], 
-        pKa_Accept = x["pKa_Accept"])[["fraction_neutral"]])] 
+        pKa_Accept = x["pKa_Accept"])[["fraction_neutral"]])]
+  # Otherwise allow all of the chemical to partition:
   } else tcdata[, Fneutral := 1]
   
   manual.input.list <- list(Tsys=this.Tsys, Tref=this.Tref,
@@ -529,7 +517,7 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
     .[is.na(duow),duow:=-20000] %>% # see SI EQC model - in vitro tox test July 2014.xlsm
     .[is.na(duaw),duaw:=60000] %>% # see SI EQC model - in vitro tox test July 2014.xlsm
     .[is.na(dumw),dumw:=duow] %>%
-    .[,MP:= MP+273.15] %>%
+    .[,MP:= MP+273.15] %>% # Convert to degrees K
     #.[,F_ratio:=exp(-(dsm/R)*(MP/Tsys))] %>% 
     .[,F_ratio:=10^(0.01*(Tsys-MP))] %>% 
     .[MP<=Tsys,F_ratio:=1]
@@ -543,13 +531,15 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
     .[is.na(gkmw),gkmw:=1.01*gkow + 0.12] %>% 
     .[,gkmw:=gkmw-dumw*Tcor] %>%
     .[,kmw:=10^gkmw] %>%
-    .[,gkow:=gkow-duow*Tcor] %>%
+    .[,gkow:=gkow-duow*Tcor] %>%                                                                            
     .[,kow:=10^gkow] %>%
     .[,gkaw:=gkaw-duaw*Tcor] %>%
     .[,kaw := 10^gkaw] %>%
     .[,gswat:=gswat-(-1*duow)*Tcor] %>%
-    .[,swat:=10^gswat*1e6]
+#   .[,swat:=10^gswat*1e6] 
+    .[,swat:=10^gswat] 
   
+ # log Kplast-W = 0.97 log KOW - 6.94 (Kramer)
   tcdata[is.na(gkpl),gkpl:=0.97*gkow-6.94] %>% 
     .[,kpl:=10^gkpl] %>%
     .[!(is.na(gkcw)),gkcw:=gkcw-duow*Tcor] %>%
@@ -566,7 +556,7 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
   tcdata[option.kbsa2==FALSE & is.na(gkbsa),kbsa:=10^(0.71*gkow+0.42)]
 
 # Change partition coefficients to account for only "neutral" chemical 
-# (could be 100% depending on value of "neutral.only"):
+# (could be 100% depending on value of "restrict.ion.partitioning"):
   tcdata[is.na(ksalt),ksalt:=0.04*gkow+0.114] %>%
     .[,swat:=swat*10^(-1*ksalt*csalt)] %>%
     .[,s1.GSE:=s1.GSE*10^(-1*ksalt*csalt)] %>%

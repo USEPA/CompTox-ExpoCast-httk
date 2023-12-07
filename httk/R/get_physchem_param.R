@@ -87,14 +87,18 @@ get_physchem_param <- function(
                                   param[!param %in% c("pKa_Accept","pKa_Donor", "logMA")]]))) | 
      any(param %in% c("pKa_Donor","pKa_Accept","logMA")))
   {
-    values <- chem.physical_and_invitro.data[this.index,param]
-    if (any(!param %in% c("pKa_Accept", "pKa_Donor", "Chemical.Class"))){
-# Add numeric values to the values.out list to be returned:
-      values.out <- lapply(as.list(values[!param %in% c(
-        "pKa_Accept", 
-        "pKa_Donor", 
-        "Chemical.Class")]), as.numeric)
-    } else{
+    col.numbers <- NULL
+    for (this.param in param) col.numbers <- c(col.numbers,
+         which(tolower(colnames(chem.physical_and_invitro.data)) == this.param))
+    values <- chem.physical_and_invitro.data[this.index, col.numbers]
+# We want to make sure the values returned are numeric, unless they are pKa's
+# pKa's can be a comma separated list:
+    if (any(!param %in% tolower(c("pKa_Accept", "pKa_Donor"))))
+    {
+      values.out <- lapply(as.list(values[!param %in% 
+                                   tolower(c("pKa_Accept", "pKa_Donor"))]), 
+                                   as.numeric)
+    } else {
       values.out <- list()
     }
     
