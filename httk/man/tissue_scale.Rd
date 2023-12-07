@@ -18,7 +18,7 @@ Allometrically scaled tissue mass or flow, in the same units as
  \code{tissue_mean_ref}.
 }
 \description{
-Allometrically scale a tissue mass or flow based on height^{3/4}.
+Allometrically scale a tissue mass or flow based on height^(3/4).
 }
 \references{
 \insertRef{ring2017identifying}{httk}

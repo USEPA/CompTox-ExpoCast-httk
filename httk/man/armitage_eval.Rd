@@ -110,20 +110,20 @@ v_total \tab Total volume of well \tab uL \cr
 v_working \tab Filled volume of well \tab uL \cr     
 cell_yield \tab Number of cells \tab cells \cr    
 gkow \tab The log10 octanol to water (PC) (logP)\tab log10 unitless ratio \cr          
-logHenry \tab The log10 Henry's law constant '\tab log10(atmosphers*m^3/mole) \cr      
-gswat \tab The log10 water solubility (logWSol) \tab log10 M=mole/L \cr         
-MP \tab The chemical compound melting point \tab degrees Celsius \cr           
+logHenry \tab The log10 Henry's law constant '\tab log10 unitless ratio \cr      
+gswat \tab The log10 water solubility (logWSol) \tab log10 mg/L \cr         
+MP \tab The chemical compound melting point \tab degrees Kelvin \cr           
 MW \tab The chemical compound molecular weight \tab g/mol \cr            
 gkaw \tab The air to water PC \tab unitless ratio \cr          
 dsm \tab \tab \cr           
 duow \tab \tab \cr          
 duaw \tab \tab \cr          
 dumw \tab \tab \cr          
-gkmw \tab \tab \cr          
+gkmw \tab log10 \tab \cr          
 gkcw \tab The log10 cell/tissue to water PC \tab log10 unitless ratio\cr          
-gkbsa \tab \tab \cr         
-gkpl \tab \tab \cr          
-ksalt \tab \tab \cr        
+gkbsa \tab The log10 bovine serum albumin to water partitiion coefficient \tab unitless \cr         
+gkpl \tab log10\tab \cr          
+ksalt \tab Setschenow constant \tab L/mol \cr        
 Tsys \tab System temperature \tab degrees C \cr          
 Tref \tab Reference temperature\tab degrees K \cr          
 option.kbsa2 \tab Use alternative bovine-serum-albumin partitioning model \tab logical \cr  
@@ -156,10 +156,10 @@ ss.GSE \tab \tab \cr
 kmw \tab \tab \cr           
 kow \tab The octanol to water PC (i.e., 10^gkow) \tab unitless \cr           
 kaw \tab The air to water PC (i.e., 10^gkaw) \tab unitless \cr           
-swat \tab The water solubility (i.e., 10^gswat*1e6) \tab uM=umol/L \cr         
+swat \tab The water solubility (i.e., 10^gswat) \tab mg/L \cr         
 kpl \tab \tab \cr           
 kcw \tab The cell/tissue to water PC (i.e., 10^gkcw) \tab unitless \cr           
-kbsa \tab \tab \cr          
+kbsa \tab The bovine serum albumin to water PC \tab unitless \cr          
 swat_L \tab \tab \cr        
 soct_L \tab \tab \cr        
 scell_L \tab \tab \cr       

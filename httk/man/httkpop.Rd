@@ -3,7 +3,6 @@
 \docType{package}
 \name{httkpop}
 \alias{httkpop}
-\alias{httkpop-package}
 \title{httkpop: Virtual population generator for HTTK.}
 \description{
 The httkpop package generates virtual population physiologies for use in 

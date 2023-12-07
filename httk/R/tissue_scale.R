@@ -1,6 +1,6 @@
 #'Allometric scaling.
 #'
-#'Allometrically scale a tissue mass or flow based on height^{3/4}.
+#'Allometrically scale a tissue mass or flow based on height^(3/4).
 #'
 #'@param height_ref Reference height in cm.
 #'@param height_indiv Individual height in cm.
