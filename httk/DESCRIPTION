@@ -84,7 +84,7 @@ Suggests: knitr, rmarkdown, R.rsp, gplots, scales,
         EnvStats, MASS, RColorBrewer, TeachingDemos, 
         stringr, reshape, viridis, gmodels,
         colorspace, cowplot, ggrepel, dplyr, forcats, smatr, gridExtra,
-        readxl
+        readxl, ks
 License: GPL-3
 LazyData: true
 LazyDataCompression: xz
