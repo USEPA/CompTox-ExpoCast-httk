@@ -51,6 +51,7 @@ head(initial_nondefault_dose)
 initial_nondefault_dose_intestine = out_nondefault_dosing[2,"Aintestine"]
 head(initial_nondefault_dose_intestine)
 
-parameterize_3comp(chem.name="Aminopterin")[sort(names(parameterize_3comp(chem.name="Aminopterin")))]
+p <- parameterize_3comp(chem.name="Aminopterin")[sort(names(parameterize_3comp(chem.name="Aminopterin")))]
+for (this.param in sort(names(p))) cat(paste(this.param,": ",p[[this.param]],"\n"))
 
 quit("no")

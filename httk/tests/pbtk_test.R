@@ -15,6 +15,7 @@ head(solve_pbtk(chem.name="bisphenol a"))
 head(solve_pbtk(chem.cas="80-05-7"))
 head(solve_pbtk(parameters=parameterize_pbtk(chem.cas="80-05-7")))
 
-parameterize_pbtk(chem.name="Aminopterin")[sort(names(parameterize_pbtk(chem.name="Aminopterin")))]
+p <- parameterize_pbtk(chem.name="Aminopterin")[sort(names(parameterize_pbtk(chem.name="Aminopterin")))]
+for (this.param in sort(names(p))) cat(paste(this.param,": ",p[[this.param]],"\n"))
 
 quit("no")
