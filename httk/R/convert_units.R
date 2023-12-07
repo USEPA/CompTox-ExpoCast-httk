@@ -23,9 +23,9 @@
 #' 
 #' \emph{Andersen and Clewell's Rules of PBPK Modeling:}
 #' \itemize{
-#'  \item{1}{Check Your Units}
-#'  \item{2}{\strong{Check Your Units}}
-#'  \item{3}{Check Mass Balance}
+#' \item{"1"}{Check Your Units}
+#' \item{"2"}{\strong{Check Your Units}}
+#' \item{"3"}{Check Mass Balance}
 #' }
 #'
 #' @param input.units Assigned input units of interest
