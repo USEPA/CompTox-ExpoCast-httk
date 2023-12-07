@@ -1,11 +1,11 @@
 ---
 title: "News for R package httk"
-date: "October, 2023"
+date: "December, 2023"
 output: html_document
 ---                                                 
 
-# version 2.3.0 (October, 2023)
-This version accompanies the submission of manuscript Honda et al. ?Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals in Commerce and the Environment?
+# version 2.3.0 (December 5, 2023)
+This version accompanies the submission of manuscript Honda et al. "Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals in Commerce and the Environment"
 
 ## Bug Fixes
 * Added parameter "plasma.vol" to one compartment model so that Monte Carlo works for non-human species
