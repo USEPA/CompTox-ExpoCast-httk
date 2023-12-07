@@ -8,7 +8,7 @@
 \description{
 \Sexpr{tools:::Rd_package_description("httk")}
 }
-\seealso{
+\references{
 \href{https://www.epa.gov/chemical-research/computational-toxicology-communities-practice-high-throughput-toxicokinetic-httk}{PowerPoint Presentation: High-Throughput Toxicokinetics (HTTK) R package}
 
 \href{https://www.epa.gov/chemical-research/toxicokinetics-overview}{Toxicokinetics at the U.S. Environmental Protection Agency}
@@ -53,7 +53,7 @@ Wambaugh et al. (2015): Toxicokinetic Triage for Environmental Chemicals
 (\doi{10.1093/toxsci/kfv118})
 
 Wambaugh et al. (2018): Evaluating In Vitro-In Vivo Extrapolation of
-Toxicokinetics}
+Toxicokinetics
 (\doi{10.1093/toxsci/kfy020})
 
 Wambaugh et al. (2019): Assessing Toxicokinetic Uncertainty and Variability
@@ -62,12 +62,35 @@ in Risk Prioritization
 
 Wetmore et al. (2015): Incorporating High-Throughput Exposure Predictions with Dosimetry-Adjusted
 In Vitro Bioactivity to Inform Chemical Toxicity Testing
-(\doi{10.1093/toxsci/kfv171)
+(\doi{10.1093/toxsci/kfv171})
 
 \href{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}{The U.S. EPA ExpoCast (Exposure Forecasting) Project}
 }
+\seealso{
+\code{\link{httkpop}}
+}
 \author{
-John Wambaugh, Robert Pearce, Caroline Ring, Gregory Honda, Nisha
-Sipes, Jimena Davis, Barbara Wetmore, Woodrow Setzer, Mark Sfeir
+\href{https://orcid.org/0000-0002-4024-534X}{John Wambaugh},
+\href{https://orcid.org/0000-0002-2891-9380}{Sarah Davidson-Fritz},  
+\href{https://orcid.org/0000-0003-3168-4049}{Robert Pearce}, 
+\href{https://orcid.org/0000-0002-0463-1251}{Caroline Ring},
+\href{https://orcid.org/0000-0001-7713-9850}{Greg Honda},
+Mark Sfeir, 
+\href{https://orcid.org/0000-0003-0526-2395}{Matt Linakis}, 
+\href{https://orcid.org/0000-0001-5570-6383}{Dustin Kapraun}, 
+\href{https://orcid.org/0000-0001-8992-9294}{Nathan Pollesch},
+\href{https://orcid.org/0000-0001-8511-4653}{Miyuki Breen},
+\href{https://orcid.org/0000-0002-5754-6085}{Shannon Bell},
+\href{https://orcid.org/0000-0003-0752-1848}{Xiaoqing Chang}, 
+\href{https://orcid.org/0000-0002-0248-8412}{Todor Antonijevic},
+Jimena Davis,
+\href{https://orcid.org/0000-0001-8781-2391}{Elaina Kenyon},
+\href{https://orcid.org/0000-0002-5901-1404}{James Sluka},
+Noelle Sinski, 
+\href{https://orcid.org/0000-0003-4203-6426}{Nisha Sipes}, 
+\href{https://orcid.org/0000-0002-6878-5348}{Barbara Wetmore},
+Lily Whipple,
+and
+Woodrow Setzer
 }
 \keyword{package}
