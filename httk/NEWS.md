@@ -353,7 +353,7 @@ This version is consistent with the published version of Pearce et al. "Evaluati
 ## New Features
 * Added arguments for whether or not to use new calibration regressions (regression) and adjusted Funbound.plasma (adjusted.Funbound.plasma).
 * Hepatic clearance and plasma binding predictions for ~8000 chemicals from Simulations Plus ADMET Predictor used in [Sipes et al. (2017)](<https://doi.org/10.1021/acs.est.7b00650>) is now included as Sipes2017 and can be added with the new function: load_sipes2017().
-* New data has been added from an IVIVE evaluation of toxicokinetics ([Wambaugh et al. 2018]<https://doi.org/10.1093/toxsci/kfy020>)
+* New data has been added from an IVIVE evaluation of toxicokinetics [Wambaugh et al. 2018](<https://doi.org/10.1093/toxsci/kfy020>)
   * New data were added to chem.invivo.PK.data and chem.invivo.PK.summary.data.
   * A new table is included: chem.invivo.PK.aggregate data
   * kgutabs default changed to 2.18.
