@@ -12,7 +12,7 @@ A data.frame containing 9411 rows and 54 columns.
  CAS\tab The preferred Chemical Abstracts Service Registry Number \tab none \cr                     
  CAS.Checksum \tab A logical indicating whether the CAS number is valid \tab none \cr                   
  DTXSID \tab DSSTox Structure ID 
-(\url{http://comptox.epa.gov/dashboard}) \tab none \cr                  
+(\url{https://comptox.epa.gov/dashboard}) \tab none \cr                  
  Formula \tab The proportions of atoms within the chemical compound  \tab none \cr                   
  All.Compound.Names \tab All names of the chemical as they occured in the
 data \tab none \cr              
@@ -119,7 +119,7 @@ and \code{\link{load_dawson2021}} may be used to add in silico, structure-based
 predictions for many thousands of additional compounds to this table.
 }
 \references{
-CompTox Chemicals Dashboard (\url{http://comptox.epa.gov/dashboard})
+CompTox Chemicals Dashboard (\url{https://comptox.epa.gov/dashboard})
 
 EPI Suite, https://www.epa.gov/opptintr/exposure/pubs/episuite.htm
 

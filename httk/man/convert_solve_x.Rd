@@ -41,7 +41,7 @@ be specified.}
 must be specified.}
 
 \item{dtxsid}{EPA's DSSTox Structure ID .
-(\url{http://comptox.epa.gov/dashboard}) the chemical must be identified by
+(\url{https://comptox.epa.gov/dashboard}) the chemical must be identified by
 either CAS, name, or DTXSIDs.}
 
 \item{parameters}{A set of model parameters, especially a set that
