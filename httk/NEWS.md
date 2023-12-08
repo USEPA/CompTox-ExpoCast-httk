@@ -258,7 +258,7 @@ This version is consistent with consistent with Linakis et al. (submitted) "Deve
     * `convert_httkpop_*`: Model-specific functions for converting HTTK-pop biometrics to model parameters
   * Beta testing and bug reports provided by Xiaoqing Chang.
 
-* EPA's DSSTox Chemical Structure ID's (DTXSIDs, see <http://comptox.epa.gov/dashboard/>) now work as chemical identifiers in addition to name and CAS.
+* EPA's DSSTox Chemical Structure ID's (DTXSIDs, see <https://comptox.epa.gov/dashboard>) now work as chemical identifiers in addition to name and CAS.
 * Results now truncated to appropriate significant figures (4) and precision (1e-12).
 * New physiological parameters have been added for monkeys
 * To decrease package size the load image option of load_sipes2017 was eliminated
