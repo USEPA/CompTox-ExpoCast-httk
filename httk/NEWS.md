@@ -396,7 +396,7 @@ This version includes data and modifications as reported in the recently submitt
 * New in vitro data from [Uchimura et al. (2010)](https://doi.org/10.1002/bdd.711), [Brown et al. (2007)](https://doi.org/10.1124/dmd.106.011569) and [Pirovano et al. (2016)](https://doi.org/10.1016/j.etap.2016.01.017), [Gulden et al. (2002)](https://doi.org/10.1016/S0300-483X(02)00085-9)
 * [Tonnelier et al. (2012)](https://doi.org/10.1007/s00204-011-0768-0) Funbound.plasma values of 0.005 changed to 0 in 
 chem.physical_and_invitro.data
-* New tissue.data table with [Ruark et al. (2014)[https://doi.org/10.1002/jps.24011] that contains different formatting with human and rat specific data
+* New tissue.data table with [Ruark et al. (2014)](https://doi.org/10.1002/jps.24011) that contains different formatting with human and rat specific data
 * parameterize_schmitt: added force.human.fub argument
 * added plasma protein and neutral lipid volume fractions to physiology.data for use in package
 * calc_mc_css: defaults to direct resampling. no longer coerces species to human when `httkpop=TRUE`. When another species is entered, a warning is thrown and the function behaves as if httkpop=FALSE.
