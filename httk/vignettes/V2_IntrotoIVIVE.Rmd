@@ -572,7 +572,7 @@ requires load the package *readXL*.
 SEEM <- read_excel("CCD-Batch-Search_DATE.xlsx",sheet=2)
 ```
 
-Perhaps most easily we can grab SEEM predictions already in RData format from https://github.com/HumanExposure/SEEM3RPackage/tree/main/SEEM3/data
+Perhaps most easily we can grab SEEM predictions already in RData format from [GitHub](https://github.com/HumanExposure/SEEM3RPackage/tree/main/SEEM3Predictor/data)
 Download the file Ring2018Preds.RData and load it:
 ```{r load_seem3, eval = FALSE}
 load("Ring2018Preds.RData")

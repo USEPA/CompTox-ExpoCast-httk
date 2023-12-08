@@ -19,7 +19,7 @@ chemical must be identified by either CAS, name, or DTXISD}
 \item{chem.name}{Chemical name (spaces and capitalization ignored) --  the 
 chemical must be identified by either CAS, name, or DTXISD}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 -- the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{Caco2.Pab.default}{sets the default value for  Caco2.Pab if Caco2.Pab is 

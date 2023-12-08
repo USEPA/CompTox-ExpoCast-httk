@@ -3,22 +3,28 @@
 #' This function initializes the parameters needed in the functions
 #' solve_fetal_pbtk by calling solve_pbtk and adding additional parameters.
 #' 
-#' 
 #' @param chem.name Either the chemical name or the CAS number must be
 #' specified. 
+#' 
 #' @param chem.cas Either the chemical name or the CAS number must be
 #' specified. 
-#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' 
+#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human"). Currently only a narrow human model is supported. 
+#' 
 #' @param fetal_fup_adjustment Logical indicator of whether to use an adjusted
 #' estimate for fetal fup based on the fetal:maternal plasma protein binding
 #' ratios presented in McNamara and Alcorn's 2002 study "Protein Binding
 #' Predictions in Infants." Defaults to TRUE.
+#' 
 #' @param return.kapraun2019 If TRUE (default) the empirical parameters for the
 #' Kapraun et al. (2019) maternal-fetal growth parameters are provided.
+#' 
 #' @param suppress.messages Whether or not the output message is suppressed.
+#' 
 #' @param ... Arguments passed to parameterize_pbtk.
 #'
 #' @return \item{pre_pregnant_BW}{Body Weight before pregnancy, kg.}
