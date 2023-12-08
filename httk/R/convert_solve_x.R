@@ -26,7 +26,7 @@
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
 #' @param dtxsid EPA's DSSTox Structure ID .
-#' (\url{http://comptox.epa.gov/dashboard}) the chemical must be identified by
+#' (\url{https://comptox.epa.gov/dashboard}) the chemical must be identified by
 #' either CAS, name, or DTXSIDs.
 #' @param parameters A set of model parameters, especially a set that
 #' includes MW (molecular weight) for our conversions.
