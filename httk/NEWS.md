@@ -1,5 +1,5 @@
 # httk 2.3.0 (2023-12-05)
-This version accompanies the submission of manuscript Honda et al. "Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals in Commerce and the Environment"
+This version accompanies the submission of manuscript Honda et al. "Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals in Commerce and the Environment". Find the analysis scripts on [GitHub](https://github.com/USEPA/comptox-expocast-caco2)
 
 ## Bug Fixes
 * Added parameter "plasma.vol" to one compartment model so that Monte Carlo works for non-human species
@@ -262,7 +262,7 @@ This version is consistent with consistent with Linakis et al. (submitted) "Deve
 * Results now truncated to appropriate significant figures (4) and precision (1e-12).
 * New physiological parameters have been added for monkeys
 * To decrease package size the load image option of load_sipes2017 was eliminated
- * Added vignette for Figure 6 from [Frank, et al. "Defining toxicological tipping points in neuronal network development."](<https://doi.org/10.1016/j.taap.2018.01.017>)
+ * Added vignette for Figure 6 from [Frank, et al. (2018) "Defining toxicological tipping points in neuronal network development."](<https://doi.org/10.1016/j.taap.2018.01.017>)
    
 # httk 1.10.1 (2019-09-10)
 
