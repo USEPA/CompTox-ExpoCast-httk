@@ -1,5 +1,6 @@
 #' Parameters for Schmitt's (2008) Tissue Partition Coefficient Method
 #' 
+#' @description
 #' This function provides the necessary parameters to run
 #' \code{\link{predict_partitioning_schmitt}}, excluding the data in table
 #' \code{\link{tissue.data}}. The model is based on the Schmitt (2008) method
@@ -65,24 +66,16 @@
 #' @seealso \code{\link{apply_fup_adjustment}}
 #'
 #' @references 
-#' Pearce, Robert G., et al. "Httk: R package for high-throughput 
-#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 #'
-#' Schmitt, Walter. "General approach for the calculation of 
-#' tissue to plasma partition coefficients." Toxicology in Vitro 22.2 (2008): 
-#' 457-467.
-#' 
-#' Schmitt, Walter. "Corrigendum to: General approach for the calculation of 
-#' tissue to plasma partition coefficients" Toxicology in Vitro 22.6 (2008): 1666.
-#' 
-#' Peyret, Thomas, Patrick Poulin, and Kannan Krishnan. "A unified algorithm 
-#' for predicting partition coefficients for PBPK modeling of drugs and 
-#' environmental chemicals." Toxicology and applied pharmacology 249.3 (2010): 
-#' 197-207.
+#' \insertRef{pearce2017httk}{httk}
 #'
-#' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-#' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
-#' and pharmacodynamics 44.6 (2017): 549-565.
+#' \insertRef{schmitt2008general}{httk}
+#'
+#' \insertRef{schmitt2008corrigendum}{httk}
+#'
+#' \insertRef{pearce2017evaluation}{httk}
+#' 
+#' \insertRef{peyret2010unified}{httk}
 #'
 #' @examples
 #' 
@@ -321,8 +314,14 @@ parameterize_schmitt <- function(chem.cas=NULL,
     fup.corrected <- NA
   } 
   
-  if (is.na(fup.corrected)) stop(
-"fup is NA, Schmitt's method for tissue partition cannot be used.")
+  if (is.na(fup.corrected))
+  {
+    if (species=="Human"){
+      stop("fup is NA, Schmitt's method for tissue partition cannot be used.")
+    }else{
+      stop("fup is NA, Schmitt's method for tissue partition cannot be used. Try setting default.to.human to TRUE.")
+    }
+  }
 
   outlist <- list(Funbound.plasma=fup.corrected,
                   unadjusted.Funbound.plasma=fup.point,
@@ -335,6 +334,12 @@ parameterize_schmitt <- function(chem.cas=NULL,
                   Fprotein.plasma = Fprotein,
                   plasma.pH=plasma.pH,
                   alpha=alpha)
+                  
+  # Only include parameters specified in modelinfo:
+  outlist <- outlist[model.list[["schmitt"]]$param.names]
+
+  # alphabetize:
+  outlist <- outlist[order(tolower(names(outlist)))]
   
   return(lapply(outlist,set_httk_precision))                                
 }

@@ -42,11 +42,11 @@ must be specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
-\item{times}{Optional time sequence for specified number of days. Dosing
-sequence begins at the beginning of times.}
+\item{times}{Optional time sequence for specified number of output times (in days) to be returned by the function.
+The model is solved explicitly at the time sequence specified. Dosing sequence begins at the first time provided.}
 
 \item{parameters}{List of chemical parameters, as output by 
 parameterize_pbtk function. Overrides chem.name and chem.cas.}
@@ -223,8 +223,7 @@ solve_pbtk(chem.name="Besonprodil",
 
 }
 \references{
-Pearce, Robert G., et al. "Httk: R package for high-throughput
-toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+\insertRef{pearce2017httk}{httk}
 }
 \author{
 John Wambaugh, Robert Pearce, Miyuki Breen, Mark Sfeir, and

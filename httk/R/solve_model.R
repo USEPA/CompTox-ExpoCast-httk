@@ -49,18 +49,25 @@
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
+#' 
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
-#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' 
+#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
-#' @param times Optional time sequence for specified number of days. Dosing
-#' sequence begins at the beginning of times.
+#' 
+#' @param times Optional time sequence for specified number of output times (in days) to be returned by the function.
+#' The model is solved explicitly at the time sequence specified. Dosing sequence begins at the first time provided.
+#' 
 #' @param parameters List of chemical parameters, as output by 
 #' parameterize_pbtk function. Overrides chem.name and chem.cas.
+#' 
 #' @param model Specified model to use in simulation: "pbtk", "3compartment",
 #' "3compartmentss", "1compartment", "schmitt", ...
+#' 
 #' @param route String specification of route of exposure for simulation:
 #' "oral", "iv", "inhalation", ...
+#' 
 #' @param dosing List of dosing metrics used in simulation, which includes
 #' the namesake entries of a model's associated dosing.params. In the case
 #' of most httk models, these should include "initial.dose", "doses.per.day", 
@@ -71,42 +78,62 @@
 #' non-NULL value, solve_model uses a default dose of 1 mg/kg BW along with the 
 #' dose type (add/multiply) specified for a given route (e.g. add the dose to gut
 #' lumen for oral route)
+#' 
 #' @param days Simulated period. Default 10 days. 
+#' 
 #' @param tsteps The number of time steps per hour. Default of 4. 
+#' 
 #' @param initial.values Vector of numeric values containing the initial
 #' concentrations or amounts of the chemical in specified tissues with units
 #' corresponding to those specified for the model outputs. Default values are zero.
+#' 
 #' @param initial.value.units Vector of character strings containing the units
 #' corresponding to 'initial.values' specified for the model outputs.
 #' Default is assuming the units match expected compartment units for the model.
+#' 
 #' @param plots Plots all outputs if true.
+#' 
 #' @param suppress.messages Whether or not the output messages are suppressed.
+#' 
 #' @param species Species desired (models have been designed to be
 #' parameterized for some subset of the following species: "Rat", "Rabbit", 
 #' "Dog", "Mouse", or default "Human").
+#' 
 #' @param input.units Input units of interest assigned to dosing. Defaults
 #' to mg/kg BW, in line with the default dosing scheme of a one-time dose of
 #' 1 mg/kg in which no other dosing parameters are specified.
+#' 
 #' @param output.units Output units of interest for the compiled components.
 #' Defaults to NULL, and will provide values in model units if unspecified.
+#' 
 #' @param method Method used by integrator (deSolve).
+#' 
 #' @param rtol Argument passed to integrator (deSolve).
+#' 
 #' @param atol Argument passed to integrator (deSolve).
+#' 
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
 #' hematocrit, Funbound.plasma, and Krbc2pu.
+#' 
 #' @param recalc.clearance Recalculates the the hepatic clearance
 #' (Clmetabolism) with new million.cells.per.gliver parameter.
+#' 
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE along with partition coefficients calculated with this value.
+#' 
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
+#' 
 #' @param ... Additional arguments passed to the integrator.
+#' 
 #' @param monitor.vars Which variables are returned as a function of time. 
 #' Default values of NULL looks up variables specified in modelinfo_MODEL.R
+#' 
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset)
+#' 
 #' @param parameterize.arg.list Additional parameterized passed to the model
 #' parameterization function.
 #' 
@@ -117,8 +144,8 @@
 #' @author John Wambaugh, Robert Pearce, Miyuki Breen, Mark Sfeir, and
 #' Sarah E. Davidson
 #' 
-#' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
-#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#' @references
+#' \insertRef{pearce2017httk}{httk}
 #' 
 #' @keywords Solve
 #'
@@ -360,7 +387,7 @@ specification in compartment_units for model ", model)
 # necessarily need all parameters associated with a given model to do this:)
   if (is.null(parameters))
   {
-    parameters <- do.call(parameterize_function,args=purrr::compact(c(list(
+    parameters <- do.call(parameterize_function, args=purrr::compact(c(list(
       chem.cas=chem.cas,
       chem.name=chem.name,
       dtxsid=dtxsid,
@@ -372,7 +399,7 @@ specification in compartment_units for model ", model)
     if (!all(param_names %in% names(parameters)))
     {
       stop(paste("Missing parameters:",
-        paste(compiled_param_names[which(!param_names %in% 
+        paste(param_names[which(!param_names %in% 
         names(parameters))],collapse=', '),
         ". Use parameters from ",parameterize_function,".",sep="")) 
     }
@@ -425,7 +452,7 @@ specification in compartment_units for model ", model)
   if (!is.null(model.list[[model]]$do.first.pass))
     if (model.list[[model]]$do.first.pass)
   {
-    parameters$Fgutabs <- parameters$Fgutabs * parameters$hepatic.bioavailability
+    parameters$Fabsgut <- parameters$Fabsgut * parameters$hepatic.bioavailability
   }
 
 ### STATE VECTOR
@@ -726,7 +753,7 @@ specification in compartment_units for model ", model)
       eventdata$time,
       eventdata$time+SMALL.TIME)))
   }  
-  
+ 
 ### MODEL PARAMETERS FOR DESOLVE
 
   # Map the R parameters onto the names for the C code:
@@ -756,7 +783,7 @@ specification in compartment_units for model ", model)
   names(parameters) <- compiled_param_names
 
 ### RUNNING DESOLVE
-
+  
 # We use the events argument with deSolve to do multiple doses:
   out <- ode(
     y = state, 
@@ -778,9 +805,6 @@ specification in compartment_units for model ", model)
 
 # only give the requested times:
  if (!is.null(requested.times)) out <- out[out[,"time"] %in% requested.times, ]
-
-# Cannot guarantee arbitrary precision for deSolve:
-  out <- set_httk_precision(out)
 
 ### MODEL OUTPUT
 
@@ -813,6 +837,9 @@ specification in compartment_units for model ", model)
                             suppress.messages=suppress.messages)
   # Re-assign 'out' with the new output from 'cu.out'
   out <- cu.out[['new.ouput.matrix']]
+
+# Cannot guarantee arbitrary precision for deSolve:
+  out[,colnames(out)!="time"] <- set_httk_precision(out[,colnames(out)!="time"])
   
 # Make a plot if asked for it (not the default behavior):
   if (plots==TRUE)
@@ -899,5 +926,5 @@ Set recalc.clearance to TRUE if desired.")
     cat("\n")
   }
     
-  return(set_httk_precision(out)) 
+  return(out) 
 }

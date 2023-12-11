@@ -12,10 +12,8 @@ A data.frame containing 9411 rows and 54 columns.
  CAS\tab The preferred Chemical Abstracts Service Registry Number \tab none \cr                     
  CAS.Checksum \tab A logical indicating whether the CAS number is valid \tab none \cr                   
  DTXSID \tab DSSTox Structure ID 
-(\url{http://comptox.epa.gov/dashboard}) \tab none \cr                  
+(\url{https://comptox.epa.gov/dashboard}) \tab none \cr                  
  Formula \tab The proportions of atoms within the chemical compound  \tab none \cr                   
- SMILES.desalt \tab The simplified molecular-input line-entry system
-structure \tab none \cr                 
  All.Compound.Names \tab All names of the chemical as they occured in the
 data \tab none \cr              
  logHenry \tab The log10 Henry's law constant \tab 
@@ -27,7 +25,8 @@ log10(atmosphers*m^3/mole) \cr
  logPwa.Reference \tab Reference for logPwa \tab \cr             
  logMA \tab The log10 phospholipid:water PC or
 "Membrane affinity" \tab unitless ratio \cr                
- logMA.Reference \tab Reference for membrane affinity \tab \cr   #'  logWSol \tab The log10 water solubility \tab log10(mole/L) \cr                  
+ logMA.Reference \tab Reference for membrane affinity \tab \cr   
+ logWSol \tab The log10 water solubility \tab log10(mole/L) \cr                  
  logWSol.Reference \tab Reference for logWsol \tab \cr              
  MP \tab The chemical compound melting point \tab degrees Celsius \cr                  
  MP.Reference \tab Reference for melting point \tab \cr                   
@@ -43,19 +42,32 @@ log10(atmosphers*m^3/mole) \cr
  DTXSID.Reference \tab Reference for DTXSID \tab \cr               
  Formula.Reference \tab Reference for chemical formulat \tab \cr             
  [SPECIES].Clint \tab (Primary hepatocyte suspension) 
-intrinsic hepatic clearance \tab uL/min/10^6 hepatocytes \cr                   
- [SPECIES].Clint.pValue \tab Probability that there is no clearance observed. \tab none \cr           
+intrinsic hepatic clearance. \emph{Entries with comma separated values are Bayesian estimates of
+the Clint distribution - displayed as the median, 95th credible interval
+(that is quantile 2.5 and 97.5, respectively), and p-value.} \tab uL/min/10^6 hepatocytes \cr                   
+ [SPECIES].Clint.pValue \tab Probability that there is no clearance observed.
+ Values close to 1 indicate clearance is not statistically significant. \tab none \cr           
  [SPECIES].Clint.pValue.Ref \tab Reference for Clint pValue \tab  \cr   
  [SPECIES].Clint.Reference \tab Reference for Clint \tab  \cr         
- [SPECIES].Fgutabs \tab Fraction of chemical absorbed from the
-gut \tab unitless fraction \cr           
- [SPECIES].Fgutabs.Reference \tab Reference for Fgutabs \tab \cr        
+ [SPECIES].Caco2.Pab \tab Caco-2 Apical-to-Basal Membrane Permeability \tab 10^-6 cm/s \cr           
+ [SPECIES].Caco2.Pab.Reference \tab Reference for Caco-2 Membrane Permeability \tab \cr
+ [SPECIES].Fabs \tab In vivo measured fraction of an oral dose of chemical 
+absorbed from the gut lumen into the gut \tab unitless fraction \cr           
+ [SPECIES].Fabs.Reference \tab Reference for Fabs \tab \cr        
+ [SPECIES].Fgut \tab In vivo measured fraction of an oral dose of chemical 
+that passes gut metabolism and clearance \tab unitless fraction \cr           
+ [SPECIES].Fgut.Reference \tab Reference for Fgut \tab \cr        
+ [SPECIES].Foral \tab In vivo measued fractional systemic bioavailability of 
+an oral dose, modeled as he product of Fabs * Fgut * Fhep (where Fhep is 
+first pass hepatic metabolism). \tab unitless fraction \cr           
+ [SPECIES].Foral.Reference \tab Reference for Foral \tab \cr        
  [SPECIES].Funbound.plasma \tab Chemical fraction unbound in presence of 
-plasma proteins \tab unitless fraction \cr         
+plasma proteins (fup). \emph{Entries with comma separated values are Bayesian estimates of
+the fup distribution - displayed as the median and 95th credible interval
+(that is quantile 2.5 and 97.5, respectively).} \tab unitless fraction \cr         
  [SPECIES].Funbound.plasma.Ref\tab Reference for Funbound.plasma \tab \cr 
  [SPECIES].Rblood2plasma \tab Chemical concentration blood to plasma ratio \tab unitless ratio \cr         
- [SPECIES].Rblood2plasma.Ref \tab Reference for Rblood2plasma \tab  \cr  
- SMILES.desalt.Reference"\tab Reference for SMILES structure \tab  \cr          
+ [SPECIES].Rblood2plasma.Ref \tab Reference for Rblood2plasma \tab  \cr        
  Chemical.Class \tab All classes to which the chemical has been assigned \tab \cr
 }
 }
@@ -107,7 +119,7 @@ and \code{\link{load_dawson2021}} may be used to add in silico, structure-based
 predictions for many thousands of additional compounds to this table.
 }
 \references{
-CompTox Chemicals Dashboard (\url{http://comptox.epa.gov/dashboard})
+CompTox Chemicals Dashboard (\url{https://comptox.epa.gov/dashboard})
 
 EPI Suite, https://www.epa.gov/opptintr/exposure/pubs/episuite.htm
 
@@ -233,16 +245,18 @@ S. (2013). Relative Impact of Incorporating Pharmacokinetics on Predicting
 In Vivo Hazard and Mode of Action from High-Throughput In Vitro Toxicity
 Assays. Toxicological Sciences 132(2), 327-346, 10.1093/toxsci/kft012.
 
-Wetmore, B. A., Wambaugh, J. F., Allen, B., Ferguson, S. S., Sochaski, M.
-A., Setzer, R. W., Houck, K. A., Strope, C. L., Cantwell, K., Judson, R. S.,
-LeCluyse, E., Clewell, H.J. III, Thomas, R.S., and Andersen, M. E. (2015).
-"Incorporating High-Throughput Exposure Predictions with Dosimetry-Adjusted
-In Vitro Bioactivity to Inform Chemical Toxicity Testing" Toxicological
-Sciences, kfv171.
+\insertRef{wetmore2015incorporating}{httk}
 
 F. L. Wood, J. B. Houston and D. Hallifax
 'Drug Metabolism and Disposition November 1, 2017, 45 (11) 1178-1188; 
 DOI: https://doi.org/10.1124/dmd.117.077040
+}
+\seealso{
+\code{\link{get_physchem_param}}
+
+\code{\link{get_invitroPK_param}}
+
+\code{\link{add_chemtable}}
 }
 \author{
 John Wambaugh

@@ -34,7 +34,14 @@ MODELS.LIST <- c("3compartmentss","PBTK")
 NUM.CPU <- 6
  
 # Add the in silico predictions:
+# Categorical QSPR:
+load_dawson2021()
+# ADmet Predictor:
 load_sipes2017()
+# Machine learning model:
+load_pradeep2020()
+# Caco-2 QSPR:
+load_honda2023()
  
 # Organize HTTK data by species:
 HTTK.data.list <- list()
@@ -54,6 +61,12 @@ for (this.species in SPECIES.LIST)
 # Create a master list of the chemical DTXSID's:
   all.ids <- sort(unique(c(all.ids,HTTK.data.list[[this.species]]$DTXSID)))
 }
+
+# temporilay make it run fast:
+ivpkfit <- read.csv("invivoPKfit-params.for.dashboard.txt")
+short.list <- ivpkfit$Chemical[1:25]
+all.ids <- all.ids[all.ids %in% short.list]
+
 
 # We want one parameter per line, but the code is pretty different wrt how we
 # retrieve/calculate these values:
@@ -276,7 +289,83 @@ save(Css.units,httk.version,output.date,file="Dashboard-HTTK-stamp.RData")
 # Convert to data.frame:
 dashboard.table <- as.data.frame(dashboard.table)
 
+#
+#
+# LOAD INVIVOPKFIT PARAMETERS
+#
+#
+
+ivpkfit <- read.csv("invivoPKfit-params.for.dashboard.txt")
+
+for (this.parameter in c(
+                          "Vdist",
+                          "Fgutabs",
+                          "kgutabs",
+                          "Thalf",
+                          "Css"))
+  {
+    this.param.data <- subset(ivpkfit, !is.na(this.parameter))
+    for (this.chem in unique(this.param.data$Chemical))
+    {
+      if (this.parameter == "Vdist") param.name <- "Vd"
+      else if (this.parameter == "Thalf") param.name <- "TK.Half.Life"
+      else if (this.parameter == "Fgutabs") param.name <- "Fsysbio"
+      else param.name <- this.parameter
+      
+      for (this.species in subset(this.param.data, Chemical==this.chem)$Species)
+      {
+        ivpkfit.row <- which(ivpkfit$Chemical==this.chem &
+                             tolower(ivpkfit$Species) == tolower(this.species))
+        if (!is.na(ivpkfit[ivpkfit.row, this.parameter]))
+        {
+          dashboard.row <- dashboard.table$DTXSID==this.chem &
+                      tolower(dashboard.table$Species) == tolower(this.species) &
+                      tolower(dashboard.table$Parameter) == tolower(param.name)
+          if (any(dashboard.row)) {
+            dashboard.row <- which(dashboard.row)
+          } else {
+            dashboard.row <- dim(dashboard.table)[1]+1
+            dashboard.table[dashboard.row,"DTXSID"] <- this.chem
+            dashboard.table[dashboard.row,"Species"] <- this.species
+            dashboard.table[dashboard.row,"Parameter"] <- param.name
+            if (param.name == "Vd") {
+              dashboard.table[dashboard.row, "Units"] <- "L/kg"
+            } else if (param.name == "TK.Half.Life") {
+              dashboard.table[dashboard.row, "Units"] <- "hours"
+            } else if (param.name == "Css") {
+              dashboard.table[dashboard.row, "Units"] <- "mg/L"
+            } else if (param.name == "kgutabs") {
+              dashboard.table[dashboard.row, "Units"] <- "1/h"
+            } else if (param.name == "Fsysbio") {
+              dashboard.table[dashboard.row, "Units"] <- "fraction"
+            }
+          }
+          for (this.ref in unique(dashboard.table[dashboard.row,"Reference"]))
+          {
+            if (!is.na(this.ref))
+            {
+              dashboard.row.ref <- dashboard.table$DTXSID==this.chem &
+                tolower(dashboard.table$Species) == tolower(this.species) &
+                tolower(dashboard.table$Parameter) == tolower(param.name)
+                dashboard.table$Reference == this.ref
+              dashboard.table[dashboard.row.ref,"Reference"] <- paste(
+                this.ref,
+                ivpkfit[ivpkfit.row,"Ref"])                                             
+            } else dashboard.table[dashboard.row,"Reference"] <-
+              ivpkfit[ivpkfit.row,"Ref"]
+            dashboard.table[dashboard.row,"Measured"] <- ivpkfit[ivpkfit.row,
+                            this.parameter]
+        }
+    }  
+  }
+}  
+
+
+#
+#
 # Replace references with DOI:
+#
+#
 dashboard.table[is.na(dashboard.table[,"Reference"]), 
                 "Reference"] <- "temp"
 dashboard.table[dashboard.table[,"Reference"]=="Sipes 2017", 
@@ -345,6 +434,13 @@ write.table(
   row.names=F,
   quote=F,
   sep="\t")
+
+
+#
+#
+# CREATE FIGURE SHOWNG CHANGE IN MONTE CARLO Css FROM PREVIOUS VERSION
+#
+#
 
 # Columns:
 # DTXSID: Chemical Identifier
