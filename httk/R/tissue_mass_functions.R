@@ -13,9 +13,7 @@
 #' physiologically based model parameters and their inter-individual variability 
 #' from anthropometry." Critical reviews in toxicology 42.9 (2012): 751-767.
 #'
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
+#' \insertRef{ring2017identifying}{httk}
 #'
 #' @author Caroline Ring
 #'
@@ -49,9 +47,7 @@ blood_weight <- function(BSA, gender){
 #' @references Geigy Pharmaceuticals, "Scientific Tables", 7th Edition, 
 #' John Wiley and Sons (1970)
 #'
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
+#' \insertRef{ring2017identifying}{httk}
 #'
 #' @author Caroline Ring
 #'
@@ -110,9 +106,7 @@ blood_mass_correct <- function(blood_mass,
 #' method for measuring body surface area: a height-weight formula validated in 
 #' infants, children, and adults." The Journal of pediatrics 93.1 (1978): 62-66.
 #'
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
+#' \insertRef{ring2017identifying}{httk}
 #'
 #' @author Caroline Ring
 #'
@@ -154,9 +148,7 @@ body_surface_area <- function(BW, H, age_years) {
 #' factors used in PBPK models of humans." Critical reviews in toxicology 33.5 
 #' (2003): 469-503.
 #'
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
+#' \insertRef{ring2017identifying}{httk}
 #'
 #' @author Caroline Ring
 #'
@@ -231,9 +223,7 @@ bone_mass_age <- function(age_years, age_months, height, weight, gender){
 #' @return A vector of brain masses in kg.
 #'
 #' @references 
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
+#' \insertRef{ring2017identifying}{httk}
 #'
 #' @author Caroline Ring
 #'
@@ -263,9 +253,7 @@ brain_mass <- function(gender, age_years){
 #' Ogiu, Nobuko, et al. "A statistical analysis of the internal 
 #' organ weights of normal Japanese people." Health physics 72.3 (1997): 368-383.
 #' 
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
+#' \insertRef{ring2017identifying}{httk}
 #'
 #' @author Caroline Ring
 #'
@@ -308,9 +296,7 @@ kidney_mass_children <- function(weight, height, gender){
 #' Ogiu, Nobuko, et al. "A statistical analysis of the internal 
 #' organ weights of normal Japanese people." Health physics 72.3 (1997): 368-383.
 #'
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
+#' \insertRef{ring2017identifying}{httk}
 #'
 #' @author Caroline Ring
 #'
@@ -349,9 +335,7 @@ liver_mass_children <- function(height, weight, gender){
 #' factors used in PBPK models of humans." Critical reviews in toxicology 33.5 
 #' (2003): 469-503.
 #'
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
+#' \insertRef{ring2017identifying}{httk}
 #'
 #' @author Caroline Ring
 #'
@@ -395,9 +379,7 @@ lung_mass_children <- function(height, weight, gender){
 #' Ogiu, Nobuko, et al. "A statistical analysis of the internal 
 #' organ weights of normal Japanese people." Health physics 72.3 (1997): 368-383.
 #'
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
+#' \insertRef{ring2017identifying}{httk}
 #'
 #' @author Caroline Ring
 #'
@@ -433,9 +415,7 @@ pancreas_mass_children <- function(height, weight, gender){
 #' physiologically based model parameters and their inter-individual variability 
 #' from anthropometry." Critical reviews in toxicology 42.9 (2012): 751-767.
 #'
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
+#' \insertRef{ring2017identifying}{httk}
 #'
 #' @author Caroline Ring
 #'
@@ -464,9 +444,7 @@ skin_mass_bosgra <- function(BSA){
 #' factors used in PBPK models of humans." Critical reviews in toxicology 33.5 
 #' (2003): 469-503.
 #'
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
+#' \insertRef{ring2017identifying}{httk}
 #'
 #' @author Caroline Ring
 #'
@@ -505,9 +483,7 @@ spleen_mass_children <- function(height, weight, gender){
 #' skeletal muscle mass in healthy children and adolescents." Journal of 
 #' cachexia, sarcopenia and muscle 3.1 (2012): 25-29.
 #'
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
+#' \insertRef{ring2017identifying}{httk}
 #'
 #' @author Caroline Ring
 #'
@@ -555,9 +531,7 @@ skeletal_muscle_mass_children <- function(gender, age_years){
 #' Janssen, Ian, et al. "Skeletal muscle mass and distribution in 468 men and
 #' women aged 18-88 yer." Journal of Applied Physiology 89.1 (2000): 81-88
 #'
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
+#' \insertRef{ring2017identifying}{httk}
 #'
 #' @author Caroline Ring
 #'

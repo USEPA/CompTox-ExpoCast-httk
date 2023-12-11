@@ -8,9 +8,6 @@
 \format{
 data.frame
 }
-\source{
-Pradeep et al. 2020 Chemical Structure Predictive Models for HTTK
-}
 \usage{
 pradeep2020
 }
@@ -26,5 +23,8 @@ as reported in Pradeep et al. (2020).
 }
 \references{
 \insertRef{pradeep2020chemstr}{httk}
+}
+\seealso{
+\code{\link{load_pradeep2020}}
 }
 \keyword{data}

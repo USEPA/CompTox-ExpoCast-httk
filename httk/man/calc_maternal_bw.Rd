@@ -23,9 +23,7 @@ BW <- params$pre_pregnant_BW +
    params$BW_cubic_theta3 * tw^3
 }
 \references{
-Kapraun, Dustin F., et al. "Empirical models for anatomical and physiological 
-changes in a human mother and fetus during pregnancy and gestation." 
-PloS one 14.5 (2019): e0215906.
+\insertRef{kapraun2019empirical}{httk}
 }
 \author{
 John Wambaugh

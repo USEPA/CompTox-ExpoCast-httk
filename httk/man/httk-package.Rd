@@ -8,58 +8,89 @@
 \description{
 \Sexpr{tools:::Rd_package_description("httk")}
 }
+\references{
+\href{https://www.epa.gov/chemical-research/computational-toxicology-communities-practice-high-throughput-toxicokinetic-httk}{PowerPoint Presentation: High-Throughput Toxicokinetics (HTTK) R package}
+
+\href{https://www.epa.gov/chemical-research/toxicokinetics-overview}{Toxicokinetics at the U.S. Environmental Protection Agency}
+
+Breen et al. (2021): High-throughput  PBTK models for in vitro to in vivo
+extrapolation
+(\doi{10.1080/17425255.2021.1935867})
+
+Pearce et al. (2017): httk: R Package for High-Throughput Toxicokinetics
+(\doi{10.18637/jss.v079.i04})
+
+Armitage et al. (2014): Application of mass balance models and the chemical
+activity concept to facilitate the use of in vitro toxicity data for risk 
+assessment
+(\doi{10.1021/es501955g})
+
+Honda et al. (2019): Using the concordance of in vitro and in vivo data to
+evaluate extrapolation  assumptions
+(\doi{10.1371/journal.pone.0217564})
+
+Kapraun et al. (2022): Evaluation of a rapid, generic human gestational dose 
+model
+(\doi{10.1016/j.reprotox.2022.09.004})
+
+Linakis et al. (2020): Development and evaluation of a high throughput 
+inhalation model for organic chemicals
+(\doi{10.1038/s41370-020-0238-y})
+
+Pearce et al. (2017): Evaluation and calibration of high-throughput
+predictions of chemical distribution to tissues
+(\doi{10.1007/s10928-017-9548-7})
+
+Ring et al. (2017): Identifying populations sensitive to environmental
+chemicals by simulating toxicokinetic variability
+(\doi{10.1016/j.envint.2017.06.004})
+
+Sipes et al. (2017): An Intuitive Approach for Predicting Potential Human
+Health Risk with the Tox21 10k Library
+(\doi{10.1021/acs.est.7b00650})
+
+Wambaugh et al. (2015): Toxicokinetic Triage for Environmental Chemicals
+(\doi{10.1093/toxsci/kfv118})
+
+Wambaugh et al. (2018): Evaluating In Vitro-In Vivo Extrapolation of
+Toxicokinetics
+(\doi{10.1093/toxsci/kfy020})
+
+Wambaugh et al. (2019): Assessing Toxicokinetic Uncertainty and Variability
+in Risk Prioritization
+(\doi{10.1093/toxsci/kfz205})
+
+Wetmore et al. (2015): Incorporating High-Throughput Exposure Predictions with Dosimetry-Adjusted
+In Vitro Bioactivity to Inform Chemical Toxicity Testing
+(\doi{10.1093/toxsci/kfv171})
+
+\href{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}{The U.S. EPA ExpoCast (Exposure Forecasting) Project}
+}
 \seealso{
-\href{https://www.epa.gov/chemical-research/computational-toxicology-communities-practice-high-throughput-toxicokinetic-httk}{
-PowerPoint Presentation: High-Throughput Toxicokinetics (HTTK) R package}
-
-\doi{10.1080/17425255.2021.1935867}{Breen et al. (2021): High-throughput 
-PBTK models for in vitro to in vivo extrapolation}
-
-\doi{10.18637/jss.v079.i04}{Pearce et al. (2017): httk: R
-Package for High-Throughput Toxicokinetics}
-
-\doi{10.1021/es501955g}{Armitage et al. (2014): Application of mass balance 
-models and the chemical activity concept to facilitate the use of in vitro 
-toxicity data for risk assessment}
-
-\doi{10.1093/toxsci/kfv171}{Incorporating High-Throughput Exposure 
-Predictions with Dosimetry-Adjusted
-In Vitro Bioactivity to Inform Chemical Toxicity Testing}
-
-\doi{10.1093/toxsci/kfv118}{Wambaugh et al. (2015):
-Toxicokinetic Triage for Environmental Chemicals}
-
-\doi{10.1007/s10928-017-9548-7}{Pearce et al. (2017):
-Evaluation and calibration of high-throughput predictions of chemical
-distribution to tissues}
-
-\doi{10.1016/j.envint.2017.06.004}{Ring et al. (2017):
-Identifying populations sensitive to environmental chemicals by simulating
-toxicokinetic variability}
-
-\doi{10.1021/acs.est.7b00650}{Sipes et al. (2017): An
-Intuitive Approach for Predicting Potential Human Health Risk with the Tox21
-10k Library}
-
-\doi{10.1093/toxsci/kfy020}{Wambaugh et al. (2018):
-Evaluating In Vitro-In Vivo Extrapolation of Toxicokinetics}
-
-\doi{10.1371/journal.pone.0217564}{Honda et al. (2019):
-Using the concordance of in vitro and in vivo data to evaluate extrapolation 
-assumptions}
-
-\doi{10.1093/toxsci/kfz205}{Wambaugh et al. (2019):
-Assessing Toxicokinetic Uncertainty and Variability in Risk Prioritization}
-
-\doi{10.1038/s41370-020-0238-y}{Linakis et al. (2020):
-Development and evaluation of a high-throughput inhalation model for organic 
-chemicals}
-
-\href{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}{
-The U.S. EPA ExpoCast (Exposure Forecasting) Project}
+\code{\link{httkpop}}
 }
 \author{
-John Wambaugh, Robert Pearce, Caroline Ring, Gregory Honda, Nisha
-Sipes, Jimena Davis, Barbara Wetmore, Woodrow Setzer, Mark Sfeir
+\href{https://orcid.org/0000-0002-4024-534X}{John Wambaugh},
+\href{https://orcid.org/0000-0002-2891-9380}{Sarah Davidson-Fritz},  
+\href{https://orcid.org/0000-0003-3168-4049}{Robert Pearce}, 
+\href{https://orcid.org/0000-0002-0463-1251}{Caroline Ring},
+\href{https://orcid.org/0000-0001-7713-9850}{Greg Honda},
+Mark Sfeir, 
+\href{https://orcid.org/0000-0003-0526-2395}{Matt Linakis}, 
+\href{https://orcid.org/0000-0001-5570-6383}{Dustin Kapraun}, 
+\href{https://orcid.org/0000-0001-8992-9294}{Nathan Pollesch},
+\href{https://orcid.org/0000-0001-8511-4653}{Miyuki Breen},
+\href{https://orcid.org/0000-0002-5754-6085}{Shannon Bell},
+\href{https://orcid.org/0000-0003-0752-1848}{Xiaoqing Chang}, 
+\href{https://orcid.org/0000-0002-0248-8412}{Todor Antonijevic},
+Jimena Davis,
+\href{https://orcid.org/0000-0001-8781-2391}{Elaina Kenyon},
+\href{https://orcid.org/0000-0002-5901-1404}{James Sluka},
+Noelle Sinski, 
+\href{https://orcid.org/0000-0003-4203-6426}{Nisha Sipes}, 
+\href{https://orcid.org/0000-0002-6878-5348}{Barbara Wetmore},
+Lily Whipple,
+and
+Woodrow Setzer
 }
 \keyword{package}

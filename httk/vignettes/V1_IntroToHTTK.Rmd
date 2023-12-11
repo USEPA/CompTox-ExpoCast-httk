@@ -1,5 +1,5 @@
 ---
-title: "Introduction to HTTK"
+title: "1) Introduction to HTTK"
 author: "Miyuki Breen, Anna Kreutz, and John Wambaugh"
 date: "June 15, 2021"
 output: rmarkdown::html_vignette

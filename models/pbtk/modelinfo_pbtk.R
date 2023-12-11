@@ -52,12 +52,14 @@ model.list[["pbtk"]]$tissuelist=list(
 # how other parameters were calculated:
 model.list[["pbtk"]]$param.names <- c(
   "BW",
+  "Caco2.Pab",
+  "Caco2.Pab.dist",
   "Clint",
   "Clmetabolismc",
   "Funbound.plasma",
   "Funbound.plasma.dist",
   "Funbound.plasma.adjustment",
-  "Fgutabs",
+  "Fabsgut",
   "Fhep.assay.correction",
   "hematocrit",
   "Kgut2pu",
@@ -287,7 +289,7 @@ model.list[["pbtk"]]$calc.standard.httkpop2httk <- TRUE
 # These are the model parameters that are impacted by httk-pop:
 model.list[["pbtk"]]$httkpop.params <- c(
   "BW",
-  "Fgutabs",
+  "Fabsgut",
   "hematocrit",
   "liver.density",
   "million.cells.per.gliver",

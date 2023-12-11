@@ -47,14 +47,8 @@ This adjustment was made starting in Wetmore et al. (2015) in order to better
 predict plasma concentrations.
 }
 \references{
-Kilford, Peter J., et al. "Hepatocellular binding of drugs: 
-correction for unbound fraction in hepatocyte incubations using microsomal 
-binding or drug lipophilicity data." Drug Metabolism and Disposition 36.7 
-(2008): 1194-1197.
-
-Wetmore, Barbara A., et al. "Incorporating high-throughput exposure 
-predictions with dosimetry-adjusted in vitro bioactivity to inform chemical 
-toxicity testing." Toxicological Sciences 148.1 (2015): 121-136.
+\insertRef{kilford2008hepatocellular}{httk} 
+\insertRef{wetmore2015incorporating}{httk}
 }
 \seealso{
 \code{\link{calc_hep_fu}}

@@ -492,6 +492,11 @@ knitr::kable(toxcast.table[1:10,c("Compound","Q10.AC50","Css","Css.Type")],
 
 
 # Step Four: Reverse Dosimetry *In Vitro-In Vivo* Extrapolation
+Most IVIVE calculations in **httk** take advantage of the fact that, to date,
+the toxicokinetic models included in **httk** are linear in dose. What this means is
+that your dose rate is $X~mg/kg/day$ and the $C_{ss}$ for $1~mg/kg/day$ is $Y~uM$, then 
+the $C_{ss}$ for $X~mg/kg/day$ is $X*Y~uM$, that is:
+$$C_{ss}\left(X~mg/kg/day\right) = X * C_{ss}\left(1~mg/kg/day\right)$$.
 Using toxicokinetics to predict tissue concentrations resulting from a known
 dose is known as "forward dosimetry". Using toxicokinetics to estimate the dose
 that might have led to a known tissue cocentration is known as "reverse dosimetry"
@@ -506,8 +511,9 @@ dose that would cause that concentration in the plasma. We do this by dividing
 the *in vitro* concentration by the $C_{ss}$ from 1 mg/kg/day,
 ending up with a dose rate with units of mg/kd/day that will product the
 *in vitro* concentration:
-$$AED = \frac{AC_{50}}{C_{ss}}$$
-Don't forget the ToxCast concentrations are given on the log-10 scale:
+$$AED = \frac{AC_{50}}{C_{ss}\left(1~mg/kg/day\right)}~mg/kg/day$$
+where b0oth $AC_{50}$ and $C_{ss}$ must have the same units. 
+Do not forget that the ToxCast concentrations are given on the log-10 scale:
 ```{r calc_equivalent_dose16, eval = TRUE}
 toxcast.table$EquivDose <- signif(10^toxcast.table$Q10.AC50 / toxcast.table$Css,
                                   3)
@@ -566,7 +572,7 @@ requires load the package *readXL*.
 SEEM <- read_excel("CCD-Batch-Search_DATE.xlsx",sheet=2)
 ```
 
-Perhaps most easily we can grab SEEM predictions already in RData format from https://github.com/HumanExposure/SEEM3RPackage/tree/main/SEEM3/data
+Perhaps most easily we can grab SEEM predictions already in RData format from [GitHub](https://github.com/HumanExposure/SEEM3RPackage/tree/main/SEEM3Predictor/data)
 Download the file Ring2018Preds.RData and load it:
 ```{r load_seem3, eval = FALSE}
 load("Ring2018Preds.RData")
