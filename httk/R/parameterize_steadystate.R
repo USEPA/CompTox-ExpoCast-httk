@@ -11,6 +11,24 @@
 #' in plasma. However, we still use chemical properties to predict the 
 #' blood:plasma ratio for estimating first-pass hepatic metabolism for oral
 #' exposures.
+#'
+#' We model systemic oral bioavailability as 
+#' \ifelse{html}{\out{F<sub>bio</sub>=F<sub>abs</sub>*F<sub>gut</sub>*F<sub>hep</sub>}}{\eqn{F_{bio}=F_{abs}*F_{gut}*F_{hep}}}.
+#' \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}}
+#' is estimated from in vitro TK data using 
+#' \code{\link{calc_hep_bioavailability}}.
+#' If \ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}}
+#' has been measured in vivo and is found in
+#' table \code{\link{chem.physical_and_invitro.data}} then we set 
+#' \ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{git}}} 
+#' to the measured value divided by 
+#' \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}} 
+#' Otherwise, if Caco2 membrane permeability data or predictions
+#' are available \ifelse{html}{\out{F<sub>abs</sub>}}{\eqn{F_{abs}}} is estimated
+#' using \code{\link{calc_fabs.oral}}.
+#' Intrinsic hepatic metabolism is used to very roughly estimate
+#' \ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}
+#' using \code{\link{calc_fgut.oral}}.
 #' 
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- the 
 #' chemical must be identified by either CAS, name, or DTXISD
@@ -51,11 +69,20 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
-#'
-#' @return 
-#' \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
-#' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
-#' dose that enters the gutlumen.} 
+#' 
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' 
+#' @param ... Other parameters
+#' 
+#' @return \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
+#' \item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, 
+#' that is, the fraction of the dose that enters the gutlumen.}  
 #' \item{Funbound.plasma}{Fraction of plasma that is not bound.} 
 #' \item{Qtotal.liverc}{Flow rate of blood exiting the liver, L/h/kg BW^3/4.} 
 #' \item{Qgfrc}{Glomerular Filtration Rate, L/h/kg
@@ -70,16 +97,13 @@
 #' \item{hepatic.bioavailability}{Fraction of dose remaining after first pass
 #' clearance, calculated from the corrected well-stirred model.}
 #'
-#' @author John Wambaugh
+#' @author John Wambaugh and Greg Honda
 #'
 #' @references 
-#' Pearce, Robert G., et al. "Httk: R package for high-throughput 
-#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 #'
-#' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
-#' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
-#' hepatocyte incubations using microsomal binding or drug lipophilicity data.
-#' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+#' \insertRef{pearce2017httk}{httk}
+#'
+#' \insertRef{kilford2008hepatocellular}{httk}
 #'
 #' @seealso \code{\link{calc_analytic_css_3compss}}
 #'
@@ -93,6 +117,8 @@
 #' 
 #'  parameters <- parameterize_steadystate(chem.name='Bisphenol-A',species='Rat')
 #'  parameters <- parameterize_steadystate(chem.cas='80-05-7')
+#' 
+#' @keywords 3compss
 #' 
 #' @export parameterize_steadystate
 parameterize_steadystate <- function(
@@ -108,7 +134,9 @@ parameterize_steadystate <- function(
                               restrictive.clearance=TRUE,
                               fup.lod.default=0.005,
                               suppress.messages=FALSE,
-                              minimum.Funbound.plasma=0.0001)
+                              minimum.Funbound.plasma=0.0001,
+                              Caco2.options=NULL,
+                              ...)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
 #each time a data.table column name is used without quotes. To appease R CMD
@@ -135,7 +163,7 @@ parameterize_steadystate <- function(
   chem.name <- out$chem.name                                
   dtxsid <- out$dtxsid
 
-  #Capitilize the first letter of species only:
+  #Capitalize the first letter of species only:
   species <- tolower(species)
   substring(species,1,1) <- toupper(substring(species,1,1))
 
@@ -254,16 +282,9 @@ parameterize_steadystate <- function(
                        )
   } else {
     fup.corrected <- fup.point
-  } 
-      
-  Fgutabs <- try(get_invitroPK_param("Fgutabs",
-                   species,
-                        chem.cas=chem.cas,
-                        chem.name=chem.name,
-                        dtxsid=dtxsid),
-               silent=TRUE)
-  if (is(Fgutabs,"try-error")) Fgutabs <- 1
-
+    fup.adjustment <- NA
+  }
+  
   Params <- list()
   Params[["Clint"]] <- Clint.point # uL/min/10^6
   Params[["Clint.dist"]] <- Clint.dist
@@ -280,22 +301,27 @@ parameterize_steadystate <- function(
   Params[["million.cells.per.gliver"]] <- 110 # 10^6 cells/g-liver
   Params[["Vliverc"]] <- Vliverc # L/kg BW
   Params[["liver.density"]] <- 1.05 # g/mL
-  Params[['Fgutabs']] <- Fgutabs
   
-  Rb2p <- available_rblood2plasma(chem.name=chem.name,
+# Blood to plasma ratio:
+  Rb2p <- available_rblood2plasma(
+            chem.name=chem.name,
             chem.cas=chem.cas,
+            dtxsid=dtxsid,
             species=species,
             adjusted.Funbound.plasma=fup.corrected,
             suppress.messages=TRUE)
   Params[["Rblood2plasma"]] <- Rb2p
-
+  
+# Oral bioavailability parameters:
 # Need to have a parameter with this name to calculate clearance, but need 
 # clearance to calculate bioavailability:
   Params[["hepatic.bioavailability"]] <- NA
   cl <- calc_hep_clearance(parameters=Params,
           hepatic.model='unscaled',
           suppress.messages=TRUE)#L/h/kg body weight
-
+          
+# "hepatic bioavailability" simulates first-pass hepatic metabolism since we 
+# don't explicitly model blood from the gut:
   Params[['hepatic.bioavailability']] <- calc_hep_bioavailability(
     parameters=list(Qtotal.liverc=Qtotal.liverc, # L/h/kg^3/4
                     Funbound.plasma=fup.corrected,
@@ -305,6 +331,20 @@ parameterize_steadystate <- function(
     restrictive.clearance=restrictive.clearance)
 
   if (is.na(Params[['hepatic.bioavailability']])) browser() 
+
+  Params <- c(
+    Params, do.call(get_fabsgut, args=purrr::compact(c(
+    list(
+      parameters=Params,
+      dtxsid=dtxsid,
+      chem.cas=chem.cas,
+      chem.name=chem.name,
+      species=species,
+      suppress.messages=suppress.messages
+      ),
+    Caco2.options))
+    ))
   
-  return(lapply(Params[order(tolower(names(Params)))],set_httk_precision))
+  return(lapply(Params[model.list[["3compartmentss"]]$param.names],
+                set_httk_precision))
 }

@@ -1,25 +1,35 @@
-#' Calculate first pass metabolism
+#' Calculate first pass heaptic metabolism
 #'
 #' For models that don't described first pass blood flow from the gut, need to
 #' cacluate a hepatic bioavailability, that is, the fraction of chemical 
 #' systemically available after metabolism during the first pass through the 
-#' liver (Rowland, 1973 Equaation 29, where k21 is blood flow through the liver
-#' and k23 is clearance from the liver in Figure 1).
+#' liver (Rowland, 1973 Equation 29, where k21 is blood flow through the liver
+#' and k23 is clearance from the liver in Figure 1 in that paper).
 #'
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- if
 #'  parameters is not specified then the chemical must be identified by either
 #'  CAS, name, or DTXISD
+#'
 #' @param chem.name Chemical name (spaces and capitalization ignored) --  if
 #'  parameters is not specified then the chemical must be identified by either
 #'  CAS, name, or DTXISD
+#'
 #' @param dtxsid EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #'  -- if parameters is not specified then the chemical must be identified by 
 #' either CAS, name, or DTXSIDs
+#'
 #' @param parameters Parameters from the appropriate parameterization function
 #' for the model indicated by argument model
+#'
 #' @param restrictive.clearance Protein binding not taken into account (set to 1) in 
 #' liver clearance if FALSE.
+#'
 #' @param flow.34 A logical constraint
+#'
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human").
+#'
+#' @param suppress.messages Whether or not to suppress the output message.
 #'
 #'@return A data.table whose columns are the parameters of the HTTK model
 #'  specified in \code{model}.
@@ -27,9 +37,8 @@
 #' @author John Wambaugh
 #'
 #'@references Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. 
-#'"Clearance concepts in pharmacokinetics." Journal of pharmacokinetics and 
-#'biopharmaceutics 1.2 (1973): 123-136.
-#'
+#' \insertRef{rowland1973clearance}{httk}
+#' 
 #' @keywords physiology 
 #'
 #' @import utils
@@ -42,7 +51,9 @@ calc_hep_bioavailability <- function(
                          dtxsid = NULL,
                          parameters=NULL,
                          restrictive.clearance=TRUE,
-                         flow.34=TRUE)
+                         flow.34=TRUE,
+                         suppress.messages=FALSE,
+                         species="Human")
 {
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -51,13 +62,41 @@ calc_hep_bioavailability <- function(
       is.null(parameters)) 
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
 
-  if (is.null(parameters))
+  # Required parameters
+  req.param <- c("BW", "Qtotal.liverc", "Clmetabolismc", "Funbound.plasma", 
+                 "Rblood2plasma")
+  
+  # Qtotal.liverc is a total blood flow for simpler models without explicit
+  # first-pass hepatic metabolism. However, if we arecalling this function from
+  # a more complicated model we can still calculate Qtotal.liverc if we have 
+  # the appropriate other parameters:
+  if (!is.null(parameters))
+    if (all(c("Qcardiacc","Qliverf","Qgutf") %in% names(parameters)))
+    {
+      parameters["Qtotal.liverc"] <- parameters[["Qcardiacc"]] * (
+        parameters[["Qliverf"]] + parameters[["Qgutf"]])
+    }  
+  
+  if (is.null(parameters) | !all(req.param %in% names(parameters)))
   {
-    parameters <- parameterize_pbtk(
-                    chem.cas=chem.cas,
-                    chem.name=chem.name,
-                    dtxsid=dtxsid)
+# If we don't have parameters we can call parameterize_steadystate using the
+# chemical identifiers. Then that function will build up a list of parameters
+# so that when it calls this function a second time (recursively) we WILL have
+# a list of parameters defined. The key is to make sure that the call to this
+# function in parameterize_steadystate occurs after all parameters needed by
+# this function are defined (or we get stuck in a recursive loop).
+    parameters <- do.call(parameterize_steadystate,
+                          args=purrr::compact(c(list(
+                            chem.cas=chem.cas,
+                            chem.name=chem.name,
+                            dtxsid=dtxsid,
+                            suppress.messages=suppress.messages))))
   }
+  
+  if (!"Clmetabolismc" %in% names(parameters))
+    parameters[["Clmetabolismc"]] <- calc_hep_clearance(parameters=parameters,
+                                                           hepatic.model='unscaled',
+                                                           suppress.messages=TRUE)#L/h/kg body weight
   
   if (!all(c("Qtotal.liverc","Funbound.plasma","Clmetabolismc","Rblood2plasma") 
     %in% names(parameters))) 

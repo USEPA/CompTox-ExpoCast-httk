@@ -22,27 +22,27 @@
 #' Funbound.plasma and Clint, are missing from 
 #' \code{\link{chem.physical_and_invitro.data}}, human values are given instead.
 #'
-#' In some cases the rapid equilbrium dailysis method (Waters et al., 2008)
+#' In some cases the rapid equilibrium dialysis method (Waters et al., 2008)
 #' fails to yield detectable concentrations for the free fraction of chemical. 
 #' In those cases we assume the compound is highly bound (that is, Fup approaches
 #' zero). For some calculations (for example, steady-state plasma concentration)
-#' there is precendent (Rotroff et al., 2010) for using half the average limit 
+#' there is precedent (Rotroff et al., 2010) for using half the average limit 
 #' of detection, that is, 0.005 (this value is configurable via the argument
-#' fup.lod.default). We do not recomend using other models where 
+#' fup.lod.default). We do not recommend using other models where 
 #' quantities like partition coefficients must be predicted using Fup. We also
-#' do not recomend including the value 0.005 in training sets for Fup predictive
+#' do not recommend including the value 0.005 in training sets for Fup predictive
 #' models.
 #'
-#' \strong{Note} that in some cases the \strong{Funbound.plasma} and the 
-#' \strong{intrinsic clearance} are
+#' \strong{Note} that in some cases the \strong{Funbound.plasma} (fup) and the 
+#' \strong{intrinsic clearance} (clint) are
 #' \emph{provided as a series of numbers separated by commas}. These values are the 
 #' result of Bayesian analysis and characterize a distribution: the first value
 #' is the median of the distribution, while the second and third values are the 
-#' lower and upper 95th percentile (that is qunatile 2.5 and 97.5) respectively.
+#' lower and upper 95th percentile (that is quantile 2.5 and 97.5) respectively.
 #' For intrinsic clearance a fourth value indicating a p-value for a decrease is
-#' provided. Typically 4000 samples were used for the Bayesian analusis, such
-#' that a p-value of "0" is equivale to "<0.00025". See Wambaugh et al. (2019)
-#' for more details. If argument meadian.only == TRUE then only the median is
+#' provided. Typically 4000 samples were used for the Bayesian analysis, such
+#' that a p-value of "0" is equivalent to "<0.00025". See Wambaugh et al. (2019)
+#' for more details. If argument median.only == TRUE then only the median is
 #' reported for parameters with Bayesian analysis distributions. If the 95% 
 #' credible interval is larger than fup.ci.cutoff (defaults
 #' to NULL) then the Fup is treated as too uncertain and the value NA is given.
@@ -92,7 +92,7 @@
 #' Compound \tab The preferred name of the chemical compound \tab none \cr 
 #' CAS \tab The preferred Chemical Abstracts Service Registry Number \tab none \cr  
 #' DTXSID \tab DSSTox Structure ID 
-#' (\url{http://comptox.epa.gov/dashboard}) \tab none \cr 
+#' (\url{https://comptox.epa.gov/dashboard}) \tab none \cr 
 #' logP \tab The log10 octanol:water partition coefficient\tab log10 unitless ratio \cr 
 #' MW \tab The chemical compound molecular weight \tab g/mol \cr 
 #' pKa_Accept \tab The hydrogen acceptor equilibria concentrations 
@@ -100,10 +100,15 @@
 #' pKa_Donor \tab The hydrogen donor equilibria concentrations 
 #'  \tab logarithm \cr   
 #' [SPECIES].Clint \tab (Primary hepatocyte suspension) 
-#' intrinsic hepatic clearance \tab uL/min/10^6 hepatocytes \cr    
-#' [SPECIES].Clint.pValue \tab Probability that there is no clearance observed. \tab none \cr  
+#' intrinsic hepatic clearance. \emph{Entries with comma separated values are Bayesian estimates of
+#' the Clint distribution - displayed as the median, 95th credible interval
+#' (that is quantile 2.5 and 97.5, respectively), and p-value.} \tab uL/min/10^6 hepatocytes \cr    
+#' [SPECIES].Clint.pValue \tab Probability that there is no clearance observed.
+#' Values close to 1 indicate clearance is not statistically significant. \tab none \cr  
 #' [SPECIES].Funbound.plasma \tab Chemical fraction unbound in presence of 
-#' plasma proteins \tab unitless fraction \cr 
+#' plasma proteins (fup). \emph{Entries with comma separated values are Bayesian estimates of
+#' the fup distribution - displayed as the median and 95th credible interval
+#' (that is quantile 2.5 and 97.5, respectively).} \tab unitless fraction \cr 
 #' [SPECIES].Rblood2plasma \tab Chemical concentration blood to plasma ratio \tab unitless ratio \cr  
 #' }
 #' }
@@ -310,98 +315,6 @@ get_cheminfo <- function(info="CAS",
     if (!(species.clint %in% colnames(chem.physical_and_invitro.data)))  
     {
       incomplete.data <- TRUE
-    } else {
-      # Set observed clint values to 0 if clint.pvalue > threshold
-      if (!is.null(clint.pvalue.threshold))
-      {
-        clint.values  <- strsplit(chem.physical_and_invitro.data[,species.clint],
-          split = ",")
-        clint.pvalues <- chem.physical_and_invitro.data[,species.clint.pvalue]
-        # Replace the clint.value with 0 when clint.pvalue > threshold
-        clint.values[lapply(clint.values,length)!=4] <- 
-          ifelse(
-            clint.pvalues[lapply(clint.values,length)!=4] > 
-            clint.pvalue.threshold & 
-            !is.na(clint.pvalues[lapply(clint.values,length)!=4]),
-            yes = "0",
-            no = clint.values[lapply(clint.values,length)!=4]
-          )
-        # Replace the (median,l95,u95) with 0 when clint.pvalue > threshold
-        clint.values[lapply(clint.values,length)==4]<-
-          ifelse(
-            clint.pvalues[lapply(clint.values,length)==4] >
-            clint.pvalue.threshold & 
-            !is.na(clint.pvalues[lapply(clint.values,length)==4]),
-            yes = lapply(clint.values[lapply(clint.values,length)==4],
-            function(x){x<-c(rep("0",3),x[[4]])}),
-            no = clint.values[lapply(clint.values,length)==4]
-          )
-        
-        clint.values <- lapply(clint.values,function(x)paste(x,collapse = ","))
-        chem.physical_and_invitro.data[,species.clint] <- unlist(clint.values)
-        if (!suppress.messages & "CLINT" %in% info)
-          warning(paste(
-            'Clint values with a pvalue >',
-            clint.pvalue.threshold,
-            'were set to 0.'))
-      }    
-    }
-    # Change the necessary parameters to the chem.physical_and_invitro.data col:
-    if (!is.null(species.clint)) 
-    {
-      necessary.params[necessary.params=="Clint"]<-species.clint
-    }
-  }
-
-  # Identify the appropriate column for Clint (if needed):
-  species.clint <- paste0(species,'.Clint')
-  species.clint.pvalue <- paste0(species,'.Clint.pValue')
-  # Make sure capitalization matches a table column:
-  if (tolower(species.clint) %in% 
-    tolower(colnames(chem.physical_and_invitro.data)))
-  {
-    species.clint <- colnames(chem.physical_and_invitro.data)[
-      tolower(colnames(chem.physical_and_invitro.data)) ==
-      tolower(species.clint)]
-    species.clint.pvalue <- colnames(chem.physical_and_invitro.data)[
-      tolower(colnames(chem.physical_and_invitro.data)) ==
-      tolower(species.clint.pvalue)]
-  }
-  
-  # Check to see if we need clint:
-  if (tolower("Clint") %in% 
-    unique(tolower(c(necessary.params,info))))   
-  {
-    # Check to see if we will use human data where species data is missing:
-    if (default.to.human)
-    {
-      # Check to see if this is a column that already has data:
-      if (species.clint %in% colnames(chem.physical_and_invitro.data))
-      {
-        # Replace chemicals with NA's only:
-        replace.index <- is.na(chem.physical_and_invitro.data[,species.clint])
-        if (any(replace.index))
-        {
-          chem.physical_and_invitro.data[replace.index,species.clint] <-
-            chem.physical_and_invitro.data[replace.index,'Human.Clint']
-          chem.physical_and_invitro.data[replace.index,species.clint.pvalue] <-
-            chem.physical_and_invitro.data[replace.index,'Human.Clint.pValue']
-          if (!suppress.messages) 
-            warning('Human values substituted for Clint and Clint.pValue.')
-        }
-      } else {
-        chem.physical_and_invitro.data[,species.clint] <-
-          chem.physical_and_invitro.data[,'Human.Clint']
-        chem.physical_and_invitro.data[,species.clint.pvalue] <-
-          chem.physical_and_invitro.data[,'Human.Clint.pValue']
-        if (!suppress.messages) 
-          warning('Human values substituted for Clint and Clint.pValue.')
-      }    
-    }
-    # Check to see if we have a column for this species in the table:
-    if (!(species.clint %in% colnames(chem.physical_and_invitro.data)))  
-    {
-      incomplete.data <- T
     } else {
       # Set observed clint values to 0 if clint.pvalue > threshold
       if (!is.null(clint.pvalue.threshold))

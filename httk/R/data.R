@@ -25,9 +25,8 @@
 #'
 #'@author Caroline Ring
 #'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
-#'  environmental chemicals by simulating toxicokinetic variability."
-#'  Environment International 106 (2017): 105-118
+#' @references 
+#' \insertRef{ring2017identifying}{httk}
 "mcnally_dt"
 
 #' A timestamp of table creation
@@ -81,9 +80,8 @@
 #'
 #'@author Caroline Ring
 #'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
-#'  environmental chemicals by simulating toxicokinetic variability."
-#'  Environment International 106 (2017): 105-118
+#' @references 
+#' \insertRef{ring2017identifying}{httk}
 "mecdt"
 
 #'CDC BMI-for-age charts
@@ -110,9 +108,8 @@
 #'
 #'@author Caroline Ring
 #'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
-#'environmental chemicals by simulating toxicokinetic variability." Environment
-#'International 106 (2017): 105-118
+#' @references 
+#' \insertRef{ring2017identifying}{httk}
 "bmiage"
 
 #'WHO weight-for-length charts
@@ -140,9 +137,8 @@
 #'@author Caroline Ring
 #'@keywords httk-pop
 #'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
-#'environmental chemicals by simulating toxicokinetic variability." Environment
-#'International 106 (2017): 105-118
+#' @references 
+#' \insertRef{ring2017identifying}{httk}
 "wfl"
 
 #'KDE bandwidth for residual variability in height/weight
@@ -176,9 +172,8 @@
 #'
 #'@author Caroline Ring
 #'@keywords httk-pop
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
-#'  environmental chemicals by simulating toxicokinetic variability."
-#'  Environment International 106 (2017): 105-118
+#' @references 
+#' \insertRef{ring2017identifying}{httk}
 "hw_H" 
 
 #'KDE bandwidths for residual variability in hematocrit
@@ -210,9 +205,8 @@
 #'
 #'@author Caroline Ring
 #'@keywords httk-pop
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
-#'  environmental chemicals by simulating toxicokinetic variability."
-#'  Environment International 106 (2017): 105-118
+#' @references 
+#' \insertRef{ring2017identifying}{httk}
 "hct_h" 
 
 #'KDE bandwidths for residual variability in serum creatinine
@@ -244,9 +238,8 @@
 #'
 #'@author Caroline Ring
 #'@keywords httk-pop
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
-#'  environmental chemicals by simulating toxicokinetic variability."
-#'  Environment International 106 (2017): 105-118
+#' @references 
+#' \insertRef{ring2017identifying}{httk}
 "scr_h" 
 
 #' Microtiter Plate Well Descriptions for Armitage et al. (2014) Model
@@ -274,8 +267,7 @@
 #'
 #' @references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
 #'2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
-#' @references Honda, Gregory S., et al. "Using the Concordance of In Vitro and
-#'In Vivo Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
+#' \insertRef{honda2019using}{httk}
 "well_param"
 
 #' Armitage et al. (2014) Model Inputs from Honda et al. (2019)
@@ -295,11 +287,9 @@
 #'@keywords data
 #'
 #'@author Greg Honda
-#'
 #'@references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
 #'2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
-#'@references Honda, Gregory S., et al. "Using the Concordance of In Vitro and
-#'In Vivo Data to Evaluate Extrapolation Assumptions", PloS ONE 14.5 (2019): e0217564.
+#' \insertRef{honda2019using}{httk}
 "armitage_input"
 
 #' DRUGS|NORMAN: Pharmaceutical List with EU, Swiss, US Consumption Data
@@ -768,7 +758,7 @@
 #' This table includes 1 and 2 compartment fits of plasma concentration vs time
 #' data aggregated from chem.invivo.PK.data, performed in Wambaugh et al. 2018.
 #' Data includes volume of distribution (Vdist, L/kg), elimination rate (kelim,
-#' 1/h), gut absorption rate (kgutabs, 1/h), fraction absorbed (Fgutabs), and
+#' 1/h), gut absorption rate (kgutabs, 1/h), fraction absorbed (Fabsgut), and
 #' steady state concentration (Css, mg/L).
 #'
 #'
@@ -892,9 +882,8 @@
 #'
 #'@author John Wambaugh
 #'
-#'@references Ring, Caroline L., et al. "Identifying populations sensitive to
-#' evironmental chemicals by simulating toxicokinetic variability." Environment
-#' international 106 (2017): 105-118
+#' @references 
+#' \insertRef{ring2017identifying}{httk}
 #'
 #'@references Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and
 #'Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
@@ -973,10 +962,8 @@
 #'  CAS\tab The preferred Chemical Abstracts Service Registry Number \tab none \cr                     
 #'  CAS.Checksum \tab A logical indicating whether the CAS number is valid \tab none \cr                   
 #'  DTXSID \tab DSSTox Structure ID 
-#' (\url{http://comptox.epa.gov/dashboard}) \tab none \cr                  
+#' (\url{https://comptox.epa.gov/dashboard}) \tab none \cr                  
 #'  Formula \tab The proportions of atoms within the chemical compound  \tab none \cr                   
-#'  SMILES.desalt \tab The simplified molecular-input line-entry system
-#' structure \tab none \cr                 
 #'  All.Compound.Names \tab All names of the chemical as they occured in the
 #' data \tab none \cr              
 #'  logHenry \tab The log10 Henry's law constant \tab 
@@ -988,7 +975,8 @@
 #'  logPwa.Reference \tab Reference for logPwa \tab \cr             
 #'  logMA \tab The log10 phospholipid:water PC or
 #' "Membrane affinity" \tab unitless ratio \cr                
-#'  logMA.Reference \tab Reference for membrane affinity \tab \cr   #'  logWSol \tab The log10 water solubility \tab log10(mole/L) \cr                  
+#'  logMA.Reference \tab Reference for membrane affinity \tab \cr   
+#'  logWSol \tab The log10 water solubility \tab log10(mole/L) \cr                  
 #'  logWSol.Reference \tab Reference for logWsol \tab \cr              
 #'  MP \tab The chemical compound melting point \tab degrees Celsius \cr                  
 #'  MP.Reference \tab Reference for melting point \tab \cr                   
@@ -1004,24 +992,42 @@
 #'  DTXSID.Reference \tab Reference for DTXSID \tab \cr               
 #'  Formula.Reference \tab Reference for chemical formulat \tab \cr             
 #'  [SPECIES].Clint \tab (Primary hepatocyte suspension) 
-#' intrinsic hepatic clearance \tab uL/min/10^6 hepatocytes \cr                   
-#'  [SPECIES].Clint.pValue \tab Probability that there is no clearance observed. \tab none \cr           
+#' intrinsic hepatic clearance. \emph{Entries with comma separated values are Bayesian estimates of
+#' the Clint distribution - displayed as the median, 95th credible interval
+#' (that is quantile 2.5 and 97.5, respectively), and p-value.} \tab uL/min/10^6 hepatocytes \cr                   
+#'  [SPECIES].Clint.pValue \tab Probability that there is no clearance observed.
+#'  Values close to 1 indicate clearance is not statistically significant. \tab none \cr           
 #'  [SPECIES].Clint.pValue.Ref \tab Reference for Clint pValue \tab  \cr   
 #'  [SPECIES].Clint.Reference \tab Reference for Clint \tab  \cr         
-#'  [SPECIES].Fgutabs \tab Fraction of chemical absorbed from the
-#' gut \tab unitless fraction \cr           
-#'  [SPECIES].Fgutabs.Reference \tab Reference for Fgutabs \tab \cr        
+#'  [SPECIES].Caco2.Pab \tab Caco-2 Apical-to-Basal Membrane Permeability \tab 10^-6 cm/s \cr           
+#'  [SPECIES].Caco2.Pab.Reference \tab Reference for Caco-2 Membrane Permeability \tab \cr
+#'  [SPECIES].Fabs \tab In vivo measured fraction of an oral dose of chemical 
+#' absorbed from the gut lumen into the gut \tab unitless fraction \cr           
+#'  [SPECIES].Fabs.Reference \tab Reference for Fabs \tab \cr        
+#'  [SPECIES].Fgut \tab In vivo measured fraction of an oral dose of chemical 
+#' that passes gut metabolism and clearance \tab unitless fraction \cr           
+#'  [SPECIES].Fgut.Reference \tab Reference for Fgut \tab \cr        
+#'  [SPECIES].Foral \tab In vivo measued fractional systemic bioavailability of 
+#' an oral dose, modeled as he product of Fabs * Fgut * Fhep (where Fhep is 
+#' first pass hepatic metabolism). \tab unitless fraction \cr           
+#'  [SPECIES].Foral.Reference \tab Reference for Foral \tab \cr        
 #'  [SPECIES].Funbound.plasma \tab Chemical fraction unbound in presence of 
-#' plasma proteins \tab unitless fraction \cr         
+#' plasma proteins (fup). \emph{Entries with comma separated values are Bayesian estimates of
+#' the fup distribution - displayed as the median and 95th credible interval
+#' (that is quantile 2.5 and 97.5, respectively).} \tab unitless fraction \cr         
 #'  [SPECIES].Funbound.plasma.Ref\tab Reference for Funbound.plasma \tab \cr 
 #'  [SPECIES].Rblood2plasma \tab Chemical concentration blood to plasma ratio \tab unitless ratio \cr         
-#'  [SPECIES].Rblood2plasma.Ref \tab Reference for Rblood2plasma \tab  \cr  
-#'  SMILES.desalt.Reference"\tab Reference for SMILES structure \tab  \cr          
+#'  [SPECIES].Rblood2plasma.Ref \tab Reference for Rblood2plasma \tab  \cr        
 #'  Chemical.Class \tab All classes to which the chemical has been assigned \tab \cr
 #' }
+#'
+#' @seealso \code{\link{get_physchem_param}} 
+#' @seealso \code{\link{get_invitroPK_param}} 
+#' @seealso \code{\link{add_chemtable}} 
+#'
 #' @author John Wambaugh
 #'
-#' @references CompTox Chemicals Dashboard (\url{http://comptox.epa.gov/dashboard})
+#' @references CompTox Chemicals Dashboard (\url{https://comptox.epa.gov/dashboard})
 #'
 #' EPI Suite, https://www.epa.gov/opptintr/exposure/pubs/episuite.htm
 #'
@@ -1147,12 +1153,7 @@
 #' In Vivo Hazard and Mode of Action from High-Throughput In Vitro Toxicity
 #' Assays. Toxicological Sciences 132(2), 327-346, 10.1093/toxsci/kft012.
 #'
-#' Wetmore, B. A., Wambaugh, J. F., Allen, B., Ferguson, S. S., Sochaski, M.
-#' A., Setzer, R. W., Houck, K. A., Strope, C. L., Cantwell, K., Judson, R. S.,
-#' LeCluyse, E., Clewell, H.J. III, Thomas, R.S., and Andersen, M. E. (2015).
-#' "Incorporating High-Throughput Exposure Predictions with Dosimetry-Adjusted
-#' In Vitro Bioactivity to Inform Chemical Toxicity Testing" Toxicological
-#' Sciences, kfv171.
+#' \insertRef{wetmore2015incorporating}{httk}
 #'
 #' F. L. Wood, J. B. Houston and D. Hallifax
 #' 'Drug Metabolism and Disposition November 1, 2017, 45 (11) 1178-1188; 
@@ -1200,7 +1201,7 @@
 #' 235-251.
 #'
 #'
-#' @source \url{ftp://newftp.epa.gov/COMPTOX/High_Throughput_Screening_Data/Previous_Data/ToxCast_Data_Release_Oct_2015/}
+#' @source \url{https://gaftp.epa.gov/comptox/High_Throughput_Screening_Data/Previous_Data/ToxCast_Data_Release_Oct_2015/MySQL_Data/}
 #' @keywords data
 "wambaugh2019.tox21"
 
@@ -1398,7 +1399,6 @@
 #' 10.1016/j.tiv.2007.09.010.
 #'
 #' ICRP. Report of the Task Group on Reference Man. ICRP Publication 23 1975
-#' @source Pearce et al. (2017), in preparation,
 #'
 #' Wambaugh, John F., et al. "Toxicokinetic triage for environmental
 #' chemicals." Toxicological Sciences (2015): 228-237.
@@ -1532,6 +1532,7 @@
 #' @references Pearce, Robert G., et al. "Evaluation and calibration of 
 #' high-throughput predictions of chemical distribution to tissues."
 #' Journal of pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
+#' @seealso \code{\link{predict_partitioning_schmitt}} 
 #' @source Pearce et al. 2017 Regression Models
 #' @keywords data
 "pearce2017regression"
@@ -1551,10 +1552,9 @@
 #' @docType data
 #' @format data.frame
 #' @author Daniel E. Dawson
-#' @references Dawson, Daniel E. et al. "Designing QSARs for parameters
-#' of high-throughput toxicokinetic models using open-source descriptors."
-#' Environmental Science & Technology____. (2021):______.
-#' @source Dawson et al. 2021 Random Forest QSAR Model
+#' @seealso \code{\link{load_dawson2021}} 
+#' @references
+#' \insertRef{dawson2021qsar}{httk}
 #' @keywords data
 "dawson2021"
 
@@ -1573,7 +1573,8 @@
 #' @author Dustin F. Kapraun
 #' @references
 #' \insertRef{kapraun2019empirical}{httk}
-#' @source Kapraun et al. 2019 Fetal PBTK Model
+#' @source
+#' \insertRef{kapraun2022fetalmodel}{httk}
 #' @keywords data
 "kapraun2019"
 
@@ -1591,9 +1592,9 @@
 #' @aliases Pradeep2020
 #' @docType data
 #' @format data.frame
+#' @seealso \code{\link{load_pradeep2020}} 
 #' @references 
 #' \insertRef{pradeep2020chemstr}{httk}
-#' @source Pradeep et al. 2020 Chemical Structure Predictive Models for HTTK
 #' @keywords data
 "pradeep2020"
 
@@ -1611,7 +1612,8 @@
 #' @format data.frame
 #' @references
 #' \insertRef{Aylward2014matfet}{httk}
-#' @source Kapraun et al. 2021 (submitted)
+#' @source
+#' \insertRef{kapraun2022fetalmodel}{httk}
 #' @keywords data
 "aylward2014"
 
@@ -1630,7 +1632,8 @@
 #' @format data.frame
 #' @references
 #' \insertRef{dallmann2018pregpbtk}{httk}
-#' @source Kapraun et al. 2021 (submitted)
+#' @source
+#' \insertRef{kapraun2022fetalmodel}{httk}
 #' @keywords data
 "pregnonpregaucs"  
 
@@ -1645,7 +1648,8 @@
 #' @format data.frame
 #' @references
 #' \insertRef{dallmann2018pregpbtk}{httk}
-#' @source Kapraun et al. 2021 (submitted)
+#' @source
+#' \insertRef{kapraun2022fetalmodel}{httk}
 #' @keywords data
 "pksim.pcs"  
 
@@ -1669,7 +1673,8 @@
 #' \insertRef{Csanady2002fetalpc}{httk}
 #' \insertRef{Curley1969fetalpc}{httk}
 #' \insertRef{Weijs2013fetalpc}{httk}
-#' @source Kapraun et al. 2021 (submitted)
+#' @source
+#' \insertRef{kapraun2022fetalmodel}{httk}
 #' @keywords data
 "fetalpcs"
 
@@ -1685,7 +1690,8 @@
 #' @format data.frame
 #' @references
 #' \insertRef{Wang2018matbloodnta}{httk}
-#' @source Kapraun et al. 2021 (submitted)
+#' @source
+#' \insertRef{kapraun2022fetalmodel}{httk}
 #' @keywords data
 "wang2018"
 
@@ -1721,4 +1727,112 @@
 #' @docType data
 #' @format data.frame
 #' @keywords data
+#' @references
+#' \insertRef{Ring2017SEEM}{httk}
 "example.seem"
+
+#' Measured Caco-2 Apical-Basal Permeability Data
+#'
+#' In vitro Caco-2 membrane permeabilities characterize how readily absobed/transported
+#' a chemical is. These measurements are all for the apical-to-basal Caco-2
+#' orientation.
+#' These data were either measured by EPA or collected by other others, as
+#' indicated by the column 'Data Origin'.
+#'
+#' \tabular{lll}{
+#' \strong{Column Name} \tab \strong{Description} \tab \strong{Units} \cr
+#' DTXSID \tab EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard}) \tab \cr
+#' Pab \tab Apical-to-basal Caco-2 permeability \tab 10^-6 cm/s \cr
+#' Data Origin \tab The reference which collected/generated the measurement \tab \cr
+#' Test \tab Whether (1) or not (0) the data was withheld from model building to be used in the QSPR test set \tab \cr
+#' CAS \tab Chemical Abstracts Service Registry Number \tab \cr
+#' }
+#' @references
+#' \insertRef{obringer2016suitability}{httk}
+#' 
+#' \insertRef{lanevskij2019physicochemical}{httk}
+#' 
+#' \insertRef{gaulton2012chembl}{httk}
+#' 
+#' \insertRef{HondaUnpublishedCaco2}{httk}
+#' @name honda2023.data
+"honda2023.data"
+
+#' Predicted Caco-2 Apical-Basal Permeabilities
+#'
+#' Honda et al. (2023) describes the construction of a machine-learning 
+#' quantitative structure-property relationship (QSPR )model for in vitro Caco-2 
+#' membrane permeabilites. That model was used to make chemical-specific 
+#' predictions provided in this table.
+#'
+#' \tabular{lll}{
+#' \strong{Column Name} \tab \strong{Description} \tab \strong{Units} \cr
+#' DTXSID \tab EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard}) \tab \cr
+#' Pab.Class.Pred \tab Predicted Pab rate of slow (1), moderate (2), or fast (3) \tab \cr
+#' Pab.Pred.AD \tab Whether (1) or not (0) the chemical is anticipated to be withing the QSPR domain of applicability \tab \cr
+#' CAS \tab Chemical Abstracts Service Registry Number \tab \cr
+#' Pab.Quant.Pred \tab Median and 95-percent interval for values within the predicted class's training data  moderate (2), or fast (3) \tab 10^-6 cm/s \cr
+#' }
+#' @references
+#' \insertRef{HondaUnpublishedCaco2}{httk}
+#' @seealso \code{\link{load_honda2023}} 
+#' @name honda2023.qspr
+"honda2023.qspr"
+
+#' Historical Performance of R Package httk
+#'
+#' This table records the historical performance and other metrics 
+#' of the R package "httk" as
+#' profiled with the function \code{\link{benchmark_httk}}. There is a row for
+#' each version and a column for each benchmark or metric. This table is used
+#' to generate graphs comparing the current version to past performance in order
+#' to help identify unintended degradtion of package capabilities.
+#'
+#' \tabular{ll}{
+#' \strong{Column Name} \tab \strong{Description} \cr
+#'  Version \tab The release of httk (major.minor.patch) \cr                      
+#'  N.steadystate \tab The number of chemicals for which Css can be predicted for the steady-state model \cr
+#'  calc_analytic.units \tab The ratio of the output of \code{\link{calc_analytic_css}} in mg/L to uM multiplied by 1000/MW (should be 1)\cr
+#'  calc_mc.units  \tab The ratio of the output of \code{\link{calc_mc_css}} in mg/L to uM multiplied by 1000/MW (should be 1) \cr
+#'  solve_pbtk.units  \tab The ratio of a Cplasma value from \code{\link{solve_pbtk}} in mg/L to uM multiplied by 1000/MW (should be 1) \cr  
+#'  RMSLE.Wetmore \tab Root mean squared log10 error between Css predictions from httk and published values from Wetmore papers (both 95th percentile) \cr
+#'  N.Wetmore  \tab  Number of chemicals used in RMSLE evaluation \cr          
+#'  RMSLE.noMC  \tab  RMSLE between 95th percentile Css prediction and median prediction \cr 
+#'  N.noMC  \tab Number of chemicals used in RMSLE evaluation \cr 
+#'  RMSLE.InVivoCss  \tab RMSLE for predictions of in vivo measured Css \cr 
+#'  N.InVivoCss  \tab Number of chemicals used in RMSLE evaluation  \cr 
+#'  RMSLE.InVivoAUC   \tab RMSLE for predictions of in vivo measured AUCs \cr 
+#'  N.InVivoAUC  \tab Number of chemicals used in RMSLE evaluation \cr 
+#'  RMSLE.InVivoCmax \tab RMSLE for predictions of in vivo measured Cmax \cr 
+#'  N.InVivoCmax  \tab Number of chemicals used in RMSLE evaluation \cr 
+#'  RMSLE.TissuePC \tab RMSLE for predicted tissue:plasma partition coefficients \cr  
+#'  N.TissuePC  \tab Number of chemicals used in RMSLE evaluation \cr                
+#'  Notes  \tab Why benchmarks/metrics may have changed \cr       
+#' }
+#'
+#' @seealso \code{\link{benchmark_httk}} 
+#' @references
+#' \insertRef{DavidsonFritzUnpublishedModelAdding}{httk}
+#' @name httk.performance
+"httk.performance"
+
+#' Sipes et al. 2017 data
+#'
+#' This table includes in silico predicted chemical-specifc plasma protein 
+#' unbound fraction (fup) and intrinsic hepatic clearance values for the entire
+#' Tox21 library 
+#' (see \url{https://www.epa.gov/chemical-research/toxicology-testing-21st-century-tox21}). 
+#' Predictions were made with Simulations Plus ADMET predictor,
+#' as reported in Sipes et al. (2017). 
+#'
+#' @name sipes2017
+#' @aliases Sipes2017
+#' @docType data
+#' @format data.frame
+#' @author Nisha Sipes
+#' @references
+#' \insertRef{sipes2017intuitive}{httk}
+#' @source ADMET, Simulations Plus
+#' @seealso \code{\link{load_sipes2017}} 
+#' @keywords data
+"sipes2017"

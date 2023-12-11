@@ -2,12 +2,7 @@
 % Please edit documentation in R/predict_partitioning_schmitt.R
 \name{predict_partitioning_schmitt}
 \alias{predict_partitioning_schmitt}
-\title{Predict partition coefficients using the method from Schmitt (2008).
-                                                                                                                       #' This function implements the method from Schmitt (2008) for predicting the 
-tissue to unbound plasma partition coefficients for the tissues contained 
-in the \code{\link{tissue.data}} table. The method has been modifed
-by Pearce et al. (2017) based on an evalaution using in vivo measured 
-partition coefficients.}
+\title{Predict partition coefficients using the method from Schmitt (2008).}
 \usage{
 predict_partitioning_schmitt(
   chem.name = NULL,
@@ -74,6 +69,12 @@ Returns tissue to unbound plasma partition coefficients for each
 tissue.
 }
 \description{
+This function implements the method from Schmitt (2008) for predicting the 
+tissue to unbound plasma partition coefficients for the tissues contained 
+in the \code{\link{tissue.data}} table. The method has been modified
+by Pearce et al. (2017) based on an evaluation using in vivo measured 
+partition coefficients.
+
 To understand this method, it is 
 important to recognize that in  a given media the fraction unbound in that 
 media is inverse of the media:water partition coefficient. 
@@ -96,8 +97,7 @@ small differences in partitioning between cell and plasma
 water. The fup is used as the plasma water to total plasma
 partition coefficient and to approximate the partitioning
 between interstitial protein and water.
-}
-\details{
+
 A regression is used to predict membrane affinity when measured values are 
 not available (\code{\link{calc_ma}}).  The
 regressions for correcting each tissue are performed on tissue plasma

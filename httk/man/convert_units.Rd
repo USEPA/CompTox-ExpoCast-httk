@@ -14,6 +14,7 @@ convert_units(
   dtxsid = NULL,
   parameters = NULL,
   temp = 25,
+  liquid.density = 1,
   state = "liquid"
 )
 }
@@ -34,7 +35,7 @@ be specified.}
 must be specified.}
 
 \item{dtxsid}{EPA's DSSTox Structure ID 
-(\url{http://comptox.epa.gov/dashboard}) the chemical must be identified by
+(\url{https://comptox.epa.gov/dashboard}) the chemical must be identified by
 either CAS, name, or DTXSIDs}
 
 \item{parameters}{A set of model parameters, especially a set that
@@ -42,7 +43,10 @@ includes MW (molecular weight) for our conversions}
 
 \item{temp}{Temperature for conversions (default = 25 degreees C)}
 
-\item{state}{Chemical state (gas or default liquid)}
+\item{liquid.density}{Density of the specified chemical in liquid state,
+numeric value, (default 1.0 g/mL).}
+
+\item{state}{Chemical state (gas or default liquid).}
 }
 \description{
 This function is designed to accept input units, output units, and the 
@@ -68,10 +72,10 @@ mg/\ifelse{html}{\out{m<sup>3</sup>}}{\eqn{m^3}} or umol/L), and
 in the context of gases assumed to be ideal, ppmv. 
 
 \emph{Andersen and Clewell's Rules of PBPK Modeling:}
-\itemize{
- \item{1}{Check Your Units}
- \item{2}{\strong{Check Your Units}}
- \item{3}{Check Mass Balance}
+\enumerate{
+\item Check Your Units
+\item \strong{Check Your Units}
+\item Check Mass Balance
 }
 }
 \examples{
@@ -96,6 +100,7 @@ MW_pyrene <- get_physchem_param(param='MW', chem.name='pyrene')
 conversion_factor <- convert_units(input.units='mg/L', output.units ='uM',
   MW=MW_pyrene)
 
+calc_mc_oral_equiv(15, parameters=p)
 }
 \author{
 Mark Sfeir, John Wambaugh, and Sarah E. Davidson

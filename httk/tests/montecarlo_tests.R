@@ -1,9 +1,13 @@
-#R CMD BATCH --no-timing --no-restore --no-save montecarlo_tests.R montecarlo_tests.Rout
+# R CMD BATCH --no-timing --no-restore --no-save montecarlo_tests.R montecarlo_tests.Rout
+
+# Get rid of anything in the workspace:
+rm(list=ls()) 
+
 library(httk)
 
+# Reduce the number of samples used by Monte Carlo to decrease runtime for
+# CRAN checks (never use predictions with only ten draws):
 NSAMP <- 10
-
-
 
 #
 #
@@ -73,4 +77,31 @@ set.seed(1234)
 # Do the calculation manually to make sure units are correct:
 signif(10/calc_mc_css(chem.name="bisphenol a",samples=NSAMP,output.units="uM"),4)
 
+# do test of passing data.table of parameters
+set.seed(1234)
+parameter.dt <- create_mc_samples(chem.cas="335104-84-2",
+                                    model="pbtk",
+                                    samples=NSAMP)
+calc_mc_oral_equiv(conc=100,
+                   parameters=parameter.dt,
+                   model="pbtk")
+
+# If we turn off all the montecarlo the samples should all be the same and
+# give us the same result as calc_analytic_css:
+a <- calc_mc_css(
+  chem.cas = "80-05-7", 
+  output.units = "uM", 
+  model = "3compartmentss", 
+  species = "Human",
+  samples=NSAMP, 
+  httkpop=FALSE, 
+  invitrouv=FALSE, 
+  return.samples=TRUE)
+b <- calc_analytic_css(
+  chem.cas = "80-05-7", 
+  output.units = "uM", 
+  model = "3compartmentss", 
+  species = "Human")
+all(a/b==1) 
+                   
 quit("no")

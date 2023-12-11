@@ -56,12 +56,15 @@ model.list[["pbtk"]]$tissuelist=list(
 # how other parameters were calculated:
 model.list[["pbtk"]]$param.names <- c(
   "BW",
+  "Caco2.Pab",
+  "Caco2.Pab.dist",
   "Clint",
+  "Clint.dist",
   "Clmetabolismc",
   "Funbound.plasma",
   "Funbound.plasma.dist",
   "Funbound.plasma.adjustment",
-  "Fgutabs",
+  "Fabsgut",
   "Fhep.assay.correction",
   "hematocrit",
   "Kgut2pu",
@@ -95,6 +98,7 @@ model.list[["pbtk"]]$param.names <- c(
 # This subset of R parameters are needed to initially parameterize the compiled
 # code for the solver: (must match ORDER under "parameters" in C code, even if 
 # some items are omitted)
+
 #
 # String representations of the R version of names of
 # the parameters are assigned to the C variable name in this scheme.
@@ -267,7 +271,7 @@ model.list[["pbtk"]]$state.vars <- c(
     "Ametabolized",
     "AUC"
     ) 
-
+    
 # Actual (intrinsic) units assigned to each of the time dependent
 # variables of the model system including state variables and any transformed
 # outputs (for example, concentrations calculated from amounts.)
@@ -295,7 +299,10 @@ model.list[["pbtk"]]$compartment.units <- c(
     "AUC"="uM*days"
   )
 
-       
+# Compartment state of matter, needed for proper unit conversion, if all
+# comaprtments of the same only include one state and set it to "all":
+model.list[["pbtk"]]$compartment.state <- list(liquid="all")
+
 #Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[["pbtk"]]$required.params <- c(
   "Clint",
@@ -319,7 +326,7 @@ model.list[["pbtk"]]$calc.standard.httkpop2httk <- TRUE
 # These are the model parameters that are impacted by httk-pop:
 model.list[["pbtk"]]$httkpop.params <- c(
   "BW",
-  "Fgutabs",
+  "Fabsgut",
   "hematocrit",
   "liver.density",
   "million.cells.per.gliver",

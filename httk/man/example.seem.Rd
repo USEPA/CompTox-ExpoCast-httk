@@ -17,4 +17,7 @@ example.seem
 We do not have the space to distribute all the SEEM predictions within
 this R package, but we can give you our "Intro to IVIVE" example chemicals
 }
+\references{
+\insertRef{Ring2017SEEM}{httk}
+}
 \keyword{data}

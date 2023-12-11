@@ -33,6 +33,7 @@ solve_pbtk(
   regression = TRUE,
   restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04,
+  Caco2.options = list(),
   monitor.vars = NULL,
   ...
 )
@@ -116,6 +117,14 @@ partition coefficients.}
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 
+\item{Caco2.options}{A list of options to use when working with Caco2 apical to
+basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
+
 \item{monitor.vars}{Which variables are returned as a function of time. 
 The default value of NULL provides "Cgut", "Cliver", "Cven", "Clung", "Cart", 
 "Crest", "Ckidney", "Cplasma", "Atubules", "Ametabolized", and "AUC"}
@@ -153,10 +162,11 @@ Schematic"}}
 Schematic"}}
 
 When species is specified as rabbit, dog, or mouse, the function uses the
-appropriate physiological data(volumes and flows) but substitues human
+appropriate physiological data(volumes and flows) but substitutes human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{
+\donttest{
 
 # Multiple doses per day:
 head(solve_pbtk(
@@ -183,7 +193,6 @@ params <- parameterize_pbtk(dtxsid="DTXSID4020406", species = "rat")
 params["Funbound.plasma"] <- 0.1
 out <- solve_pbtk(parameters=params, days=2.5)
 
-\donttest{
 # A fifty day simulation:
 out <- solve_pbtk(
   chem.name = "Bisphenol A", 
@@ -209,8 +218,7 @@ print(c.vs.t)
 
 }
 \references{
-Pearce, Robert G., et al. "Httk: R package for high-throughput
-toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+\insertRef{pearce2017httk}{httk}
 }
 \seealso{
 \code{\link{solve_model}}

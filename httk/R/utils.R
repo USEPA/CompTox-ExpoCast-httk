@@ -7,9 +7,8 @@
 #' @param fhat A list with elements x, w, and h (h is the KDE bandwidth).
 #' @return A vector of n samples from the KDE fhat
 #' @author Caroline Ring
-#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
+#' @references 
+#' \insertRef{ring2017identifying}{httk}
 #' @keywords httk-pop
 #' @import stats
 #' @export rfun
@@ -47,9 +46,8 @@ rfun <- function(n,
 #' each element of \code{x} is within the inclusive limits given by
 #' \code{lims}.
 #' @author Caroline Ring
-#' @references Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment International 106 (2017): 105-118
+#' @references 
+#' \insertRef{ring2017identifying}{httk}
 #' @keywords httk-pop
 #' @export is_in_inclusive
 is_in_inclusive <- function(x, lims) {
