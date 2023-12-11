@@ -45,11 +45,19 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#' 
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
 #'
 #' @return 
 #' \item{BW}{Body Weight, kg.} 
 #' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
-#' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the 
+#' \item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the 
 #' fraction of the dose that enters the gutlumen.} 
 #' \item{Funbound.plasma}{Fraction of plasma that is not bound.} 
 #' \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte 
@@ -79,20 +87,14 @@
 #' @author Robert Pearce and John Wambaugh
 #'
 #' @references 
-#' Pearce, Robert G., et al. "Httk: R package for high-throughput 
-#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 #'
-#' Schmitt, Walter. "General approach for the calculation of tissue 
-#' to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+#' \insertRef{pearce2017httk}{httk}
 #'
-#' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-#' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
-#' and pharmacodynamics 44.6 (2017): 549-565.
+#' \insertRef{schmitt2008general}{httk}
 #'
-#' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
-#' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
-#' hepatocyte incubations using microsomal binding or drug lipophilicity data.
-#' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+#' \insertRef{pearce2017evaluation}{httk}
+#'
+#' \insertRef{kilford2008hepatocellular}{httk}
 #'
 #' @keywords Parameter 3compartment
 #'
@@ -129,7 +131,8 @@ parameterize_3comp<- function(
                        regression = TRUE,
                        suppress.messages = FALSE,
                        restrictive.clearance = TRUE,
-                       minimum.Funbound.plasma = 0.0001)
+                       minimum.Funbound.plasma = 0.0001,
+                       Caco2.options = NULL)
 {
   parms <- parameterize_pbtk(
              chem.cas = chem.cas,
@@ -147,9 +150,11 @@ parameterize_3comp<- function(
              regression = regression,
              suppress.messages = suppress.messages,
              restrictive.clearance = restrictive.clearance,
-             minimum.Funbound.plasma = minimum.Funbound.plasma)
+             minimum.Funbound.plasma = minimum.Funbound.plasma,
+             Caco2.options = Caco2.options)
                               
   parms$Qkidneyf <- parms$Vvenc <- parms$Vartc <- NULL
  
-  return(lapply(parms[order(tolower(names(parms)))],set_httk_precision))                     
+  return(lapply(parms[model.list[["3compartment"]]$param.names],
+                set_httk_precision))                   
 }

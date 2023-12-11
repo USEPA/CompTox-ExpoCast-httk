@@ -60,6 +60,8 @@
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
 #' hematocrit, Funbound.plasma, and Krbc2pu.
+#' @param clint.pvalue.threshold Hepatic clearances with clearance assays
+#' having p-values greater than the threshold are set to zero.
 #' @param recalc.clearance Recalculates the the hepatic clearance
 #' (Clmetabolism) with new million.cells.per.gliver parameter.
 #' @param dosing.matrix Vector of dosing times or a matrix consisting of two
@@ -74,6 +76,13 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
 #' @param monitor.vars Which variables are returned as a function of time. 
 #' Defaults value of NULL provides "Cliver", "Csyscomp", "Atubules", 
 #' "Ametabolized", "AUC"
@@ -85,8 +94,8 @@
 #'
 #' @author John Wambaugh and Robert Pearce
 #'
-#' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
-#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#' @references 
+#' \insertRef{pearce2017httk}{httk}
 #'
 #' @keywords Solve 3compartment
 #'
@@ -147,11 +156,13 @@ solve_3comp <- function(chem.name = NULL,
                     default.to.human=FALSE,
                     recalc.blood2plasma=FALSE,
                     recalc.clearance=FALSE,
+                    clint.pvalue.threshold=0.05,
                     dosing.matrix=NULL,
                     adjusted.Funbound.plasma=TRUE,
                     regression=TRUE,
                     restrictive.clearance = TRUE,
                     minimum.Funbound.plasma=0.0001,
+                    Caco2.options = list(),
                     monitor.vars=NULL,
                     ...)
 {
@@ -179,13 +190,16 @@ solve_3comp <- function(chem.name = NULL,
     input.units=input.units,
     output.units=output.units,
     method=method,rtol=rtol,atol=atol,
-    default.to.human=default.to.human,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-    regression=regression,
-    restrictive.clearance = restrictive.clearance,
     minimum.Funbound.plasma=minimum.Funbound.plasma,
+    parameterize.arg.list=list(
+                      default.to.human=default.to.human,
+                      clint.pvalue.threshold=clint.pvalue.threshold,
+                      restrictive.clearance = restrictive.clearance,
+                      regression=regression,
+                      Caco2.options=Caco2.options),
     ...)
   
   out <- cbind(out,out[,"Csyscomp"])

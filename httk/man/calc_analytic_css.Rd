@@ -23,6 +23,7 @@ calc_analytic_css(
   restrictive.clearance = TRUE,
   bioactive.free.invivo = FALSE,
   IVIVE = NULL,
+  Caco2.options = list(),
   parameterize.args = list(),
   ...
 )
@@ -97,6 +98,14 @@ Argument may be set to "Honda1" through "Honda4". If used, this function
 overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments. 
 See Details below for more information.}
 
+\item{Caco2.options}{A list of options to use when working with Caco2 apical to
+basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
+
 \item{parameterize.args}{List of arguments passed to model's associated
 parameterization function, including default.to.human, 
 adjusted.Funbound.plasma, regression, and minimum.Funbound.plasma. The 
@@ -124,16 +133,26 @@ Concentrations are calculated for the specifed model with constant
 oral infusion dosing.  All tissues other than gut, liver, and lung are the 
 product of the steady state plasma concentration and the tissue to plasma 
 partition coefficient. 
-\tabular{lrrrr}{
-\tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical Conc. \tab TK Statistic Used* \cr
-Honda1 \tab Veinous (Plasma) \tab Restrictive \tab Free \tab Mean Conc. \cr
-Honda2 \tab Veinous \tab Restrictive \tab Free \tab Max Conc. \cr
-Honda3 \tab Veinous \tab Non-restrictive \tab Total \tab Mean Conc. \cr
-Honda4 \tab Veinous \tab Non-restrictive \tab Total \tab Max Conc. \cr
-Honda5 \tab Target Tissue \tab Non-restrictive \tab Total \tab Mean Conc. \cr
-Honda6 \tab Target Tissue \tab Non-restrictive \tab Total \tab Max Conc. \cr
+
+Only four sets of IVIVE assumptions that performed well in Honda et al. 
+(2019) are currently included in \code{\link{honda.ivive}}:
+"Honda1" through "Honda4". The use of max (peak) 
+concentration can not be currently be calculated with \code{\link{calc_analytic_css}}. 
+The httk default settings correspond to "Honda3":
+
+\tabular{lrrrrr}{
+\tab \emph{In Vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical Conc. \emph{In Vivo} \tab TK Statistic Used* \tab Bioactive Chemical Conc. \emph{In Vitro} \cr
+Honda1 \tab Veinous (Plasma) \tab Restrictive \tab Free \tab Mean Conc. In Vivo \tab Free Conc. In Vitro \cr
+Honda2 \tab Veinous \tab Restrictive \tab Free \tab Mean Conc. In Vivo \tab Nominal Conc. In Vitro \cr
+Honda3 \tab Veinous \tab Restrictive \tab Total \tab Mean Conc. In Vivo \tab Nominal Conc. In Vitro \cr
+Honda4 \tab Target Tissue \tab Non-restrictive \tab Total \tab Mean Conc. In Vivo \tab Nominal Conc. In Vitro \cr
 }
-*Assumption is currently ignored because analytical steady-state solutions are currently used by this function.
+
+"Honda1" uses plasma concentration, restrictive clearance, and treats the 
+unbound invivo concentration as bioactive. For IVIVE, any input nominal 
+concentration in vitro should be converted to cfree.invitro using 
+\code{\link{armitage_eval}}, otherwise performance will be the same as 
+"Honda2".
 }
 \examples{
 calc_analytic_css(chem.name='Bisphenol-A',output.units='mg/L',
@@ -163,8 +182,7 @@ calc_analytic_css(chem.name="Theobromine",model="3compartmentss")
 
 }
 \references{
-Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
-In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
+\insertRef{honda2019using}{httk}
 }
 \seealso{
 \code{\link{calc_css}}

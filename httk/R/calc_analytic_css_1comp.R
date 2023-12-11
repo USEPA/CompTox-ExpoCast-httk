@@ -28,6 +28,15 @@
 #'@param bioactive.free.invivo If FALSE (default), then the total concentration is treated
 #' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 #' bioactive in vivo. Only works with tissue = NULL in current implementation.
+#' 
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' 
 #'@param ... Additional parameters passed to parameterize function if 
 #' parameters is NULL.
 #'  
@@ -50,6 +59,7 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
                                    tissue=NULL,
                                    restrictive.clearance=TRUE,
                                    bioactive.free.invivo = FALSE,
+                                   Caco2.options = list(),
                                    ...)
 {
 
@@ -79,6 +89,7 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
                                     dtxsid=dtxsid,
                                     suppress.messages=suppress.messages,
                                     restrictive.clearance=restrictive.clearance,
+                                    Caco2.options = Caco2.options,
                                     ...)
     if (recalc.blood2plasma) 
     {
@@ -97,10 +108,11 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
       warning("Argument restrictive.clearance=FALSE ignored by model 1comp when parameters!=NULL.") 
     }
   }
-  
-  hourly.dose <- hourly.dose * parameters$Fgutabs
+
   
   # one compartment Css is dose.rate / clearance:
+  hourly.dose <- hourly.dose * parameters$Fbio.oral
+
   Css <- hourly.dose / parameters$kelim / parameters$Vdist
   # Convert to plasma concentration:
   Css <- Css/parameters[['Rblood2plasma']]

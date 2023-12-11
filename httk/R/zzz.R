@@ -25,3 +25,4 @@ if(getRversion() >= "2.15.1")
 ## HOWEVER, it is much better practice to write code
 ## that can be checked thoroughly, e.g.
 #if(condition) .Call(entry1, 1, 2, 3) else .Call(entry2, 1, 2, 3)
+

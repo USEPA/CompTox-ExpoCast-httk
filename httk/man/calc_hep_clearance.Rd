@@ -71,12 +71,14 @@ calc_hep_clearance(chem.name="Ibuprofen",well.stirred.correction=FALSE)
 \references{
 Ito, K., & Houston, J. B. (2004). "Comparison of the use of liver models for 
 predicting drug clearance using in vitro kinetic data from hepatic microsomes 
-and isolated hepatocytes." Pharmaceutical Tesearch, 21(5), 785-792.
+and isolated hepatocytes." Pharmaceutical Research, 21(5), 785-792.
 
-Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
-(2008). Hepatocellular binding of drugs: correction for unbound fraction in
-hepatocyte incubations using microsomal binding or drug lipophilicity data.
-Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+Carlile, David J., Katayoun Zomorodi, and J. Brian Houston. "Scaling factors 
+to relate drug metabolic clearance in hepatic microsomes, isolated 
+hepatocytes, and the intact liver: studies with induced livers involving 
+diazepam." Drug metabolism and disposition 25.8 (1997): 903-911.
+
+\insertRef{kilford2008hepatocellular}{httk}
 }
 \author{
 John Wambaugh and Robert Pearce

@@ -57,10 +57,19 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
-#'
-#' @return 
-#' \item{Vdist}{Volume of distribution, units of L/kg BW.}
-#' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' 
+#' @return \item{Vdist}{Volume of distribution, units of L/kg BW.}
+#' \item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, i.e. the 
+#' fraction of the dose that enters the gutlumen.} \item{kelim}{Elimination rate, units of
+#' 1/h.} \item{hematocrit}{Percent volume of red blood cells in the blood.}
+#' \item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of the
 #' dose that enters the gutlumen.} 
 #' \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte 
 #' assay using the method of Kilford et al. (2008)} 
@@ -79,20 +88,14 @@
 #' @author John Wambaugh and Robert Pearce
 #'
 #' @references 
-#' Pearce, Robert G., et al. "Httk: R package for high-throughput 
-#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 #'
-#' Schmitt, Walter. "General approach for the calculation of tissue 
-#' to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+#' \insertRef{pearce2017httk}{httk}
 #'
-#' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-#' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
-#' and pharmacodynamics 44.6 (2017): 549-565.
+#' \insertRef{schmitt2008general}{httk}
 #'
-#' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
-#' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
-#' hepatocyte incubations using microsomal binding or drug lipophilicity data.
-#' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+#' \insertRef{pearce2017evaluation}{httk}
+#'
+#' \insertRef{kilford2008hepatocellular}{httk} 
 #'
 #' @keywords Parameter 1compartment
 #'
@@ -133,7 +136,9 @@ parameterize_1comp <- function(
                         well.stirred.correction=TRUE,
                         suppress.messages=FALSE,
                         clint.pvalue.threshold=0.05,
-                        minimum.Funbound.plasma=0.0001)
+                        minimum.Funbound.plasma=0.0001,
+                        Caco2.options = list()
+                        )
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
 #each time a data.table column name is used without quotes. To appease R CMD
@@ -181,7 +186,8 @@ parameterize_1comp <- function(
                                   restrictive.clearance=restrictive.clearance,
                                   clint.pvalue.threshold=clint.pvalue.threshold,
                                   minimum.Funbound.plasma=
-                                    minimum.Funbound.plasma))
+                                    minimum.Funbound.plasma,
+                                  Caco2.options = Caco2.options))
   ss.params <- c(ss.params, params['Vdist'])
   
   params[['kelim']] <- calc_elimination_rate(parameters=ss.params,
@@ -228,35 +234,35 @@ parameterize_1comp <- function(
    
 # Check the species argument for capitalization problems and whether or not 
 # it is in the table:  
-    if (!(species %in% colnames(physiology.data)))
+  if (!(species %in% colnames(physiology.data)))
+  {
+    if (toupper(species) %in% toupper(colnames(physiology.data)))
     {
-      if (toupper(species) %in% toupper(colnames(physiology.data)))
-      {
-        phys.species <- colnames(physiology.data)[
-                          toupper(colnames(physiology.data))==toupper(species)]
-      } else stop(paste("Physiological PK data for",species,"not found."))
-    } else phys.species <- species
-  
-  # Load the physiological parameters for this species
-    this.phys.data <- physiology.data[,phys.species]
-    names(this.phys.data) <- physiology.data[,1]
-    
-    params[['hematocrit']] <- this.phys.data[["Hematocrit"]]
-    params[['MW']] <- get_physchem_param("MW",chem.cas=chem.cas)
-  
-    Fgutabs <- try(
-                 get_invitroPK_param(
-                   "Fgutabs",
-                   species,
-                   chem.cas=chem.cas),
-                 silent=TRUE)
+      phys.species <- colnames(physiology.data)[
+                        toupper(colnames(physiology.data))==toupper(species)]
+    } else stop(paste("Physiological PK data for",species,"not found."))
+  } else phys.species <- species
 
-    if (is(Fgutabs,"try-error")) Fgutabs <- 1
-    
-    params[['Fgutabs']] <- Fgutabs
-    params[['hepatic.bioavailability']] <- 
-      ss.params[['hepatic.bioavailability']]  
-    params[['BW']] <- this.phys.data[["Average BW"]]
+# Load the physiological parameters for this species
+  this.phys.data <- physiology.data[,phys.species]
+  names(this.phys.data) <- physiology.data[,1]
   
-  return(lapply(params[order(tolower(names(params)))],set_httk_precision))
+    
+  params[['hematocrit']] <- this.phys.data[["Hematocrit"]]
+  params[['plasma.vol']] <- this.phys.data[["Plasma Volume"]]/1000 # L/kg BW
+
+  params[['MW']] <- get_physchem_param("MW",chem.cas=chem.cas)
+
+  params[['Fabsgut']] <- ss.params[['Fabsgut']]
+  params[['Fabs']] <- ss.params[['Fabs']]
+  params[['Fgut']] <- ss.params[['Fgut']]
+  params[["Caco2.Pab"]] <- ss.params[['Caco2.Pab']]
+  params[["Caco2.Pab.dist"]] <- ss.params[['Caco2.Pab.dist']]
+  
+  params[['hepatic.bioavailability']] <- 
+    ss.params[['hepatic.bioavailability']]  
+  params[['BW']] <- this.phys.data[["Average BW"]]
+  
+  return(lapply(params[model.list[["1compartment"]]$param.names],
+                set_httk_precision))
 }

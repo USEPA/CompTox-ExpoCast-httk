@@ -30,28 +30,33 @@ armitage_eval(
   this.f_oc = 1,
   this.conc_ser_alb = 24,
   this.conc_ser_lip = 1.9,
-  this.Vdom = 0
+  this.Vdom = 0,
+  this.pH = 7,
+  restrict.ion.partitioning = FALSE
 )
 }
 \arguments{
 \item{casrn.vector}{For vector or single value, CAS number}
 
-\item{nomconc.vector}{For vector or single value, micromolar nominal 
+\item{nomconc.vector}{For vector or single value, micromolar (uM = mol/L) nominal 
 concentration (e.g. AC50 value)}
 
 \item{this.well_number}{For single value, plate format default is 384, used
-if is.na(tcdata)==TRUE}
+if is.na(tcdata)==TRUE. This value chooses default surface area settings for
+\code{\link{armitage_estimate_sarea}} based on the number of plates per well.}
 
 \item{this.FBSf}{Fraction fetal bovine serum, must be entered by user.}
 
 \item{tcdata}{A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
-v_total, v_working. Otherwise supply single values to this.params.}
+v_total, v_working. Otherwise supply single values to this.params (e.g., this.sarea,
+this.v_total, etc.). Chemical parameters are taken from 
+\code{\link{chem.physical_and_invitro.data}}.}
 
 \item{this.sarea}{Surface area per well (m^2)}
 
-\item{this.v_total}{Total volume per well (m^3)}
+\item{this.v_total}{Total volume per well (uL)}
 
-\item{this.v_working}{Working volume per well (m^3)}
+\item{this.v_working}{Working volume per well (uL)}
 
 \item{this.cell_yield}{Number of cells per well}
 
@@ -68,7 +73,7 @@ model}
 
 \item{this.memblip}{Membrane lipid content of cells}
 
-\item{this.nlom}{Structural protein conent of cells}
+\item{this.nlom}{Structural protein content of cells}
 
 \item{this.P_nlom}{Proportionality constant to octanol structural protein}
 
@@ -76,104 +81,108 @@ model}
 
 \item{this.P_cells}{Proportionality constant to octanol storage lipid}
 
-\item{this.csalt}{Ionic strength of buffer, mol/L}
+\item{this.csalt}{Ionic strength of buffer (M = mol/L)}
 
 \item{this.celldensity}{Cell density kg/L, g/mL}
 
 \item{this.cellmass}{Mass per cell, ng/cell}
 
-\item{this.f_oc}{1, everything assumed to be like proteins}
+\item{this.f_oc}{Everything assumed to be like proteins}
 
-\item{this.conc_ser_alb}{24 g/L, mass concentration of albumin in serum.}
+\item{this.conc_ser_alb}{Mass concentration of albumin in serum (g/L)}
 
-\item{this.conc_ser_lip}{1.9 g/L, mass concentration of lipids in serum.}
+\item{this.conc_ser_lip}{Mass concentration of lipids in serum (g/L)}
 
 \item{this.Vdom}{0 ml, the volume of dissolved organic matter (DOM)}
+
+\item{this.pH}{7.0, pH of cell culture}
+
+\item{restrict.ion.partitioning}{FALSE, Should we restrict the chemical available to partition to only the neutral fraction?}
 }
 \value{
 \tabular{lll}{
-\strong{Column} \tab \strong{Description} \tab \strong{units} \cr
-casrn \tab Chemical Abstracts Service Registry Number \tab \cr
-nomconc \tab Nominal Concentration \tab mol/L \cr       
-well_number \tab Number of wells in plate \tab unitless \cr   
+\strong{Param} \tab \strong{Description} \tab \strong{Units} \cr
+casrn \tab Chemical Abstracts Service Registry Number \tab character \cr
+nomconc \tab Nominal Concentration \tab uM=umol/L \cr       
+well_number \tab Number of wells in plate (used to set default surface area) \tab unitless \cr   
 sarea \tab Surface area of well \tab m^2 \cr         
-v_total \tab Total volume of well \tab m^3 \cr       
-v_working \tab Filled volume of well \tab m^3 \cr     
+v_total \tab Total volume of well \tab uL \cr       
+v_working \tab Filled volume of well \tab uL \cr     
 cell_yield \tab Number of cells \tab cells \cr    
-gkow \tab log10 octanol to water partition coefficient (PC)\tab log10 \cr          
-logHenry \tab log10 Henry's law constant '\tab log10 atm-m3/mol \cr      
-gswat \tab log10 Water solubility \tab log10 mol/L \cr         
-MP \tab Melting Point \tab degrees Celsius \cr           
-MW \tab Molecular Weight \tab g/mol \cr            
-gkaw \tab air-water partition coefficient \tab (mol/m3)/(mol/m3) \cr          
+gkow \tab The log10 octanol to water (PC) (logP)\tab log10 unitless ratio \cr          
+logHenry \tab The log10 Henry's law constant '\tab log10 unitless ratio \cr      
+gswat \tab The log10 water solubility (logWSol) \tab log10 mg/L \cr         
+MP \tab The chemical compound melting point \tab degrees Kelvin \cr           
+MW \tab The chemical compound molecular weight \tab g/mol \cr            
+gkaw \tab The air to water PC \tab unitless ratio \cr          
 dsm \tab \tab \cr           
 duow \tab \tab \cr          
 duaw \tab \tab \cr          
 dumw \tab \tab \cr          
-gkmw \tab \tab \cr          
-gkcw \tab \tab \cr          
-gkbsa \tab \tab \cr         
-gkpl \tab \tab \cr          
-ksalt \tab \tab \cr        
-Tsys \tab \tab \cr          
-Tref \tab \tab \cr          
-option.kbsa2 \tab \tab \cr  
-option.swat2 \tab \tab \cr  
-FBSf \tab \tab \cr          
-pseudooct \tab \tab \cr     
-memblip \tab \tab \cr       
-nlom \tab \tab \cr          
-P_nlom \tab \tab \cr   
-P_dom \tab dissolved organic matter to water PC \tab Dimensionless \cr         
-P_cells \tab \tab \cr      
-csalt \tab \tab \cr         
-celldensity \tab \tab \cr   
-cellmass \tab \tab \cr      
-f_oc \tab \tab \cr          
+gkmw \tab log10 \tab \cr          
+gkcw \tab The log10 cell/tissue to water PC \tab log10 unitless ratio\cr          
+gkbsa \tab The log10 bovine serum albumin to water partitiion coefficient \tab unitless \cr         
+gkpl \tab log10\tab \cr          
+ksalt \tab Setschenow constant \tab L/mol \cr        
+Tsys \tab System temperature \tab degrees C \cr          
+Tref \tab Reference temperature\tab degrees K \cr          
+option.kbsa2 \tab Use alternative bovine-serum-albumin partitioning model \tab logical \cr  
+option.swat2 \tab Use alternative water solubility correction \tab logical \cr  
+FBSf \tab Fraction fetal bovine serum \tab unitless \cr          
+pseudooct \tab Pseudo-octanol cell storage lipid content \tab \cr     
+memblip \tab Membrane lipid content of cells \tab  \cr       
+nlom \tab Structural protein content of cells \tab \cr
+P_nlom \tab Proportionality constant to octanol structural protein \tab unitless \cr   
+P_dom \tab Proportionality constant to dissolved organic material (DOM) \tab unitless \cr         
+P_cells \tab Proportionality constant to octanol storage lipid \tab unitless \cr      
+csalt \tab Ionic strength of buffer \tab M=mol/L \cr
+celldensity \tab Cell density \tab kg/L, g/mL \cr   
+cellmass \tab Mass per cell \tab ng/cell \cr      
+f_oc \tab \tab \cr
 cellwat \tab \tab \cr       
 Tcor \tab \tab \cr          
 Vm \tab Volume of media \tab L \cr            
-Vwell \tab volume of medium (aqueous phase only) \tab L \cr         
-Vair \tab volume of head space \tab L \cr          
-Vcells \tab volume of cells/tissue\tab \cr        
-Valb \tab volume of serum albumin \tab \cr         
-Vslip \tab volume of serum lipids \tab \cr         
-Vdom \tab volume of dissolved organic matter\tab \cr          
+Vwell \tab Volume of medium (aqueous phase only) \tab L \cr         
+Vair \tab Volume of head space \tab L \cr          
+Vcells \tab Volume of cells/tissue\tab L \cr        
+Valb \tab Volume of serum albumin \tab L \cr         
+Vslip \tab Volume of serum lipids \tab L \cr         
+Vdom \tab Volume of dissolved organic matter\tab L \cr          
 F_ratio \tab \tab \cr       
 gs1.GSE \tab \tab \cr       
 s1.GSE \tab \tab \cr        
 gss.GSE \tab \tab \cr       
 ss.GSE \tab \tab \cr        
 kmw \tab \tab \cr           
-kow \tab octanol to water PC \tab \cr           
-kaw \tab the air towater PC \tab dimensionless \cr           
-swat \tab \tab \cr         
+kow \tab The octanol to water PC (i.e., 10^gkow) \tab unitless \cr           
+kaw \tab The air to water PC (i.e., 10^gkaw) \tab unitless \cr           
+swat \tab The water solubility (i.e., 10^gswat) \tab mg/L \cr         
 kpl \tab \tab \cr           
-kcw \tab cell/tissue to water PC \tab dimensionless \cr           
-kbsa \tab \tab \cr          
+kcw \tab The cell/tissue to water PC (i.e., 10^gkcw) \tab unitless \cr           
+kbsa \tab The bovine serum albumin to water PC \tab unitless \cr          
 swat_L \tab \tab \cr        
-oct_L \tab \tab \cr        
+soct_L \tab \tab \cr        
 scell_L \tab \tab \cr       
-cinit \tab Initial concentration \tab mol \cr         
-mtot \tab Total moles \tab mol \cr          
-cwat \tab Total concentration in water \tab mol/L \cr          
-cwat_s \tab Dissolved concentration in water \tab mol/L \cr        
-csat \tab Is the solution saturated (1/0) \tab Boolean \cr         
+cinit \tab Initial concentration \tab uM=umol/L \cr         
+mtot \tab Total micromoles \tab umol \cr          
+cwat \tab Total concentration in water \tab uM=umol/L \cr          
+cwat_s \tab Dissolved concentration in water \tab uM=umol/L \cr        
+csat \tab Is the solution saturated (1/0) \tab logical \cr         
 activity \tab \tab \cr      
-cair \tab \tab mol/L \cr          
-calb \tab \tab mol/L \cr          
-cslip \tab \tab mol/L \cr         
-cdom \tab concentration of/in dissolved organic matter\tab mol/L \cr          
-ccells \tab \tab mol/L \cr        
-cplastic \tab \tab mol/L \cr      
-mwat_s \tab Mass dissolved in water \tab mols \cr        
-mair \tab Mass in air \tab mols \cr          
-mbsa \tab Mass bound to bovine serum albumin \tab mols \cr          
-mslip \tab Mass bound to serum lipids \tab mols \cr        
-mdom \tab Mass bound to dissolved organic matter \tab mols \cr          
-mcells \tab Mass in cells \tab mols \cr        
-mplastic \tab Mass bond to plastic \tab mols \cr      
-mprecip \tab Mass precipitated out of solution \tab \cr       
+cair \tab Concentration in head space\tab uM=umol/L \cr          
+calb \tab Concentration in serum albumin\tab uM=umol/L \cr          
+cslip \tab Concentration in serum lipids\tab uM=umol/L \cr         
+cdom \tab Concentration in dissolved organic matter\tab uM=umol/L \cr          
+ccells \tab Concentration in cells\tab uM=umol/L \cr        
+cplastic \tab Concentration in plastic\tab uM=umol/L \cr      
+mwat_s \tab Mass dissolved in water \tab umols \cr        
+mair \tab Mass in air/head space \tab umols \cr          
+mbsa \tab Mass bound to bovine serum albumin \tab umols \cr          
+mslip \tab Mass bound to serum lipids \tab umols \cr        
+mdom \tab Mass bound to dissolved organic matter \tab umols \cr          
+mcells \tab Mass in cells \tab umols \cr        
+mplastic \tab Mass bond to plastic \tab umols \cr      
+mprecip \tab Mass precipitated out of solution \tab umols\cr       
 xwat_s \tab Fraction dissolved in water \tab fraction \cr        
 xair \tab Fraction in the air \tab fraction \cr          
 xbsa \tab Fraction bound to bovine serum albumin \tab fraction \cr          
@@ -182,14 +191,14 @@ xdom \tab Fraction bound to dissolved organic matter \tab fraction \cr
 xcells \tab Fraction within cells \tab fraction \cr        
 xplastic \tab Fraction bound to plastic \tab fraction \cr     
 xprecip \tab Fraction precipitated out of solution \tab fraction \cr       
-eta_free \tab effective availability ratio \tab fraction \cr      
-\strong{cfree.invitro} \tab \strong{Free concentration in the in vitro media} (use for Honda1 and Honda2) \tab micromolar \cr
+eta_free \tab Effective availability ratio \tab fraction \cr      
+\strong{cfree.invitro} \tab \strong{Free concentration in the in vitro media} (use for Honda1 and Honda2) \tab fraction \cr
 }
 }
 \description{
-Evaluate the Armitage model for chemical distributon in vitro. Takes input
+Evaluate the Armitage model for chemical distributon \emph{in vitro}. Takes input
 as data table or vectors of values. Outputs a data table. Updates over
-the model published in Armitage et al. 2014 include binding to plastic walls
+the model published in Armitage et al. (2014) include binding to plastic walls
 and lipid and protein compartments in cells.
 }
 \examples{
@@ -249,7 +258,7 @@ print(out)
 Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 
 2014, 48, 9770-9779. https://doi.org/10.1021/es501955g
 
-Honda et al. PloS one 14.5 (2019): e0217564. https://doi.org/10.1371/journal.pone.0217564
+\insertRef{honda2019using}{httk}
 }
 \author{
 Greg Honda

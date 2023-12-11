@@ -1,6 +1,6 @@
 
-R version 4.1.3 (2022-03-10) -- "One Push-Up"
-Copyright (C) 2022 The R Foundation for Statistical Computing
+R Under development (unstable) (2023-04-16 r84269 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2023 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64 (64-bit)
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -17,7 +17,11 @@ Type 'demo()' for some demos, 'help()' for on-line help, or
 'help.start()' for an HTML browser interface to help.
 Type 'q()' to quit R.
 
-> #R CMD BATCH --no-timing --no-restore --no-save other_tests.R other_tests.Rout
+> # R CMD BATCH --no-timing --no-restore --no-save other_tests.R other_tests.Rout
+> 
+> # Get rid of anything in the workspace:
+> rm(list=ls()) 
+> 
 > library(httk)
 > 
 > #calc_css(chem.name='nicotine')
@@ -25,13 +29,13 @@ Type 'q()' to quit R.
 > calc_css(chem.name='nicotine', model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 $avg
-[1] 0.6737
+[1] 0.5756
 
 $frac
 [1] 0.7682
 
 $max
-[1] 1.6
+[1] 1.376
 
 $the.day
 [1] 0
@@ -46,13 +50,13 @@ Warning messages:
 > 
 > calc_css(chem.name='nicotine', model="3compartment")
 $avg
-[1] 0.4046
+[1] 0.345
 
 $frac
 [1] 0.449
 
 $max
-[1] 1.294
+[1] 1.113
 
 $the.day
 [1] 0
@@ -68,19 +72,21 @@ Warning messages:
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
 5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
+6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+  Default value of 1.6 used for Caco2 permeability.
 > 
 > calc_css(chem.name="endrin")
 $avg
-[1] 1060
+[1] 986.4
 
 $frac
-[1] 0.929
+[1] 0.9898
 
 $max
-[1] 1061
+[1] 986.7
 
 $the.day
-[1] 3276
+[1] 5673
 
 Warning messages:
 1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
@@ -97,57 +103,59 @@ Warning messages:
   Rblood2plasma has been recalculated.
 7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human Rblood2plasma calculated with calc_rblood2plasma.
+8: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+  Default value of 1.6 used for Caco2 permeability.
 > 
 > calc_tkstats(chem.name='nicotine',days=10)
 Human plasma concentrations returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.8238 .
 $AUC
-[1] 6.979
+[1] 6.002
 
 $peak
-[1] 4.58
+[1] 3.938
 
 $mean
-[1] 0.6979
+[1] 0.6002
 
 > 
 > calc_tkstats(dtxsid="DTXSID0020442",days=1)
 Plasma values returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
 $AUC
-[1] 9.504
+[1] 9.227
 
 $peak
-[1] 10.64
+[1] 10.32
 
 $mean
-[1] 9.504
+[1] 9.227
 
 > 
 > calc_tkstats(dtxsid="DTXSID0020442",days=10)
 Plasma values returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
 $AUC
-[1] 296.1
+[1] 287.4
 
 $peak
-[1] 44.67
+[1] 43.37
 
 $mean
-[1] 29.61
+[1] 28.74
 
 > 
 > calc_tkstats(dtxsid="DTXSID0020442",days=100)
 Plasma values returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
 $AUC
-[1] 4242
+[1] 4119
 
 $peak
-[1] 48.78
+[1] 47.35
 
 $mean
-[1] 42.42
+[1] 41.19
 
 > 
 > calc_analytic_css(
@@ -161,7 +169,7 @@ $mean
 +     minimum.Funbound.plasma=1e-4),
 +   daily.dose=2)
 Plasma concentration for liver returned in uM units.
-[1] 33
+[1] 11.58
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   rabbit coerced to Human for metabolic clearance data.
@@ -179,6 +187,10 @@ Warning messages:
   Human fractional tissue volumes used in calculating partition coefficients.
 8: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma substituted.
+9: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+  Default value of 1.6 used for Caco2 permeability.
+10: In calc_fgut.oral(parameters = c(out, parameters), chem.cas = chem.cas,  :
+  Human intestinal permeability and microvilli blood flow used to calculate fraction absorbed by gut
 > 
 > predict_partitioning_schmitt(chem.name='nicotine')
 $Kadipose2pu

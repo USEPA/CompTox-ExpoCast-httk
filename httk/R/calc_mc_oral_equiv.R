@@ -97,6 +97,9 @@
 #' @param dtxsid EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #'
+#' @param parameters Parameters from the appropriate parameterization function
+#' for the model indicated by argument model
+#'
 #' @param suppress.messages Suppress text messages. 
 #'
 #' @param input.units Units of given concentration, default of uM but can also
@@ -137,11 +140,8 @@
 #' @param IVIVE Honda et al. (2019) identified six plausible sets of
 #' assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 #' Argument may be set to "Honda1" through "Honda6". If used, this function
-#' overwrites the tissue, restrictive.clearance, and plasma.binding arguments.
+#' overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments.
 #' See Details below for more information.
-#'
-#' @param ... Additional parameters passed to \code{\link{calc_mc_css}} for httkpop and
-#' variance of parameters.
 #'
 #' @param model Model used in calculation,'gas_pbtk' for the gas pbtk model, 
 #' 'pbtk' for the multiple compartment model,
@@ -149,6 +149,21 @@
 #' the three compartment steady state model, and '1compartment' for one 
 #' compartment model. This only applies when httkpop=TRUE and species="Human",
 #' otherwise '3compartmentss' is used.
+#' 
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' 
+#' @param calc.analytic.css.arg.list A list of options to pass to the analytic steady-state calculation function.
+#' This includes `restrictive.clearance`, `bioactive.free.invivo`, `IVIVE`,
+#' `wellstirred.correction`, and `adjusted.Funbound.plasma`.
+#' 
+#' @param ... Additional parameters passed to \code{\link{calc_mc_css}} for httkpop and
+#' variance of parameters.
 #'
 #' @return Equivalent dose in specified units, default of mg/kg BW/day.
 #'
@@ -158,19 +173,14 @@
 #'
 #' @author John Wambaugh
 #'
-#' @references Wetmore, Barbara A., et al. "Incorporating high-throughput 
-#' exposure predictions with dosimetry-adjusted in vitro bioactivity to inform 
-#' chemical toxicity testing." Toxicological Sciences 148.1 (2015): 121-136.
+#' @references 
+#' \insertRef{ring2017identifying}{httk} 
 #'
-#' Ring, Caroline L., et al. "Identifying populations sensitive to
-#' environmental chemicals by simulating toxicokinetic variability."
-#' Environment international 106 (2017): 105-118. 
+#' \insertRef{wetmore2015incorporating}{httk}
 #' 
-#' Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
-#' In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
+#' \insertRef{honda2019using}{httk}
 #' 
-#' Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts in 
-#' pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
+#' \insertRef{rowland1973clearance}{httk}
 #' 
 #' @keywords Monte-Carlo Steady-State
 #'
@@ -205,13 +215,27 @@
 #'                    samples=NSAMP,
 #'                    which.quantile=c(0.05,0.5,0.95), tissue='brain')
 #'  
+#' # We can also use the Monte Carlo functions by passing a table
+#' # where each row represents a different Monte Carlo draw of parameters:
+#' p <- create_mc_samples(chem.cas="80-05-7")
+#' # Use data.table for steady-state plasma concentration (Css) Monte Carlo:
+#' calc_mc_css(parameters=p)
+#' # Using the same table gives the same answer:
+#' calc_mc_css(parameters=p)
+#' # Use Css for 1 mg/kg/day for simple reverse toxicokinetics 
+#' # in Vitro-In Vivo Extrapolation to convert 15 uM to mg/kg/day:
+#' 15/calc_mc_css(parameters=p, output.units="uM")
+#' # Can do the same with calc_mc_oral_equiv:
+#' calc_mc_oral_equiv(15, parameters=p)
 #' }
 #' 
+#' @importFrom purrr compact 
 #' @export calc_mc_oral_equiv
 calc_mc_oral_equiv <- function(conc,
                                chem.name=NULL,
                                chem.cas=NULL,
                                dtxsid=NULL,
+                               parameters=NULL,
                                which.quantile=0.95,
                                species="Human",
                                input.units='uM',
@@ -224,15 +248,18 @@ calc_mc_oral_equiv <- function(conc,
                                concentration = "plasma",
                                IVIVE=NULL,
                                model='3compartmentss',
+                               Caco2.options = list(),
+                               calc.analytic.css.arg.list = list(),
                                ...)
 {
   # check if the input units are in concentration units - output error if TRUE
   if (!(tolower(input.units) %in% c('um','mg/l'))) 
     stop("Input units can only be uM or mg/L.")
   # check if the output units are in "amount / kg / day" - output error if TRUE
-  if(grepl(output.units,pattern = "pkgpday$")==FALSE){
+  if(grepl(output.units, pattern = "pkgpday$")==FALSE)
+  {
     stop("Output units can only be umolpkgpday or mgpkgpday.")
-  }else{
+  } else {
     # if the output units contain 'pkgpday' (i.e. '/kg/day'),
     # then remove this string from the output.units
     tmp.output.units <- gsub(x = output.units,
@@ -247,7 +274,6 @@ calc_mc_oral_equiv <- function(conc,
     # for 'dose' unit conversions later in the function
   }
     
-  
   if (!is.null(IVIVE)) 
   {
     out <- honda.ivive(method=IVIVE,tissue=tissue)
@@ -256,6 +282,24 @@ calc_mc_oral_equiv <- function(conc,
     tissue <- out[["tissue"]]
     concentration <- out[["concentration"]]
   }
+  
+  # Unfortunately there are historically two ways to pass arguments to calc.analytic.css,
+  # Throw a warning if the user specifies them twice:
+  for (this.param in c("restrictive.clearance",
+                       "bioactive.free.invivo",
+                       "IVIVE",
+                       "well.stirred.correction",
+                       "adjusted.Funbound.plasma"))
+# Check if parameter specified both ways:
+    if (this.param %in% calc.analytic.css.arg.list)
+# Check if value differs:
+      if (eval(parse(text=this.param)) != calc.analytic.css.arg.list[[this.param]])
+      { 
+        warning(paste("Argument ", 
+                      this.param, 
+                      "overwrote same argument given in calc.analytic.css.arg.list"))
+        calc.analytic.css.arg.list[[this.param]] <- eval(parse(text=this.param))
+      }
   
   if ((bioactive.free.invivo == TRUE & !is.null(tissue)) | 
      (bioactive.free.invivo == TRUE & tolower(concentration) != "plasma"))
@@ -308,28 +352,27 @@ calc_mc_oral_equiv <- function(conc,
   well.stirred.correction <- adjusted.Funbound.plasma <- NULL
   #End R CMD CHECK appeasement.
   
+
   # output units are in '<input.units>/mg/kg/day' for 'Css'
   # (i.e. 'mg/L / kg/day' or 'uM / kg/day')
   Css <- try(do.call(calc_mc_css,
-                        args=c(list(
+# we use purrr::compact to drop NULL values from arguments list:
+                        args=purrr::compact(c(list(
                           chem.name=chem.name,
                           chem.cas=chem.cas,
                           dtxsid=dtxsid,
+                          parameters=parameters,
                           model=model,
                           which.quantile=which.quantile,
                           species=species,
                           output.units=input.units,
-                          suppress.messages=TRUE,
+                         # suppress.messages=TRUE,
                           tissue=tissue,
                           concentration=concentration,
-                          calc.analytic.css.arg.list=list( 
-                            restrictive.clearance = restrictive.clearance,
-                            bioactive.free.invivo = bioactive.free.invivo,
-                            IVIVE = IVIVE,
-                            well.stirred.correction=well.stirred.correction,
-                            adjusted.Funbound.plasma=adjusted.Funbound.plasma),
+                          calc.analytic.css.arg.list=calc.analytic.css.arg.list,
+                          Caco2.options = Caco2.options,
                           return.samples=return.samples,
-                          ...))))
+                          ...)))))
                          
   if (is(Css,"try-error"))
   {
@@ -350,6 +393,7 @@ calc_mc_oral_equiv <- function(conc,
     if (is.null(chem.cas)){
       chem.cas <- get_chem_id(chem.name=chem.name)[['chem.cas']]
     } 
+
     MW <- get_physchem_param("MW",chem.cas=chem.cas)
     # output units are in 'umol/kg/day' for 'dose'
     dose <- dose * convert_units(

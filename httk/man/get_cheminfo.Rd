@@ -64,7 +64,7 @@ data for the model specified by argument "model":
 Compound \tab The preferred name of the chemical compound \tab none \cr 
 CAS \tab The preferred Chemical Abstracts Service Registry Number \tab none \cr  
 DTXSID \tab DSSTox Structure ID 
-(\url{http://comptox.epa.gov/dashboard}) \tab none \cr 
+(\url{https://comptox.epa.gov/dashboard}) \tab none \cr 
 logP \tab The log10 octanol:water partition coefficient\tab log10 unitless ratio \cr 
 MW \tab The chemical compound molecular weight \tab g/mol \cr 
 pKa_Accept \tab The hydrogen acceptor equilibria concentrations 
@@ -72,10 +72,15 @@ pKa_Accept \tab The hydrogen acceptor equilibria concentrations
 pKa_Donor \tab The hydrogen donor equilibria concentrations 
  \tab logarithm \cr   
 [SPECIES].Clint \tab (Primary hepatocyte suspension) 
-intrinsic hepatic clearance \tab uL/min/10^6 hepatocytes \cr    
-[SPECIES].Clint.pValue \tab Probability that there is no clearance observed. \tab none \cr  
+intrinsic hepatic clearance. \emph{Entries with comma separated values are Bayesian estimates of
+the Clint distribution - displayed as the median, 95th credible interval
+(that is quantile 2.5 and 97.5, respectively), and p-value.} \tab uL/min/10^6 hepatocytes \cr    
+[SPECIES].Clint.pValue \tab Probability that there is no clearance observed.
+Values close to 1 indicate clearance is not statistically significant. \tab none \cr  
 [SPECIES].Funbound.plasma \tab Chemical fraction unbound in presence of 
-plasma proteins \tab unitless fraction \cr 
+plasma proteins (fup). \emph{Entries with comma separated values are Bayesian estimates of
+the fup distribution - displayed as the median and 95th credible interval
+(that is quantile 2.5 and 97.5, respectively).} \tab unitless fraction \cr 
 [SPECIES].Rblood2plasma \tab Chemical concentration blood to plasma ratio \tab unitless ratio \cr  
 }
 }
@@ -104,27 +109,27 @@ When default.to.human is set to TRUE, and the species-specific data,
 Funbound.plasma and Clint, are missing from 
 \code{\link{chem.physical_and_invitro.data}}, human values are given instead.
 
-In some cases the rapid equilbrium dailysis method (Waters et al., 2008)
+In some cases the rapid equilibrium dialysis method (Waters et al., 2008)
 fails to yield detectable concentrations for the free fraction of chemical. 
 In those cases we assume the compound is highly bound (that is, Fup approaches
 zero). For some calculations (for example, steady-state plasma concentration)
-there is precendent (Rotroff et al., 2010) for using half the average limit 
+there is precedent (Rotroff et al., 2010) for using half the average limit 
 of detection, that is, 0.005 (this value is configurable via the argument
-fup.lod.default). We do not recomend using other models where 
+fup.lod.default). We do not recommend using other models where 
 quantities like partition coefficients must be predicted using Fup. We also
-do not recomend including the value 0.005 in training sets for Fup predictive
+do not recommend including the value 0.005 in training sets for Fup predictive
 models.
 
-\strong{Note} that in some cases the \strong{Funbound.plasma} and the 
-\strong{intrinsic clearance} are
+\strong{Note} that in some cases the \strong{Funbound.plasma} (fup) and the 
+\strong{intrinsic clearance} (clint) are
 \emph{provided as a series of numbers separated by commas}. These values are the 
 result of Bayesian analysis and characterize a distribution: the first value
 is the median of the distribution, while the second and third values are the 
-lower and upper 95th percentile (that is qunatile 2.5 and 97.5) respectively.
+lower and upper 95th percentile (that is quantile 2.5 and 97.5) respectively.
 For intrinsic clearance a fourth value indicating a p-value for a decrease is
-provided. Typically 4000 samples were used for the Bayesian analusis, such
-that a p-value of "0" is equivale to "<0.00025". See Wambaugh et al. (2019)
-for more details. If argument meadian.only == TRUE then only the median is
+provided. Typically 4000 samples were used for the Bayesian analysis, such
+that a p-value of "0" is equivalent to "<0.00025". See Wambaugh et al. (2019)
+for more details. If argument median.only == TRUE then only the median is
 reported for parameters with Bayesian analysis distributions. If the 95% 
 credible interval is larger than fup.ci.cutoff (defaults
 to NULL) then the Fup is treated as too uncertain and the value NA is given.

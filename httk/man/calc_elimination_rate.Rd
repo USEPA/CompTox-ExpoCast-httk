@@ -10,7 +10,7 @@ calc_elimination_rate(
   dtxsid = NULL,
   parameters = NULL,
   species = "Human",
-  suppress.messages = FALSE,
+  suppress.messages = TRUE,
   default.to.human = FALSE,
   restrictive.clearance = TRUE,
   adjusted.Funbound.plasma = TRUE,
@@ -93,14 +93,9 @@ calc_elimination_rate(chem.cas="80-05-7")
 Schmitt, Walter. "General approach for the calculation of tissue 
 to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
 
-Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-predictions of chemical distribution to tissues." Journal of pharmacokinetics 
-and pharmacodynamics 44.6 (2017): 549-565.
+\insertRef{dawson2021qsar}{httk} 
 
-Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
-(2008). Hepatocellular binding of drugs: correction for unbound fraction in
-hepatocyte incubations using microsomal binding or drug lipophilicity data.
-Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+\insertRef{kilford2008hepatocellular}{httk}
 }
 \author{
 John Wambaugh

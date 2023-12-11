@@ -26,7 +26,7 @@
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
 #' @param dtxsid EPA's DSSTox Structure ID .
-#' (\url{http://comptox.epa.gov/dashboard}) the chemical must be identified by
+#' (\url{https://comptox.epa.gov/dashboard}) the chemical must be identified by
 #' either CAS, name, or DTXSIDs.
 #' @param parameters A set of model parameters, especially a set that
 #' includes MW (molecular weight) for our conversions.
@@ -76,6 +76,25 @@ convert_solve_x <- function(model.output.mat,
                             ...){
   # default compartment units; includes case 1, i.e. output.units is NULL
   compartment_units <- model.list[[model]]$compartment.units
+  # determine the state of matter (liquid or gas) for each compartment:
+  compartment_state <- model.list[[model]]$compartment.state
+  # If there is only one state set all compartments to that state:
+  if (length(names(compartment_state))==1)
+  {
+    compartment_state <- setNames(rep(names(compartment_state),
+                                  length(compartment_units)),
+                                  names(compartment_units))
+  } else {
+    new_compartment_state <- NULL
+    # Build up compartment_state one state at a time:
+    for (this.state in names(compartment_state))
+      new_compartment_state <- c(new_compartment_state,
+                                 setNames(rep(this.state,
+                                   length(compartment_state[[this.state]])),
+                                   compartment_state[[this.state]]))
+    compartment_state <- new_compartment_state 
+  } 
+  
   ou <- compartment_units[which(names(compartment_units)%in%colnames(model.output.mat))]
     
   if(length(output.units)==1 & is.null(names(output.units))){
@@ -128,39 +147,49 @@ convert_solve_x <- function(model.output.mat,
   }
   
   # Set-up the default
-  cf <- vector(length = length(ou)) %>% setNames(.,names(ou)) # conversion factor vector
+  cf <- setNames(rep(1,length(ou)),names(ou)) # conversion factor vector
   out <- model.output.mat # output matrix to return
 
   # Convert compartments in the model output matrix
-  for(this.compartment in names(ou)){
-    # conversion factor
-    cf.tmp <- try(
-      convert_units(input.units = compartment_units[this.compartment],
-                    output.units = ou[this.compartment],
-                    MW = MW,
-                    chem.cas = chem.cas,
-                    chem.name = chem.name,
-                    dtxsid = dtxsid,
-                    parameters = parameters,
-                    ...)
-    )
-    # check if the conversion factor from 'convert_units' is not a 'try-error'
-    if(!is(cf.tmp,"try-error")){
-      cf[this.compartment] <- cf.tmp
-    }else{
-      # print a warning
-      warning(this.compartment,
-              " was not converted since the specified units '", ou[this.compartment],
-              "' are not supported. ",
-              "Units are set back to the default model compartment units, (i.e. '",
-              compartment_units[this.compartment],
-              "'), and the conversion factor is 1.")
-      # save missing since unit conversion is not applicable
-      cf[this.compartment] <- 1
-      ou[this.compartment] <- compartment_units[this.compartment]
-    }
-    # re-set the values in the compartment column with converted values
-    out[,this.compartment] <- model.output.mat[,this.compartment]*cf[this.compartment]
+  for(this.compartment in names(ou))
+  {
+    # Check if conversion is needed:
+    if (compartment_units[this.compartment] != ou[this.compartment])
+    {
+      # conversion factor
+      cf.tmp <- try(
+        convert_units(input.units = compartment_units[this.compartment],
+                      output.units = ou[this.compartment],
+                      MW = MW,
+                      chem.cas = chem.cas,
+                      chem.name = chem.name,
+                      dtxsid = dtxsid,
+                      parameters = parameters,
+                      state = compartment_state[this.compartment],
+                      ...)
+      )
+
+      # check if the conversion factor from 'convert_units' is not a 'try-error'
+      if (!is(cf.tmp,"try-error"))
+      {
+        cf[this.compartment] <- cf.tmp
+      } else {
+        # print a warning
+        warning(this.compartment,
+                " was not converted since the specified units '", 
+                ou[this.compartment],
+                "' are not supported. ",
+                "Units are set back to the default model compartment units, (i.e. '",
+                compartment_units[this.compartment],
+                "'), and the conversion factor is 1.")
+        # save missing since unit conversion is not applicable
+        cf[this.compartment] <- 1
+        ou[this.compartment] <- compartment_units[this.compartment]
+      }
+      # re-set the values in the compartment column with converted values
+      out[,this.compartment] <- model.output.mat[,this.compartment] *
+                                cf[this.compartment]
+    } else out[,this.compartment] <- model.output.mat[,this.compartment]
   }
   
   # Print a matrix of desired output units and the conversion factors from

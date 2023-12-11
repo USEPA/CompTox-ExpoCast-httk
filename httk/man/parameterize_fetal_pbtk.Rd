@@ -22,7 +22,7 @@ specified.}
 \item{chem.name}{Either the chemical name or the CAS number must be
 specified.}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
@@ -42,7 +42,7 @@ Kapraun et al. (2019) maternal-fetal growth parameters are provided.}
 }
 \value{
 \item{pre_pregnant_BW}{Body Weight before pregnancy, kg.}
-\item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} \item{Fgutabs}{Fraction
+\item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} \item{Fabsgut}{Fraction
 of the oral dose absorbed, i.e. the fraction of the dose that enters the
 gutlumen.} \item{Funbound.plasma}{Fraction of plasma that is not bound.}
 \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
@@ -98,10 +98,7 @@ solve_fetal_pbtk by calling solve_pbtk and adding additional parameters.
  
 }
 \references{
-Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
-(2008). Hepatocellular binding of drugs: correction for unbound fraction in
-hepatocyte incubations using microsomal binding or drug lipophilicity data.
-Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+\insertRef{kilford2008hepatocellular}{httk}
 
 McNamara PJ, Alcorn J. Protein binding predictions in infants. 
 AAPS PharmSci. 2002;4(1):E4. doi: 10.1208/ps040104. PMID: 12049488.

@@ -22,10 +22,13 @@ create_mc_samples(
   tissue = NULL,
   httkpop.dt = NULL,
   invitro.mc.arg.list = NULL,
+  adjusted.Funbound.plasma = TRUE,
+  adjusted.Clint = TRUE,
   httkpop.generate.arg.list = list(method = "direct resampling"),
   convert.httkpop.arg.list = NULL,
   propagate.invitrouv.arg.list = NULL,
-  parameterize.arg.list = NULL
+  parameterize.arg.list = NULL,
+  Caco2.options = NULL
 )
 }
 \arguments{
@@ -57,7 +60,8 @@ the three compartment steady state model, and '1compartment' for one
 compartment model.  This only applies when httkpop=TRUE and species="Human",
 otherwise '3compartmentss' is used.}
 
-\item{httkpop}{Whether or not to use the Ring et al. (2017) "httkpop"
+\item{httkpop}{Whether or not to use the 
+\insertCite{ring2017identifying;textual}{httk} "httkpop"
 population generator. Species must be 'Human'.}
 
 \item{invitrouv}{Logical to indicate whether to include in vitro parameters
@@ -97,6 +101,14 @@ called to generate this table.}
 \item{invitro.mc.arg.list}{Additional parameters passed to 
 \code{\link{invitro_mc}}.}
 
+\item{adjusted.Funbound.plasma}{Uses 
+\insertCite{pearce2017evaluation;textual}{httk} lipid binding adjustment
+for Funbound.plasma when set to TRUE (Default).}
+
+\item{adjusted.Clint}{Uses 
+\insertCite{kilford2008hepatocellular;textual}{httk} hepatocyte incubation
+binding adjustment for Clint when set to TRUE (Default).}
+
 \item{httkpop.generate.arg.list}{Additional parameters passed to 
 \code{\link{httkpop_generate}}.}
 
@@ -108,6 +120,10 @@ associated in vitro uncertainty and variability propagation function}
 
 \item{parameterize.arg.list}{Additional parameters passed to the 
 parameterize_* function for the model.}
+
+\item{Caco2.options}{Arguments describing how to handle Caco2 absorption data
+that are passed to \code{\link{invitro_mc}} and the parameterize_[MODEL] 
+functions}
 }
 \value{
 A data table where each column corresponds to parameters needed for the 
@@ -126,19 +142,23 @@ one of three ways. First parameters can be varied in an uncorrelated manner
 using truncated normal distributions by the function 
 \code{\link{monte_carlo}}. Then,
 physiological parameters can be varied in a correlated manner according to
-the Ring et al. (2017) (\doi{10.1016/j.envint.2017.06.004}) \emph{httk-pop} 
+the \insertCite{ring2017identifying;textual}{httk} 
+(\doi{10.1016/j.envint.2017.06.004}) \emph{httk-pop} 
 approach by the function \code{\link{httkpop_mc}}. Next, both uncertainty
 and variability of in vitro HTTK parameters can be simulated by the function
-\code{\link{invitro_mc}} as described by Wambaugh et al. (2019) 
+\code{\link{invitro_mc}} as described by 
+\insertCite{wambaugh2019assessing;textual}{httk} 
 (\doi{10.1093/toxsci/kfz205}). Finally, tissue-specific partition 
-coefficients are predicted for each draw using the Schmitt (2008)
+coefficients are predicted for each draw using the 
+\insertCite{schmitt2008general;textual}{httk}
 (\doi{10.1016/j.tiv.2007.09.010}) method as calibrated to \emph{in vivo}
-data by Pearce et al. (2017) (\doi{10.1007/s10928-017-9548-7}) and 
+data by \insertCite{pearce2017evaluation;textual}{httk} 
+(\doi{10.1007/s10928-017-9548-7}) and 
 implemented in \code{\link{predict_partitioning_schmitt}}.
 }
 \details{
 The Monte Carlo methods used here were recently updated and described by
-Breen et al. (submitted).
+\insertCite{breen2022simulating;textual}{httk}.
 
 We aim to make any function that uses chemical identifiers 
 (name, CAS, DTXSID) 
@@ -152,17 +172,23 @@ different functions.
 \examples{
 
 \donttest{
-sample_set = create_mc_samples(chem.name = 'bisphenol a')
+# We can use the Monte Carlo functions by passing a table
+# where each row represents a different Monte Carlo draw of parameters:
+p <- create_mc_samples(chem.cas="80-05-7")
+# Use data.table for steady-state plasma concentration (Css) Monte Carlo:
+calc_mc_css(parameters=p)
+# Using the same table gives the same answer:
+calc_mc_css(parameters=p)
+# Use Css for 1 mg/kg/day for simple reverse toxicokinetics 
+# in Vitro-In Vivo Extrapolation to convert 15 uM to mg/kg/day:
+15/calc_mc_css(parameters=p, output.units="uM")
+# Can do the same with calc_mc_oral_equiv:
+calc_mc_oral_equiv(15, parameters=p)
 }
 
 }
 \references{
-Wambaugh, John F., et al. "Toxicokinetic triage for 
-environmental chemicals." Toxicological Sciences 147.1 (2015): 55-67.
-
-Ring, Caroline L., et al. "Identifying populations sensitive to
-environmental chemicals by simulating toxicokinetic variability."
-Environment international 106 (2017): 105-118.
+\insertAllCited{}
 }
 \author{
 Caroline Ring, Robert Pearce, and John Wambaugh

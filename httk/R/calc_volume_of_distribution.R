@@ -48,11 +48,11 @@
 #' 
 #' @author John Wambaugh and Robert Pearce
 #' 
-#' @references Schmitt W. "General approach for the calculation of tissue to
-#' plasma partition coefficients." Toxicology In Vitro, 22, 457-467 (2008).
-#' Peyret, T., Poulin, P., Krishnan, K., "A unified algorithm for predicting
-#' partition coefficients for PBPK modeling of drugs and environmental
-#' chemicals." Toxicology and Applied Pharmacology, 249, 197-207 (2010).
+#' @references
+#'
+#' \insertRef{schmitt2008general}{httk}
+#' 
+#' \insertRef{peyret2010unified}{httk}
 #' 
 #' @keywords Parameter 1compartment
 #'

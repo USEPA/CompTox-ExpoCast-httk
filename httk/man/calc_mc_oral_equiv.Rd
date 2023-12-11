@@ -9,6 +9,7 @@ calc_mc_oral_equiv(
   chem.name = NULL,
   chem.cas = NULL,
   dtxsid = NULL,
+  parameters = NULL,
   which.quantile = 0.95,
   species = "Human",
   input.units = "uM",
@@ -21,6 +22,8 @@ calc_mc_oral_equiv(
   concentration = "plasma",
   IVIVE = NULL,
   model = "3compartmentss",
+  Caco2.options = list(),
+  calc.analytic.css.arg.list = list(),
   ...
 )
 }
@@ -35,6 +38,9 @@ specified.}
 
 \item{dtxsid}{EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
+
+\item{parameters}{Parameters from the appropriate parameterization function
+for the model indicated by argument model}
 
 \item{which.quantile}{Which quantile from Monte Carlo steady-state
 simulation (\code{\link{calc_mc_css}}) is requested. Can be a vector. Note that 95th
@@ -76,7 +82,7 @@ specific tissue.}
 \item{IVIVE}{Honda et al. (2019) identified six plausible sets of
 assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 Argument may be set to "Honda1" through "Honda6". If used, this function
-overwrites the tissue, restrictive.clearance, and plasma.binding arguments.
+overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments.
 See Details below for more information.}
 
 \item{model}{Model used in calculation,'gas_pbtk' for the gas pbtk model, 
@@ -85,6 +91,18 @@ See Details below for more information.}
 the three compartment steady state model, and '1compartment' for one 
 compartment model. This only applies when httkpop=TRUE and species="Human",
 otherwise '3compartmentss' is used.}
+
+\item{Caco2.options}{A list of options to use when working with Caco2 apical to
+basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
+
+\item{calc.analytic.css.arg.list}{A list of options to pass to the analytic steady-state calculation function.
+This includes `restrictive.clearance`, `bioactive.free.invivo`, `IVIVE`,
+`wellstirred.correction`, and `adjusted.Funbound.plasma`.}
 
 \item{...}{Additional parameters passed to \code{\link{calc_mc_css}} for httkpop and
 variance of parameters.}
@@ -179,6 +197,7 @@ currently ignored because analytical steady-state solutions are currently
 used by this function.
 }
 \examples{
+\donttest{
 # Set the number of samples (NSAMP) low for rapid testing, increase NSAMP 
 # for more stable results. Default value is 1000:
 NSAMP = 10
@@ -195,7 +214,6 @@ calc_mc_oral_equiv(chem.name="Surinabant",conc=0.5,samples=NSAMP)
 # Note that we use set.seed to get the same sequence of random numbers for
 # the two different function calls (calc_mc_css and calc_mc_oral_equiv)
 
-\donttest{
 # The following example should result in an error since we do not 
 # estimate tissue partitioning with '3compartmentss'. 
 set.seed(1234)                        
@@ -209,23 +227,29 @@ calc_mc_oral_equiv(0.1,chem.cas="34256-82-1", model='pbtk',
                    samples=NSAMP,
                    which.quantile=c(0.05,0.5,0.95), tissue='brain')
  
+# We can also use the Monte Carlo functions by passing a table
+# where each row represents a different Monte Carlo draw of parameters:
+p <- create_mc_samples(chem.cas="80-05-7")
+# Use data.table for steady-state plasma concentration (Css) Monte Carlo:
+calc_mc_css(parameters=p)
+# Using the same table gives the same answer:
+calc_mc_css(parameters=p)
+# Use Css for 1 mg/kg/day for simple reverse toxicokinetics 
+# in Vitro-In Vivo Extrapolation to convert 15 uM to mg/kg/day:
+15/calc_mc_css(parameters=p, output.units="uM")
+# Can do the same with calc_mc_oral_equiv:
+calc_mc_oral_equiv(15, parameters=p)
 }
 
 }
 \references{
-Wetmore, Barbara A., et al. "Incorporating high-throughput 
-exposure predictions with dosimetry-adjusted in vitro bioactivity to inform 
-chemical toxicity testing." Toxicological Sciences 148.1 (2015): 121-136.
+\insertRef{ring2017identifying}{httk} 
 
-Ring, Caroline L., et al. "Identifying populations sensitive to
-environmental chemicals by simulating toxicokinetic variability."
-Environment international 106 (2017): 105-118. 
+\insertRef{wetmore2015incorporating}{httk}
 
-Honda, Gregory S., et al. "Using the Concordance of In Vitro and 
-In Vivo Data to Evaluate Extrapolation Assumptions." 2019. PLoS ONE 14(5): e0217564.
+\insertRef{honda2019using}{httk}
 
-Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. "Clearance concepts in 
-pharmacokinetics." Journal of pharmacokinetics and biopharmaceutics 1.2 (1973): 123-136.
+\insertRef{rowland1973clearance}{httk}
 }
 \seealso{
 \code{\link{calc_mc_css}}

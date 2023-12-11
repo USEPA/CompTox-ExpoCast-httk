@@ -49,7 +49,7 @@ model.list[["gas_pbtk"]]$param.names <- c(
   "Clint",
   "Clint.dist",
   "Clmetabolismc",
-  "Fgutabs",
+  "Fabsgut",
   "Fhep.assay.correction",
   "Funbound.plasma",
   "Funbound.plasma.adjustment",
@@ -270,6 +270,8 @@ model.list[["gas_pbtk"]]$allowed.units.output <- list(
 # outputs (for example, concentrations calculated from amounts.)
 # AUC values should also be included.
 model.list[["gas_pbtk"]]$compartment.units <- c(
+                                          "Ainh"="umol",
+                                          "Aexh"="umol",
                                           "Aart"="umol",
                                           "Agut"="umol",
                                           "Agutlumen"="umol",
@@ -300,6 +302,44 @@ model.list[["gas_pbtk"]]$compartment.units <- c(
                                           "Crest"="uM",
                                           "Cven"="uM"
                                           )
+
+# Compartment state of matter, needed for proper unit conversion, if all
+# comaprtments of the same only include one state and set it to "all":
+model.list[["gas_pbtk"]]$compartment.state <- list(
+  liquid = c("Ainh",
+             "Aexh",
+             "Aart",
+             "Agut",
+             "Agutlumen",
+             "Akidney", 
+             "Aliver",
+             "Alung",
+             "Ametabolized",
+             "Amuc",
+             "Aplasma",
+             "Arest",
+             "Atubules",
+             "AUC",
+             "Aven",
+             "Cart",
+             "Cgut",
+             "Ckidney",
+             "Cliver",
+             "Clung",
+             "Cmuc",
+             "Cplasma",
+             "Crest",
+             "Cven"
+             ),
+  gas = c("Calv",
+          "Calvppmv",
+          "Cmixexh",
+          "Cmixexhppmv",
+          "Cinhppmv",
+          "Cendexh",
+          "Cendexhppmv"
+          )
+  )
 
 # These parameters specify the exposure scenario simulated by the model:
 model.list[["gas_pbtk"]]$dosing.params <- c(
@@ -381,7 +421,7 @@ model.list[["gas_pbtk"]]$calc.standard.httkpop2httk <- TRUE
 # These are the model parameters that are impacted by httk-pop:
 model.list[["gas_pbtk"]]$httkpop.params <- c(
   "BW",
-  "Fgutabs",
+  "Fabsgut",
   "hematocrit",
   "liver.density",
   "million.cells.per.gliver",
