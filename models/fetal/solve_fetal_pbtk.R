@@ -43,8 +43,8 @@
 #' @param species Included for compatibility with other functions, but the model
 #' will not run for non-human species (default "Human").
 #' @param tsteps The number time steps per hour. Default of 4. 
-#' @param daily.dose Total daily dose, mg.
-#' @param dose Amount of a single dose, mg/kg BW.  
+#' @param daily.dose Total daily dose, mg/kg BW.
+#' @param dose Amount of a single, initial oral dose in mg/kg BW.  
 #' @param doses.per.day Number of doses per day.
 #' @param initial.values Vector containing the initial concentrations or
 #' amounts of the chemical in specified tissues with units corresponding to
@@ -52,6 +52,11 @@
 #' @param plots Plots all outputs if true.
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @param iv.dose Simulates a single i.v. dose if true.
+#' @param input.units Input units of interest assigned to dosing, defaults to
+#' mg/kg BW
+#' @param output.units A named vector of output units expected for the model
+#' results. Default, NULL, returns model results in units specified in the
+#' 'modelinfo' file. See table below for details.
 #' @param method Method used by integrator (deSolve).
 #' @param rtol Argument passed to integrator (deSolve).
 #' @param atol Argument passed to integrator (deSolve).
@@ -81,14 +86,32 @@
 #' for each time point.
 #' 
 #' @author John Wambaugh, Mark Sfeir, and Dustin Kapraun
+#'
 #' @keywords Solve
+#'
+#' @seealso \code{\link{solve_model}}
+#'
+#' @seealso \code{\link{parameterize_fetal_pbtk}}
+#'
 #' @examples
 #' 
 #' out = solve_fetal_pbtk(chem.name = 'bisphenol a', daily.dose = 1,
-#' doses.per.day = 3, plots = TRUE)
+#' doses.per.day = 3)
+#'
+#' # With adjustement to fraction unbound plasma for fetus:
+#' fetal_parms_fup_adjusted <- 
+#'   parameterize_fetal_pbtk(chem.name = 'perfluorooctane sulfonic acid')
+#' head(solve_fetal_pbtk(parameters = fetal_parms_fup_adjusted))
+#' 
+#' # Without adjustement to fraction unbound plasma for fetus:
+#' fetal_parms_fup_unadjusted <-  
+#'   parameterize_fetal_pbtk(chem.name = 'perfluorooctane sulfonic acid',
+#'                                 fetal_fup_adjustment = FALSE)
+#' head(solve_fetal_pbtk(parameters = fetal_parms_fup_unadjusted))
+#' 
 #' 
 #' @export solve_fetal_pbtk
-#' @useDynLib httk
+#'
 #' @import deSolve
 solve_fetal_pbtk <- function(chem.name = NULL,
                              chem.cas = NULL,
@@ -103,16 +126,18 @@ solve_fetal_pbtk <- function(chem.name = NULL,
                              daily.dose = NULL,
                              doses.per.day=NULL,
                              initial.values=NULL,
-                             plots=F,
-                             suppress.messages=F,
-                             iv.dose=F,
-                             method="lsoda",rtol=1e-8,atol=1e-12, #begin.css = F,
-                             default.to.human=F,
-                             recalc.blood2plasma=F,
-                             recalc.clearance=F,
-                             adjusted.Funbound.plasma=T,
-                             regression=T,
-                             restrictive.clearance = T,
+                             plots=FALSE,
+                             suppress.messages=FALSE,
+                             iv.dose=FALSE,
+                             input.units='mg/kg',
+                             output.units=NULL,
+                             method="lsoda",rtol=1e-8,atol=1e-12, #begin.css = FALSE,
+                             default.to.human=FALSE,
+                             recalc.blood2plasma=FALSE,
+                             recalc.clearance=FALSE,
+                             adjusted.Funbound.plasma=TRUE,
+                             regression=TRUE,
+                             restrictive.clearance = TRUE,
                              minimum.Funbound.plasma = 0.0001,
                              monitor.vars = NULL,
                              ...)
@@ -146,6 +171,8 @@ describe human gestation.")
     monitor.vars=monitor.vars,
     suppress.messages=suppress.messages,
     species='Human', #other species not (yet) supported by solve_fetal_pbtk
+    input.units=input.units,
+    output.units=output.units,
     method=method,rtol=rtol,atol=atol,
     default.to.human=default.to.human,
     recalc.blood2plasma=recalc.blood2plasma,

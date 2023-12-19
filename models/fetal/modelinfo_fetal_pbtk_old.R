@@ -10,9 +10,6 @@
 # When calculating steady-state, which compartment do we test? 
 # ("C" is preprended):
 model.list[["fetal_pbtk"]]$steady.state.compartment <- "plasma"
-                                              
-# What units does the analytic function return:
-# model.list[["fetal_pbtk"]]$steady.state.units <- "mg/L"
 
 # Function used for generating model parameters:
 model.list[["fetal_pbtk"]]$parameterize.func <- "parameterize_fetal_pbtk"
@@ -75,7 +72,9 @@ model.list[["fetal_pbtk"]]$param.names <- c(
   "kgutabs",                      
 # Maternal tissue partition coefficients:
   "Kadipose2pu",
+
   "Kgut2pu",
+
   "Kkidney2pu",
   "Kliver2pu",                    
   "Klung2pu",
@@ -104,6 +103,11 @@ model.list[["fetal_pbtk"]]$param.names <- c(
   "Vthyroidc",    
   "Vkidneyc",                     
   "Vgutc",                       
+
+
+
+
+
   "Vliverc",
   "Vlungc",                       
 # Tissue Densities:
@@ -307,7 +311,7 @@ model.list[["fetal_pbtk"]]$Rtosolvermap <- list(
   Qcardiac_cubic_theta3 = "Qcardiac_cubic_theta3",
   term = "term",
   Qgut_percent_initial = "Qgut_percent_initial",
-  Qgut_percent_terminal = "Qgut_percent_terminal",
+  Qgut_percent_termina = "Qgut_percent_terminal",
   Qkidney_cubic_theta0 = "Qkidney_cubic_theta0",
   Qkidney_cubic_theta1 = "Qkidney_cubic_theta1",
   Qkidney_cubic_theta2 = "Qkidney_cubic_theta2",
@@ -335,7 +339,7 @@ model.list[["fetal_pbtk"]]$Rtosolvermap <- list(
   Qfplacenta_logistic_theta1= "Qfplacenta_logistic_theta1",
   Qfplacenta_logistic_theta2 = "Qfplacenta_logistic_theta2",
   Qfdv_gompertz_theta0  = "Qfdv_gompertz_theta0",
-  Qfdv_gompertz_theta1 =  "Qfdv_gompertz_theta1",
+  Qfdv_gompertz_theta =  "Qfdv_gompertz_theta1",
   Qfdv_gompertz_theta2 =  "Qfdv_gompertz_theta2",
   Qfnonplacental_percent =  "Qfnonplacental_percent",
   Qfgut_percent = "Qfgut_percent",
@@ -344,7 +348,6 @@ model.list[["fetal_pbtk"]]$Rtosolvermap <- list(
   Qbrain_percent = "Qbrain_percent",
   Qkidney_percent = "Qkidney_percent",
   Qgut_percent = "Qgut_percent",
-  Qfliver_percent = "Qfliver_percent",
   Qfthyroid_percent  = "Qfthyroid_percent"
 )
 
@@ -537,20 +540,7 @@ model.list[["fetal_pbtk"]]$derivative.output.names <- c(
   "Cfbrain",
   "Afplasma",
   "Cfplasma",
-  "Rfblood2plasma",
-  "fBW",
-  "Vamnf",
-  "Vplacenta",
-  "Vfart",
-  "Vfven",
-  "Vfkidney",
-  "Vfthyroid",
-  "Vfliver",
-  "Vfbrain",
-  "Vfgut",
-  "Vflung",
-  "Vfrest")
-
+  "Rfblood2plasma")
 
 #Which variables to track by default (should be able to build this from
 #state vars and outputs):
@@ -591,9 +581,9 @@ model.list[["fetal_pbtk"]]$allowed.units.input <- list(
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[["fetal_pbtk"]]$allowed.units.output <- list(
   "oral" = c('uM','mg/L','umol','mg','uM*days',
-             'mg/L*days',"unitless","L"),
+             'mg/L*days',"unitless"),
   "iv" = c('uM','mg/L','umol','mg','uM*days',
-             'mg/L*days',"unitless","L"))
+             'mg/L*days',"unitless"))
 
 ## These parameters specify the exposure scenario simulated by the model:
 model.list[["fetal_pbtk"]]$routes <- list(
@@ -693,21 +683,7 @@ model.list[["fetal_pbtk"]]$compartment.units <- c(
   "AUC" = "uM*days",
   "fAUC" = "uM*days",
   "Rblood2plasma" = "unitless",
-  "Rfblood2plasma" = "unitless", 
-  "fBW" = "L",
-  "Vamnf" = "L",
-  "Vplacenta" = "L",
-  "Vfart" = "L",
-  "Vfven" = "L",
-  "Vfkidney" = "L",
-  "Vfthyroid" = "L",
-  "Vfliver" = "L",
-  "Vfbrain" = "L",
-  "Vfgut" = "L",
-  "Vflung" = "L",
-  "Vfrest" = "L"
-  )
-
+  "Rfblood2plasma" = "unitless")
 
        
 #Parameters needed to make a prediction (this is used by get_cheminfo):
@@ -723,17 +699,12 @@ model.list[["fetal_pbtk"]]$required.params <- c(
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
 model.list[["fetal_pbtk"]]$calcpc <- TRUE
   
+
 # Do we need to recalculate first pass metabolism when doing Monte Carlo?
 model.list[["fetal_pbtk"]]$firstpass <- FALSE
 
 # Do we ignore the Fups where the value was below the limit of detection?
-model.list[["fetal_pbtk"]]$exclude.fup.zero <- TRUE
+model.list[["fetal_pbtk"]]$exclude.fup.zero <- T
 
 # These are the parameter names needed to describe steady-state dosing:
 model.list[["fetal_pbtk"]]$css.dosing.params <- c("hourly.dose")
-
-# Filter out volatile compounds with Henry's Law Constant Threshold
-model.list[["fetal_pbtk"]]$log.henry.threshold <- c(-4.5)
-
-# Filter out compounds belonging to select chemical classes
-model.list[["fetal_pbtk"]]$chem.class.filt <- c("PFAS")
