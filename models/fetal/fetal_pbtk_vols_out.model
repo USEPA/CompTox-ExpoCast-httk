@@ -1,0 +1,339 @@
+States = {
+Agutlumen,
+Agut,
+Aliver,
+Aven,
+Alung,
+Aart,
+Aadipose,
+Arest,
+Akidney,
+Atubules,
+Ametabolized,
+AUC,
+fAUC,
+Athyroid,
+Aplacenta,
+Afgut,
+Aflung,
+Afliver,
+Afven,
+Afart,
+Afrest,
+Afthyroid,
+Afkidney,
+Afbrain,
+};
+
+Outputs = {
+Cgut,
+Cliver,
+Cven,
+Clung,
+Cart,
+Cadipose,
+Crest,
+Ckidney,
+Cplasma,
+Aplasma,
+Cthyroid,
+Rblood2plasma,
+Cplacenta,
+Cfliver,
+Cfven,
+Cfart,
+Cfgut,
+Cflung,
+Cfrest,
+Cfthyroid,
+Cfkidney,
+Cfbrain,
+Afplasma,
+Cfplasma,
+Rfblood2plasma,
+
+# output fetal volume quantities to link with 1tri_pbtk 
+fBW, 
+Vamnf, 
+Vplacenta, 
+#Vven,
+#Vart, 
+#Vadipose, 
+#Vrest,
+#Vffmx, 
+#Vallx,
+Vfart, 
+Vfven, 
+Vfkidney, 
+Vfthyroid, 
+Vfliver, 
+Vfbrain, 
+Vfgut, 
+Vflung, 
+Vfrest
+};
+
+pre_pregnant_BW = 0;
+Clmetabolismc = 0;
+Clmetabolism = 0; 
+kgutabs = 0;
+Kkidney2pu = 0;
+Kliver2pu = 0;
+Kadipose2pu = 0;
+Krest2pu = 0;
+Klung2pu = 0;
+Kgut2pu = 0;
+Krbc2pu = 0;
+Kthyroid2pu = 0;
+Kplacenta2pu = 0;
+Kfplacenta2pu = 0;
+Kfkidney2pu = 0;
+Kfrest2pu = 0;
+Kfthyroid2pu = 0;
+Kfliver2pu = 0;
+Kflung2pu = 0;
+Kfgut2pu = 0;
+Kfrbc2pu = 0;
+Kfbrain2pu = 0;
+Vgutc = 0;
+Vgut = 0;
+Vkidneyc = 0;
+Vkidney = 0;
+Vliverc = 0;
+Vliver = 0;
+Vlungc = 0;
+Vlung = 0;
+Vthyroidc = 0;
+Vthyroid = 0;
+Fraction_unbound_plasma = 0;
+Fraction_unbound_plasma_fetus = 0;
+gut_density = 0;
+kidney_density = 0;
+liver_density = 0;
+lung_density = 0;
+thyroid_density = 0;
+adipose_density = 0;
+ffmx_density = 0;
+placenta_density = 0;
+amnf_density = 0;
+brain_density = 0;
+#Further parameters correspond to the naming conventions for the 
+#"theta" coefficients and constants associated with the model 
+#equations in Kapraun et al. 2019, except where such a constant
+#already has an intuitive name in the model, as with 
+#pre_pregnant_BW (which would correspond to theta0 in associated
+#cubic model equation for BW according to Kapraun et al. 2019)
+BW_cubic_theta1 = 0;
+BW_cubic_theta2 = 0;
+BW_cubic_theta3 = 0;
+Wadipose_linear_theta0 = 0;
+Wadipose_linear_theta1 = 0;
+Wfkidney_gompertz_theta0 = 0;
+Wfkidney_gompertz_theta1 = 0;
+Wfkidney_gompertz_theta2 = 0;
+Wfthyroid_gompertz_theta0 = 0;
+Wfthyroid_gompertz_theta1 = 0;
+Wfthyroid_gompertz_theta2 = 0;
+Wfliver_gompertz_theta0 = 0;
+Wfliver_gompertz_theta1 = 0;
+Wfliver_gompertz_theta2 = 0;
+Wfbrain_gompertz_theta0 = 0;
+Wfbrain_gompertz_theta1 = 0;
+Wfbrain_gompertz_theta2 = 0;
+Wfgut_gompertz_theta0 = 0;
+Wfgut_gompertz_theta1 = 0;
+Wfgut_gompertz_theta2 = 0;
+Wflung_gompertz_theta0 = 0;
+Wflung_gompertz_theta1 = 0;
+Wflung_gompertz_theta2 = 0;
+hematocrit_quadratic_theta0 = 0;
+hematocrit_quadratic_theta1 = 0;
+hematocrit_quadratic_theta2 = 0;
+fhematocrit_cubic_theta1 = 0;
+fhematocrit_cubic_theta2 = 0;
+fhematocrit_cubic_theta3 = 0;
+fBW_gompertz_theta0 = 0;
+fBW_gompertz_theta1 = 0;
+fBW_gompertz_theta2 = 0;
+Vplacenta_cubic_theta1 = 0;
+Vplacenta_cubic_theta2 = 0;
+Vplacenta_cubic_theta3 = 0;
+Vamnf_logistic_theta0 = 0;
+Vamnf_logistic_theta1 = 0;
+Vamnf_logistic_theta2 = 0;
+Vplasma_mod_logistic_theta0 = 0;
+Vplasma_mod_logistic_theta1 = 0;
+Vplasma_mod_logistic_theta2 = 0;
+Vplasma_mod_logistic_theta3 = 0;
+venous_blood_fraction = 0;
+arterial_blood_fraction = 0;
+fblood_weight_ratio = 0;
+Qcardiac_cubic_theta0 = 0;
+Qcardiac_cubic_theta1 = 0;
+Qcardiac_cubic_theta2 = 0;
+Qcardiac_cubic_theta3 = 0;
+term = 0;
+Qgut_percent_initial = 0;
+Qgut_percent_terminal = 0;
+Qkidney_cubic_theta0 = 0;
+Qkidney_cubic_theta1 = 0;
+Qkidney_cubic_theta2 = 0;
+Qkidney_cubic_theta3 = 0;
+Qliver_percent_initial = 0;
+Qliver_percent_terminal = 0;
+Qthyroid_percent_initial = 0;
+Qthyroid_percent_terminal = 0;
+Qplacenta_linear_theta1 = 0;
+Qadipose_percent_initial = 0;
+Qadipose_percent_terminal = 0;
+Qgfr_quadratic_theta0 = 0;
+Qgfr_quadratic_theta1 = 0;
+Qgfr_quadratic_theta2 = 0;
+Qfrvtl_logistic_theta0 = 0;
+Qfrvtl_logistic_theta1 = 0;
+Qfrvtl_logistic_theta2 = 0;
+Qflvtl_logistic_theta0 = 0;
+Qflvtl_logistic_theta1 = 0;
+Qflvtl_logistic_theta2 = 0;
+Qfda_logistic_theta0 = 0;
+Qfda_logistic_theta1 = 0;
+Qfda_logistic_theta2 = 0;
+Qfplacenta_logistic_theta0 = 0;
+Qfplacenta_logistic_theta1 = 0;
+Qfplacenta_logistic_theta2 = 0;
+Qfdv_gompertz_theta0 = 0;
+Qfdv_gompertz_theta1 = 0;
+Qfdv_gompertz_theta2 = 0;
+Qfnonplacental_percent = 0;
+Qfgut_percent = 0;
+Qfkidney_percent = 0;
+Qfbrain_percent = 0;
+Qbrain_percent = 0;
+Qkidney_percent = 0;
+Qgut_percent = 0;
+Qfliver_percent = 0;
+Qfthyroid_percent = 0;
+
+Initialize{
+kgutabs = kgutabs * 24;
+Clmetabolism = Clmetabolismc * 24 * pre_pregnant_BW;
+Vgut = Vgutc * pre_pregnant_BW / gut_density;  
+Vkidney = Vkidneyc * pre_pregnant_BW / kidney_density;
+Vliver = Vliverc * pre_pregnant_BW / liver_density;
+Vlung = Vlungc * pre_pregnant_BW / lung_density;
+Vthyroid= Vthyroidc * pre_pregnant_BW / thyroid_density;
+}
+
+Dynamics{
+tw = t / 7.0 ; #time in weeks
+BW = pre_pregnant_BW + BW_cubic_theta1 * tw + BW_cubic_theta2 * pow ( tw , 2 ) + BW_cubic_theta3 * pow ( tw , 3 ) ; 
+Wadipose = Wadipose_linear_theta0 + Wadipose_linear_theta1 * tw ;
+Wfkidney = 0.001 * Wfkidney_gompertz_theta0 * exp ( Wfkidney_gompertz_theta1 / Wfkidney_gompertz_theta2 * ( 1 - exp ( -Wfkidney_gompertz_theta2 * tw ) ) ) ;
+Wfthyroid =  0.001 * Wfthyroid_gompertz_theta0 * exp ( Wfthyroid_gompertz_theta1 / Wfthyroid_gompertz_theta2 * ( 1 - exp ( -Wfthyroid_gompertz_theta2 * tw ) ) ) ;
+Wfliver =0.001 * Wfliver_gompertz_theta0 * exp ( Wfliver_gompertz_theta1 / Wfliver_gompertz_theta2 * ( 1 - exp ( -Wfliver_gompertz_theta2 * tw ) ) ) ;
+Wfbrain = 0.001 * Wfbrain_gompertz_theta0 * exp ( Wfbrain_gompertz_theta1 / Wfbrain_gompertz_theta2 * ( 1 - exp ( -Wfbrain_gompertz_theta2 * tw ) ) ) ;
+Wfgut = 0.001 * Wfgut_gompertz_theta0 * exp ( Wfgut_gompertz_theta1 / Wfgut_gompertz_theta2 * ( 1 - exp ( -Wfgut_gompertz_theta2 * tw ) ) ) ;
+Wflung = 0.001 * Wflung_gompertz_theta0 * exp ( Wflung_gompertz_theta1 / Wflung_gompertz_theta2 * ( 1 - exp ( -Wflung_gompertz_theta2 * tw ) ) ) ;
+hematocrit = ( hematocrit_quadratic_theta0 + hematocrit_quadratic_theta1 * tw + hematocrit_quadratic_theta2 * pow ( tw , 2 ) ) / 100;
+Rblood2plasma = 1 - hematocrit + hematocrit * Krbc2pu * Fraction_unbound_plasma;
+fhematocrit = ( fhematocrit_cubic_theta1 * tw + fhematocrit_cubic_theta2 * pow ( tw , 2 ) + fhematocrit_cubic_theta3 * pow ( tw , 3 ) ) / 100 ;
+Rfblood2plasma = 1 - fhematocrit + fhematocrit * Kfrbc2pu * Fraction_unbound_plasma_fetus;
+fBW = 0.001 * fBW_gompertz_theta0 * exp ( fBW_gompertz_theta1 / fBW_gompertz_theta2 * ( 1 - exp ( -fBW_gompertz_theta2 * tw ) ) ) ;
+Vplacenta = 0.001 * ( Vplacenta_cubic_theta1 * tw + Vplacenta_cubic_theta2 * pow ( tw , 2 ) + Vplacenta_cubic_theta3 * pow ( tw , 3 ) ) ;
+Vamnf = 0.001 * Vamnf_logistic_theta0 / ( 1 + exp ( -Vamnf_logistic_theta1 * ( tw - Vamnf_logistic_theta2 ) ) ) ;
+Vplasma = Vplasma_mod_logistic_theta0 / ( 1 + exp ( -Vplasma_mod_logistic_theta1 * ( tw - Vplasma_mod_logistic_theta2 ) ) ) + Vplasma_mod_logistic_theta3 ;
+Vrbcs = hematocrit/(1 - hematocrit)*Vplasma;
+Vven =  venous_blood_fraction * (Vrbcs + Vplasma);
+Vart = arterial_blood_fraction * (Vrbcs + Vplasma);
+Vadipose = 1/adipose_density*Wadipose;
+Vffmx = 1 / ffmx_density * ( BW - Wadipose - ( fBW + placenta_density * Vplacenta + amnf_density * Vamnf ) ) ;
+Vallx = Vart + Vven + Vthyroid + Vkidney + Vgut + Vliver + Vlung ;
+Vrest = Vffmx - Vallx;
+Vfart= 0.001 * arterial_blood_fraction * fblood_weight_ratio * fBW ;
+Vfven= 0.001 * venous_blood_fraction * fblood_weight_ratio * fBW ;
+Vfkidney= 1/kidney_density*Wfkidney; 
+Vfthyroid= 1/thyroid_density*Wfthyroid;
+Vfliver= 1/liver_density*Wfliver;
+Vfbrain = 1/brain_density*Wfbrain;
+Vfgut = 1/gut_density*Wfgut;
+Vflung = 1/lung_density*Wflung; 
+Vfrest= fBW - (Vfart + Vfven + Vfbrain + Vfkidney + Vfthyroid + Vfliver + Vfgut + Vflung);
+Qcardiac = 24 * ( Qcardiac_cubic_theta0 + Qcardiac_cubic_theta1 * tw + Qcardiac_cubic_theta2 * pow ( tw , 2 ) + Qcardiac_cubic_theta3 * pow ( tw , 3 ) );
+Qgut= 0.01 * ( Qgut_percent_initial + ( Qgut_percent_terminal - Qgut_percent_initial ) / term * tw ) * Qcardiac ;
+Qkidney = 24 * ( Qkidney_cubic_theta0 + Qkidney_cubic_theta1 * tw + Qkidney_cubic_theta2 * pow ( tw , 2 ) + Qkidney_cubic_theta3 * pow ( tw , 3 ) ) ;
+Qliver = 0.01 * ( Qliver_percent_initial + ( Qliver_percent_terminal - Qliver_percent_initial ) / term * tw ) * Qcardiac ;
+Qthyroid = 0.01 * ( Qthyroid_percent_initial + ( Qthyroid_percent_terminal - Qthyroid_percent_initial ) / term * tw ) * Qcardiac ;
+Qplacenta = 24 * Qplacenta_linear_theta1 * 1000 * Vplacenta ; 
+Qadipose = 0.01 * ( Qadipose_percent_initial + ( Qadipose_percent_terminal - Qadipose_percent_initial ) / term * tw ) * Qcardiac ;
+Qrest = Qcardiac - (Qgut + Qkidney + Qliver + Qthyroid + Qplacenta + Qadipose);
+Qgfr = 60 * 24 * 0.001 * ( Qgfr_quadratic_theta0 + Qgfr_quadratic_theta1 * tw + Qgfr_quadratic_theta2 * pow ( tw , 2 ) ) ;
+Qfrvtl = 60 * 24 * 0.001 * Qfrvtl_logistic_theta0 / ( 1 + exp ( -Qfrvtl_logistic_theta1 * ( tw - Qfrvtl_logistic_theta2 ) ) ) ;
+Qflvtl = 60 * 24 * 0.001 * Qflvtl_logistic_theta0 / ( 1 + exp ( -Qflvtl_logistic_theta1 * ( tw - Qflvtl_logistic_theta2 ) ) ) ;
+Qfda = 60 * 24 * 0.001 * Qfda_logistic_theta0 / ( 1 + exp ( -Qfda_logistic_theta1 * ( tw - Qfda_logistic_theta2 ) ) ) ;
+Qfartb = Qflvtl + Qfda ;
+Qfcardiac = Qfartb;
+Qflung = Qfrvtl - Qfda;
+Qfplacenta = 60 * 24 * 0.001 * Qfplacenta_logistic_theta0 / ( 1 + exp ( -Qfplacenta_logistic_theta1 * ( tw - Qfplacenta_logistic_theta2 ) ) ) ;
+Qfdv = 60 * 24 * 0.001 * Qfdv_gompertz_theta0 * exp ( Qfdv_gompertz_theta1 / Qfdv_gompertz_theta2 * ( 1 - exp ( -Qfdv_gompertz_theta2 * tw ) ) ) ;
+Qfgut = Qfgut_percent / Qfnonplacental_percent * ( 1 - Qfplacenta / Qfartb ) * Qfartb ;
+Qfkidney = Qfkidney_percent/Qfnonplacental_percent*(1 - Qfplacenta/Qfartb)*Qfartb;
+Qfbrain = Qfbrain_percent/Qfnonplacental_percent*(1 - Qfplacenta/Qfartb)*Qfartb;
+Qfliver = Qfliver_percent/(100 - (Qbrain_percent + Qkidney_percent + Qgut_percent) )*(1 - (Qfbrain_percent + Qfkidney_percent + Qfgut_percent)/Qfnonplacental_percent)*(1 - Qfplacenta/Qfartb)*Qfartb;
+Qfthyroid = Qfthyroid_percent/(100 - (Qbrain_percent + Qkidney_percent + Qgut_percent) )*(1 - (Qfbrain_percent + Qfkidney_percent + Qfgut_percent)/Qfnonplacental_percent)*(1 - Qfplacenta/Qfartb)*Qfartb;
+Qfrest = Qfcardiac - (Qfplacenta + Qfgut + Qfliver + Qfthyroid + Qfkidney + Qfbrain);
+Qfbypass = Qfcardiac - Qflung;
+
+
+Cgut = Agut / Vgut;
+Cliver = Aliver / Vliver;
+Cven = Aven / Vven;
+Clung = Alung / Vlung;
+Cart = Aart / Vart;
+Cadipose = Aadipose / Vadipose;
+Crest = Arest / Vrest;
+Ckidney = Akidney / Vkidney;
+Cplasma = Aven / Vven / Rblood2plasma;
+Aplasma = Aven / Rblood2plasma * (1 - hematocrit);
+Cthyroid = Athyroid / Vthyroid;
+Cplacenta = Aplacenta / Vplacenta;
+Cfart = Afart / Vfart;
+Cfven = Afven / Vfven;
+Cfkidney = Afkidney / Vfkidney;
+Cfrest = Afrest / Vfrest;
+Cfthyroid = Afthyroid / Vfthyroid;
+Cfliver = Afliver / Vfliver;
+Cfbrain = Afbrain / Vfbrain;
+Cflung = Aflung / Vflung;
+Cfgut = Afgut / Vfgut;
+Cfplasma = Afven / Vfven / Rblood2plasma;
+Afplasma = Afven / Rblood2plasma * (1 - fhematocrit);
+
+ 
+
+dt (Agutlumen) = - kgutabs * Agutlumen;
+dt (Agut) = kgutabs * Agutlumen + Qgut * (Aart / Vart - Agut / Vgut * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma);
+dt (Aliver) = Qliver * Aart / Vart + Qgut * Agut / Vgut * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma - (Qliver + Qgut) * Aliver / Vliver / Kliver2pu/ Fraction_unbound_plasma * Rblood2plasma - Clmetabolism * Aliver / Vliver / Kliver2pu;
+dt (Aven) = ((Qliver + Qgut) * Aliver / Vliver / Kliver2pu + Qkidney * Akidney / Vkidney / Kkidney2pu + Qadipose * Aadipose / Vadipose / Kadipose2pu + Qrest * Arest / Vrest / Krest2pu + Qthyroid * Athyroid / Vthyroid / Kthyroid2pu + Qplacenta * Aplacenta / Vplacenta / Kplacenta2pu) * Rblood2plasma / Fraction_unbound_plasma - Qcardiac * Aven / Vven;
+dt (Alung) = Qcardiac * (Aven / Vven - Alung / Vlung * Rblood2plasma / Klung2pu / Fraction_unbound_plasma);
+dt (Aart) = Qcardiac * (Alung / Vlung * Rblood2plasma / Klung2pu / Fraction_unbound_plasma - Aart / Vart);
+dt (Aadipose) = Qadipose*(Aart / Vart - Aadipose / Vadipose * Rblood2plasma / Kadipose2pu / Fraction_unbound_plasma);
+dt (Arest) = Qrest * (Aart / Vart - Arest / Vrest * Rblood2plasma / Krest2pu / Fraction_unbound_plasma);
+dt (Akidney) = Qkidney * Aart / Vart - Qkidney * Akidney / Vkidney / Kkidney2pu * Rblood2plasma / Fraction_unbound_plasma - Qgfr * Aart / Vart / Rblood2plasma * Fraction_unbound_plasma;
+dt (Atubules) = Qgfr * Aart / Vart / Rblood2plasma * Fraction_unbound_plasma;
+dt (Ametabolized) = Clmetabolism * Aliver / Vliver / Kliver2pu;
+dt (AUC) = Aven / Vven / Rblood2plasma;
+dt (Athyroid) = Qthyroid * (Aart / Vart - Athyroid / Vthyroid / Kthyroid2pu / Fraction_unbound_plasma * Rblood2plasma);
+dt (Aplacenta) = Qplacenta * Aart / Vart - Qplacenta  * (Aplacenta / Vplacenta / Kplacenta2pu / Fraction_unbound_plasma * Rblood2plasma) - Qfplacenta  * (Aplacenta / Vplacenta / Kfplacenta2pu / Fraction_unbound_plasma_fetus * Rfblood2plasma)  + Qfplacenta * Afart / Vfart; 
+dt (Afart) =  Qflung * Aflung / Vflung * Rfblood2plasma / Kflung2pu / Fraction_unbound_plasma_fetus + Qfbypass * Afven / Vfven -  Qfcardiac * Afart/Vfart;
+dt (Afven) =   ((Qfliver + Qfgut + Qfplacenta - Qfdv) * Afliver / Vfliver / Kfliver2pu  + Qfdv  * Aplacenta / Vplacenta / Kfplacenta2pu + Qfthyroid * Afthyroid / Vfthyroid / Kfthyroid2pu + Qfrest * Afrest / Vfrest / Kfrest2pu + Qfkidney * Afkidney / Vfkidney / Kfkidney2pu + Qfbrain * Afbrain / Vfbrain / Kfbrain2pu) * Rfblood2plasma / Fraction_unbound_plasma_fetus - Qfcardiac * Afven / Vfven;
+dt (Afkidney) = Qfkidney * (Afart/Vfart - Afkidney / Vfkidney / Kfkidney2pu * Rfblood2plasma / Fraction_unbound_plasma_fetus);
+dt (Afrest) = Qfrest * (Afart/Vfart - Afrest / Vfrest / Kfrest2pu * Rfblood2plasma / Fraction_unbound_plasma_fetus);
+dt (Afthyroid) = Qfthyroid * (Afart/Vfart - Afthyroid / Vfthyroid / Kfthyroid2pu * Rfblood2plasma / Fraction_unbound_plasma_fetus);
+dt (Afliver) = Qfliver * Afart/Vfart + ( Qfgut * Afgut / Vfgut * Rfblood2plasma / Kfgut2pu + (Qfplacenta - Qfdv) * Aplacenta / Vplacenta / Kfplacenta2pu * Rfblood2plasma - (Qfliver + Qfgut + Qfplacenta - Qfdv) * Afliver / Vfliver / Kfliver2pu * Rfblood2plasma )/ Fraction_unbound_plasma_fetus;
+dt (Aflung) = Qflung * (Afven / Vfven - Aflung / Vflung * Rfblood2plasma / Kflung2pu / Fraction_unbound_plasma_fetus);
+dt (Afgut) =  Qfgut * (Afart / Vfart - Afgut / Vfgut * Rfblood2plasma / Kfgut2pu / Fraction_unbound_plasma_fetus);
+dt (Afbrain) =  Qfbrain * (Afart / Vfart - Afbrain / Vfbrain * Rfblood2plasma / Kfbrain2pu / Fraction_unbound_plasma_fetus);
+dt (fAUC) = Afven / Vfven / Rfblood2plasma;
+}
+
+End.
