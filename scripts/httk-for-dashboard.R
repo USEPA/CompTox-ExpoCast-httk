@@ -43,6 +43,42 @@ load_pradeep2020()
 # Caco-2 QSPR:
 load_honda2023()
  
+# Find all the duplicates:
+chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
+                                         !is.na(DTXSID))
+dup.chems <- chem.physical_and_invitro.data$DTXSID[duplicated((chem.physical_and_invitro.data$DTXSID))]
+length(dup.chems)
+dup.chems <- unique(dup.chems,
+                    subset(chem.physical_and_invitro.data, CAS %in%
+                    chem.physical_and_invitro.data$CAS[
+                      duplicated((chem.physical_and_invitro.data$CAS))])$DTXSID)
+length(dup.chems)
+
+# Try to keep predictions from Dawson 2021:
+for (this.chem in dup.chems)
+{
+  these.dup.rows <- which(chem.physical_and_invitro.data$DTXSID==this.chem)
+  keep.row <- NULL
+  for(this.row in these.dup.rows)
+    if (regexpr("Dawson",
+                chem.physical_and_invitro.data[this.row,"Human.Clint.Reference"])!=-1
+      ) keep.row <- this.row
+  these.dup.rows <- these.dup.rows[these.dup.rows!=keep.row]
+  chem.physical_and_invitro.data <- chem.physical_and_invitro.data[
+    -these.dup.rows,]
+}
+
+# Check to make sure no duplicates left:
+chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
+                                         !is.na(DTXSID))
+dup.chems <- chem.physical_and_invitro.data$DTXSID[duplicated((chem.physical_and_invitro.data$DTXSID))]
+length(dup.chems)
+dup.chems <- unique(dup.chems,
+                    subset(chem.physical_and_invitro.data, CAS %in%
+                             chem.physical_and_invitro.data$CAS[
+                               duplicated((chem.physical_and_invitro.data$CAS))])$DTXSID)
+length(dup.chems)
+
 # Organize HTTK data by species:
 HTTK.data.list <- list()
 all.ids <- NULL
@@ -62,10 +98,10 @@ for (this.species in SPECIES.LIST)
   all.ids <- sort(unique(c(all.ids,HTTK.data.list[[this.species]]$DTXSID)))
 }
 
-# temporilay make it run fast:
-ivpkfit <- read.csv("invivoPKfit-params.for.dashboard.txt")
-short.list <- ivpkfit$Chemical[1:25]
-all.ids <- all.ids[all.ids %in% short.list]
+# temporarily make it run fast:
+#ivpkfit <- read.csv("invivoPKfit-params.for.dashboard.txt")
+#short.list <- ivpkfit$Chemical[1:25]
+#all.ids <- all.ids[all.ids %in% short.list]
 
 
 # We want one parameter per line, but the code is pretty different wrt how we
@@ -261,8 +297,25 @@ clusterExport(cl, c(
   "WHICH.QUANTILES",
   "NUM.SAMPLES"))
 
+dashboard.list <- NULL
+for (this.id in all.ids)
+  dashboard.list[[this.id]] <-   make.ccd.table(
+    this.id=this.id,
+    HTTK.data.list=HTTK.data.list,
+    species.list=SPECIES.LIST,
+    model.list=MODELS.LIST,
+    param.list=param.list,
+    units.list=units.list,
+    all.ids=all.ids,
+    RANDOM.SEED=RANDOM.SEED,
+    which.quantiles=WHICH.QUANTILES,
+    num.samples=NUM.SAMPLES
+  )
+
 # Create a list with one table per chemical:
-dashboard.list <- clusterApply(cl,all.ids,function(x)
+dashboard.list <- clusterApply(cl,
+                               all.ids,
+                               function(x)
   make.ccd.table(
     this.id=x,
     HTTK.data.list=HTTK.data.list,
