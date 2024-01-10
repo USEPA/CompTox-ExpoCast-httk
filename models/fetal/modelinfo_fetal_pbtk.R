@@ -1,7 +1,8 @@
 # Add the human gestational PBTK model to the list of models:
 # 
-# Kapraun et al. "Evaluation of a Rapid, Multi-Chemical Human Gestational Dose Model"
-# in preparation
+# Kapraun, Dustin F., et al.
+# "Evaluation of a rapid, generic human gestational dose model."
+# Reproductive Toxicology 113 (2022): 172-188.
 
 
 #Analytic expression for steady-state plasma concentration.
@@ -12,7 +13,7 @@
 model.list[["fetal_pbtk"]]$steady.state.compartment <- "plasma"
                                               
 # What units does the analytic function return:
-# model.list[["fetal_pbtk"]]$steady.state.units <- "mg/L"
+model.list[["fetal_pbtk"]]$steady.state.units <- "mg/L"
 
 # Function used for generating model parameters:
 model.list[["fetal_pbtk"]]$parameterize.func <- "parameterize_fetal_pbtk"
@@ -66,7 +67,7 @@ model.list[["fetal_pbtk"]]$param.names <- c(
   "Clint",
   "Clint.dist",
   "Clmetabolismc",                
-  "Fgutabs",      
+  "Fabsgut",      
   "Fhep.assay.correction",
   "Fraction_unbound_plasma_fetus",
   "Funbound.plasma",              
@@ -83,7 +84,7 @@ model.list[["fetal_pbtk"]]$param.names <- c(
   "Krest2pu",
   "Kplacenta2pu",
   "Kthyroid2pu",                  
-# Maternal tissue partition coefficients:
+# Fetal tissue partition coefficients:
   "Kfbrain2pu",                  
   "Kfgut2pu",
   "Kfkidney2pu",                  
@@ -708,7 +709,9 @@ model.list[["fetal_pbtk"]]$compartment.units <- c(
   "Vfrest" = "L"
   )
 
-
+# Compartment state of matter, needed for proper unit conversion, if all
+# comaprtments of the same only include one state and set it to "all":
+model.list[["fetal_pbtk"]]$compartment.state <- list(liquid="all")
        
 #Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[["fetal_pbtk"]]$required.params <- c(
