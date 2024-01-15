@@ -31,7 +31,7 @@ SPECIES.LIST <- c("Human","Rat")
 MODELS.LIST <- c("3compartmentss","PBTK")
 
 # How many processors are available for parallel computing:
-NUM.CPU <- 6
+NUM.CPU <- detectCores()-1
  
 # Add the in silico predictions:
 # Categorical QSPR:
@@ -275,18 +275,18 @@ make.ccd.table <- function(
 }
 
 # Create a multicore cluster:
-cl <- parallel::makeCluster(detectCores()-1)
+cl <- parallel::makeCluster(NUM.CPU)
 
 # Load httk on all cores:
 clusterEvalQ(cl, library(httk))
 # Clear memory all cores:
 clusterEvalQ(cl, rm(list=ls()))
-# Load ADMet predicitons:
-clusterEvalQ(cl, load_sipes2017())
+
 # Define the table creator function on all cores:
 clusterExport(cl, "make.ccd.table")
 # Share data with all cores:
 clusterExport(cl, c(
+  "chem.physical_and_invitro.data",
   "HTTK.data.list",
   "SPECIES.LIST",
   "MODELS.LIST",
@@ -297,20 +297,21 @@ clusterExport(cl, c(
   "WHICH.QUANTILES",
   "NUM.SAMPLES"))
 
-dashboard.list <- NULL
-for (this.id in all.ids)
-  dashboard.list[[this.id]] <-   make.ccd.table(
-    this.id=this.id,
-    HTTK.data.list=HTTK.data.list,
-    species.list=SPECIES.LIST,
-    model.list=MODELS.LIST,
-    param.list=param.list,
-    units.list=units.list,
-    all.ids=all.ids,
-    RANDOM.SEED=RANDOM.SEED,
-    which.quantiles=WHICH.QUANTILES,
-    num.samples=NUM.SAMPLES
-  )
+# Non-parallel version:
+# dashboard.list <- NULL
+# for (this.id in all.ids)
+#   dashboard.list[[this.id]] <-   make.ccd.table(
+#     this.id=this.id,
+#     HTTK.data.list=HTTK.data.list,
+#     species.list=SPECIES.LIST,
+#     model.list=MODELS.LIST,
+#     param.list=param.list,
+#     units.list=units.list,
+#     all.ids=all.ids,
+#     RANDOM.SEED=RANDOM.SEED,
+#     which.quantiles=WHICH.QUANTILES,
+#     num.samples=NUM.SAMPLES
+#   )
 
 # Create a list with one table per chemical:
 dashboard.list <- clusterApply(cl,
@@ -408,11 +409,11 @@ for (this.parameter in c(
               ivpkfit[ivpkfit.row,"Ref"]
             dashboard.table[dashboard.row,"Measured"] <- ivpkfit[ivpkfit.row,
                             this.parameter]
-        }
+          }
+        }  
+      }
     }  
   }
-}  
-
 
 #
 #
@@ -558,10 +559,4 @@ write.table(
   row.names=F,
   quote=F,
   sep="\t")
-
-
-
-
-
-
 
