@@ -550,8 +550,8 @@ print(Fig)
 dev.off()
 
 tmp <- tmp[,colnames(tmp)[c(1:5,7:8,12:13,16)]]
-colnames(tmp) <- gsub("x","prev",colnames(tmp))
-colnames(tmp) <- gsub("y","new",colnames(tmp))
+colnames(tmp) <- gsub("x","new",colnames(tmp))
+colnames(tmp) <- gsub("y","prev",colnames(tmp))
 write.table(
   tmp,
   file=paste(

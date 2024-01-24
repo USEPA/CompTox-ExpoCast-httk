@@ -617,8 +617,20 @@ benchmark_httk <- function(
     benchmarks[["units.plot"]] <- units.plot
     
 
-    rmsle.plot <- 
-      ggplot2::ggplot(subset(plot.table, regexpr("RMSLE", Benchmark)!=-1),
+    model.rmsle.plot <- 
+      ggplot2::ggplot(subset(plot.table, Benchmark %in%
+                             c("RMSLE.wetmore","RMSLE.nomc")),
+             aes(x=Version, y=Value, color=Benchmark, group=Benchmark)) + 
+      geom_point() +
+      geom_line() +
+      ylab("Root Mean Squared Log10 Error (RMSLE)") +
+      theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
+    benchmarks[["rmsle.plot"]] <- rmsle.plot
+
+    invivo.rmsle.plot <- 
+      ggplot2::ggplot(subset(plot.table, Benchmark %in%
+                             c("InVivoCss","RMSLE.InVivoAUC",
+                               "RMSLE.InVivoCmax","RMSLE.TissuePC")),
              aes(x=Version, y=Value, color=Benchmark, group=Benchmark)) + 
       geom_point() +
       geom_line() +
