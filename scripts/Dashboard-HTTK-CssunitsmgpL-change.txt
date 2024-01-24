@@ -1,4 +1,4 @@
-DTXSID	Parameter	Model	Species	Percentile	Predicted.prev	Units.prev	Predicted.new	Units.new	Change
+DTXSID	Parameter	Model	Species	Percentile	Predicted.new	Units.new	Predicted.prev	Units.prev	Change
 DTXSID001009966	Css	3compartmentss	Human	95%	8.735	mg/L	NA	NA	NA
 DTXSID001014436	Css	3compartmentss	Human	95%	2.928	mg/L	NA	NA	NA
 DTXSID00143784	Css	3compartmentss	Human	95%	1.147	mg/L	NA	NA	NA
