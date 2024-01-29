@@ -70,7 +70,8 @@ Vfliver,
 Vfbrain, 
 Vfgut, 
 Vflung, 
-Vfrest
+Vfrest, 
+fhematocrit
 };
 
 pre_pregnant_BW = 0;
