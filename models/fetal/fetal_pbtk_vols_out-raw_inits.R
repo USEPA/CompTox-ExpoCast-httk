@@ -189,7 +189,8 @@ Outputs <- c(
     "Vfbrain",
     "Vfgut",
     "Vflung",
-    "Vfrest"
+    "Vfrest",
+    "fhematocrit"
 )
 
 initStates <- function(parms, newStates = NULL) {

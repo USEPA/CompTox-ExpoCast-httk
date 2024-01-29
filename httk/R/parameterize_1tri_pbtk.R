@@ -101,7 +101,7 @@ parameterize_1tri_pbtk<- function(
   chem.name=NULL,
   dtxsid = NULL,
   species="Human",
-  Kconceptus2pu = 1, # set to 1 for now
+  # Kconceptus2pu = 1, # set to 1 for now
   return.kapraun2019=TRUE, # this is mostly a subset of httk::kapraun2019 
   suppress.messages=FALSE, # adding Qbrain_percent_{initial,terminal}
   ...)
@@ -202,7 +202,51 @@ parameterize_1tri_pbtk<- function(
     lumped_tissue_values_maternal),1,1) == 'K']) #only add the partition coefficients
   parms$pH_Plasma_mat <- maternal.blood.pH
 
-  # add Kconceptus2pu which is equivocal and hence, user-defined 
+  # # add Kconceptus2pu which is equivocal and hence, user-defined 
+  # parms$Kconceptus2pu <- Kconceptus2pu
+  
+  # compute Kconceptus2pu based on weighted average 
+  # of fetal_pcs from fetal_pbtk model 
+  fetal.compts <- c("gut", "liver", "kidney", "lung", "ven", "art", "thyroid", 
+                    "rest", "brain")
+  fetal.tissues <- fetal.compts[! (fetal.compts %in% c("ven", "art"))]
+  
+  fetal.parms <- parameterize_fetal_pbtk(chem.cas=chem.cas,
+                                         chem.name=chem.name,
+                                         dtxsid=dtxsid)
+  
+  # get fetal tissue partition coefficients 
+  fetal.pcs <- c(fetal.parms[substr(names(fetal.parms),1,2) == 'Kf'], 
+                 fetal.parms["Kplacenta2pu"])
+  
+  # new compts from conceptus at day 91 
+  missing.amts <- c(paste0("Af", fetal.compts),
+                    "Aplacenta")
+  
+  missing.vols <- str_replace(missing.amts, "^A", "V")
+  
+  # get volumes from C model implementation
+  vols.out <- solve_fetal_pbtk(chem.cas=chem.cas,
+                               chem.name=chem.name, 
+                               dtxsid=dtxsid,
+                               dose = 0, 
+                               times = c(13*7, 13*7+1), # times needs to contain at least 2 values
+                               monitor.vars = c(missing.vols, "fhematocrit")) 
+  
+  Vf = vols.out[1, missing.vols[missing.vols %in% c(paste0("Vf", fetal.tissues), "Vplacenta")] ]
+  Kf = unlist(fetal.pcs[c(paste0("Kf", fetal.tissues,"2pu"), "Kplacenta2pu")])
+  
+  # add tissues 
+  Kconceptus2pu = sum(Vf*log10(Kf))
+  
+  # add art,ven blood components
+  fbV = vols.out[1, c("Vfart", "Vfven")]
+  Kconceptus2pu = Kconceptus2pu + vols.out[1, "fhematocrit"]*log10(fetal.parms$Kfrbc2pu)*sum(fbV) # RBCs 
+  Kconceptus2pu = Kconceptus2pu + (1 - vols.out[1, "fhematocrit"])*log10(fetal.parms$Kfplacenta2pu)*sum(fbV) # fetal plasma 
+  
+  Vtotal = sum(Vf) + sum(fbV)
+  Kconceptus2pu = 10^(Kconceptus2pu/Vtotal)
+  Kconceptus2pu = unname(Kconceptus2pu)
   parms$Kconceptus2pu <- Kconceptus2pu
   
   #

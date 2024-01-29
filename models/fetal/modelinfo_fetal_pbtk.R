@@ -550,7 +550,8 @@ model.list[["fetal_pbtk"]]$derivative.output.names <- c(
   "Vfbrain",
   "Vfgut",
   "Vflung",
-  "Vfrest")
+  "Vfrest", 
+  "fhematocrit")
 
 
 #Which variables to track by default (should be able to build this from
@@ -706,7 +707,8 @@ model.list[["fetal_pbtk"]]$compartment.units <- c(
   "Vfbrain" = "L",
   "Vfgut" = "L",
   "Vflung" = "L",
-  "Vfrest" = "L"
+  "Vfrest" = "L", 
+  "fhematocrit" = "unitless"
   )
 
 # Compartment state of matter, needed for proper unit conversion, if all

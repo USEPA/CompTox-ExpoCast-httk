@@ -3,7 +3,7 @@
 
    Model File:  fetal/fetal_pbtk_vols_out.model
 
-   Date:  Tue Dec 05 12:24:54 2023
+   Date:  Tue Jan 23 14:54:26 2024
 
    Created by:  "C:/Users/ktruong/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/httk-dev/models/mod.exe v6.1.0"
     -- a model preprocessor by Don Maszle
@@ -39,7 +39,7 @@
      Afkidney = 0.0,
      Afbrain = 0.0,
 
-   37 Outputs:
+   38 Outputs:
     "Cgut",
     "Cliver",
     "Cven",
@@ -77,6 +77,7 @@
     "Vfgut",
     "Vflung",
     "Vfrest",
+    "fhematocrit",
 
    0 Inputs:
 
@@ -286,6 +287,7 @@
 #define ID_Vfgut 0x00022
 #define ID_Vflung 0x00023
 #define ID_Vfrest 0x00024
+#define ID_fhematocrit 0x00025
 
 /* Parameters */
 static double parms[134];
@@ -427,8 +429,8 @@ static double parms[134];
 
 // /* Forcing (Input) functions */
 // static double forc[0];
-
-
+// 
+// 
 // /* Function definitions for delay differential equations */
 // 
 // int Nout=1;
@@ -470,8 +472,8 @@ void initmodfetal_pbtk (void (* odeparms)(int *, double *))
 // }
 
 
-/* Calling R code will ensure that input y has same
-   dimension as yini */
+// /* Calling R code will ensure that input y has same
+//    dimension as yini */
 // void initState (double *y)
 // {
 //   int i;
@@ -518,7 +520,6 @@ void derivsfetal_pbtk (int *neq, double *pdTime, double *y, double *ydot, double
   /* local */ double Wfgut;
   /* local */ double Wflung;
   /* local */ double hematocrit;
-  /* local */ double fhematocrit;
   /* local */ double Vplasma;
   /* local */ double Vrbcs;
   /* local */ double Vven;
@@ -574,9 +575,9 @@ void derivsfetal_pbtk (int *neq, double *pdTime, double *y, double *ydot, double
 
   yout[ID_Rblood2plasma] = 1 - hematocrit + hematocrit * Krbc2pu * Fraction_unbound_plasma ;
 
-  fhematocrit = ( fhematocrit_cubic_theta1 * tw + fhematocrit_cubic_theta2 * pow ( tw , 2 ) + fhematocrit_cubic_theta3 * pow ( tw , 3 ) ) / 100 ;
+  yout[ID_fhematocrit] = ( fhematocrit_cubic_theta1 * tw + fhematocrit_cubic_theta2 * pow ( tw , 2 ) + fhematocrit_cubic_theta3 * pow ( tw , 3 ) ) / 100 ;
 
-  yout[ID_Rfblood2plasma] = 1 - fhematocrit + fhematocrit * Kfrbc2pu * Fraction_unbound_plasma_fetus ;
+  yout[ID_Rfblood2plasma] = 1 - yout[ID_fhematocrit] + yout[ID_fhematocrit] * Kfrbc2pu * Fraction_unbound_plasma_fetus ;
 
   yout[ID_fBW] = 0.001 * fBW_gompertz_theta0 * exp ( fBW_gompertz_theta1 / fBW_gompertz_theta2 * ( 1 - exp ( - fBW_gompertz_theta2 * tw ) ) ) ;
 
@@ -710,7 +711,7 @@ void derivsfetal_pbtk (int *neq, double *pdTime, double *y, double *ydot, double
 
   yout[ID_Cfplasma] = y[ID_Afven] / yout[ID_Vfven] / yout[ID_Rblood2plasma] ;
 
-  yout[ID_Afplasma] = y[ID_Afven] / yout[ID_Rblood2plasma] * ( 1 - fhematocrit ) ;
+  yout[ID_Afplasma] = y[ID_Afven] / yout[ID_Rblood2plasma] * ( 1 - yout[ID_fhematocrit] ) ;
 
   ydot[ID_Agutlumen] = - kgutabs * y[ID_Agutlumen] ;
 
