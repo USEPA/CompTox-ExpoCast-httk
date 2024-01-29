@@ -9,7 +9,6 @@ parameterize_1tri_pbtk(
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  Kconceptus2pu = 1,
   return.kapraun2019 = TRUE,
   suppress.messages = FALSE,
   ...
@@ -28,9 +27,6 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human"). Currently only a narrow human model is supported.}
 
-\item{Kconceptus2pu}{Ratio of concentration of chemical in the 'conceptus'
-compartment of the model to unbound concentration in plasma.}
-
 \item{return.kapraun2019}{If TRUE (default) empirical parameters from 
 Kapraun et al. (2019) necessary for defining the model are provided.
 This is a subset of the httk::kapraun2019 list object with additional parameters.}
@@ -38,6 +34,9 @@ This is a subset of the httk::kapraun2019 list object with additional parameters
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
 \item{...}{Arguments passed to parameterize_pbtk.}
+
+\item{Kconceptus2pu}{Ratio of concentration of chemical in the 'conceptus'
+compartment of the model to unbound concentration in plasma.}
 }
 \value{
 \item{pre_pregnant_BW}{Body Weight before pregnancy, kg.}
