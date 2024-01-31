@@ -3,7 +3,7 @@
 
    Model File:  fetal/fetal_pbtk_vols_out.model
 
-   Date:  Tue Jan 23 14:54:26 2024
+   Date:  Tue Jan 30 12:26:44 2024
 
    Created by:  "C:/Users/ktruong/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/httk-dev/models/mod.exe v6.1.0"
     -- a model preprocessor by Don Maszle
@@ -709,9 +709,9 @@ void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, in
 
   yout[ID_Cfgut] = y[ID_Afgut] / yout[ID_Vfgut] ;
 
-  yout[ID_Cfplasma] = y[ID_Afven] / yout[ID_Vfven] / yout[ID_Rblood2plasma] ;
+  yout[ID_Cfplasma] = y[ID_Afven] / yout[ID_Vfven] / yout[ID_Rfblood2plasma] ;
 
-  yout[ID_Afplasma] = y[ID_Afven] / yout[ID_Rblood2plasma] * ( 1 - yout[ID_fhematocrit] ) ;
+  yout[ID_Afplasma] = y[ID_Afven] / yout[ID_Rfblood2plasma] * ( 1 - yout[ID_fhematocrit] ) ;
 
   ydot[ID_Agutlumen] = - kgutabs * y[ID_Agutlumen] ;
 
