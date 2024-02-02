@@ -1,3 +1,8 @@
+## Bug Fixes
+* Fixed issue where `create_mc_samples` could not handle argument 
+***parameters*** being a list (as in, 
+parameters=parameterize_steadstate(chem.name="bisphenola"))
+
 # httk 2.3.0 (2023-12-05)
 This version accompanies the submission of manuscript Honda et al. 
 "Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals 
