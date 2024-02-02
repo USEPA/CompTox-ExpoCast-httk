@@ -1,3 +1,7 @@
+## Bug Fixes
+* Changed Rblood2plasma to Rfblood2plasma for fetal plasma in model fetal_pbtk
+(Thank you to Kimberly Troung)
+
 # httk 2.3.0 (2023-12-05)
 This version accompanies the submission of manuscript Honda et al. 
 "Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals 
