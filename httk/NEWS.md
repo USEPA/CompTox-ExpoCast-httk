@@ -1,3 +1,8 @@
+## Bug Fixes
+* Error messages for `calc_css` now explain that function is only applicable
+to dynamical (time-evolving) models and handles errors with other models
+(such as 3comaprtmentss) more gracefully
+
 # httk 2.3.0 (2023-12-05)
 This version accompanies the submission of manuscript Honda et al. 
 "Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals 
