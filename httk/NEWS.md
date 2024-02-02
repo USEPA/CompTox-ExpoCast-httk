@@ -1,3 +1,6 @@
+## Bug Fixes
+* Argument keepit100 was being improperly ignored by `get_fabsgut`
+
 # httk 2.3.0 (2023-12-05)
 This version accompanies the submission of manuscript Honda et al. 
 "Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals 
