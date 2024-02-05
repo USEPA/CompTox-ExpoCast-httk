@@ -428,7 +428,8 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
     
     if(any(is.na(tcdata[missing.rows, well_number]))){
       print(paste0("Either well_number or geometry must be defined for rows: ", 
-                   paste(which(tcdata[, is.na(sarea) & is.na(well_number)]),collapse = ",")))
+                   paste(which(tcdata[, is.na(sarea) & is.na(well_number)]),
+                         collapse = ",")))
       stop()
     }else{
       temp <- armitage_estimate_sarea(tcdata[missing.rows,])
@@ -445,11 +446,16 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
   }
   
   # Check if required phys-chem parameters are provided:
-  if(!all(c("gkow","logHenry","gswat","MP","MW") %in% names(tcdata))){
+  if(!all(c("gkow","logHenry","gswat","MP","MW") %in% names(tcdata)))
+  {
   # If not, pull them:
     tcdata[, c("gkow","logHenry","logWSol","MP","MW") := 
-             as.data.frame(get_physchem_param(param = c("logP","logHenry","logWSol","MP","MW"), 
-                                chem.cas = casrn),row.names = casrn)]
+             as.data.frame(get_physchem_param(param = c("logP",
+                                                        "logHenry",
+                                                        "logWSol",
+                                                        "MP",
+                                                        "MW"), 
+                                chem.cas = casrn))]
   }
 
   # Convevert from chem.physical_and_invitro.data units to Armitage model units:
@@ -476,23 +482,30 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
   } else tcdata[, Fneutral := 1]
   
   manual.input.list <- list(Tsys=this.Tsys, Tref=this.Tref,
-                            option.kbsa2=this.option.kbsa2, option.swat2=this.option.swat2,
-                            FBSf=this.FBSf, pseudooct=this.pseudooct, memblip=this.memblip,
-                            nlom=this.nlom, P_nlom=this.P_nlom, P_dom=this.P_dom, P_cells=this.P_cells,
-                            csalt=this.csalt, celldensity=this.celldensity, cellmass=this.cellmass, f_oc=this.f_oc,
-                            conc_ser_alb = this.conc_ser_alb, conc_ser_lip = this.conc_ser_lip, Vdom = this.Vdom)
+                            option.kbsa2=this.option.kbsa2, 
+                            option.swat2=this.option.swat2,
+                            FBSf=this.FBSf, pseudooct=this.pseudooct, 
+                            memblip=this.memblip,
+                            nlom=this.nlom, P_nlom=this.P_nlom, 
+                            P_dom=this.P_dom, P_cells=this.P_cells,
+                            csalt=this.csalt, celldensity=this.celldensity, 
+                            cellmass=this.cellmass, f_oc=this.f_oc,
+                            conc_ser_alb = this.conc_ser_alb, 
+                            conc_ser_lip = this.conc_ser_lip, Vdom = this.Vdom)
   
   check.list <- c("dsm","duow","duaw","dumw",
                   "gkmw","gkcw","gkbsa","gkpl","ksalt")
   
   req.list <- c("Tsys","Tref","option.kbsa2","option.swat2",
                 "FBSf","pseudooct","memblip","nlom","P_nlom","P_dom","P_cells",
-                "csalt","celldensity","cellmass","f_oc","conc_ser_alb","conc_ser_lip","Vdom")
+                "csalt","celldensity","cellmass","f_oc","conc_ser_alb",
+                "conc_ser_lip","Vdom")
   if(!all(check.list%in%names(tcdata))){
     tcdata[,check.list[!(check.list %in% names(tcdata))]] <- as.double(NA)}
   
   if(!all(req.list%in%names(tcdata))){
-    tcdata[,req.list[!(req.list %in% names(tcdata))]] <- manual.input.list[!(names(manual.input.list) %in% names(tcdata))]}
+    tcdata[,req.list[!(req.list %in% names(tcdata))]] <- 
+    manual.input.list[!(names(manual.input.list) %in% names(tcdata))]}
   
   R <- 8.3144621 # J/(mol*K)
   
