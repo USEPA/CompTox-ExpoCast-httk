@@ -330,7 +330,10 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' print(out)
 #' 
 #' @export armitage_eval
-armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
+armitage_eval <- function(chem.cas=NULL,
+                          chem.name=NULL,
+                          dtxsid = NULL,
+                          casrn.vector = NA_character_, # vector of CAS numbers
                           nomconc.vector = 1, # nominal concentration vector (e.g. apparent AC50 values) in uM = umol/L
                           this.well_number = 384,
                           this.FBSf = NA_real_, # Must be set if not in tcdata, this is the most senstive parameter in the model.
@@ -397,8 +400,26 @@ armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
   Fneutral <- MW <- NULL
   #End R CMD CHECK appeasement.
   
-  if(all(is.na(tcdata))){
-    tcdata <- data.table(casrn = casrn.vector,
+  if (all(is.na(tcdata)))
+  {
+    if (length(casrn.vector) > 1) chem.cas <- casrn.vector
+    else if (!is.na(casrn.vector)) chem.cas <- casrn.vector
+    
+    if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid)) 
+    stop('chem.name, chem.cas, or dtxsid must be specified.')
+
+    out <- get_chem_id(chem.cas=chem.cas,
+                     chem.name=chem.name,
+                     dtxsid=dtxsid)
+    chem.cas <- out$chem.cas
+    chem.name <- out$chem.name
+    dtxsid <- out$dtxsid
+
+    tcdata <- data.table(DTXSID = dtxsid,
+                         Compound = chem.name,
+                         casrn = chem.cas,
                          nomconc = nomconc.vector,
                          well_number = this.well_number,
                          sarea = this.sarea,
