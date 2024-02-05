@@ -1,3 +1,11 @@
+## Enhancements
+* Changed `armitage_eval` to allow chemical specification by usual arguments
+chem.name, chem.cas, and DTXSID. Preserved casrn.vector for backward compatibility.
+* Change `armitage_eval` to allow multiple instances of chemicals (no longer 
+using CASRN as row names) -- thank you Katie Paul Friedman for suggestion
+* Added Katie Paul Friedman (USEPA) as contributor for long history of 
+suggesting refinements and putting up with bugs
+
 # httk 2.3.0 (2023-12-05)
 This version accompanies the submission of manuscript Honda et al. 
 "Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals 
