@@ -1,3 +1,8 @@
+## Bug Fixes
+* Liquid densities previous referred to as ppmv for `convert_units` were
+actually ppmw. Cannot calculate ppmv without chemical-specific liquid density,
+which we do not know.
+
 # httk 2.3.0 (2023-12-05)
 This version accompanies the submission of manuscript Honda et al. 
 "Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals 
