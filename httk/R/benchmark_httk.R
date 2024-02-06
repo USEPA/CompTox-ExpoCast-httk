@@ -111,7 +111,7 @@
 #'
 #'   model.rmsle.plot \tab A ggplot2 figure comparing various functions values
 #' against values predicted by other models (chiefly SimCyp predictions from
-#' Wetmoer et al. 2012 and 2015. 
+#' Wetmore et al. 2012 and 2015. 
 #' Output generated is the root mean square log10 error for parameters estimated
 #' by the package. \cr
 #'
