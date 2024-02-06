@@ -1,0 +1,86 @@
+---
+title: 'Scherer: Plot IVDisp Fractions'
+author: "Meredith Scherer"
+date: "2024-02-06"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{i) Scherer: Plot IVDisp Fractions}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+*Please send questions to wambaugh.john@epa.gov*
+
+## HTTK Version
+
+This vignette was created with **httk** v2.3.0. Although we attempt to maintain backward compatibility, if you encounter issues with the latest release of **httk** and cannot easily address the changes, historical versions of httk are available from: https://cran.r-project.org/src/contrib/Archive/httk/
+
+## Prepare for session
+R package **knitr** generates html and PDF documents from this RMarkdown file,
+Each bit of code that follows is known as a "chunk". We start by telling 
+**knitr** how we want our chunks to look.
+```{r configure_knitr, eval = TRUE}
+knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+### Clear the memory
+It is a bad idea to let variables and other information from previous R
+sessions float around, so we first remove everything in the R memory.
+```{r clear_memory, eval = TRUE}
+rm(list=ls()) 
+```
+
+### eval = execute.vignette
+If you are using the RMarkdown version of this vignette (extension, .RMD) you
+will be able to see that several chunks of code in this vignette
+have the statement "eval = execute.vignette". The next chunk of code, by default,
+sets execute.vignette = FALSE.  This means that the code is included (and necessary) but was
+not run when the vignette was built. We do this because some steps require 
+extensive computing time and the checks on CRAN limit how long we can spend
+building the package. If you want this vignette to work, you must run all code,
+either by cutting and pasting it into R. Or, if viewing the .RMD file, you can
+either change execute.vignette to TRUE or press "play" (the green arrow) on
+each chunk in RStudio.
+```{r runchunks, eval = TRUE}
+# Set whether or not the following chunks will be executed (run):
+execute.vignette <- FALSE
+```
+
+### Load the relevant libraries
+If you get the message "Error in library(X) : there is no package called 'X'"
+then you will need to install that package: 
+
+From the R command prompt:
+
+install.packages("X")
+
+Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
+```{r InitialPrep, eval = execute.vignette}
+library(ggplot2)
+```
+
+## Create Pie Chart
+
+This code produces a pie chart for an example in vitro distribution data set.
+
+```{r MakeTable, eval = execute.vignette}
+
+# Example data set with compartments and fraction present in each compartment
+
+input_table <- data.frame(compartment = c("Free in medium", "Bound in plasma", "Associated with cells", "In headspace", "Soaked to well plastic"), fraction=c(0.1, 0.240597245, 0.600, 0.048, 0.01140276))
+
+```
+
+
+```{r MakePlot, eval = execute.vignette}
+
+# Pie chart function to plot the data set
+piechart(input_table)
+
+```
+
+
+
+
+
+
