@@ -430,13 +430,6 @@ benchmark_httk <- function(
                                             as.numeric(FitData2$Pred.Cmax) /
                                             as.numeric(FitData2$Cmax)))
                                         )
-                                                                
-#    write.table(FitData[,c(1,3,5,6,29,31)], 
-#                file=paste("invivovcsscheck-",
-#                           packageVersion("httk"),
-#                           ".txt",sep=""),
-#                           row.names=FALSE,
-#                           sep="\t")
   }
 
   #
@@ -623,7 +616,6 @@ benchmark_httk <- function(
       theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
     benchmarks[["units.plot"]] <- units.plot
     
-    browser()
     model.rmsle.plot <- 
       ggplot2::ggplot(subset(plot.table, Benchmark %in%
                              c("RMSLE.Wetmore","RMSLE.noMC")),
