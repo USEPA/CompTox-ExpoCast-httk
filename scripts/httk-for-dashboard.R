@@ -1,3 +1,5 @@
+#R CMD BATCH --vanilla httk-for-dashboard.R
+
 library(httk)
 library(parallel)
 library(data.table)
@@ -44,24 +46,30 @@ load_pradeep2020()
 load_honda2023()
  
 # Find all the duplicates:
+# First eliminat NA DTXSIDs (can't do logical tests on them)
 chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
                                          !is.na(DTXSID))
-dup.chems <- chem.physical_and_invitro.data$DTXSID[duplicated((chem.physical_and_invitro.data$DTXSID))]
+# Now check for duplicated DTXSIDs:
+dup.chems <- chem.physical_and_invitro.data$DTXSID[
+  duplicated((chem.physical_and_invitro.data$DTXSID))]
 length(dup.chems)
+# Now check for duplicated CASRN and grab the DTXSIDs of any chemicals with
+# duplicated CAS (but unique DTXSIDs):
 dup.chems <- unique(dup.chems,
                     subset(chem.physical_and_invitro.data, CAS %in%
                     chem.physical_and_invitro.data$CAS[
                       duplicated((chem.physical_and_invitro.data$CAS))])$DTXSID)
 length(dup.chems)
 
-# Try to keep predictions from Dawson 2021:
+# Among the duplicates, try to keep the predictions from Dawson 2021:
 for (this.chem in dup.chems)
 {
   these.dup.rows <- which(chem.physical_and_invitro.data$DTXSID==this.chem)
   keep.row <- NULL
   for(this.row in these.dup.rows)
     if (regexpr("Dawson",
-                chem.physical_and_invitro.data[this.row,"Human.Clint.Reference"])!=-1
+                chem.physical_and_invitro.data[this.row,
+                                               "Human.Clint.Reference"])!=-1
       ) keep.row <- this.row
   these.dup.rows <- these.dup.rows[these.dup.rows!=keep.row]
   chem.physical_and_invitro.data <- chem.physical_and_invitro.data[
@@ -71,13 +79,16 @@ for (this.chem in dup.chems)
 # Check to make sure no duplicates left:
 chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
                                          !is.na(DTXSID))
-dup.chems <- chem.physical_and_invitro.data$DTXSID[duplicated((chem.physical_and_invitro.data$DTXSID))]
+dup.chems <- chem.physical_and_invitro.data$DTXSID[
+  duplicated((chem.physical_and_invitro.data$DTXSID))]
 length(dup.chems)
 dup.chems <- unique(dup.chems,
                     subset(chem.physical_and_invitro.data, CAS %in%
-                             chem.physical_and_invitro.data$CAS[
-                               duplicated((chem.physical_and_invitro.data$CAS))])$DTXSID)
-length(dup.chems)
+                    chem.physical_and_invitro.data$CAS[
+                      duplicated((chem.physical_and_invitro.data$CAS))])$DTXSID)
+# This should be true:
+length(dup.chems) == 0
+
 
 # Organize HTTK data by species:
 HTTK.data.list <- list()
@@ -98,12 +109,6 @@ for (this.species in SPECIES.LIST)
   all.ids <- sort(unique(c(all.ids,HTTK.data.list[[this.species]]$DTXSID)))
 }
 
-# temporarily make it run fast:
-#ivpkfit <- read.csv("invivoPKfit-params.for.dashboard.txt")
-#short.list <- ivpkfit$Chemical[1:25]
-#all.ids <- all.ids[all.ids %in% short.list]
-
-
 # We want one parameter per line, but the code is pretty different wrt how we
 # retrieve/calculate these values:
 param.list <- c("Clint","Fup","Vd","Days.Css","TK.Half.Life","Css")
@@ -114,8 +119,6 @@ units.list[["Vd"]] <- "L/kg"
 units.list[["Days.Css"]] <- "Days"
 units.list[["TK.Half.Life"]] <- "hours"
 units.list[["Css"]] <- "mg/L"
-
-
 
 # Function to create all the rows of info for a particular chemical:
 make.ccd.table <- function(
@@ -274,51 +277,13 @@ make.ccd.table <- function(
   return(dashboard.table)
 }
 
-# Create a multicore cluster:
-cl <- parallel::makeCluster(NUM.CPU)
-
-# Load httk on all cores:
-clusterEvalQ(cl, library(httk))
-# Clear memory all cores:
-clusterEvalQ(cl, rm(list=ls()))
-
-# Define the table creator function on all cores:
-clusterExport(cl, "make.ccd.table")
-# Share data with all cores:
-clusterExport(cl, c(
-  "chem.physical_and_invitro.data",
-  "HTTK.data.list",
-  "SPECIES.LIST",
-  "MODELS.LIST",
-  "param.list",
-  "units.list",
-  "all.ids",
-  "RANDOM.SEED",
-  "WHICH.QUANTILES",
-  "NUM.SAMPLES"))
-
+if (NUM.CPU == 1)
+{
 # Non-parallel version:
-# dashboard.list <- NULL
-# for (this.id in all.ids)
-#   dashboard.list[[this.id]] <-   make.ccd.table(
-#     this.id=this.id,
-#     HTTK.data.list=HTTK.data.list,
-#     species.list=SPECIES.LIST,
-#     model.list=MODELS.LIST,
-#     param.list=param.list,
-#     units.list=units.list,
-#     all.ids=all.ids,
-#     RANDOM.SEED=RANDOM.SEED,
-#     which.quantiles=WHICH.QUANTILES,
-#     num.samples=NUM.SAMPLES
-#   )
-
-# Create a list with one table per chemical:
-dashboard.list <- clusterApply(cl,
-                               all.ids,
-                               function(x)
-  make.ccd.table(
-    this.id=x,
+dashboard.list <- NULL
+for (this.id in all.ids)
+  dashboard.list[[this.id]] <-   make.ccd.table(
+    this.id=this.id,
     HTTK.data.list=HTTK.data.list,
     species.list=SPECIES.LIST,
     model.list=MODELS.LIST,
@@ -328,9 +293,60 @@ dashboard.list <- clusterApply(cl,
     RANDOM.SEED=RANDOM.SEED,
     which.quantiles=WHICH.QUANTILES,
     num.samples=NUM.SAMPLES
-    ))
+  )
+} else {
+  # Create a multicore cluster:
+  cl <- parallel::makeCluster(NUM.CPU)
+  
+  # Load httk on all cores:
+  clusterEvalQ(cl, library(httk))
+  # Clear memory all cores:
+  clusterEvalQ(cl, rm(list=ls()))
+  
+  # Dawson 2021:
+  clusterEvalQ(cl, load_dawson2021())
+  # ADmet Predictor:
+  clusterEvalQ(cl, load_sipes2017())
+  # Machine learning model:
+  clusterEvalQ(cl, load_pradeep2020())
+  # Caco-2 QSPR:
+  clusterEvalQ(cl, load_honda2023())
 
-stopCluster(cl)
+  # Define the table creator function on all cores:
+  clusterExport(cl, "make.ccd.table")
+  # Share data with all cores:
+  clusterExport(cl, c(
+    "chem.physical_and_invitro.data",
+    "HTTK.data.list",
+    "SPECIES.LIST",
+    "MODELS.LIST",
+    "param.list",
+    "units.list",
+    "all.ids",
+    "RANDOM.SEED",
+    "WHICH.QUANTILES",
+    "NUM.SAMPLES"))
+  
+  # Create a list with one table per chemical:
+  dashboard.list <- clusterApply(cl,
+                                 all.ids,
+                                 function(x)
+    make.ccd.table(
+      this.id=x,
+      HTTK.data.list=HTTK.data.list,
+      species.list=SPECIES.LIST,
+      model.list=MODELS.LIST,
+      param.list=param.list,
+      units.list=units.list,
+      all.ids=all.ids,
+      RANDOM.SEED=RANDOM.SEED,
+      which.quantiles=WHICH.QUANTILES,
+      num.samples=NUM.SAMPLES
+      ))
+  
+  stopCluster(cl)
+}
+
 # Combine all the individual tables into a single table:
 dashboard.table <- rbindlist(dashboard.list)
 
@@ -549,6 +565,8 @@ png("calc-mc-css-fold-change.png")
 print(Fig)
 dev.off()
 
+# Duplicate column names in the two merged tables (dashboard.table, prev.table) 
+# have .x and .y assigned to them respectively.
 tmp <- tmp[,colnames(tmp)[c(1:5,7:8,12:13,16)]]
 colnames(tmp) <- gsub("x","new",colnames(tmp))
 colnames(tmp) <- gsub("y","prev",colnames(tmp))
@@ -559,4 +577,6 @@ write.table(
   row.names=F,
   quote=F,
   sep="\t")
+  
+sessionInfo()
 
