@@ -39,6 +39,10 @@ permeability chemicals and therefore predicts only three values
 for calculating systemic bioavailability as ***Fbio = Fabs * Fgut * Fhep*** 
 where first-pass hepatic metabolism was already available from 
 `calc_hep_bioavailability`.
+* Changed the name of the variable describing fraction absorbed from the gut
+prior to first-pass hepatic metabolism to ***Fabsgut*** to reflect that
+***Fabs*** and ***Fgut*** are now modeled separately
+(that is, ***Fabsgut = Fabs * Fgut***).
 * Integrated ***Fabs*** and ***Fgut*** into oral exposure for all TK models and 
 integrated into population variability and uncertainty functions within 
 `invitro_uv`
