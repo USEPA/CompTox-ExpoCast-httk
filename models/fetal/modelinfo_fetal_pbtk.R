@@ -551,7 +551,8 @@ model.list[["fetal_pbtk"]]$derivative.output.names <- c(
   "Vfgut",
   "Vflung",
   "Vfrest", 
-  "fhematocrit")
+  "fhematocrit"
+  )
 
 
 #Which variables to track by default (should be able to build this from
