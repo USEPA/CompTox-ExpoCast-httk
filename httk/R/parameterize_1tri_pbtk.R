@@ -194,60 +194,16 @@ parameterize_1tri_pbtk<- function(
         liver=c("liver"),
         kidney=c("kidney"), 
         lung=c("lung"), 
-        thyroid = c("thyroid")
-        # conceptus = c("placenta")
+        thyroid = c("thyroid"),
+        conceptus = c("placenta") # this excludes conceptus (placental tissue) from the rest of the body
         ),
       suppress.messages=TRUE)
   parms <- c(parms, lumped_tissue_values_maternal[substr(names(
     lumped_tissue_values_maternal),1,1) == 'K']) #only add the partition coefficients
+  
+  # Kconceptus2pu is time-varying and updated in the C code so remove quantity calculated by Schmitt
+  parms$Kconceptus2pu <- NULL
   parms$pH_Plasma_mat <- maternal.blood.pH
-
-  # # add Kconceptus2pu which is equivocal and hence, user-defined 
-  # parms$Kconceptus2pu <- Kconceptus2pu
-  
-  # compute Kconceptus2pu based on weighted average 
-  # of fetal_pcs from fetal_pbtk model 
-  fetal.compts <- c("gut", "liver", "kidney", "lung", "ven", "art", "thyroid", 
-                    "rest", "brain")
-  fetal.tissues <- fetal.compts[! (fetal.compts %in% c("ven", "art"))]
-  
-  fetal.parms <- parameterize_fetal_pbtk(chem.cas=chem.cas,
-                                         chem.name=chem.name,
-                                         dtxsid=dtxsid)
-  
-  # get fetal tissue partition coefficients 
-  fetal.pcs <- c(fetal.parms[substr(names(fetal.parms),1,2) == 'Kf'], 
-                 fetal.parms["Kplacenta2pu"])
-  
-  # new compts from conceptus at day 91 
-  missing.amts <- c(paste0("Af", fetal.compts),
-                    "Aplacenta")
-  
-  missing.vols <- str_replace(missing.amts, "^A", "V")
-  
-  # get volumes from C model implementation
-  vols.out <- solve_fetal_pbtk(chem.cas=chem.cas,
-                               chem.name=chem.name, 
-                               dtxsid=dtxsid,
-                               dose = 0, 
-                               times = c(13*7, 13*7+1), # times needs to contain at least 2 values
-                               monitor.vars = c(missing.vols, "fhematocrit")) 
-  
-  Vf = vols.out[1, missing.vols[missing.vols %in% c(paste0("Vf", fetal.tissues), "Vplacenta")] ]
-  Kf = unlist(fetal.pcs[c(paste0("Kf", fetal.tissues,"2pu"), "Kplacenta2pu")])
-  
-  # add tissues 
-  Kconceptus2pu = sum(Vf*log10(Kf))
-  
-  # add art,ven blood components
-  fbV = vols.out[1, c("Vfart", "Vfven")]
-  Kconceptus2pu = Kconceptus2pu + vols.out[1, "fhematocrit"]*log10(fetal.parms$Kfrbc2pu)*sum(fbV) # RBCs 
-  Kconceptus2pu = Kconceptus2pu + (1 - vols.out[1, "fhematocrit"])*log10(fetal.parms$Kfplacenta2pu)*sum(fbV) # fetal plasma 
-  
-  Vtotal = sum(Vf) + sum(fbV)
-  Kconceptus2pu = 10^(Kconceptus2pu/Vtotal)
-  Kconceptus2pu = unname(Kconceptus2pu)
-  parms$Kconceptus2pu <- Kconceptus2pu
   
   #
   # JOINT PARAMETERS:
@@ -283,10 +239,91 @@ parameterize_1tri_pbtk<- function(
   #capture our desired parameters from parameterize_pbtk in "parms," too
   parms <- c(parms, pbtk_parms_desired)
   
+  # compute Kconceptus2pu_initial as a volume-weighted avg of 
+  # maternal partition coefficients at t = 0 
+  const.tissues <- names(tissue.vols.list)[names(tissue.vols.list) != "brain"]
+  
+  fetal.parms <- parameterize_fetal_pbtk(chem.cas=chem.cas,
+                                         chem.name=chem.name,
+                                         dtxsid=dtxsid)
+  
+  # get maternal tissue partition coefficients 
+  mat.pcs <- fetal.parms[grep("^K(?!.*f)", names(fetal.parms), perl = T)]
+  
+  # first, compute contribution from constant tissues 
+  Vm = unlist(tissue.vols.list[const.tissues])
+  Km =  unlist(mat.pcs[paste0("K", const.tissues,"2pu")])
+  
+  KV = sum(Vm*Km)
+  
+  # define all the functions necessary to compute the time-varying volumes
+  # hard-coded this but perhaps there is a better way to retrieve them from the C model 
+  Vplasma <- function(tw) {
+    fetal.parms$Vplasma_mod_logistic_theta0 / ( 1 + exp ( -fetal.parms$Vplasma_mod_logistic_theta1 * ( tw - fetal.parms$Vplasma_mod_logistic_theta2 ) ) ) + fetal.parms$Vplasma_mod_logistic_theta3
+  }
+  
+  hematocrit <- function(tw) {
+    ( fetal.parms$hematocrit_quadratic_theta0 + fetal.parms$hematocrit_quadratic_theta1 * tw + fetal.parms$hematocrit_quadratic_theta2 * tw^2 ) / 100
+  }
+  
+  Vrbcs <- function(tw)  {
+    hematocrit(tw)/(1 - hematocrit(tw))*Vplasma(tw)
+  }
+  
+  Vven <- function(tw) {
+    fetal.parms$venous_blood_fraction * (Vrbcs(tw) + Vplasma(tw))
+  }  
+  
+  Vart <- function(tw) {
+    fetal.parms$arterial_blood_fraction * (Vrbcs(tw) + Vplasma(tw))
+  }
+  
+  Wadipose <- function(tw) {
+    fetal.parms$Wadipose_linear_theta0 + fetal.parms$Wadipose_linear_theta1 * tw
+  }
+  
+  Vadipose <- function(tw) {
+    1/fetal.parms$adipose_density*Wadipose(tw)
+  }
+  
+  BW <- function(tw) {
+    fetal.parms$pre_pregnant_BW + fetal.parms$BW_cubic_theta1 * tw + fetal.parms$BW_cubic_theta2 * tw^2 + fetal.parms$BW_cubic_theta3 * tw^3
+  }
+  
+  Vffmx <- function(tw) {
+    1 / fetal.parms$ffmx_density * ( BW(tw) - Wadipose(tw))
+  } 
+  
+  Vrest <- function(tw) {
+    Vffmx(tw) - (Vart(tw) + Vven(tw) + sum(Vm))
+  }
+  
+  timevar.vols <- c(
+    Vven = Vven(0), 
+    Vart = Vart(0), 
+    Vadipose = Vadipose(0), 
+    Vrest = Vrest(0)
+  )
+  
+  # add adipose, rest (fat and non-fat) terms 
+  KV = KV + timevar.vols[["Vadipose"]]*mat.pcs[["Kadipose2pu"]] 
+  KV = KV + timevar.vols[["Vrest"]]*mat.pcs[["Krest2pu"]] 
+  
+  # add art,ven blood components
+  bV = timevar.vols[c("Vart", "Vven")]
+  KV = KV + hematocrit(0)*mat.pcs[["Krbc2pu"]]*sum(bV) #RBCs
+  KV = KV + (1-hematocrit(0))/fetal.parms$Funbound.plasma*sum(bV) #plasma 
+  
+  Vtotal = sum(Vm) + sum(timevar.vols)
+  Kconceptus2pu_initial = KV/Vtotal
+  parms$Kconceptus2pu_initial <- Kconceptus2pu_initial
+  parms$Kconceptus2pu_final <- fetal.parms[["Kplacenta2pu"]]
+  
+
 # Set appropriate precision:
   parms <- lapply(parms[sort(names(parms))], set_httk_precision)
-           
-
+  
+  
 #Now for the many parameters associated with the dynamic physiologic equations
 #for pregnancy from Kapraun et al. (2019):
   if (return.kapraun2019)

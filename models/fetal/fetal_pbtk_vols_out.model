@@ -52,16 +52,10 @@ Afplasma,
 Cfplasma,
 Rfblood2plasma,
 
-# output fetal volume quantities to link with 1tri_pbtk 
+# output fetal volumes to link with 1tri_pbtk 
 fBW, 
 Vamnf, 
 Vplacenta, 
-#Vven,
-#Vart, 
-#Vadipose, 
-#Vrest,
-#Vffmx, 
-#Vallx,
 Vfart, 
 Vfven, 
 Vfkidney, 
