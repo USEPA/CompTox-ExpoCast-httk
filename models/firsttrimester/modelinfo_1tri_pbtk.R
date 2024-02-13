@@ -36,7 +36,7 @@ model.list[["1tri_pbtk"]]$alltissues=c(
   "spleen",
   "red blood cells",
   "thyroid",
-  # "placenta",
+  "placenta",
   "rest")
 
 # Which tissues from tissue.data are not lumped together when forming
@@ -45,13 +45,13 @@ model.list[["1tri_pbtk"]]$alltissues=c(
 # lumped.
 model.list[["1tri_pbtk"]]$tissuelist=list(
   adipose = c("adipose"),
-  brain = c("brain"),
+  # brain = c("brain"),
   gut = c("gut"),
   liver=c("liver"),
   kidney=c("kidney"),
   lung=c("lung"),
-  thyroid = c("thyroid")
-  # conceptus = c("placenta")
+  thyroid = c("thyroid"),
+  conceptus = c("placenta")
   )
   
 # These are all the parameters returned by the R model parameterization function.
@@ -87,14 +87,15 @@ model.list[["1tri_pbtk"]]$param.names <- c(
   "Krbc2pu", # parms[10]
   "Kthyroid2pu",                  
 #  "Kbrain2pu",
-  "Kconceptus2pu",
+  "Kconceptus2pu_initial",
+  "Kconceptus2pu_final", 
 # Scaled (1/kg BW) constant tissue volumes:
   "Vgutc",                       
   "Vkidneyc", 
   "Vliverc",
   "Vlungc", # parms[20]
   "Vthyroidc", 
-#  "Vbrainc",                       
+#  "Vbrainc",   
 # Tissue Densities:
   "gut_density",  
   "kidney_density",
@@ -150,18 +151,18 @@ model.list[["1tri_pbtk"]]$param.names <- c(
   "Qadipose_percent_terminal",
   "Qgfr_quadratic_theta0",
   "Qgfr_quadratic_theta1",
-  "Qgfr_quadratic_theta2", # parms[80]
+  "Qgfr_quadratic_theta2" # parms[80]
 # Parameters unique to 1st tri model:
 #  "Qbrain_percent_initial",
 #  "Qbrain_percent_terminal", # parms[82]
-  "fBW_13wks",
-  "Vplacenta_13wks",
-  "Vamnf_13wks",
-  "Vconceptus_final", # parms[86]
-  "Vconceptus_initial", 
-  "Qconceptus_final", 
-  "Qconceptus_initial" #parms[89]
-  )
+  # "fBW_13wks",
+  # "Vplacenta_13wks",
+  # "Vamnf_13wks",
+  # "Vconceptus_final", # parms[86]
+  # "Vconceptus_initial",
+  # "Qconceptus_final",
+  # "Qconceptus_initial" #parms[89]
+)
 
 # This subset of R parameters are needed to initially parameterize the compiled
 # code for the solver (must match ORDER under "parameters" in C code, even if 
@@ -185,7 +186,8 @@ model.list[["1tri_pbtk"]]$Rtosolvermap <- list(
   Krbc2pu="Krbc2pu", # parms[10]
   Kthyroid2pu="Kthyroid2pu",
 #  Kbrain2pu="Kbrain2pu",
-  Kconceptus2pu="Kconceptus2pu",
+  Kconceptus2pu_initial="Kconceptus2pu_initial",
+  Kconceptus2pu_final="Kconceptus2pu_final",
   Vgutc = "Vgutc",
   Vkidneyc = "Vkidneyc",
   Vliverc = "Vliverc",
@@ -284,7 +286,8 @@ model.list[["1tri_pbtk"]]$compiled.param.names <- c(
   "Krbc2pu", # parms[10]
   "Kthyroid2pu",
   # "Kbrain2pu",
-  "Kconceptus2pu",
+  "Kconceptus2pu_initial",
+  "Kconceptus2pu_final", 
   "Vgutc",
   "Vgut",
   "Vkidneyc",
@@ -388,7 +391,12 @@ model.list[["1tri_pbtk"]]$derivative.output.names <- c(
   #"Qconceptus",
   "Cplasma",
   "Aplasma",
-  "Rblood2plasma"
+  "Rblood2plasma", 
+  "Vven",
+  "Vart",
+  "Vadipose",
+  "Vrest",
+  "hematocrit"
   )
 
 #Which variables to track by default (should be able to build this from
@@ -423,9 +431,9 @@ model.list[["1tri_pbtk"]]$allowed.units.input <- list(
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[["1tri_pbtk"]]$allowed.units.output <- list(
   "oral" = c('uM','mg/L','umol','mg','uM*days',
-             'mg/L*days',"unitless"),
+             'mg/L*days',"unitless", "L"),
   "iv" = c('uM','mg/L','umol','mg','uM*days',
-             'mg/L*days',"unitless"))
+             'mg/L*days',"unitless", "L"))
 
 ## These parameters specify the exposure scenario simulated by the model:
 model.list[["1tri_pbtk"]]$routes <- list(
@@ -496,11 +504,19 @@ model.list[["1tri_pbtk"]]$compartment.units <- c(
   "Cconceptus" = "uM",
   "Cplasma" = "uM",
   "Cthyroid" = "uM",
-  "Rblood2plasma" = "unitless"
+  "Rblood2plasma" = "unitless",
   #"Vconceptus" = "L", 
-  #"Qconceptus" = "L/d"
+  #"Qconceptus" = "L/d", 
+  "Vven" = "L",
+  "Vart" = "L",
+  "Vadipose" = "L",
+  "Vrest" = "L",
+  "hematocrit" = "unitless"
   )
 
+# Compartment state of matter, needed for proper unit conversion, if all
+# compartments of the same only include one state and set it to "all":
+model.list[["1tri_pbtk"]]$compartment.state <- list(liquid="all")
        
 #Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[["1tri_pbtk"]]$required.params <- c(
