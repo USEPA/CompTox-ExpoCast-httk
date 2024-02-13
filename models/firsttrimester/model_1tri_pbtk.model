@@ -46,6 +46,14 @@ Cconceptus,
 Cplasma,
 Aplasma,
 Rblood2plasma,
+
+# output maternal volumes to compute Kconceptus2pu_initial 
+Vven, 
+Vart, 
+Vadipose,  
+Vrest, 
+hematocrit, 
+
 #Cplacenta,
 #Cfliver,
 #Cfven,
@@ -74,7 +82,8 @@ Kgut2pu = 0;
 Krbc2pu = 0;
 Kthyroid2pu = 0;
 
-Kconceptus2pu = 0; 
+Kconceptus2pu_initial = 0; 
+Kconceptus2pu_final = 0; 
 
 #Kplacenta2pu = 0;
 #Kfplacenta2pu = 0;
@@ -237,6 +246,8 @@ Vconceptus_initial = 0;
 # approximating maternal blood flow to conceptus using Qplacenta model eval at 13 wks
 Qconceptus_final = 24 * Qplacenta_linear_theta1 * 1000 * Vplacenta_13wks ; 
 Qconceptus_initial = 0; 
+
+
 }
 
 Dynamics{
@@ -341,6 +352,8 @@ Cconceptus = (Vconceptus > 0 ? Aconceptus / Vconceptus : 0);
 #Cfplasma = Afven / Vfven / Rblood2plasma;
 #Afplasma = Afven / Rblood2plasma * (1 - fhematocrit);
 
+# add dynamical partition coefficient 
+Kconceptus2pu = Kconceptus2pu_initial + ( ( Kconceptus2pu_final - Kconceptus2pu_initial ) / 13 ) * tw ; 
  
 
 dt (Agutlumen) = - kgutabs * Agutlumen;

@@ -12,7 +12,8 @@ initParms <- function(newParms = NULL) {
     Kgut2pu = 0,
     Krbc2pu = 0,
     Kthyroid2pu = 0,
-    Kconceptus2pu = 0,
+    Kconceptus2pu_initial = 0,
+    Kconceptus2pu_final = 0,
     Vgutc = 0,
     Vgut = 0,
     Vkidneyc = 0,
@@ -116,7 +117,12 @@ Outputs <- c(
     "Cconceptus",
     "Cplasma",
     "Aplasma",
-    "Rblood2plasma"
+    "Rblood2plasma",
+    "Vven",
+    "Vart",
+    "Vadipose",
+    "Vrest",
+    "hematocrit"
 )
 
 initStates <- function(parms, newStates = NULL) {
