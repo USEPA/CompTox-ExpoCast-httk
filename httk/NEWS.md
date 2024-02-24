@@ -1,4 +1,7 @@
 ## Bug Fixes
+* Error messages for `calc_css` now explain that function is only applicable
+to dynamical (time-evolving) models and handles errors with other models
+(such as 3compartmentss) more gracefully
 * Changed Rblood2plasma to Rfblood2plasma for fetal plasma in model fetal_pbtk
 (Thank you to Kimberly Troung)
 * Liquid densities previous referred to as ppmv for `convert_units` were
