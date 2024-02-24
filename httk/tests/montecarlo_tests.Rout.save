@@ -304,14 +304,54 @@ uM concentration converted to mgpkgpday dose for 0.95 quantile.
   95% 
 1.396 
 > 
+> # do test of passing single set of parameters
+> params <- parameterize_steadystate(chem.cas="80-05-7")
+Warning messages:
+1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Clint is provided as a distribution.
+2: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
+  Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
+3: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Fraction unbound is provided as a distribution.
+4: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
+  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
+5: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+  Default value of 1.6 used for Caco2 permeability.
+> css3 <- calc_analytic_css(
++   parameters=params,
++   output.units = "uM", 
++   model = "3compartmentss", 
++   species = "Human")
+Plasma concentration returned in uM units.
+> set.seed(1234)
+> css4 <- calc_mc_css(
++   parameters=params, 
++   output.units = "uM", 
++   model = "3compartmentss", 
++   species = "Human", 
++   httkpop=FALSE, 
++   invitrouv=FALSE, 
++   return.samples=TRUE)
+Human plasma concentration returned in uM units.
+> set.seed(1234)
+> css5 <- calc_mc_css(
++   parameters=params, 
++   output.units = "uM", 
++   model = "3compartmentss", 
++   species = "Human", 
++   httkpop=TRUE, 
++   invitrouv=TRUE, 
++   return.samples=TRUE)
+Human plasma concentration returned in uM units.
+> 
 > # If we turn off all the montecarlo the samples should all be the same and
 > # give us the same result as calc_analytic_css:
-> a <- calc_mc_css(
+> set.seed(1234)
+> css1 <- calc_mc_css(
 +   chem.cas = "80-05-7", 
 +   output.units = "uM", 
 +   model = "3compartmentss", 
-+   species = "Human",
-+   samples=NSAMP, 
++   species = "Human", 
 +   httkpop=FALSE, 
 +   invitrouv=FALSE, 
 +   return.samples=TRUE)
@@ -323,7 +363,8 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
-> b <- calc_analytic_css(
+> set.seed(1234)
+> css2 <- calc_analytic_css(
 +   chem.cas = "80-05-7", 
 +   output.units = "uM", 
 +   model = "3compartmentss", 
@@ -340,7 +381,14 @@ Warning messages:
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
 5: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
-> all(a/b==1) 
+> # These values should be the same:
+> all(css1/css2==1)
 [1] TRUE
+> css2/css3==1
+[1] TRUE
+> # Because we can't recalculate Rblood2plasma for 3compartmentss this is not
+> # quite the same but should be close:
+> unique(css4)/css2
+[1] 1.008207
 >                    
 > quit("no")
