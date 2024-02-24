@@ -1,4 +1,7 @@
 ## Bug Fixes
+* Fixed issue where `create_mc_samples` could not handle argument 
+***parameters*** being a list (as in, 
+parameters=parameterize_steadstate(chem.name="bisphenola"))
 * Error messages for `calc_css` now explain that function is only applicable
 to dynamical (time-evolving) models and handles errors with other models
 (such as 3compartmentss) more gracefully
