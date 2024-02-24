@@ -1,6 +1,9 @@
 ## Bug Fixes
 * Changed Rblood2plasma to Rfblood2plasma for fetal plasma in model fetal_pbtk
 (Thank you to Kimberly Troung)
+* Liquid densities previous referred to as ppmv for `convert_units` were
+actually ppmw. Cannot calculate ppmv without chemical-specific liquid density,
+which we do not know.
 ## Enhancements
 * Changed `armitage_eval` to allow chemical specification by usual arguments
 chem.name, chem.cas, and DTXSID. Preserved casrn.vector for backward compatibility.
