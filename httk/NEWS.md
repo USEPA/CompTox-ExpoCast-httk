@@ -1,5 +1,24 @@
 ## Bug Fixes
 * Argument keepit100 was being improperly ignored by `get_fabsgut`
+* Fixed issue where `create_mc_samples` could not handle argument 
+***parameters*** being a list (as in, 
+parameters=parameterize_steadstate(chem.name="bisphenola"))
+* Error messages for `calc_css` now explain that function is only applicable
+to dynamical (time-evolving) models and handles errors with other models
+(such as 3compartmentss) more gracefully
+* Changed Rblood2plasma to Rfblood2plasma for fetal plasma in model fetal_pbtk
+(Thank you to Kimberly Troung)
+* Liquid densities previous referred to as ppmv for `convert_units` were
+actually ppmw. Cannot calculate ppmv without chemical-specific liquid density,
+which we do not know.
+
+## Enhancements
+* Changed `armitage_eval` to allow chemical specification by usual arguments
+chem.name, chem.cas, and DTXSID. Preserved casrn.vector for backward compatibility.
+* Change `armitage_eval` to allow multiple instances of chemicals (no longer 
+using CASRN as row names) -- thank you Katie Paul Friedman for suggestion
+* Added Katie Paul Friedman (USEPA) as contributor for long history of 
+suggesting refinements and putting up with bugs
 
 # httk 2.3.0 (2023-12-05)
 This version accompanies the submission of manuscript Honda et al. 
@@ -42,6 +61,10 @@ permeability chemicals and therefore predicts only three values
 for calculating systemic bioavailability as ***Fbio = Fabs * Fgut * Fhep*** 
 where first-pass hepatic metabolism was already available from 
 `calc_hep_bioavailability`.
+* Changed the name of the variable describing fraction absorbed from the gut
+prior to first-pass hepatic metabolism to ***Fabsgut*** to reflect that
+***Fabs*** and ***Fgut*** are now modeled separately
+(that is, ***Fabsgut = Fabs * Fgut***).
 * Integrated ***Fabs*** and ***Fgut*** into oral exposure for all TK models and 
 integrated into population variability and uncertainty functions within 
 `invitro_uv`
