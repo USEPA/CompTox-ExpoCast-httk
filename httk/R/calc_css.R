@@ -144,10 +144,19 @@ calc_css <- function(chem.name=NULL,
 # to set up the solver:
   if (is.null(model)) stop("Model must be specified.")
   model <- tolower(model)
+
+# Model has to be in the model.list:
   if (!(model %in% names(model.list)))            
   {
+    dynamic.models <- names(model.list)[unlist(lapply(model.list,
+          function(x) !is.null(x$solve.func)))]
     stop(paste("Model",model,"not available. Please select from:",
-      paste(names(model.list),collapse=", ")))
+      paste(dynamic.models,collapse=", ")))
+# Model has to be dynamic (to find steady-state, model must depend on time):
+  } else if (is.null(model.list[[model]]$solve.func))
+  {
+    stop(paste("Model",model,"is not dynamic -- calc_css is not applicable."))
+# Otherwise, proceed:
   } else {
     #Set more convenient names for various model-related variables (e.g. route
     #of exposure) stored in the list of lists, model.list, compiled in the
