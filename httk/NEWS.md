@@ -1,3 +1,7 @@
+## Bug Fixes
+* Liquid densities previous referred to as ppmv for `convert_units` were
+actually ppmw. Cannot calculate ppmv without chemical-specific liquid density,
+which we do not know.
 ## Enhancements
 * Changed `armitage_eval` to allow chemical specification by usual arguments
 chem.name, chem.cas, and DTXSID. Preserved casrn.vector for backward compatibility.
