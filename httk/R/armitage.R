@@ -246,7 +246,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' cslip \tab Concentration in serum lipids\tab uM=umol/L \cr         
 #' cdom \tab Concentration in dissolved organic matter\tab uM=umol/L \cr          
 #' ccells \tab Concentration in cells\tab uM=umol/L \cr        
-#' cplastic \tab Concentration in plastic\tab uM=umol/L \cr      
+#' cplastic \tab Concentration in plastic\tab uM=umol/m^2 \cr      
 #' mwat_s \tab Mass dissolved in water \tab umols \cr        
 #' mair \tab Mass in air/head space \tab umols \cr          
 #' mbsa \tab Mass bound to bovine serum albumin \tab umols \cr          
