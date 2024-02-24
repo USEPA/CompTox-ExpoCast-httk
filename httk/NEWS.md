@@ -1,4 +1,5 @@
 ## Bug Fixes
+* Argument keepit100 was being improperly ignored by `get_fabsgut`
 * Fixed issue where `create_mc_samples` could not handle argument 
 ***parameters*** being a list (as in, 
 parameters=parameterize_steadstate(chem.name="bisphenola"))
@@ -10,6 +11,7 @@ to dynamical (time-evolving) models and handles errors with other models
 * Liquid densities previous referred to as ppmv for `convert_units` were
 actually ppmw. Cannot calculate ppmv without chemical-specific liquid density,
 which we do not know.
+ 
 ## Enhancements
 * Changed `armitage_eval` to allow chemical specification by usual arguments
 chem.name, chem.cas, and DTXSID. Preserved casrn.vector for backward compatibility.
