@@ -80,24 +80,24 @@ model.list[["3compartment"]]$param.names <- c(
   "Vrestc"
   )
                     
-# This subset of R parameters are needed to initially parametrize the compiled
-# code for the solver: (must match ORDER under "parameters" in C code)
+#
+# String representations of the R version of names of
+# the parameters are assigned to the C variable name in this scheme.
 model.list[["3compartment"]]$Rtosolvermap <- list(
   BW = "BW",
   CLmetabolismc="Clmetabolismc",
-  Fraction_unbound_plasma="Funbound.plasma",
-  Kgut2plasma="Kgut2pu",
   kgutabs="kgutabs",
-  Kliver2plasma="Kliver2pu",
-  Krest2plasma="Krest2pu",
   Qcardiacc="Qcardiacc",
   Qgfrc="Qgfrc",
   Qgutf="Qgutf",
   Qliverf="Qliverf",
-  Ratioblood2plasma="Rblood2plasma",
   Vportvenc="Vgutc",
   Vliverc="Vliverc",
-  Vsyscompc="Vrestc"
+  Vsyscompc="Vrestc",
+  Fraction_unbound_plasma="Funbound.plasma",
+  Kliver2plasma="Kliver2pu",
+  Krest2plasma="Krest2pu",
+  Ratioblood2plasma="Rblood2plasma"
 )
 
 # This function translates the R model parameters into the compiled model
