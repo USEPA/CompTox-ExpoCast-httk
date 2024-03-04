@@ -35,7 +35,7 @@ be specified.}
 must be specified.}
 
 \item{dtxsid}{EPA's DSSTox Structure ID 
-(\url{http://comptox.epa.gov/dashboard}) the chemical must be identified by
+(\url{https://comptox.epa.gov/dashboard}) the chemical must be identified by
 either CAS, name, or DTXSIDs}
 
 \item{parameters}{A set of model parameters, especially a set that
@@ -72,10 +72,10 @@ mg/\ifelse{html}{\out{m<sup>3</sup>}}{\eqn{m^3}} or umol/L), and
 in the context of gases assumed to be ideal, ppmv. 
 
 \emph{Andersen and Clewell's Rules of PBPK Modeling:}
-\itemize{
- \item{1}{Check Your Units}
- \item{2}{\strong{Check Your Units}}
- \item{3}{Check Mass Balance}
+\enumerate{
+\item Check Your Units
+\item \strong{Check Your Units}
+\item Check Mass Balance
 }
 }
 \examples{

@@ -1,7 +1,7 @@
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
-SCRIPT.VERSION <- "feature/PFAS October2023"
+SCRIPT.VERSION <- "feature/PFAS February 2024"
 
 ## R Packages ##
 library(reshape)
@@ -469,7 +469,16 @@ Obach2018.table[Obach2018.table[,"CAS #"]=="4731-52-6", "CAS #"] <-
   "444731-52-6"
 Obach2018.table[Obach2018.table[,"CAS #"]=="66981-73-5", "CAS #"] <- 
   "72797-41-2"
-
+Obach2018.table[Obach2018.table[,"CAS #"]=="135729-61-2", "CAS #"] <- 
+  "135729-56-5"
+Obach2018.table[Obach2018.table[,"CAS #"]=="51931-66-9", "CAS #"] <- 
+  "32447-90-8"
+Obach2018.table[Obach2018.table[,"CAS #"]=="120443-16-5", "CAS #"] <- 
+  "115104-28-4"
+# Carnitine_l -> "levocarnitine", dashboard gives CAS="541-15-1"
+Obach2018.table[Obach2018.table[,"Name"]=="Carnitine_L",
+  "CAS #"] <- "541-15-1"  
+  
 # Get rid of non-numeric fu values:
 Obach2018.table$fu <- signif(as.numeric(Obach2018.table[,
   "fraction unbound \r\nin plasma (fu)"]),4)
@@ -806,6 +815,8 @@ Cory.newpKa <- ret.df
 Cory.newpKa[Cory.newpKa$CAS=="3764-87-2","Compound"] <- "Trestolone"
 # Dashboard prefers a different cas:
 Cory.newpKa[Cory.newpKa$CAS=="85650-52-8","CAS"] <- "61337-67-5"
+Cory.newpKa[Cory.newpKa$CAS=="120443-16-5","CAS"] <- "115104-28-4"
+ 
  
 # Old mistake gave wrong CAS for Metoprolol in list given to Cory::
 Cory.newpKa <- Cory.newpKa[Cory.newpKa$CAS!="37350-58-6",]
@@ -1016,6 +1027,10 @@ pc.data.table[which(pc.data.table[,'CAS'] %in% c(
   '59-99-4','2955-38-6','155-97-5','41903-57-5','58-55-9','77-32-7','59-05-2',
   '60-54-8')),
   'fu'] <- NA
+  
+# Change outdated CAS:
+pc.data.table[pc.data.table$Drug=="Bisoprolol-S", "CAS"] <- "66722-44-9"
+
 #pc.data <- subset(pc.data, Tissue %in% c("Adipose","Bone","Brain","Gut","Heart","Kidney","Liver","Lung","Muscle","Skin","Spleen","Blood Cells") & Species == 'Rat')   
 chem.physical_and_invitro.data <- add_chemtable(
   pc.data.table,
@@ -1154,6 +1169,7 @@ chem.physical_and_invitro.data <- add_chemtable(
   species="Rat",     
   overwrite=T)
 
+
 chem.physical_and_invitro.data <- check_duplicates(
   chem.physical_and_invitro.data, check.cols="Compound")
 
@@ -1236,12 +1252,49 @@ for (this.row in 1:dim(sipes.bad.cas)[1])
 # LogP of -27.9 is probably bad:
 sipes2017[sipes2017$CAS=="40077-57-4","logP"] <- NA
 
+dim(sipes2017)
+
+# write.table(sipes2017[,1:2],file="Sipes2017forDashboard.txt",
+#             row.names=FALSE,
+#             quote=FALSE,
+#             sep="\t")
+
+# Get the DTXSIDs and updated CASRN from the CCD:
+sipes2017.ccd <- as.data.frame(read_excel("Sipes2017fromDashboard.xlsx",
+                                          sheet=2))
+# Get rid of problematic CAS:
+sipes2017.ccd.bad <- subset(sipes2017.ccd,
+                        regexpr("two or more", FOUND_BY)!=-1 |
+                        regexpr("Found 0 results", FOUND_BY)!= -1)
+sipes2017.ccd <- subset(sipes2017.ccd, !(INPUT %in%sipes2017.ccd.bad$INPUT))
+sipes2017 <- subset(sipes2017, !(CAS %in%sipes2017.ccd.bad$INPUT))
+dim(sipes2017)
+                        
+# Change deleted CAS to what CCD reports:
+sipes2017.ccd.deleted <- subset(sipes2017.ccd,
+                        regexpr("Deleted", FOUND_BY)!=-1)
+for (this.cas in sipes2017.ccd.deleted$INPUT)
+{
+   correct.cas <- sipes2017.ccd.deleted[sipes2017.ccd.deleted$INPUT==this.cas,
+                                       "CASRN"]
+   sipes2017[sipes2017$CAS==this.cas, "CAS"] <- correct.cas
+}
+dim(sipes2017)
+
+# merge in DTXSIDs:
+sipes2017 <- merge(sipes2017,sipes2017.ccd[,c("DTXSID","CASRN")],
+                   by.x = "CAS",
+                   by.y = "CASRN")          
+dim(sipes2017)
+
+
+
 # Store the chemical physprop, but don't add Fup and Clint yet:
 chem.physical_and_invitro.data <- add_chemtable(sipes2017,
                                   current.table=chem.physical_and_invitro.data,
                                   data.list=list(Compound='Compound', 
                                     CAS='CAS',
-                         #           DTXSID="DTXSID", 
+                                    DTXSID="DTXSID", 
 #                                    MW = 'MW', 
 #                                    logP = 'logP',
 #                                    pKa_Donor = 'pKa_Donor', 
@@ -2237,6 +2290,7 @@ chem.physical_and_invitro.data <- add_chemtable(droge2019,
 #
 
 
+
 #
 #
 #
@@ -2335,9 +2389,6 @@ dsstox[,"logWSol"] <- log10(as.numeric(dsstox[,
 # Set a reasonable precision for numbers:
 dsstox <- set.precision(dsstox)
 
-# No duplicated values:
-dsstox <- subset(dsstox, !duplicated(DTXSID))
-
 chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,
                                                        !is.na(CASRN) &
                                                        !(CASRN %in% "N/A")),
@@ -2346,7 +2397,7 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,
     CAS='CASRN',
     DTXSID="DTXSID",
     MW='AVERAGE_MASS',
-    SMILES.desalt='QSAR_READY_SMILES',
+    SMILES.desalt='SMILES',
     Formula="MOLECULAR_FORMULA",
     logP="OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED",
     logHenry = "logHenry",
@@ -2356,11 +2407,6 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,
   reference="EPA",
   overwrite=T)
   
-# Make sure there are no duplicate rows after reading CAS and DTXSID from dashboard:
-chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
-                                        !duplicated(CAS) &
-                                        !duplicated(DTXSID))
-
 EPA.ref <- paste('CompTox Dashboard',
   file.info(paste("HTTK-DSSTox-output-",i,".tsv",sep=""))$ctime)
 
@@ -2434,7 +2480,7 @@ if (dim(dsstox)[1]>0)
       CAS='CASRN',
       DTXSID="DTXSID",
       MW='AVERAGE_MASS',
-      SMILES.desalt='QSAR_READY_SMILES',
+      SMILES.desalt='SMILES',
       Formula="MOLECULAR_FORMULA",
       logP="OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED",
       logHenry = "logHenry",
@@ -2445,7 +2491,9 @@ if (dim(dsstox)[1]>0)
     overwrite=T)
 }
 
-  # Make sure there are no duplicate rows after reading CAS and DTXSID from dashboard:
+# Make sure there are no duplicate rows after reading CAS and DTXSID from dashboard:
+chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
+                                        !is.na(DTXSID))
 chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
                                         !duplicated(CAS) &
                                         !duplicated(DTXSID))
@@ -2556,6 +2604,21 @@ chem.physical_and_invitro.data table -- written to nodtxsid.txt.\n")
     file="nodtxsid.txt",row.names=FALSE)
   chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
     !is.na(DTXSID))
+}
+
+# Assign compound name from CCD for chemicals with unique DTXSID but duplicate
+# compound names:
+dup.compounds <- read.csv("duplicate_names.csv")
+for (this.chem in dup.compounds$DTXSID)
+{
+  this.row.dup <- which(dup.compounds$DTXSID == this.chem)
+  this.row.table <- which(chem.physical_and_invitro.data$DTXSID == this.chem)
+  chem.physical_and_invitro.data[this.row.table, "CAS"] <-
+    dup.compounds[this.row.dup, "CASRN"]
+  chem.physical_and_invitro.data[this.row.table, "Compound"] <-
+    dup.compounds[this.row.dup, "PREFERRED_NAME"]
+  chem.physical_and_invitro.data[this.row.table, "Formula"] <-
+    dup.compounds[this.row.dup, "MOLECULAR_FORMULA"]
 }
 
 chem.physical_and_invitro.data <- check_duplicates(

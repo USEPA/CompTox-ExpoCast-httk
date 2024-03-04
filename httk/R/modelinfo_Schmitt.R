@@ -62,7 +62,7 @@ model.list[["schmitt"]]$noMC.params <- c(
   'pKa_Accept',
   "Fhep.assay.correction",
   "Funbound.plasma.adjustment",
-  'Fgutabs'
+  'Fabsgut'
   )
 
 ##Define the parameter names for each model in one place so that all functions can use them:

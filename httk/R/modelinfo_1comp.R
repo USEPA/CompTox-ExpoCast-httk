@@ -45,7 +45,7 @@ model.list[["1compartment"]]$param.names <- c(
   "BW",
   "Clint",
   "Clint.dist",
-  "Fgutabs",
+  "Fabsgut",
   "Fhep.assay.correction",
   "Funbound.plasma",
   "Funbound.plasma.dist",
@@ -184,7 +184,7 @@ model.list[["1compartment"]]$calc.standard.httkpop2httk <- TRUE
 # These are the model parameters that are impacted by httk-pop:
 model.list[["1compartment"]]$httkpop.params <- c(
   "BW",
-  "Fgutabs",
+  "Fabsgut",
   "hepatic.bioavailability",
   "hematocrit",
   "liver.density",

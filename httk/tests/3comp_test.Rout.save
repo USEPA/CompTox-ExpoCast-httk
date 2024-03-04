@@ -321,38 +321,39 @@ Aintestine
 > 
 > p <- parameterize_3comp(chem.name="Aminopterin")[sort(names(parameterize_3comp(chem.name="Aminopterin")))]
 There were 16 warnings (use warnings() to see them)
-> for (this.param in sort(names(p))) cat(paste(this.param,": ",p[[this.param]],"\n"))
-BW :  70 
-Caco2.Pab :  1.6 
-Caco2.Pab.dist :  NA 
-Clint :  0 
-Clint.dist :  NA 
-Clmetabolismc :  0 
-Fabsgut :  0.8719 
-Fhep.assay.correction :  0.9482 
-Funbound.plasma :  0.7498 
-Funbound.plasma.adjustment :  0.9998 
-Funbound.plasma.dist :  NA 
+> for (this.param in sort(tolower(names(p)))) cat(paste(this.param,": ",p[[this.param]],"\n"))
+bw :   
+caco2.pab :   
+caco2.pab.dist :   
+clint :   
+clint.dist :   
+clmetabolismc :   
+fabsgut :   
+fhep.assay.correction :   
+funbound.plasma :   
+funbound.plasma.adjustment :   
+funbound.plasma.dist :   
 hematocrit :  0.44 
-Kgut2pu :  1.373 
+kgut2pu :   
 kgutabs :  2.18 
-Kliver2pu :  3.221 
-Krbc2pu :  0.7415 
-Krest2pu :  0.778 
+kliver2pu :   
+krbc2pu :   
+krest2pu :   
 liver.density :  1.05 
-MA :  7.082 
+ma :   
 million.cells.per.gliver :  110 
-MW :  440.4 
-pKa_Accept :  8.09 
-pKa_Donor :  2.81 
-Pow :  0.03467 
-Qcardiacc :  13.88 
-Qgfrc :  0.3099 
-Qgutf :  0.2054 
-Qliverf :  0.0535 
-Rblood2plasma :  0.8046 
-Vgutc :  0.0158 
-Vliverc :  0.02448 
-Vrestc :  0.7879 
+mw :   
+pka_accept :   
+pka_donor :   
+pow :   
+qcardiacc :   
+qgfrc :   
+qgutf :   
+qliverf :   
+rblood2plasma :   
+vgutc :   
+vliverc :   
+vrestc :   
+> 
 > 
 > quit("no")

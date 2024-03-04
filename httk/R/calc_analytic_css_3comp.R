@@ -123,20 +123,34 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
   }
   param.names.schmitt <- model.list[["schmitt"]]$param.names
 
+  # Get the basic parameters:
+  BW <- parameters[["BW"]] # kg
+  hourly.dose <- hourly.dose * parameters[["Fabsgut"]] * BW # mg/h
+  fup <- parameters[["Funbound.plasma"]]
+  Rblood2plasma <- parameters[["Rblood2plasma"]]
 
-  hourly.dose <- hourly.dose * parameters$Fgutabs
-  fup <- parameters$Funbound.plasma
-  Rblood2plasma <- parameters$Rblood2plasma
-  Clmetabolism <- parameters$Clmetabolismc
-  if (!restrictive.clearance) Clmetabolism <- Clmetabolism / fup
-  
+  # Calculate hepatic clearance:
+  Clmetabolism <- BW * calc_hep_clearance(
+                         parameters = parameters,
+                         model="well-stirred",
+                         restrictive.clearance = restrictive.clearance) # L/h
+
+  # Get the partition coefficients:
+  Kliv <- parameters[["Kliver2pu"]]
+  Krest <- parameters[["Krest2pu"]]
+
+  # Get the flows we need:
+  Qgfr <- parameters[["Qgfrc"]] * BW^(3/4) # L/h
+  Ql <- (parameters[["Qliverf"]] + parameters[["Qgutf"]]) * 
+          parameters[["Qcardiacc"]] * BW^(3/4) # L/h
+   
   # Steady-state blood concentration:
-  Css_blood <- hourly.dose * parameters[['BW']]^0.25  / 
-    (Clmetabolism * parameters[['BW']]^0.25 + 
-    parameters$Qgfrc * (parameters$Qliverf + 
-    parameters$Qgutf) * parameters$Qcardiacc / 
-    ((parameters$Qliverf + parameters$Qgutf) * parameters$Qcardiacc + 
-    fup * parameters$Qgfrc / parameters$Rblood2plasma)) / fup
+  Css_blood <- hourly.dose /
+   (Rblood2plasma / fup / Kliv * Clmetabolism +
+    1 / Krest * Qgfr +
+    1 / Kliv * Clmetabolism * Qgfr / Ql)
+    
+  # Convert from blood to plasma 
   Css <- Css_blood/ Rblood2plasma
   
 # Check to see if a specific tissue was asked for:

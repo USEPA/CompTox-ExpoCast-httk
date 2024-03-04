@@ -53,7 +53,7 @@ model.list[["3compartment"]]$param.names <- c(
   "Funbound.plasma",
   "Funbound.plasma.dist",
   "Funbound.plasma.adjustment",
-  "Fgutabs",
+  "Fabsgut",
   "Fhep.assay.correction",
   "hematocrit",
   "Kgut2pu",

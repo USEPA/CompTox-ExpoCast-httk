@@ -127,6 +127,8 @@
 #' @seealso \code{\link{calc_analytic_css_3comp}}
 #'
 #' @export solve_3comp
+#'
+#' @useDynLib httk
 solve_3comp <- function(chem.name = NULL,
                     chem.cas = NULL,
                     dtxsid = NULL,
@@ -182,12 +184,9 @@ solve_3comp <- function(chem.name = NULL,
     input.units=input.units,
     output.units=output.units,
     method=method,rtol=rtol,atol=atol,
-    default.to.human=default.to.human,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-    regression=regression,
-    restrictive.clearance = restrictive.clearance,
     minimum.Funbound.plasma=minimum.Funbound.plasma,
     parameterize.arg.list=list(
                       default.to.human=default.to.human,

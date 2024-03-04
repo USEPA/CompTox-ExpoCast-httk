@@ -63,8 +63,8 @@ LOC.WD <- "c:/users/jwambaug/"
 
 Set the sizes of the labels and points in the figure (these settings impact the PNG differently than the figure within RStudio):
 ```{r fig_properties, eval = TRUE}
-FONT.SIZE <- 18
-POINT.SIZE <- 3
+FONT.SIZE <- 24
+POINT.SIZE <- 4
 ```
 
 ### Function to format scientific notation 
@@ -425,6 +425,7 @@ for (this.chem in huh.data[,"DTXSID"])
   }
 cl.table$Class <- "PFAS"
 cl.table[!(cl.table$DTXSID %in% new.pfas), "Class"] <- "Other"
+cl.table$Class <- factor(cl.table$Class, levels=c("PFAS","Other"))
 ```
 
 ```{r fig_ratio_httk, eval = TRUE}
@@ -438,7 +439,7 @@ fig.ratio.httk  <- ggplot(data=subset(cl.table, Species=="Rat")) +
   geom_abline(slope=1,intercept=0,linetype="dashed")+
 #  geom_line(aes(x=logP,y=logPfit1),color="black") + 
 #  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
-  ylab("In Vivo Observed Clearance Ratio") + 
+  ylab("In Vivo Observed Human:Rat Clearance Ratio") + 
   xlab("HTTK Predicted Clearance Ratio") +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
@@ -449,7 +450,7 @@ fig.ratio.httk  <- ggplot(data=subset(cl.table, Species=="Rat")) +
 print(fig.ratio.httk)
   ggsave(paste0(LOC.WD,
     "Fig_rat_cl_ratio.tiff"),
-         height =8, width =8, dpi = 600, compression = "lzw")
+         height =11, width =12, dpi = 300)
 ```
 
 ```{r fig_ratio_ml, eval = TRUE}
@@ -473,7 +474,7 @@ fig.ratio.ml  <- ggplot(data=subset(cl.table, Species!="Human")) +
 print(fig.ratio.ml)
   ggsave(paste0(LOC.WD,
     "Fig_ml_cl_ratio.tiff"),
-         height = 8, width = 8, dpi = 600, compression = "lzw")
+         height = 11, width = 12, dpi = 300)
 ```
 
 
@@ -602,9 +603,11 @@ half.lives <- NULL
 for (this.chem in new.pfas)
 {
   new.row <- data.frame(DTXSID=this.chem,
-                        Human.HL=calc_half_life(dtxsid=this.chem,species="human"),
+                        Human.HL=calc_half_life(dtxsid=this.chem,species="human",
+                                  suppress.messages=TRUE),
                         Rat.HL=calc_half_life(dtxsid=this.chem,species="rat",
-                                              default.to.human=TRUE))
+                                              default.to.human=TRUE,
+                                  suppress.messages=TRUE))
   new.row$Type <- "HTTK"
   half.lives <- rbind(half.lives, new.row)
   param.human <- try(parameterize_pfas1comp(dtxsid=this.chem,
@@ -657,11 +660,30 @@ for (this.chem in wallis$DTXSID)
 }
 ```
 
+```{r results_from_new_model_run}
+wallis[wallis$DTXSID=="DTXSID90723993","HL.ML"] <- 29000/24
+wallis[wallis$DTXSID=="DTXSID50723994","HL.ML"] <- 29000/24
+wallis[wallis$DTXSID=="DTXSID20892348","HL.ML"] <- 53/24
+for (this.col in c("HL.Low","HL.High"))
+{
+  new.col <- paste0(this.col,".Class") 
+    wallis[, new.col] <- 4
+  wallis[wallis[, this.col] < 60,
+       new.col] <- 3
+  wallis[wallis[, this.col] < 7,
+       new.col] <- 2
+  wallis[wallis[, this.col] < 0.5,
+       new.col] <- 1
+}
+```
+
 ```{r wallis_2023_fig}
+wallis$HL.ML.jitter <- wallis$HL.ML*(1.0+runif(dim(wallis)[1],-0.5,0.5))
+
 wallis.fig <- ggplot(data=wallis) +
   geom_segment(aes(
-    x=HL.ML,
-    xend=HL.ML,
+    x=HL.ML.jitter,
+    xend=HL.ML.jitter,
     y=HL.Low,
     yend=HL.High,
     colour=Status),
@@ -677,6 +699,14 @@ wallis.fig <- ggplot(data=wallis) +
         scale_color_viridis(discrete=2)
 
 print(wallis.fig)
+
+tiff(file = paste0(LOC.WD,"WallisComparison.tiff"),
+     width=12,
+     height=11,
+     units="in",
+     res=300)
+print(wallis.fig)
+dev.off()
 
 subset(wallis, is.na(HL.ML))
 ```

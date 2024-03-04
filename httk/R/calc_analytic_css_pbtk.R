@@ -155,7 +155,7 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
   fup <- parameters[["Funbound.plasma"]]
   if (!restrictive.clearance) Clmetabolism <- Clmetabolism / fup
   
-  hourly.dose <- hourly.dose * parameters$Fgutabs
+  hourly.dose <- hourly.dose * parameters$Fabsgut
   
 # Css for venous blood:
   Cven.ss <- (hourly.dose * (Qliver + Qgut) / 

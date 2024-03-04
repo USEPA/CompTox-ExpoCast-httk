@@ -54,7 +54,7 @@
 #'
 #' @return 
 #' \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
-#' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
+#' \item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of the
 #' dose that enters the gutlumen.} 
 #' \item{Funbound.plasma}{Fraction of plasma that is not bound.} 
 #' \item{Qtotal.liverc}{Flow rate of blood exiting the liver, L/h/kg BW^3/4.} 
@@ -258,13 +258,13 @@ parameterize_steadystate2 <- function(
     fup.corrected <- fup.point
   } 
       
-  Fgutabs <- try(get_invitroPK_param("Fgutabs",
+  Fabsgut <- try(get_invitroPK_param("Fabsgut",
                    species,
                         chem.cas=chem.cas,
                         chem.name=chem.name,
                         dtxsid=dtxsid),
                silent=TRUE)
-  if (is(Fgutabs,"try-error")) Fgutabs <- 1
+  if (is(Fabsgut,"try-error")) Fabsgut <- 1
   
   # Exhalation parameters:
   # Get the blood:air and mucus:air partition coefficients:
@@ -299,7 +299,7 @@ parameterize_steadystate2 <- function(
   Params[["million.cells.per.gliver"]] <- 110 # 10^6 cells/g-liver
   Params[["Vliverc"]] <- Vliverc # L/kg BW
   Params[["liver.density"]] <- 1.05 # g/mL
-  Params[['Fgutabs']] <- Fgutabs
+  Params[['Fabsgut']] <- Fabsgut
   Params[["Kblood2air"]] <- Kblood2air
   Params[["Qalvc"]] <- Qalvc
   

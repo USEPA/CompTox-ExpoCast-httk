@@ -52,7 +52,7 @@
 #' @return 
 #' \item{Vdist}{Volume of distribution, units of L/kg BW.}
 #' \item{plasma.vol}{Volume of the plasma, L/kg BW.}
-#' \item{Fgutabs}{Fraction of the oral dose absorbed, that is, the fraction of the
+#' \item{Fabsgut}{Fraction of the oral dose absorbed, that is, the fraction of the
 #' dose that enters the gutlumen.} 
 #' \item{kelim}{Elimination rate, units of 1/h.} 
 #' \item{hematocrit}{Percent volume of red blood cells in the blood.}
@@ -238,14 +238,14 @@ parameterize_pfas1comp <- function(
     params[['BW']] <- this.phys.data[["Average BW"]] 
    
 # Fraction absorbed in the gut either has been measured somewhere or defaults to 1:
-    Fgutabs <- try(
+    Fabsgut <- try(
                  get_invitroPK_param(
-                   "Fgutabs",
+                   "Fabsgut",
                    species,
                    chem.cas=chem.cas),
                  silent=TRUE)
-    if (is(Fgutabs,"try-error")) Fgutabs <- 1
-    params[['Fgutabs']] <- Fgutabs
+    if (is(Fabsgut,"try-error")) Fabsgut <- 1
+    params[['Fabsgut']] <- Fabsgut
     
 # First pass hepatic metabolism can only be estimated if we have fup and clint:
   if (estimate.firstpass &

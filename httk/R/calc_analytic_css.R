@@ -271,7 +271,7 @@ calc_analytic_css <- function(chem.name=NULL,
   if (!is.null(model.list[[model]]$do.first.pass))
     if (model.list[[model]]$do.first.pass)
   {
-    parameters$Fgutabs <- parameters$Fgutabs * parameters$hepatic.bioavailability
+    parameters$Fabsgut <- parameters$Fabsgut * parameters$hepatic.bioavailability
   }
     
   if((bioactive.free.invivo == TRUE & !is.null(tissue)) | 

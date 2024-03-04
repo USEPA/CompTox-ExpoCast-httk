@@ -136,7 +136,7 @@ calc_analytic_css_3compss2 <- function(chem.name=NULL,
   Kblood2air <- parameters$Kblood2air
  
 # Calculate steady-state blood Css, Pearce et al. (2017) equation section 2.2:
-  Css_blood <- parameters$Fgutabs * 
+  Css_blood <- parameters$Fabsgut * 
     parameters$hepatic.bioavailability *
     hourly.dose / (
     parameters$Qgfrc/BW^0.25 * Fup + # Renal clearance

@@ -63,7 +63,7 @@ dataset).}
 }
 \value{
 \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
-\item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the
+\item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of the
 dose that enters the gutlumen.} 
 \item{Funbound.plasma}{Fraction of plasma that is not bound.} 
 \item{Qtotal.liverc}{Flow rate of blood exiting the liver, L/h/kg BW^3/4.} 
