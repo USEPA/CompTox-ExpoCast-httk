@@ -135,11 +135,10 @@ void getParms3comp (double *inParms, double *out, int *nout) {
     parms[i] = inParms[i];
   }
 
-
   kgutabs = kgutabs * 24 ;
   CLmetabolism = CLmetabolismc * 24 * BW ;
-  Qcardiac = Qcardiacc * 24 * BW ;
-  Qgfr = Qgfrc * BW * 24 ;
+  Qcardiac = Qcardiacc * 24 * pow ( BW , 0.75 ) ;
+  Qgfr = Qgfrc * pow ( BW , 0.75 ) * 24 ;
   Qgut = Qcardiac * Qgutf ;
   Qliver = Qcardiac * Qliverf ;
   Vportven = Vportvenc * BW ;
@@ -163,13 +162,13 @@ void derivs3comp (int *neq, double *pdTime, double *y, double *ydot, double *you
 
   ydot[ID_Aintestine] = - kgutabs * y[ID_Aintestine] ;
 
-  ydot[ID_Aportven] = kgutabs * y[ID_Aintestine] + Qgut * ( y[ID_Asyscomp] / Vsyscomp * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma - y[ID_Aportven] / Vportven ) ;
+  ydot[ID_Aportven] = kgutabs * y[ID_Aintestine] + Qgut * y[ID_Asyscomp] / Vsyscomp * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma - Qgut * y[ID_Aportven] / Vportven ;
 
-  ydot[ID_Aliver] = Qgut * y[ID_Aportven] / Vportven + Qliver * y[ID_Asyscomp] / Vsyscomp * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma - ( Qliver + Qgut ) * y[ID_Aliver] / Vliver * Ratioblood2plasma / Fraction_unbound_plasma / Kliver2plasma - CLmetabolism / Kliver2plasma * y[ID_Aliver] / Vliver ;
+  ydot[ID_Aliver] = Qgut * y[ID_Cportven] / Vportven + Qliver * y[ID_Asyscomp] / Vsyscomp * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma - ( Qliver + Qgut ) * y[ID_Aliver] / Vliver * Ratioblood2plasma / Fraction_unbound_plasma / Kliver2plasma - CLmetabolism / Kliver2plasma * y[ID_Aliver] / Vliver ;
 
-  ydot[ID_Asyscomp] = ( Qgut + Qliver ) * y[ID_Aliver] / Vliver * Ratioblood2plasma / Fraction_unbound_plasma / Kliver2plasma - Qgut * y[ID_Asyscomp] / Vsyscomp * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma - Qliver * y[ID_Asyscomp] / Vsyscomp * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma - Qgfr / Krest2plasma * y[ID_Asyscomp] / Vsyscomp ;
+  ydot[ID_Asyscomp] = ( Qgut + Qliver ) * y[ID_Aliver] / Vliver * Ratioblood2plasma / Fraction_unbound_plasma / Kliver2plasma - ( Qgut + Qliver ) * y[ID_Asyscomp] / Vsyscomp * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma - Qgfr / Krest2plasma * y[ID_Asyscomp] / Vsyscomp ;
 
-  ydot[ID_Ametabolized] = CLmetabolism / Kliver2plasma * y[ID_Aliver] / Vliver ;
+  ydot[ID_Ametabolized] = CLmetabolism / Kliver2plasma * y[ID_Aliver] / Vliver;
 
   ydot[ID_Atubules] = Qgfr / Krest2plasma * y[ID_Asyscomp] / Vsyscomp ;
 
