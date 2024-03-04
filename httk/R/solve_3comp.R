@@ -134,6 +134,8 @@
 #' @seealso \code{\link{calc_analytic_css_3comp}}
 #'
 #' @export solve_3comp
+#'
+#' @useDynLib httk
 solve_3comp <- function(chem.name = NULL,
                     chem.cas = NULL,
                     dtxsid = NULL,
