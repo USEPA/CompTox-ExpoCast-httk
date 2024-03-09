@@ -59,6 +59,8 @@ library(ggpubr)
 library(readxl)
 
 LOC.WD <- "c:/users/jwambaug/"
+PFAS.MODEL.USED <- "3compartmentsspfas"
+NONPFAS.MODEL.USED <- "3compartmentss2"
 ```
 
 Set the sizes of the labels and points in the figure (these settings impact the PNG differently than the figure within RStudio):
@@ -87,7 +89,7 @@ chem.physical_and_invitro.data$Rat.Funbound.plasma <- NA
 
 ```{r plot_clint_fup}
 new.pfas <- get_2023pfasinfo(info="dtxsid",
-                                      model="3compartmentss2",
+                                      model=PFAS.MODEL.USED,
                                       suppress.messages=TRUE)
 clint.fup <- subset(chem.physical_and_invitro.data,
                     !is.na(Human.Funbound.plasma) &
@@ -185,7 +187,7 @@ cl.table <- httk::pfas.clearance
 
 for (this.chem in unique(cl.table$DTXSID))
   if (this.chem %in% get_2023pfasinfo(info="dtxsid",
-                                      model="3compartmentss2",
+                                      model=PFAS.MODEL.USED,
                                       suppress.messages=TRUE))
   {
     chem.subset <- subset(cl.table, DTXSID==this.chem)
@@ -194,7 +196,7 @@ for (this.chem in unique(cl.table$DTXSID))
       # Css in units of mg/L for 1 mg/kg/day
       out <- calc_analytic_css(dtxsid=this.chem,
                                species=this.species,
-                               model="3compartmentss2",
+                               model=PFAS.MODEL.USED,
                                output.units="mg/L",
                                parameterize.args=list(default.to.human=TRUE),
                                suppress.messages=TRUE)
@@ -389,7 +391,7 @@ huh.data <- as.data.frame(read_excel(paste0(LOC.WD,"Huh-2011-HumanCL.xlsx")))
 huh.data$Human.CL.Lphpkg <- as.numeric(huh.data[,4])*60/1000
 huh.data$Rat.CL.Lphpkg <- as.numeric(huh.data$a)*(0.25)^as.numeric(huh.data$b)*60/1000
 
-httk.chem.list <- get_cheminfo(model="3compartmentss2", info="DTXSID")
+httk.chem.list <- get_cheminfo(model=PFAS.MODEL.USED, info="DTXSID")
 for (this.chem in huh.data[,"DTXSID"])
   if (!is.na(this.chem))
   {
@@ -404,17 +406,23 @@ for (this.chem in huh.data[,"DTXSID"])
   new.row[1, "TK.Ratio.InVivo"] <- huh.data[this.row, "Rat.CL.Lphpkg"] /
     huh.data[this.row, "Human.CL.Lphpkg"]
   if (this.chem %in% httk.chem.list)
+    if (!(this.chem %in% new.pfas) |
+        this.chem %in% dawson2023$DTXSID)
   {
     print(this.chem)
     human.css <- calc_analytic_css(dtxsid = this.chem,
-                               model="3compartmentss2",
+                               model=ifelse(this.chem %in% new.pfas,
+                                            PFAS.MODEL.USED,
+                                            NONPFAS.MODEL.USED),
                                output.units="mg/L",
                                species="Human",
                                suppress.messages=TRUE)
     new.row[1, "HTTK.Cltot.Lphpkgbw"] <-
         1/human.css/24
     rat.css <- calc_analytic_css(dtxsid = this.chem,
-                               model="3compartmentss2",
+                               model=ifelse(this.chem %in% new.pfas,
+                                            PFAS.MODEL.USED,
+                                            NONPFAS.MODEL.USED),
                                output.units="mg/L",
                                species="Rat",
                                parameterize.args=list(default.to.human=TRUE),
@@ -424,8 +432,8 @@ for (this.chem in huh.data[,"DTXSID"])
   }
   }
 cl.table$Class <- "PFAS"
-cl.table[!(cl.table$DTXSID %in% new.pfas), "Class"] <- "Other"
-cl.table$Class <- factor(cl.table$Class, levels=c("PFAS","Other"))
+cl.table[!(cl.table$DTXSID %in% new.pfas), "Class"] <- "Non-PFAS"
+cl.table$Class <- factor(cl.table$Class, levels=c("PFAS","Non-PFAS"))
 ```
 
 ```{r fig_ratio_httk, eval = TRUE}
@@ -495,7 +503,7 @@ dev.off()
 ```{r firstpass, eval=TRUE}
 firstpass.table <- NULL
 for (this.chem in get_2023pfasinfo(info="dtxsid", suppress.messages=TRUE,
-                                   model="3compartmentss2"))
+                                   model=PFAS.MODEL.USED))
 {
       params <- parameterize_steadystate(dtxsid=this.chem,
                                           suppress.messages=TRUE)
@@ -542,7 +550,7 @@ rb2p.table <- rb2p.table[,colnames(rb2p.table) %in%
 for (this.chem in rb2p.table$DTXSID)
 {
   if (this.chem %in% get_2023pfasinfo(info="dtxsid", suppress.messages=TRUE,
-                                   model="3compartmentss2"))
+                                   model=PFAS.MODEL.USED))
   {
     rb2p.table[rb2p.table$DTXSID==this.chem,"HTTK.Rb2p"] <- 
       calc_rblood2plasma(dtxsid=this.chem)

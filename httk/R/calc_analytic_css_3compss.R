@@ -132,22 +132,25 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
   Fup <- parameters$Funbound.plasma
   Rb2p <- parameters$Rblood2plasma 
   BW <- parameters$BW
+  
   # Total blood flow (gut plus arterial) into liver:
   Qtotalliver <- parameters$Qtotal.liverc/BW^0.25 #L/h/kg BW
 
-# Scale up from in vitro Clint to a whole liver clearance:
+  # Glomerular filtration (for kidney elimination):
+  Qgfr <- parameters$Qgfrc/BW^0.25 #L/h/kg BW
+  
+  # Scale up from in vitro Clint to a whole liver clearance:
   cl <- calc_hep_clearance(parameters=parameters,
-          hepatic.model='unscaled',
-          suppress.messages=TRUE)#L/h/kg body weight
-  if (!restrictive.clearance) cl <- cl*Fup
+          hepatic.model='well-stirred',
+          restrictive.clearance = restrictive.clearance,
+          suppress.messages=TRUE) #L/h/kg body weight
 
 # Calculate steady-state blood Css, Pearce et al. (2017) equation section 2.2:
    Css_blood <- parameters$Fabsgut * 
     parameters$hepatic.bioavailability *
     hourly.dose / (
-    parameters$Qgfrc/BW^0.25 * Fup + 
-    Qtotalliver*Fup*cl /
-    (Qtotalliver + Fup*cl/Rb2p))
+    Qgfr * Fup + 
+    cl)
   # Convert from blood to plasma:
   Css <- Css_blood/Rb2p
     
