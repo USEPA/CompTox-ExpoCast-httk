@@ -305,6 +305,8 @@ solve_model <- function(chem.name = NULL,
     initforc <- model.list[[model]]$forcings.materials[["initforc"]]
 # Using a forcings series also requires specifying fcontrol argument
     fcontrol <- model.list[[model]]$forcings.materials[["fcontrol"]]
+    # State of Compound in Various Compartments
+    compartment_state <- model.list[[model]]$compartment.state
   }
   
 
@@ -586,6 +588,16 @@ specification in compartment_units for model ", model)
       given.units <- initial.value.units[this.compartment]
       # required model value units
       model.units <- compartment_units[this.compartment]
+      # compartment state for unit conversion
+      model.compartment.state.check <- unlist(lapply(compartment_state,function(x){this.compartment%in%x}))
+      if(any(model.compartment.state.check)){
+        model.compartment.state <- names(compartment_state)[which(model.compartment.state.check==TRUE)]
+      }else{
+        warning(paste0(this.compartment,
+                      " state is not specified in the model.list for ",model,
+                      ". Will assume the default, i.e. 'liquid'."))
+        model.compartment.state <- "liquid"
+      }
       
       # # (1) get all tissues with volume from param_names
       # all.tissue.vols <- param_names[grep(param_names,pattern = "^V.+c$")]
@@ -610,7 +622,8 @@ specification in compartment_units for model ", model)
       out.unit.conversion <- convert_units(
         input.units=given.units,
         output.units=model.units,
-        MW = MW) # ,
+        MW = MW,
+        state = model.comp.state) # ,
         # vol = tissue.vol)
       
       return(out.unit.conversion)
@@ -664,6 +677,14 @@ specification in compartment_units for model ", model)
                                                      pattern = "^A|^C",
                                                      replacement = "V"),"c")
 
+  # Check whether the dose.var is in the compartment.state list & if so which
+  entry.state.check <- unlist(lapply(compartment_state,function(x){dose.var%in%x}))
+  if(any(entry.state.check)){
+    entry.compartment.state <- names(compartment_state)[which(entry.state.check==TRUE)]
+  }else{
+    stop(paste0("Entry compartment state is not specified in the model.list for ",model,"."))
+  }
+  
   # (3) Check if the tissue string is in all.tissue.vols,
   #     yes then get the provided parameter
   #     no then return null value
@@ -681,14 +702,14 @@ specification in compartment_units for model ", model)
   dosing.units <- input.units
   
   #Scale dose if input.units is measured in (mg/kg) 
-
   dosing <- scale_dosing(
     dosing,
     parameters,
     route,
     input.units = input.units,
     output.units = dose.units,
-    vol = entry.tissue.vol)
+    vol = entry.tissue.vol,
+    state = entry.compartment.state)
   dosing.units <- dose.units  #redefine the dosing units if scaling occurs
   
   #Extract our dosing parameters for use
