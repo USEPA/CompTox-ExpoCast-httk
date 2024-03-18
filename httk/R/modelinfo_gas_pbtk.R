@@ -342,27 +342,34 @@ model.list[["gas_pbtk"]]$compartment.state <- list(
   )
 
 # These parameters specify the exposure scenario simulated by the model:
-model.list[["gas_pbtk"]]$dosing.params <- c(
-  "initial.dose",
-  "daily.dose",
-  "doses.per.day",
-  "dosing.matrix",
-  "forcings")
+#model.list[["gas_pbtk"]]$dosing.params <- c(
+#  "initial.dose",
+#  "daily.dose",
+#  "doses.per.day",
+#  "dosing.matrix",
+#  "forcings")
 
 model.list[["gas_pbtk"]]$routes <- list(
   "oral" = list(
-# We need to know which compartment gets the dose 
+    # We need to know which compartment gets the dose 
     "entry.compartment" = "Agutlumen",
-# desolve events can take the values "add" to add dose C1 <- C1 + dose,
-# "replace" to change the value C1 <- dose
-# or "multiply" to change the value to C1 <- C1*dose
-    "dose.type" = "add"),
+    # desolve events can take the values "add" to add dose C1 <- C1 + dose,
+    # "replace" to change the value C1 <- dose
+    # or "multiply" to change the value to C1 <- C1*dose
+    "dose.type" = "add",
+    "dosing.params" = c("daily.dose",
+                        "initial.dose",
+                        "doses.per.day",
+                        "dosing.matrix")),
   "iv" = list(
     "entry.compartment" = "Aven",
-    "dose.type" = "add"),
+    "dose.type" = "add",
+    "dosing.params" = c("initial.dose",
+                        "dosing.matrix")),
   "inhalation" = list(
     "entry.compartment" = "Cinhppmv",
-    "dose.type" = "replace")   
+    "dose.type" = "replace",
+    "dosing.params" = "forcings")   
   )
 
 # This ORDERED LIST of variables are always calculated in amounts (must match
@@ -409,10 +416,14 @@ model.list[["gas_pbtk"]]$forcings.materials <- list(initforc="initforc_gas_pbtk"
   fcontrol = list(method='constant',rule=2,f=0))
 
 # These are the parameter names needed to describe steady-state dosing:
-model.list[["gas_pbtk"]]$css.dosing.params <- c("exp.conc", "period", "exp.duration")
+model.list[["gas_pbtk"]]$css.dosing.params <- list(
+  inhalation=c("exp.conc", "period", "exp.duration"),
+  oral=c("hourly.dose"))
+  
 
 # Function for calculating Clmetabolismc after Clint is varied:
 model.list[["gas_pbtk"]]$propagateuv.func <- "propagate_invitrouv_pbtk"
+
 # If httk-pop is enabled:
 # Function for converting httk-pop physiology to model parameters:
 model.list[["gas_pbtk"]]$convert.httkpop.func <- NULL

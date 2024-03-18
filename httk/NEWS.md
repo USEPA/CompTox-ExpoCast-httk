@@ -24,6 +24,9 @@ chem.name, chem.cas, and DTXSID. Preserved casrn.vector for backward compatibili
 using CASRN as row names) -- thank you Katie Paul Friedman for suggestion
 * Added Katie Paul Friedman (USEPA) as contributor for long history of 
 suggesting refinements and putting up with bugs
+* Function `solve_model` now gives warnings when ignoring elements of 
+***dosing*** for a given model and route (acceptible dosing.params are now
+specified by the modelinfo_[MODEL].R file)
 
 # httk 2.3.0 (2023-12-05)
 This version accompanies the submission of manuscript Honda et al. 
