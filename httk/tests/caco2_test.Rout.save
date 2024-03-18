@@ -1,7 +1,7 @@
 
-R Under development (unstable) (2023-04-16 r84269 ucrt) -- "Unsuffered Consequences"
-Copyright (C) 2023 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R Under development (unstable) (2024-03-16 r86144 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -48,7 +48,7 @@ Warning messages:
 +                   model="pbtk",
 +                   Caco2.options=list(keepit100=TRUE))
 Plasma concentration returned in uM units.
-[1] 1.259
+[1] 1.463
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -113,20 +113,20 @@ The model outputs are provided in the following units:
 	uM: Cgut, Cliver, Cven, Clung, Cart, Crest, Ckidney, Cplasma
 	uM*days: AUC
 
-           time Agutlumen  Cgut  Cliver    Cven    Clung      Cart     Crest
-[1,] 0.00000000    263.90  0.00  0.0000 0.00000 0.000000 0.0000000 0.000e+00
-[2,] 0.00100000    250.40 11.60  0.3535 0.00219 0.006982 0.0003398 5.172e-06
-[3,] 0.01041667    153.00 62.08 20.4900 0.24610 2.023000 0.2145000 5.680e-02
-[4,] 0.02083333     88.72 63.01 42.3500 0.58480 5.095000 0.5606000 3.564e-01
-[5,] 0.03125000     51.45 51.12 50.8900 0.77210 6.850000 0.7620000 8.430e-01
-[6,] 0.04166667     29.83 39.15 49.9000 0.82150 7.345000 0.8209000 1.381e+00
+           time Agutlumen  Cgut  Cliver     Cven    Clung      Cart     Crest
+[1,] 0.00000000    306.60  0.00  0.0000 0.000000 0.000000 0.0000000 0.000e+00
+[2,] 0.00100000    291.00 13.48  0.4107 0.002545 0.008112 0.0003948 6.010e-06
+[3,] 0.01041667    177.80 72.13 23.8100 0.285900 2.350000 0.2492000 6.599e-02
+[4,] 0.02083333    103.10 73.21 49.2100 0.679500 5.920000 0.6513000 4.141e-01
+[5,] 0.03125000     59.77 59.40 59.1300 0.897100 7.958000 0.8853000 9.794e-01
+[6,] 0.04166667     34.66 45.49 57.9700 0.954400 8.534000 0.9538000 1.605e+00
        Ckidney  Cplasma  Atubules Ametabolized       AUC
 [1,] 0.000e+00 0.000000 0.000e+00     0.000000 0.000e+00
-[2,] 3.918e-04 0.002755 3.700e-07     0.001339 7.780e-07
-[3,] 2.699e+00 0.309600 4.154e-03     0.951800 1.198e-03
-[4,] 1.065e+01 0.735700 2.683e-02     4.729000 6.760e-03
-[5,] 1.690e+01 0.971300 6.559e-02    10.270000 1.583e-02
-[6,] 1.960e+01 1.033000 1.116e-01    16.200000 2.639e-02
+[2,] 4.552e-04 0.003201 4.300e-07     0.001555 9.040e-07
+[3,] 3.135e+00 0.359700 4.826e-03     1.106000 1.392e-03
+[4,] 1.237e+01 0.854800 3.117e-02     5.495000 7.854e-03
+[5,] 1.964e+01 1.129000 7.620e-02    11.940000 1.839e-02
+[6,] 2.277e+01 1.201000 1.296e-01    18.820000 3.066e-02
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.

@@ -150,15 +150,16 @@
 #' @keywords Solve
 #'
 #' @examples
-#' # The varrious "solve_x" functions are wrappers for solve_model:
+#' # The various "solve_x" functions are wrappers for solve_model:
 #' head(solve_pbtk(chem.name="Terbufos", days=1))
 #'
-#' head(solve_model(chem.name="Terbufos",model="pbtk",dosing=list(
-#'                  initial.dose = 1, # Assume dose is in mg/kg BW/day  
-#'                  doses.per.day=NULL,
-#'                  dosing.matrix = NULL,
+#' head(solve_model(chem.name="Terbufos",model="pbtk",
 #'                  days=1,
-#'                  daily.dose = NULL)))
+#'                  dosing=list(
+#'                    initial.dose = 1, # Assume dose is in mg/kg BW/day  
+#'                    doses.per.day=NULL,
+#'                    dosing.matrix = NULL,
+#'                    daily.dose = NULL)))
 #'
 #' # A dose matrix specifies times and magnitudes of doses:
 #' dm <- matrix(c(0,1,2,5,5,5),nrow=3)
@@ -170,19 +171,23 @@
 #'            days=2.5,
 #'            daily.dose=NULL)
 #' 
-#' solve_model(chem.name="Methenamine",model="pbtk",dosing=list(
-#'             initial.dose =NULL,
-#'             doses.per.day=NULL,
-#'             daily.dose=NULL,
+#' solve_model(chem.name="Methenamine",
+#'             model="pbtk",
 #'             days=2.5,
-#'             dosing.matrix=dm))
+#'             dosing=list(
+#'               initial.dose =NULL,
+#'               doses.per.day=NULL,
+#'               daily.dose=NULL,
+#'               dosing.matrix=dm))
 #' 
-#' solve_model(chem.name="Besonprodil",model="pbtk",dosing=list(
-#'             initial.dose =NULL,
-#'             doses.per.day=4,
-#'             daily.dose=1,
+#' solve_model(chem.name="Besonprodil",
+#'             model="pbtk",
 #'             days=2.5,
-#'             dosing.matrix=NULL))
+#'             dosing=list(
+#'               initial.dose=NULL,
+#'               doses.per.day=4,
+#'               daily.dose=1,
+#'               dosing.matrix=NULL))
 #'   
 #' solve_pbtk(chem.name="Besonprodil",
 #'            daily.dose=1,
@@ -278,9 +283,6 @@ solve_model <- function(chem.name = NULL,
 # the names of the state variables of the model (so far, always in units of 
 # amounts)
     state.vars <- model.list[[model]]$state.vars
-# The names of the supported dosing parameters, the names of which must be 
-# specified to solve_model, even if corresponding to NULL values
-    dosing_params <- model.list[[model]]$dosing.params
 # name of function that initializes the compiled model code:
     initialize_compiled_function <- model.list[[model]]$compiled.init.func
 # name(s)s of the R parameters needed to initialize the compiled model params:
@@ -348,6 +350,9 @@ is not among those listed in compartment.units in modelinfo file for model",
           route))
       }
     }
+    # The names of the supported dosing parameters, the names of which must be 
+    # specified to solve_model, even if corresponding to NULL values
+    dosing_params <- model.list[[model]]$routes[[route]][["dosing.params"]]
   }
   
   #Make basic checks for variable name convention observance in objects of
@@ -649,8 +654,20 @@ specification in compartment_units for model ", model)
   # Make sure we have all specified dosing parameters for the model
   # accounted for
   if (!all(unique(dosing_params) %in% names(dosing)))
-    stop("Dosing descriptor(s) missing")
-  
+    stop(paste("Dosing descriptor(s) missing for route",
+               route, "in model",
+               model, ":",
+               unique(dosing_params)[!(unique(dosing_params) 
+                                       %in% names(dosing))]))
+ 
+  # Warn if unnecessary dosing_param provided:
+  if (any(!(names(dosing) %in% dosing_params)))
+    warning(paste("The following dosing descriptor(s) ignored for route",
+               route, "in model",
+               model, ":",
+               names(dosing)[!(names(dosing) 
+                                       %in% dosing_params)]))
+   
   #Provide default, somewhat arbitrary, single-time dosing case of
   #1 mg/kg BW for when no dosing is specified by user.
   if (all(as.logical(lapply(dosing, is.null)))) dosing$initial.dose <- 1 
