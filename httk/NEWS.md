@@ -1,3 +1,6 @@
+# httk 2.3.1 (2023-3-19)
+This patch addresses a number of bugs.
+
 ## Bug Fixes
 * Argument keepit100 was being improperly ignored by `get_fabsgut`
 * Fixed issue where `create_mc_samples` could not handle argument 
@@ -11,14 +14,19 @@ to dynamical (time-evolving) models and handles errors with other models
 * Liquid densities previous referred to as ppmv for `convert_units` were
 actually ppmw. Cannot calculate ppmv without chemical-specific liquid density,
 which we do not know.
+* Added model descriptor compartment.state to indicate which compartments are
+liquid and which are gaseous
  
 ## Enhancements
 * Changed `armitage_eval` to allow chemical specification by usual arguments
 chem.name, chem.cas, and DTXSID. Preserved casrn.vector for backward compatibility.
-* Change `armitage_eval` to allow multiple instances of chemicals (no longer 
+* Changed `armitage_eval` to allow multiple instances of chemicals (no longer 
 using CASRN as row names) -- thank you Katie Paul Friedman for suggestion
 * Added Katie Paul Friedman (USEPA) as contributor for long history of 
 suggesting refinements and putting up with bugs
+* Function `solve_model` now gives warnings when ignoring elements of 
+***dosing*** for a given model and route (acceptible dosing.params are now
+specified by the modelinfo_[MODEL].R file)
 
 # httk 2.3.0 (2023-12-05)
 This version accompanies the submission of manuscript Honda et al. 
