@@ -1,7 +1,7 @@
 
-R Under development (unstable) (2023-04-16 r84269 ucrt) -- "Unsuffered Consequences"
-Copyright (C) 2023 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R Under development (unstable) (2024-03-16 r86144 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -60,11 +60,11 @@ The model outputs are provided in the following units:
 [6,]     3.814   17.84 3.213 3.213 12.780  7.343  4.958     6.985   19.210
      Cfbrain Cfplasma Rfblood2plasma Qcardiac Qthyroid
 [1,]   0.000   0.0000          3.788     8656    118.6
-[2,]   2.452   0.4115          3.800     8673    118.7
-[3,]   3.906   0.6576          3.812     8690    118.8
-[4,]   4.767   0.8055          3.824     8707    118.9
-[5,]   5.279   0.8950          3.836     8724    119.0
-[6,]   5.582   0.9496          3.848     8741    119.1
+[2,]   2.452   0.3669          3.800     8673    118.7
+[3,]   3.906   0.5843          3.812     8690    118.8
+[4,]   4.767   0.7132          3.824     8707    118.9
+[5,]   5.279   0.7897          3.836     8724    119.0
+[6,]   5.582   0.8352          3.848     8741    119.1
 > head(solve_fetal_pbtk(chem.cas="80-05-7"))
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
@@ -100,11 +100,11 @@ The model outputs are provided in the following units:
 [6,]    0.1730  0.8094 0.1458 0.1458 0.5797 0.3331 0.2249    0.3169   0.8714
      Cfbrain Cfplasma Rfblood2plasma Qcardiac Qthyroid
 [1,]  0.0000  0.00000          3.788     8656    118.6
-[2,]  2.0400  0.34230          3.800     8673    118.7
-[3,]  1.2100  0.20380          3.812     8690    118.8
-[4,]  0.7181  0.12130          3.824     8707    118.9
-[5,]  0.4263  0.07228          3.836     8724    119.0
-[6,]  0.2532  0.04307          3.848     8741    119.1
+[2,]  2.0400  0.30520          3.800     8673    118.7
+[3,]  1.2100  0.18100          3.812     8690    118.8
+[4,]  0.7181  0.10740          3.824     8707    118.9
+[5,]  0.4263  0.06378          3.836     8724    119.0
+[6,]  0.2532  0.03788          3.848     8741    119.1
 > head(solve_fetal_pbtk(parameters=parameterize_fetal_pbtk(chem.cas="80-05-7")))
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
@@ -140,11 +140,11 @@ The model outputs are provided in the following units:
 [6,]    0.1730  0.8094 0.1458 0.1458 0.5797 0.3331 0.2249    0.3169   0.8714
      Cfbrain Cfplasma Rfblood2plasma Qcardiac Qthyroid
 [1,]  0.0000  0.00000          3.788     8656    118.6
-[2,]  2.0400  0.34230          3.800     8673    118.7
-[3,]  1.2100  0.20380          3.812     8690    118.8
-[4,]  0.7181  0.12130          3.824     8707    118.9
-[5,]  0.4263  0.07228          3.836     8724    119.0
-[6,]  0.2532  0.04307          3.848     8741    119.1
+[2,]  2.0400  0.30520          3.800     8673    118.7
+[3,]  1.2100  0.18100          3.812     8690    118.8
+[4,]  0.7181  0.10740          3.824     8707    118.9
+[5,]  0.4263  0.06378          3.836     8724    119.0
+[6,]  0.2532  0.03788          3.848     8741    119.1
 Warning messages:
 1: In solve_model(chem.name = chem.name, chem.cas = chem.cas, dtxsid = dtxsid,  :
   Rblood2plasma not recalculated. 
