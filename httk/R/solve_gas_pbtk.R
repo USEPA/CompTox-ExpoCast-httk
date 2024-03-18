@@ -365,15 +365,17 @@ solve_gas_pbtk <- function(chem.name = NULL,
     forcings = forcings_gen(exp.conc, period, exp.start.time = 0, exp.duration, days) 
   }
       
-      #Comment out tentative alternate scheme to forcings for now
-      ###
-    #Nrep <- ceiling((days - exp.start.time)/period)
-# We want the start and stop timeS:
-    #time <- sort(c(period * (0:(Nrep - 1)), # Start times
-      #period * (0:(Nrep - 1))+exp.duration)) # End times
-    #dose  <- rep(c(exp.conc,0), Nrep)
-    #dosing.matrix = cbind(dose,time)
-      ###
+  # Describe the dose regimen:
+  dosing <- list(
+    initial.dose=dose,
+    dosing.matrix=dosing.matrix,
+    daily.dose=daily.dose,
+    doses.per.day=doses.per.day,
+    forcings=forcings
+    )
+  # Limit to only the needed dosing parameters:
+  dosing <- dosing[names(dosing) %in%
+                     model.list[["gas_pbtk"]]$routes[[route]]$dosing.params]
   
   #Now make call to solve_model with gas model specific arguments configured 
   out <- solve_model(
@@ -384,13 +386,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
     parameters=parameters,
     model="gas_pbtk",
     route=route,
-    # route='inhalation',
-    dosing=list(
-      initial.dose=dose,
-      dosing.matrix=dosing.matrix,
-      daily.dose=daily.dose,
-      doses.per.day=doses.per.day,
-      forcings=forcings),
+    dosing=dosing,
     days=days,
     tsteps = tsteps, # tsteps is number of steps per hour
     initial.values=initial.values,
