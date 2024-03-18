@@ -319,8 +319,6 @@ NULL
 #' 
 #' @aliases httk
 #' 
-#' @docType _PACKAGE
-#' 
 #' @author 
 #' \href{https://orcid.org/0000-0002-4024-534X}{John Wambaugh},
 #' \href{https://orcid.org/0000-0002-2891-9380}{Sarah Davidson-Fritz},  
@@ -404,4 +402,4 @@ NULL
 #' (\doi{10.1093/toxsci/kfv171})
 #' 
 #' \href{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}{The U.S. EPA ExpoCast (Exposure Forecasting) Project}
- NULL
+"_PACKAGE"
