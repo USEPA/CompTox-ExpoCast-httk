@@ -662,7 +662,7 @@ specification in compartment_units for model ", model)
  
   # Warn if unnecessary dosing_param provided:
   if (any(!(names(dosing) %in% dosing_params)))
-    stop(paste("The following dosing descriptor(s) ignored for route",
+    warning(paste("The following dosing descriptor(s) ignored for route",
                route, "in model",
                model, ":",
                names(dosing)[!(names(dosing) 
