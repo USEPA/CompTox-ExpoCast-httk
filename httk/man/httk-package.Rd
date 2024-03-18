@@ -9,7 +9,7 @@
 \Sexpr{tools:::Rd_package_description("httk")}
 }
 \references{
-\href{https://www.epa.gov/chemical-research/computational-toxicology-communities-practice-high-throughput-toxicokinetic-httk}{PowerPoint Presentation: High-Throughput Toxicokinetics (HTTK) R package}
+\href{https://www.epa.gov/sites/default/files/2019-06/documents/comptoxcop-wambaugh-httk-r-package-062719-draft5.pdf}{Presentation: High-Throughput Toxicokinetics (HTTK) R package}
 
 \href{https://www.epa.gov/chemical-research/toxicokinetics-overview}{Toxicokinetics at the U.S. Environmental Protection Agency}
 
@@ -93,4 +93,3 @@ Lily Whipple,
 and
 Woodrow Setzer
 }
-\keyword{package}

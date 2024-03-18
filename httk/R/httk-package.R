@@ -173,7 +173,6 @@
 #'   
 #'   
 #' @import data.table
-#' @docType package
 #'
 #'@keywords httk-pop
 #'
@@ -320,8 +319,6 @@ NULL
 #' 
 #' @aliases httk
 #' 
-#' @docType package
-#' 
 #' @author 
 #' \href{https://orcid.org/0000-0002-4024-534X}{John Wambaugh},
 #' \href{https://orcid.org/0000-0002-2891-9380}{Sarah Davidson-Fritz},  
@@ -349,7 +346,7 @@ NULL
 #' @seealso \code{\link{httkpop}}
 #' 
 #' @references 
-#' \href{https://www.epa.gov/chemical-research/computational-toxicology-communities-practice-high-throughput-toxicokinetic-httk}{PowerPoint Presentation: High-Throughput Toxicokinetics (HTTK) R package}
+#' \href{https://www.epa.gov/sites/default/files/2019-06/documents/comptoxcop-wambaugh-httk-r-package-062719-draft5.pdf}{Presentation: High-Throughput Toxicokinetics (HTTK) R package}
 #' 
 #' \href{https://www.epa.gov/chemical-research/toxicokinetics-overview}{Toxicokinetics at the U.S. Environmental Protection Agency}
 #'
@@ -405,5 +402,4 @@ NULL
 #' (\doi{10.1093/toxsci/kfv171})
 #' 
 #' \href{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}{The U.S. EPA ExpoCast (Exposure Forecasting) Project}
-#' @keywords package
- NULL
+"_PACKAGE"
