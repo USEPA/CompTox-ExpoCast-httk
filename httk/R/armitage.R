@@ -103,8 +103,15 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' the model published in Armitage et al. (2014) include binding to plastic walls
 #' and lipid and protein compartments in cells.
 #' 
+#' @param chem.name A single or vector of name(s)) of desired chemical(s).
+#' @param chem.cas A single or vector of Chemical Abstracts Service Registry 
+#' Number(s) (CAS-RN) of desired chemical(s).
+#' @param dtxsid A single or vector ofEPA's DSSTox Structure ID(s) 
+#' (\url{https://comptox.epa.gov/dashboard})  
 #' 
-#' @param casrn.vector For vector or single value, CAS number
+#' @param casrn.vector A deprecated argument specifying a single or vector of 
+#' Chemical Abstracts Service Registry 
+#' Number(s) (CAS-RN) of desired chemical(s).
 #' 
 #' @param nomconc.vector For vector or single value, micromolar (uM = mol/L) nominal 
 #' concentration (e.g. AC50 value)
