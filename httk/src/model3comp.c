@@ -164,7 +164,7 @@ void derivs3comp (int *neq, double *pdTime, double *y, double *ydot, double *you
 
   ydot[ID_Aportven] = kgutabs * y[ID_Aintestine] + Qgut * y[ID_Asyscomp] / Vsyscomp * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma - Qgut * y[ID_Aportven] / Vportven ;
 
-  ydot[ID_Aliver] = Qgut * y[ID_Cportven] / Vportven + Qliver * y[ID_Asyscomp] / Vsyscomp * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma - ( Qliver + Qgut ) * y[ID_Aliver] / Vliver * Ratioblood2plasma / Fraction_unbound_plasma / Kliver2plasma - CLmetabolism / Kliver2plasma * y[ID_Aliver] / Vliver ;
+  ydot[ID_Aliver] = Qgut * y[ID_Aportven] / Vportven + Qliver * y[ID_Asyscomp] / Vsyscomp * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma - ( Qliver + Qgut ) * y[ID_Aliver] / Vliver * Ratioblood2plasma / Fraction_unbound_plasma / Kliver2plasma - CLmetabolism / Kliver2plasma / Fraction_unbound_plasma * y[ID_Aliver] / Vliver ;
 
   ydot[ID_Asyscomp] = ( Qgut + Qliver ) * y[ID_Aliver] / Vliver * Ratioblood2plasma / Fraction_unbound_plasma / Kliver2plasma - ( Qgut + Qliver ) * y[ID_Asyscomp] / Vsyscomp * Ratioblood2plasma / Fraction_unbound_plasma / Krest2plasma - Qgfr / Krest2plasma * y[ID_Asyscomp] / Vsyscomp ;
 
