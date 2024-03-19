@@ -6,6 +6,8 @@
 #' 
 #' The PBTK model (Pearce et al., 2017) predicts the amount of chemical in
 #' various tissues of the body. A system of oridinary
+
+
 #' differential equations describes how the amounts in each tissue change as 
 #' a function of time. The analytic steady-state equation was found by 
 #' algebraically solving for the tissue concentrations that result in each
@@ -22,11 +24,12 @@
 #'  where Q_cardiac is the cardiace output, Q_gfr is the glomerular filtration
 #' rate in the kidney, other Q's indicate blood flows to various tissues, 
 #' Cl_metabolism is the chemical-specific whole liver metabolism clearance,
-#' f_up is the chemical-specific fraction unbound n plasma, R_b2p is the 
+#' f_up is the chemical-specific fraction unbound in plasma, R_b2p is the 
 #' chemical specific ratio of concentrations in blood:plasma, K_tissue2fuplasma
 #' is the chemical- and tissue-specufic equilibrium partition coefficient
 #' and dose rate has  units of mg/kg/day. 
 #' 
+
 #'@param chem.name Either the chemical name, CAS number, or the parameters must 
 #' be specified.
 #'@param chem.cas Either the chemical name, CAS number, or the parameters must 
@@ -42,7 +45,7 @@
 #'@param suppress.messages Whether or not the output message is suppressed.
 #'@param recalc.blood2plasma Recalculates the ratio of the amount of chemical 
 #' in the blood to plasma using the input parameters. Use this if you have 
-#''altered hematocrit, Funbound.plasma, or Krbc2pu.
+#' altered hematocrit, Funbound.plasma, or Krbc2pu.
 #'@param tissue Desired tissue conentration (defaults to whole body 
 #' concentration.)
 #'@param restrictive.clearance If TRUE (default), then only the fraction of
@@ -140,7 +143,11 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
       parameters[['Rblood2plasma']] <- 1 - 
         parameters[['hematocrit']] + 
         parameters[['hematocrit']] * parameters[['Krbc2pu']] * parameters[['Funbound.plasma']]
+
     }
+
+
+
   }
   
   Qcardiac <-  parameters[["Qcardiacc"]] / parameters[['BW']]^0.25 # L/h/kg
@@ -169,6 +176,49 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
          Qrest)
 # Calculate steady-state plasma Css:
   Css <- Cven.ss / Rblood2plasma
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # Check to see if a specific tissue was asked for:
   if (!is.null(tissue))
