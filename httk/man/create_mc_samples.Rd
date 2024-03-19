@@ -123,7 +123,8 @@ parameterize_* function for the model.}
 
 \item{Caco2.options}{Arguments describing how to handle Caco2 absorption data
 that are passed to \code{\link{invitro_mc}} and the parameterize_[MODEL] 
-functions}
+functions.
+See \code{\link{get_fabsgut}} for further details.}
 }
 \value{
 A data table where each column corresponds to parameters needed for the 
