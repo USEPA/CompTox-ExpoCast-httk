@@ -5,6 +5,14 @@
 #' Houston (2004) are also available. In vitro measured hepatic clearace is 
 #' corrected for the free fraction in the assay using the model of Kilford et 
 #' al. (2008).
+#'
+#' The agument restrictive.clearance (defaults to TRUE) describes the
+#' significance (or lack thereof) of plasma protein binding in metabolism. 
+#' Restrictive clearance assumes that only the free fraction of chemical in
+#' plasma is available for metabolism. 
+#' Non-restrictive clearance assumes that the compound is weakly bound to
+#' plasma protein and any free chemical metabolized is instantly
+#' replaced. For non-restrictive clearance the effective fup = 1.
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
@@ -186,7 +194,8 @@ calc_hep_clearance <- function(chem.name=NULL,
            "Funbound.plasma",
            parameters,
            "calc_hep_clearance") # unitless fraction
-           
+
+  #           
   # Restrictive clearance assumes that only the free fraction of chemical in
   # plasma is available for metabolism.
   #
@@ -194,6 +203,9 @@ calc_hep_clearance <- function(chem.name=NULL,
   # plasma protein and any free chemical metabolized is instantly
   # replaced. For non-restrictive clearance the effective fup = 1:
   if (!restrictive.clearance) fup <- 1
+  #
+  #
+  #
   
   Qtotal.liverc <- get_param(
                      "Qtotal.liverc",
