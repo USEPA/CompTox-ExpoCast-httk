@@ -3,7 +3,6 @@
 \docType{package}
 \name{httk-package}
 \alias{httk-package}
-\alias{_PACKAGE}
 \alias{httk}
 \title{\Sexpr{tools:::Rd_package_title("httk")}}
 \description{
