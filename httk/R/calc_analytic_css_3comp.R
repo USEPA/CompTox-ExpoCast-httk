@@ -2,6 +2,32 @@
 #'
 #'This function calculates the analytic steady state plasma or venous blood 
 #'concentrations as a result of infusion dosing.
+#' 
+#' The three compartment model (Pearce et al., 2017) describes the amount of chemical in
+#' three key tissues of the body: the liver, the portal vein (essentially, oral absorption
+#' from the guy), and a systemic compartment ("sc") representing the rest of the body.
+#' A system of oridinary
+#' differential equations describes how the amounts in each tissue change as 
+#' a function of time. The analytic steady-state equation was found by 
+#' algebraically solving for the tissue concentrations that result in each
+#' equation being zero -- thus determining the concentration at which there is no change
+#' over time as the result of a fixed infusion dose rate. 
+#'
+#' The analytical solution is:
+#' \deqn{C^{ss}_{sc} = \frac{dose rate * \frac{Q_{liver} + Q_{gut}}{\frac{f_{up}}{R_{b:p}}*Cl_{metabolism} + (Q_{liver}+Q_{gut})}}{Q_{cardiac} - \frac{(Q_{liver} + Q_{gut})^2}{\frac{f_{up}}{R_{b:p}}*Cl_{metabolism} + (Q_{liver}+Q_{gut})} - \frac{(Q_{kidney})^2}{\frac{f_{up}}{R_{b:p}}*Q_{GFR}+Q_{kideny}}-Q_{rest}}}{%
+#' C_ven_ss =(dose rate * (Q_liver + Q_gut) / (f_up/Rb2p*Cl_metabolism + (Q_liver + Qgut)))/(Q_cardiac - (Q_liver + Qgut)^2/(f_up/Rb2p*Cl_metabolism + (Q_liver + Qgut)) - (Q_kidney)^2/(f_up/Rb2p*Q_gfr + Q_kidney) - Q_rest)}
+#' \deqn{C^{ss}_{plasma} = \frac{C^{ss}_{ven}}{R_{b:p}}}{%
+#'       C_ss = C_ven_ss/Rb2p}
+#' \deqn{C^{ss}_{tissue} = \frac{K_{tissue:fuplasma}*f_{up}}{R_{b:p}}*C^{ss}_{ven}}{%
+#'        C_tissue_ss = K_tissue2fuplasma*f_up*C_ven_ss/Rb2p}
+#'  where Q_cardiac is the cardiace output, Q_gfr is the glomerular filtration
+#' rate in the kidney, other Q's indicate blood flows to various tissues, 
+#' Cl_metabolism is the chemical-specific whole liver metabolism clearance,
+#' f_up is the chemical-specific fraction unbound in plasma, R_b2p is the 
+#' chemical specific ratio of concentrations in blood:plasma, K_tissue2fuplasma
+#' is the chemical- and tissue-specufic equilibrium partition coefficient
+#' and dose rate has  units of mg/kg/day. 
+#'
 #'
 #'@param chem.name Either the chemical name, CAS number, or the parameters must 
 #' be specified.
@@ -18,7 +44,7 @@
 #'@param suppress.messages Whether or not the output message is suppressed.
 #'@param recalc.blood2plasma Recalculates the ratio of the amount of chemical 
 #' in the blood to plasma using the input parameters. Use this if you have 
-#' 'altered hematocrit, Funbound.plasma, or Krbc2pu.
+#' altered hematocrit, Funbound.plasma, or Krbc2pu.
 #'@param tissue Desired tissue conentration (defaults to whole body 
 #' concentration.)
 #'@param restrictive.clearance If TRUE (default), then only the fraction of
@@ -130,10 +156,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
   Rblood2plasma <- parameters[["Rblood2plasma"]]
 
   # Calculate hepatic clearance:
-  Clmetabolism <- BW * calc_hep_clearance(
-                         parameters = parameters,
-                         model="well-stirred",
-                         restrictive.clearance = restrictive.clearance) # L/h
+  Clmetabolism <- BW *parameters[["Clmetabolismc"]] # L/h
 
   # Get the partition coefficients:
   Kliv <- parameters[["Kliver2pu"]]
