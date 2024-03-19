@@ -636,7 +636,7 @@ specification in compartment_units for model ", model)
   SMALL.TIME <- 1e-3  
   
   # We need to let the solver know which time points we want:
-  if (is.null(times)) times <- round(seq(0, days, 1/(24*tsteps)),8)
+  if (is.null(times)) times <- seq(0, days, 1/(24*tsteps))
   times <- sort(times)
   start.time <- times[1]
   end.time <- times[length(times)]
