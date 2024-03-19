@@ -186,6 +186,13 @@ calc_hep_clearance <- function(chem.name=NULL,
            "Funbound.plasma",
            parameters,
            "calc_hep_clearance") # unitless fraction
+           
+  # Restrictive clearance assumes that only the free fraction of chemical in
+  # plasma is available for metabolism.
+  #
+  # Non-restrictive clearance assumes that the compound is weakly bound to
+  # plasma protein and any free chemical metabolized is instantly
+  # replaced. For non-restrictive clearance the effective fup = 1:
   if (!restrictive.clearance) fup <- 1
   
   Qtotal.liverc <- get_param(
