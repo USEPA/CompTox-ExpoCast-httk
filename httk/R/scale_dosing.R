@@ -24,7 +24,7 @@
 #' "uM").
 #' @param vol Volume for the target tissue of interest.
 #' NOTE: Volume should not be in units of per BW, i.e. "kg".
-#' @param state Chemical state (gas or default liquid).
+#' @param state Chemical state of matter (gas or default liquid).
 #' 
 #' 
 #' @return
