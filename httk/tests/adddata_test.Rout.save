@@ -1,7 +1,7 @@
 
-R Under development (unstable) (2023-04-16 r84269 ucrt) -- "Unsuffered Consequences"
-Copyright (C) 2023 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R Under development (unstable) (2024-03-16 r86144 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -66,10 +66,10 @@ For model 3compartmentss each chemical must have non-NA values for:Human.Clint, 
 > 
 > calc_css(chem.name="Tester")
 $avg
-[1] 44.27
+[1] 44.26
 
 $frac
-[1] 0.9792
+[1] 0.979
 
 $max
 [1] 44.75
