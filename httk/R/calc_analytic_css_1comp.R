@@ -1,7 +1,7 @@
-#'Calculate the analytic steady state concentration for the one compartment model.
+#' Calculate the analytic steady state concentration for the one compartment model.
 #'
-#'This function calculates the analytic steady state plasma or venous blood 
-#'concentrations as a result of infusion dosing.
+#' This function calculates the analytic steady state plasma or venous blood 
+#' concentrations as a result of infusion dosing.
 #'
 #'@param chem.name Either the chemical name, CAS number, or the parameters must 
 #' be specified.
@@ -41,14 +41,17 @@
 #'@param ... Additional parameters passed to parameterize function if 
 #' parameters is NULL.
 #'  
-#'@return Steady state plasma concentration in mg/L units
+#' @return Steady state plasma concentration in mg/L units
 #'
 #' @seealso \code{\link{calc_analytic_css}}
 #'
 #' @seealso \code{\link{parameterize_1comp}}
 #'
-#'@author Robert Pearce and John Wambaugh
-#'@keywords 1compartment
+#' @author Robert Pearce and John Wambaugh
+#'
+#' @keywords 1compartment
+#'
+#' @export calc_analytic_css_1comp
 calc_analytic_css_1comp <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid = NULL,
