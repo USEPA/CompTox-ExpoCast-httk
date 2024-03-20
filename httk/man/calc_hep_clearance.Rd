@@ -62,6 +62,15 @@ Houston (2004) are also available. In vitro measured hepatic clearace is
 corrected for the free fraction in the assay using the model of Kilford et 
 al. (2008).
 }
+\details{
+The agument restrictive.clearance (defaults to TRUE) describes the
+significance (or lack thereof) of plasma protein binding in metabolism. 
+Restrictive clearance assumes that only the free fraction of chemical in
+plasma is available for metabolism. 
+Non-restrictive clearance assumes that the compound is weakly bound to
+plasma protein and any free chemical metabolized is instantly
+replaced. For non-restrictive clearance the effective fup = 1.
+}
 \examples{
 
 calc_hep_clearance(chem.name="Ibuprofen",hepatic.model='unscaled')

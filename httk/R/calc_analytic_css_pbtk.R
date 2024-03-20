@@ -1,13 +1,12 @@
 #'Calculate the analytic steady state plasma concentration for model pbtk.
 #'
 #' This function calculates the analytic steady state concentration (mg/L) as a result
-#' of oral infusion dosing. Concentrations are returned for plasma by default, but various
+#' of constant oral infusion dosing. 
+#' Concentrations are returned for plasma by default, but various
 #' tissues or blood concentrations can also be given as specified.
 #' 
-#' The PBTK model (Pearce et al., 2017) predicts the amount of chemical in
-#' various tissues of the body. A system of oridinary
-
-
+#' The PBTK model \insertCite{pearce2017httk}{httk} predicts the amount of chemical in
+#' various tissues of the body. A system of ordinary
 #' differential equations describes how the amounts in each tissue change as 
 #' a function of time. The analytic steady-state equation was found by 
 #' algebraically solving for the tissue concentrations that result in each
@@ -21,12 +20,12 @@
 #'       C_ss = C_ven_ss/Rb2p}
 #' \deqn{C^{ss}_{tissue} = \frac{K_{tissue:fuplasma}*f_{up}}{R_{b:p}}*C^{ss}_{ven}}{%
 #'        C_tissue_ss = K_tissue2fuplasma*f_up*C_ven_ss/Rb2p}
-#'  where Q_cardiac is the cardiace output, Q_gfr is the glomerular filtration
+#'  where Q_cardiac is the cardiac output, Q_gfr is the glomerular filtration
 #' rate in the kidney, other Q's indicate blood flows to various tissues, 
 #' Cl_metabolism is the chemical-specific whole liver metabolism clearance,
 #' f_up is the chemical-specific fraction unbound in plasma, R_b2p is the 
 #' chemical specific ratio of concentrations in blood:plasma, K_tissue2fuplasma
-#' is the chemical- and tissue-specufic equilibrium partition coefficient
+#' is the chemical- and tissue-specific equilibrium partition coefficient
 #' and dose rate has  units of mg/kg/day. 
 #' 
 
@@ -68,18 +67,20 @@
 #'@param ... Additional parameters passed to parameterize function if 
 #' parameters is NULL.
 #'  
-#'@return Steady state plasma concentration in mg/L units
+#' @return Steady state plasma concentration in mg/L units
 #'
 #' @seealso \code{\link{calc_analytic_css}}
 #'
 #' @seealso \code{\link{parameterize_pbtk}}
 #'
-#'@author Robert Pearce and John Wambaugh
+#' @author Robert Pearce and John Wambaugh
 #'
 #' @references 
-#' \insertRef{pearce2017httk}{httk}
+#' \insertAllCited{}
 #'
-#'@keywords pbtk                           
+#' @keywords pbtk
+#'
+#' @export calc_analytic_css_pbtk                          
 calc_analytic_css_pbtk <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid = NULL,
