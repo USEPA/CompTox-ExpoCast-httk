@@ -1,8 +1,9 @@
 #' Solve_3comp
 #' 
 #' This function solves for the amounts or concentrations of a chemical in
-#' different tissues as functions of time based on the dose and dosing
-#' frequency.  It uses a three compartment model with partition coefficients.
+#' the blood of three different compartments representing the body.
+#' The volumes of the three compartments are chemical specific, dtermined from
+#' the true tissue volumes multipled by the partition coefficients.
 #' 
 #' Note that the timescales for the model parameters have units of hours while 
 #' the model output is in days.
@@ -206,8 +207,5 @@ solve_3comp <- function(chem.name = NULL,
                       Caco2.options=Caco2.options),
     ...)
   
-  out <- cbind(out,out[,"Csyscomp"])
-  colnames(out)[length(colnames(out))]<-"Cplasma"
-    
   return(out) 
 }
