@@ -2,8 +2,25 @@
 #' 
 #' This function solves for the amounts or concentrations of a chemical in
 #' the blood of three different compartments representing the body.
-#' The volumes of the three compartments are chemical specific, dtermined from
-#' the true tissue volumes multipled by the partition coefficients.
+#' The volumes of the three compartments are chemical specific, determined from
+#' the true tissue volumes multipled by the partition coefficients:
+#' \deqn{V_{pv} = V_{gut}}
+#' \deqn{V_{liv} = \frac{K_{liv}*f_{up}}{R_{b:p}}V_{liver}}
+#' \deqn{V_{sc} = \frac{K_{sc}*f_{up}}{R_{b:p}}V_{rest}}
+#' where "pv" is the portal vein, "liv" is the liver, and "sc" is the systemic
+#' compartment; V_gut, V_liver, and V_rest are physiological tissue volumes;
+#' K_x are chemical- and tissue-specific equlibrium partition coefficients 
+#' between tissue and free chemcial concentration in plasma;
+#' f_up is the chemical-specific fraction unbound in plasma; and R_b:p is the 
+#' chemical specific ratio of concentrations in blood:plasma.
+#' The blood concentrations evolve according to:
+#' \deqn{\frac{d C_{pv}}{dt} = \frac{1}{V_{pv}}\left(k_{abs}A_{si} + Q_{pv}C_{sc}-Q_{pv}C_{pv}\right)}
+#' \deqn{\frac{d C_{liv}}{dt} = \frac{1}{V_{liv}}\left(Q_{pv}C_{pv} + Q_{ha}C_{sc}-\left(Q_{pv} + Q{ha}\right)C_{liv}-\frac{1}{R_{b:p}}Cl_{h}C_{liv}\right)}
+#' \deqn{\frac{d C_{sc}}{dt} = \frac{1}{V_{sc}}\left(\left(Q_{pv} + Q_{ha}\right)C_{liv} - \left(Q_{pv} + Q_{ha}\right)C_{sc} - \frac{f_{up}}{R_{b:p}}*Q_{GFR}*C_{sc}\right)}
+#' where "ha" is the hepatic artery, Q's are flows, "GFR" is the glomerular
+#' filtration rate in the kidney, 
+# and Cl_h is the chemical-specific whole liver metabolism 
+#' clearance (scaled up from intrinsic clearance, which does not depend on flow).
 #' 
 #' Note that the timescales for the model parameters have units of hours while 
 #' the model output is in days.
@@ -11,7 +28,8 @@
 #' Default of NULL for doses.per.day solves for a single dose.
 #' 
 #' The compartments used in this model are the gutlumen, gut, liver, and
-#' rest-of-body, with the plasma equivalent to the liver plasma.
+#' rest-of-body, with the plasma related to the concentration in the blood
+#' in the systemic compartment by the blood:plasma ratio.
 #' 
 #' Model Figure 
 #' \if{html}{\figure{3comp.jpg}{options: width="60\%" alt="Figure: Three
@@ -22,8 +40,6 @@
 #' When species is specified as rabbit, dog, or mouse, the function uses the
 #' appropriate physiological data(volumes and flows) but substitues human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
-#' 
-#' 
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
