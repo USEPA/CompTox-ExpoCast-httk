@@ -1,33 +1,22 @@
-#'Calculate the analytic steady state concentration for model 3comp
+#' Calculate the analytic steady state concentration for model 3compartment
 #'
-#'This function calculates the analytic steady state plasma or venous blood 
-#'concentrations as a result of infusion dosing.
-#' 
-#' The three compartment model (Pearce et al., 2017) describes the amount of chemical in
+#' This function calculates the analytic steady state plasma or blood 
+#' concentrations as a result of constant oral infusion dosing.
+#' The three compartment model \insertCite{pearce2017httk}{httk}
+#' describes the amount of chemical in
 #' three key tissues of the body: the liver, the portal vein (essentially, oral absorption
-#' from the guy), and a systemic compartment ("sc") representing the rest of the body.
-#' A system of oridinary
-#' differential equations describes how the amounts in each tissue change as 
-#' a function of time. The analytic steady-state equation was found by 
-#' algebraically solving for the tissue concentrations that result in each
-#' equation being zero -- thus determining the concentration at which there is no change
-#' over time as the result of a fixed infusion dose rate. 
-#'
-#' The analytical solution is:
-#' \deqn{C^{ss}_{sc} = \frac{dose rate * \frac{Q_{liver} + Q_{gut}}{\frac{f_{up}}{R_{b:p}}*Cl_{metabolism} + (Q_{liver}+Q_{gut})}}{Q_{cardiac} - \frac{(Q_{liver} + Q_{gut})^2}{\frac{f_{up}}{R_{b:p}}*Cl_{metabolism} + (Q_{liver}+Q_{gut})} - \frac{(Q_{kidney})^2}{\frac{f_{up}}{R_{b:p}}*Q_{GFR}+Q_{kideny}}-Q_{rest}}}{%
-#' C_ven_ss =(dose rate * (Q_liver + Q_gut) / (f_up/Rb2p*Cl_metabolism + (Q_liver + Qgut)))/(Q_cardiac - (Q_liver + Qgut)^2/(f_up/Rb2p*Cl_metabolism + (Q_liver + Qgut)) - (Q_kidney)^2/(f_up/Rb2p*Q_gfr + Q_kidney) - Q_rest)}
-#' \deqn{C^{ss}_{plasma} = \frac{C^{ss}_{ven}}{R_{b:p}}}{%
-#'       C_ss = C_ven_ss/Rb2p}
-#' \deqn{C^{ss}_{tissue} = \frac{K_{tissue:fuplasma}*f_{up}}{R_{b:p}}*C^{ss}_{ven}}{%
-#'        C_tissue_ss = K_tissue2fuplasma*f_up*C_ven_ss/Rb2p}
-#'  where Q_cardiac is the cardiace output, Q_gfr is the glomerular filtration
-#' rate in the kidney, other Q's indicate blood flows to various tissues, 
-#' Cl_metabolism is the chemical-specific whole liver metabolism clearance,
-#' f_up is the chemical-specific fraction unbound in plasma, R_b2p is the 
-#' chemical specific ratio of concentrations in blood:plasma, K_tissue2fuplasma
-#' is the chemical- and tissue-specufic equilibrium partition coefficient
-#' and dose rate has  units of mg/kg/day. 
-#'
+#' from the gut), and a systemic compartment ("sc") representing the rest of the body.
+#' See \code{\link{solve_3comp}} for additional details. The analytical
+#' steady-state solution for the the three compartment model is:
+#' \deqn{C^{ss}_{plasma} = \frac{dose}{f_{up}*Q_{GFR} + Cl_{h} + \frac{Cl_{h}}{Q_{l}}\frac{f_{up}}{R_{b:p}}Q_{GFR}}}
+#' \deqn{C^{ss}_{blood} = R_{b:p}*C^{ss}_{plasma}}
+#'  where Q_GFR is the glomerular filtration
+#' rate in the kidney, Q_l is the total liver blood flow (hepatic artery plus
+#' total vein),
+#' Cl_h is the chemical-specific whole liver metabolism 
+#' clearance (scaled up from intrinsic clearance, which does not depend on flow),
+#' f_up is the chemical-specific fraction unbound in plasma, R_b:p is the 
+#' chemical specific ratio of concentrations in blood:plasma.
 #'
 #'@param chem.name Either the chemical name, CAS number, or the parameters must 
 #' be specified.
@@ -67,18 +56,20 @@
 #'@param ... Additional parameters passed to parameterize function if 
 #' parameters is NULL.
 #'  
-#'@return Steady state plasma concentration in mg/L units
+#' @return Steady state plasma concentration in mg/L units
 #'
 #' @seealso \code{\link{calc_analytic_css}}
 #'
 #' @seealso \code{\link{parameterize_3comp}}
 #'
-#'@author Robert Pearce and John Wambaugh
+#' @author Robert Pearce and John Wambaugh
 #'
 #' @references 
-#' \insertRef{pearce2017httk}{httk} 
+#' \insertAllCited{}
 #'
-#'@keywords 3compartment
+#' @keywords 3compartment
+#'
+#' @export calc_analytic_css_3comp
 calc_analytic_css_3comp <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid=NULL,
