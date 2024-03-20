@@ -15,7 +15,7 @@ model.list[[THIS.MODEL]]$steady.state.units <- "mg/L"
 
 # When calculating steady-state with calc_css, which compartment do we test? 
 # ("C" is preprended):
-model.list[[THIS.MODEL]]$steady.state.compartment <- "syscomp"
+model.list[[THIS.MODEL]]$steady.state.compartment <- "plasma"
 
 # Function used for generating model parameters:
 model.list[[THIS.MODEL]]$parameterize.func <- "parameterize_3comp"
@@ -151,12 +151,14 @@ model.list[[THIS.MODEL]]$derivative.func <- "derivs3comp"
 model.list[[THIS.MODEL]]$derivative.output.names <- c(
   "Cportven",
   "Cliver",
-  "Csyscomp"
+  "Csyscomp",
+  "Cplasma"
 )
 
 model.list[[THIS.MODEL]]$default.monitor.vars <- c(
   "Cliver",
   "Csyscomp",
+  "Cplasma",
   "Atubules",
   "Ametabolized",
   "AUC"
@@ -219,6 +221,7 @@ model.list[[THIS.MODEL]]$compartment.units <-c(
     "Cportven"="uM",
     "Cliver"="uM",
     "Csyscomp"="uM",
+    "Cplasma"="uM",
     "AUC"="uM*days"
   )
 
@@ -226,7 +229,7 @@ model.list[[THIS.MODEL]]$compartment.units <-c(
 # comaprtments of the same only include one state and set it to "all":
 model.list[[THIS.MODEL]]$compartment.state <- list(liquid="all")
 
-Parameters needed to make a prediction (this is used by get_cheminfo):
+# Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[[THIS.MODEL]]$required.params <- c(
   "Clint",
   "Funbound.plasma",
