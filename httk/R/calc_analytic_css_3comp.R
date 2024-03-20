@@ -169,14 +169,14 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
           parameters[["Qcardiacc"]] * BW^(3/4) # L/h
    
   # Steady-state blood concentration:
-  Css_blood <- hourly.dose /
-   (1 / Krest * Qgfr +
-    Rblood2plasma / fup / Kliv * Clmetabolism +
-    1 / Krest * Clmetabolism * Qgfr / Ql +
-    Ql * Rblood2plasma / fup * (1 / Krest - 1 / Kliv))
-    
+  Css_blood <- hourly.dose * Rblood2plasma /
+   (fup * Qgfr +
+    Clmetabolism +
+    Clmetabolism * Qgfr / Ql * fup / Rblood2plasma
+   )
+   
   # Convert from blood to plasma 
-  Css <- Css_blood/ Rblood2plasma
+  Css <- Css_blood / Rblood2plasma
   
 # Check to see if a specific tissue was asked for:
   if (!is.null(tissue))
