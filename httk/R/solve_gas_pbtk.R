@@ -119,6 +119,11 @@
 #' 'modelinfo' file. See table below for details.
 #' 
 #' @param method Method used by integrator (deSolve).
+#' (Note: There are precision differences between M1 Mac and other OS systems
+#' for this function due to how long doubles are handled. To replicate results
+#' between various OS systems we suggest changing the default method of "lsoda"
+#' to "lsode" and also adding the argument mf = 10.
+#' See [deSolve::ode()] for further details.)
 #' 
 #' @param rtol Argument passed to integrator (deSolve).
 #' 
