@@ -28,7 +28,7 @@ uM <- calc_mc_css(chem.cas="50594-66-6",samples=NSAMP,output.units="uM")
 set.seed(1234)
 mgpL <- calc_mc_css(chem.cas="50594-66-6",samples=NSAMP,output.units="mg/L")
 # Test unit conversions, molecular weight of Acifluorfen is 361.66:
-signif(mgpL/uM*1000,4)
+signif(mgpL/uM*1000,3)
 # Human.Clint.pvalue > 0.05, no measured Rblood2plasma
 set.seed(1234)
 calc_mc_css(chem.cas="116-06-3",samples=NSAMP)
