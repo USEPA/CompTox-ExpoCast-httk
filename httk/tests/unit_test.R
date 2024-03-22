@@ -35,7 +35,10 @@ convert_units("ug/L","ppmv",
 head(solve_gas_pbtk(chem.name="bisphenol a",
                     times=c(0,0.1,0.05),
                     output.units=setNames("mg/m3","Cendexhppmv"),
-                    method = "lsode",mf = 10))
+                    method = "lsode",
+                    mf = 10, 
+                    rtol=1e-7,
+                    atol=1e-7))
 
 # Quit without saving or displaying messages:
 quit("no")

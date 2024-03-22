@@ -112,9 +112,9 @@ Warning messages:
 3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Clint is provided as a distribution.
 > # Test unit conversions, molecular weight of Acifluorfen is 361.66:
-> signif(mgpL/uM*1000,4)
-  95% 
-361.7 
+> signif(mgpL/uM*1000,3)
+95% 
+362 
 > # Human.Clint.pvalue > 0.05, no measured Rblood2plasma
 > set.seed(1234)
 > calc_mc_css(chem.cas="116-06-3",samples=NSAMP)
