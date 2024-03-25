@@ -21,6 +21,9 @@
 #' filtration rate in the kidney, 
 # and Cl_h is the chemical-specific whole liver metabolism 
 #' clearance (scaled up from intrinsic clearance, which does not depend on flow).
+#' Plasma concentration in compartment x is given by 
+#' \eqn{C_{x,plasma} = \frac{C_{x}}{R_{b2p}}} for a tissue independent value of 
+#' \eqn{R_{b2p}}.
 #' 
 #' Note that the timescales for the model parameters have units of hours while 
 #' the model output is in days.
