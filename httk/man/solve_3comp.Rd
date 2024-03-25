@@ -162,6 +162,9 @@ The blood concentrations evolve according to:
 where "ha" is the hepatic artery, Q's are flows, "GFR" is the glomerular
 filtration rate in the kidney, 
 clearance (scaled up from intrinsic clearance, which does not depend on flow).
+Plasma concentration in compartment x is given by 
+\eqn{C_{x,plasma} = \frac{C_{x}}{R_{b2p}}} for a tissue independent value of 
+\eqn{R_{b2p}}.
 }
 \details{
 Note that the timescales for the model parameters have units of hours while 

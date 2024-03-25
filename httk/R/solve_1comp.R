@@ -3,6 +3,13 @@
 #' This function solves for the amount or concentration of a chemical in plasma
 #' for a one compartment model as a function of time based on the dose and
 #' dosing frequency. 
+#' The model describes blood concentrations in a single compartment. 
+#' The volume of distribution
+#' depends on the physical volume of each tissue and the predicted chemical 
+#' partitioning into those volumes. 
+#' Plasma concentration in compartment x is given by 
+#' \eqn{C_{plasma} = \frac{C_{blood}}{R_{b2p}}} for a tissue independent value of 
+#' \eqn{R_{b2p}}.
 #' 
 #' Note that the timescales for the model parameters have units of hours while 
 #' the model output is in days.
