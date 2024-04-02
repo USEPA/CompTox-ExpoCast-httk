@@ -68,8 +68,11 @@ httkpop_mc <- function(model,
                         httkpop_generate,
                         args=list(nsamp=samples,...))
   # Convert HTTK-Pop-generated parameters to HTTK physiological parameters
-  if (model.list[[model]]$calc.standard.httkpop2httk)
+  if (model.list[[model]]$calc.standard.httkpop2httk){
     physiology.dt <- httkpop_biotophys_default(indiv_dt = httkpop.dt)
+  }else{
+    physiology.dt <- httkpop.dt
+  }
   
   # set precision:
   cols <- colnames(physiology.dt)
