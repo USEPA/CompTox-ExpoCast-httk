@@ -163,9 +163,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
   Css_blood <- hourly.dose * Rblood2plasma /
    (fup * Qgfr +
     Clmetabolism +
-    Rblood2plasma * Qalv / Kblood2air + 
-    Clmetabolism / Ql * fup / Rblood2plasma *
-      (Qgfr + Rblood2plasma * Qalv / Kblood2air)
+    Clmetabolism / Ql * fup / Rblood2plasma * Qgfr
    )
    
   # Convert from blood to plasma 

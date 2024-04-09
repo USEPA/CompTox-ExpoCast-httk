@@ -67,7 +67,7 @@ This function calculates the hepatic clearance in plasma for using the
 \insertCite{ito2004comparison}{httk} are also available.
 Parameters for scaling from flow-free intrinsic-hepatic clearance to 
 whole-liver metabolism rate are taken from 
-\insetCite{carlile1997scaling}{httk}.
+\insertCite{carlile1997scaling}{httk}.
 In vitro measured hepatic clearace is 
 corrected for estimated binding in the in vitro clearance assay 
 using the model of \insertCite{kilford2008hepatocellular}{httk}.
