@@ -79,6 +79,7 @@ calc_analytic_css_3comp2 <- function(chem.name=NULL,
                                    suppress.messages=FALSE,
                                    recalc.blood2plasma=FALSE,
                                    tissue=NULL,
+                                   route="oral",
                                    restrictive.clearance=TRUE,
                                    bioactive.free.invivo = FALSE,
                                    Caco2.options = list(),
@@ -165,9 +166,10 @@ calc_analytic_css_3comp2 <- function(chem.name=NULL,
     Qalv <- 0
     Kblood2air <- 1
   } else {
-  }
- 
-   
+    Qalv <- parameters[["Qalvc"]] * BW^(3/4) # L/h
+    Kblood2air <- parameters[["Kblood2air"]]
+ }
+  
   if (route %in% "oral")
   { 
     # Steady-state blood concentration:

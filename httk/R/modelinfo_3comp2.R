@@ -80,7 +80,7 @@ model.list[[THIS.MODEL]]$param.names <- c(
   "Qgfrc",
   "Qgutf",
   "Qliverf",
-  "Qalvf",
+  "Qalvc",
   "Rblood2plasma",
   "Vgutc",
   "Vliverc",
@@ -98,7 +98,7 @@ model.list[[THIS.MODEL]]$Rtosolvermap <- list(
   Qgfrc="Qgfrc",
   Qgutf="Qgutf",
   Qliverf="Qliverf",
-  Qalvf="Qalvf",
+  Qalvc="Qalvc",
   Vportvenc="Vgutc",
   Vliverc="Vliverc",
   Vsyscompc="Vrestc",
@@ -123,6 +123,7 @@ model.list[[THIS.MODEL]]$compiled.param.names <- c(
   "Qgfrc",
   "Qgutf",
   "Qliverf",
+  "Qalvc",
   "Vportvenc",
   "Vliverc",
   "Vsyscompc",
@@ -175,8 +176,10 @@ model.list[[THIS.MODEL]]$allowed.units.input <- list(
        
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[[THIS.MODEL]]$allowed.units.output <- list(
-              "oral" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'),
-              "iv" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'),
+              "oral" = c('uM','mg/L','ppmv','umol','mg','uM*days','mg/L*days',
+                        'mg/m^3','mg/m^3*days'),
+              "iv" = c('uM','mg/L','ppmv','umol','mg','uM*days','mg/L*days',
+                        'mg/m^3','mg/m^3*days'),
               "inhalation" = c('uM','mg/L','ppmv','umol','mg','uM*days','mg/L*days',
                         'mg/m^3','mg/m^3*days'))
 
