@@ -122,7 +122,8 @@
 #' 
 #' @param Caco2.options Arguments describing how to handle Caco2 absorption data
 #' that are passed to \code{\link{invitro_mc}} and the parameterize_[MODEL] 
-#' functions
+#' functions.
+#' See \code{\link{get_fabsgut}} for further details.
 #'
 #' @param adjusted.Funbound.plasma Uses 
 #' \insertCite{pearce2017evaluation;textual}{httk} lipid binding adjustment
@@ -476,12 +477,15 @@ Set species=\"Human\" to run httkpop model.')
     (calcrb2p & is.na(Rb2p.invivo))) 
   {
 # Calculate Krbc2plasma from blood:plasma ratio (if available). We use the average
-# value because we want this to PC to be the same for all individuals since we 
+# value because we want this PC to be the same for all individuals since we 
 # don't have the phys-chem to recalculate. But we need the adjusted values:
     parameterize.args$adjusted.Funbound.plasma <- TRUE
     parameterize.args$suppress.messages=TRUE
-    adj.parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
-                         args=purrr::compact(parameterize.args))
+    if (is.null(parameters))
+    {
+      adj.parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
+                           args=purrr::compact(parameterize.args))
+    } else adj.parameters.mean <- parameters
     parameters.dt[,Krbc2pu:=calc_krbc2pu(
       Rb2p = adj.parameters.mean$Rblood2plasma,
       Funbound.plasma = adj.parameters.mean$Funbound.plasma)]
