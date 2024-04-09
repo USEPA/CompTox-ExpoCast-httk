@@ -118,8 +118,8 @@
 #'                                   species='rabbit',default.to.human=TRUE)
 #'  out <- solve_3comp(parameters=parameters,plots=TRUE)
 #' 
-#' @export parameterize_3comp2
-parameterize_3comp2 <- function(
+#' @export parameterize_3comp
+parameterize_3comp <- function(
                        chem.cas = NULL,
                        chem.name = NULL,
                        dtxsid = NULL,

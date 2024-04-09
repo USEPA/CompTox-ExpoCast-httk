@@ -30,7 +30,7 @@
 
    0 Inputs:
 
-   24 Parameters:
+   25 Parameters:
      BW = 0.0,
      CLmetabolismc = 0.0,
      kgutabs = 0.0,
@@ -38,6 +38,7 @@
      Qgfrc = 0.0,
      Qgutf = 0.0,
      Qliverf = 0.0,
+     Qalvf = 0.0,
      Vportvenc = 0.0,
      Vliverc = 0.0,
      Vsyscompc = 0.0,
@@ -79,7 +80,7 @@
 #define ID_Cplasma 0x00003
 
 /* Parameters */
-static double parms[24];
+static double parms[25];
 
 #define BW parms[0]
 #define CLmetabolismc parms[1]
@@ -88,29 +89,30 @@ static double parms[24];
 #define Qgfrc parms[4]
 #define Qgutf parms[5]
 #define Qliverf parms[6]
-#define Vportvenc parms[7]
-#define Vliverc parms[8]
-#define Vsyscompc parms[9]
-#define Vportven parms[10]
-#define Vliver parms[11]
-#define Vsyscomp parms[12]
-#define Fraction_unbound_plasma parms[13]
-#define CLmetabolism parms[14]
-#define Qcardiac parms[15]
-#define Qgfr parms[16]
-#define Qgut parms[17]
-#define Qliver parms[18]
-#define Qalv parms[19]
-#define Kliver2plasma parms[20]
-#define Krest2plasma parms[21]
-#define Kblood2plasma parms[22]
-#define Ratioblood2plasma parms[23]
+#define Qalvf parms[7]
+#define Vportvenc parms[8]
+#define Vliverc parms[9]
+#define Vsyscompc parms[10]
+#define Vportven parms[11]
+#define Vliver parms[12]
+#define Vsyscomp parms[13]
+#define Fraction_unbound_plasma parms[14]
+#define CLmetabolism parms[15]
+#define Qcardiac parms[16]
+#define Qgfr parms[17]
+#define Qgut parms[18]
+#define Qliver parms[19]
+#define Qalv parms[20]
+#define Kliver2plasma parms[21]
+#define Krest2plasma parms[22]
+#define Kblood2air parms[23]
+#define Ratioblood2plasma parms[24]
 
 /* Function definitions for delay differential equations */
 
-int Nout3comp=1;
-int nr3comp[1]={0};
-double ytau3comp[1] = {0.0};
+int Nout3comp2=1;
+int nr3comp2[1]={0};
+double ytau3comp2[1] = {0.0};
 
 /*Array of initial state variables*/
 static double yini3comp2[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; 
@@ -128,7 +130,7 @@ void initState3comp2 (double *y)
 {
   int i;
 
-  for (i = 0; i < sizeof(yini3comp) / sizeof(yini3comp[0]); i++)
+  for (i = 0; i < sizeof(yini3comp2) / sizeof(yini3comp2[0]); i++)
   {
     yini3comp2[i] = y[i];
   }
@@ -165,7 +167,7 @@ void derivs3comp2 (int *neq, double *pdTime, double *y, double *ydot, double *yo
 
    /* local */ double Cinh;
 
-  Cinh = Cinhppmv / 24.45 ; // ppmv -> umol/L 
+  Cinh = y[ID_Cinhppmv] / 24.45 ; // ppmv -> umol/L 
   
   yout[ID_Cportven] = y[ID_Aportven] / Vportven / 1;
 
@@ -181,7 +183,7 @@ void derivs3comp2 (int *neq, double *pdTime, double *y, double *ydot, double *yo
 
   ydot[ID_Aliver] = Qgut * yout[ID_Cportven] + Qliver * yout[ID_Csyscomp] - ( Qliver + Qgut ) * yout[ID_Cliver]  - CLmetabolism / Ratioblood2plasma * yout[ID_Cliver];
 
-  ydot[ID_Asyscomp] = ( Qgut + Qliver ) * yout[ID_Cliver] - ( Qgut + Qliver ) * yout[ID_Csyscomp] - Fraction_unbound_plasma / Ratioblood2plasma * Qgfr * yout[ID_Csyscomp] + Fraction_unbound_plasma * Qalv / Kblood2air * (Cinh - out[ID_Csyscomp]);
+  ydot[ID_Asyscomp] = ( Qgut + Qliver ) * yout[ID_Cliver] - ( Qgut + Qliver ) * yout[ID_Csyscomp] - Fraction_unbound_plasma / Ratioblood2plasma * Qgfr * yout[ID_Csyscomp] + Fraction_unbound_plasma * Qalv / Kblood2air * (Cinh - yout[ID_Csyscomp]);
 
   ydot[ID_Ametabolized] = CLmetabolism / Ratioblood2plasma * yout[ID_Cliver];
 
