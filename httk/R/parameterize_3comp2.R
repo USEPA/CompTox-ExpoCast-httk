@@ -113,10 +113,10 @@
 #'
 #' @examples
 #' 
-#'  parameters <- parameterize_3comp(chem.name='Bisphenol-A',species='Rat')
-#'  parameters <- parameterize_3comp(chem.cas='80-05-7',
+#'  parameters <- parameterize_3comp2(chem.name='Bisphenol-A',species='Rat')
+#'  parameters <- parameterize_3comp2(chem.cas='80-05-7',
 #'                                   species='rabbit',default.to.human=TRUE)
-#'  out <- solve_3comp(parameters=parameters,plots=TRUE)
+#'  out <- solve_3comp2(parameters=parameters,plots=TRUE)
 #' 
 #' @export parameterize_3comp2
 parameterize_3comp2 <- function(
@@ -156,6 +156,20 @@ parameterize_3comp2 <- function(
                               
   parms$Qkidneyf <- parms$Vvenc <- parms$Vartc <- NULL
  
-  return(lapply(parms[model.list[["3compartment"]]$param.names],
+# Inhalation parameters:
+  gasparms <- do.call(parameterize_gas_pbtk, args=purrr::compact(c(
+    list(
+             chem.cas = chem.cas,
+             chem.name = chem.name,
+             dtxsid = dtxsid,
+             species = species,
+             default.to.human = default.to.human,
+      suppress.messages=suppress.messages
+      ),
+    Caco2.options))
+    )
+  parms <- c(parms, gasparms[["Qalvc"]], gasparms[["Kblood2air"]])
+ 
+  return(lapply(parms[model.list[["3compartment2"]]$param.names],
                 set_httk_precision))                   
 }
