@@ -38,7 +38,7 @@
      Qgfrc = 0.0,
      Qgutf = 0.0,
      Qliverf = 0.0,
-     Qalvf = 0.0,
+     Qalvc = 0.0,
      Vportvenc = 0.0,
      Vliverc = 0.0,
      Vsyscompc = 0.0,
@@ -89,7 +89,7 @@ static double parms[25];
 #define Qgfrc parms[4]
 #define Qgutf parms[5]
 #define Qliverf parms[6]
-#define Qalvf parms[7]
+#define Qalvc parms[7]
 #define Vportvenc parms[8]
 #define Vliverc parms[9]
 #define Vsyscompc parms[10]
@@ -151,7 +151,7 @@ void getParms3comp2 (double *inParms, double *out, int *nout) {
   Qgfr = Qgfrc * pow ( BW , 0.75 ) * 24 ;
   Qgut = Qcardiac * Qgutf ;
   Qliver = Qcardiac * Qliverf ;
-  Qalv = Qcardiac * Qalvf ;
+  Qalv = Qalvc * pow ( BW , 0.75 ) * 24 ;
   Vportven = Vportvenc * BW ;
   Vsyscomp = Vsyscompc * BW ;
   Vliver = Vliverc * BW ;

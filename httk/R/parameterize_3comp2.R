@@ -168,7 +168,7 @@ parameterize_3comp2 <- function(
       ),
     Caco2.options))
     )
-  parms <- c(parms, gasparms[["Qalvc"]], gasparms[["Kblood2air"]])
+  parms <- c(parms, gasparms["Qalvc"], gasparms["Kblood2air"])
  
   return(lapply(parms[model.list[["3compartment2"]]$param.names],
                 set_httk_precision))                   
