@@ -69,13 +69,15 @@
 #' # 1 uM -> 296.148/1000 =  0.296
 #' convert_units("uM","mg/L",chem.name="diclofenac")
 #'
-#' convert_units("uM","ppmv",chem.name="styrene")
+#' # ppmv only works for gasses:
+#' try(convert_units("uM","ppmv",chem.name="styrene"))
+#' convert_units("uM","ppmv",chem.name="styrene",state="gas")
 #'
 #' # Compare with https://www3.epa.gov/ceampubl/learn2model/part-two/onsite/ia_unit_conversion.html
 #' # 1 ug/L Toluene -> 0.263 ppmv
-#' convert_units("ug/L","ppmv",chem.name="toluene")
+#' convert_units("ug/L","ppmv",chem.name="toluene",state="gas")
 #' # 1 pppmv Toluene, 0.0038 mg/L
-#' convert_units("ppmv","mg/L",chem.name="toluene")
+#' convert_units("ppmv","mg/L",chem.name="toluene",state="gas")
 #'
 #' MW_pyrene <- get_physchem_param(param='MW', chem.name='pyrene')
 #' conversion_factor <- convert_units(input.units='mg/L', output.units ='uM',
@@ -241,21 +243,21 @@ convert_units <- function(input.units = NULL,
     if (state == "liquid")
     {
       # Liquid solvent has density liquid.density g / mL:
-  # density and volume per volume:
-      conc_units_conversion_frame["mg/l","ppmv"] <- 1/liquid.density  
-      conc_units_conversion_frame["mg/l","ppbv"] <- 10^3/liquid.density  
-      conc_units_conversion_frame["mg/m3","ppmv"] <- 1/liquid.density/10^3  
-      conc_units_conversion_frame["ug/l","ppmv"] <- 1/10^3/liquid.density
-      conc_units_conversion_frame["ug/ml","ppmv"] <- 1/liquid.density
-  # molar and volume per volume:
-      conc_units_conversion_frame["um","ppmv"] <- this.MW*10^-3/liquid.density  
-      conc_units_conversion_frame["um","ppbv"] <- this.MW*10^0/liquid.density  
-      conc_units_conversion_frame["nm","ppmv"] <- this.MW*10^-6/liquid.density  
-      conc_units_conversion_frame["nm","ppbv"] <- this.MW*10^-3/liquid.density  
-      conc_units_conversion_frame["m","ppmv"] <- this.MW*10^3/liquid.density  
-      conc_units_conversion_frame["m","ppbv"] <- this.MW*10^6/liquid.density  
-      conc_units_conversion_frame["mm","ppmv"] <- this.MW*10^0/liquid.density  
-      conc_units_conversion_frame["mm","ppbv"] <- this.MW*10^3/liquid.density  
+  # density and weight per weight:
+      conc_units_conversion_frame["mg/l","ppmw"] <- 1/liquid.density  
+      conc_units_conversion_frame["mg/l","ppbw"] <- 10^3/liquid.density  
+      conc_units_conversion_frame["mg/m3","ppmw"] <- 1/liquid.density/10^3  
+      conc_units_conversion_frame["ug/l","ppmw"] <- 1/10^3/liquid.density
+      conc_units_conversion_frame["ug/ml","ppmw"] <- 1/liquid.density
+  # molar and weight per weight:
+      conc_units_conversion_frame["um","ppmw"] <- this.MW*10^-3/liquid.density  
+      conc_units_conversion_frame["um","ppbw"] <- this.MW*10^0/liquid.density  
+      conc_units_conversion_frame["nm","ppmw"] <- this.MW*10^-6/liquid.density  
+      conc_units_conversion_frame["nm","ppbw"] <- this.MW*10^-3/liquid.density  
+      conc_units_conversion_frame["m","ppmw"] <- this.MW*10^3/liquid.density  
+      conc_units_conversion_frame["m","ppbw"] <- this.MW*10^6/liquid.density  
+      conc_units_conversion_frame["mm","ppmw"] <- this.MW*10^0/liquid.density  
+      conc_units_conversion_frame["mm","ppbw"] <- this.MW*10^3/liquid.density  
   # molar and weight per weight:
       conc_units_conversion_frame["ug/g","um"] <- 10^3/this.MW*liquid.density
       conc_units_conversion_frame["ppmw","um"] <- 10^3/this.MW*liquid.density     

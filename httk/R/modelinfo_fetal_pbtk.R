@@ -596,15 +596,21 @@ model.list[["fetal_pbtk"]]$allowed.units.output <- list(
 ## These parameters specify the exposure scenario simulated by the model:
 model.list[["fetal_pbtk"]]$routes <- list(
   "oral" = list(
-# We need to know which compartment gets the dose 
+    # We need to know which compartment gets the dose 
     "entry.compartment" = "Agutlumen",
-# desolve events can take the values "add" to add dose C1 <- C1 + dose,
-# "replace" to change the value C1 <- dose
-# or "multiply" to change the value to C1 <- C1*dose
-    "dose.type" = "add"),
+    # desolve events can take the values "add" to add dose C1 <- C1 + dose,
+    # "replace" to change the value C1 <- dose
+    # or "multiply" to change the value to C1 <- C1*dose
+    "dose.type" = "add",
+    "dosing.params" = c("daily.dose",
+                        "initial.dose",
+                        "doses.per.day",
+                        "dosing.matrix")),
   "iv" = list(
     "entry.compartment" = "Aven",
-    "dose.type" = "add")
+    "dose.type" = "add",
+    "dosing.params" = c("initial.dose",
+                        "dosing.matrix"))
   )
 
 # ORDERED LIST of state variables (must match Model variables: 
@@ -720,7 +726,8 @@ model.list[["fetal_pbtk"]]$firstpass <- FALSE
 model.list[["fetal_pbtk"]]$exclude.fup.zero <- TRUE
 
 # These are the parameter names needed to describe steady-state dosing:
-model.list[["fetal_pbtk"]]$css.dosing.params <- c("hourly.dose")
+model.list[["fetal_pbtk"]]$css.dosing.params <- list(
+  oral=c("hourly.dose"))
 
 # Filter out volatile compounds with Henry's Law Constant Threshold
 model.list[["fetal_pbtk"]]$log.henry.threshold <- c(-4.5)

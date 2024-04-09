@@ -5,7 +5,7 @@
 \alias{example.toxcast}
 \title{ToxCast Example Data
 The main page for the ToxCast data is here:
-https://www.epa.gov/chemical-research/exploring-toxcast-data-downloadable-data
+https://www.epa.gov/comptox-tools/exploring-toxcast-data
 Most useful to us is a single file containing all the hits across all chemcials
 and assays:
 https://clowder.edap-cluster.com/datasets/6364026ee4b04f6bb1409eda?space=62bb560ee4b07abf29f88fef}
