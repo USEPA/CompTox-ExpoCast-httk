@@ -67,10 +67,10 @@
 #' @references 
 #' \insertAllCited{}
 #'
-#' @keywords 3compartment analyticCss
+#' @keywords 3compartment2 analyticCss
 #'
-#' @export calc_analytic_css_3comp
-calc_analytic_css_3comp <- function(chem.name=NULL,
+#' @export calc_analytic_css_3comp2
+calc_analytic_css_3comp2 <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid=NULL,
                                    parameters=NULL,
@@ -82,6 +82,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
                                    restrictive.clearance=TRUE,
                                    bioactive.free.invivo = FALSE,
                                    Caco2.options = list(),
+                                   exhalation = TRUE,
                                    ...)
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -159,18 +160,31 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
   Ql <- (parameters[["Qliverf"]] + parameters[["Qgutf"]]) * 
           parameters[["Qcardiacc"]] * BW^(3/4) # L/h
           
-  # Steady-state blood concentration:
-  Css_blood <- hourly.dose * Rblood2plasma /
-   (fup * Qgfr +
-    Clmetabolism +
-    Rblood2plasma * Qalv / Kblood2air + 
-    Clmetabolism / Ql * fup / Rblood2plasma *
-      (Qgfr + Rblood2plasma * Qalv / Kblood2air)
-   )
+  if (!exhalation)
+  {
+    Qalv <- 0
+    Kblood2air <- 1
+  } else {
+  }
+ 
    
-  # Convert from blood to plasma 
-  Css <- Css_blood / Rblood2plasma
-
+  if (route %in% "oral")
+  { 
+    # Steady-state blood concentration:
+    Css_blood <- hourly.dose * Rblood2plasma /
+     (fup * Qgfr +
+      Clmetabolism +
+      Rblood2plasma * Qalv / Kblood2air + 
+      Clmetabolism / Ql * fup / Rblood2plasma *
+        (Qgfr + Rblood2plasma * Qalv / Kblood2air)
+     )
+     
+    # Convert from blood to plasma 
+    Css <- Css_blood / Rblood2plasma
+  } else if (route %in% "inhalation") {
+    if (!exhalation) warning("Model 3comp used with inhalation but no exhalation.")
+  
+  } else stop("Route must be either oral or inhalation.")
 # Check to see if a specific tissue was asked for:
   if (!is.null(tissue))
   {
