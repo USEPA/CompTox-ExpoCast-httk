@@ -1,14 +1,11 @@
-# Add the 3compartment model (Pearce et al., 2017) to the list of models:
-#
-# Pearce, Robert G., et al. "Httk: R package for high-throughput 
-# toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+# The 3compartment model with gas inhalation/exhalation:
 
 # Model identifier for the model.list:
-THIS.MODEL <- "3compartment" 
+THIS.MODEL <- "3compartment2" 
 
 # Analytic expression for steady-state plasma concentration to be used by
 # calc_analytic_css:
-model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_3comp"
+model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_3comp2"
 
 # What units does the analytic function return in calc_analytic_css:
 model.list[[THIS.MODEL]]$steady.state.units <- "mg/L"
@@ -18,11 +15,11 @@ model.list[[THIS.MODEL]]$steady.state.units <- "mg/L"
 model.list[[THIS.MODEL]]$steady.state.compartment <- "plasma"
 
 # Function used for generating model parameters:
-model.list[[THIS.MODEL]]$parameterize.func <- "parameterize_3comp"
+model.list[[THIS.MODEL]]$parameterize.func <- "parameterize_3comp2"
 
 # Function called for running the model:
-model.list[[THIS.MODEL]]$solve.func <- "solve_3comp"
-
+model.list[[THIS.MODEL]]$solve.func <- "solve_3comp2"
+                                                   
 # Here are the tissues from tissue.data that are considered:
 # They should correspond
 # in name to the names present in the tissue.data object, if the parameters
@@ -71,6 +68,7 @@ model.list[[THIS.MODEL]]$param.names <- c(
   "kgutabs",
   "Kliver2pu",
   "Krest2pu",
+  "Kblood2air",
   "liver.density",
   "million.cells.per.gliver",
   "MW",
@@ -82,6 +80,7 @@ model.list[[THIS.MODEL]]$param.names <- c(
   "Qgfrc",
   "Qgutf",
   "Qliverf",
+  "Qalvf",
   "Rblood2plasma",
   "Vgutc",
   "Vliverc",
@@ -99,18 +98,20 @@ model.list[[THIS.MODEL]]$Rtosolvermap <- list(
   Qgfrc="Qgfrc",
   Qgutf="Qgutf",
   Qliverf="Qliverf",
+  Qalvf="Qalvf",
   Vportvenc="Vgutc",
   Vliverc="Vliverc",
   Vsyscompc="Vrestc",
   Fraction_unbound_plasma="Funbound.plasma",
   Kliver2plasma="Kliver2pu",
   Krest2plasma="Krest2pu",
+  Kblood2air="Kblood2air",
   Ratioblood2plasma="Rblood2plasma"
 )
 
 # This function translates the R model parameters into the compiled model
 # parameters:
-model.list[[THIS.MODEL]]$compiled.parameters.init <- "getParms3comp"
+model.list[[THIS.MODEL]]$compiled.parameters.init <- "getParms3comp2"
 
 # This is the ORDERED full list of parameters used by the compiled code to 
 # calculate the derivative of the system of equations describing the model 
@@ -134,17 +135,19 @@ model.list[[THIS.MODEL]]$compiled.param.names <- c(
   "Qgfr",
   "Qgut",
   "Qliver",
+  "Qalv",
   "Kliver2plasma",
   "Krest2plasma",
+  "Kblood2air",
   "Ratioblood2plasma"
   )
 
 # This function initializes the state vector for the compiled model:
-model.list[[THIS.MODEL]]$compiled.init.func <- "initmod3comp"
+model.list[[THIS.MODEL]]$compiled.init.func <- "initmod3comp2"
 
 # This is the function that calculates the derviative of the model as a function
 # of time, state, and parameters:
-model.list[[THIS.MODEL]]$derivative.func <- "derivs3comp"
+model.list[[THIS.MODEL]]$derivative.func <- "derivs3comp2"
 
 # This is the ORDERED list of variables returned by the derivative function
 # (from Model variables: Outputs):
@@ -166,13 +169,17 @@ model.list[[THIS.MODEL]]$default.monitor.vars <- c(
 
 # Allowable units assigned to dosing input:
 model.list[[THIS.MODEL]]$allowed.units.input <- list(
+       "inhalation" = c('ppmv','mg/L','mg/m^3','uM','umol','mg'),
        "oral" = c('umol','mg','mg/kg'),
        "iv" = c('umol','mg','mg/kg'))
        
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[[THIS.MODEL]]$allowed.units.output <- list(
               "oral" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'),
-              "iv" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'))
+              "iv" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'),
+              "inhalation" = c('uM','mg/L','ppmv','umol','mg','uM*days','mg/L*days',
+                        'mg/m^3','mg/m^3*days'))
+
   
 model.list[[THIS.MODEL]]$routes <- list(
   "oral" = list(
@@ -190,7 +197,13 @@ model.list[[THIS.MODEL]]$routes <- list(
     "entry.compartment" = "Asyscomp",
     "dose.type" = "add",
     "dosing.params" = c("initial.dose",
-                        "dosing.matrix"))
+                        "dosing.matrix")),
+  "inhalation" = list(
+    "entry.compartment" = "Cinhppmv",
+    "dose.type" = "replace",
+    "dosing.params" = c("initial.dose",
+                        "dosing.matrix"))   
+
   )    
 
 # ORDERED LIST of state variables (must match Model variables: 
@@ -204,7 +217,8 @@ model.list[[THIS.MODEL]]$state.vars <- c(
   "Asyscomp",
   "Ametabolized",
   "Atubules",
-  "AUC"
+  "AUC",
+  "Cinhppmv"
   )
 
 # Default set of units assigned to correspond to each of the time dependent
@@ -222,12 +236,30 @@ model.list[[THIS.MODEL]]$compartment.units <-c(
     "Cliver"="uM",
     "Csyscomp"="uM",
     "Cplasma"="uM",
+    "Cinhppmv"="ppmv",
     "AUC"="uM*days"
   )
 
 # Compartment state of matter, needed for proper unit conversion, if all
-# comaprtments of the same only include one state and set it to "all":
-model.list[[THIS.MODEL]]$compartment.state <- list(liquid="all")
+model.list[[THIS.MODEL]]$compartment.state <- list(
+  liquid = c(    "Aintestine",
+    "Aportven",
+    "Aliver",
+    "Asyscomp",
+    "Ametabolized",
+    "Atubules",
+    "Cportven",
+    "Cliver",
+    "Csyscomp",
+    "Cplasma",
+    "AUC"
+             ),
+  gas = c("Cinhppmv",
+    )
+  )
+
+
+
 
 # Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[[THIS.MODEL]]$required.params <- c(
