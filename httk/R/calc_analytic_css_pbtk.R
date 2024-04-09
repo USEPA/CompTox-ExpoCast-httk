@@ -124,11 +124,16 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
     chem.name <- out$chem.name                                
     dtxsid <- out$dtxsid  
 
-    parameters <- parameterize_pbtk(chem.cas=chem.cas,
-                                    chem.name=chem.name,
-                                    suppress.messages=suppress.messages,
-                                    Caco2.options = Caco2.options,
-                                    ...) 
+    parameters <- do.call(parameterize_pbtk, 
+                          args=purrr::compact(c(
+                            list(chem.cas=chem.cas,
+                                 chem.name=chem.name,
+                                 suppress.messages=suppress.messages,
+                                 Caco2.options = Caco2.options,
+                                 restrictive.clearance = restrictive.clearance
+                                 ),
+                            ...)))
+                                    
     if (recalc.blood2plasma) 
     {
       warning("Argument recalc.blood2plasma=TRUE ignored because parameters is NULL.")
@@ -147,9 +152,6 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
         parameters[['hematocrit']] * parameters[['Krbc2pu']] * parameters[['Funbound.plasma']]
 
     }
-
-
-
   }
   
   Qcardiac <-  parameters[["Qcardiacc"]] / parameters[['BW']]^0.25 # L/h/kg
@@ -163,64 +165,20 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
   Qrest <- Qcardiac-Qgut-Qliver-Qkidney # L/h/kg
   Rblood2plasma <- parameters[['Rblood2plasma']]
   fup <- parameters[["Funbound.plasma"]]
-  if (!restrictive.clearance) Clmetabolism <- Clmetabolism / fup
   
   hourly.dose <- hourly.dose * parameters$Fabsgut
   
 # Css for venous blood:
   Cven.ss <- (hourly.dose * (Qliver + Qgut) / 
-         (fup * Clmetabolism / Rblood2plasma + (Qliver + Qgut))) / 
+         (Clmetabolism / Rblood2plasma + (Qliver + Qgut))) / 
          (Qcardiac - 
          (Qliver + Qgut)**2 /
-         (fup * Clmetabolism / Rblood2plasma + (Qliver + Qgut)) - 
+         (Clmetabolism / Rblood2plasma + (Qliver + Qgut)) - 
          Qkidney +
          Qgfr * fup / Rblood2plasma  - 
          Qrest)
 # Calculate steady-state plasma Css:
   Css <- Cven.ss / Rblood2plasma
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 # Check to see if a specific tissue was asked for:
   if (!is.null(tissue))
