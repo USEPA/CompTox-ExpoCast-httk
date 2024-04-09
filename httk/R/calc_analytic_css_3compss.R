@@ -164,21 +164,25 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
   Rb2p <- parameters$Rblood2plasma 
   BW <- parameters$BW
   # Total blood flow (gut plus arterial) into liver:
-  Qtotalliver <- parameters$Qtotal.liverc/BW^0.25 #L/h/kg BW
+  Qtotalliver <- parameters$Qtotal.liverc/BW^0.25 # L / h / kg BW
 
-# Scale up from in vitro Clint to a whole liver clearance:
-  cl <- calc_hep_clearance(parameters=parameters,
-          hepatic.model='unscaled',
-          suppress.messages=TRUE)#L/h/kg body weight
-  if (!restrictive.clearance) cl <- cl*Fup
-
-# Calculate steady-state plasma Css, Pearce et al. (2017) equation section 2.2:
+  # Scale glomerular filtration rate to per kg BW:
+  Qgfr <- parameters$Qgfrc/BW^0.25 # L / h / kg BW
+  
+  # Scale up from in vitro Clint to a whole liver clearance:
+  Cl <- calc_hep_clearance(parameters=parameters,
+          hepatic.model="well-stirred",
+          restrictive.clearance = restrictive.clearance,
+          suppress.messages=TRUE) # L / h / kg BW
+  
+# Calculate steady-state plasma Css. With the well-stirred calculation (above)
+# this is the same equation as Wetmore et al. (2012) page 160 or 
+# Pearce et al. (2017) equation section 2.2:
    Css <- parameters$Fabsgut * 
     parameters$hepatic.bioavailability *
-    hourly.dose / (
-    parameters$Qgfrc/BW^0.25 * Fup + 
-    Qtotalliver*Fup*cl /
-    (Qtotalliver + Fup*cl/Rb2p))
+    hourly.dose / 
+    (Qgfr * Fup + Cl) 
+# Css has units of mg / L
     
 # Check to see if a specific tissue was asked for:
   if (!is.null(tissue))
