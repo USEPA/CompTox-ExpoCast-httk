@@ -2,95 +2,51 @@
 % Please edit documentation in R/httk-package.R
 \docType{package}
 \name{httk-package}
-\alias{httk-package}
 \alias{httk}
-\title{\Sexpr{tools:::Rd_package_title("httk")}}
+\alias{httk-package}
+\title{httk: High-Throughput Toxicokinetics}
 \description{
-\Sexpr{tools:::Rd_package_description("httk")}
-}
-\references{
-\href{https://www.epa.gov/chemical-research/computational-toxicology-communities-practice-high-throughput-toxicokinetic-httk}{PowerPoint Presentation: High-Throughput Toxicokinetics (HTTK) R package}
-
-\href{https://www.epa.gov/chemical-research/toxicokinetics-overview}{Toxicokinetics at the U.S. Environmental Protection Agency}
-
-Breen et al. (2021): High-throughput  PBTK models for in vitro to in vivo
-extrapolation
-(\doi{10.1080/17425255.2021.1935867})
-
-Pearce et al. (2017): httk: R Package for High-Throughput Toxicokinetics
-(\doi{10.18637/jss.v079.i04})
-
-Armitage et al. (2014): Application of mass balance models and the chemical
-activity concept to facilitate the use of in vitro toxicity data for risk 
-assessment
-(\doi{10.1021/es501955g})
-
-Honda et al. (2019): Using the concordance of in vitro and in vivo data to
-evaluate extrapolation  assumptions
-(\doi{10.1371/journal.pone.0217564})
-
-Kapraun et al. (2022): Evaluation of a rapid, generic human gestational dose 
-model
-(\doi{10.1016/j.reprotox.2022.09.004})
-
-Linakis et al. (2020): Development and evaluation of a high throughput 
-inhalation model for organic chemicals
-(\doi{10.1038/s41370-020-0238-y})
-
-Pearce et al. (2017): Evaluation and calibration of high-throughput
-predictions of chemical distribution to tissues
-(\doi{10.1007/s10928-017-9548-7})
-
-Ring et al. (2017): Identifying populations sensitive to environmental
-chemicals by simulating toxicokinetic variability
-(\doi{10.1016/j.envint.2017.06.004})
-
-Sipes et al. (2017): An Intuitive Approach for Predicting Potential Human
-Health Risk with the Tox21 10k Library
-(\doi{10.1021/acs.est.7b00650})
-
-Wambaugh et al. (2015): Toxicokinetic Triage for Environmental Chemicals
-(\doi{10.1093/toxsci/kfv118})
-
-Wambaugh et al. (2018): Evaluating In Vitro-In Vivo Extrapolation of
-Toxicokinetics
-(\doi{10.1093/toxsci/kfy020})
-
-Wambaugh et al. (2019): Assessing Toxicokinetic Uncertainty and Variability
-in Risk Prioritization
-(\doi{10.1093/toxsci/kfz205})
-
-Wetmore et al. (2015): Incorporating High-Throughput Exposure Predictions with Dosimetry-Adjusted
-In Vitro Bioactivity to Inform Chemical Toxicity Testing
-(\doi{10.1093/toxsci/kfv171})
-
-\href{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}{The U.S. EPA ExpoCast (Exposure Forecasting) Project}
+Pre-made models that can be rapidly tailored to various chemicals and species using chemical-specific in vitro data and physiological information. These tools allow incorporation of chemical toxicokinetics ("TK") and in vitro-in vivo extrapolation ("IVIVE") into bioinformatics, as described by Pearce et al. (2017) (\doi{10.18637/jss.v079.i04}). Chemical-specific in vitro data characterizing toxicokinetics have been obtained from relatively high-throughput experiments. The chemical-independent ("generic") physiologically-based ("PBTK") and empirical (for example, one compartment) "TK" models included here can be parameterized with in vitro data or in silico predictions which are provided for thousands of chemicals, multiple exposure routes, and various species. High throughput toxicokinetics ("HTTK") is the combination of in vitro data and generic models. We establish the expected accuracy of HTTK for chemicals without in vivo data through statistical evaluation of HTTK predictions for chemicals where in vivo data do exist. The models are systems of ordinary differential equations that are developed in MCSim and solved using compiled (C-based) code for speed. A Monte Carlo sampler is included for simulating human biological variability (Ring et al., 2017 \doi{10.1016/j.envint.2017.06.004}) and propagating parameter uncertainty (Wambaugh et al., 2019 \doi{10.1093/toxsci/kfz205}). Empirically calibrated methods are included for predicting tissue:plasma partition coefficients and volume of distribution (Pearce et al., 2017 \doi{10.1007/s10928-017-9548-7}). These functions and data provide a set of tools for using IVIVE to convert concentrations from high-throughput screening experiments (for example, Tox21, ToxCast) to real-world exposures via reverse dosimetry (also known as "RTK") (Wetmore et al., 2015 \doi{10.1093/toxsci/kfv171}).
 }
 \seealso{
-\code{\link{httkpop}}
+Useful links:
+\itemize{
+  \item \url{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}
+  \item Report bugs at \url{https://github.com/USEPA/CompTox-ExpoCast-httk}
+}
+
 }
 \author{
-\href{https://orcid.org/0000-0002-4024-534X}{John Wambaugh},
-\href{https://orcid.org/0000-0002-2891-9380}{Sarah Davidson-Fritz},  
-\href{https://orcid.org/0000-0003-3168-4049}{Robert Pearce}, 
-\href{https://orcid.org/0000-0002-0463-1251}{Caroline Ring},
-\href{https://orcid.org/0000-0001-7713-9850}{Greg Honda},
-Mark Sfeir, 
-\href{https://orcid.org/0000-0003-0526-2395}{Matt Linakis}, 
-\href{https://orcid.org/0000-0001-5570-6383}{Dustin Kapraun}, 
-\href{https://orcid.org/0000-0001-8992-9294}{Nathan Pollesch},
-\href{https://orcid.org/0000-0001-8511-4653}{Miyuki Breen},
-\href{https://orcid.org/0000-0002-5754-6085}{Shannon Bell},
-\href{https://orcid.org/0000-0003-0752-1848}{Xiaoqing Chang}, 
-\href{https://orcid.org/0000-0002-0248-8412}{Todor Antonijevic},
-Jimena Davis,
-\href{https://orcid.org/0000-0001-8781-2391}{Elaina Kenyon},
-\href{https://orcid.org/0000-0002-5901-1404}{James Sluka},
-Noelle Sinski, 
-\href{https://orcid.org/0000-0003-4203-6426}{Nisha Sipes}, 
-\href{https://orcid.org/0000-0002-6878-5348}{Barbara Wetmore},
-Lily Whipple,
-and
-Woodrow Setzer
+\strong{Maintainer}: John Wambaugh \email{wambaugh.john@epa.gov} (\href{https://orcid.org/0000-0002-4024-534X}{ORCID})
+
+Authors:
+\itemize{
+  \item Sarah Davidson-Fritz \email{davidsonfritz.sarah@epa.gov} (\href{https://orcid.org/0000-0002-2891-9380}{ORCID})
+  \item Robert Pearce (\href{https://orcid.org/0000-0003-3168-4049}{ORCID})
+  \item Caroline Ring \email{Ring.Caroline@epa.gov} (\href{https://orcid.org/0000-0002-0463-1251}{ORCID})
+  \item Greg Honda \email{honda.gregory@epa.gov} (\href{https://orcid.org/0000-0001-7713-9850}{ORCID})
+  \item Mark Sfeir
+  \item Matt Linakis \email{MLINAKIS@ramboll.com} (\href{https://orcid.org/0000-0003-0526-2395}{ORCID})
+  \item Dustin Kapraun \email{kapraun.dustin@epa.gov} (\href{https://orcid.org/0000-0001-5570-6383}{ORCID})
 }
-\keyword{package}
+
+Other contributors:
+\itemize{
+  \item Nathan Pollesch \email{pollesch.nathan@epa.gov} (\href{https://orcid.org/0000-0001-8992-9294}{ORCID}) [contributor]
+  \item Miyuki Breen \email{breen.miyuki@epa.gov} (\href{https://orcid.org/0000-0001-8511-4653}{ORCID}) [contributor]
+  \item Shannon Bell \email{Shannon.bell@inotivco.com} (\href{https://orcid.org/0000-0002-5754-6085}{ORCID}) [contributor]
+  \item Xiaoqing Chang \email{Xiaoqing.chang@inotivco.com} (\href{https://orcid.org/0000-0003-0752-1848}{ORCID}) [contributor]
+  \item Todor Antonijevic \email{tantonijevic@toxstrategies.com} (\href{https://orcid.org/0000-0002-0248-8412}{ORCID}) [contributor]
+  \item Jimena Davis [contributor]
+  \item Elaina Kenyon \email{kenyon.elaina@epa.gov} (\href{https://orcid.org/0000-0001-8781-2391}{ORCID}) [contributor]
+  \item Katie Paul Friedman \email{Paul-Friedman.Katie@epa.gov} (\href{https://orcid.org/0000-0002-2710-1691}{ORCID}) [contributor]
+  \item James Sluka \email{jsluka@indiana.edu} (\href{https://orcid.org/0000-0002-5901-1404}{ORCID}) [contributor]
+  \item Noelle Sinski \email{Noelle.Sinski@icf.com} [contributor]
+  \item Nisha Sipes \email{sipes.nisha@epa.gov} (\href{https://orcid.org/0000-0003-4203-6426}{ORCID}) [contributor]
+  \item Barbara Wetmore \email{wetmore.barbara@epa.gov} (\href{https://orcid.org/0000-0002-6878-5348}{ORCID}) [contributor]
+  \item Lily Whipple [contributor]
+  \item Woodrow Setzer (\href{https://orcid.org/0000-0002-6709-9186}{ORCID}) [contributor]
+}
+
+}
+\keyword{internal}

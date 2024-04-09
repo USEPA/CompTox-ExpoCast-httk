@@ -1,7 +1,7 @@
 
-R Under development (unstable) (2023-04-16 r84269 ucrt) -- "Unsuffered Consequences"
-Copyright (C) 2023 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R Under development (unstable) (2024-03-16 r86144 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -37,7 +37,7 @@ Type 'q()' to quit R.
 > #
 > # Compare with 
 > #   https://www.eurofinsus.com/environment-testing/services/air-and-vapor/unit-conversion-calculator/
-> # STP assumes 24.45 = (25°C and 1 atm)
+> # STP assumes 24.45 = (25?C and 1 atm)
 > # 1 ug/L Toluene -> 0.26539 ppmv
 > convert_units("ug/L","ppmv",
 +                 chem.name="toluene",
@@ -58,7 +58,11 @@ Type 'q()' to quit R.
 > # Test that convert_solve_x doesn't throw any errors:
 > head(solve_gas_pbtk(chem.name="bisphenol a",
 +                     times=c(0,0.1,0.05),
-+                     output.units=setNames("mg/m3","Cendexhppmv")))
++                     output.units=setNames("mg/m3","Cendexhppmv"),
++                     method = "lsode",
++                     mf = 10, 
++                     rtol=1e-7,
++                     atol=1e-7))
             output.unit conversion.factor
 Cendexhppmv       mg/m3             9.332
 AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
@@ -75,8 +79,8 @@ The model outputs are provided in the following units:
 [3,] 0.10 0.7285 0.2085 0.02505 0.3882 0.04737 0.1958   1.142 0.03152        0
      Cendexhppmv Cmixexhppmv Cmuc Atubules Ametabolized       AUC
 [1,]   0.000e+00     0.01227    0 0.000000        0.000 0.0000000
-[2,]   9.890e-07     0.01227 1866 0.009153        2.026 0.0006988
-[3,]   1.975e-06     0.01227 3733 0.021120        5.476 0.0020270
+[2,]   9.840e-07     0.01227 1866 0.009153        2.026 0.0006988
+[3,]   1.966e-06     0.01227 3733 0.021120        5.476 0.0020270
 Warning messages:
 1: In solve_gas_pbtk(chem.name = "bisphenol a", times = c(0, 0.1, 0.05),  :
   Henry's constant, as a measure of volatility, is smaller for the
