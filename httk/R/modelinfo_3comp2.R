@@ -254,7 +254,7 @@ model.list[[THIS.MODEL]]$compartment.state <- list(
     "Cplasma",
     "AUC"
              ),
-  gas = c("Cinhppmv",
+  gas = c("Cinhppmv"
     )
   )
 
