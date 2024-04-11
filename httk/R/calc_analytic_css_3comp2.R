@@ -75,6 +75,7 @@ calc_analytic_css_3comp2 <- function(chem.name=NULL,
                                    dtxsid=NULL,
                                    parameters=NULL,
                                    hourly.dose=1/24,
+                                   Cinhaled = NULL,
                                    concentration='plasma',
                                    suppress.messages=FALSE,
                                    recalc.blood2plasma=FALSE,
@@ -170,23 +171,33 @@ calc_analytic_css_3comp2 <- function(chem.name=NULL,
     Kblood2air <- parameters[["Kblood2air"]]
  }
   
+  # Steady-state blood concentration (mg/L):
   if (route %in% "oral")
   { 
-    # Steady-state blood concentration:
     Css_blood <- hourly.dose * Rblood2plasma /
      (fup * Qgfr +
       Clmetabolism +
       Rblood2plasma * Qalv / Kblood2air + 
-      Clmetabolism / Ql * fup / Rblood2plasma *
-        (Qgfr + Rblood2plasma * Qalv / Kblood2air)
+      Clmetabolism / Ql *
+        (fup / Rblood2plasma * Qgfr + Qalv / Kblood2air)
      )
-     
-    # Convert from blood to plasma 
-    Css <- Css_blood / Rblood2plasma
   } else if (route %in% "inhalation") {
+    if (is.null(Cinhaled)) stop("Must set inhalation dose in ppmv.")
     if (!exhalation) warning("Model 3comp used with inhalation but no exhalation.")
-  
+    
+    CinhaledmgpL <- convert_units("ppmv", "mg/L", state="gas")*Cinhaled
+    
+    Css_blood <- Qalv * CinhaledmgpL /
+     (Ql -
+      Ql^2 / (Ql + Clmetabolism / Rblood2plasma) +
+      fup * Qgfr / Rblood2plasma + 
+      Qalv / Kblood2air) 
   } else stop("Route must be either oral or inhalation.")
+
+  # Convert from blood to plasma 
+  Css <- Css_blood / Rblood2plasma
+
+
 # Check to see if a specific tissue was asked for:
   if (!is.null(tissue))
   {
@@ -242,5 +253,6 @@ calc_analytic_css_3comp2 <- function(chem.name=NULL,
       
     } else if (tolower(concentration)!='plasma') stop("Only blood and plasma concentrations are calculated.")
   }
-  return(Css)
+  
+  return(Css) # mg/L
 }
