@@ -120,7 +120,7 @@ static double yini3comp2[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
 /*----- Initializers */
 void initmod3comp2 (void (* odeparms)(int *, double *))
 {
-  int N=24;
+  int N=25;
   odeparms(&N, parms);
 }
 
@@ -183,8 +183,8 @@ void derivs3comp2 (int *neq, double *pdTime, double *y, double *ydot, double *yo
 
   ydot[ID_Aliver] = Qgut * yout[ID_Cportven] + Qliver * yout[ID_Csyscomp] - ( Qliver + Qgut ) * yout[ID_Cliver]  - CLmetabolism / Ratioblood2plasma * yout[ID_Cliver];
 
-  ydot[ID_Asyscomp] = ( Qgut + Qliver ) * yout[ID_Cliver] - ( Qgut + Qliver ) * yout[ID_Csyscomp] - Fraction_unbound_plasma / Ratioblood2plasma * Qgfr * yout[ID_Csyscomp] + Fraction_unbound_plasma * Qalv / Kblood2air * (Cinh - yout[ID_Csyscomp]);
-
+  ydot[ID_Asyscomp] = ( Qgut + Qliver ) * yout[ID_Cliver] - ( Qgut + Qliver ) * yout[ID_Csyscomp] - Fraction_unbound_plasma / Ratioblood2plasma * Qgfr * yout[ID_Csyscomp] - Qalv / Ratioblood2plasma / Kblood2air * yout[ID_Csyscomp] + Qalv * Cinh;
+                                
   ydot[ID_Ametabolized] = CLmetabolism / Ratioblood2plasma * yout[ID_Cliver];
 
   ydot[ID_Atubules] = Fraction_unbound_plasma / Ratioblood2plasma * Qgfr * yout[ID_Csyscomp] ;
