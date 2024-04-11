@@ -429,8 +429,9 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
     Qalvc = ((fR*60) * (VT - VD))/outlist$BW^0.75 #L/h/kg^0.75, 
     #Added 4-30-19 to allow user-input respiratory and/or work values,
     #assumes input units of L and min^-1
-  } else {
+  } else {                                               
     Vdot <- this.phys.data["Pulmonary Ventilation Rate"]
+    # Linakis et al. (2020) Equation 5 by way of Clewell et al. (2001):
     Qalvc <- Vdot * (0.67) #L/h/kg^0.75
   }
   outlist <- c(outlist,Kblood2air =  Kblood2air,Kmuc2air = Kmuc2air,Qalvc=as.numeric(Qalvc))
