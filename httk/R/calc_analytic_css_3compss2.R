@@ -38,12 +38,14 @@
 #'
 #' @seealso \code{\link{parameterize_steadystate}}
 #'
-#'@author Robert Pearce and John Wambaugh
+#'@author ohn Wambaugh
 #'
 #' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
 #' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 #'
 #'@keywords 3compss2
+#'
+#' @export calc_analytic_css_3compss2
 calc_analytic_css_3compss2 <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid = NULL,
@@ -142,9 +144,10 @@ calc_analytic_css_3compss2 <- function(chem.name=NULL,
   # Calculate steady-state blood Css, Pearce et al. (2017) equation section 2.2:
   Css_blood <- parameters$Fabsgut * 
     parameters$hepatic.bioavailability *
+    Rb2p *
     hourly.dose / (
     Qgfr * Fup + # Renal clearance
-    parameters$Qalv/Kblood2air +     # Exhalation clearance
+    Rb2p * Qalv/Kblood2air +     # Exhalation clearance
     cl)
   
   # Convert from blood to plasma:

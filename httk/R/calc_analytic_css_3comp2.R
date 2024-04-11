@@ -149,6 +149,7 @@ calc_analytic_css_3comp2 <- function(chem.name=NULL,
   hourly.dose <- hourly.dose * parameters[["Fabsgut"]] * BW # mg/h
   fup <- parameters[["Funbound.plasma"]]
   Rblood2plasma <- parameters[["Rblood2plasma"]]
+  Fabsgut <- parameters[["Fabsgut"]]
 
   # Calculate hepatic clearance:
   Clmetabolism <- BW *parameters[["Clmetabolismc"]] # L/h
@@ -174,7 +175,9 @@ calc_analytic_css_3comp2 <- function(chem.name=NULL,
   # Steady-state blood concentration (mg/L):
   if (route %in% "oral")
   { 
-    Css_blood <- hourly.dose * Rblood2plasma /
+    Css_blood <- hourly.dose * 
+                 Fabsgut *
+                 Rblood2plasma /
      (fup * Qgfr +
       Clmetabolism +
       Rblood2plasma * Qalv / Kblood2air + 
