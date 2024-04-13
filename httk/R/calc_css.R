@@ -28,7 +28,7 @@
 #' 
 #' @param daily.dose Total daily dose, mg/kg BW.
 #' 
-#' @param doses.per.day Number of doses per day.
+#' @param doses.per.day Number of oral doses per day.
 #' 
 #' @param days Initial number of days to run simulation that is multiplied on
 #' each iteration.
@@ -119,6 +119,8 @@ calc_css <- function(chem.name=NULL,
                     f = .01,
                     daily.dose=1,
                     doses.per.day=3,
+                    dose.units = "mg/kg",
+                    route = "oral",
                     days = 21,
                     output.units = "uM",
                     suppress.messages=FALSE,
@@ -214,6 +216,7 @@ calc_css <- function(chem.name=NULL,
     parameters=parameters,
     daily.dose=daily.dose,
     concentration='plasma',
+    route=route,
     model=model,
     output.units = output.units,
     suppress.messages=TRUE,
@@ -241,6 +244,8 @@ calc_css <- function(chem.name=NULL,
       parameters=parameters,
     model=model, 
     dosing=dosing,
+    route=route,
+    input.units=dose.units,
     suppress.messages=TRUE,
     days=days,
     output.units = output.units,
@@ -281,6 +286,8 @@ calc_css <- function(chem.name=NULL,
       model=model,
       initial.values = Final_Conc[state.vars],  
       dosing=dosing,
+      route=route,
+      input.units=dose.units,
       days = additional.days,
       output.units = output.units,
       restrictive.clearance=restrictive.clearance,
