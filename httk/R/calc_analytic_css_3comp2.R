@@ -191,13 +191,18 @@ calc_analytic_css_3comp2 <- function(chem.name=NULL,
     if (is.null(Cinhaled)) stop("Must set inhalation dose in ppmv.")
     if (!exhalation) warning("Model 3comp used with inhalation but no exhalation.")
     
-    CinhaledmgpL <- convert_units("ppmv", "mg/L", state="gas")*Cinhaled
+    CinhaledmgpL <- convert_units(dtxsid=dtxsid,
+                                  "ppmv", "mg/L", state="gas") *
+                                  Cinhaled
     
-    Css_blood <- Qalv * CinhaledmgpL /
-     (Ql -
-      Ql^2 / (Ql + Clmetabolism / Rblood2plasma) +
-      fup * Qgfr / Rblood2plasma + 
-      Qalv / Kblood2air) 
+    Css_blood <- CinhaledmgpL * # Inhaled concentration mg/L
+                 Qalv / # Alveolar air flow # L/h
+                 (
+                   Ql - # Liver blood flow L/h
+                   Ql^2 / (Ql + Clmetabolism / Rblood2plasma) + # Return from liver less hepatic clearance L/h
+                   fup * Qgfr / Rblood2plasma + # Glomerular filtration from blood L/h
+                   Qalv / Kblood2air # Exhalation rate L/h
+                 ) 
   } else stop("Route must be either oral or inhalation.")
 
   # Convert from blood to plasma 
