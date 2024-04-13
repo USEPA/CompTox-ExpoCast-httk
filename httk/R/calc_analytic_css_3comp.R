@@ -143,9 +143,12 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
 
   # Get the basic parameters:
   BW <- parameters[["BW"]] # kg
-  hourly.dose <- hourly.dose * parameters[["Fabsgut"]] * BW # mg/h
+  hourly.dose <- hourly.dose * BW # mg/h
   fup <- parameters[["Funbound.plasma"]]
   Rblood2plasma <- parameters[["Rblood2plasma"]]
+
+  # Oral bioavailability:
+  Fabsgut <- parameters[["Fabsgut"]]
 
   # Calculate hepatic clearance:
   Clmetabolism <- BW *parameters[["Clmetabolismc"]] # L/h
@@ -160,11 +163,14 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
           parameters[["Qcardiacc"]] * BW^(3/4) # L/h
           
   # Steady-state blood concentration:
-  Css_blood <- hourly.dose * Rblood2plasma /
-   (fup * Qgfr +
-    Clmetabolism +
-    Clmetabolism / Ql * fup / Rblood2plasma * Qgfr
-   )
+  Css_blood <- hourly.dose * # Oral dose rate mg/h
+               Fabsgut * # Fraction of dose absorbed from gut (in vivo or Caco-2)
+               Rblood2plasma / # Blood to plasma concentration ratio
+               (
+                 fup * Qgfr + # Glomerular filtration to proximal tubules (kidney)
+                 Clmetabolism + # Hepatic metabolism (liver)
+                 Clmetabolism / Ql * fup / Rblood2plasma * Qgfr
+               )
    
   # Convert from blood to plasma 
   Css <- Css_blood / Rblood2plasma

@@ -185,13 +185,13 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
 # this is the same equation as Wetmore et al. (2012) page 160 or 
 # Pearce et al. (2017) equation section 2.2:
 
-   Css <- Fabsgut * 
-          Fhep *
-          hourly.dose / (
-            Qgfr * Fup + # Renal clearance
-
-            Clhep # Well-stirred hepatic metabolism
-            )
+   Css <- hourly.dose * # Oral dose rate mg/kg/h
+          Fabsgut * # Fraction of dose absorbed from gut (in vivo or Caco-2)
+          Fhep / # Fraction of dose that escapes first-pass hepatic metabolism
+          (
+            Qgfr * Fup + # Glomerular filtration to proximal tubules (kidney)
+            Clhep # Well-stirred hepatic metabolism (liver)
+          )
 
 # Css has units of mg / L
     
