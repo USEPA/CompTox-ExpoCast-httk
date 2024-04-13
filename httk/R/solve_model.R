@@ -446,13 +446,15 @@ specification in compartment_units for model ", model)
       parameters[[names(ss.params) %in% names(parameters)]]
     parameters[['Clmetabolismc']] <- calc_hep_clearance(parameters=ss.params,
       hepatic.model='unscaled',
+      restrictive.clearance = restrictive.clearance,
       suppress.messages=TRUE)
   }
   
   # If the hepatic metabolism is not slowed by plasma protein binding (non-
   # restrictive clearance)  
-  if (!restrictive.clearance) parameters$Clmetabolismc <- 
-    parameters$Clmetabolismc / parameters$Funbound.plasma
+# This should be handled in calc_hep_clearance above
+#  if (!restrictive.clearance) parameters$Clmetabolismc <- 
+#    parameters$Clmetabolismc / parameters$Funbound.plasma
   
   # If there is not an explicit liver we need to include a factor for first-
   # pass metabolism:
