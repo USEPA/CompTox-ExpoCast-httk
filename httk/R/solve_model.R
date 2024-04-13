@@ -733,7 +733,8 @@ specification in compartment_units for model ", model)
   #units that are ready for any necessary conversion
   dosing.units <- input.units
   
-  #Scale dose if input.units is measured in (mg/kg) 
+  # Scale dose if input.units is measured in (mg/kg) 
+  # Oral absorption (Fabsgut) is handled in this functon:
   dosing <- scale_dosing(
     dosing,
     parameters,

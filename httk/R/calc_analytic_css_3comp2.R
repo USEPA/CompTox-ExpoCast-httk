@@ -146,9 +146,11 @@ calc_analytic_css_3comp2 <- function(chem.name=NULL,
 
   # Get the basic parameters:
   BW <- parameters[["BW"]] # kg
-  hourly.dose <- hourly.dose * parameters[["Fabsgut"]] * BW # mg/h
+  hourly.dose <- hourly.dose * BW # mg/h
   fup <- parameters[["Funbound.plasma"]]
   Rblood2plasma <- parameters[["Rblood2plasma"]]
+ 
+  # Oral bioavailability:
   Fabsgut <- parameters[["Fabsgut"]]
 
   # Calculate hepatic clearance:
@@ -175,15 +177,16 @@ calc_analytic_css_3comp2 <- function(chem.name=NULL,
   # Steady-state blood concentration (mg/L):
   if (route %in% "oral")
   { 
-    Css_blood <- hourly.dose * 
-                 Fabsgut *
-                 Rblood2plasma /
-     (fup * Qgfr +
-      Clmetabolism +
-      Rblood2plasma * Qalv / Kblood2air + 
-      Clmetabolism / Ql *
-        (fup / Rblood2plasma * Qgfr + Qalv / Kblood2air)
-     )
+    Css_blood <- hourly.dose * # Oral dose rate mg/h
+                 Fabsgut * # Fraction of dose absorbed from gut (in vivo or Caco-2)
+                 Rblood2plasma / # Blood to plasma concentration ratio
+                 (
+                    fup * Qgfr + # Glomerular filtration to proximal tubules (kidney)
+                    Clmetabolism + # Hepatic metabolism (liver)
+                    Rblood2plasma * Qalv / Kblood2air + # Exhalation clearance
+                    Clmetabolism / Ql *
+                      (fup / Rblood2plasma * Qgfr + Qalv / Kblood2air)
+                 )
   } else if (route %in% "inhalation") {
     if (is.null(Cinhaled)) stop("Must set inhalation dose in ppmv.")
     if (!exhalation) warning("Model 3comp used with inhalation but no exhalation.")

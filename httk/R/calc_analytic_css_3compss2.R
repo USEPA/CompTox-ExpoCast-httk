@@ -124,15 +124,19 @@ calc_analytic_css_3compss2 <- function(chem.name=NULL,
   Fup <- parameters$Funbound.plasma
   Rb2p <- parameters$Rblood2plasma 
   BW <- parameters$BW
- 
-   # Total blood flow (gut plus arterial) into liver:
+
+  # Oral bioavailability:
+  Fabsgut <- parameters$Fabsgut
+  Fhep <- parameters$hepatic.bioavailability
+  
+  # Total blood flow (gut plus arterial) into liver:
   Qtotalliver <- parameters$Qtotal.liverc/BW^0.25 #L/h/kg BW
   
   # Glomerular filtration (for kidney elimination):
   Qgfr <- parameters$Qgfrc/BW^0.25 #L/h/kg BW
 
   # Scale up from in vitro Clint to a whole liver clearance:
-  cl <- calc_hep_clearance(parameters=parameters,
+  Clhep <- calc_hep_clearance(parameters=parameters,
                            hepatic.model='well-stirred',
                            restrictive.clearance = restrictive.clearance,
                            suppress.messages=TRUE) #L/h/kg body weight
@@ -142,13 +146,15 @@ calc_analytic_css_3compss2 <- function(chem.name=NULL,
   Kblood2air <- parameters$Kblood2air
  
   # Calculate steady-state blood Css, Pearce et al. (2017) equation section 2.2:
-  Css_blood <- parameters$Fabsgut * 
-    parameters$hepatic.bioavailability *
-    Rb2p *
-    hourly.dose / (
-    Qgfr * Fup + # Renal clearance
-    Rb2p * Qalv/Kblood2air +     # Exhalation clearance
-    cl)
+  Css_blood <- hourly.dose * # Oral dose rate mg/kg/h
+    Fabsgut * # Fraction of dose absorbed from gut (in vivo or Caco-2)
+    Fhep * # Fraction of dose that escapes first-pass hepatic metabolism
+    Rb2p / # Blood to plasma concentration ratio
+    (
+      Qgfr * Fup + # Glomerular filtration to proximal tubules (kidney)
+      Rb2p * Qalv/Kblood2air + # Exhalation clearance
+      Clhep # Well-stirred hepatic metabolism (liver)
+    )
   
   # Convert from blood to plasma:
   Css <- Css_blood/Rb2p
