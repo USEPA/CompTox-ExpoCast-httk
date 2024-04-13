@@ -55,6 +55,7 @@ calc_analytic_css_3compss2 <- function(chem.name=NULL,
                                    suppress.messages=FALSE,
                                    recalc.blood2plasma=FALSE,
                                    tissue=NULL,
+                                   route="oral",
                                    restrictive.clearance=TRUE,
                                    bioactive.free.invivo = FALSE,
                                    ...)
@@ -146,15 +147,32 @@ calc_analytic_css_3compss2 <- function(chem.name=NULL,
   Kblood2air <- parameters$Kblood2air
  
   # Calculate steady-state blood Css, Pearce et al. (2017) equation section 2.2:
-  Css_blood <- hourly.dose * # Oral dose rate mg/kg/h
-    Fabsgut * # Fraction of dose absorbed from gut (in vivo or Caco-2)
-    Fhep * # Fraction of dose that escapes first-pass hepatic metabolism
-    Rb2p / # Blood to plasma concentration ratio
-    (
-      Qgfr * Fup + # Glomerular filtration to proximal tubules (kidney)
-      Rb2p * Qalv/Kblood2air + # Exhalation clearance
-      Clhep # Well-stirred hepatic metabolism (liver)
-    )
+  if (route %in% "oral")
+  { 
+      Css_blood <- hourly.dose * # Oral dose rate mg/kg/h
+      Fabsgut * # Fraction of dose absorbed from gut (in vivo or Caco-2)
+      Fhep * # Fraction of dose that escapes first-pass hepatic metabolism
+      Rb2p / # Blood to plasma concentration ratio
+      (
+        Qgfr * Fup + # Glomerular filtration to proximal tubules (kidney)
+        Rb2p * Qalv/Kblood2air + # Exhalation clearance
+        Clhep # Well-stirred hepatic metabolism (liver)
+      )
+  } else if (route %in% "inhalation") {
+    if (is.null(Cinhaled)) stop("Must set inhalation dose in ppmv.")
+    
+    CinhaledmgpL <- convert_units(dtxsid=dtxsid,
+                                  "ppmv", "mg/L", state="gas") *
+                                  Cinhaled
+    
+    Css_blood <- CinhaledmgpL * # Inhaled concentration mg/L
+                 Qalv / # Alveolar air flow # L/h
+                 (
+                   Clhep + # Well-stirred hepatic metabolism (liver)
+                   fup * Qgfr / Rblood2plasma + # Glomerular filtration from blood L/h
+                   Qalv / Kblood2air # Exhalation rate L/h
+                 ) 
+  } else stop("Route must be either oral or inhalation.")
   
   # Convert from blood to plasma:
   Css <- Css_blood/Rb2p
