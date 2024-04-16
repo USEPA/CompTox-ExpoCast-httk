@@ -50,8 +50,12 @@ calc_analytic_css_3compss2 <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid = NULL,
                                    parameters=NULL,
-                                   hourly.dose=1/24,
+                                   dosing=list(daily.dose=1),
+                                   hourly.dose = NULL,
+                                   dose.units = "mg",
                                    concentration='plasma',
+                                   species="human",
+                                   Caco2.options = NULL,
                                    suppress.messages=FALSE,
                                    recalc.blood2plasma=FALSE,
                                    tissue=NULL,
@@ -60,10 +64,28 @@ calc_analytic_css_3compss2 <- function(chem.name=NULL,
                                    bioactive.free.invivo = FALSE,
                                    ...)
 {
-
-  param.names.3compss <- model.list[["3compartmentss2"]]$param.names
+  if (!is.null(hourly.dose))
+  {
+     warning("calc_analytic_css_3compss deprecated argument hourly.dose replaced with new argument dose, value given assigned to dosing.")
+     dosing <- list(daily.dose = 24*hourly.dose)
+  }
+  
+# Load from modelinfo file:
+  THIS.MODEL <- "3compartmentss2"
+  param.names <- model.list[[THIS.MODEL]]$param.names
   param.names.schmitt <- model.list[["schmitt"]]$param.names
-    
+  parameterize_function <- model.list[[THIS.MODEL]]$parameterize.func
+
+  wrong.dose.params <- names(dosing)[!(names(dosing) %in%
+                             model.list[[THIS.MODEL]]$routes[[route]][["dosing.params"]])]
+  if (length(wrong.dose.params) > 0) stop(
+      paste("Dosing params",
+      paste(wrong.dose.params,collapse=", "), 
+      "not correct for model",
+      THIS.MODEL, 
+      "and route", 
+      route))
+      
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
@@ -93,19 +115,21 @@ calc_analytic_css_3compss2 <- function(chem.name=NULL,
       warning("Argument recalc.blood2plasma=TRUE ignored because parameters is NULL.")
     }
     
-    parameters <- parameterize_steadystate2(
-                                    chem.cas=chem.cas,
-                                    chem.name=chem.name,
-                                    dtxsid=dtxsid,
-                                    suppress.messages=suppress.messages,
-                                    restrictive.clearance=restrictive.clearance,
-                                    ...)
+    parameters <- do.call(what=parameterize_function, 
+                          args=purrr::compact(c(
+                            list(chem.cas=chem.cas,
+                                 chem.name=chem.name,
+                                 suppress.messages=suppress.messages,
+                                 Caco2.options = Caco2.options,
+                                 restrictive.clearance = restrictive.clearance
+                                 ),
+                            ...)))
 
   } else {
-    if (!all(param.names.3compss %in% names(parameters)))
+    if (!all(param.names %in% names(parameters)))
     {
       stop(paste("Missing parameters:",
-                 paste(param.names.3compss[which(!param.names.3compss %in% names(parameters))],
+                 paste(param.names[which(!param.names %in% names(parameters))],
                    collapse=', '),
                  ".  Use parameters from parameterize_steadystate."))
     }
@@ -149,21 +173,28 @@ calc_analytic_css_3compss2 <- function(chem.name=NULL,
   # Calculate steady-state blood Css, Pearce et al. (2017) equation section 2.2:
   if (route %in% "oral")
   { 
+    hourly.dose <- dosing[["daily.dose"]] /
+                     BW / 
+                     24 * 
+                     convert_units(MW = parameters[["MW"]], 
+                                   dose.units, 
+                                   "mg") # mg/kg/h
+
       Css_blood <- hourly.dose * # Oral dose rate mg/kg/h
-      Fabsgut * # Fraction of dose absorbed from gut (in vivo or Caco-2)
-      Fhep * # Fraction of dose that escapes first-pass hepatic metabolism
-      Rb2p / # Blood to plasma concentration ratio
-      (
-        Qgfr * Fup + # Glomerular filtration to proximal tubules (kidney)
-        Rb2p * Qalv/Kblood2air + # Exhalation clearance
-        Clhep # Well-stirred hepatic metabolism (liver)
-      )
+                   Fabsgut * # Fraction of dose absorbed from gut (in vivo or Caco-2)
+                   Fhep * # Fraction of dose that escapes first-pass hepatic metabolism
+                   Rb2p / # Blood to plasma concentration ratio
+                   (
+                     Qgfr * Fup + # Glomerular filtration to proximal tubules (kidney)
+                     Rb2p * Qalv/Kblood2air + # Exhalation clearance
+                     Clhep # Well-stirred hepatic metabolism (liver)
+                   )
   } else if (route %in% "inhalation") {
-    if (is.null(Cinhaled)) stop("Must set inhalation dose in ppmv.")
-    
-    CinhaledmgpL <- convert_units(dtxsid=dtxsid,
-                                  "ppmv", "mg/L", state="gas") *
-                                  Cinhaled
+    CinhaledmgpL <- dosing[["Cinhppmv"]] * 
+                      convert_units(MW = parameters[["MW"]],
+                                    dose.units,
+                                    "mg/L", 
+                                    state="gas") # mg/l
     
     Css_blood <- CinhaledmgpL * # Inhaled concentration mg/L
                  Qalv / # Alveolar air flow # L/h

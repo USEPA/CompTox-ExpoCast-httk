@@ -78,7 +78,9 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid = NULL,
                                    parameters=NULL,
-                                   hourly.dose=1/24,
+                                   dosing=list(daily.dose=1),
+                                   hourly.dose = NULL,
+                                   dose.units = "mg",
                                    concentration='plasma',
                                    suppress.messages=FALSE,
                                    recalc.blood2plasma=FALSE,
@@ -88,9 +90,17 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
                                    Caco2.options = list(),
                                    ...)
 {
-
-  param.names.3compss <- model.list[["3compartmentss"]]$param.names
+  if (!is.null(hourly.dose))
+  {
+     warning("calc_analytic_css_3compss deprecated argument hourly.dose replaced with new argument dose, value given assigned to dose")
+     dosing <- list(daily.dose = 24*hourly.dose)
+  }
+  
+# Load from modelinfo file:
+  THIS.MODEL <- "3compartmentss"
+  param.names <- model.list[[THIS.MODEL]]$param.names
   param.names.schmitt <- model.list[["schmitt"]]$param.names
+  parameterize_function <- model.list[[THIS.MODEL]]$parameterize.func
     
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -130,20 +140,21 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
       warning("Argument recalc.blood2plasma=TRUE ignored because parameters is NULL.")
     }
     
-    parameters <- parameterize_steadystate(
-                                    chem.cas=chem.cas,
-                                    chem.name=chem.name,
-                                    dtxsid=dtxsid,
-                                    suppress.messages=suppress.messages,
-                                    restrictive.clearance=restrictive.clearance,
-                                    Caco2.options = Caco2.options,
-                                    ...)
+    parameters <- do.call(what=parameterize_function, 
+                          args=purrr::compact(c(
+                            list(chem.cas=chem.cas,
+                                 chem.name=chem.name,
+                                 suppress.messages=suppress.messages,
+                                 Caco2.options = Caco2.options,
+                                 restrictive.clearance = restrictive.clearance
+                                 ),
+                            ...)))
 
   } else {
-    if (!all(param.names.3compss %in% names(parameters)))
+    if (!all(param.names %in% names(parameters)))
     {
       stop(paste("Missing parameters:",
-                 paste(param.names.3compss[which(!param.names.3compss %in% names(parameters))],
+                 paste(param.names[which(!param.names %in% names(parameters))],
                    collapse=', '),
                  ".  Use parameters from parameterize_steadystate."))
     }
@@ -160,9 +171,18 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
                                                    hematocrit=parameters$hematocrit)
   }
 
+  BW <- parameters$BW
+  
+  # Dose rate:
+  hourly.dose <- dosing[["daily.dose"]] /
+                   24 /
+                   BW *
+                   convert_units(MW = parameters[["MW"]],
+                                 dose.units,
+                                 "mg") # mg/kg/h
+
   Fup <- parameters$Funbound.plasma
   Rb2p <- parameters$Rblood2plasma 
-  BW <- parameters$BW
 
   # Total blood flow (gut plus arterial) into liver:
   Qtotalliver <- parameters$Qtotal.liverc/BW^0.25 # L / h / kg BW
