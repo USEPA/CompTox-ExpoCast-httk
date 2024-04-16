@@ -97,3 +97,8 @@ model.list[[THIS.MODEL]]$css.dosing.params <- c("hourly.dose")
 
 # Filter out volatile compounds with Henry's Law Constant Threshold
 model.list[[THIS.MODEL]]$log.henry.threshold <- c(-4.5)
+
+model.list[[THIS.MODEL]]$routes <- list(
+  "oral" = list(
+    "dosing.params" = c("daily.dose"))
+  ) 

@@ -85,7 +85,9 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid = NULL,
                                    parameters=NULL,
-                                   hourly.dose=1/24,
+                                   dosing=list(daily.dose=1),
+                                   hourly.dose = NULL,
+                                   dose.units = "mg",
                                    concentration='plasma',
                                    suppress.messages=FALSE,
                                    recalc.blood2plasma=FALSE,
@@ -95,16 +97,17 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
                                    Caco2.options = list(),
                                    ...)
 {
-  #R CMD CHECK throws notes about "no visible binding for global variable", for
-  #each time a data.table column name is used without quotes. To appease R CMD
-  #CHECK, a variable has to be created for each of these column names and set to
-  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
-  #this is pointless and annoying.
-  dose <- NULL
-  #End R CMD CHECK appeasement.
+  if (!is.null(hourly.dose))
+  {
+     warning("calc_analytic_css_3compss deprecated argument hourly.dose replaced with new argument dose, value given assigned to dose")
+     dosing <- list(daily.dose = 24*hourly.dose)
+  }
   
-  param.names.pbtk <- model.list[["pbtk"]]$param.names
+# Load from modelinfo file:
+  THIS.MODEL <- "pbtk"
+  param.names <- model.list[[THIS.MODEL]]$param.names
   param.names.schmitt <- model.list[["schmitt"]]$param.names
+  parameterize_function <- model.list[[THIS.MODEL]]$parameterize.func
     
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -124,7 +127,7 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
     chem.name <- out$chem.name                                
     dtxsid <- out$dtxsid  
 
-    parameters <- do.call(parameterize_pbtk, 
+    parameters <- do.call(what=parameterize_function, 
                           args=purrr::compact(c(
                             list(chem.cas=chem.cas,
                                  chem.name=chem.name,
@@ -139,10 +142,10 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
       warning("Argument recalc.blood2plasma=TRUE ignored because parameters is NULL.")
     }
   } else {
-    if (!all(param.names.pbtk %in% names(parameters)))
+    if (!all(param.names %in% names(parameters)))
     {
       stop(paste("Missing parameters:",
-           paste(param.names.pbtk[which(!param.names.pbtk %in% names(parameters))],
+           paste(param.names[which(!param.names %in% names(parameters))],
              collapse=', '),
            ".  Use parameters from parameterize_pbtk.")) 
     }
@@ -154,6 +157,16 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
     }
   }
   
+  BW <- parameters$BW
+    
+  # Dose rate:
+  hourly.dose <- dosing[["daily.dose"]] /
+                   BW /
+                   24 *
+                   convert_units(MW = parameters[["MW"]],
+                                 dose.units,
+                                 "mg") # mg/kg/h
+                                 
   Qcardiac <-  parameters[["Qcardiacc"]] / parameters[['BW']]^0.25 # L/h/kg
   Qgfr <-  parameters[["Qgfrc"]] / parameters[['BW']]^0.25 # L/h/kg   
   Clmetabolism <-  parameters[["Clmetabolismc"]] # L/h/kg
@@ -166,10 +179,9 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
   Rblood2plasma <- parameters[['Rblood2plasma']]
   fup <- parameters[["Funbound.plasma"]]
   
-  hourly.dose <- hourly.dose * parameters$Fabsgut
-  
 # Css for venous blood:
-  Cven.ss <- (hourly.dose * (Qliver + Qgut) / 
+  Cven.ss <- parameters$Fabsgut *
+         (hourly.dose * (Qliver + Qgut) / 
          (Clmetabolism / Rblood2plasma + (Qliver + Qgut))) / 
          (Qcardiac - 
          (Qliver + Qgut)**2 /
