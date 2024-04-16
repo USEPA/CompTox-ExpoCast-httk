@@ -74,8 +74,9 @@ calc_analytic_css_3comp2 <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid=NULL,
                                    parameters=NULL,
-                                   hourly.dose=1/24,
-                                   Cinhaled = NULL,
+                                   dosing=list(daily.dose=1),
+                                   hourly.dose = NULL,
+                                   dose.units = "mg",
                                    concentration='plasma',
                                    suppress.messages=FALSE,
                                    recalc.blood2plasma=FALSE,
@@ -87,17 +88,28 @@ calc_analytic_css_3comp2 <- function(chem.name=NULL,
                                    exhalation = TRUE,
                                    ...)
 {
-  #R CMD CHECK throws notes about "no visible binding for global variable", for
-  #each time a data.table column name is used without quotes. To appease R CMD
-  #CHECK, a variable has to be created for each of these column names and set to
-  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
-  #this is pointless and annoying.
-  dose <- NULL
-  #End R CMD CHECK appeasement.
-  
-  param.names.3comp <- model.list[["3compartment"]]$param.names
-  param.names.schmitt <- model.list[["schmitt"]]$param.names
+  if (!is.null(hourly.dose))
+  {
+     warning("calc_analytic_css_3compss deprecated argument hourly.dose replaced with new argument dose, value given assigned to dosing.")
+     dosing <- list(daily.dose = 24*hourly.dose)
+  }
     
+# Load from modelinfo file:
+  THIS.MODEL <- "3compartment2"
+  param.names <- model.list[[THIS.MODEL]]$param.names
+  param.names.schmitt <- model.list[["schmitt"]]$param.names
+  parameterize_function <- model.list[[THIS.MODEL]]$parameterize.func
+
+  wrong.dose.params <- names(dosing)[!(names(dosing) %in%
+                             model.list[[THIS.MODEL]]$routes[[route]][["dosing.params"]])]
+  if (length(wrong.dose.params) > 0) stop(
+      paste("Dosing params",
+      paste(wrong.dose.params,collapse=", "), 
+      "not correct for model",
+      THIS.MODEL, 
+      "and route", 
+      route))
+          
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
@@ -116,24 +128,31 @@ calc_analytic_css_3comp2 <- function(chem.name=NULL,
     chem.name <- out$chem.name                                
     dtxsid <- out$dtxsid  
 
-    parameters <- parameterize_3comp(chem.cas=chem.cas,
-                                    chem.name=chem.name,
-                                    suppress.messages=suppress.messages,
-                                    ...)
+    parameters <- do.call(what=parameterize_function, 
+                          args=purrr::compact(c(
+                            list(chem.cas=chem.cas,
+                                 chem.name=chem.name,
+                                 suppress.messages=suppress.messages,
+                                 Caco2.options = Caco2.options,
+                                 restrictive.clearance = restrictive.clearance
+                                 ),
+                            ...)))
+      
     if (recalc.blood2plasma) 
     {
       warning("Argument recalc.blood2plasma=TRUE ignored because parameters is NULL.")
     }
   } else {
-    if (!all(param.names.3comp %in% names(parameters)))
+    if (!all(param.names %in% names(parameters)))
     {
       stop(paste("Missing parameters:",
-           paste(param.names.3comp[which(!param.names.3comp %in% names(parameters))],
+           paste(param.names[which(!param.names %in% names(parameters))],
              collapse=', '),
            ".  Use parameters from parameterize_3comp."))
     }
+    
     param.names.pbtk <- model.list[["pbtk"]]$param.names 
-    if (any(param.names.pbtk[which(!param.names.pbtk %in% param.names.3comp)] 
+    if (any(param.names.pbtk[which(!param.names.pbtk %in% param.names)] 
       %in% names(parameters)))
     {
       stop("Parameters are from parameterize_pbtk. Use parameters from parameterize_3comp instead.")
@@ -142,11 +161,9 @@ calc_analytic_css_3comp2 <- function(chem.name=NULL,
       parameters[['hematocrit']] + 
       parameters[['hematocrit']] * parameters[['Krbc2pu']] * parameters[['Funbound.plasma']]
   }
-  param.names.schmitt <- model.list[["schmitt"]]$param.names
 
   # Get the basic parameters:
   BW <- parameters[["BW"]] # kg
-  hourly.dose <- hourly.dose * BW # mg/h
   fup <- parameters[["Funbound.plasma"]]
   Rblood2plasma <- parameters[["Rblood2plasma"]]
  
@@ -177,6 +194,12 @@ calc_analytic_css_3comp2 <- function(chem.name=NULL,
   # Steady-state blood concentration (mg/L):
   if (route %in% "oral")
   { 
+    hourly.dose <- dosing[["daily.dose"]] /
+                     24 *
+                     convert_units(MW = parameters[["MW"]],
+                                   dose.units,
+                                   "mg") # mg/h
+    
     Css_blood <- hourly.dose * # Oral dose rate mg/h
                  Fabsgut * # Fraction of dose absorbed from gut (in vivo or Caco-2)
                  Rblood2plasma / # Blood to plasma concentration ratio
@@ -188,12 +211,14 @@ calc_analytic_css_3comp2 <- function(chem.name=NULL,
                       (fup / Rblood2plasma * Qgfr + Qalv / Kblood2air)
                  )
   } else if (route %in% "inhalation") {
-    if (is.null(Cinhaled)) stop("Must set inhalation dose in ppmv.")
+    if (is.null(dosing[["Cinhppmv"]])) stop("Must set inhalation dose in ppmv.")
     if (!exhalation) warning("Model 3comp used with inhalation but no exhalation.")
     
-    CinhaledmgpL <- convert_units(dtxsid=dtxsid,
-                                  "ppmv", "mg/L", state="gas") *
-                                  Cinhaled
+    CinhaledmgpL <- dosing[["Cinhppmv"]] * 
+                      convert_units(MW = parameters[["MW"]],
+                                    dose.units,
+                                    "mg/L", 
+                                    state="gas") # mg/l
     
     Css_blood <- CinhaledmgpL * # Inhaled concentration mg/L
                  Qalv / # Alveolar air flow # L/h
