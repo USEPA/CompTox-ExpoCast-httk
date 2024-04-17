@@ -3,6 +3,13 @@
 #' This function solves for the amount or concentration of a chemical in plasma
 #' for a one compartment model as a function of time based on the dose and
 #' dosing frequency. 
+#' The model describes blood concentrations in a single compartment. 
+#' The volume of distribution
+#' depends on the physical volume of each tissue and the predicted chemical 
+#' partitioning into those volumes. 
+#' Plasma concentration in compartment x is given by 
+#' \eqn{C_{plasma} = \frac{C_{blood}}{R_{b2p}}} for a tissue independent value of 
+#' \eqn{R_{b2p}}.
 #' 
 #' Note that the timescales for the model parameters have units of hours while 
 #' the model output is in days.
@@ -69,6 +76,15 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' See \code{\link{get_fabsgut}} for further details.
+#' 
 #' @param monitor.vars Which variables are returned as a function of time. 
 #' Defaults value of NULL provides "Agutlumen", "Ccompartment", "Ametabolized",
 #' "AUC"
@@ -141,6 +157,7 @@ solve_1comp <- function(chem.name = NULL,
                     restrictive.clearance = TRUE,
                     minimum.Funbound.plasma=0.0001,
                     monitor.vars=NULL,
+                    Caco2.options = list(),
                     ...)
 {
   out <- solve_model(
@@ -175,7 +192,8 @@ solve_1comp <- function(chem.name = NULL,
                       default.to.human=default.to.human,
                       clint.pvalue.threshold=0.05,
                       restrictive.clearance = restrictive.clearance,
-                      regression=regression),
+                      regression=regression,
+                      Caco2.options=Caco2.options),
     ...)
   
   return(out) 

@@ -33,6 +33,7 @@ solve_pbtk(
   regression = TRUE,
   restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04,
+  Caco2.options = list(),
   monitor.vars = NULL,
   ...
 )
@@ -116,6 +117,15 @@ partition coefficients.}
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 
+\item{Caco2.options}{A list of options to use when working with Caco2 apical to
+basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
+Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
+Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+See \code{\link{get_fabsgut}} for further details.}
+
 \item{monitor.vars}{Which variables are returned as a function of time. 
 The default value of NULL provides "Cgut", "Cliver", "Cven", "Clung", "Cart", 
 "Crest", "Ckidney", "Cplasma", "Atubules", "Ametabolized", and "AUC"}
@@ -130,21 +140,37 @@ for each time point.
 \description{
 This function solves for the amounts or concentrations in uM of a chemical
 in different tissues as functions of time based on the dose and dosing
-frequency.
+frequency. 
+In this PBTK formulation. \eqn{C_{tissue}} is the concentration in tissue at 
+time t. Since the perfusion limited partition coefficients describe 
+instantaneous equilibrium between the tissue and the free fraction in 
+plasma, the whole plasma concentration is 
+\eqn{C_{tissue,plasma} = \frac{1}{f_{up}*K_{tissue2fup}}*C_{tissue}}. 
+Note that we use a single, 
+constant value of \eqn{f_{up}} across all tissues. Corespondingly the free 
+plasma 
+concentration is modeled as 
+\eqn{C_{tissue,free plasma} = \frac{1}{K_{tissue2fup}}*C_tissue}. 
+The amount of blood flowing from tissue x is \eqn{Q_{tissue}} (L/h) at a 
+concentration 
+\eqn{C_{x,blood} = \frac{R_{b2p}}{f_{up}*K_{tissue2fup}}*C_{tissue}}, where 
+we use a 
+single \eqn{R_{b2p}} value throughout the body.
+Metabolic clearance is modelled as being from the total plasma 
+concentration here, though it is restricted to the free fraction in 
+\code{\link{calc_hep_clearance}} by default. Renal clearance via 
+glomerulsr filtration is from the free plasma concentration.
+The compartments used in this model are the gutlumen, gut, liver, kidneys,
+veins, arteries, lungs, and the rest of the body.
+The extra compartments include the amounts or concentrations metabolized by
+the liver and excreted by the kidneys through the tubules.
+AUC is the area under the curve of the plasma concentration.
 }
 \details{
 Note that the model parameters have units of hours while the model output is
 in days.
 
 Default NULL value for doses.per.day solves for a single dose.
-
-The compartments used in this model are the gutlumen, gut, liver, kidneys,
-veins, arteries, lungs, and the rest of the body.
-
-The extra compartments include the amounts or concentrations metabolized by
-the liver and excreted by the kidneys through the tubules.
-
-AUC is the area under the curve of the plasma concentration.
 
 Model Figure 
 \if{html}{\figure{pbtk.jpg}{options: width="60\%" alt="Figure: PBTK Model

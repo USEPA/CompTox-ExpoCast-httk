@@ -3,6 +3,25 @@
 #' This function solves for the amounts or concentrations of a chemical
 #' in different tissues as functions of time as a result of inhalation 
 #' exposure to an ideal gas.
+#' In this PBTK formulation. \eqn{C_{tissue}} is the concentration in tissue at 
+#' time t. Since the perfusion limited partition coefficients describe 
+#' instantaneous equilibrium between the tissue and the free fraction in 
+#' plasma, the whole plasma concentration is 
+#' \eqn{C_{tissue,plasma} = \frac{1}{f_{up}*K_{tissue2fup}}*C_{tissue}}. 
+#' Note that we use a single, 
+#' constant value of \eqn{f_{up}} across all tissues. Corespondingly the free 
+#' plasma 
+#' concentration is modeled as 
+#' \eqn{C_{tissue,free plasma} = \frac{1}{K_{tissue2fup}}*C_tissue}. 
+#' The amount of blood flowing from tissue x is \eqn{Q_{tissue}} (L/h) at a 
+#' concentration 
+#' \eqn{C_{x,blood} = \frac{R_{b2p}}{f_{up}*K_{tissue2fup}}*C_{tissue}}, where 
+#' we use a 
+#' single \eqn{R_{b2p}} value throughout the body.
+#' Metabolic clearance is modelled as being from the total plasma 
+#' concentration here, though it is restricted to the free fraction in 
+#' \code{\link{calc_hep_clearance}} by default. Renal clearance via 
+#' glomerulsr filtration is from the free plasma concentration.
 #' 
 #' The default dosing scheme involves a specification of the start time
 #' of exposure (exp.start.time), the concentration of gas inhaled (exp.conc),
@@ -119,6 +138,11 @@
 #' 'modelinfo' file. See table below for details.
 #' 
 #' @param method Method used by integrator (deSolve).
+#' (Note: There are precision differences between M1 Mac and other OS systems
+#' for this function due to how long doubles are handled. To replicate results
+#' between various OS systems we suggest changing the default method of "lsoda"
+#' to "lsode" and also adding the argument mf = 10.
+#' See [deSolve::ode()] for further details.)
 #' 
 #' @param rtol Argument passed to integrator (deSolve).
 #' 
@@ -365,15 +389,17 @@ solve_gas_pbtk <- function(chem.name = NULL,
     forcings = forcings_gen(exp.conc, period, exp.start.time = 0, exp.duration, days) 
   }
       
-      #Comment out tentative alternate scheme to forcings for now
-      ###
-    #Nrep <- ceiling((days - exp.start.time)/period)
-# We want the start and stop timeS:
-    #time <- sort(c(period * (0:(Nrep - 1)), # Start times
-      #period * (0:(Nrep - 1))+exp.duration)) # End times
-    #dose  <- rep(c(exp.conc,0), Nrep)
-    #dosing.matrix = cbind(dose,time)
-      ###
+  # Describe the dose regimen:
+  dosing <- list(
+    initial.dose=dose,
+    dosing.matrix=dosing.matrix,
+    daily.dose=daily.dose,
+    doses.per.day=doses.per.day,
+    forcings=forcings
+    )
+  # Limit to only the needed dosing parameters:
+  dosing <- dosing[names(dosing) %in%
+                     model.list[["gas_pbtk"]]$routes[[route]]$dosing.params]
   
   #Now make call to solve_model with gas model specific arguments configured 
   out <- solve_model(
@@ -384,13 +410,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
     parameters=parameters,
     model="gas_pbtk",
     route=route,
-    # route='inhalation',
-    dosing=list(
-      initial.dose=dose,
-      dosing.matrix=dosing.matrix,
-      daily.dose=daily.dose,
-      doses.per.day=doses.per.day,
-      forcings=forcings),
+    dosing=dosing,
     days=days,
     tsteps = tsteps, # tsteps is number of steps per hour
     initial.values=initial.values,

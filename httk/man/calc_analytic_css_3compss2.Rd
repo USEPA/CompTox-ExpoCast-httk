@@ -10,11 +10,16 @@ calc_analytic_css_3compss2(
   chem.cas = NULL,
   dtxsid = NULL,
   parameters = NULL,
-  hourly.dose = 1/24,
+  dosing = list(daily.dose = 1),
+  hourly.dose = NULL,
+  dose.units = "mg",
   concentration = "plasma",
+  species = "human",
+  Caco2.options = NULL,
   suppress.messages = FALSE,
   recalc.blood2plasma = FALSE,
   tissue = NULL,
+  route = "oral",
   restrictive.clearance = TRUE,
   bioactive.free.invivo = FALSE,
   ...
@@ -77,6 +82,6 @@ toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 \code{\link{parameterize_steadystate}}
 }
 \author{
-Robert Pearce and John Wambaugh
+ohn Wambaugh
 }
 \keyword{3compss2}

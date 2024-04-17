@@ -39,7 +39,17 @@ armitage_eval(
 )
 }
 \arguments{
-\item{casrn.vector}{For vector or single value, CAS number}
+\item{chem.cas}{A single or vector of Chemical Abstracts Service Registry 
+Number(s) (CAS-RN) of desired chemical(s).}
+
+\item{chem.name}{A single or vector of name(s)) of desired chemical(s).}
+
+\item{dtxsid}{A single or vector ofEPA's DSSTox Structure ID(s) 
+(\url{https://comptox.epa.gov/dashboard})}
+
+\item{casrn.vector}{A deprecated argument specifying a single or vector of 
+Chemical Abstracts Service Registry 
+Number(s) (CAS-RN) of desired chemical(s).}
 
 \item{nomconc.vector}{For vector or single value, micromolar (uM = mol/L) nominal 
 concentration (e.g. AC50 value)}
@@ -201,7 +211,7 @@ eta_free \tab Effective availability ratio \tab fraction \cr
 \description{
 Evaluate the Armitage model for chemical distributon \emph{in vitro}. Takes input
 as data table or vectors of values. Outputs a data table. Updates over
-the model published in Armitage et al. 2014 include binding to plastic walls
+the model published in Armitage et al. (2014) include binding to plastic walls
 and lipid and protein compartments in cells.
 }
 \examples{

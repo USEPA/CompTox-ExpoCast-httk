@@ -2,9 +2,6 @@
 #' 
 #' This function initializes the parameters needed in the functions
 #' solve_fetal_pbtk by calling solve_pbtk and adding additional parameters.
-#' The rate of oral absorption used
-#' is 2.2 L/h, the median rate observed across 44 chemicals by 
-#' \href{https://doi.org/10.1093/toxsci/kfy020}{Wambaugh et al. (2018)}.
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
 #' specified. 
@@ -71,11 +68,7 @@
 #' tissue to unbound concentration in plasma.} \item{Kplacenta2pu}{Ratio of
 #' concentration of chemical in placental tissue to unbound concentration in
 #' maternal plasma.} \item{Kfplacenta2pu}{Ratio of concentration of chemical in
-#' placental tissue to unbound concentration in fetal plasma.}
-#' \item{pKa_Donor}{Ionization equilibria (if any) for hydrogen donation (acids).} 
-#' \item{pKa_Accept}{Ionization equilibria (if any) for hydrogen acceptance (bases).} 
-#' \item{Pow}{Octanol:Water equilibrium partition coefficient (hydrophobicity)}
-#' \item{MA}{Membrane affinity -- physopholipid bi-layer partition coefficient} 
+#' placental tissue to unbound concentration in fetal plasma.} 
 #'
 #' @author Robert Pearce, Mark Sfeir, John Wambaugh, and Dustin Kapraun
 #'
