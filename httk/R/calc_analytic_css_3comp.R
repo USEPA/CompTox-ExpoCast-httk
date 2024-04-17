@@ -91,14 +91,13 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
      warning("calc_analytic_css_3compss deprecated argument hourly.dose replaced with new argument dose, value given assigned to dosing.")
      dosing <- list(daily.dose = 24*hourly.dose)
   }
-  hourly.dose <- dosing$daily.dose/24 
-  
+
 # Load from modelinfo file:
   THIS.MODEL <- "3compartment"
   param.names <- model.list[[THIS.MODEL]]$param.names
   param.names.schmitt <- model.list[["schmitt"]]$param.names
   parameterize_function <- model.list[[THIS.MODEL]]$parameterize.func
-    
+
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
@@ -139,6 +138,7 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
              collapse=', '),
            ".  Use parameters from parameterize_3comp."))
     }
+
     param.names.pbtk <- model.list[["pbtk"]]$param.names 
     if (any(param.names.pbtk[which(!param.names.pbtk %in% param.names)] 
       %in% names(parameters)))
@@ -246,5 +246,6 @@ calc_analytic_css_3comp <- function(chem.name=NULL,
       
     } else if (tolower(concentration)!='plasma') stop("Only blood and plasma concentrations are calculated.")
   }
-  return(Css)
+  
+  return(Css) # mg/L
 }

@@ -200,7 +200,7 @@ calc_analytic_css_3compss2 <- function(chem.name=NULL,
                  Qalv / # Alveolar air flow # L/h
                  (
                    Clhep + # Well-stirred hepatic metabolism (liver)
-                   fup * Qgfr / Rblood2plasma + # Glomerular filtration from blood L/h
+                   Fup * Qgfr / Rb2p + # Glomerular filtration from blood L/h
                    Qalv / Kblood2air # Exhalation rate L/h
                  ) 
   } else stop("Route must be either oral or inhalation.")
