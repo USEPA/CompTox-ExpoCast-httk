@@ -93,7 +93,7 @@ calc_analytic_css_3comp2 <- function(chem.name=NULL,
      warning("calc_analytic_css_3compss deprecated argument hourly.dose replaced with new argument dose, value given assigned to dosing.")
      dosing <- list(daily.dose = 24*hourly.dose)
   }
-    
+
 # Load from modelinfo file:
   THIS.MODEL <- "3compartment2"
   param.names <- model.list[[THIS.MODEL]]$param.names
@@ -150,7 +150,7 @@ calc_analytic_css_3comp2 <- function(chem.name=NULL,
              collapse=', '),
            ".  Use parameters from parameterize_3comp."))
     }
-    
+
     param.names.pbtk <- model.list[["pbtk"]]$param.names 
     if (any(param.names.pbtk[which(!param.names.pbtk %in% param.names)] 
       %in% names(parameters)))
@@ -166,7 +166,7 @@ calc_analytic_css_3comp2 <- function(chem.name=NULL,
   BW <- parameters[["BW"]] # kg
   fup <- parameters[["Funbound.plasma"]]
   Rblood2plasma <- parameters[["Rblood2plasma"]]
- 
+
   # Oral bioavailability:
   Fabsgut <- parameters[["Fabsgut"]]
 
@@ -232,7 +232,6 @@ calc_analytic_css_3comp2 <- function(chem.name=NULL,
 
   # Convert from blood to plasma 
   Css <- Css_blood / Rblood2plasma
-
 
 # Check to see if a specific tissue was asked for:
   if (!is.null(tissue))
