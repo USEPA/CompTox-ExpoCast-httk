@@ -204,7 +204,8 @@ model.list[[THIS.MODEL]]$routes <- list(
   "inhalation" = list(
     "entry.compartment" = "Cinhppmv",
     "dose.type" = "replace",
-    "dosing.params" = c("Cinhppmv"))   
+    "dosing.params" = c("Cinhppmv",
+                        "initial.dose"))   
 
   )    
 

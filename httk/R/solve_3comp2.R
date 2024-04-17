@@ -191,6 +191,21 @@ solve_3comp2 <- function(chem.name = NULL,
                     monitor.vars=NULL,
                     ...)
 {
+  if (route %in% "inhalation")
+  {
+    dosing <- list(
+           initial.dose = dose,
+           Cinhppmv = dose
+           )
+  } else {
+    dosing <- list(
+        initial.dose=dose,
+        dosing.matrix=dosing.matrix,
+        daily.dose=daily.dose,
+        doses.per.day=doses.per.day
+        )
+  }
+
   out <- solve_model(
     chem.name = chem.name,
     chem.cas = chem.cas,
@@ -199,12 +214,7 @@ solve_3comp2 <- function(chem.name = NULL,
     parameters=parameters,
     model="3compartment2",
     route=ifelse(iv.dose, "iv", route),
-    dosing=list(
-      initial.dose=dose,
-      dosing.matrix=dosing.matrix,
-      daily.dose=daily.dose,
-      doses.per.day=doses.per.day
-    ),
+    dosing=dosing,
     days=days,
     tsteps = tsteps, # tsteps is number of steps per hour
     initial.values=initial.values,
