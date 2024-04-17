@@ -201,7 +201,7 @@ calc_analytic_css <- function(chem.name=NULL,
   {
     dose.units <- gsub("/day", "", dose.units)
   }
-  
+    
   if (is.null(model)) stop("Model must be specified.")
 # We need to know model-specific information (from modelinfo_[MODEL].R]) 
 # to set up the solver:
@@ -227,14 +227,6 @@ calc_analytic_css <- function(chem.name=NULL,
                paste(available.routes,collapse=", ")))
   }
 
-  if (route == "oral")
-  {
-    dosing = list(daily.dose = dose)
-  } else if (route == "inhalation") {
-    dosing = list(Cinhppmv = dose)
-  } else stop(paste("Do not know how to handle steady-state dosing for route",
-                    route))
-  
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
@@ -348,6 +340,14 @@ calc_analytic_css <- function(chem.name=NULL,
     dose <- dose*parameters[["BW"]]
     dose.units <- gsub("/kg", "", dose.units)
   }
+
+  if (route == "oral")
+  {
+    dosing = list(daily.dose = dose)
+  } else if (route == "inhalation") {
+    dosing = list(Cinhppmv = dose)
+  } else stop(paste("Do not know how to handle steady-state dosing for route",
+                    route))
     
   if (model %in% names(model.list))            
   {
