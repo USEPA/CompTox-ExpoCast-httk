@@ -395,7 +395,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
       million.cells.per.gliver=110, # 10^6 cells/g-liver
       liver.density=1.05)) # g/mL
   } else {
-    outlist <- c(outlist,list(
+    outlist <- c(outlist, list(
       vmax=vmax,km=km,
       Clint=Clint.point, 
       Clint.dist = Clint.dist, 
@@ -405,11 +405,11 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   }
  
 # Blood to plasma ratio:
-  outlist <- c(outlist,
+  outlist <- c(outlist, list(
     Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
       species=species,
       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-      suppress.messages=TRUE))
+      suppress.messages=TRUE)))
     
 # Get the blood:air and mucus:air partition coefficients:
   Kx2air <- calc_kair(chem.name=chem.name,
@@ -434,7 +434,9 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
     # Linakis et al. (2020) Equation 5 by way of Clewell et al. (2001):
     Qalvc <- Vdot * (0.67) #L/h/kg^0.75
   }
-  outlist <- c(outlist,Kblood2air =  Kblood2air,Kmuc2air = Kmuc2air,Qalvc=as.numeric(Qalvc))
+  outlist <- c(outlist, list(Kblood2air =  Kblood2air,
+                             Kmuc2air = Kmuc2air,
+                             Qalvc=as.numeric(Qalvc)))
     
 # Oral bioavailability parameters:
   outlist <- c(
