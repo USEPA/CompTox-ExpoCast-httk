@@ -55,6 +55,8 @@ model.list[[THIS.MODEL]]$tissuelist = list(
 # how other parameters were calculated:
 model.list[[THIS.MODEL]]$param.names <- c(
   "BW",
+  "Caco2.Pab",
+  "Caco2.Pab.dist",
   "Clint",
   "Clint.dist",
   "Clmetabolismc",
