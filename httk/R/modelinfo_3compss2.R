@@ -47,7 +47,8 @@ model.list[[THIS.MODEL]]$required.params <- c(
   "Pow",
   "pKa_Donor",
   "pKa_Accept",
-  "MW"
+  "MW",
+  "logHenry"
    )
    
 # If httk-pop is enabled:
