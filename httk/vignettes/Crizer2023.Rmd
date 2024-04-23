@@ -241,6 +241,12 @@ fig.clhttk.invivo  <- ggplot(data=cl.table) +
   theme( text  = element_text(size=FONT.SIZE))
 
 print(fig.clhttk.invivo)
+
+RMSLE <- function(tab,colx,coly) 
+{ 
+    return(signif(mean(log10(tab[,colx]/tab[,coly])^2,na.rm=TRUE)^(1/2),3))
+}
+RMSLE(cl.table,"HTTK.Cltot.Lphpkgbw","ClLphpkgbw")
 ```
 ```{r fig_clspecies_invivo, eval = TRUE}
 fig.clspecies.invivo  <- ggplot(data=cl.table) +
@@ -331,6 +337,7 @@ fig.clml.invivo  <- ggplot(data=cl.table) +
   theme( text  = element_text(size=FONT.SIZE))
 
 print(fig.clml.invivo)
+RMSLE(cl.table,"MachineLearning.Cltot.Lphpkgbw","ClLphpkgbw")
 ```
 
 ```{r multipanelrefchemdatafigureforpaper}

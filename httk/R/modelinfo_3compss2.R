@@ -96,4 +96,4 @@ model.list[[THIS.MODEL]]$routes <- list(
     "dosing.params" = c("daily.dose")),
   "inhalation" = list(
     "dosing.params" = c("Cinhppmv"))
-  )    
+  )
