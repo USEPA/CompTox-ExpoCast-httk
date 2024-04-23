@@ -261,17 +261,15 @@ model.list[[THIS.MODEL]]$compartment.state <- list(
     )
   )
 
-
-
-
-# Parameters needed to make a prediction (this is used by get_cheminfo):
+#Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[[THIS.MODEL]]$required.params <- c(
   "Clint",
   "Funbound.plasma",
   "Pow",
   "pKa_Donor",
   "pKa_Accept",
-  "MW"
+  "MW",
+  "logHenry"
    )
 
 # Function for calculating Clmetabolismc after Clint is varied:
