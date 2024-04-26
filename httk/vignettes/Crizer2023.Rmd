@@ -223,6 +223,11 @@ for (this.chem in unique(cl.table$DTXSID))
 ```
 
 ```{r fig_clhttk, eval = TRUE}
+RMSLE <- function(tab,colx,coly) 
+{ 
+    return(signif(mean(log10(tab[,colx]/tab[,coly])^2,na.rm=TRUE)^(1/2),3))
+}
+
 fig.clhttk.invivo  <- ggplot(data=cl.table) +
   geom_point(aes(
     x=HTTK.Cltot.Lphpkgbw,
@@ -238,15 +243,13 @@ fig.clhttk.invivo  <- ggplot(data=cl.table) +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
   theme_bw()  +
-  theme( text  = element_text(size=FONT.SIZE))
+  theme( text  = element_text(size=FONT.SIZE))+
+  annotate("text", x = 10^-6, y = 10^-1, 
+           label = paste("RMSLE:",
+                         RMSLE(cl.table,"HTTK.Cltot.Lphpkgbw","ClLphpkgbw")))
 
 print(fig.clhttk.invivo)
 
-RMSLE <- function(tab,colx,coly) 
-{ 
-    return(signif(mean(log10(tab[,colx]/tab[,coly])^2,na.rm=TRUE)^(1/2),3))
-}
-RMSLE(cl.table,"HTTK.Cltot.Lphpkgbw","ClLphpkgbw")
 ```
 ```{r fig_clspecies_invivo, eval = TRUE}
 fig.clspecies.invivo  <- ggplot(data=cl.table) +
@@ -334,10 +337,14 @@ fig.clml.invivo  <- ggplot(data=cl.table) +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
   theme_bw()  +
-  theme( text  = element_text(size=FONT.SIZE))
+  theme( text  = element_text(size=FONT.SIZE))+
+  annotate("text", x = 10^-5, y = 10^-1, 
+           label = paste("RMSLE:",
+                         RMSLE(cl.table,
+                               "MachineLearning.Cltot.Lphpkgbw",
+                               "ClLphpkgbw")))
 
 print(fig.clml.invivo)
-RMSLE(cl.table,"MachineLearning.Cltot.Lphpkgbw","ClLphpkgbw")
 ```
 
 ```{r multipanelrefchemdatafigureforpaper}
