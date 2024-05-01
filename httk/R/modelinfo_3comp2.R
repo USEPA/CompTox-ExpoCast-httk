@@ -316,3 +316,6 @@ model.list[[THIS.MODEL]]$css.dosing.params <- list(
 
 # Filter out compounds belonging to select chemical classes
 model.list[[THIS.MODEL]]$chem.class.filt <- c("PFAS")
+
+# Different systems of equations are better suited to different ODE solvers:
+model.list[[THIS.MODEL]]$default.solver.method <- "lsode"
