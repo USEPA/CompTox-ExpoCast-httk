@@ -72,9 +72,6 @@
 #' @param output.units A named vector of output units expected for the model
 #' results. Default, NULL, returns model results in units specified in the
 #' 'modelinfo' file. See table below for details.
-#' @param method Method used by integrator (deSolve).
-#' @param rtol Argument passed to integrator (deSolve).
-#' @param atol Argument passed to integrator (deSolve).
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
@@ -108,7 +105,7 @@
 #' @param monitor.vars Which variables are returned as a function of time. 
 #' Defaults value of NULL provides "Cliver", "Csyscomp", "Atubules", 
 #' "Ametabolized", "AUC"
-#' @param ... Additional arguments passed to the integrator.
+#' @param ... Additional arguments passed to the integrator (deSolve).
 #'
 #' @return A matrix of class deSolve with a column for time(in days) and each
 #' compartment, the plasma concentration, area under the curve, and a row for
@@ -177,7 +174,6 @@ solve_3comp2 <- function(chem.name = NULL,
                     input.units='mg/kg',
                     # output.units='uM',
                     output.units=NULL,
-                    method="lsoda",rtol=1e-8,atol=1e-12,
                     default.to.human=FALSE,
                     recalc.blood2plasma=FALSE,
                     recalc.clearance=FALSE,
@@ -224,7 +220,6 @@ solve_3comp2 <- function(chem.name = NULL,
     species=species,
     input.units=input.units,
     output.units=output.units,
-    method=method,rtol=rtol,atol=atol,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
