@@ -75,8 +75,8 @@
 #' precise dose regimen specification, and is a matrix consisting of two
 #' columns or rows named "time" and "dose" containing the time and amount of 
 #' each dose. If none of the namesake entries of the dosing list is set to a
-#' non-NULL value, solve_model uses a default dose of 1 mg/kg BW along with the 
-#' dose type (add/multiply) specified for a given route (e.g. add the dose to gut
+#' non-NULL value, solve_model uses a default initial dose of 1 mg/kg BW along with the 
+#' dose type (add/multiply) specified for a given route (for example, add the dose to gut
 #' lumen for oral route)
 #' 
 #' @param days Simulated period. Default 10 days. 
@@ -219,7 +219,7 @@ solve_model <- function(chem.name = NULL,
                     species="Human",
                     input.units="mg/kg", # units for 'dosing'
                     output.units=NULL, # needs to be a named list or named vector for desired units corresponding to compartments
-                    method="lsoda",
+                    method=NULL,
                     rtol=1e-6,
                     atol=1e-6,
                     recalc.blood2plasma=FALSE,
@@ -311,6 +311,14 @@ solve_model <- function(chem.name = NULL,
     fcontrol <- model.list[[model]]$forcings.materials[["fcontrol"]]
     # State of Compound in Various Compartments
     compartment_state <- model.list[[model]]$compartment.state
+    # Set the ODE solver:
+    if (is.null(method))
+    {
+      if (!is.null(model.list[[model]]$default.solver.method))
+      {
+        method <- model.list[[model]]$default.solver.method
+      } else method <- "lsoda"
+    }
   }
   
 
@@ -675,6 +683,14 @@ specification in compartment_units for model ", model)
 
   #Sanitize the input.units
   input.units <- tolower(input.units)
+  
+  # Set default dose:
+  if (is.null(dosing)) dosing=list(
+                                   initial.dose = 1,
+                                   doses.per.day=NULL,
+                                   dosing.matrix = NULL,
+                                   daily.dose = NULL
+                                   )
   
   # Make sure we have all specified dosing parameters for the model
   # accounted for
