@@ -181,15 +181,16 @@ to the user unless the times argument is used, in which case only the time
 points specified by that argument are provided.
 }
 \examples{
-# The varrious "solve_x" functions are wrappers for solve_model:
+# The various "solve_x" functions are wrappers for solve_model:
 head(solve_pbtk(chem.name="Terbufos", days=1))
 
-head(solve_model(chem.name="Terbufos",model="pbtk",dosing=list(
-                 initial.dose = 1, # Assume dose is in mg/kg BW/day  
-                 doses.per.day=NULL,
-                 dosing.matrix = NULL,
+head(solve_model(chem.name="Terbufos",model="pbtk",
                  days=1,
-                 daily.dose = NULL)))
+                 dosing=list(
+                   initial.dose = 1, # Assume dose is in mg/kg BW/day  
+                   doses.per.day=NULL,
+                   dosing.matrix = NULL,
+                   daily.dose = NULL)))
 
 # A dose matrix specifies times and magnitudes of doses:
 dm <- matrix(c(0,1,2,5,5,5),nrow=3)
@@ -201,19 +202,23 @@ solve_pbtk(chem.name="Methenamine",
            days=2.5,
            daily.dose=NULL)
 
-solve_model(chem.name="Methenamine",model="pbtk",dosing=list(
-            initial.dose =NULL,
-            doses.per.day=NULL,
-            daily.dose=NULL,
+solve_model(chem.name="Methenamine",
+            model="pbtk",
             days=2.5,
-            dosing.matrix=dm))
+            dosing=list(
+              initial.dose =NULL,
+              doses.per.day=NULL,
+              daily.dose=NULL,
+              dosing.matrix=dm))
 
-solve_model(chem.name="Besonprodil",model="pbtk",dosing=list(
-            initial.dose =NULL,
-            doses.per.day=4,
-            daily.dose=1,
+solve_model(chem.name="Besonprodil",
+            model="pbtk",
             days=2.5,
-            dosing.matrix=NULL))
+            dosing=list(
+              initial.dose=NULL,
+              doses.per.day=4,
+              daily.dose=1,
+              dosing.matrix=NULL))
   
 solve_pbtk(chem.name="Besonprodil",
            daily.dose=1,

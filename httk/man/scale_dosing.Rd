@@ -10,7 +10,8 @@ scale_dosing(
   route,
   input.units = NULL,
   output.units = "uM",
-  vol = NULL
+  vol = NULL,
+  state = "liquid"
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ Currently supported units "mg/L", "ug/L","ug/mL", "uM", "umol/L", "ug/dL",
 
 \item{vol}{Volume for the target tissue of interest.
 NOTE: Volume should not be in units of per BW, i.e. "kg".}
+
+\item{state}{Chemical state of matter (gas or default liquid).}
 }
 \value{
 A list of numeric values for doses converted to output.units, potentially

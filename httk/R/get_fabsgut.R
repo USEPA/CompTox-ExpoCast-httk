@@ -90,89 +90,93 @@ get_fabsgut <- function(
                           Caco2.Pab.default = Caco2.Pab.default,
                           suppress.messages = suppress.messages))
 
-    # Get the in vivo measured systemic oral bioavailability if
-    # available, optionally overwriting based on Caco2.Pab
-    Fbio <- try(get_invitroPK_param("Foral",species,chem.cas=chem.cas),
-                silent=TRUE)
-    if (!is(Fbio,"try-error") & !overwrite.invivo)
-    {
-      # Correct for hepatic first-pass metabolism:
-      Fhep <- try(get_invitroPK_param("Fhep",species,chem.cas=chem.cas),
-                silent=TRUE)
-      if (is(Fhep,"try-error") | overwrite.invivo == TRUE)
+  # Only bother with the remaining code if keepit100=FALSE
+  if (!keepit100)
+  {
+      # Get the in vivo measured systemic oral bioavailability if
+      # available, optionally overwriting based on Caco2.Pab
+      Fbio <- try(get_invitroPK_param("Foral",species,chem.cas=chem.cas),
+                  silent=TRUE)
+      if (!is(Fbio,"try-error") & !overwrite.invivo)
       {
-        if (!is.null(parameters[['hepatic.bioavailability']]))
+        # Correct for hepatic first-pass metabolism:
+        Fhep <- try(get_invitroPK_param("Fhep",species,chem.cas=chem.cas),
+                  silent=TRUE)
+        if (is(Fhep,"try-error") | overwrite.invivo == TRUE)
         {
-          Fhep <- parameters[['hepatic.bioavailability']] 
+          if (!is.null(parameters[['hepatic.bioavailability']]))
+          {
+            Fhep <- parameters[['hepatic.bioavailability']] 
+          } else {
+            Fhep <- calc_hep_bioavailability(parameters = parameters, 
+                                            chem.cas = chem.cas,
+                                            chem.name = chem.name,
+                                            dtxsid = dtxsid,
+                                            species = species, 
+                                            suppress.messages = suppress.messages)
+          }
+        }
+        Fabsgut <- Fbio/Fhep
+      } else Fabsgut <- NA
+      
+      # Get the fraction absorbed from the gut, preferring in vivo measured data if
+      # available, otherwise attempt to use Caco2.Pab
+      Fabs <- try(get_invitroPK_param("Fabs",species,chem.cas=chem.cas),
+                  silent=TRUE)
+      if (is(Fabs,"try-error") | overwrite.invivo == TRUE){
+        if (overwrite.invivo  | 
+            (Caco2.Fabs & is(Fabs,"try-error")))
+        {
+          out[["Fabs"]] <- 1
+          # Caco2 is a human cell line
+          # only calculable for human, assume the same across species
+          Fabs <- calc_fabs.oral(
+            parameters = c(out, parameters), 
+            chem.cas = chem.cas,
+            chem.name = chem.name,
+            dtxsid = dtxsid,
+            species = species,
+            suppress.messages=suppress.messages) 
         } else {
-          Fhep <- calc_hep_bioavailability(parameters = parameters, 
-                                          chem.cas = chem.cas,
-                                          chem.name = chem.name,
-                                          dtxsid = dtxsid,
-                                          species = species, 
-                                          suppress.messages = suppress.messages)
+          Fabs <- 1
         }
       }
-      Fabsgut <- Fbio/Fhep
-    } else Fabsgut <- NA
-    
-    # Get the fraction absorbed from the gut, preferring in vivo measured data if
-    # available, otherwise attempt to use Caco2.Pab
-    Fabs <- try(get_invitroPK_param("Fabs",species,chem.cas=chem.cas),
-                silent=TRUE)
-    if (is(Fabs,"try-error") | overwrite.invivo == TRUE){
-      if (overwrite.invivo  | 
-          (Caco2.Fabs & is(Fabs,"try-error")))
+      
+      # We have a hard time with Fgut, if we don't have it measured we first
+      # try to set it with Fabsgut/Fabs:
+      Fgut <- try(get_invitroPK_param("Fgut",species,chem.cas=chem.cas),
+                  silent=TRUE)
+      if (is(Fgut,"try-error") | overwrite.invivo == TRUE)
       {
-        out[["Fabs"]] <- 1
-        # Caco2 is a human cell line
-        # only calculable for human, assume the same across species
-        Fabs <- calc_fabs.oral(
-          parameters = c(out, parameters), 
-          chem.cas = chem.cas,
-          chem.name = chem.name,
-          dtxsid = dtxsid,
-          species = species,
-          suppress.messages=suppress.messages) 
-      } else {
-        Fabs <- 1
+        if (overwrite.invivo | 
+            (Caco2.Fgut & is(Fgut,"try-error")))
+        {
+          Fgut <- calc_fgut.oral(
+            parameters = c(out, parameters), 
+            chem.cas = chem.cas,
+            chem.name = chem.name,
+            dtxsid = dtxsid,
+            species = species,
+            suppress.messages=suppress.messages) 
+        } else if (!is.na(Fabsgut) & !overwrite.invivo) {
+          Fgut <- Fabsgut/Fabs
+        } else {
+          Fgut <- 1
+        }
       }
-    }
-    
-    # We have a hard time with Fgut, if we don't have it measured we first
-    # try to set it with Fabsgut/Fabs:
-    Fgut <- try(get_invitroPK_param("Fgut",species,chem.cas=chem.cas),
-                silent=TRUE)
-    if (is(Fgut,"try-error") | overwrite.invivo == TRUE)
-    {
-      if (overwrite.invivo | 
-          (Caco2.Fgut & is(Fgut,"try-error")))
-      {
-        Fgut <- calc_fgut.oral(
-          parameters = c(out, parameters), 
-          chem.cas = chem.cas,
-          chem.name = chem.name,
-          dtxsid = dtxsid,
-          species = species,
-          suppress.messages=suppress.messages) 
-      } else if (!is.na(Fabsgut) & !overwrite.invivo) {
-        Fgut <- Fabsgut/Fabs
-      } else {
-        Fgut <- 1
-      }
-    }
-    
-    out[['Fabsgut']] <- Fabs*Fgut
-    out[['Fabs']] <- Fabs
-    out[['Fgut']] <- Fgut
+      
+      out[['Fabsgut']] <- Fabs*Fgut
+      out[['Fabs']] <- Fabs
+      out[['Fgut']] <- Fgut
+  
+    # Require that values are <= 1:
+    out[names(out) %in% c("Fabsgut", "Fabs", "Fgut")] <- 
+      lapply(out[names(out) %in% c("Fabsgut", "Fabs", "Fgut")], 
+             function(x) suppressWarnings(ifelse(x>1, 1.0, x)))
 
-  # Require that values are <= 1:
-  out[names(out) %in% c("Fabsgut", "Fabs", "Fgut")] <- 
-    lapply(out[names(out) %in% c("Fabsgut", "Fabs", "Fgut")], 
-           function(x) suppressWarnings(ifelse(x>1, 1.0, x)))
-
-  # Set a reasonable precision:
-  out <- lapply(out, set_httk_precision)
+    # Set a reasonable precision:
+    out <- lapply(out, set_httk_precision)
+  }
   
   return(out)
 }
