@@ -219,7 +219,9 @@ solve_model <- function(chem.name = NULL,
                     species="Human",
                     input.units="mg/kg", # units for 'dosing'
                     output.units=NULL, # needs to be a named list or named vector for desired units corresponding to compartments
-                    method="lsoda",rtol=1e-8,atol=1e-12,
+                    method="lsoda",
+                    rtol=1e-6,
+                    atol=1e-6,
                     recalc.blood2plasma=FALSE,
                     recalc.clearance=FALSE,
                     restrictive.clearance=TRUE,

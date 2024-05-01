@@ -55,9 +55,6 @@
 #' output.units.  Defaults are zero.
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @param plots Plots all outputs if true.
-#' @param method Method used by integrator (deSolve).
-#' @param rtol Argument passed to integrator (deSolve).
-#' @param atol Argument passed to integrator (deSolve).
 #' @param default.to.human Substitutes missing rat values with human values if
 #' true.
 #' @param dosing.matrix Vector of dosing times or a matrix consisting of two
@@ -88,7 +85,7 @@
 #' @param monitor.vars Which variables are returned as a function of time. 
 #' Defaults value of NULL provides "Agutlumen", "Ccompartment", "Ametabolized",
 #' "AUC"
-#' @param ... Additional arguments passed to the integrator.
+#' @param ... Additional arguments passed to the integrator (deSolve).
 #'
 #' @return A matrix with a column for time(in days) and a column for the
 #' compartment and the area under the curve (concentration only).
@@ -147,7 +144,6 @@ solve_1comp <- function(chem.name = NULL,
                     input.units='mg/kg',
                     # output.units='uM',
                     output.units=NULL,
-                    method="lsoda",rtol=1e-8,atol=1e-12,
                     default.to.human=FALSE,
                     recalc.blood2plasma=FALSE,
                     recalc.clearance=FALSE,
@@ -183,7 +179,6 @@ solve_1comp <- function(chem.name = NULL,
     species=species,
     input.units=input.units,
     output.units=output.units,
-    method=method,rtol=rtol,atol=atol,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
