@@ -250,7 +250,7 @@ have a direct toxicological interpretation.
 ## Downloading ToxCast Data
 
 The main page for the data is here:
-https://www.epa.gov/chemical-research/exploring-toxcast-data
+https://www.epa.gov/comptox-tools/exploring-toxcast-data
 
 Most useful to us is a single file containing all the hits across all chemicals
 and assays:

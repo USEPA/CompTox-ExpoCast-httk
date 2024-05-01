@@ -24,6 +24,8 @@
 #' "uM").
 #' @param vol Volume for the target tissue of interest.
 #' NOTE: Volume should not be in units of per BW, i.e. "kg".
+#' @param state Chemical state of matter (gas or default liquid).
+#' 
 #' 
 #' @return
 #' A list of numeric values for doses converted to output.units, potentially
@@ -42,8 +44,10 @@ scale_dosing <- function(
   route,
   input.units=NULL,
   output.units="uM",
-  vol = NULL)# add volume conversion update for amount to conc (or vice versa)
-             # then update solve_model
+  vol = NULL, # add volume conversion update for amount to conc (or vice versa),
+  # then update solve_model
+  state = "liquid")
+             
 {
   if (!all(c("BW","MW","Fabsgut")%in%names(parameters))) 
     stop("Argument \"parameters\" must specify BW, MW, and Fabsgut.")
@@ -66,7 +70,8 @@ scale_dosing <- function(
       input.units = input.units, 
       output.units = output.units, 
       MW =MW,
-      vol=vol) # Should NOT be in '/kg' if applicable
+      vol=vol,
+      state = state) # Should NOT be in '/kg' if applicable
 
 # We currently model absorption processes as just diminishing overall dose:
   if (route=="oral")
