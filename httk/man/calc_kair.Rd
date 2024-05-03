@@ -12,7 +12,9 @@ calc_kair(
   species = "Human",
   adjusted.Funbound.plasma = TRUE,
   default.to.human = FALSE,
-  suppress.messages = FALSE
+  suppress.messages = FALSE,
+  pH = 7.4,
+  alpha = 0.001
 )
 }
 \arguments{
