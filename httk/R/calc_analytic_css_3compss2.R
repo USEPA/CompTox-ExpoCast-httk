@@ -197,11 +197,12 @@ calc_analytic_css_3compss2 <- function(chem.name=NULL,
                                     state="gas") # mg/l
     
     Css_blood <- CinhaledmgpL * # Inhaled concentration mg/L
-                 Qalv / # Alveolar air flow # L/h
+                 Qalv * # Alveolar air flow L/h
+                 Rb2p / # Blood to plasma concentration ratio  
                  (
                    Clhep + # Well-stirred hepatic metabolism (liver)
-                   Fup * Qgfr / Rb2p + # Glomerular filtration from blood L/h
-                   Qalv / Kblood2air # Exhalation rate L/h
+                   Fup * Qgfr  + # Glomerular filtration from blood L/h
+                   Qalv * Rb2p / Kblood2air # Exhalation rate L/h
                  ) 
   } else stop("Route must be either oral or inhalation.")
   

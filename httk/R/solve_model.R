@@ -220,14 +220,15 @@ solve_model <- function(chem.name = NULL,
                     input.units="mg/kg", # units for 'dosing'
                     output.units=NULL, # needs to be a named list or named vector for desired units corresponding to compartments
                     method=NULL,
-                    rtol=1e-6,
-                    atol=1e-6,
+                    rtol=1e-5,
+                    atol=1e-5,
                     recalc.blood2plasma=FALSE,
                     recalc.clearance=FALSE,
                     restrictive.clearance=TRUE,
                     adjusted.Funbound.plasma=TRUE,
                     minimum.Funbound.plasma=0.0001,
                     parameterize.arg.list=list(),
+                    small.time = 1e-4, 
                     ...)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -665,19 +666,16 @@ specification in compartment_units for model ", model)
   # Save the requested times so that we only return those:
   requested.times <- times
 
-  # Small time delta for plotting changes:
-  SMALL.TIME <- 1e-3  
-  
   # We need to let the solver know which time points we want:
   if (is.null(times)) times <- seq(0, days, 1/(24*tsteps))
   times <- sort(times)
   start.time <- times[1]
   end.time <- times[length(times)]
 
-  # We add a time point 1e-5 later than the beginning to make the plots look
+  # We add a time point 1e-4 later than the beginning to make the plots look
   # better. Use 'unique' function to remove redundant times that may have
   # been generated using 'round'
-  times <- sort(unique(c(times,start.time+SMALL.TIME)))
+  times <- sort(unique(c(times,start.time+small.time)))
 
 ### DOSING
 
@@ -821,11 +819,11 @@ specification in compartment_units for model ", model)
       value = dose.vec, 
       method = rep(dose.type,num.doses))
     #Update our times vector to include times of provided dosing events, as well as
-    #the times of dosing events incremented by SMALL.TIME for visualization.
+    #the times of dosing events incremented by small.time for visualization.
     times <- sort(unique(c(times,
-      sapply(eventdata$time-SMALL.TIME, function(x) max(x,0)),
+      sapply(eventdata$time-small.time, function(x) max(x,0)),
       eventdata$time,
-      eventdata$time+SMALL.TIME)))
+      eventdata$time+small.time)))
   }  
  
 ### MODEL PARAMETERS FOR DESOLVE
