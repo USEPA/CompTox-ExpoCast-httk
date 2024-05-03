@@ -100,12 +100,6 @@ static double parms[22];
 #define Krest2plasma parms[20]
 #define Ratioblood2plasma parms[21]
 
-/* Function definitions for delay differential equations */
-
-int Nout3comp=1;
-int nr3comp[1]={0};
-double ytau3comp[1] = {0.0};
-
 static double yini3comp[7] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
 
 /*----- Initializers */
