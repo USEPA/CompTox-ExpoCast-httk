@@ -2,7 +2,8 @@
 
 ## Bug Fixes
 * Cleaned up functions for model 3compartment
-
+* Corrected error where non-restrictive clearance option was not working for model pbtk
+  
 ## Enhancements
 * Cleaned up code for various ODE models to make them more consistent and better annotated (more comments)
 * Modified 'calc_kair' to only allow neutral chemical fraction to partition into air
