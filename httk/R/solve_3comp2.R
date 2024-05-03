@@ -152,10 +152,10 @@
 #'
 #' @seealso \code{\link{calc_analytic_css_3comp}}
 #'
-#' @export solve_3comp
+#' @export solve_3comp2
 #'
 #' @useDynLib httk
-solve_3comp <- function(chem.name = NULL,
+solve_3comp2 <- function(chem.name = NULL,
                     chem.cas = NULL,
                     dtxsid = NULL,
                     times=NULL,
@@ -169,6 +169,7 @@ solve_3comp <- function(chem.name = NULL,
                     plots=FALSE,
                     suppress.messages=FALSE,
                     species="Human",
+                    route="oral",
                     iv.dose=FALSE,
                     input.units='mg/kg',
                     # output.units='uM',
@@ -186,20 +187,30 @@ solve_3comp <- function(chem.name = NULL,
                     monitor.vars=NULL,
                     ...)
 {
+  if (route %in% "inhalation")
+  {
+    dosing <- list(
+           initial.dose = dose,
+           Cinhppmv = dose
+           )
+  } else {
+    dosing <- list(
+        initial.dose=dose,
+        dosing.matrix=dosing.matrix,
+        daily.dose=daily.dose,
+        doses.per.day=doses.per.day
+        )
+  }
+
   out <- solve_model(
     chem.name = chem.name,
     chem.cas = chem.cas,
     dtxsid = dtxsid,
     times=times,
     parameters=parameters,
-    model="3compartment",
-    route=ifelse(iv.dose,"iv","oral"),
-    dosing=list(
-      initial.dose=dose,
-      dosing.matrix=dosing.matrix,
-      daily.dose=daily.dose,
-      doses.per.day=doses.per.day
-    ),
+    model="3compartment2",
+    route=ifelse(iv.dose, "iv", route),
+    dosing=dosing,
     days=days,
     tsteps = tsteps, # tsteps is number of steps per hour
     initial.values=initial.values,

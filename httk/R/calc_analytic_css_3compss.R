@@ -78,7 +78,9 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid = NULL,
                                    parameters=NULL,
-                                   hourly.dose=1/24,
+                                   dosing=list(daily.dose=1),
+                                   hourly.dose = NULL,
+                                   dose.units = "mg",
                                    concentration='plasma',
                                    suppress.messages=FALSE,
                                    recalc.blood2plasma=FALSE,
@@ -88,9 +90,17 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
                                    Caco2.options = list(),
                                    ...)
 {
-
-  param.names.3compss <- model.list[["3compartmentss"]]$param.names
+  if (!is.null(hourly.dose))
+  {
+     warning("calc_analytic_css_3compss deprecated argument hourly.dose replaced with new argument dose, value given assigned to dose")
+     dosing <- list(daily.dose = 24*hourly.dose)
+  }
+  
+# Load from modelinfo file:
+  THIS.MODEL <- "3compartmentss"
+  param.names <- model.list[[THIS.MODEL]]$param.names
   param.names.schmitt <- model.list[["schmitt"]]$param.names
+  parameterize_function <- model.list[[THIS.MODEL]]$parameterize.func
     
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -130,20 +140,21 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
       warning("Argument recalc.blood2plasma=TRUE ignored because parameters is NULL.")
     }
     
-    parameters <- parameterize_steadystate(
-                                    chem.cas=chem.cas,
-                                    chem.name=chem.name,
-                                    dtxsid=dtxsid,
-                                    suppress.messages=suppress.messages,
-                                    restrictive.clearance=restrictive.clearance,
-                                    Caco2.options = Caco2.options,
-                                    ...)
+    parameters <- do.call(what=parameterize_function, 
+                          args=purrr::compact(c(
+                            list(chem.cas=chem.cas,
+                                 chem.name=chem.name,
+                                 suppress.messages=suppress.messages,
+                                 Caco2.options = Caco2.options,
+                                 restrictive.clearance = restrictive.clearance
+                                 ),
+                            ...)))
 
   } else {
-    if (!all(param.names.3compss %in% names(parameters)))
+    if (!all(param.names %in% names(parameters)))
     {
       stop(paste("Missing parameters:",
-                 paste(param.names.3compss[which(!param.names.3compss %in% names(parameters))],
+                 paste(param.names[which(!param.names %in% names(parameters))],
                    collapse=', '),
                  ".  Use parameters from parameterize_steadystate."))
     }
@@ -160,25 +171,49 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
                                                    hematocrit=parameters$hematocrit)
   }
 
+  BW <- parameters$BW
+  
+  # Dose rate:
+  hourly.dose <- dosing[["daily.dose"]] /
+                   24 /
+                   BW *
+                   convert_units(MW = parameters[["MW"]],
+                                 dose.units,
+                                 "mg") # mg/kg/h
+
   Fup <- parameters$Funbound.plasma
   Rb2p <- parameters$Rblood2plasma 
-  BW <- parameters$BW
+
   # Total blood flow (gut plus arterial) into liver:
-  Qtotalliver <- parameters$Qtotal.liverc/BW^0.25 #L/h/kg BW
+  Qtotalliver <- parameters$Qtotal.liverc/BW^0.25 # L / h / kg BW
 
-# Scale up from in vitro Clint to a whole liver clearance:
-  cl <- calc_hep_clearance(parameters=parameters,
-          hepatic.model='unscaled',
-          suppress.messages=TRUE)#L/h/kg body weight
-  if (!restrictive.clearance) cl <- cl*Fup
+  # Scale glomerular filtration rate (for kidney elimination) to per kg BW:
+  Qgfr <- parameters$Qgfrc/BW^0.25 # L / h / kg BW
 
-# Calculate steady-state plasma Css, Pearce et al. (2017) equation section 2.2:
-   Css <- parameters$Fabsgut * 
-    parameters$hepatic.bioavailability *
-    hourly.dose / (
-    parameters$Qgfrc/BW^0.25 * Fup + 
-    Qtotalliver*Fup*cl /
-    (Qtotalliver + Fup*cl/Rb2p))
+  # Scale up from in vitro Clint to a whole liver clearance:
+  Clhep <- calc_hep_clearance(parameters=parameters,
+          hepatic.model="well-stirred",
+          restrictive.clearance = restrictive.clearance,
+          suppress.messages=TRUE) # L / h / kg BW
+
+  # Oral bioavailability:
+  Fabsgut <- parameters$Fabsgut
+  Fhep <- parameters$hepatic.bioavailability
+
+
+# Calculate steady-state plasma Css. With the well-stirred calculation (above)
+# this is the same equation as Wetmore et al. (2012) page 160 or 
+# Pearce et al. (2017) equation section 2.2:
+
+   Css <- hourly.dose * # Oral dose rate mg/kg/h
+          Fabsgut * # Fraction of dose absorbed from gut (in vivo or Caco-2)
+          Fhep / # Fraction of dose that escapes first-pass hepatic metabolism
+          (
+            Qgfr * Fup + # Glomerular filtration to proximal tubules (kidney)
+            Clhep # Well-stirred hepatic metabolism (liver)
+          )
+
+# Css has units of mg / L
     
 # Check to see if a specific tissue was asked for:
   if (!is.null(tissue))
@@ -236,7 +271,6 @@ calc_analytic_css_3compss <- function(chem.name=NULL,
   }
   return(Css)
 }
-
 
 # Add some parameters to the output from parameterize_steady_state so that
 # predict_partitioning_schmitt can run without reparameterizing

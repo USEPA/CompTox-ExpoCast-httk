@@ -10,7 +10,9 @@ calc_analytic_css_3compss(
   chem.cas = NULL,
   dtxsid = NULL,
   parameters = NULL,
-  hourly.dose = 1/24,
+  dosing = list(daily.dose = 1),
+  hourly.dose = NULL,
+  dose.units = "mg",
   concentration = "plasma",
   suppress.messages = FALSE,
   recalc.blood2plasma = FALSE,
@@ -74,11 +76,30 @@ parameters is NULL.}
 Steady state plasma concentration in mg/L units
 }
 \description{
-This function calculates the analytic steady state plasma or venous blood 
-concentrations as a result of infusion dosing.
+This function calculates the steady state plasma or venous blood 
+concentrations as a result of constant oral infusion dosing. 
+The equation, initally used 
+for high throughput in vitro-in vivo extrapolation in
+\insertCite{rotroff2010incorporating}{httk} and later given in 
+\insertCite{wetmore2012integration}{httk}, assumes that the concentration 
+is the inverse of the total clearance, which is the sum of hepatic metabolism
+and renal filatrion:
+\deqn{C^{ss}_{plasma} = \frac{dose}{f_{up}*Q_{GFR}+Cl_{h}}}
+\deqn{C^{ss}_{blood} = R_{b:p}*C^{ss}_{plasma}}
+ where Q_GFR is the glomerular filtration
+rate in the kidney, Cl_h is the chemical-specific whole liver metabolism 
+clearance (scaled up from intrinsic clearance, which does not depend on flow),
+f_up is the chemical-specific fraction unbound in plasma, R_b:p is the 
+chemical specific ratio of concentrations in blood:plasma.
+}
+\details{
+This equation is a simplification of the steady-state plasma concentration
+in the three-comprtment model (see \code{\link{solve_3comp}}), neglecting a
+higher order term that causes this Css to be higher for very rapidly cleared
+chemicals.
 }
 \references{
-\insertRef{pearce2017httk}{httk}
+\insertAllCited{}
 }
 \seealso{
 \code{\link{calc_analytic_css}}
