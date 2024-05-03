@@ -1,3 +1,13 @@
+# httk 2.3.2
+
+## Bug Fixes
+* Cleaned up functions for model 3compartment
+
+## Enhancements
+* Cleaned up code for various ODE models to make them more consistent and better annotated (more comments)
+* Modified 'calc_kair' to only allow neutral chemical fraction to partition into air
+* Updated help files describing models
+
 # httk 2.3.1 (2023-3-19)
 This patch addresses a number of bugs.
 
