@@ -10,11 +10,10 @@ calc_analytic_css(
   dtxsid = NULL,
   parameters = NULL,
   species = "human",
-  daily.dose = 1,
+  daily.dose = NULL,
+  dose = 1,
+  dose.units = "mg/kg/day",
   route = "oral",
-  exp.conc = 1,
-  period = 24,
-  exp.duration = 24,
   output.units = "uM",
   model = "pbtk",
   concentration = "plasma",
@@ -50,15 +49,6 @@ default "Human").}
 
 \item{route}{Route of exposure (either "oral", "iv", or "inhalation"
 default "oral").}
-
-\item{exp.conc}{Specified inhalation exposure concentration for use in assembling
-'forcings' data series argument for integrator. Defaults to uM/L}
-
-\item{period}{For use in assembling forcing function data series 'forcings'
-argument, specified in hours}
-
-\item{exp.duration}{For use in assembling forcing function data 
-series 'forcings' argument, specified in hours}
 
 \item{output.units}{Units for returned concentrations, defaults to uM 
 (specify units = "uM") but can also be mg/L.}
@@ -120,6 +110,15 @@ the lowest measured Fup in our dataset).}
 
 \item{...}{Additional parameters passed to parameterize function if 
 parameters is NULL.}
+
+\item{exp.conc}{Specified inhalation exposure concentration for use in assembling
+'forcings' data series argument for integrator. Defaults to uM/L}
+
+\item{period}{For use in assembling forcing function data series 'forcings'
+argument, specified in hours}
+
+\item{exp.duration}{For use in assembling forcing function data 
+series 'forcings' argument, specified in hours}
 }
 \value{
 Steady state plasma concentration in specified units

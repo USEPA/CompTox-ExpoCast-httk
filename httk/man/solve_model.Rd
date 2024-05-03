@@ -23,15 +23,16 @@ solve_model(
   species = "Human",
   input.units = "mg/kg",
   output.units = NULL,
-  method = "lsoda",
-  rtol = 1e-08,
-  atol = 1e-12,
+  method = NULL,
+  rtol = 1e-05,
+  atol = 1e-05,
   recalc.blood2plasma = FALSE,
   recalc.clearance = FALSE,
   restrictive.clearance = TRUE,
   adjusted.Funbound.plasma = TRUE,
   minimum.Funbound.plasma = 1e-04,
   parameterize.arg.list = list(),
+  small.time = 1e-04,
   ...
 )
 }
@@ -64,8 +65,8 @@ of most httk models, these should include "initial.dose", "doses.per.day",
 precise dose regimen specification, and is a matrix consisting of two
 columns or rows named "time" and "dose" containing the time and amount of 
 each dose. If none of the namesake entries of the dosing list is set to a
-non-NULL value, solve_model uses a default dose of 1 mg/kg BW along with the 
-dose type (add/multiply) specified for a given route (e.g. add the dose to gut
+non-NULL value, solve_model uses a default initial dose of 1 mg/kg BW along with the 
+dose type (add/multiply) specified for a given route (for example, add the dose to gut
 lumen for oral route)}
 
 \item{days}{Simulated period. Default 10 days.}
