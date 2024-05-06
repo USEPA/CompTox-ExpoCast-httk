@@ -1,2 +1,4 @@
 data-raw/
 vignettes/Linakis2020/
+^.*\.Rproj$
+^\.Rproj\.user$
