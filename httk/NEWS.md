@@ -9,6 +9,7 @@
 * Modified 'calc_kair' to only allow neutral chemical fraction to partition into air
 * Updated help files describing models
 * Default ODE solver tolerances increased to just below significant figures reported by HTTK (we report 4 sig figs, now require the solver to converge to 5)
+* 'solve_[MODEL]' functions now exclusively pass arguments to deSolve through "..."
 * New modelinfo file variable default.solver.method can be set -- species the default ODE solver approach for deSolve if "lsoda" is not desired
 
 # httk 2.3.1 (2023-3-19)
