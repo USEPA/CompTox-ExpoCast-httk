@@ -1,3 +1,17 @@
+# httk 2.3.2
+
+## Bug Fixes
+* Cleaned up functions for model 3compartment
+* Corrected error where non-restrictive clearance option was not working for model pbtk
+  
+## Enhancements
+* Cleaned up code for various ODE models to make them more consistent and better annotated (more comments)
+* Modified 'calc_kair' to only allow neutral chemical fraction to partition into air
+* Updated help files describing models
+* Default ODE solver tolerances increased to just below significant figures reported by HTTK (we report 4 sig figs, now require the solver to converge to 5)
+* 'solve_[MODEL]' functions now exclusively pass arguments to deSolve through "..."
+* New modelinfo file variable default.solver.method can be set -- species the default ODE solver approach for deSolve if "lsoda" is not desired
+
 # httk 2.3.1 (2023-3-19)
 This patch addresses a number of bugs.
 

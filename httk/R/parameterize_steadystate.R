@@ -318,8 +318,9 @@ parameterize_steadystate <- function(
 # clearance to calculate bioavailability:
   Params[["hepatic.bioavailability"]] <- NA
   cl <- calc_hep_clearance(parameters=Params,
-          hepatic.model='unscaled',
-          suppress.messages=TRUE)#L/h/kg body weight
+          hepatic.model="unscaled",
+          restrictive.clearance = restrictive.clearance,
+          suppress.messages=TRUE) #L/h/kg body weight
           
 # "hepatic bioavailability" simulates first-pass hepatic metabolism since we 
 # don't explicitly model blood from the gut:
