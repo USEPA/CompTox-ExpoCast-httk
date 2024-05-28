@@ -332,7 +332,7 @@ create_mc_samples <- function(chem.cas=NULL,
   # we use purrr::compact to drop NULL values from arguments list:
       parameters.dt <- do.call(converthttkpopfun, args=purrr::compact(c(list(
                        parameters.dt=parameters.dt,
-                       httkpop.dt=httkpop.dt),
+                       physiology.dt=physiology.dt),
                        convert.httkpop.arg.list)))
    } else {
     if(httkpop==TRUE) 
