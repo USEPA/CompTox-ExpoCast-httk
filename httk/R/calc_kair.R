@@ -48,6 +48,11 @@
 #'
 #' @param suppress.messages Whether or not the output messages are suppressed.
 #'
+#' @param alpha Ratio of Distribution coefficient D of totally charged species
+#' and that of the neutral form
+#'
+#' @param pH pH where ionization is evaluated.
+#'
 #' @return A named list containing the blood:air, water:air, and mucus:air 
 #' partition coefficients
 #'
@@ -64,6 +69,8 @@
 #' Scott, John W., et al. "Tuning to odor solubility and sorption pattern in 
 #' olfactory epithelial responses." Journal of Neuroscience 34.6 (2014): 
 #' 2025-2036.
+#' 
+#' @seealso \code{\link{calc_dow}}
 #' 
 #' @keywords parameter
 #'

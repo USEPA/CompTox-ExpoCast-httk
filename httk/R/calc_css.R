@@ -69,6 +69,11 @@
 #' @param dosing The dosing object for more complicated scenarios. Defaults to
 #' repeated \code{daily.dose} spread out over \code{doses.per.day}
 #'
+#' @param dose.units The units associated with the dose received.
+#'
+#' @param route Route of exposure (either "oral", "iv", or "inhalation"
+#' default "oral").
+#'
 #' @param ... Additional arguments passed to model solver (default of
 #' \code{\link{solve_pbtk}}).
 #'

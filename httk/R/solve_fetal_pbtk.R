@@ -192,6 +192,8 @@ describe human gestation.")
     regression=regression,
     restrictive.clearance = restrictive.clearance,
     minimum.Funbound.plasma=minimum.Funbound.plasma,
+    atol=1e-8,
+    rotl=1e-8,
     ...)
   
   return(out) 
