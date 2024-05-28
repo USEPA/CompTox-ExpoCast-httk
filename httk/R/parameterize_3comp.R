@@ -97,7 +97,7 @@
 #'
 #' \insertRef{kilford2008hepatocellular}{httk}
 #'
-#' @keywords Parameter 3compartment
+#' @keywords Parameter 3compartment2
 #'
 #' @seealso \code{\link{solve_3comp}}
 #'
@@ -119,7 +119,7 @@
 #'  out <- solve_3comp(parameters=parameters,plots=TRUE)
 #' 
 #' @export parameterize_3comp
-parameterize_3comp<- function(
+parameterize_3comp <- function(
                        chem.cas = NULL,
                        chem.name = NULL,
                        dtxsid = NULL,
