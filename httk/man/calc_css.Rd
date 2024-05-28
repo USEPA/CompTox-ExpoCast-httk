@@ -53,6 +53,11 @@ the average concentration must come within to be considered at steady state.}
 
 \item{doses.per.day}{Number of oral doses per day.}
 
+\item{dose.units}{The units associated with the dose received.}
+
+\item{route}{Route of exposure (either "oral", "iv", or "inhalation"
+default "oral").}
+
 \item{days}{Initial number of days to run simulation that is multiplied on
 each iteration.}
 
