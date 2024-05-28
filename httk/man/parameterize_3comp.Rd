@@ -141,5 +141,5 @@ retrieved from table \code{\link{physiology.data}}.
 \author{
 Robert Pearce and John Wambaugh
 }
-\keyword{3compartment}
+\keyword{3compartment2}
 \keyword{Parameter}

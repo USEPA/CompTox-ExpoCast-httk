@@ -78,7 +78,7 @@ either change execute.vignette to TRUE or press "play" (the green arrow) on
 each chunk in RStudio.
 ```{r runchunks, eval = TRUE}
 # Set whether or not the following chunks will be executed (run):
-execute.vignette <- FALSE
+execute.vignette <- TRUE
 ```
 
 ### Load the relevant libraries
@@ -149,7 +149,9 @@ for (this.unit in gas.units)
     for (this.chem in these.chems)  
     {
       this.factor <- convert_units(
-        input.units=this.unit, output.units=target.unit, dtxsid=this.chem)
+        input.units=this.unit, 
+        output.units=target.unit, 
+        dtxsid=this.chem, state="gas")
       print(paste("Use",this.factor,"to convert",this.unit,"to",target.unit))
       
       # Scale the observation    
@@ -184,8 +186,10 @@ for (this.unit in tissue.units)
       CONC_U==this.unit)$DTXSID)    
     for (this.chem in these.chems)  
     {
-      this.factor <- convert_units(
-        input.units=this.unit, output.units=target.unit, dtxsid=this.chem)
+      this.factor <- try(convert_units(
+        input.units=this.unit, 
+        output.units=target.unit, 
+        dtxsid=this.chem))
       print(paste("Use",this.factor,"to convert",this.unit,"to",target.unit))
       
       # Scale the observation    
@@ -664,7 +668,7 @@ for (this.chem in these.chems)
 {
   # Use HTTK unit conversion:
   this.factor <- convert_units(
-    input.units="ppmv", output.units="um", chem.name=this.chem)
+    input.units="ppmv", output.units="um", chem.name=this.chem, state="gas")
       
   # Scale the observation    
   simobsfull[simobsfull$chem==this.chem & 
@@ -938,6 +942,78 @@ fig2 <- ggplot(
     legend.title = element_text(face = 'bold', size = 24),
     legend.text = element_text(face = 'bold',size = 24))
 fig2 #Display plot in R
+```
+
+
+```{r make_how_to_add_models_version, eval=execute.vignette}
+library(scales)
+# Function for formatting tick labels:
+scientific_10 <- function(x) {                                  
+  out <- gsub("1e", "10^", scientific_format()(x))              
+  out <- gsub("\\+","",out)                                     
+  out <- gsub("10\\^01","10",out)                               
+  out <- parse(text=gsub("10\\^00","1",out))                    
+}  
+
+font.size.large <- 10
+font.size.small <- 8
+
+figaddmodels <- ggplot(
+  data = simobsfull[
+    simobsfull$simconc > 0 & 
+    simobsfull$obsconc > 0,], 
+  aes(x = log10(simconc), y = log10(obsconc))) + 
+  geom_point(
+    color = ifelse(
+      abs(
+        log10(simobsfull[
+          simobsfull$simconc > 0 & 
+          simobsfull$obsconc > 0,]$simconc) -
+        log10(simobsfull[
+          simobsfull$simconc > 0 & 
+          simobsfull$obsconc > 0,]$obsconc)) >2,
+      'red',
+      'black'),alpha=0.25) + 
+  geom_abline() + 
+  scale_y_log10(label=scientific_10)+
+  scale_x_log10(label=scientific_10)+
+  xlab("Simulated Concentrations") + 
+  ylab("Observed Concentrations") + 
+  theme_bw() + 
+  geom_smooth(method = 'lm',se = FALSE, aes(color = 'Overall')) + 
+  geom_smooth(method = 'lm', se = FALSE, aes(color = species)) + 
+  geom_text(
+    x = Inf, 
+    y = -Inf, 
+    hjust = 1.05, 
+    vjust = -0.15, 
+    size = 4, 
+    label = paste0(
+      "\nRegression R^2: ", 
+      round(summary(lmall)$r.squared,digits = 2),
+      "\nRegression RMSE: ", 
+      round(sqrt(mean(lmall$residuals^2)),digits = 2),
+      "\nRMSE (Identity): ", 
+      round(totalrmse,digits = 2)
+    )) + 
+  scale_color_discrete(name = 'Species', breaks = c("Overall","Human","Rat")) +
+  theme(
+    plot.title = element_text(face = 'bold', size = font.size.small),
+    axis.title.x = element_text(face = 'bold', size = font.size.large), 
+    axis.text.x = element_text(size=font.size.small), 
+    axis.title.y = element_text(face = 'bold', size = font.size.large), 
+    axis.text.y = element_text(size = font.size.small),
+    legend.title = element_text(face = 'bold', size = font.size.large),
+    legend.text = element_text(face = 'bold',size = font.size.large)) 
+print(figaddmodels)
+ggsave("c:/users/jwambaug/AddModelsFig1.tiff", width=6, height=4, dpi=300)
+
+counts <- simobsfull[,c("chem","dose","explen","species")]
+counts <- subset(counts,!duplicated(counts))
+paste(length(unique(counts$chem)),
+      "chemicals across",dim(counts)[1],
+      "experimental conditions in",
+      length(unique(counts$species)),"species.")
 ```
 
 ```{r write_figure2, eval = execute.vignette}

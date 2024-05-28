@@ -1,7 +1,7 @@
 #' Calculate Monte Carlo Oral Equivalent Dose
 #' 
 #' @description
-#' This function converts a chemical plasma concetration to an oral adminstered
+#' This function converts a chemical plasma concentration to an oral adminstered
 #' equivalent
 #' dose (AED) using a concentration obtained from \code{\link{calc_mc_css}}.  
 #' This function uses reverse dosimetry-based 
