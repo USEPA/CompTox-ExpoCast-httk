@@ -47,6 +47,10 @@ default "Human").}
 
 \item{daily.dose}{Total daily dose, mg/kg BW.}
 
+\item{dose}{The amount of chemial to which the individual is exposed.}
+
+\item{dose.units}{The units associated with the dose received.}
+
 \item{route}{Route of exposure (either "oral", "iv", or "inhalation"
 default "oral").}
 
@@ -110,15 +114,6 @@ the lowest measured Fup in our dataset).}
 
 \item{...}{Additional parameters passed to parameterize function if 
 parameters is NULL.}
-
-\item{exp.conc}{Specified inhalation exposure concentration for use in assembling
-'forcings' data series argument for integrator. Defaults to uM/L}
-
-\item{period}{For use in assembling forcing function data series 'forcings'
-argument, specified in hours}
-
-\item{exp.duration}{For use in assembling forcing function data 
-series 'forcings' argument, specified in hours}
 }
 \value{
 Steady state plasma concentration in specified units

@@ -125,6 +125,10 @@ dataset)}
 \item{parameterize.arg.list}{Additional parameterized passed to the model
 parameterization function.}
 
+\item{small.time}{A tiny amount of time used to provide predictions on either
+side of an instaneous event (like an iv injection). This helps ensure that
+abrupt changes plot well. Defaults to 1e-4.}
+
 \item{...}{Additional arguments passed to the integrator.}
 }
 \value{
