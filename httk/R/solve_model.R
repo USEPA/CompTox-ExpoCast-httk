@@ -136,6 +136,10 @@
 #' 
 #' @param parameterize.arg.list Additional parameterized passed to the model
 #' parameterization function.
+#'
+#' @param small.time A tiny amount of time used to provide predictions on either
+#' side of an instaneous event (like an iv injection). This helps ensure that
+#' abrupt changes plot well. Defaults to 1e-4.
 #' 
 #' @return A matrix of class deSolve with a column for time(in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
