@@ -47,29 +47,42 @@
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
 #' specified. 
+#'
 #' @param chem.cas Either the chemical name or the CAS number must be
 #' specified. 
+#'
 #' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
+#'
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#'
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
+#'
 #' @param parameters Chemical parameters from \code{\link{parameterize_schmitt}}
 #' overrides chem.name, dtxsid, and chem.cas.
+#'
 #' @param alpha Ratio of Distribution coefficient D of totally charged species
 #' and that of the neutral form
+#'
 #' @param adjusted.Funbound.plasma Whether or not to use Funbound.plasma
 #' adjustment.
+#'
 #' @param regression Whether or not to use the regressions.  Regressions are
 #' used by default.
+#'
 #' @param regression.list Tissues to use regressions on.
+#'
 #' @param tissues Vector of desired partition coefficients.  Returns all by
 #' default.
+#'
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#'
 #' @param suppress.messages Whether or not the output message is suppressed.
+#'
 #' @param model Model for which partition coefficients are neeeded (for example,
 #' "pbtk", "3compartment")
 #'

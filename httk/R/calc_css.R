@@ -28,7 +28,7 @@
 #' 
 #' @param daily.dose Total daily dose, mg/kg BW.
 #' 
-#' @param doses.per.day Number of doses per day.
+#' @param doses.per.day Number of oral doses per day.
 #' 
 #' @param days Initial number of days to run simulation that is multiplied on
 #' each iteration.
@@ -68,6 +68,11 @@
 #' 
 #' @param dosing The dosing object for more complicated scenarios. Defaults to
 #' repeated \code{daily.dose} spread out over \code{doses.per.day}
+#'
+#' @param dose.units The units associated with the dose received.
+#'
+#' @param route Route of exposure (either "oral", "iv", or "inhalation"
+#' default "oral").
 #'
 #' @param ... Additional arguments passed to model solver (default of
 #' \code{\link{solve_pbtk}}).
@@ -119,6 +124,8 @@ calc_css <- function(chem.name=NULL,
                     f = .01,
                     daily.dose=1,
                     doses.per.day=3,
+                    dose.units = "mg/kg",
+                    route = "oral",
                     days = 21,
                     output.units = "uM",
                     suppress.messages=FALSE,
@@ -212,8 +219,10 @@ calc_css <- function(chem.name=NULL,
     chem.cas = chem.cas,
     dtxsid = dtxsid,
     parameters=parameters,
-    daily.dose=daily.dose,
+    dose=daily.dose,
     concentration='plasma',
+    route=route,
+    dose.units=dose.units,
     model=model,
     output.units = output.units,
     suppress.messages=TRUE,
@@ -241,6 +250,8 @@ calc_css <- function(chem.name=NULL,
       parameters=parameters,
     model=model, 
     dosing=dosing,
+    route=route,
+    input.units=dose.units,
     suppress.messages=TRUE,
     days=days,
     output.units = output.units,
@@ -281,6 +292,8 @@ calc_css <- function(chem.name=NULL,
       model=model,
       initial.values = Final_Conc[state.vars],  
       dosing=dosing,
+      route=route,
+      input.units=dose.units,
       days = additional.days,
       output.units = output.units,
       restrictive.clearance=restrictive.clearance,
