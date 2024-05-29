@@ -108,9 +108,11 @@
 #' 
 #' @param method Method used by integrator (deSolve).
 #' 
-#' @param rtol Argument passed to integrator (deSolve).
+#' @param rtol Relative tolerance used by integrator (deSolve) to determine 
+#' numerical precision -- defaults to 1e-6.
 #' 
-#' @param atol Argument passed to integrator (deSolve).
+#' @param atol Absolute tolerance used by integrator (deSolve) to determine
+#" numerical precision-- defaults to 1e-6.
 #' 
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
@@ -224,8 +226,8 @@ solve_model <- function(chem.name = NULL,
                     input.units="mg/kg", # units for 'dosing'
                     output.units=NULL, # needs to be a named list or named vector for desired units corresponding to compartments
                     method=NULL,
-                    rtol=1e-5,
-                    atol=1e-5,
+                    rtol=1e-6,
+                    atol=1e-6,
                     recalc.blood2plasma=FALSE,
                     recalc.clearance=FALSE,
                     restrictive.clearance=TRUE,
