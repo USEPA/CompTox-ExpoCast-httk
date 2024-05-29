@@ -22,9 +22,6 @@ solve_pbtk(
   iv.dose = FALSE,
   input.units = "mg/kg",
   output.units = NULL,
-  method = "lsoda",
-  rtol = 1e-08,
-  atol = 1e-12,
   default.to.human = FALSE,
   recalc.blood2plasma = FALSE,
   recalc.clearance = FALSE,
@@ -84,12 +81,6 @@ mg/kg BW}
 results. Default, NULL, returns model results in units specified in the
 'modelinfo' file. See table below for details.}
 
-\item{method}{Method used by integrator (deSolve).}
-
-\item{rtol}{Argument passed to integrator (deSolve).}
-
-\item{atol}{Argument passed to integrator (deSolve).}
-
 \item{default.to.human}{Substitutes missing animal values with human values
 if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 
@@ -130,7 +121,7 @@ See \code{\link{get_fabsgut}} for further details.}
 The default value of NULL provides "Cgut", "Cliver", "Cven", "Clung", "Cart", 
 "Crest", "Ckidney", "Cplasma", "Atubules", "Ametabolized", and "AUC"}
 
-\item{...}{Additional arguments passed to the integrator.}
+\item{...}{Additional arguments passed to the integrator (deSolve).}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each

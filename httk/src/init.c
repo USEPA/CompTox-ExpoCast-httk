@@ -43,13 +43,6 @@ extern void jacfetal_pbtk(int *, double *, double *, int *, int *, double *, int
 extern void eventfetal_pbtk(int *, double *, double *);
 extern void rootfetal_pbtk (int *, double *, double *, int *, double *, double *, int *);
 
-extern void getParms3comp2(double *, double *, int *);
-extern void initmod3comp2(void *);
-extern void derivs3comp2(int *, double *, double *, double *, double *, int *);
-extern void jac3comp2(int *, double *, double *, int *, int *, double *, int *, double *, int *);
-extern void event3comp2(int *, double *, double *);
-extern void root3comp2(int *, double *, double *, int *, double *, double *, int *);
-
 static const R_CMethodDef CEntries[] = {
     {"getParmspbtk",       (DL_FUNC) &getParmspbtk,       3},
     {"initmodpbtk", (DL_FUNC) &initmodpbtk, 1},
@@ -85,13 +78,6 @@ static const R_CMethodDef CEntries[] = {
     {"jacfetal_pbtk", (DL_FUNC) &jacfetal_pbtk, 9},
     {"eventfetal_pbtk", (DL_FUNC) &eventfetal_pbtk, 3},
     {"rootfetal_pbtk", (DL_FUNC) &rootfetal_pbtk, 7},
-
-    {"getParms3comp2", (DL_FUNC) &getParms3comp2, 3},
-    {"initmod3comp2", (DL_FUNC) &initmod3comp2, 1},
-    {"derivs3comp2", (DL_FUNC) &derivs3comp2, 6},
-    {"jac3comp2", (DL_FUNC) &jac3comp2, 9},
-    {"event3comp2", (DL_FUNC) &event3comp2, 3},
-    {"root3comp2", (DL_FUNC) &root3comp2, 7},
 
     {NULL, NULL, 0}
 };

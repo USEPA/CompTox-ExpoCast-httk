@@ -137,17 +137,6 @@
 #' results. Default, NULL, returns model results in units specified in the
 #' 'modelinfo' file. See table below for details.
 #' 
-#' @param method Method used by integrator (deSolve).
-#' (Note: There are precision differences between M1 Mac and other OS systems
-#' for this function due to how long doubles are handled. To replicate results
-#' between various OS systems we suggest changing the default method of "lsoda"
-#' to "lsode" and also adding the argument mf = 10.
-#' See [deSolve::ode()] for further details.)
-#' 
-#' @param rtol Argument passed to integrator (deSolve).
-#' 
-#' @param atol Argument passed to integrator (deSolve).
-#' 
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
 #' 
@@ -195,7 +184,12 @@
 #' @param VD Anatomical dead space (L), to be modulated especially as part of
 #' simulating the state of exercise
 #' 
-#' @param ... Additional arguments passed to the integrator.
+#' @param ... Additional arguments passed to the integrator (deSolve).
+#' (Note: There are precision differences between M1 Mac and other OS systems
+#' for this function due to how long doubles are handled. To replicate results
+#' between various OS systems we suggest changing the default method of "lsoda"
+#' to "lsode" and also adding the argument mf = 10.
+#' See [deSolve::ode()] for further details.)
 #'
 #' @return A matrix of class deSolve with a column for time(in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
@@ -273,7 +267,6 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            input.units = "ppmv", # assume input units are ppmv with updated inhalation model
                            # input.units = "uM",
                            output.units=NULL,
-                           method="lsoda",rtol=1e-8,atol=1e-12,
                            default.to.human=FALSE,
                            recalc.blood2plasma=FALSE,
                            recalc.clearance=FALSE,
@@ -420,7 +413,6 @@ solve_gas_pbtk <- function(chem.name = NULL,
     species=species,
     input.units=input.units,
     output.units=output.units,
-    method=method,rtol=rtol,atol=atol,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,

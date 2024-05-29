@@ -23,9 +23,6 @@ solve_fetal_pbtk(
   iv.dose = FALSE,
   input.units = "mg/kg",
   output.units = NULL,
-  method = "lsoda",
-  rtol = 1e-08,
-  atol = 1e-12,
   default.to.human = FALSE,
   recalc.blood2plasma = FALSE,
   recalc.clearance = FALSE,
@@ -34,6 +31,8 @@ solve_fetal_pbtk(
   restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04,
   monitor.vars = NULL,
+  atol = 1e-08,
+  rtol = 1e-08,
   ...
 )
 }
@@ -88,12 +87,6 @@ mg/kg BW}
 results. Default, NULL, returns model results in units specified in the
 'modelinfo' file. See table below for details.}
 
-\item{method}{Method used by integrator (deSolve).}
-
-\item{rtol}{Argument passed to integrator (deSolve).}
-
-\item{atol}{Argument passed to integrator (deSolve).}
-
 \item{default.to.human}{Substitutes missing animal values with human values
 if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 
@@ -118,6 +111,12 @@ equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 
 \item{monitor.vars}{Which variables to track by default}
+
+\item{atol}{Absolute tolerance used by integrator (deSolve) to determine
+numerical precision-- defaults to 1e-8.}
+
+\item{rtol}{Relative tolerance used by integrator (deSolve) to determine 
+numerical precision -- defaults to 1e-8.}
 
 \item{...}{Additional arguments passed to the integrator.}
 }

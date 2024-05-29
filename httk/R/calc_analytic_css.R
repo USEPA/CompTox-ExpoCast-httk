@@ -18,37 +18,29 @@ model.list <- list()
 #' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #'
-#'@param parameters Chemical parameters from parameterize_pbtk (for model = 
-#''pbtk'), parameterize_3comp (for model = '3compartment), 
-#'parameterize_1comp(for model = '1compartment') or parameterize_steadystate 
-#'(for model = '3compartmentss'), overrides chem.name and chem.cas.
+#' @param parameters Chemical parameters from parameterize_pbtk (for model = 
+#' 'pbtk'), parameterize_3comp (for model = '3compartment), 
+#' parameterize_1comp(for model = '1compartment') or parameterize_steadystate 
+#' (for model = '3compartmentss'), overrides chem.name and chem.cas.
 #'
-#'@param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#'
 #' @param route Route of exposure (either "oral", "iv", or "inhalation"
 #' default "oral").
 #'
-#'@param daily.dose Total daily dose, mg/kg BW.
+#' @param daily.dose Total daily dose, mg/kg BW.
 #'
-#'@param exp.conc Specified inhalation exposure concentration for use in assembling
-#''forcings' data series argument for integrator. Defaults to uM/L 
+#' @param output.units Units for returned concentrations, defaults to uM 
+#' (specify units = "uM") but can also be mg/L.
 #'
-#'@param period For use in assembling forcing function data series 'forcings'
-#'argument, specified in hours
+#' @param model Model used in calculation,'gas_pbtk' for the gas pbtk model, 
+#' 'pbtk' for the multiple compartment model,
+#' '3compartment' for the three compartment model, '3compartmentss' for 
+#' the three compartment steady state model, and '1compartment' for one 
+#' compartment model.
 #'
-#'@param exp.duration For use in assembling forcing function data 
-#'series 'forcings' argument, specified in hours
-#'
-#'@param output.units Units for returned concentrations, defaults to uM 
-#'(specify units = "uM") but can also be mg/L.
-#'
-#'@param model Model used in calculation,'gas_pbtk' for the gas pbtk model, 
-#''pbtk' for the multiple compartment model,
-#''3compartment' for the three compartment model, '3compartmentss' for 
-#'the three compartment steady state model, and '1compartment' for one 
-#'compartment model.
-#'
-#'@param suppress.messages Whether or not the output message is suppressed.
+#' @param suppress.messages Whether or not the output message is suppressed.
 #'
 #' @param tissue Desired steady state tissue concentration. Default is of NULL
 #' typically gives whole body plasma concentration.
@@ -96,6 +88,10 @@ model.list <- list()
 #' partition coefficients, and minimum.Funbound.plasma is the value to which
 #' Monte Carlo draws less than this value are set (default is 0.0001 -- half
 #' the lowest measured Fup in our dataset).
+#'
+#' @param dose The amount of chemial to which the individual is exposed.
+#'
+#' @param dose.units The units associated with the dose received.
 #'
 #'@param ... Additional parameters passed to parameterize function if 
 #'parameters is NULL.
@@ -253,7 +249,27 @@ calc_analytic_css <- function(chem.name=NULL,
     stop("Concentration must be one of blood, tissue, or plasma")
   }
   
-### MODEL PARAMETERS FOR R
+  # If argument IVIVE is set, change arguments to match Honda et al. (2019) 
+  # IVIVE parameters:
+  if (!is.null(IVIVE)) 
+  {
+    out <- honda.ivive(method=IVIVE, tissue=tissue)
+    restrictive.clearance <- out[["restrictive.clearance"]]
+    tissue <- out[["tissue"]]
+    bioactive.free.invivo <- out[["bioactive.free.invivo"]]
+    concentration <- out[["concentration"]]
+  }
+  
+  if ((bioactive.free.invivo == TRUE & !is.null(tissue)) | 
+     (bioactive.free.invivo == TRUE & tolower(concentration) != "plasma")
+     )
+  {
+    stop("Option bioactive.free.invivo only works with tissue = NULL and concentration = \"plasma\".\n
+         Ctissue * Funbound.plasma is not a relevant concentration.\n
+         Cfree_blood should be the same as Cfree_plasma = Cplasma*Funbound.plasma.")
+  }  
+    
+  ### MODEL PARAMETERS FOR R
 
 # Make sure we have all the parameters necessary to describe the chemical (we don't
 # necessarily need all parameters associated with a given model to do this:)
@@ -267,26 +283,6 @@ calc_analytic_css <- function(chem.name=NULL,
     chem.cas <- out$chem.cas
     chem.name <- out$chem.name                                
     dtxsid <- out$dtxsid  
-
-  # If argument IVIVE is set, change arguments to match Honda et al. (2019) 
-  # IVIVE parameters:
-    if (!is.null(IVIVE)) 
-    {
-      out <- honda.ivive(method=IVIVE, tissue=tissue)
-      restrictive.clearance <- out[["restrictive.clearance"]]
-      tissue <- out[["tissue"]]
-      bioactive.free.invivo <- out[["bioactive.free.invivo"]]
-      concentration <- out[["concentration"]]
-    }
-    
-    if ((bioactive.free.invivo == TRUE & !is.null(tissue)) | 
-       (bioactive.free.invivo == TRUE & tolower(concentration) != "plasma")
-       )
-    {
-      stop("Option bioactive.free.invivo only works with tissue = NULL and concentration = \"plasma\".\n
-           Ctissue * Funbound.plasma is not a relevant concentration.\n
-           Cfree_blood should be the same as Cfree_plasma = Cplasma*Funbound.plasma.")
-    }      
 
   # pass chemical information plus formal argument parameterize.args to the
   # parameterization function specified by the appropriate modelinfo file:

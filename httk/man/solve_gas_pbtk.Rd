@@ -28,9 +28,6 @@ solve_gas_pbtk(
   iv.dose = FALSE,
   input.units = "ppmv",
   output.units = NULL,
-  method = "lsoda",
-  rtol = 1e-08,
-  atol = 1e-12,
   default.to.human = FALSE,
   recalc.blood2plasma = FALSE,
   recalc.clearance = FALSE,
@@ -116,17 +113,6 @@ forcings. Defaults to "ppmv" as applied to the default forcings scheme.}
 results. Default, NULL, returns model results in units specified in the
 'modelinfo' file. See table below for details.}
 
-\item{method}{Method used by integrator (deSolve).
-(Note: There are precision differences between M1 Mac and other OS systems
-for this function due to how long doubles are handled. To replicate results
-between various OS systems we suggest changing the default method of "lsoda"
-to "lsode" and also adding the argument mf = 10.
-See [deSolve::ode()] for further details.)}
-
-\item{rtol}{Argument passed to integrator (deSolve).}
-
-\item{atol}{Argument passed to integrator (deSolve).}
-
 \item{default.to.human}{Substitutes missing animal values with human values
 if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 
@@ -174,7 +160,12 @@ the state of exercise}
 \item{VD}{Anatomical dead space (L), to be modulated especially as part of
 simulating the state of exercise}
 
-\item{...}{Additional arguments passed to the integrator.}
+\item{...}{Additional arguments passed to the integrator (deSolve).
+(Note: There are precision differences between M1 Mac and other OS systems
+for this function due to how long doubles are handled. To replicate results
+between various OS systems we suggest changing the default method of "lsoda"
+to "lsode" and also adding the argument mf = 10.
+See [deSolve::ode()] for further details.)}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each

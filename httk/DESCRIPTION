@@ -1,6 +1,6 @@
 Package: httk
-Version: 99.12.10
-Date: 2024-02-24
+Version: 99.12.11
+Date: 2024-05-29
 Title: High-Throughput Toxicokinetics
 Description: Pre-made models that can be rapidly tailored to various chemicals
              and species using chemical-specific in vitro data and physiological 

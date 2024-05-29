@@ -1,4 +1,4 @@
-# version feature/PFAS (July, 2023)
+# version feature/PFAS (May, 2024)
 ## Bug Fixes
 ## New Features
 * Added new chemical-specific *in vitro* data for Fup and Clint for PFAS measured in [Smeltz et al. (2023)](https://doi.org/10.1021/acs.chemrestox.3c00003)
@@ -16,6 +16,23 @@
 * Revised 'calc_ma' to increase membrane affinities for PFAS chemicals ~400x based on regression to data from [Droge et al. (2019)](https://doi.org/10.1021/acs.est.8b05052) (if new argument 'pfas.calibration==TRUE')
 * Can now use 'get_physchem_param' to retrieve "Chemical.Class" (only defined for PFAS to date)
 * Revised documentation for 1compartment model
+
+# httk 2.3.2
+
+## Bug Fixes
+* Cleaned up functions for model 3compartment
+* Corrected error where non-restrictive clearance option was not working for model pbtk
+  
+## Enhancements
+* Cleaned up code for various ODE models to make them more consistent and better annotated (more comments)
+* Modified 'calc_kair' to only allow neutral chemical fraction to partition into air
+* Updated help files describing models
+* Default ODE solver tolerances increased to just below significant figures reported by HTTK (we report 4 sig figs, now require the solver to converge to 5)
+* 'solve_[MODEL]' functions now exclusively pass arguments to deSolve through "..."
+* New modelinfo file variable default.solver.method can be set -- species the default ODE solver approach for deSolve if "lsoda" is not desired
+
+# httk 2.3.1 (2023-3-19)
+This patch addresses a number of bugs.
 
 ## Bug Fixes
 * Argument keepit100 was being improperly ignored by `get_fabsgut`

@@ -2,32 +2,49 @@
 #'
 #' This function calculates the analytic steady state plasma or venous blood 
 #' concentrations as a result of infusion dosing.
-#'
-#'@param chem.name Either the chemical name, CAS number, or the parameters must 
+#' 
+#' @param chem.name Either the chemical name, CAS number, or the parameters must 
 #' be specified.
-#'@param chem.cas Either the chemical name, CAS number, or the parameters must 
+#' 
+#' @param chem.cas Either the chemical name, CAS number, or the parameters must 
 #' be specified.
+#' 
 #' @param dtxsid EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
-#'@param parameters Chemical parameters from parameterize_pbtk (for model = 
+#' 
+#' @param parameters Chemical parameters from parameterize_pbtk (for model = 
 #' 'pbtk'), parameterize_3comp (for model = '3compartment), 
 #' parameterize_1comp(for model = '1compartment') or parameterize_steadystate 
 #' (for model = '3compartmentss'), overrides chem.name and chem.cas.
-#'@param hourly.dose Hourly dose rate mg/kg BW/h.
-#'@param concentration Desired concentration type, 'blood' or default 'plasma'.
-#'@param suppress.messages Whether or not the output message is suppressed.
-#'@param recalc.blood2plasma Recalculates the ratio of the amount of chemical 
+#' 
+#' @param hourly.dose Hourly dose rate mg/kg BW/h.
+#' 
+#' @param concentration Desired concentration type, 'blood' or default 'plasma'.
+#' 
+#' @param suppress.messages Whether or not the output message is suppressed.
+#' 
+#' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical 
 #' in the blood to plasma using the input parameters. Use this if you have 
 #' altered hematocrit, Funbound.plasma, or Krbc2pu.
-#'@param tissue Desired tissue conentration (defaults to whole body 
-#'concentration.)
-#'@param restrictive.clearance If TRUE (default), then only the fraction of
+#' 
+#' @param tissue Desired tissue conentration (defaults to whole body 
+#' concentration.)
+#' 
+#' @param restrictive.clearance If TRUE (default), then only the fraction of
 #' chemical not bound to protein is available for metabolism in the liver. If 
 #' FALSE, then all chemical in the liver is metabolized (faster metabolism due
 #' to rapid off-binding). 
-#'@param bioactive.free.invivo If FALSE (default), then the total concentration is treated
+#' 
+#' @param bioactive.free.invivo If FALSE (default), then the total concentration is treated
 #' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 #' bioactive in vivo. Only works with tissue = NULL in current implementation.
+#' 
+#' @param dosing List of dosing metrics used in simulation, which includes
+#' the namesake entries of a model's associated dosing.params. For steady-state
+#' calculations this is likely to be either "daily.dose" for oral exposures or
+#' "Cinhaled" for inhalation.
+#'
+#' @param dose.units The units associated with the dose received.
 #' 
 #' @param Caco2.options A list of options to use when working with Caco2 apical to
 #' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
@@ -38,7 +55,7 @@
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
 #' See \code{\link{get_fabsgut}} for further details.
 #' 
-#'@param ... Additional parameters passed to parameterize function if 
+#' @param ... Additional parameters passed to parameterize function if 
 #' parameters is NULL.
 #'  
 #' @return Steady state plasma concentration in mg/L units
@@ -50,8 +67,6 @@
 #' @author Robert Pearce and John Wambaugh
 #'
 #' @keywords 1compartment
-#'
-#' @export calc_analytic_css_1comp
 calc_analytic_css_1comp <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid = NULL,
@@ -131,15 +146,15 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
 
   # Dose rate:
   hourly.dose <- dosing[["daily.dose"]] /
-                   BW /
+                   parameters[["BW"]] /
                    24 *
                    convert_units(MW = parameters[["MW"]],
                                  dose.units,
                                  "mg") # mg/kg/h
 
-  Css <- hourly.dose / parameters$kelim / parameters$Vdist
+  Css <- hourly.dose / parameters[["kelim"]] / parameters[["Vdist"]]
   # Convert to plasma concentration:
-  Css <- Css/parameters[['Rblood2plasma']]
+  Css <- Css/parameters[["Rblood2plasma"]]
   
 # Check to see if a specific tissue was asked for:
   if (!is.null(tissue))
