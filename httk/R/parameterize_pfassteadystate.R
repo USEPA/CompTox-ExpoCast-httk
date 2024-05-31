@@ -113,7 +113,8 @@ parameterize_pfassteadystate <- function(
                               restrictive.clearance=TRUE,
                               fup.lod.default=0.005,
                               suppress.messages=FALSE,
-                              minimum.Funbound.plasma=0.0001)
+                              minimum.Funbound.plasma=0.0001,
+                              Caco2.options=NULL)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
 #each time a data.table column name is used without quotes. To appease R CMD
@@ -261,14 +262,6 @@ parameterize_pfassteadystate <- function(
     fup.corrected <- fup.point
   } 
       
-  Fabsgut <- try(get_invitroPK_param("Fabsgut",
-                   species,
-                        chem.cas=chem.cas,
-                        chem.name=chem.name,
-                        dtxsid=dtxsid),
-               silent=TRUE)
-  if (is(Fabsgut,"try-error")) Fabsgut <- 1
-  
   # Exhalation parameters:
   # Get the blood:air and mucus:air partition coefficients:
   Kx2air <- calc_kair(chem.name=chem.name,
@@ -370,7 +363,6 @@ if (regexpr("PFAS", get_physchem_param("Chemical.Class",dtxsid=dtxsid) != -1))
   Params[["million.cells.per.gliver"]] <- 110 # 10^6 cells/g-liver
   Params[["Vliverc"]] <- Vliverc # L/kg BW
   Params[["liver.density"]] <- 1.05 # g/mL
-  Params[['Fabsgut']] <- Fabsgut
   Params[["Kblood2air"]] <- Kblood2air
   Params[["Qalvc"]] <- Qalvc
   
@@ -396,7 +388,20 @@ if (regexpr("PFAS", get_physchem_param("Chemical.Class",dtxsid=dtxsid) != -1))
                     BW=BW),
     restrictive.clearance=restrictive.clearance)
 
-  if (is.na(Params[['hepatic.bioavailability']])) browser() 
+  if (is.na(Params[['hepatic.bioavailability']])) browser()
+  
+  Params <- c(
+    Params, do.call(get_fabsgut, args=purrr::compact(c(
+    list(
+      parameters=Params,
+      dtxsid=dtxsid,
+      chem.cas=chem.cas,
+      chem.name=chem.name,
+      species=species,
+      suppress.messages=suppress.messages
+      ),
+    Caco2.options))
+    )) 
   
   return(lapply(Params[order(tolower(names(Params)))],set_httk_precision))
 }

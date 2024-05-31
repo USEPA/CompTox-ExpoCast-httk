@@ -110,9 +110,9 @@ get_physchem_param <- function(
 # pKa's can be a comma separated list:
     if (any(!param %in% tolower(c("pKa_Accept", "pKa_Donor"))))
     {
-      values.out <- lapply(as.list(values[!param %in% 
+      values.out <- suppressWarnings(lapply(as.list(values[!param %in% 
                                    tolower(c("pKa_Accept", "pKa_Donor"))]), 
-                                   as.numeric)
+                                   as.numeric))
     } else {
       values.out <- list()
     }
