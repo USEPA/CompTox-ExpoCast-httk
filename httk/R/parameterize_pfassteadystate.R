@@ -366,12 +366,27 @@ if (regexpr("PFAS", get_physchem_param("Chemical.Class",dtxsid=dtxsid) != -1))
   Params[["Kblood2air"]] <- Kblood2air
   Params[["Qalvc"]] <- Qalvc
   
+
+# Alter Rb:p for PFAS:
+if (regexpr("PFAS", get_physchem_param("Chemical.Class",dtxsid=dtxsid) != -1))
+{
+  # Now let's use calc_ionization to estimate the chemical's charge profile:
+  ion <- calc_ionization(
+    pH=7.4,
+    pKa_Donor=pKa_Donor,,
+    pKa_Accept=pKa_Accept)
+    
+  # Poothong (2017)
+  if (ion$fraction_negative > 0.9) Params[['Rblood2plasma']] <- 0.5
+  else Params[['Rblood2plasma']] <- 10
+} else {
   Rb2p <- available_rblood2plasma(chem.name=chem.name,
             chem.cas=chem.cas,
             species=species,
             adjusted.Funbound.plasma=fup.corrected,
             suppress.messages=TRUE)
   Params[["Rblood2plasma"]] <- Rb2p
+}  
 
 # Need to have a parameter with this name to calculate clearance, but need 
 # clearance to calculate bioavailability:
