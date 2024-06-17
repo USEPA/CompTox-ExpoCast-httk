@@ -3,7 +3,8 @@
 ## Bug Fixes
 * Cleaned up functions for model 3compartment
 * Corrected error where non-restrictive clearance option was not working for model pbtk
-  
+* Corrected compartment names for model "gas_pbk" -- "Calv", "Cendexh", and "Cmixexh" were being returned in ppmv units, while "Calvppmv", "Cendexhppmv", and "Cmixexhppmv" were in uM
+
 ## Enhancements
 * Cleaned up code for various ODE models to make them more consistent and better annotated (more comments)
 * Modified 'calc_kair' to only allow neutral chemical fraction to partition into air

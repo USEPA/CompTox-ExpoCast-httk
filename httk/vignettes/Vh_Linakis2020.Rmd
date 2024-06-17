@@ -120,8 +120,8 @@ conc_data <- subset(conc_data,toupper(ORIG_CONC_U) != "PERCENT")
 colnames(conc_data)[colnames(conc_data)=="ORIG_CONC_U"] <- "CONC_U"
 conc_data$ORIGINAL_CONC_U <- conc_data$CONC_U
 conc_data$ORIGINAL_CONC <- conc_data$CONCENTRATION
-
-
+# Maybe Linakis et al translated all concentrations to uM?
+conc_data$CONC_U <- "uM"
 ```
 
 Sets the units based on the sampling matrix (gas/liquid):
@@ -297,6 +297,10 @@ for(i in 1:nrow(unique_scenarios)){
     # EB : unspecified exhaled breath sample (assumed to be EEB)
     # PL: plasma
     # +W with work/exercise
+    # The model outputs are provided in the following units:
+	  # uM: Cven, Clung, Cart, Cplasma, Calv, Cendexh, Cmixexh, Cmuc
+	  # ppmv: Calvppmv, Cendexhppmv, Cmixexhppmv
+	  # uM*days: AUC
     if (unique_scenarios$SAMPLING_MATRIX[i] == "VBL" | 
       unique_scenarios$SAMPLING_MATRIX[i] == "BL" | 
       unique_scenarios$SAMPLING_MATRIX[i] == "BL (+W)")
@@ -310,23 +314,11 @@ for(i in 1:nrow(unique_scenarios)){
       unique_scenarios$SAMPLING_MATRIX[i] == "EEB" | 
       unique_scenarios$SAMPLING_MATRIX[i] == "EB (+W)")
     {
-      if (unique_scenarios[i,"CONC_U"] == "ppmv")
-      {
-        solve$simconc <- solve$Cendexhppmv
-        solve$unit <- "ppmv"
-      } else if (unique_scenarios[i,"CONC_U"] == "uM") {
-        solve$simconc <- solve$Cendexh
-        solve$unit <- "uM"
-      }
+      solve$simconc <- solve$Cendexhppmv
+      solve$unit <- "ppmv"
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "MEB") {
-      if (unique_scenarios[i,"CONC_U"] == "ppmv")
-      {
         solve$simconc <- solve$Cmixexhppmv
         solve$unit <- "ppmv"
-      } else if (unique_scenarios[i,"CONC_U"] == "uM") {
-        solve$simconc <- solve$Cmixexh
-        solve$unit <- "uM"
-      }
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "PL"){
       solve$simconc <- solve$Cplasma
       solve$unit <- "uM"
@@ -662,7 +654,7 @@ unique_scenarios <- subset(unique_scenarios,!is.na(unique_scenarios$RSQD))
 ```
 
 The observations in simobsfull are in both uM and ppmv -- standardize to uM
-```{r Standardize Units, eval = execute.vignette}
+```{r Standardize Units, eval = FALSE}
 these.chems <- unique(subset(simobsfull,unit=="ppmv")$chem)
 for (this.chem in these.chems)
 {
@@ -973,30 +965,24 @@ figaddmodels <- ggplot(
           simobsfull$simconc > 0 & 
           simobsfull$obsconc > 0,]$obsconc)) >2,
       'red',
-      'black'),alpha=0.25) + 
+      'black'),alpha=0.15) + 
   geom_abline() + 
-  scale_y_log10(label=scientific_10)+
-  scale_x_log10(label=scientific_10)+
+  scale_y_log10(label=scientific_10,limits=c(0.01,10))+
+  scale_x_log10(label=scientific_10,limits=c(0.01,10))+
   xlab("Simulated Concentrations") + 
   ylab("Observed Concentrations") + 
   theme_bw() + 
-  geom_smooth(method = 'lm',se = FALSE, aes(color = 'Overall')) + 
-  geom_smooth(method = 'lm', se = FALSE, aes(color = species)) + 
+  geom_smooth(method = 'lm',se = FALSE, aes(color = 'Overall', linetype="Overall")) + 
+  geom_smooth(method = 'lm', se = FALSE, aes(color = species, linetype = species)) + 
   geom_text(
-    x = Inf, 
-    y = -Inf, 
-    hjust = 1.05, 
-    vjust = -0.15, 
+    x = 0.5, 
+    y = -0.2, 
     size = 4, 
-    label = paste0(
-      "\nRegression R^2: ", 
-      round(summary(lmall)$r.squared,digits = 2),
-      "\nRegression RMSE: ", 
-      round(sqrt(mean(lmall$residuals^2)),digits = 2),
-      "\nRMSE (Identity): ", 
-      round(totalrmse,digits = 2)
-    )) + 
+    label = paste0("RMSLE: ",
+            round(totalrmse,digits = 2)
+            )) + 
   scale_color_discrete(name = 'Species', breaks = c("Overall","Human","Rat")) +
+  scale_linetype_discrete(name = 'Species', breaks = c("Overall","Human","Rat")) +
   theme(
     plot.title = element_text(face = 'bold', size = font.size.small),
     axis.title.x = element_text(face = 'bold', size = font.size.large), 
