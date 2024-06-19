@@ -1462,7 +1462,6 @@
 #' @docType data
 #' @format A data.frame containing x rows and y columns.
 #' @author Matt Linakis
-#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
 #'
 #' @source Matt Linakis
 #' @keywords data
@@ -1470,12 +1469,33 @@
 
 #' Concentration data involved in Linakis 2020 vignette analysis.
 #'
+#' These rat and human TK concentration vs. time (CvT) data are drawn from
+#' the CvTdb (Sayre et el., 2020). Concentrations have all been converted to
+#' the units of uM. All data are from inhalation studies.
+#'
+#' \tabular{ll}{
+#' \strong{Column Name} \tab \strong{Description} \cr
+#'  PREFERRED_NAME        \tab Substance preferred name \cr                      
+#'  DTXSID     \tab Identifier for CompTox Chemical Dashboard \cr
+#'  CASRN  \tab Chemical abstracts service registration number\cr
+#'  AVERAGE_MASS  \tab Substance molecular weight g/mol \cr
+#'   DOSE DOSE_U   \tab Inhalation exposure concentration in parts per million \cr  
+#'  EXP_LENGTH   \tab Duration of inhalation exposur \cr
+#'   TIME  \tab  Measurment time \cr          
+#'  TIME_U   \tab  Time units for all times reported \cr 
+#'  CONC_SPECIES  \tab Species for study \cr 
+#'  SAMPLING_MATRIX   \tab Matrix analyzed \cr 
+#'  SOURCE_CVT   \tab Data source identifier within CvTdb \cr 
+#'  ORIG_CONC_U   \tab Original reported units for concentration \cr 
+#'  CONCENTRATION   \tab Analyte concentration in uM units\cr 
+#' }
 #'
 #' @docType data
-#' @format A data.frame containing x rows and y columns.
+#' @format A data.frame containing 2142 rows and 16 columns.
 #' @author Matt Linakis
-#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
-#'
+#' @references 
+#' \insertRef{linakis2020development}{httk}
+#' \insertRef{sayre2020database}{httk}
 #' @source Matt Linakis
 #' @keywords data
 "concentration_data_Linakis2020"
