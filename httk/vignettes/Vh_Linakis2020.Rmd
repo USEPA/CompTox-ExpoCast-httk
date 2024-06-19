@@ -264,8 +264,8 @@ for(i in 1:nrow(unique_scenarios)){
         input.units = unique_scenarios$DOSE_U[i],
         exp.conc = as.numeric(unique_scenarios$DOSE[i]), # SED (06-22-2021) think this should input ppmv
         # exp.conc = ((as.numeric(unique_scenarios$DOSE[i])*1e20*1000)/PPMVCONVERT*1000)/1e20,
-        exp.duration = unique_scenarios$EXP_LENGTH[i]*24, 
-        period = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i])*24, 
+        exp.duration = unique_scenarios$EXP_LENGTH[i], 
+        period = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i]), 
         species = as.character(unique_scenarios$CONC_SPECIES[i]),
         monitor.vars = c(
           "Cven", 
@@ -954,7 +954,7 @@ figaddmodels <- ggplot(
   data = simobsfull[
     simobsfull$simconc > 0 & 
     simobsfull$obsconc > 0,], 
-  aes(x = log10(simconc), y = log10(obsconc))) + 
+  aes(x = simconc, y = obsconc)) + 
   geom_point(
     color = ifelse(
       abs(
@@ -967,16 +967,16 @@ figaddmodels <- ggplot(
       'red',
       'black'),alpha=0.15) + 
   geom_abline() + 
-  scale_y_log10(label=scientific_10,limits=c(0.01,10))+
-  scale_x_log10(label=scientific_10,limits=c(0.01,10))+
+  scale_y_log10(label=scientific_10,limits=c(1e-4,1e4))+
+  scale_x_log10(label=scientific_10,limits=c(1e-4,1e4))+
   xlab("Simulated Concentrations") + 
   ylab("Observed Concentrations") + 
   theme_bw() + 
   geom_smooth(method = 'lm',se = FALSE, aes(color = 'Overall', linetype="Overall")) + 
   geom_smooth(method = 'lm', se = FALSE, aes(color = species, linetype = species)) + 
   geom_text(
-    x = 0.5, 
-    y = -0.2, 
+    x = 2, 
+    y = -1, 
     size = 4, 
     label = paste0("RMSLE: ",
             round(totalrmse,digits = 2)
@@ -1002,7 +1002,7 @@ paste(length(unique(counts$chem)),
       length(unique(counts$species)),"species.")
 ```
 
-```{r write_figure2, eval = execute.vignette}
+```{r write_figure2, eval = FALSE}
 pdf("Linakis2020/Figure2.pdf", width = 10, height = 10)
 print(fig2)
 dev.off()
