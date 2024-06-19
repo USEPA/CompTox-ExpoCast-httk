@@ -246,15 +246,26 @@ for each unique external exposure scenario (corresponding to 142 studies)
 ```{r runmodel, eval = execute.vignette}
 simlist <- list()
 obslist <- list()
-for(i in 1:nrow(unique_scenarios)){
-#for(i in 50){
-#  tryCatch({
+for (i in 1:nrow(unique_scenarios))
+{
     relconc <- subset(conc_data,conc_data$DTXSID == unique_scenarios$DTXSID[i] & 
       conc_data$DOSE == unique_scenarios$DOSE[i] & 
       conc_data$EXP_LENGTH == unique_scenarios$EXP_LENGTH[i] & 
       conc_data$CONC_SPECIES == unique_scenarios$CONC_SPECIES[i] & 
       conc_data$SAMPLING_MATRIX == unique_scenarios$SAMPLING_MATRIX[i])
     obslist[[i]] <- relconc
+#
+#
+#
+#
+#
+# THE FOLLOWING CODE RUNS solve_gas_pbtk FOR EACH SCENARIO 
+# (UNIQUE COMBINATION OF CHEMICAL, SPECIES, DOSE, ETC.)
+#
+#
+#
+#
+#
     solve <- suppressWarnings(as.data.frame(solve_gas_pbtk(
         chem.cas = unique_scenarios$CASRN[i], 
         days = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i]), 
@@ -263,7 +274,6 @@ for(i in 1:nrow(unique_scenarios)){
         tsteps = 500,
         input.units = unique_scenarios$DOSE_U[i],
         exp.conc = as.numeric(unique_scenarios$DOSE[i]), # SED (06-22-2021) think this should input ppmv
-        # exp.conc = ((as.numeric(unique_scenarios$DOSE[i])*1e20*1000)/PPMVCONVERT*1000)/1e20,
         exp.duration = unique_scenarios$EXP_LENGTH[i], # days 
         period = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i]), # days 
         species = as.character(unique_scenarios$CONC_SPECIES[i]),
@@ -282,7 +292,16 @@ for(i in 1:nrow(unique_scenarios)){
           "AUC"),
         vmax.km = FALSE,
         suppress.messages = TRUE)))
-
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#
     this.Rb2p <- suppressWarnings(available_rblood2plasma(
       chem.cas=unique_scenarios$CASRN[i],
       species=as.character(unique_scenarios$CONC_SPECIES[i])))
@@ -319,7 +338,7 @@ for(i in 1:nrow(unique_scenarios)){
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "MEB") {
         solve$simconc <- solve$Cmixexhppmv
         solve$unit <- "ppmv"
-    } else if (unique_scenarios$SAMPLING_MATRIX[i] == "PL"){
+    } else if (unique_scenarios$SAMPLING_MATRIX[i] == "PL") {
       solve$simconc <- solve$Cplasma
       solve$unit <- "uM"
     } else {
