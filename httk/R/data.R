@@ -1473,6 +1473,16 @@
 #' the CvTdb (Sayre et el., 2020). Concentrations have all been converted to
 #' the units of uM. All data are from inhalation studies.
 #'
+#' Abbreviations used for sampling matrix:
+#' BL : blood
+#' EEB : end-exhaled breath
+#' MEB : mixed exhaled breath
+#' VBL : venous blood
+#' ABL : arterial blood
+#' EB : unspecified exhaled breath sample (assumed to be EEB)
+#' PL: plasma
+#' +W with work/exercise
+#'
 #' \tabular{ll}{
 #' \strong{Column Name} \tab \strong{Description} \cr
 #'  PREFERRED_NAME        \tab Substance preferred name \cr                      
