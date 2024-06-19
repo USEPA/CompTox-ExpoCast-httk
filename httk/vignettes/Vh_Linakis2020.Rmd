@@ -259,13 +259,13 @@ for(i in 1:nrow(unique_scenarios)){
         chem.cas = unique_scenarios$CASRN[i], 
         days = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i]), 
 # Make sure we get conc's at the observed times:
-        times=unique(c(0,signif(obslist[[i]]$TIME,4))), 
+        times=unique(c(0,signif(obslist[[i]]$TIME,4))), # days
         tsteps = 500,
         input.units = unique_scenarios$DOSE_U[i],
         exp.conc = as.numeric(unique_scenarios$DOSE[i]), # SED (06-22-2021) think this should input ppmv
         # exp.conc = ((as.numeric(unique_scenarios$DOSE[i])*1e20*1000)/PPMVCONVERT*1000)/1e20,
-        exp.duration = unique_scenarios$EXP_LENGTH[i], 
-        period = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i]), 
+        exp.duration = unique_scenarios$EXP_LENGTH[i], # days 
+        period = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i]), # days 
         species = as.character(unique_scenarios$CONC_SPECIES[i]),
         monitor.vars = c(
           "Cven", 
