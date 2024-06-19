@@ -244,10 +244,14 @@ unique_scenarios <- conc_data[with(conc_data,
 Create a list of dataframes of observed and predicted concentrations
 for each unique external exposure scenario (corresponding to 142 studies)
 ```{r runmodel, eval = execute.vignette}
+# Store the output of each simulation:
 simlist <- list()
+# Store the Cvt data relevant to each simulation
 obslist <- list()
+# Conduct one simulation for each unique combination of chemical, species, dose:
 for (i in 1:nrow(unique_scenarios))
 {
+  # Identify relevant Cvt data:
     relconc <- subset(conc_data,conc_data$DTXSID == unique_scenarios$DTXSID[i] & 
       conc_data$DOSE == unique_scenarios$DOSE[i] & 
       conc_data$EXP_LENGTH == unique_scenarios$EXP_LENGTH[i] & 
@@ -269,11 +273,11 @@ for (i in 1:nrow(unique_scenarios))
     solve <- suppressWarnings(as.data.frame(solve_gas_pbtk(
         chem.cas = unique_scenarios$CASRN[i], 
         days = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i]), 
-# Make sure we get conc's at the observed times:
+# Make sure we get predicted conc's at the observed times:
         times=unique(c(0,signif(obslist[[i]]$TIME,4))), # days
         tsteps = 500,
-        input.units = unique_scenarios$DOSE_U[i],
-        exp.conc = as.numeric(unique_scenarios$DOSE[i]), # SED (06-22-2021) think this should input ppmv
+        exp.conc = as.numeric(unique_scenarios$DOSE[i]), # SED (06-22-2021) think this is ppmv for all scenarios
+         input.units = unique_scenarios$DOSE_U[i], # specify the units for exp.conc (ppmv)
         exp.duration = unique_scenarios$EXP_LENGTH[i], # days 
         period = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i]), # days 
         species = as.character(unique_scenarios$CONC_SPECIES[i]),
@@ -302,12 +306,14 @@ for (i in 1:nrow(unique_scenarios))
 #
 #
 #
+
+# Get the blood:plasma ratio:
     this.Rb2p <- suppressWarnings(available_rblood2plasma(
       chem.cas=unique_scenarios$CASRN[i],
       species=as.character(unique_scenarios$CONC_SPECIES[i])))
     solve$Rb2p <- this.Rb2p
     
-    # Sets the output appropriate for the sampling matrix
+    # The column simconc holds the appropriate prediction for the sampling matrix
     # BL : blood
     # EEB : end-exhaled breath
     # MEB : mixed exhaled breath
@@ -316,6 +322,7 @@ for (i in 1:nrow(unique_scenarios))
     # EB : unspecified exhaled breath sample (assumed to be EEB)
     # PL: plasma
     # +W with work/exercise
+    #
     # The model outputs are provided in the following units:
 	  # uM: Cven, Clung, Cart, Cplasma, Calv, Cendexh, Cmixexh, Cmuc
 	  # ppmv: Calvppmv, Cendexhppmv, Cmixexhppmv
