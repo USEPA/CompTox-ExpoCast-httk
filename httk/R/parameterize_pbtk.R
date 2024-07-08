@@ -93,7 +93,7 @@
 #'
 #' @param liver.density Liver density (defaults to 1.05 g/mL from International Commission on Radiological Protection (1975))
 #'
-#' @param kgutabs Oral absorption rate from gut (defaults to 2.18 1/h from Wambaugh et al. (2018))
+#' @param kgutabs Oral absorption rate from gut (determined from Peff)
 #' 
 #' @return \item{BW}{Body Weight, kg.} 
 #' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
@@ -196,7 +196,7 @@ parameterize_pbtk <- function(
                        minimum.Funbound.plasma=0.0001,
                        million.cells.per.gliver= 110, # 10^6 cells/g-liver Carlile et al. (1997)
                        liver.density= 1.05, # g/mL International Commission on Radiological Protection (1975)
-                       kgutabs = 2.18, # 1/h, Wambaugh et al. (2018)
+                       kgutabs = NA, # 1/h, Wambaugh et al. (2018)
                        Caco2.options = NULL
                        )
 {
@@ -335,6 +335,7 @@ parameterize_pbtk <- function(
   # Create the list of parameters:
   BW <- this.phys.data["Average BW"]
   hematocrit = this.phys.data["Hematocrit"]
+  
   outlist <- c(outlist,list(BW = as.numeric(BW),
                             kgutabs = kgutabs, # 1/h
                             Funbound.plasma = fup, # unitless fraction
