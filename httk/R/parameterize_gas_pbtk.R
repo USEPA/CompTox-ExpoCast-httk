@@ -347,7 +347,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   BW <- this.phys.data["Average BW"]
   hematocrit = this.phys.data["Hematocrit"]
   outlist <- c(outlist,list(BW = as.numeric(BW),
-    kgutabs = 2.18, # 1/h 
+#    kgutabs = 2.18, # 1/h 
     Funbound.plasma = fup, # unitless fraction
     Funbound.plasma.dist = schmitt.params$Funbound.plasma.dist,
     hematocrit = as.numeric(hematocrit), # unitless ratio

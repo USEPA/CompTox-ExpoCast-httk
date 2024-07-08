@@ -5,12 +5,16 @@
 #' Caco-2 permeabilities (\eqn{10^{-6}} cm/s) are related to 
 #' effective permeability based on \insertCite{yang2007prediction;textual}{httk}.
 #' These functions calculate the fraction absorbed (calc_fabs.oral -- 
-#' \insertCite{darwich2010interplay;textual}{httk}), the fraction
+#' \insertCite{darwich2010interplay;textual}{httk} and
+#' \insertCite{yu1999compartmental;textual}{httk}), the fraction
 #' surviving first pass gut metabolism (calc_fgut.oral), and the overall systemic
 #' oral bioavailability
 #' (calc_fbio.oral). Note that the first pass hepatic clearance is calculated within the
 #' parameterization and other functions. using \code{\link{calc_hep_bioavailability}} 
-
+#' Absorption rate is calculated according to Fick's law 
+#' (\insertCite{lennernas1997human;textual}{httk}) assuming low blood 
+#' concentrations.
+#'
 #' We assume that systemic oral bioavailability (\eqn{F_{bio}})
 #' consists of three components: 
 #' (1) the fraction of chemical absorbed from intestinal lumen into enterocytes 
@@ -66,20 +70,26 @@
 #' 
 # Caco2 derived values if available.
 #'
-#' @return \item{fbio.oral}{Oral bioavailability, the fraction of oral dose 
+#' @return 
+#' \item{fbio.oral}{Oral bioavailability, the fraction of oral dose 
 #' reaching systemic distribution in the body.}
 #' \item{fabs.oral}{Fraction of dose absorbed, i.e. the fraction of the dose
-#' that enters the gutlumen.} \item{fgut.oral}{Fraction of chemical surviving
-#' first pass metabolism in the gut.} \item{fhep.oral}{Fraction of chemical
+#' that enters the gutlumen.} 
+#' \item{fgut.oral}{Fraction of chemical surviving
+#' first pass metabolism in the gut.} 
+#' \item{fhep.oral}{Fraction of chemical
 #' surviving first pass hepatic clearance.}
+#' \item{kgutabs}{Rate of absorption from gut (1/h).}
 #' 
-#' @author Gregory Honda
+#' @author Gregory Honda and John Wambaugh
 #' @keywords Parameter
 #'
 #' @references 
 #' \insertRef{darwich2010interplay}{httk}
 #' \insertRef{yang2007prediction}{httk}
 #' \insertRef{HondaUnpublishedCaco2}{httk}
+#' \insertRef{yu1999compartmental}{httk}
+#' \insertRef{lennernas1997human}{httk}
 #' 
 #' @export calc_fbio.oral
 #' @export calc_fabs.oral
@@ -104,12 +114,20 @@ calc_fbio.oral <- function(parameters = NULL,
 
   # Now handle Fgut:
   fgut.oral <- calc_fgut.oral(parameters = parameters,
-                            chem.cas=chem.cas,
-                            chem.name=chem.name,
-                            dtxsid=dtxsid,
-                            species=species,
-                            suppress.messages=suppress.messages)
-
+                              chem.cas=chem.cas,
+                              chem.name=chem.name,
+                              dtxsid=dtxsid,
+                              species=species,
+                              suppress.messages=suppress.messages)
+                            
+  # Absorption rate:
+  kgutabs <- calc_kgutabs(parameters = parameters,
+                          chem.cas=chem.cas,
+                          chem.name=chem.name,
+                          dtxsid=dtxsid,
+                          species=species,
+                          suppress.messages=suppress.messages)
+                    
   # Determine Fhep.oral
   if (is.null(parameters))
   {
@@ -134,7 +152,8 @@ calc_fbio.oral <- function(parameters = NULL,
   out <-list("fbio.oral" = fbio.oral,
              "fabs.oral" = fabs.oral,
              "fgut.oral" = fgut.oral,
-             "fhep.oral" = fhep.oral
+             "fhep.oral" = fhep.oral,
+             "kgutabs" = kgutabs
     )
 
   # Set precision:
@@ -186,14 +205,39 @@ calc_fabs.oral <- function(parameters = NULL,
                               suppress.messages = suppress.messages))
   }
   
-  # Determine Fabs.oral based on Caco2 data
-    # Yang 2007 equation 10 for Caco2 pH7.4
-    peff <- 10^(0.4926 * log10(parameters$Caco2.Pab) - 0.1454) 
-    # Fagerholm 1996 -- Yang et al. (2007) equation 14
-    if (tolower(species) %in% c("rat"))
-      peff <- max((peff - 0.03)/3.6, 0)
-    # Darwich et al. (2010) Equation 3
-    fabs.oral <- 1 - (1 + 0.54 * peff)^-7
+  # Determine Fabs.oral based on Caco2 data (cm/s)
+  peff <- calc_peff(Caco2.Pab = parameters$Caco2.Pab,
+                    species = species,
+                    suppress.messages = suppress.messages)
+  
+  # Load the physiological parameters for this species
+  this.phys.data <- physiology.data[, phys.species]
+  names(this.phys.data) <- physiology.data[, 1]
+  
+  # Load mean residence time in small intestine:
+  MRT <- this.phys.data["Small Intestine Mean Residence Time"] # min
+  if (is.na(MRT))
+  {
+    # Default to rat in absence of species specific data:
+    default.phys.data <- physiology.data[, "Rat"]
+    names(default.phys.data) <- physiology.data[, 1]
+    MRT <- default.phys.data["Small Intestine Mean Residence Time"]
+    if (!suppress.messages) warning("Rat SI mean residence time used for oral absorption.")
+  }
+    
+  # Load radius of small intestine:
+  Rsi <- this.phys.data["Small Intestine Radius"] # cm
+  if (is.na(Rsi))
+  {
+    # Default to rat in absence of species specific data:
+    default.phys.data <- physiology.data[, "Rat"]
+    names(default.phys.data) <- physiology.data[, 1]
+    Rsi <- default.phys.data["Small Intestine Radius"]
+    if (!suppress.messages) warning("Rat SI radius time used for oral absorption.")
+  }  
+  
+  # Yu and Amidon (1999) Equation 11
+  fabs.oral <- 1 - (1 + 2 * peff * MRT / 7 / Rsi)^-7
 
   # Require that the fraction is less than 1:
   fabs.oral <- ifelse(fabs.oral > 1, 1.0, fabs.oral)
@@ -201,8 +245,149 @@ calc_fabs.oral <- function(parameters = NULL,
   return(set_httk_precision(as.numeric(fabs.oral)))
 }
 
+#' @describeIn calc_fbio.oral Calculate the effective gut permeability rate
+calc_peff <- function(parameters = NULL,
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  species = "Human",
+  default.to.human = FALSE,
+  suppress.messages = FALSE,
+  Caco2.Pab = NULL
+  )
+{
+  if (is.null(Caco2.Pab))
+  {
+    if (!is.null(parameters))
+    {
+      # Required parameters
+      req.param <- c("BW", "Clint", "Funbound.plasma", "Rblood2plasma")
+      
+      if (!all(req.param %in% names(parameters)))
+      {
+        missing <- req.param[!(req.param %in% names(parameters))]
+        stop(paste("Missing parameter",missing,"in function calc_fgut.oral."))
+      }
+    } else {  
+        # Need a list called parameters:
+        if (is.null(parameters)) parameters <- list()
+        
+  # We need to describe the chemical to be simulated one way or another:
+        if (is.null(chem.cas) & 
+            is.null(chem.name) & 
+            is.null(dtxsid)) 
+          stop('chem.name, chem.cas, or dtxsid must be specified.')
+      
+      # Look up the chemical name/CAS, depending on what was provide:
+          out <- get_chem_id(
+                  chem.cas=chem.cas,
+                  chem.name=chem.name,
+                  dtxsid=dtxsid)
+          chem.cas <- out$chem.cas
+          chem.name <- out$chem.name                                
+          dtxsid <- out$dtxsid
+  
+          # If we don't have parameters we can call parameterize_steadystate using the
+          # chemical identifiers. Then that function will build up a list of parameters
+          # so that when it calls this function a second time (recursively) we WILL have
+          # a list of parameters defined. The key is to make sure that the call to this
+          # function in parameterize_steadystate occurs after all parameters needed by
+          # this function are defined (or we get stuck in a recursive loop).
+          parameters <- do.call(parameterize_steadystate,
+                                args=purrr::compact(c(list(
+                                  chem.cas=chem.cas,
+                                  chem.name=chem.name,
+                                  dtxsid=dtxsid,
+                                  suppress.messages=suppress.messages))))
+    }
+    Caco2.Pab <- parameters[["Caco2.Pab"]]
+  }  
+  
+  # Yang 2007 equation 10 for Caco2 pH7.4
+  peff <- 10^(0.4926 * log10(Caco2.Pab) - 0.1454) 
+  # Fagerholm 1996 -- Yang et al. (2007) equation 14
+  if (tolower(species) %in% c("rat"))
+    peff <- max((peff - 0.03)/3.6, 0)
+         
+  return(set_httk_precision(as.numeric(peff)))
+}
+
+#' @describeIn calc_fbio.oral Calculate the gut absorption rate (1/h)
+calc_kgutabs<- function(parameters = NULL,
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  species = "Human",
+  default.to.human = FALSE,
+  suppress.messages = FALSE,
+  )
+{
+  if (!is.null(parameters))
+  {
+    # Required parameters
+    req.param <- c("BW", "Clint", "Funbound.plasma", "Rblood2plasma")
+    
+    if (!all(req.param %in% names(parameters)))
+    {
+      missing <- req.param[!(req.param %in% names(parameters))]
+      stop(paste("Missing parameter",missing,"in function calc_fgut.oral."))
+    }
+  } else {  
+      # Need a list called parameters:
+      if (is.null(parameters)) parameters <- list()
+      
+# We need to describe the chemical to be simulated one way or another:
+      if (is.null(chem.cas) & 
+          is.null(chem.name) & 
+          is.null(dtxsid)) 
+        stop('chem.name, chem.cas, or dtxsid must be specified.')
+    
+    # Look up the chemical name/CAS, depending on what was provide:
+        out <- get_chem_id(
+                chem.cas=chem.cas,
+                chem.name=chem.name,
+                dtxsid=dtxsid)
+        chem.cas <- out$chem.cas
+        chem.name <- out$chem.name                                
+        dtxsid <- out$dtxsid
+
+        # If we don't have parameters we can call parameterize_steadystate using the
+        # chemical identifiers. Then that function will build up a list of parameters
+        # so that when it calls this function a second time (recursively) we WILL have
+        # a list of parameters defined. The key is to make sure that the call to this
+        # function in parameterize_steadystate occurs after all parameters needed by
+        # this function are defined (or we get stuck in a recursive loop).
+        parameters <- do.call(parameterize_steadystate,
+                              args=purrr::compact(c(list(
+                                chem.cas=chem.cas,
+                                chem.name=chem.name,
+                                dtxsid=dtxsid,
+                                suppress.messages=suppress.messages))))
+  }
+  
+  Peff <- calc_peff(Caco2.Pab=Caco2.Pab,
+                    species = species,
+                    suppress.messages = suppress.messages)
+                    
+  # Load radius of small intestine:
+  Rsi <- this.phys.data["Small Intestine Radius"] # cm
+  if (is.na(Rsi))
+  {
+    # Default to rat in absence of species specific data:
+    default.phys.data <- physiology.data[, "Rat"]
+    names(default.phys.data) <- physiology.data[, 1]
+    Rsi <- default.phys.data["Small Intestine Radius"]
+    if (!suppress.messages) warning("Rat SI radius time used for oral absorption.")
+  } 
+  
+  # Lennernas (1997):
+  kgutabs <-  2 * Peff / Rsi * 3600 # 1/h
+        
+  return(set_httk_precision(as.numeric(kgutabs)))
+}
+
 #' @describeIn calc_fbio.oral Calculate the fraction of chemical surviving first pass metabolism in the gut
-# Is this the Yang et al. (2007) QGut Model?
+# This is the Yang et al. (2007) QGut Model
 calc_fgut.oral <- function(parameters = NULL,
   chem.cas = NULL,
   chem.name = NULL,
