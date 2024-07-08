@@ -82,6 +82,7 @@ get_fabsgut <- function(
   out[["Fabs"]] <- 1
   out[["Fgut"]] <- 1
   out[["Fabsgut"]] <- 1
+  out[["kabsgut"]] <- 2.18 # Wambaugh et al. (2018)
   
   # Retrieve the chemical-specific Caco-2 value:
   out <- c(out, get_caco2(chem.cas=chem.cas,
@@ -173,6 +174,17 @@ get_fabsgut <- function(
     out[names(out) %in% c("Fabsgut", "Fabs", "Fgut")] <- 
       lapply(out[names(out) %in% c("Fabsgut", "Fabs", "Fgut")], 
              function(x) suppressWarnings(ifelse(x>1, 1.0, x)))
+
+    # Get the in vivo measured absorption rate, defaulting to average value
+    # from Wambaugh et al. (2018):
+    kgutabs <- try(get_invitroPK_param("kgutabs",
+                                       species,
+                                       chem.cas=chem.cas),
+                   silent=TRUE)
+    if (!is(kgutabs,"try-error") & !overwrite.invivo)
+    {
+      out[["kabsgut"]] <- kgutabs
+    }
 
     # Set a reasonable precision:
     out <- lapply(out, set_httk_precision)

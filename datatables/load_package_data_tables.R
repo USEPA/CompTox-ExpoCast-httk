@@ -80,7 +80,7 @@ check_duplicates <- function(
 PKandTISSUEDATAFILE <- "pkdata.xlsx"
 
 physiology.data <- set.precision(read_excel(PKandTISSUEDATAFILE,
-  sheet="Basic PK"))[1:16,]
+  sheet="Basic PK"))[1:18,]
 # Write to text so Git can track changes:
 write.table(physiology.data,
   file="Basic-Physiology.txt",

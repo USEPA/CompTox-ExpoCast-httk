@@ -104,6 +104,11 @@ library(forcats)
 library(smatr)
 ```
 ### Get metabolism and concentration data 
+
+The table httk::concentration_data_Linakis2020 contains CvTdb data 
+(Sayre, et al. 2020) for inhalation exposure. The units of all measurements have
+been converted to uM concentrations.
+
 ```{r data, eval = execute.vignette}
 met_data <- metabolism_data_Linakis2020
 conc_data <- concentration_data_Linakis2020
@@ -112,8 +117,12 @@ conc_data <- concentration_data_Linakis2020
 #conc_data <- concentration_data_Linakis2020
 #  subset(concentration_data_Linakis2020, !(SOURCE_CVT %in% c(
 #  "11453305")))
-conc_data[,"DOSE_U"] <- ifelse(conc_data[,"DOSE_U"] == "ppm",yes = "ppmv",conc_data[,"DOSE_U"]) 
-conc_data[,"ORIG_CONC_U"] <- ifelse(conc_data[,"ORIG_CONC_U"] == "ppm",yes = "ppmv",conc_data[,"ORIG_CONC_U"]) 
+conc_data[,"DOSE_U"] <- ifelse(conc_data[,"DOSE_U"] == "ppm",
+                               yes = "ppmv",
+                               conc_data[,"DOSE_U"]) 
+conc_data[,"ORIG_CONC_U"] <- ifelse(conc_data[,"ORIG_CONC_U"] == "ppm",
+                                    yes = "ppmv",
+                                    conc_data[,"ORIG_CONC_U"]) 
 # Not sure what to do with percent:
 conc_data <- subset(conc_data,toupper(ORIG_CONC_U) != "PERCENT")
 # Rename this column:
@@ -135,7 +144,7 @@ Sets the units based on the sampling matrix (gas/liquid):
   +W with work/exercise
     
 Normalize units for gaseous samples to ppmv:
-```{r convert_to_ppmweight, eval = execute.vignette}
+```{r convert_to_ppmweight, eval = FALSE}
 gas.media <- c("EB","MEB","EEB","EB (+W)")
 gas.units <- unique(subset(conc_data,
   SAMPLING_MATRIX %in% gas.media)$CONC_U)
@@ -173,7 +182,7 @@ for (this.unit in gas.units)
 ```
 
 Normalize the units for tissue samples to uM:
-```{r normalize_other_units, eval = execute.vignette}
+```{r normalize_other_units, eval = FALSE}
 tissue.media <- c("VBL","BL","ABL","PL","BL (+W)")
 tissue.units <- unique(subset(conc_data,
   SAMPLING_MATRIX %in% tissue.media)$CONC_U)
@@ -270,7 +279,7 @@ for (i in 1:nrow(unique_scenarios))
 #
 #
 #
-    solve <- suppressWarnings(as.data.frame(solve_gas_pbtk(
+    solver.out <- suppressWarnings(as.data.frame(solve_gas_pbtk(
         chem.cas = unique_scenarios$CASRN[i], 
         days = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i]), 
 # Make sure we get predicted conc's at the observed times:
@@ -311,7 +320,7 @@ for (i in 1:nrow(unique_scenarios))
     this.Rb2p <- suppressWarnings(available_rblood2plasma(
       chem.cas=unique_scenarios$CASRN[i],
       species=as.character(unique_scenarios$CONC_SPECIES[i])))
-    solve$Rb2p <- this.Rb2p
+    solver.out$Rb2p <- this.Rb2p
     
     # The column simconc holds the appropriate prediction for the sampling matrix
     # BL : blood
@@ -331,26 +340,26 @@ for (i in 1:nrow(unique_scenarios))
       unique_scenarios$SAMPLING_MATRIX[i] == "BL" | 
       unique_scenarios$SAMPLING_MATRIX[i] == "BL (+W)")
     {
-      solve$simconc <- solve$Cven*this.Rb2p
-      solve$unit <- "uM"
+      solver.out$simconc <- solver.out$Cven*this.Rb2p
+      solver.out$unit <- "uM"
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "ABL") {
-      solve$simconc <- solve$Cart*this.Rb2p
-      solve$unit <- "uM"
+      solver.out$simconc <- solver.out$Cart*this.Rb2p
+      solver.out$unit <- "uM"
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "EB" |
       unique_scenarios$SAMPLING_MATRIX[i] == "EEB" | 
       unique_scenarios$SAMPLING_MATRIX[i] == "EB (+W)")
     {
-      solve$simconc <- solve$Cendexhppmv
-      solve$unit <- "ppmv"
+      solver.out$simconc <- solver.out$Cendexh # uM
+      solver.out$unit <- "uM"
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "MEB") {
-        solve$simconc <- solve$Cmixexhppmv
-        solve$unit <- "ppmv"
+        solver.out$simconc <- solver.out$Cmixexh # uM
+        solver.out$unit <- "uM"
     } else if (unique_scenarios$SAMPLING_MATRIX[i] == "PL") {
-      solve$simconc <- solve$Cplasma
-      solve$unit <- "uM"
+      solver.out$simconc <- solver.out$Cplasma
+      solver.out$unit <- "uM"
     } else {
-      solve$simconc <- NA
-      solve$unit <- NA
+      solver.out$simconc <- NA
+      solver.out$unit <- NA
     }
     simlist[[i]] <- solve
 }
@@ -372,7 +381,7 @@ for(i in 1:nrow(unique_scenarios))
       ylab(paste0("Simulated ", 
         unique_scenarios$SAMPLING_MATRIX[i], 
         "\nConcentration (" , 
-        solve$unit, ")")) + 
+        solver.out$unit, ")")) + 
       ggtitle(paste0(
         unique_scenarios$PREFERRED_NAME[i],
         " (", 
