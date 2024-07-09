@@ -4,10 +4,12 @@ Oral Bioavailability for Chemicals in Commerce and the Environment"
 provided by reviewers at ALTEX
 
 ## Enhancements
-*'calc_fabs.oral' now calculates oral uptake rate kgutabs using Caco-2 permeability, according to method of (Thank you ALTEX reviewers)
+* 'calc_fabs.oral' now calculates oral uptake rate kgutabs using Caco-2 permeability, according to method of Lennernas (1997) (Thank you ALTEX reviewers)
+* Replaced conversion of human effective gut permeability to rat using Wahajudin et al. (2011) regression (Thank you ALTEX reviewers) 
 
 ## Bug Fixes
 * Calculation of Fabs corrected for non-human species to follow Yu and Amidon (1999) using small intestine mean residence time and radius. (Thank you ALTEX reviewers) 
+* Corrected units in calculation of Fabs -- now indicates that more chemicals are poorly absorbed.
 
 # httk 2.3.2
 
