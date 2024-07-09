@@ -237,7 +237,13 @@ calc_fabs.oral <- function(parameters = NULL,
   }  
   
   # Yu and Amidon (1999) Equation 11
-  fabs.oral <- 1 - (1 + 2 * peff * MRT / 7 / Rsi)^-7
+  # MRT has units of minutes
+  # Rsi has units of cm
+  # peff has units of 10^-4 cm/s
+  # factor of 60 converts MRT min to s
+  # factor of 1/10^4 convert Rsi cm to 10-4 cm
+  factor of 10^4 converts 1/cm to 1/10^-4 cm
+  fabs.oral <- 1 - (1 + 2 * peff * MRT / 7 / Rsi*60*10^4)^-7
 
   # Require that the fraction is less than 1:
   fabs.oral <- ifelse(fabs.oral > 1, 1.0, fabs.oral)
@@ -245,7 +251,7 @@ calc_fabs.oral <- function(parameters = NULL,
   return(set_httk_precision(as.numeric(fabs.oral)))
 }
 
-#' @describeIn calc_fbio.oral Calculate the effective gut permeability rate
+#' @describeIn calc_fbio.oral Calculate the effective gut permeability rate (10^-4 cm/s)
 calc_peff <- function(parameters = NULL,
   chem.cas = NULL,
   chem.name = NULL,
@@ -304,7 +310,9 @@ calc_peff <- function(parameters = NULL,
   }  
   
   # Yang 2007 equation 10 for Caco2 pH7.4
+  # peff has units of 10^-4 cm/s, Caco2.Pab has units of 10^-6 cm/s
   peff <- 10^(0.4926 * log10(Caco2.Pab) - 0.1454) 
+  
   # Fagerholm 1996 -- Yang et al. (2007) equation 14
   if (tolower(species) %in% c("rat"))
     peff <- max((peff - 0.03)/3.6, 0)
