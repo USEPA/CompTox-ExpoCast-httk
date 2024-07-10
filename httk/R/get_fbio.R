@@ -131,6 +131,8 @@ get_fbio <- function(
     # available, optionally overwriting based on Caco2.Pab
     Fbio <- try(get_invitroPK_param("Foral",species,chem.cas=chem.cas),
                 silent=TRUE)
+    # Set to NA so we will calculate later using Fabs and Fgut:
+    Fabsgut <- NA
     # Because we model Fbio as Fabs*Fgut*Fhep we calculate Fabs*Fgut from Fbio:
     if (!is(Fbio,"try-error") & !overwrite.invivo)
     {
@@ -140,8 +142,6 @@ get_fbio <- function(
     } else if (is(Fbio,"try-error") | !overwrite.invivo) 
     {
       Fbio <- caco2.vals[["fbio.oral"]]
-      # Set to NA so we will calculate later using Fabs and Fgut:
-      Fabsgut <- NA
     }
       
     # Get the fraction absorbed from the gut, preferring in vivo measured data if
