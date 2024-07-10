@@ -387,7 +387,7 @@ parameterize_pbtk <- function(
    
 # Oral bioavailability parameters:
   outlist <- c(
-    outlist, do.call(get_fabsgut, args=purrr::compact(c(
+    outlist, do.call(get_fbio, args=purrr::compact(c(
     list(
       parameters=outlist,
       dtxsid=dtxsid,
