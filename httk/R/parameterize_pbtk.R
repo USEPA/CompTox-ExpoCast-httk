@@ -84,7 +84,7 @@
 #' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 #' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-#' See \code{\link{get_fabsgut}} for further details.
+#' See \code{\link{get_fbio}} for further details.
 #' 
 #' @param minimum.Funbound.plasma \eqn{f_{up}} is not allowed to drop below
 #' this value (default is 0.0001).                                
@@ -337,7 +337,6 @@ parameterize_pbtk <- function(
   hematocrit = this.phys.data["Hematocrit"]
   
   outlist <- c(outlist,list(BW = as.numeric(BW),
-                            kgutabs = kgutabs, # 1/h
                             Funbound.plasma = fup, # unitless fraction
                             Funbound.plasma.dist = schmitt.params$Funbound.plasma.dist,
                             hematocrit = as.numeric(hematocrit), # unitless ratio
@@ -398,6 +397,9 @@ parameterize_pbtk <- function(
       ),
     Caco2.options))
     ))
+
+  # If provided by argument:
+  if (!is.na(kgutabs)) outlist[["kgutabs"]] <- kgutabs
 
   # Only include parameters specified in modelinfo:
   outlist <- outlist[model.list[["pbtk"]]$param.names]

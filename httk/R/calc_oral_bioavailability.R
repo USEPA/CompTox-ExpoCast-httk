@@ -104,6 +104,40 @@ calc_fbio.oral <- function(parameters = NULL,
   suppress.messages = FALSE
   )
 {
+  # Determine Fhep.oral
+  if (is.null(parameters))
+  {
+    if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid)) 
+      stop('chem.name, chem.cas, or dtxsid must be specified.')
+        
+    # Note that the following call to parameterize_steadystate calls this
+    # function. However, because parameterize_steadystate creates and passes
+    # a list of parameters we will never reach this bit of this function
+    # recursively:
+    parameters <- parameterize_steadystate(
+                   chem.cas=chem.cas,
+                   chem.name=chem.name,
+                   dtxsid=dtxsid,
+                   species=species,
+                   suppress.messages=suppress.messages)
+  }
+  
+  if (!("Caco2.Pab" %in% names(parameters)))
+  {
+    if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid)) 
+      stop('chem.name, chem.cas, or dtxsid must be specified if Caoc2.Pab not specified in argument parameters.')
+      
+    # Retrieve the chemical-specific Caco-2 value:
+    parameters <-  c(parameters, get_caco2(chem.cas=chem.cas,
+                            chem.name=chem.name,
+                            dtxsid=dtxsid,
+                            suppress.messages = suppress.messages))
+  }
+  
   # Handle fabs first:    
   fabs.oral <- calc_fabs.oral(parameters = parameters,
                               chem.cas=chem.cas,
@@ -128,22 +162,19 @@ calc_fbio.oral <- function(parameters = NULL,
                           species=species,
                           suppress.messages=suppress.messages)
                     
-  # Determine Fhep.oral
-  if (is.null(parameters))
+  # Do we already have Fhep?
+  if (!is.null(parameters[['hepatic.bioavailability']]))
   {
-    # Note that the following call to parameterize_steadystate calls this
-    # function. However, because parameterize_steadystate creates and passes
-    # a list of parameters we will never reach this bit of this function
-    # recursively:
-    parameters <- parameterize_steadystate(
-                   chem.cas=chem.cas,
-                   chem.name=chem.name,
-                   dtxsid=dtxsid,
-                   species=species,
-                   suppress.messages=suppress.messages)
+    fhep.oral <- parameters[['hepatic.bioavailability']]
+  # If not, calculate it:
+  } else {
+    fhep.oral <- calc_hep_bioavailability(parameters = parameters, 
+                                          chem.cas = chem.cas,
+                                          chem.name = chem.name,
+                                          dtxsid = dtxsid,
+                                          species = species, 
+                                          suppress.messages = suppress.messages)
   }
-  
-  fhep.oral <- parameters[["hepatic.bioavailability"]]
   
   # Determine Fbio.oral
   fbio.oral <- fabs.oral*fhep.oral*fgut.oral 
