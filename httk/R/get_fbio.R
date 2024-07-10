@@ -36,8 +36,8 @@
 #'
 #' @keywords Parameter oral_bioavailability 
 #'
-#' @export get_fabsgut
-get_fabsgut <- function(
+#' @export get_fbio
+get_fbio <- function(
     parameters=NULL,
     chem.cas=NULL,
     chem.name=NULL,
@@ -82,7 +82,7 @@ get_fabsgut <- function(
   out[["Fabs"]] <- 1
   out[["Fgut"]] <- 1
   out[["Fabsgut"]] <- 1
-  out[["kabsgut"]] <- 2.18 # Wambaugh et al. (2018)
+  out[["kgutabs"]] <- 2.18 # Wambaugh et al. (2018)
   
   # Retrieve the chemical-specific Caco-2 value:
   out <- c(out, get_caco2(chem.cas=chem.cas,
@@ -94,81 +94,82 @@ get_fabsgut <- function(
   # Only bother with the remaining code if keepit100=FALSE
   if (!keepit100)
   {
-      # Get the in vivo measured systemic oral bioavailability if
-      # available, optionally overwriting based on Caco2.Pab
-      Fbio <- try(get_invitroPK_param("Foral",species,chem.cas=chem.cas),
-                  silent=TRUE)
-      if (!is(Fbio,"try-error") & !overwrite.invivo)
+    caco2.vals <- calc_fbio.oral(parameters = parameters,
+                                 species = species,
+                                 default.to.human = default.to.human,
+                                 suppress.messages = suppress.messages)
+
+
+    # Attempt to use the in vivo measured hepatic bioavailability (first-pass
+    # hepatic metbaolism):
+    Fhep <- try(get_invitroPK_param("Fhep",species,chem.cas=chem.cas),
+              silent=TRUE)
+    # If we don't have an in vivo value or are overwriting it:
+    if (is(Fhep,"try-error") | overwrite.invivo == TRUE)
+    {
+      # Do we already have Fhep?
+      if (!is.null(parameters[['hepatic.bioavailability']]))
       {
-        # Correct for hepatic first-pass metabolism:
-        Fhep <- try(get_invitroPK_param("Fhep",species,chem.cas=chem.cas),
-                  silent=TRUE)
-        if (is(Fhep,"try-error") | overwrite.invivo == TRUE)
-        {
-          if (!is.null(parameters[['hepatic.bioavailability']]))
-          {
-            Fhep <- parameters[['hepatic.bioavailability']] 
-          } else {
-            Fhep <- calc_hep_bioavailability(parameters = parameters, 
-                                            chem.cas = chem.cas,
-                                            chem.name = chem.name,
-                                            dtxsid = dtxsid,
-                                            species = species, 
-                                            suppress.messages = suppress.messages)
-          }
-        }
-        Fabsgut <- Fbio/Fhep
-      } else Fabsgut <- NA
-      
-      # Get the fraction absorbed from the gut, preferring in vivo measured data if
-      # available, otherwise attempt to use Caco2.Pab
-      Fabs <- try(get_invitroPK_param("Fabs",species,chem.cas=chem.cas),
-                  silent=TRUE)
-      if (is(Fabs,"try-error") | overwrite.invivo == TRUE){
-        if (overwrite.invivo  | 
-            (Caco2.Fabs & is(Fabs,"try-error")))
-        {
-          out[["Fabs"]] <- 1
-          # Caco2 is a human cell line
-          # only calculable for human, assume the same across species
-          Fabs <- calc_fabs.oral(
-            parameters = c(out, parameters), 
-            chem.cas = chem.cas,
-            chem.name = chem.name,
-            dtxsid = dtxsid,
-            species = species,
-            suppress.messages=suppress.messages) 
-        } else {
-          Fabs <- 1
-        }
+        Fhep <- parameters[['hepatic.bioavailability']]
+      # If not, calculate it:
+      } else {
+        Fhep <- calc_hep_bioavailability(parameters = parameters, 
+                                        chem.cas = chem.cas,
+                                        chem.name = chem.name,
+                                        dtxsid = dtxsid,
+                                        species = species, 
+                                        suppress.messages = suppress.messages)
       }
+    }
+
+    # Get the in vivo measured systemic oral bioavailability if
+    # available, optionally overwriting based on Caco2.Pab
+    Fbio <- try(get_invitroPK_param("Foral",species,chem.cas=chem.cas),
+                silent=TRUE)
+    # Because we model Fbio as Fabs*Fgut*Fhep we calculate Fabs*Fgut from Fbio:
+    if (!is(Fbio,"try-error") & !overwrite.invivo)
+    {
+      # Correct for hepatic first-pass metabolism:
+      # Fabsgut is the product Fabs*Fgut (without Fhep):
+      Fabsgut <- Fbio/Fhep
+    } else if (is(Fbio,"try-error") | !overwrite.invivo) 
+    {
+      Fbio <- caco2.vals[["fbio.oral"]]
+      # Set to NA so we will calculate later using Fabs and Fgut:
+      Fabsgut <- NA
+    }
       
-      # We have a hard time with Fgut, if we don't have it measured we first
-      # try to set it with Fabsgut/Fabs:
-      Fgut <- try(get_invitroPK_param("Fgut",species,chem.cas=chem.cas),
-                  silent=TRUE)
-      if (is(Fgut,"try-error") | overwrite.invivo == TRUE)
-      {
-        if (overwrite.invivo | 
-            (Caco2.Fgut & is(Fgut,"try-error")))
-        {
-          Fgut <- calc_fgut.oral(
-            parameters = c(out, parameters), 
-            chem.cas = chem.cas,
-            chem.name = chem.name,
-            dtxsid = dtxsid,
-            species = species,
-            suppress.messages=suppress.messages) 
-        } else if (!is.na(Fabsgut) & !overwrite.invivo) {
-          Fgut <- Fabsgut/Fabs
-        } else {
-          Fgut <- 1
-        }
-      }
+    # Get the fraction absorbed from the gut, preferring in vivo measured data if
+    # available, otherwise attempt to use Caco2.Pab
+    Fabs <- try(get_invitroPK_param("Fabs",species,chem.cas=chem.cas),
+                silent=TRUE)
+    # If we don't have an in vivo value or are overwriting it:
+    if (is(Fabs,"try-error") | overwrite.invivo == TRUE)
+    {
+      Fabs <- caco2.vals[["fabs.oral"]]
+    }
       
-      out[['Fabsgut']] <- Fabs*Fgut
-      out[['Fabs']] <- Fabs
-      out[['Fgut']] <- Fgut
+    # We have a hard time with Fgut, if we don't have it measured we first
+    # try to set it with Fabsgut/Fabs:
+    Fgut <- try(get_invitroPK_param("Fgut",species,chem.cas=chem.cas),
+                silent=TRUE)
+    # If we don't have an in vivo value of Fgut but we do have an in vivo 
+    # estimate of Fabsgut, can use Fabs to calculate this:
+    if (is(Fgut,"try-error") & !is.na(Fabsgut) & !overwrite.invivo) 
+    {
+      Fgut <- Fabsgut/Fabs 
+    # If we don't have an in vivo value or are overwriting it:
+    } else if (is(Fgut,"try-error") | overwrite.invivo == TRUE)
+    {
+      Fgut <- caco2.vals[["fgut.oral"]]
+    }
+     
+    # If we don't have an in vivo Fabsgut then calculate it: 
+    if (is.na(Fabsgut)) Fabsgut <- Fabs*Fgut
+    
+    out[['Fabsgut']] <- Fabsgut 
+    out[['Fabs']] <- Fabs
+    out[['Fgut']] <- Fgut
   
     # Require that values are <= 1:
     out[names(out) %in% c("Fabsgut", "Fabs", "Fgut")] <- 
@@ -181,14 +182,17 @@ get_fabsgut <- function(
                                        species,
                                        chem.cas=chem.cas),
                    silent=TRUE)
-    if (!is(kgutabs,"try-error") & !overwrite.invivo)
+    # If we have an in vivo value and overwrite invivo = FALSE: 
+    if (is(kgutab,"try-error") | overwrite.invivo == TRUE)
     {
-      out[["kabsgut"]] <- kgutabs
+      kgutabs <- caco2.vals[["kgutabs"]]
     }
-
-    # Set a reasonable precision:
-    out <- lapply(out, set_httk_precision)
+    
+    out[["kgutabs"]] <- kgutabs
   }
-  
+
+  # Set a reasonable precision:
+  out <- lapply(out, set_httk_precision)
+      
   return(out)
 }
