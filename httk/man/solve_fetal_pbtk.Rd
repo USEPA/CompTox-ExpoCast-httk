@@ -31,6 +31,8 @@ solve_fetal_pbtk(
   restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04,
   monitor.vars = NULL,
+  atol = 1e-08,
+  rtol = 1e-08,
   ...
 )
 }
@@ -109,6 +111,12 @@ equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 
 \item{monitor.vars}{Which variables to track by default}
+
+\item{atol}{Absolute tolerance used by integrator (deSolve) to determine
+numerical precision-- defaults to 1e-8.}
+
+\item{rtol}{Relative tolerance used by integrator (deSolve) to determine 
+numerical precision -- defaults to 1e-8.}
 
 \item{...}{Additional arguments passed to the integrator.}
 }
