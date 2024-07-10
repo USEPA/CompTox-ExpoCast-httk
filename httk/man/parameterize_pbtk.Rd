@@ -22,7 +22,7 @@ parameterize_pbtk(
   minimum.Funbound.plasma = 1e-04,
   million.cells.per.gliver = 110,
   liver.density = 1.05,
-  kgutabs = 2.18,
+  kgutabs = NA,
   Caco2.options = NULL
 )
 }
@@ -74,7 +74,7 @@ this value (default is 0.0001).}
 
 \item{liver.density}{Liver density (defaults to 1.05 g/mL from International Commission on Radiological Protection (1975))}
 
-\item{kgutabs}{Oral absorption rate from gut (defaults to 2.18 1/h from Wambaugh et al. (2018))}
+\item{kgutabs}{Oral absorption rate from gut (determined from Peff)}
 
 \item{Caco2.options}{A list of options to use when working with Caco2 apical to
 basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
