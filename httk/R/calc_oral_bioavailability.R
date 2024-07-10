@@ -68,6 +68,9 @@
 #' @param Caco2.Pab.default (Numeric) Caco2 apical to basolateral data.
 #' (Defaults to  1.6.) (Not applicable for `calc_fbio.oral`.)
 #' 
+#' @param restrictive.clearance Protein binding not taken into account (set to 1) in 
+#' liver clearance if FALSE.
+#' 
 # Caco2 derived values if available.
 #'
 #' @return 
@@ -101,7 +104,8 @@ calc_fbio.oral <- function(parameters = NULL,
   dtxsid = NULL,
   species = "Human",
   default.to.human = FALSE,
-  suppress.messages = FALSE
+  suppress.messages = FALSE,
+  restrictive.clearance = FALSE
   )
 {
   # Determine Fhep.oral
@@ -121,7 +125,8 @@ calc_fbio.oral <- function(parameters = NULL,
                    chem.name=chem.name,
                    dtxsid=dtxsid,
                    species=species,
-                   suppress.messages=suppress.messages)
+                   suppress.messages=suppress.messages,
+                   restrictive.clearance=restrictive.clearance)
   }
   
   if (!("Caco2.Pab" %in% names(parameters)))
@@ -163,19 +168,45 @@ calc_fbio.oral <- function(parameters = NULL,
                           suppress.messages=suppress.messages)
                     
   # Do we already have Fhep?
-  if (!is.null(parameters[['hepatic.bioavailability']]))
+  # Is parameters a table (Monte Carlo)?
+  if (is.data.table(parameters))
   {
-    fhep.oral <- parameters[['hepatic.bioavailability']]
-  # If not, calculate it:
+    if ("hepatic.bioavailability" %in% colnames(parameters))
+    {
+      fhep.oral <- parameters[,"hepatic.bioavailability"]
+    # If not, calculate it:
+    } else {
+      cl <- calc_hep_clearance(parameters=parameters,
+          hepatic.model='unscaled',
+          restrictive.clearance=restrictive.clearance,
+          suppress.messages=TRUE) #L/h/kg body weight
+      parameters[,hepatic.bioavailability := do.call(calc_hep_bioavailability,
+        args=purrr::compact(list(
+          parameters=list(
+            Qtotal.liverc=parameters$Qtotal.liverc, # L/h/kg^3/4
+            Funbound.plasma=parameters$Funbound.plasma,
+            Clmetabolismc=cl, # L/h/kg
+            Rblood2plasma=parameters$Rblood2plasma,
+            BW=parameters$BW)
+            )))]
+      fhep.oral <- parameters[,"hepatic.bioavailability",with=TRUE]
+    }
   } else {
-    fhep.oral <- calc_hep_bioavailability(parameters = parameters, 
-                                          chem.cas = chem.cas,
-                                          chem.name = chem.name,
-                                          dtxsid = dtxsid,
-                                          species = species, 
-                                          suppress.messages = suppress.messages)
+    # otherwise assume parameeters is a list:
+    if (!is.null(parameters[['hepatic.bioavailability']]))
+    {
+      fhep.oral <- parameters[['hepatic.bioavailability']]
+    # If not, calculate it:
+    } else {
+      fhep.oral <- calc_hep_bioavailability(parameters = parameters, 
+                                            chem.cas = chem.cas,
+                                            chem.name = chem.name,
+                                            dtxsid = dtxsid,
+                                            species = species,
+                                            restrictive.clearance=restrictive.clearance, 
+                                            suppress.messages = suppress.messages)
+    }
   }
-  
   # Determine Fbio.oral
   fbio.oral <- fabs.oral*fhep.oral*fgut.oral 
   
@@ -242,7 +273,8 @@ calc_fabs.oral <- function(parameters = NULL,
                     suppress.messages = suppress.messages)
   
   # Load the physiological parameters for this species
-  this.phys.data <- physiology.data[, species]
+  this.phys.data <- physiology.data[, tolower(colnames(physiology.data)) 
+                                              %in% tolower(species)]
   names(this.phys.data) <- physiology.data[, 1]
   
   # Load mean residence time in small intestine:
@@ -409,7 +441,8 @@ calc_kgutabs<- function(parameters = NULL,
                     suppress.messages = suppress.messages)
                     
   # Load the physiological parameters for this species
-  this.phys.data <- physiology.data[, species]
+  this.phys.data <- physiology.data[, tolower(colnames(physiology.data)) 
+                                              %in% tolower(species)]
   names(this.phys.data) <- physiology.data[, 1]
   
   # Load radius of small intestine:

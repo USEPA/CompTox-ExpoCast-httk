@@ -361,7 +361,7 @@ for (i in 1:nrow(unique_scenarios))
       solver.out$simconc <- NA
       solver.out$unit <- NA
     }
-    simlist[[i]] <- solve
+    simlist[[i]] <- solver.out
 }
 ```
 
@@ -375,7 +375,7 @@ for(i in 1:nrow(unique_scenarios))
     relconc <- obslist[[i]]
 
 #Right now this is only calculating real concentrations according to mg/L in blood
-    cvtlist[[i]] <- ggplot(plot.data, aes(time*24, simconc)) + 
+    cvtlist[[i]] <- ggplot(data=plot.data, aes(time*24, simconc)) + 
       geom_line() + 
       xlab("Time (h)") + 
       ylab(paste0("Simulated ", 
