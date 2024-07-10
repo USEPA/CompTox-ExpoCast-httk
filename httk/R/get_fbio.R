@@ -85,16 +85,21 @@ get_fbio <- function(
   out[["kgutabs"]] <- 2.18 # Wambaugh et al. (2018)
   
   # Retrieve the chemical-specific Caco-2 value:
-  out <- c(out, get_caco2(chem.cas=chem.cas,
+  Caco2.Pab <- get_caco2(chem.cas=chem.cas,
                           chem.name=chem.name,
                           dtxsid=dtxsid,
                           Caco2.Pab.default = Caco2.Pab.default,
-                          suppress.messages = suppress.messages))
-
+                          suppress.messages = suppress.messages)
+  out <- c(out, Caco2.Pab)
+  parameters <- c(parameters, Caco2.Pab)
+  
   # Only bother with the remaining code if keepit100=FALSE
   if (!keepit100)
   {
     caco2.vals <- calc_fbio.oral(parameters = parameters,
+                                 chem.cas=chem.cas,
+                                 chem.name=chem.name,
+                                 dtxsid=dtxsid,
                                  species = species,
                                  default.to.human = default.to.human,
                                  suppress.messages = suppress.messages)
@@ -183,7 +188,7 @@ get_fbio <- function(
                                        chem.cas=chem.cas),
                    silent=TRUE)
     # If we have an in vivo value and overwrite invivo = FALSE: 
-    if (is(kgutab,"try-error") | overwrite.invivo == TRUE)
+    if (is(kgutabs,"try-error") | overwrite.invivo == TRUE)
     {
       kgutabs <- caco2.vals[["kgutabs"]]
     }
