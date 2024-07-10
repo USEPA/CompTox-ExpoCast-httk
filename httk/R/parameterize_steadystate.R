@@ -77,7 +77,7 @@
 #' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 #' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-#' See \code{\link{get_fabsgut}} for further details.
+#' See \code{\link{get_fbio}} for further details.
 #' 
 #' @param ... Other parameters
 #' 
@@ -335,7 +335,7 @@ parameterize_steadystate <- function(
   if (is.na(Params[['hepatic.bioavailability']])) browser() 
 
   Params <- c(
-    Params, do.call(get_fabsgut, args=purrr::compact(c(
+    Params, do.call(get_fbio, args=purrr::compact(c(
     list(
       parameters=Params,
       dtxsid=dtxsid,
