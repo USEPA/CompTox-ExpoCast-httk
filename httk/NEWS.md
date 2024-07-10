@@ -14,6 +14,7 @@ provided by reviewers at ALTEX
 
 ## Enhancements
 * 'calc_fabs.oral' now calculates oral uptake rate kgutabs using Caco-2 permeability, according to method of Lennernas (1997) (Thank you ALTEX reviewers)
+* Revised and changed name of 'get_fabsgut' to 'get_fbio' and modified function to use 'calc_fbio_oral' rather than call oral bioavailability subfunctions directly
 * Replaced conversion of human effective gut permeability to rat using Wahajudin et al. (2011) regression (Thank you ALTEX reviewers) 
 * Cleaned up code for various ODE models to make them more consistent and better annotated (more comments)
 * Reordered variables in modelinfo files for consistency so that diff can be used more easily to compare two models
