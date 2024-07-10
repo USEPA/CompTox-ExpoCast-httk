@@ -211,7 +211,7 @@ calc_fabs.oral <- function(parameters = NULL,
                     suppress.messages = suppress.messages)
   
   # Load the physiological parameters for this species
-  this.phys.data <- physiology.data[, phys.species]
+  this.phys.data <- physiology.data[, species]
   names(this.phys.data) <- physiology.data[, 1]
   
   # Load mean residence time in small intestine:
@@ -241,9 +241,8 @@ calc_fabs.oral <- function(parameters = NULL,
   # Rsi has units of cm
   # peff has units of 10^-4 cm/s
   # factor of 60 converts MRT min to s
-  # factor of 1/10^4 convert Rsi cm to 10-4 cm
-  factor of 10^4 converts 1/cm to 1/10^-4 cm
-  fabs.oral <- 1 - (1 + 2 * peff * MRT / 7 / Rsi*60*10^4)^-7
+  # factor of 1/10^4 converts 1/cm to 1/10^-4 cm
+  fabs.oral <- 1 - (1 + 2 * peff * MRT / 7 / Rsi*60/10^4)^-7
 
   # Require that the fraction is less than 1:
   fabs.oral <- ifelse(fabs.oral > 1, 1.0, fabs.oral)
@@ -328,7 +327,7 @@ calc_kgutabs<- function(parameters = NULL,
   dtxsid = NULL,
   species = "Human",
   default.to.human = FALSE,
-  suppress.messages = FALSE,
+  suppress.messages = FALSE
   )
 {
   if (!is.null(parameters))
@@ -374,10 +373,14 @@ calc_kgutabs<- function(parameters = NULL,
                                 suppress.messages=suppress.messages))))
   }
   
-  Peff <- calc_peff(Caco2.Pab=Caco2.Pab,
+  Peff <- calc_peff(Caco2.Pab=parameters[["Caco2.Pab"]],
                     species = species,
                     suppress.messages = suppress.messages)
                     
+  # Load the physiological parameters for this species
+  this.phys.data <- physiology.data[, species]
+  names(this.phys.data) <- physiology.data[, 1]
+  
   # Load radius of small intestine:
   Rsi <- this.phys.data["Small Intestine Radius"] # cm
   if (is.na(Rsi))
@@ -465,13 +468,12 @@ calc_fgut.oral <- function(parameters = NULL,
     clu_hep <- clu_hep*parameters$BW # L/h 
     clu_gut <- clu_hep/100 # approximate ratio of cyp abundances
     
-    # Yang et al. (2007) equation 10 (our data is at pH 7.4):
-    peff <- (10^(0.4926 * parameters$Caco2.Pab - 0.1454)) # peff dimensional 10-4 cm/s
+    peff <- calc_peff(Caco2.Pab=parameters[["Caco2.Pab"]],
+                      species = species,
+                      suppress.messages = suppress.messages)
     
     if(tolower(species) == "rat")
     {
-      # Fagerholm 1996 -- Yang et al. (2007) equation 14
-      peff <- max((peff - 0.03)/3.6, 0)
       Asmallintestine <- 71/(100^2) # m2 Ref?
 # IF not a rat, we assume human:
     } else {
@@ -485,7 +487,7 @@ calc_fgut.oral <- function(parameters = NULL,
     
     # Define a rate of intestinal transport to compete with absorption for poorly
     # absorbed chemicals:
-    Qintesttransport <- 0.5
+    Qintesttransport <- 0.1
     
     # Calculate Qvilli based on Qsmallintestine
     # Tateishi 1997 -- Human Qsmallintestine = 38 ml/min/100 g
