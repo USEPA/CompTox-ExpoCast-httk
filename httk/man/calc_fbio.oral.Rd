@@ -15,7 +15,8 @@ calc_fbio.oral(
   dtxsid = NULL,
   species = "Human",
   default.to.human = FALSE,
-  suppress.messages = FALSE
+  suppress.messages = FALSE,
+  restrictive.clearance = FALSE
 )
 
 calc_fabs.oral(
@@ -87,6 +88,9 @@ human values if TRUE. (Not applicable for `calc_fabs.oral`.)
 
 \item{suppress.messages}{(Logical) Whether or not the output message is
 suppressed. (Defaults to `FALSE`.)}
+
+\item{restrictive.clearance}{Protein binding not taken into account (set to 1) in 
+liver clearance if FALSE.}
 
 \item{Caco2.Pab.default}{(Numeric) Caco2 apical to basolateral data.
 (Defaults to  1.6.) (Not applicable for `calc_fbio.oral`.)}
