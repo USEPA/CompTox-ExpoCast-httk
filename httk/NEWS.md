@@ -12,6 +12,7 @@ provided by reviewers at ALTEX
 * Calculation of Fabs corrected for non-human species to follow Yu and Amidon (1999) using small intestine mean residence time and radius. (Thank you ALTEX reviewers) 
 * Corrected units of Peff in calculation of Fabs by 'calc_fabs.oral'-- calculations now indicate that more chemicals are poorly absorbed.
 * Revised 'calc_css' to handle models with no specified analytic solution
+* Revised ionization code in 'armitage_eval' -- air:water partitioning now only for neutral compound, pka_donor and pka_accept values now correctly used (thank you Meredith Scherer)
 
 ## Enhancements
 * 'calc_fabs.oral' now calculates oral uptake rate kgutabs using Caco-2 permeability, according to method of Lennernas (1997) (Thank you ALTEX reviewers)
