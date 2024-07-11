@@ -494,13 +494,15 @@ armitage_eval <- function(chem.cas=NULL,
   # components:
   if (restrict.ion.partitioning)
   {
-    if (!all(c("pKa_Donor","pKa_Accept") %in% names(tcdata)))
-    {
-    # If not, pull them:
-      tcdata[, c("pKa_Donor","pKa_Accept") := 
-               as.data.frame(get_physchem_param(param = c("pKa_Donor","pKa_Accept"), 
-                                  chem.cas = casrn),row.names = casrn)]
-    }
+     if (!all(c("pKa_Donor","pKa_Accept") %in% names(tcdata)))
+     {     
+     # If not, pull them:       
+       tcdata[, c("pKa_Donor") := as.data.frame(get_physchem_param(
+                  param = c("pKa_Donor"), chem.cas = casrn), row.names = casrn)]
+       tcdata[, c("pKa_Accept") := as.data.frame(get_physchem_param(
+                  param = c("pKa_Accept"), chem.cas = casrn),row.names = casrn)]
+     }
+     
     # Calculate the fraction neutral:
     tcdata[, Fneutral := apply(.SD,1,function(x) calc_ionization(
         pH = this.pH,    
