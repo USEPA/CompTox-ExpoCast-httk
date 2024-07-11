@@ -24,8 +24,8 @@ solve_model(
   input.units = "mg/kg",
   output.units = NULL,
   method = NULL,
-  rtol = 1e-05,
-  atol = 1e-05,
+  rtol = 1e-06,
+  atol = 1e-06,
   recalc.blood2plasma = FALSE,
   recalc.clearance = FALSE,
   restrictive.clearance = TRUE,
@@ -101,9 +101,10 @@ Defaults to NULL, and will provide values in model units if unspecified.}
 
 \item{method}{Method used by integrator (deSolve).}
 
-\item{rtol}{Argument passed to integrator (deSolve).}
+\item{rtol}{Relative tolerance used by integrator (deSolve) to determine 
+numerical precision -- defaults to 1e-6.}
 
-\item{atol}{Argument passed to integrator (deSolve).}
+\item{atol}{Absolute tolerance used by integrator (deSolve) to determine}
 
 \item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical
 in the blood to plasma using the input parameters, calculated with

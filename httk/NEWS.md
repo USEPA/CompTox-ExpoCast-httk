@@ -1,16 +1,31 @@
 # httk 2.3.2
+This patch addresses general model clarity and incorporates comments received
+on manuscript "Impact of Gut Permeability on Estimation of 
+Oral Bioavailability for Chemicals in Commerce and the Environment" 
+provided by reviewers at ALTEX
 
 ## Bug Fixes
 * Cleaned up functions for model 3compartment
 * Corrected error where non-restrictive clearance option was not working for model pbtk
-  
+* Set restrictive.clearance=TRUE by defailt in 'calc_hep_clearance' when model = "unscaled"
+* Corrected compartment names for model "gas_pbk" -- "Calv", "Cendexh", and "Cmixexh" were being returned in ppmv units, while "Calvppmv", "Cendexhppmv", and "Cmixexhppmv" were in uM
+* Calculation of Fabs corrected for non-human species to follow Yu and Amidon (1999) using small intestine mean residence time and radius. (Thank you ALTEX reviewers) 
+* Corrected units of Peff in calculation of Fabs by 'calc_fabs.oral'-- calculations now indicate that more chemicals are poorly absorbed.
+* Revised 'calc_css' to handle models with no specified analytic solution
+* Revised ionization code in 'armitage_eval' -- air:water partitioning now only for neutral compound, pka_donor and pka_accept values now correctly used (thank you Meredith Scherer)
+
 ## Enhancements
+* 'calc_fabs.oral' now calculates oral uptake rate kgutabs using Caco-2 permeability, according to method of Lennernas (1997) (Thank you ALTEX reviewers)
+* Revised and changed name of 'get_fabsgut' to 'get_fbio' and modified function to use 'calc_fbio_oral' rather than call oral bioavailability subfunctions directly
+* Replaced conversion of human effective gut permeability to rat using Wahajudin et al. (2011) regression (Thank you ALTEX reviewers) 
 * Cleaned up code for various ODE models to make them more consistent and better annotated (more comments)
+* Reordered variables in modelinfo files for consistency so that diff can be used more easily to compare two models
 * Modified 'calc_kair' to only allow neutral chemical fraction to partition into air
 * Updated help files describing models
 * Default ODE solver tolerances increased to just below significant figures reported by HTTK (we report 4 sig figs, now require the solver to converge to 5)
 * 'solve_[MODEL]' functions now exclusively pass arguments to deSolve through "..."
-* New modelinfo file variable default.solver.method can be set -- species the default ODE solver approach for deSolve if "lsoda" is not desired
+* New modelinfo file variable default.solver.method can be set -- specifies the default ODE solver approach for deSolve if "lsoda" is not desired
+* Revised 'calc_css' to better calculate the day on which steady-state is reached
 
 # httk 2.3.1 (2023-3-19)
 This patch addresses a number of bugs.

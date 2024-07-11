@@ -123,7 +123,7 @@
 #' @param Caco2.options Arguments describing how to handle Caco2 absorption data
 #' that are passed to \code{\link{invitro_mc}} and the parameterize_[MODEL] 
 #' functions.
-#' See \code{\link{get_fabsgut}} for further details.
+#' See \code{\link{get_fbio}} for further details.
 #'
 #' @param adjusted.Funbound.plasma Uses 
 #' \insertCite{pearce2017evaluation;textual}{httk} lipid binding adjustment
