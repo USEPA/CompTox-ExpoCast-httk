@@ -604,7 +604,7 @@ armitage_eval <- function(chem.cas=NULL,
     .[MP>298.15,ss.GSE:=ss.GSE*10^(-1*ksalt*csalt)] %>%
     .[,swat_L:=swat/F_ratio] %>%
     .[,kow:=Fneutral*kow/(10^(-1*ksalt*csalt))] %>%
-    .[,kaw:=kaw/(10^(-1*ksalt*csalt))] %>%
+    .[,kaw:=Fneutral*kaw/(10^(-1*ksalt*csalt))] %>%
     .[,kcw:=Fneutral*kcw/(10^(-1*ksalt*csalt))] %>%
     .[,kbsa:=Fneutral*kbsa/(10^(-1*ksalt*csalt))]
 
