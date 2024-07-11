@@ -67,7 +67,7 @@ Authors@R: c(
            person("Katie", "Paul Friedman", email="Paul-Friedman.Katie@epa.gov",
              role = c("ctb"), comment = c(ORCID = "0000-0002-2710-1691")),
            person("Meredith", "Scherer", email="Scherer.Meredith@epa.gov",
-             role = c("ctb", comment = c(ORCID = "0000-0002-9785-7363")),
+             role = c("ctb"), comment = c(ORCID = "0000-0002-9785-7363")),
            person("James", "Sluka", email = "jsluka@indiana.edu", 
              role = c("ctb"), comment = c(ORCID = "0000-0002-5901-1404")),
            person("Noelle", "Sinski", email = "Noelle.Sinski@icf.com",
