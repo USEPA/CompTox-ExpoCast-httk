@@ -436,6 +436,7 @@ calc_kgutabs<- function(parameters = NULL,
                                 suppress.messages=suppress.messages))))
   }
   
+  # 10^-4 cm/s
   Peff <- calc_peff(Caco2.Pab=parameters[["Caco2.Pab"]],
                     species = species,
                     suppress.messages = suppress.messages)
@@ -457,7 +458,11 @@ calc_kgutabs<- function(parameters = NULL,
   } 
   
   # Lennernas (1997):
-  kgutabs <-  2 * Peff / Rsi * 3600 # 1/h
+  # peff is 10^-4 cm/s
+  # Rsi is cm
+  # 3600 s in 1 h
+  # 1 / 10000 10^-4 cm in cm
+  kgutabs <-  2 * Peff / Rsi * 3600 / 10000 # 1/h
         
   return(set_httk_precision(as.numeric(kgutabs)))
 }
