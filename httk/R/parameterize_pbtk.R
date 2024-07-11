@@ -84,7 +84,7 @@
 #' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 #' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-#' See \code{\link{get_fabsgut}} for further details.
+#' See \code{\link{get_fbio}} for further details.
 #' 
 #' @param minimum.Funbound.plasma \eqn{f_{up}} is not allowed to drop below
 #' this value (default is 0.0001).                                
@@ -93,7 +93,7 @@
 #'
 #' @param liver.density Liver density (defaults to 1.05 g/mL from International Commission on Radiological Protection (1975))
 #'
-#' @param kgutabs Oral absorption rate from gut (defaults to 2.18 1/h from Wambaugh et al. (2018))
+#' @param kgutabs Oral absorption rate from gut (determined from Peff)
 #' 
 #' @return \item{BW}{Body Weight, kg.} 
 #' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
@@ -196,7 +196,7 @@ parameterize_pbtk <- function(
                        minimum.Funbound.plasma=0.0001,
                        million.cells.per.gliver= 110, # 10^6 cells/g-liver Carlile et al. (1997)
                        liver.density= 1.05, # g/mL International Commission on Radiological Protection (1975)
-                       kgutabs = 2.18, # 1/h, Wambaugh et al. (2018)
+                       kgutabs = NA, # 1/h, Wambaugh et al. (2018)
                        Caco2.options = NULL
                        )
 {
@@ -335,8 +335,8 @@ parameterize_pbtk <- function(
   # Create the list of parameters:
   BW <- this.phys.data["Average BW"]
   hematocrit = this.phys.data["Hematocrit"]
+  
   outlist <- c(outlist,list(BW = as.numeric(BW),
-                            kgutabs = kgutabs, # 1/h
                             Funbound.plasma = fup, # unitless fraction
                             Funbound.plasma.dist = schmitt.params$Funbound.plasma.dist,
                             hematocrit = as.numeric(hematocrit), # unitless ratio
@@ -386,7 +386,7 @@ parameterize_pbtk <- function(
    
 # Oral bioavailability parameters:
   outlist <- c(
-    outlist, do.call(get_fabsgut, args=purrr::compact(c(
+    outlist, do.call(get_fbio, args=purrr::compact(c(
     list(
       parameters=outlist,
       dtxsid=dtxsid,
@@ -397,6 +397,9 @@ parameterize_pbtk <- function(
       ),
     Caco2.options))
     ))
+
+  # If provided by argument:
+  if (!is.na(kgutabs)) outlist[["kgutabs"]] <- kgutabs
 
   # Only include parameters specified in modelinfo:
   outlist <- outlist[model.list[["pbtk"]]$param.names]
