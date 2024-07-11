@@ -593,8 +593,8 @@ armitage_eval <- function(chem.cas=NULL,
   tcdata[!(is.na(gkbsa)),gkbsa:=gkbsa-duow*Tcor] %>%
     .[!(is.na(gkbsa)),kbsa:=10^gkbsa]
 
-  tcdata[option.kbsa2==TRUE & is.na(gkbsa) & gkaw<4.5, kbsa:=10^(1.08*gkow-0.7)] %>%
-    .[option.kbsa2==TRUE & is.na(gkbsa) & gkaw>=4.5, kbsa:=10^(0.37*gkow+2.56)]
+  tcdata[option.kbsa2==TRUE & is.na(gkbsa) & gkow<4.5, kbsa:=10^(1.08*gkow-0.7)] %>%
+    .[option.kbsa2==TRUE & is.na(gkbsa) & gkow>=4.5, kbsa:=10^(0.37*gkow+2.56)]
 
   tcdata[option.kbsa2==FALSE & is.na(gkbsa),kbsa:=10^(0.71*gkow+0.42)]
 
