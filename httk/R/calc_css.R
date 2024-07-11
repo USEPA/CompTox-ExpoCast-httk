@@ -231,8 +231,14 @@ calc_css <- function(chem.name=NULL,
     well.stirred.correction=well.stirred.correction,
     restrictive.clearance=restrictive.clearance
   )
-  css <- do.call("calc_analytic_css", 
+  # Check to see if there is analytic Css funtion:
+  if (!is.null(model.list[["gas_pbtk"]]$analytic.css.func))
+     css <- do.call("calc_analytic_css", 
                  args=purrr::compact(analyticcss_params))
+  # Otherwise set css to infinite:
+  css <- Inf
+  
+  # Use this conentration to cutoff the iterations:
   target.conc <- (1 - f) * css 
 
 # Identify the concentration that we are intending to check for steady-state:
@@ -267,15 +273,17 @@ calc_css <- function(chem.name=NULL,
   total.days <- days
   additional.days <- days
 
+  # Calculate the fractional change on the last simulated day:
+  conc.delta <- (out[match((additional.days - 1),out[,'time']),target] -
+                out[match((additional.days - 2),out[,'time']),target]) /
+                out[match((additional.days - 2),out[,'time']),target] 
 #  # For the 3-compartment model:  
 #  colnames(out)[colnames(out)=="Csyscomp"]<-"Cplasma"
 
 # Until we reach steady-state, keep running the solver for longer times, 
 # restarting each time from where we left off:
   while(all(out[,target] < target.conc) & 
-       ((out[match((additional.days - 1),out[,'time']),target]-
-        out[match((additional.days - 2),out[,'time']),target])/
-        out[match((additional.days - 2),out[,'time']),target] > f.change))
+       (conc.delta > f.change))
   {
     if(additional.days < 1000)
     {
@@ -285,7 +293,7 @@ calc_css <- function(chem.name=NULL,
     #}
     total.days <- total.days + additional.days
 
-  out <- do.call(solve_model,
+    out <- do.call(solve_model,
 # we use purrr::compact to drop NULL values from arguments list:
       args=purrr::compact(c(list(    
       parameters=parameters,
@@ -302,6 +310,11 @@ calc_css <- function(chem.name=NULL,
       ...))))
     Final_Conc <- out[dim(out)[1],monitor.vars]
   
+# Calculate the fractional change on the last simulated day:
+  conc.delta <- (out[match((additional.days - 1),out[,'time']),target] -
+                out[match((additional.days - 2),out[,'time']),target]) /
+                out[match((additional.days - 2),out[,'time']),target] 
+        
     if(total.days > 36500) break 
   }
   
@@ -310,13 +323,11 @@ calc_css <- function(chem.name=NULL,
   {
     # The day the simulation started:
     sim.start.day <- total.days - additional.days
-    # The day the current simulation reached Css:
-    if(any(out[,target] >= target.conc))
-    {
-      sim.css.day <- floor(min(out[out[,target]>=target.conc,"time"]))
-    } else {
-      sim.css.day <- additional.days
-    }
+    
+    # Find the first day the current simulation reached max concentration:
+    sim.css.day <- floor(min(out[which(out[,target]/max(out[,target])==1),
+                         "time"]))
+    
     # The overall day the simulation reached Css:
     css.day <- sim.start.day+sim.css.day
     # Fraction of analytic Css achieved:
