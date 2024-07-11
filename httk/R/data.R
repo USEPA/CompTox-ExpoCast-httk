@@ -1795,6 +1795,10 @@
 #' orientation.
 #' These data were either measured by EPA or collected by other others, as
 #' indicated by the column 'Data Origin'.
+#' Anywhere that the values is reported by three numbers separated by a comma 
+#' (this also happens for plasma protein binding) the three values are: median, 
+#' lower 95 percent confidence intervals, upper 95 percent confidence interval. Unless you are 
+#' doing monte carlo work it makes sense to ignore the second and third values.
 #'
 #' \tabular{lll}{
 #' \strong{Column Name} \tab \strong{Description} \tab \strong{Units} \cr
