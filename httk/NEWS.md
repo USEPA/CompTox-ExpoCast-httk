@@ -11,6 +11,7 @@ provided by reviewers at ALTEX
 * Corrected compartment names for model "gas_pbk" -- "Calv", "Cendexh", and "Cmixexh" were being returned in ppmv units, while "Calvppmv", "Cendexhppmv", and "Cmixexhppmv" were in uM
 * Calculation of Fabs corrected for non-human species to follow Yu and Amidon (1999) using small intestine mean residence time and radius. (Thank you ALTEX reviewers) 
 * Corrected units of Peff in calculation of Fabs by 'calc_fabs.oral'-- calculations now indicate that more chemicals are poorly absorbed.
+* Revised 'calc_css' to handle models with no specified analytic solution
 
 ## Enhancements
 * 'calc_fabs.oral' now calculates oral uptake rate kgutabs using Caco-2 permeability, according to method of Lennernas (1997) (Thank you ALTEX reviewers)
@@ -23,6 +24,7 @@ provided by reviewers at ALTEX
 * Default ODE solver tolerances increased to just below significant figures reported by HTTK (we report 4 sig figs, now require the solver to converge to 5)
 * 'solve_[MODEL]' functions now exclusively pass arguments to deSolve through "..."
 * New modelinfo file variable default.solver.method can be set -- specifies the default ODE solver approach for deSolve if "lsoda" is not desired
+* Revised 'calc_css' to better calculate the day on which steady-state is reached
 
 # httk 2.3.1 (2023-3-19)
 This patch addresses a number of bugs.
