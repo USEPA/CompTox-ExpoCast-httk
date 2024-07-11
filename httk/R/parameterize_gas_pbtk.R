@@ -74,7 +74,7 @@
 #' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 #' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-#' See \code{\link{get_fabsgut}} for further details.
+#' See \code{\link{get_fbio}} for further details.
 #' 
 #' @param ... Other parameters
 #' 
@@ -347,7 +347,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   BW <- this.phys.data["Average BW"]
   hematocrit = this.phys.data["Hematocrit"]
   outlist <- c(outlist,list(BW = as.numeric(BW),
-    kgutabs = 2.18, # 1/h 
+#    kgutabs = 2.18, # 1/h 
     Funbound.plasma = fup, # unitless fraction
     Funbound.plasma.dist = schmitt.params$Funbound.plasma.dist,
     hematocrit = as.numeric(hematocrit), # unitless ratio
@@ -438,7 +438,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
     
 # Oral bioavailability parameters:
   outlist <- c(
-    outlist, do.call(get_fabsgut, args=purrr::compact(c(
+    outlist, do.call(get_fbio, args=purrr::compact(c(
     list(
       parameters=outlist,
       dtxsid=dtxsid,
