@@ -882,7 +882,13 @@ specification in compartment_units for model ", model)
     ...)
 
 # only give the requested times:
- if (!is.null(requested.times)) out <- out[out[,"time"] %in% requested.times, ]
+ if (!is.null(requested.times))
+ {
+   # Have to reset the class because deSolve.subset returns a matrix instead of 
+   # deSolve object:
+   out <- structure(out[out[,"time"]%in%requested.times,],
+                class="deSolve")
+ }
 
 ### MODEL OUTPUT
 
