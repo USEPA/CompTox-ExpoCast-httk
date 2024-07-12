@@ -466,6 +466,7 @@ Set species=\"Human\" to run httkpop model.')
       PCs <- do.call(predict_partitioning_schmitt, args=purrr::compact(list(
                parameters=parameters.dt,
                args.schmitt,
+               tissues=model.list[[model]]$alltissues,
                suppress.messages=TRUE)))
 # Store the red blood cell to unbound plasma partition coefficient if we need
 # it later:

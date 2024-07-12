@@ -64,14 +64,23 @@ httkpop_mc <- function(model,
 
 # Generate the initial physiology data from NHANES biometrics:
   if (is.null(httkpop.dt))
-    httkpop.dt <- do.call(
+  {
+     httkpop.dt <- do.call(
                         httkpop_generate,
                         args=list(nsamp=samples,...))
+  }
+  
   # Convert HTTK-Pop-generated parameters to HTTK physiological parameters
-  if (model.list[[model]]$calc.standard.httkpop2httk){
-    physiology.dt <- httkpop_biotophys_default(indiv_dt = httkpop.dt)
-  }else{
-    physiology.dt <- httkpop.dt
+  physiology.dt <- httkpop.dt
+  if (!is.null(model.list[[model]]$calc.standard.httkpop2httk))
+  {
+    if (model.list[[model]]$calc.standard.httkpop2httk)
+    {
+      physiology.dt <- httkpop_biotophys_default(indiv_dt = httkpop.dt)
+    }
+  } else {
+    warning(paste0("Warning calc.standard.httkpop2httk not set in modelinfo file for model ",
+                   model))
   }
   
   # set precision:
