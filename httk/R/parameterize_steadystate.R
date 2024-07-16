@@ -164,6 +164,14 @@ parameterize_steadystate <- function(
   chem.name <- out$chem.name                                
   dtxsid <- out$dtxsid
 
+# Make sure we have all the parameters we need:
+  check_model(chem.cas=chem.cas, 
+              chem.name=chem.name,
+              dtxsid=dtxsid,
+              model="3compartmentss",
+              species=species,
+              default.to.human=default.to.human)
+
   #Capitalize the first letter of species only:
   species <- tolower(species)
   substring(species,1,1) <- toupper(substring(species,1,1))

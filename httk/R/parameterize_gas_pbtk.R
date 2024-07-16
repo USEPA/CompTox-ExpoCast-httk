@@ -230,6 +230,14 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   chem.name <- out$chem.name                                
   dtxsid <- out$dtxsid
    
+# Make sure we have all the parameters we need:
+  check_model(chem.cas=chem.cas, 
+            chem.name=chem.name,
+            dtxsid=dtxsid,
+            model="gas_pbtk",
+            species=species,
+            default.to.human=default.to.human)
+            
   if (is(tissuelist,'list')==FALSE) stop("tissuelist must be a list of vectors.") 
 
   # Clint has units of uL/min/10^6 cells:
@@ -415,6 +423,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   Kx2air <- calc_kair(chem.name=chem.name,
                       chem.cas=chem.cas,
                       dtxsid=dtxsid,
+                      parameters=outlist,
                       species=species,
                       default.to.human=default.to.human,
                       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
