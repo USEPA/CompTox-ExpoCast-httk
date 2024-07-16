@@ -88,6 +88,30 @@ check_model <- function(chem.name=NULL,
   
   if (!(chem.present)) 
   {
+    this.index <- which(dtxsid == chem.physical_and_invitro.data[,"DTXSID"])
+    if (any(this.index))
+    {
+      chem.class.filt <- model.list[[model]]$chem.class.filt
+      if (!is.null(chem.class.filt))
+      {
+        chem.class <- strsplit(
+          chem.physical_and_invitro.data[this.index,"Chemical.Class"],
+          split = ",")
+        # check if the chemical class is in the filter-out object
+        in.domain <- !(any(chem.class%in%chem.class.filt))
+        if (!in.domain) stop(paste0("Chemical CAS: ",
+          chem.cas,
+          ", DTXSID: ",
+          dtxsid,
+          ", named: ",
+          chem.name,
+          " is outside the chemical class domain for model ",
+          model,
+          "."
+          ))
+       }
+     }
+
     if (tolower(species) != "human" &
         !default.to.human) stop(paste0("Chemical CAS: ",
       chem.cas,
@@ -95,7 +119,7 @@ check_model <- function(chem.name=NULL,
       dtxsid,
       ", named: ",
       chem.name,
-      " either has insufficient parameters or is outside the domain for model ",
+      " has insufficient parameters for model ",
       model,
       ". Try setting default.to.human=TRUE"
       ))
@@ -105,7 +129,7 @@ check_model <- function(chem.name=NULL,
       dtxsid,
       ", named: ",
       chem.name,
-      " either has insufficient parameters or is outside the domain for model ",
+      " has insufficient parameters for model ",
       model,
       "."
       ))
