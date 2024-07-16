@@ -259,6 +259,8 @@ simlist <- list()
 obslist <- list()
 # Conduct one simulation for each unique combination of chemical, species, dose:
 for (i in 1:nrow(unique_scenarios))
+  if (unique_scenarios$CASRN[i] %in% get_cheminfo(model="gas_pbtk",
+                                                  suppress.messages = TRUE))
 {
   # Identify relevant Cvt data:
     relconc <- subset(conc_data,conc_data$DTXSID == unique_scenarios$DTXSID[i] & 
@@ -279,7 +281,7 @@ for (i in 1:nrow(unique_scenarios))
 #
 #
 #
-    solver.out <- suppressWarnings(as.data.frame(solve_gas_pbtk(
+    solver.out <- try(suppressWarnings(as.data.frame(solve_gas_pbtk(
         chem.cas = unique_scenarios$CASRN[i], 
         days = (unique_scenarios$TIME[i]+unique_scenarios$EXP_LENGTH[i]), 
 # Make sure we get predicted conc's at the observed times:
@@ -304,7 +306,7 @@ for (i in 1:nrow(unique_scenarios))
           "Cmuc", 
           "AUC"),
         vmax.km = FALSE,
-        suppress.messages = TRUE)))
+        suppress.messages = TRUE))))
 #
 #
 #
@@ -315,7 +317,10 @@ for (i in 1:nrow(unique_scenarios))
 #
 #
 #
-
+    if (class(solver.out) %in% "try-error") 
+      solver.out <- data.frame(time=NA,Conc=NA)
+    
+    print(solver.out)
 # Get the blood:plasma ratio:
     this.Rb2p <- suppressWarnings(available_rblood2plasma(
       chem.cas=unique_scenarios$CASRN[i],
@@ -374,6 +379,8 @@ for(i in 1:nrow(unique_scenarios))
     plot.data <- simlist[[i]]
     relconc <- obslist[[i]]
 
+    if (!is.null(plot.data))
+    {
 #Right now this is only calculating real concentrations according to mg/L in blood
     cvtlist[[i]] <- ggplot(data=plot.data, aes(time*24, simconc)) + 
       geom_line() + 
@@ -402,6 +409,7 @@ for(i in 1:nrow(unique_scenarios))
         legend.title = element_text(face = 'bold', size = 16),
         legend.text = element_text(face = 'bold',size = 14))+
       theme_bw() 
+    }
 }
 ```
 
@@ -423,7 +431,9 @@ for(i in 1:length(simlist))
   simdata <- as.data.frame(simlist[[i]])
 # skips over anything for which there was no observed data or 
 # insufficient information to run simulation:
-  if (!is.null(simlist[[i]]) & !is.null(obslist[[i]]))
+  if (!is.null(simdata) & 
+      !is.null(obsdata) &
+      dim(simdata)[1]>1)
   { 
 # Make sure we are looking at consistent time points:
     simobscomb <- simdata[simdata$time %in% signif(obsdata$TIME,4),]
@@ -509,7 +519,7 @@ Identify which quartile each observation occurred in with respect to the latest 
 observed time
 ```{r time_quartile, eval = execute.vignette}
 for(i in 1:length(simobslist))
-  if (nrow(simobslist[[i]])>0)
+  if (!is.null(simobslist[[i]]))
   {
     simobscomb <- simobslist[[i]]
     for (j in 1:nrow(simobscomb))
@@ -532,7 +542,7 @@ for(i in 1:length(simobslist))
 Calculate the area under the curve (AUC)
 ```{r calc_AUC, eval = execute.vignette}
 for(i in 1:length(simobslist))
-  if (nrow(simobslist[[i]])>0)
+  if (!is.null(simobslist[[i]]))
   {
     simobscomb <- simobslist[[i]]
 # Calculat the AUC with the trapezoidal rule:    
@@ -578,7 +588,7 @@ for(i in 1:length(simobslist))
 Calculate performance statistics
 ```{r calc_error, eval = execute.vignette}
 for(i in 1:length(simobslist))
-  if (nrow(simobslist[[i]])>0)
+  if (!is.null(simobslist[[i]]))
   {
     simobscomb <- simobslist[[i]]
     unique_scenarios$RSQD[i] <- 1 - (
@@ -601,7 +611,7 @@ Combine individual studies into single table
 ```{r combine_studies, eval = execute.vignette}
 obsvpredlist <- list()
 for(i in 1:length(simobslist))
-  if (nrow(simobslist[[i]])>0)
+  if (!is.null(simobslist[[i]]))
   {
     simobscomb <- simobslist[[i]]
     obsvpredlist[[i]] <- ggplot(simobscomb, aes(x = simconc, y = obsconc)) + 
@@ -647,6 +657,7 @@ dev.off()
 ### Finish simulated concentration/time plots
 ```{r annotate_study_stats, eval = execute.vignette}
 for (i in 1:length(cvtlist))
+  if (!is.null(cvtlist[[i]]))
 {
   cvtlist[[i]] <- cvtlist[[i]] + 
     geom_text(

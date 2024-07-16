@@ -216,6 +216,14 @@ parameterize_pbtk <- function(
   chem.cas <- out$chem.cas
   chem.name <- out$chem.name
   dtxsid <- out$dtxsid
+
+# Make sure we have all the parameters we need:
+  check_model(chem.cas=chem.cas, 
+            chem.name=chem.name,
+            dtxsid=dtxsid,
+            model="pbtk",
+            species=species,
+            default.to.human=default.to.human)
   
 # Get the intrinsic hepatic clearance:  
   Clint.list <- get_clint(

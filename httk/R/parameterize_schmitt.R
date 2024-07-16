@@ -111,8 +111,9 @@ parameterize_schmitt <- function(chem.cas=NULL,
 
 # Look up the chemical name/CAS, depending on what was provided:
   if (is.null(parameters))
-    if (any(is.null(chem.cas),is.null(chem.name),is.null(dtxsid)))
   {
+    if (any(is.null(chem.cas),is.null(chem.name),is.null(dtxsid)))
+    {
     out <- get_chem_id(
             chem.cas=chem.cas,
             chem.name=chem.name,
@@ -120,6 +121,15 @@ parameterize_schmitt <- function(chem.cas=NULL,
     chem.cas <- out$chem.cas
     chem.name <- out$chem.name                                
     dtxsid <- out$dtxsid
+    }
+    # Make sure we have all the parameters we need:
+    check_model(chem.cas=chem.cas, 
+                chem.name=chem.name,
+                dtxsid=dtxsid,
+                model="schmitt",
+                species=species,
+                default.to.human=default.to.human
+                )
   }
 
 # Check the species argument for capitalization problems and whether or not it 

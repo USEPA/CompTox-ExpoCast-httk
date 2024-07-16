@@ -4,7 +4,7 @@
 #' there are sufficient data for the specified model and species. 
 #' By default the function returns only CAS (that is, info="CAS"). 
 #' The type of information available includes chemical identifiers 
-#' ("Compound", "CASRN", "DTXSID"), in vitro
+#' ("Compound", "CAS", "DTXSID"), in vitro
 #' measurements ("Clint", "Clint.pvalue", "Funbound plasma", "Rblood2plasma"), 
 #' and physico-chemical information ("Formula", "logMA", "logP", "MW",
 #' "pKa_Accept", "pKa_Donor"). The argument "info" can be a single type of 
@@ -218,19 +218,13 @@ get_cheminfo <- function(info="CAS",
   
   #Create a local copy so we can edit it:
   chem.physical_and_invitro.data <- chem.physical_and_invitro.data
-  
-  #R CMD CHECK throws notes about "no visible binding for global variable", for
-  #each time a data.table column name is used without quotes. To appease R CMD
-  #CHECK, a variable has to be created for each of these column names and set to
-  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
-  #this is pointless and annoying.
-  physiology.data <- NULL
+  physiology.data <- physiology.data
   
   #End R CMD CHECK appeasement.
 
 # Figure out which species we support
   valid.species <- 
-    colnames(httk::physiology.data)[!(colnames(httk::physiology.data)
+    colnames(physiology.data)[!(colnames(physiology.data)
     %in% c("Parameter","Units"))]
 # Standardize the species capitalization
   if (tolower(species) %in% tolower(valid.species)) species <-
