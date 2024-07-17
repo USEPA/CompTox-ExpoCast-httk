@@ -107,7 +107,7 @@ check_model <- function(chem.name=NULL,
           chem.name,
           " is outside the chemical class domain for model ",
           model,
-          "."
+          ". See help(get_cheminfo)."
           ))
        }
      }
@@ -121,7 +121,7 @@ check_model <- function(chem.name=NULL,
       chem.name,
       " has insufficient parameters for model ",
       model,
-      ". Try setting default.to.human=TRUE"
+      ". Try setting default.to.human=TRUE. See also help(get_cheminfo)"
       ))
     else stop(paste0("Chemical CAS: ",
       chem.cas,
@@ -131,7 +131,7 @@ check_model <- function(chem.name=NULL,
       chem.name,
       " has insufficient parameters for model ",
       model,
-      "."
+      ". See help(get_cheminfo)."
       ))
   }
 }
