@@ -99,14 +99,14 @@ permeability for ~10,000 chemicals -- QSPR is optimized to detect low
 permeability chemicals and therefore predicts only three values 
 (low/medium/high permeability)
 * Added new functions `calc_fbio.oral`, `calc_fabs.oral`, and `calc_fgut.oral` 
-for calculating systemic bioavailability as ***Fbio = Fabs * Fgut * Fhep*** 
+for calculating systemic bioavailability as $Fbio = Fabs \times Fgut \times Fhep$ 
 where first-pass hepatic metabolism was already available from 
 `calc_hep_bioavailability`.
 * Changed the name of the variable describing fraction absorbed from the gut
-prior to first-pass hepatic metabolism to ***Fabsgut*** to reflect that
-***Fabs*** and ***Fgut*** are now modeled separately
-(that is, ***Fabsgut = Fabs * Fgut***).
-* Integrated ***Fabs*** and ***Fgut*** into oral exposure for all TK models and 
+prior to first-pass hepatic metabolism to $Fabsgut$ to reflect that
+$Fabs$ and $Fgut$ are now modeled separately
+(that is, ***Fabsgut = Fabs \times Fgut***).
+* Integrated $Fabs$ and $Fgut$ into oral exposure for all TK models and 
 integrated into population variability and uncertainty functions within 
 `invitro_uv`
 * Added new function `benchmark_httk` to compare current function of the 
