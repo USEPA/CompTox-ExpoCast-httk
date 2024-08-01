@@ -31,6 +31,7 @@ provided by reviewers at ALTEX
 * New modelinfo file variable default.solver.method can be set -- specifies the default ODE solver approach for deSolve if "lsoda" is not desired
 * Revised 'calc_css' to better calculate the day on which steady-state is reached
 * Added internal function 'check_model' to provide more informative error messages when key model parameters are missing
+* Updated scoping on several functions so that data.tables are handled locally within the functions and not passed by reference.
 
 # httk 2.3.1 (2023-3-19)
 This patch addresses a number of bugs.
