@@ -130,6 +130,9 @@ parameterize_schmitt <- function(chem.cas=NULL,
                 species=species,
                 default.to.human=default.to.human
                 )
+  } else {
+    # Work with local copy of parameters in function(scoping):
+    if (is.data.table(parameters)) parameters <- copy(parameters) 
   }
 
 # Check the species argument for capitalization problems and whether or not it 
@@ -230,7 +233,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
     Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas)
   }   
 
-  if (pKa_Donor == -999)
+  if (!is.na(pKa_Donor)) if (pKa_Donor == -999)
   {
     pKa_Donor <- suppressWarnings(get_physchem_param(
                                     "pKa_Donor",
@@ -239,7 +242,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
                                     dtxsid=dtxsid))
   }
   
-  if (pKa_Accept == -999)
+  if (!is.na(pKa_Accept)) if (pKa_Accept == -999)
   {    
     pKa_Accept <- suppressWarnings(get_physchem_param(
                                      "pKa_Accept",
@@ -297,19 +300,18 @@ parameterize_schmitt <- function(chem.cas=NULL,
  
   if (fup.point > 0)
   {     
-    # Get the Pearce et al. (2017) lipid binding correction:       
-    fup.adjustment <- calc_fup_correction(fup.point,
-                                          parameters=parameters,
-                                          dtxsid=dtxsid,
-                                          chem.name=chem.name,
-                                          chem.cas=chem.cas,
-                                          default.to.human=default.to.human,
-                                          force.human.fup=force.human.fup,
-                                          suppress.messages=suppress.messages)
-  
     # Apply the correction if requested:
     if (adjusted.Funbound.plasma)
     { 
+      # Get the Pearce et al. (2017) lipid binding correction:       
+      fup.adjustment <- calc_fup_correction(fup.point,
+                                            parameters=parameters,
+                                            dtxsid=dtxsid,
+                                            chem.name=chem.name,
+                                            chem.cas=chem.cas,
+                                            default.to.human=default.to.human,
+                                            force.human.fup=force.human.fup,
+                                            suppress.messages=suppress.messages)
       fup.corrected <- apply_fup_adjustment(
                          fup.point,
                          fup.correction=fup.adjustment,
@@ -317,6 +319,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
                          minimum.Funbound.plasma=minimum.Funbound.plasma
                          )
     } else {
+      fup.adjustment <- 1 
       fup.corrected <- fup.point
     } 
   } else {
