@@ -578,17 +578,22 @@ Set species=\"Human\" to run httkpop model.')
     parameters.dt[,Rblood2plasma := calc_rblood2plasma(
                                       hematocrit=hematocrit,
                                       Krbc2pu=Krbc2pu,
-                                      Funbound.plasma=Funbound.plasma)] 
+                                      Funbound.plasma=Funbound.plasma,
+# We can set this to TRUE because the value in Funbound.plasma is either adjusted
+# or not adjusted already:
+                                      adjusted.Funbound.plasma=TRUE)]
+                             
                                       
     if (any(is.na(parameters.dt$Rblood2plasma)))
-    {
+    {                                       
       parameters.dt[is.na(Rblood2plasma),
                           Rblood2plasma := available_rblood2plasma(
                             chem.cas=chem.cas,
                             chem.name=chem.name,
                             dtxsid=dtxsid,
                             species=species,
-                            adjusted.Funbound.plasma=TRUE,
+# We can set this to TRUE because the value in Funbound.plasma is either adjusted
+# or not adjusted already:                           adjusted.Funbound.plasma=TRUE,
                             suppress.messages=suppress.messages)]
     }
   }
