@@ -51,6 +51,7 @@ actually ppmw. Cannot calculate ppmv without chemical-specific liquid density,
 which we do not know.
 * Added model descriptor compartment.state to indicate which compartments are
 liquid and which are gaseous
+* 'calc_analytic_css_3compss' was reporting blood concentrations when asked for plasma
  
 ## Enhancements
 * Changed `armitage_eval` to allow chemical specification by usual arguments
