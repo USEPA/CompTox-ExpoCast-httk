@@ -180,14 +180,15 @@ calc_analytic_css_3compss2 <- function(chem.name=NULL,
                                    dose.units, 
                                    "mg") # mg/kg/h
 
+# Steady-state chemical concentration in blood in units of mg/L:
       Css_blood <- hourly.dose * # Oral dose rate mg/kg/h
                    Fabsgut * # Fraction of dose absorbed from gut (in vivo or Caco-2)
                    Fhep * # Fraction of dose that escapes first-pass hepatic metabolism
                    Rb2p / # Blood to plasma concentration ratio
                    (
-                     Qgfr * Fup + # Glomerular filtration to proximal tubules (kidney)
-                     Rb2p * Qalv/Kblood2air + # Exhalation clearance
-                     Clhep # Well-stirred hepatic metabolism (liver)
+                     Qgfr * Fup + # Glomerular filtration to proximal tubules (kidney) L/h/kg BW
+                     Rb2p * Qalv/Kblood2air + # Exhalation clearance L/h/kg BW
+                     Clhep # Well-stirred hepatic metabolism (liver) L/h/kg BW
                    )
   } else if (route %in% "inhalation") {
     CinhaledmgpL <- dosing[["Cinhppmv"]] * 
@@ -196,13 +197,14 @@ calc_analytic_css_3compss2 <- function(chem.name=NULL,
                                     "mg/L", 
                                     state="gas") # mg/l
     
+# Steady-state chemical concentration in blood in units of mg/L:
     Css_blood <- CinhaledmgpL * # Inhaled concentration mg/L
                  Qalv * # Alveolar air flow L/h
                  Rb2p / # Blood to plasma concentration ratio  
                  (
-                   Clhep + # Well-stirred hepatic metabolism (liver)
-                   Fup * Qgfr  + # Glomerular filtration from blood L/h
-                   Qalv * Rb2p / Kblood2air # Exhalation rate L/h
+                   Clhep + # Well-stirred hepatic metabolism (liver) L/h/kg BW
+                   Fup * Qgfr  + # Glomerular filtration from blood L/h L/h/kg BW
+                   Qalv * Rb2p / Kblood2air # Exhalation rate L/h L/h/kg BW
                  ) 
   } else stop("Route must be either oral or inhalation.")
   
