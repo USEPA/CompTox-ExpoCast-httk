@@ -68,6 +68,9 @@ httkpop_mc <- function(model,
      httkpop.dt <- do.call(
                         httkpop_generate,
                         args=list(nsamp=samples,...))
+  } else {
+    # Needed for scoping (work with local table only):
+    httkpop.dt <- copy(httkpop.dt)  
   }
   
   # Convert HTTK-Pop-generated parameters to HTTK physiological parameters

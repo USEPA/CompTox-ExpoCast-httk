@@ -121,6 +121,9 @@ calc_rblood2plasma <- function(
                     hematocrit=hematocrit,
                     Krbc2pu=Krbc2pu,
                     Funbound.plasma=Funbound.plasma)
+  } else {
+    # Work with local copy of parameters in function(scoping):
+    if (is.data.table(parameters)) parameters <- copy(parameters) 
   }
   
   if (!(species %in% colnames(physiology.data)))
