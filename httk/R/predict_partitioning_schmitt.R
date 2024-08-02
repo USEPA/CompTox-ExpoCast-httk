@@ -89,6 +89,8 @@
 #' @seealso \code{\link{parameterize_schmitt}}
 #'
 #' @seealso \code{\link{tissue.data}}
+#'
+#' @seealso \code{\link{calc_ma}}
 #' 
 #' @return Returns tissue to unbound plasma partition coefficients for each
 #' tissue.
@@ -175,10 +177,14 @@ predict_partitioning_schmitt <- function(
       dtxsid=dtxsid,
       species=species,
       default.to.human=default.to.human,
+      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
       minimum.Funbound.plasma=minimum.Funbound.plasma,
       suppress.messages=suppress.messages)
     user.params <- F
   } else {
+  # Work with local copy of parameters in function(scoping):
+    if (is.data.table(parameters)) parameters <- copy(parameters)
+    
     user.params <- T
     if (!"plasma.pH"%in%names(parameters)) parameters$plasma.pH <- 7.4
     if (!"Fprotein.plasma"%in%names(parameters)) 
@@ -203,10 +209,9 @@ Fraction unbound for species below limit of detection, cannot predict partitioni
 # If we don't have a measured value, use Yun & Edgington (2013):
   if (any(is.na(parameters$MA)))
   {
-     if (!suppress.messages) warning(
-"Membrane affintity (MA) predicted with method of Yun and Edginton (2013)")  
     parameters$MA[is.na(parameters$MA)] <- 
-      10^(1.294 + 0.304 * log10(parameters$Pow))
+      calc_ma(parameters = parameters,
+              suppress.messages = suppress.messages)
   }   
   
   if(! tolower(species) %in% c('rat','human')){

@@ -127,6 +127,9 @@ calc_fbio.oral <- function(parameters = NULL,
                    species=species,
                    suppress.messages=suppress.messages,
                    restrictive.clearance=restrictive.clearance)
+  } else {
+    # Work with local copy of parameters in function(scoping):
+    if (is.data.table(parameters)) parameters <- copy(parameters) 
   }
   
   if (!("Caco2.Pab" %in% names(parameters)))

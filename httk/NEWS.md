@@ -13,8 +13,9 @@ provided by reviewers at ALTEX
 * Corrected units of Peff in calculation of Fabs by 'calc_fabs.oral'-- calculations now indicate that more chemicals are poorly absorbed.
 * Revised 'calc_css' to handle models with no specified analytic solution
 * Revised ionization code in 'armitage_eval' so that pka_donor and pka_accept values now correctly used (thank you Meredith Scherer)
-* Fixed bug in 'solve_model' when only specific times requesed and plots=TRUE (thank you Kimberly Troung)
-* Fixed bug with 'get_chem_id' when using 'add_chemtable' without DTXSIDs (thank you Marc Beal and Miyuki Breen)
+* Corrected bug in 'solve_model' when only specific times requesed and plots=TRUE (thank you Kimberly Troung)
+* Corrected bug with 'get_chem_id' when using 'add_chemtable' without DTXSIDs (thank you Marc Beal and Miyuki Breen)
+* Corrected bug with 'creater_mc_samples' where arguments were not getting passed to 'invitro_mc' (thank you Hsing-Chieh Lin and Weihsueh Chiu)
 
 ## Enhancements
 * A physiology data table from 'httkpop_generate' can now be passed to 'calc_mc_css' and 'calc_mc_tk' (and 'calc_mc_css' via ...) so that a consistent populatin can be used across monte carlo runs. See argument httkpop.dt.
@@ -30,6 +31,7 @@ provided by reviewers at ALTEX
 * New modelinfo file variable default.solver.method can be set -- specifies the default ODE solver approach for deSolve if "lsoda" is not desired
 * Revised 'calc_css' to better calculate the day on which steady-state is reached
 * Added internal function 'check_model' to provide more informative error messages when key model parameters are missing
+* Updated scoping on several functions so that data.tables are handled locally within the functions and not passed by reference.
 
 # httk 2.3.1 (2023-3-19)
 This patch addresses a number of bugs.
@@ -49,6 +51,7 @@ actually ppmw. Cannot calculate ppmv without chemical-specific liquid density,
 which we do not know.
 * Added model descriptor compartment.state to indicate which compartments are
 liquid and which are gaseous
+* 'calc_analytic_css_3compss' was reporting blood concentrations when asked for plasma
  
 ## Enhancements
 * Changed `armitage_eval` to allow chemical specification by usual arguments
@@ -99,14 +102,14 @@ permeability for ~10,000 chemicals -- QSPR is optimized to detect low
 permeability chemicals and therefore predicts only three values 
 (low/medium/high permeability)
 * Added new functions `calc_fbio.oral`, `calc_fabs.oral`, and `calc_fgut.oral` 
-for calculating systemic bioavailability as ***Fbio = Fabs * Fgut * Fhep*** 
+for calculating systemic bioavailability as $Fbio = Fabs \times Fgut \times Fhep$ 
 where first-pass hepatic metabolism was already available from 
 `calc_hep_bioavailability`.
 * Changed the name of the variable describing fraction absorbed from the gut
-prior to first-pass hepatic metabolism to ***Fabsgut*** to reflect that
-***Fabs*** and ***Fgut*** are now modeled separately
-(that is, ***Fabsgut = Fabs * Fgut***).
-* Integrated ***Fabs*** and ***Fgut*** into oral exposure for all TK models and 
+prior to first-pass hepatic metabolism to $Fabsgut$ to reflect that
+$Fabs$ and $Fgut$ are now modeled separately
+(that is, ***Fabsgut = Fabs \times Fgut***).
+* Integrated $Fabs$ and $Fgut$ into oral exposure for all TK models and 
 integrated into population variability and uncertainty functions within 
 `invitro_uv`
 * Added new function `benchmark_httk` to compare current function of the 
