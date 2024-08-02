@@ -419,17 +419,23 @@ Set species=\"Human\" to run httkpop model.')
   if (invitrouv) 
   {
     parameters.dt <- do.call(invitro_mc,
-                       args=unique(purrr::compact(c(list(
-                         parameters.dt=parameters.dt,
-                         samples=samples),
-                         invitro.mc.arg.list,
-                         adjusted.Clint = adjusted.Clint,
-                         adjusted.Funbound.plasma = adjusted.Funbound.plasma,
-                         Caco2.options[names(Caco2.options)[
-                           !names(Caco2.options) %in%
+                       args=purrr::compact(
+                         c(
+                           list(
+                             parameters.dt=parameters.dt,
+                             samples=samples,
+                             adjusted.Clint = adjusted.Clint,
+                             adjusted.Funbound.plasma = adjusted.Funbound.plasma,
+                             Caco2.options[names(Caco2.options)[
+                               !names(Caco2.options) %in%
 # invitro_mc doesn't make use of these arguments because we've already called
 # parameterize_[MODEL]:
-                             c("Caco2.Pab.default", "overwrite.invivo")]]))))
+                               c("Caco2.Pab.default", "overwrite.invivo")]]
+                             ),
+                             invitro.mc.arg.list
+                           )
+                         )
+                       )
   } else {
   # Clint and fup are adjusted within invitro_mc, if not called we need to adjust them here:
   #
@@ -572,17 +578,22 @@ Set species=\"Human\" to run httkpop model.')
     parameters.dt[,Rblood2plasma := calc_rblood2plasma(
                                       hematocrit=hematocrit,
                                       Krbc2pu=Krbc2pu,
-                                      Funbound.plasma=Funbound.plasma)] 
+                                      Funbound.plasma=Funbound.plasma,
+# We can set this to TRUE because the value in Funbound.plasma is either adjusted
+# or not adjusted already:
+                                      adjusted.Funbound.plasma=TRUE)]
+                             
                                       
     if (any(is.na(parameters.dt$Rblood2plasma)))
-    {
+    {                                       
       parameters.dt[is.na(Rblood2plasma),
                           Rblood2plasma := available_rblood2plasma(
                             chem.cas=chem.cas,
                             chem.name=chem.name,
                             dtxsid=dtxsid,
                             species=species,
-                            adjusted.Funbound.plasma=TRUE,
+# We can set this to TRUE because the value in Funbound.plasma is either adjusted
+# or not adjusted already:                           adjusted.Funbound.plasma=TRUE,
                             suppress.messages=suppress.messages)]
     }
   }

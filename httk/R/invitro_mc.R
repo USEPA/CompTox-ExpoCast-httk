@@ -155,6 +155,9 @@ invitro_mc <- function(parameters.dt=NULL,
   Caco2.Pab.dist <- Caco2.Pab.mu <- Fabs <- Fgut <- Fabsgut <- NULL
   #End R CMD CHECK appeasement.
 
+  # Needed for scoping (work with local parameters.dt table only):
+  parameters.dt <- copy(parameters.dt)                      
+
   # Are we doing clint measurmement Monte Carlo?
   if (is.null(clint.meas.cv))
   {
