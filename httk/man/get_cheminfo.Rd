@@ -90,7 +90,7 @@ This function lists information on all the chemicals within HTTK for which
 there are sufficient data for the specified model and species. 
 By default the function returns only CAS (that is, info="CAS"). 
 The type of information available includes chemical identifiers 
-("Compound", "CASRN", "DTXSID"), in vitro
+("Compound", "CAS", "DTXSID"), in vitro
 measurements ("Clint", "Clint.pvalue", "Funbound plasma", "Rblood2plasma"), 
 and physico-chemical information ("Formula", "logMA", "logP", "MW",
 "pKa_Accept", "pKa_Donor"). The argument "info" can be a single type of 

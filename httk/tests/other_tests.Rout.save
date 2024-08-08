@@ -1,7 +1,7 @@
 
-R Under development (unstable) (2023-04-16 r84269 ucrt) -- "Unsuffered Consequences"
-Copyright (C) 2023 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R Under development (unstable) (2024-03-16 r86144 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -29,10 +29,10 @@ Type 'q()' to quit R.
 > calc_css(chem.name='nicotine', model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 $avg
-[1] 0.5756
+[1] 0.5664
 
 $frac
-[1] 0.7682
+[1] 0.756
 
 $max
 [1] 1.376
@@ -50,10 +50,10 @@ Warning messages:
 > 
 > calc_css(chem.name='nicotine', model="3compartment")
 $avg
-[1] 0.345
+[1] 0.3386
 
 $frac
-[1] 0.449
+[1] 0.4408
 
 $max
 [1] 1.113

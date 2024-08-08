@@ -287,8 +287,8 @@ Cfliver = Afliver / Vfliver;
 Cfbrain = Afbrain / Vfbrain;
 Cflung = Aflung / Vflung;
 Cfgut = Afgut / Vfgut;
-Cfplasma = Afven / Vfven / Rblood2plasma;
-Afplasma = Afven / Rblood2plasma * (1 - fhematocrit);
+Cfplasma = Afven / Vfven / Rfblood2plasma;
+Afplasma = Afven / Rfblood2plasma * (1 - fhematocrit);
 
  
 

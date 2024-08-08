@@ -5,11 +5,17 @@ rm(list=ls())
 
 library(httk)
 
-head(solve_gas_pbtk(chem.name="pyrene",times=c(0,0.1,0.05)))
-head(solve_gas_pbtk(chem.cas="129-00-0",times=c(0,0.1,0.05)))
+# The following arguments were added: method = "lsode",mf = 10.
+# Rationale: Following is required for the same results on various OS's due to
+#   precision differences.
+head(solve_gas_pbtk(chem.name="pyrene",times=c(0,0.1,0.05),
+                    method = "lsode",mf = 10))
+head(solve_gas_pbtk(chem.cas="129-00-0",times=c(0,0.1,0.05),
+                    method = "lsode",mf = 10))
 head(solve_gas_pbtk(
   parameters=parameterize_gas_pbtk(chem.cas="129-00-0"),
-  times=c(0,0.1,0.05)))
+  times=c(0,0.1,0.05),
+  method = "lsode",mf = 10))
 
 parameterize_gas_pbtk(chem.name="styrene")
 
