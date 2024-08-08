@@ -422,6 +422,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   outlist <- c(outlist,
     Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
       species=species,
+      class.exclude=class.exclude,
       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
       suppress.messages=TRUE))
     
