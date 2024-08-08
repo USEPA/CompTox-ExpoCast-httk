@@ -313,8 +313,13 @@ get_cheminfo <- function(info="CAS",
       # Set observed clint values to 0 if clint.pvalue > threshold
       if (!is.null(clint.pvalue.threshold))
       {
-        clint.values  <- strsplit(chem.physical_and_invitro.data[,species.clint],
-          split = ",")
+        if (any(!is.na(chem.physical_and_invitro.data$Rat.Clint)))
+        {
+          clint.values  <- strsplit(chem.physical_and_invitro.data[,species.clint],
+            split = ",")
+        } else {
+          clint.values <- rep(NA,dim(chem.physical_and_invitro.data)[1])
+        }
         clint.pvalues <- chem.physical_and_invitro.data[,species.clint.pvalue]
         # Replace the clint.value with 0 when clint.pvalue > threshold
         clint.values[lapply(clint.values,length)!=4] <- 
