@@ -1,6 +1,6 @@
 Package: httk
-Version: 2.3.0
-Date: 2023-12-05
+Version: 2.3.2
+Date: 2024-05-03
 Title: High-Throughput Toxicokinetics
 Description: Pre-made models that can be rapidly tailored to various chemicals
              and species using chemical-specific in vitro data and physiological 
@@ -64,6 +64,10 @@ Authors@R: c(
            person("Jimena", "Davis", role = c("ctb")), 
            person("Elaina", "Kenyon", email="kenyon.elaina@epa.gov",
              role = c("ctb"), comment = c(ORCID = "0000-0001-8781-2391")),
+           person("Katie", "Paul Friedman", email="Paul-Friedman.Katie@epa.gov",
+             role = c("ctb"), comment = c(ORCID = "0000-0002-2710-1691")),
+           person("Meredith", "Scherer", email="Scherer.Meredith@epa.gov",
+             role = c("ctb"), comment = c(ORCID = "0000-0002-9785-7363")),
            person("James", "Sluka", email = "jsluka@indiana.edu", 
              role = c("ctb"), comment = c(ORCID = "0000-0002-5901-1404")),
            person("Noelle", "Sinski", email = "Noelle.Sinski@icf.com",
@@ -81,7 +85,7 @@ Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats,
         graphics, utils, magrittr, purrr, methods, Rdpack, ggplot2
 RdMacros: Rdpack
 Suggests: knitr, rmarkdown, R.rsp, gplots, scales,
-        EnvStats, MASS, RColorBrewer, TeachingDemos, 
+        EnvStats, MASS, RColorBrewer,  
         stringr, reshape, viridis, gmodels,
         colorspace, cowplot, ggrepel, dplyr, forcats, smatr, gridExtra,
         readxl, ks
@@ -90,7 +94,7 @@ LazyData: true
 LazyDataCompression: xz
 Encoding: UTF-8
 VignetteBuilder: knitr, R.rsp
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.1
 URL:
         https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research
 BugReports: https://github.com/USEPA/CompTox-ExpoCast-httk
@@ -110,7 +114,9 @@ Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>),
   Xiaoqing Chang [ctb] (<https://orcid.org/0000-0003-0752-1848>), 
   Todor Antonijevic [ctb] (<https://orcid.org/0000-0002-0248-8412>),
   Jimena Davis [ctb],
-  Elaina Kenyon [ctb] (<https://orcid.org/0000-0001-8781-2391>), 
+  Elaina Kenyon [ctb] (<https://orcid.org/0000-0001-8781-2391>),
+  Katie Paul Friedman [ctb] (<https://orcid.org/0000-0002-2710-1691>),
+  Meredith Scherer [ctb] (<https://orcid.org/0000-0002-9785-7363>), 
   James Sluka [ctb] (<https://orcid.org/0000-0002-5901-1404>),
   Noelle Sinski [ctb], 
   Nisha Sipes [ctb] (<https://orcid.org/0000-0003-4203-6426>), 

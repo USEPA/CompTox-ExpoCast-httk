@@ -9,7 +9,9 @@ calc_analytic_css_1comp(
   chem.cas = NULL,
   dtxsid = NULL,
   parameters = NULL,
-  hourly.dose = 1/24,
+  dosing = list(daily.dose = 1),
+  hourly.dose = NULL,
+  dose.units = "mg",
   concentration = "plasma",
   suppress.messages = FALSE,
   recalc.blood2plasma = FALSE,
@@ -35,7 +37,14 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 parameterize_1comp(for model = '1compartment') or parameterize_steadystate 
 (for model = '3compartmentss'), overrides chem.name and chem.cas.}
 
+\item{dosing}{List of dosing metrics used in simulation, which includes
+the namesake entries of a model's associated dosing.params. For steady-state
+calculations this is likely to be either "daily.dose" for oral exposures or
+"Cinhaled" for inhalation.}
+
 \item{hourly.dose}{Hourly dose rate mg/kg BW/h.}
+
+\item{dose.units}{The units associated with the dose received.}
 
 \item{concentration}{Desired concentration type, 'blood' or default 'plasma'.}
 
@@ -58,12 +67,13 @@ as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is tr
 bioactive in vivo. Only works with tissue = NULL in current implementation.}
 
 \item{Caco2.options}{A list of options to use when working with Caco2 apical to
-basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
-Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
+Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
 Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
 fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+See \code{\link{get_fbio}} for further details.}
 
 \item{...}{Additional parameters passed to parameterize function if 
 parameters is NULL.}

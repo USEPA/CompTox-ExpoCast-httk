@@ -48,6 +48,9 @@
 #' @param default.to.human Substitutes missing species-specific values with human values if
 #' TRUE (default is FALSE).
 #' 
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' 
 #' @param force.human.clint.fup Uses human hepatic intrinsic clearance and fraction
 #' of unbound plasma in calculation of partition coefficients for rats if true.
 #' 
@@ -71,12 +74,13 @@
 #' dataset).
 #' 
 #' @param Caco2.options A list of options to use when working with Caco2 apical to
-#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
-#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
 #' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
 #' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 #' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' See \code{\link{get_fbio}} for further details.
 #' 
 #' @param ... Other parameters
 #' 
@@ -128,6 +132,7 @@ parameterize_steadystate <- function(
                               species="Human",
                               clint.pvalue.threshold=0.05,
                               default.to.human=FALSE,
+                              class.exclude=TRUE,
                               force.human.clint.fup=FALSE,
                               adjusted.Funbound.plasma=TRUE,
                               adjusted.Clint=TRUE,
@@ -162,6 +167,15 @@ parameterize_steadystate <- function(
   chem.cas <- out$chem.cas
   chem.name <- out$chem.name                                
   dtxsid <- out$dtxsid
+
+# Make sure we have all the parameters we need:
+  check_model(chem.cas=chem.cas, 
+              chem.name=chem.name,
+              dtxsid=dtxsid,
+              model="3compartmentss",
+              species=species,
+              class.exclude=class.exclude,
+              default.to.human=default.to.human)
 
   #Capitalize the first letter of species only:
   species <- tolower(species)
@@ -308,6 +322,7 @@ parameterize_steadystate <- function(
             chem.cas=chem.cas,
             dtxsid=dtxsid,
             species=species,
+            class.exclude=class.exclude,
             adjusted.Funbound.plasma=fup.corrected,
             suppress.messages=TRUE)
   Params[["Rblood2plasma"]] <- Rb2p
@@ -317,8 +332,9 @@ parameterize_steadystate <- function(
 # clearance to calculate bioavailability:
   Params[["hepatic.bioavailability"]] <- NA
   cl <- calc_hep_clearance(parameters=Params,
-          hepatic.model='unscaled',
-          suppress.messages=TRUE)#L/h/kg body weight
+          hepatic.model="unscaled",
+          restrictive.clearance = restrictive.clearance,
+          suppress.messages=TRUE) #L/h/kg body weight
           
 # "hepatic bioavailability" simulates first-pass hepatic metabolism since we 
 # don't explicitly model blood from the gut:
@@ -333,7 +349,7 @@ parameterize_steadystate <- function(
   if (is.na(Params[['hepatic.bioavailability']])) browser() 
 
   Params <- c(
-    Params, do.call(get_fabsgut, args=purrr::compact(c(
+    Params, do.call(get_fbio, args=purrr::compact(c(
     list(
       parameters=Params,
       dtxsid=dtxsid,
