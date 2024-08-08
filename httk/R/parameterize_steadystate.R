@@ -322,6 +322,7 @@ parameterize_steadystate <- function(
             chem.cas=chem.cas,
             dtxsid=dtxsid,
             species=species,
+            class.exclude=class.exclude,
             adjusted.Funbound.plasma=fup.corrected,
             suppress.messages=TRUE)
   Params[["Rblood2plasma"]] <- Rb2p
