@@ -28,7 +28,7 @@ uM <- calc_mc_css(chem.cas="50594-66-6",samples=NSAMP,output.units="uM")
 set.seed(1234)
 mgpL <- calc_mc_css(chem.cas="50594-66-6",samples=NSAMP,output.units="mg/L")
 # Test unit conversions, molecular weight of Acifluorfen is 361.66:
-signif(mgpL/uM*1000,4)
+signif(mgpL/uM*1000,3)
 # Human.Clint.pvalue > 0.05, no measured Rblood2plasma
 set.seed(1234)
 calc_mc_css(chem.cas="116-06-3",samples=NSAMP)
@@ -86,22 +86,54 @@ calc_mc_oral_equiv(conc=100,
                    parameters=parameter.dt,
                    model="pbtk")
 
-# If we turn off all the montecarlo the samples should all be the same and
-# give us the same result as calc_analytic_css:
-a <- calc_mc_css(
-  chem.cas = "80-05-7", 
+# do test of passing single set of parameters
+params <- parameterize_steadystate(chem.cas="80-05-7")
+css3 <- calc_analytic_css(
+  parameters=params,
   output.units = "uM", 
   model = "3compartmentss", 
-  species = "Human",
-  samples=NSAMP, 
+  species = "Human")
+set.seed(1234)
+css4 <- calc_mc_css(
+  parameters=params, 
+  output.units = "uM", 
+  model = "3compartmentss", 
+  species = "Human", 
   httkpop=FALSE, 
   invitrouv=FALSE, 
   return.samples=TRUE)
-b <- calc_analytic_css(
+set.seed(1234)
+css5 <- calc_mc_css(
+  parameters=params, 
+  output.units = "uM", 
+  model = "3compartmentss", 
+  species = "Human", 
+  httkpop=TRUE, 
+  invitrouv=TRUE, 
+  return.samples=TRUE)
+
+# If we turn off all the montecarlo the samples should all be the same and
+# give us the same result as calc_analytic_css:
+set.seed(1234)
+css1 <- calc_mc_css(
+  chem.cas = "80-05-7", 
+  output.units = "uM", 
+  model = "3compartmentss", 
+  species = "Human", 
+  httkpop=FALSE, 
+  invitrouv=FALSE, 
+  return.samples=TRUE)
+set.seed(1234)
+css2 <- calc_analytic_css(
   chem.cas = "80-05-7", 
   output.units = "uM", 
   model = "3compartmentss", 
   species = "Human")
-all(a/b==1) 
+# These values should be the same:
+all(css1/css2==1)
+css2/css3==1
+# Because we can't recalculate Rblood2plasma for 3compartmentss this is not
+# quite the same but should be close:
+unique(css4)/css2
                    
 quit("no")

@@ -48,6 +48,11 @@
 #'
 #' @param suppress.messages Whether or not the output messages are suppressed.
 #'
+#' @param alpha Ratio of Distribution coefficient D of totally charged species
+#' and that of the neutral form
+#'
+#' @param pH pH where ionization is evaluated.
+#'
 #' @return A named list containing the blood:air, water:air, and mucus:air 
 #' partition coefficients
 #'
@@ -65,6 +70,8 @@
 #' olfactory epithelial responses." Journal of Neuroscience 34.6 (2014): 
 #' 2025-2036.
 #' 
+#' @seealso \code{\link{calc_dow}}
+#' 
 #' @keywords parameter
 #'
 #' @export calc_kair
@@ -77,7 +84,9 @@ calc_kair <- function(
                  species="Human",
                  adjusted.Funbound.plasma = TRUE,
                  default.to.human = FALSE,
-                 suppress.messages = FALSE) 
+                 suppress.messages = FALSE,
+                 pH = 7.4,
+                 alpha = 0.001) 
 {
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -108,7 +117,27 @@ calc_kair <- function(
   } else {
     logHenry <- parameters$logHenry 
   }
+  
+  if (is.null(parameters) |  (!("pKa_Donor" %in% names(parameters)))) 
+  { 
+    pKa_Donor = get_physchem_param(param = 'pKa_Donor', 
+                                  chem.cas=chem.cas,
+                                  chem.name=chem.name,
+                                  dtxsid=dtxsid) 
+  } else {
+    pKa_Donor <- parameters$pKa_Donor 
+  }
     
+  if (is.null(parameters) |  (!("pKa_Accept" %in% names(parameters)))) 
+  { 
+    pKa_Accept = get_physchem_param(param = 'pKa_Accept', 
+                                  chem.cas=chem.cas,
+                                  chem.name=chem.name,
+                                  dtxsid=dtxsid) 
+  } else {
+    pKa_Accept <- parameters$pKa_Accept 
+  }
+  
   if (is.null(parameters) |  (!("body_temp" %in% names(parameters)))) 
   { 
    # Check the species argument for capitilization problems and whether or not it is in the table:  
@@ -157,9 +186,18 @@ calc_kair <- function(
   }  
 
   hl <- 10^logHenry #Henry's constant in atm*m^3 / mol 
+
+# For the most part only neutral compound partitions into the air:
+  ionization <- calc_ionization(pH=pH,
+                                pKa_Donor=pKa_Donor,
+                                pKa_Accept=pKa_Accept)
+  fraction_neutral  <- ionization[["fraction_neutral"]]
+  fraction_charged <- ionization[["fraction_charged"]]
+  
 # Linakis et al. (2020) Equation 3:
 # Gas constant 8.314 in units of J/(mol*K), body temperature 
-  Kwater2air <- 8.314 * body_temp / (hl * 101325)   #101325 atm to Pa 
+  Kwater2air <- 1/(fraction_neutral + alpha*fraction_charged)*
+                8.314 * body_temp / (hl * 101325)   #101325 atm to Pa 
 # Linakis et al. (2020) Equation 2:
   Kblood2air <- Kwater2air * Rblood2plasma / Funbound.plasma
 # Linakis et al. (2020) Equation 4:

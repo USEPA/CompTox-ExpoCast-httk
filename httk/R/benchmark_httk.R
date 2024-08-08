@@ -104,7 +104,14 @@
 #' calculated. If the units are correct the ratio should be 1 (within the 
 #' precision of the functions -- usually four significant figures). \cr
 #'
-#'   rmsle.plot \tab A ggplot2 figure showing RMSLE tests of various functions. 
+#'   invivo.rmsle.plot \tab A ggplot2 figure comparing
+#' model predictions to in vivo measured values. 
+#' Output generated is the root mean square log10 error for parameters estimated
+#' by the package. \cr
+#'
+#'   model.rmsle.plot \tab A ggplot2 figure comparing various functions values
+#' against values predicted by other models (chiefly SimCyp predictions from
+#' Wetmore et al. 2012 and 2015. 
 #' Output generated is the root mean square log10 error for parameters estimated
 #' by the package. \cr
 #'
@@ -423,13 +430,6 @@ benchmark_httk <- function(
                                             as.numeric(FitData2$Pred.Cmax) /
                                             as.numeric(FitData2$Cmax)))
                                         )
-                                                                
-#    write.table(FitData[,c(1,3,5,6,29,31)], 
-#                file=paste("invivovcsscheck-",
-#                           packageVersion("httk"),
-#                           ".txt",sep=""),
-#                           row.names=FALSE,
-#                           sep="\t")
   }
 
   #
@@ -616,15 +616,26 @@ benchmark_httk <- function(
       theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
     benchmarks[["units.plot"]] <- units.plot
     
-
-    rmsle.plot <- 
-      ggplot2::ggplot(subset(plot.table, regexpr("RMSLE", Benchmark)!=-1),
+    model.rmsle.plot <- 
+      ggplot2::ggplot(subset(plot.table, Benchmark %in%
+                             c("RMSLE.Wetmore","RMSLE.noMC")),
              aes(x=Version, y=Value, color=Benchmark, group=Benchmark)) + 
       geom_point() +
       geom_line() +
       ylab("Root Mean Squared Log10 Error (RMSLE)") +
       theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
-    benchmarks[["rmsle.plot"]] <- rmsle.plot
+    benchmarks[["model.rmsle.plot"]] <- model.rmsle.plot
+
+    invivo.rmsle.plot <- 
+      ggplot2::ggplot(subset(plot.table, Benchmark %in%
+                             c("RMSLE.InVivoCss","RMSLE.InVivoAUC",
+                               "RMSLE.InVivoCmax","RMSLE.TissuePC")),
+             aes(x=Version, y=Value, color=Benchmark, group=Benchmark)) + 
+      geom_point() +
+      geom_line() +
+      ylab("Root Mean Squared Log10 Error (RMSLE)") +
+      theme(axis.text.x = element_text(angle = 45, vjust = 0.5, hjust=1))
+    benchmarks[["invivo.rmsle.plot"]] <- invivo.rmsle.plot
     
     count.plot <- 
       ggplot2::ggplot(subset(plot.table, regexpr("N.", Benchmark)!=-1),

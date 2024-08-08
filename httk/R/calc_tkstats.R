@@ -169,6 +169,9 @@ calc_tkstats <-function(
         daily.dose=daily.dose,
         doses.per.day=doses.per.day,
         forcings=forcings)
+    # Limit to only the needed dosing parameters:
+    dosing <- dosing[names(dosing) %in%
+                 model.list[[model]]$routes[[route]]$dosing.params]
 
     PKtimecourse <- solve_model(
                       chem.name=chem.name,

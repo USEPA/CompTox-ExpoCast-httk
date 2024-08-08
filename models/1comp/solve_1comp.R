@@ -3,14 +3,21 @@
 #' This function solves for the amount or concentration of a chemical in plasma
 #' for a one compartment model as a function of time based on the dose and
 #' dosing frequency. 
+#' The model describes blood concentrations in a single compartment. 
+#' The volume of distribution
+#' depends on the physical volume of each tissue and the predicted chemical 
+#' partitioning into those volumes. 
+#' Plasma concentration in compartment x is given by 
+#' \eqn{C_{plasma} = \frac{C_{blood}}{R_{b2p}}} for a tissue independent value of 
+#' \eqn{R_{b2p}}.
 #' 
-#' Note that the model parameters have units of hours while the model output is
-#' in days.
+#' Note that the timescales for the model parameters have units of hours while 
+#' the model output is in days.
 #' 
 #' Default value of NULL for doses.per.day solves for a single dose.
 #' 
 #' When species is specified as rabbit, dog, or mouse, the function uses the
-#' appropriate physiological data(volumes and flows) but substitues human
+#' appropriate physiological data(volumes and flows) but substitutes human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #' 
 #' AUC is area under plasma concentration curve.
@@ -32,27 +39,27 @@
 #' overrides chem.name and chem.cas.
 #' @param days Length of the simulation.
 #' @param tsteps The number time steps per hour.
-#' @param daily.dose Total daily dose, mg/kg BW.
-#' @param dose Amount of a single dose, mg/kg BW. 
+#' @param daily.dose Total daily dose, default is mg/kg BW.
+#' @param dose Amount of a single dose, default is mg/kg BW. 
 #' @param doses.per.day Number of doses per day.
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", or default
 #' "Human").
 #' @param iv.dose Simulates a single i.v. dose if true.
-#' @param output.units Desired units (either "mg/L", "mg", "umol", or default
-#' "uM").
+#' @param input.units Input units of interest assigned to dosing, defaults to
+#' "mg/kg" BW. 
+#' @param output.units A named vector of output units expected for the model
+#' results. Default, NULL, returns model results in units specified in the
+#' 'modelinfo' file. See table below for details.
 #' @param initial.values Vector containing the initial concentrations or
 #' amounts of the chemical in specified tissues with units corresponding to
 #' output.units.  Defaults are zero.
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' @param plots Plots all outputs if true.
-#' @param method Method used by integrator (deSolve).
-#' @param rtol Argument passed to integrator (deSolve).
-#' @param atol Argument passed to integrator (deSolve).
 #' @param default.to.human Substitutes missing rat values with human values if
 #' true.
 #' @param dosing.matrix Vector of dosing times or a matrix consisting of two
 #' columns or rows named "dose" and "time" containing the time and amount, in
-#' mg/kg BW, of each dose.
+#' mg/kg BW by default, of each dose.
 #' @param recalc.clearance Whether or not to recalculate the elimination
 #' rate.
 #' @param recalc.blood2plasma Whether or not to recalculate the blood:plasma
@@ -66,29 +73,59 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' See \code{\link{get_fbio}} for further details.
+#' 
 #' @param monitor.vars Which variables are returned as a function of time. 
 #' Defaults value of NULL provides "Agutlumen", "Ccompartment", "Ametabolized",
 #' "AUC"
-#' @param ... Additional arguments passed to the integrator.
+#' @param ... Additional arguments passed to the integrator (deSolve).
 #'
 #' @return A matrix with a column for time(in days) and a column for the
 #' compartment and the area under the curve (concentration only).
 #'
 #' @author Robert Pearce
 #'
-#' @references Pearce, Robert G., et al. "Httk: R package for high-throughput
-#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+#' @references 
+#' \insertRef{pearce2017httk}{httk} 
 #'
 #' @keywords Solve 1compartment
 #'
 #' @examples
 #' 
-#' solve_1comp(chem.name='Bisphenol-A',days=1)
+#' solve_1comp(chem.name='Bisphenol-A', days=1)
+#'
+#' # By storing the model parameters in a vector first, you can potentially
+#' # edit them before using the model:
 #' params <- parameterize_1comp(chem.cas="80-05-7")
-#' solve_1comp(parameters=params)
+#' solve_1comp(parameters=params, days=1)
+#'
+#' head(solve_1comp(chem.name="Terbufos", daily.dose=NULL, dose=1, days=1))
+#' head(solve_1comp(chem.name="Terbufos", daily.dose=NULL,
+#'                  dose=1,days=1, iv.dose=TRUE))
+#' 
+#' # A dose matrix specifies times and magnitudes of doses:
+#' dm <- matrix(c(0,1,2,5,5,5),nrow=3)
+#' colnames(dm) <- c("time","dose")
+#' solve_1comp(chem.name="Methenamine", dosing.matrix=dm,
+#'             days=2.5, dose=NULL,daily.dose=NULL)
+#' 
+#' solve_1comp(chem.name="Besonprodil", daily.dose=1, dose=NULL,
+#'             days=2.5, doses.per.day=4)
+#'
+#' @seealso \code{\link{solve_model}}
+#'
+#' @seealso \code{\link{parameterize_1comp}}
+#'
+#' @seealso \code{\link{calc_analytic_css_1comp}}
 #'
 #' @export solve_1comp
-#' @useDynLib httk
 solve_1comp <- function(chem.name = NULL,
                     chem.cas = NULL,
                     dtxsid = NULL,
@@ -104,17 +141,19 @@ solve_1comp <- function(chem.name = NULL,
                     suppress.messages=FALSE,
                     species="Human",
                     iv.dose=FALSE,
-                    output.units='uM',
-                    method="lsoda",rtol=1e-8,atol=1e-12,
+                    input.units='mg/kg',
+                    # output.units='uM',
+                    output.units=NULL,
                     default.to.human=FALSE,
                     recalc.blood2plasma=FALSE,
                     recalc.clearance=FALSE,
                     dosing.matrix=NULL,
                     adjusted.Funbound.plasma=TRUE,
                     regression=TRUE,
-                    restrictive.clearance = T,
+                    restrictive.clearance = TRUE,
                     minimum.Funbound.plasma=0.0001,
                     monitor.vars=NULL,
+                    Caco2.options = list(),
                     ...)
 {
   out <- solve_model(
@@ -138,8 +177,8 @@ solve_1comp <- function(chem.name = NULL,
     monitor.vars=monitor.vars,
     suppress.messages=suppress.messages,
     species=species,
+    input.units=input.units,
     output.units=output.units,
-    method=method,rtol=rtol,atol=atol,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
@@ -148,7 +187,8 @@ solve_1comp <- function(chem.name = NULL,
                       default.to.human=default.to.human,
                       clint.pvalue.threshold=0.05,
                       restrictive.clearance = restrictive.clearance,
-                      regression=regression),
+                      regression=regression,
+                      Caco2.options=Caco2.options),
     ...)
   
   return(out) 
