@@ -355,7 +355,7 @@ parameterize_steadystate2 <- function(
   if (is.na(Params[['hepatic.bioavailability']])) browser() 
 
   Params <- c(
-    Params, do.call(get_fabsgut, args=purrr::compact(c(
+    Params, do.call(get_fbio, args=purrr::compact(c(
     list(
       parameters=Params,
       dtxsid=dtxsid,

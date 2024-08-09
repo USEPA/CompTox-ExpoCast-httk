@@ -78,6 +78,6 @@ concentrations as a result of infusion dosing.
 \code{\link{parameterize_steadystate}}
 }
 \author{
-John Wambaugh
+ohn Wambaugh
 }
 \keyword{3compss2}
