@@ -138,6 +138,8 @@ parameters." Xenobiotica 43.10 (2013): 839-852.
 \code{\link{parameterize_schmitt}}
 
 \code{\link{tissue.data}}
+
+\code{\link{calc_ma}}
 }
 \author{
 Robert Pearce
