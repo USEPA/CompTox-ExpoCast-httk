@@ -29,6 +29,9 @@
 #' @param default.to.human Substitutes missing fraction of unbound plasma with
 #' human values if true.
 #' 
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' 
 #' @return Stops code from running if all parameters needed for model
 #' are not available, otherwise does nothing.
 #'
@@ -52,6 +55,7 @@ check_model <- function(chem.name=NULL,
                         dtxsid=NULL,
                         model=NULL,
                         species=NULL,
+                        class.exclude=TRUE,
                         default.to.human=FALSE)
 {
   good.chems <- get_cheminfo(info=c("Compound",
@@ -59,6 +63,7 @@ check_model <- function(chem.name=NULL,
                                     "DTXSID"),
                              model=model,
                              species=species,
+                             class.exclude=class.exclude,
                              suppress.messages=TRUE)
   if (tolower(species) != "human" & default.to.human)
   {
@@ -68,6 +73,7 @@ check_model <- function(chem.name=NULL,
                                      "DTXSID"),
                                      model=model,
                                      species="Human",
+                                     class.exclude=class.exclude,
                                      suppress.messages=TRUE)
                         )       
   }

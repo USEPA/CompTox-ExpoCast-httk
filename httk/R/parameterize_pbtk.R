@@ -42,12 +42,14 @@
 #' @param dtxsid EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})   
 #' -- the chemical must be identified by either CAS, name, or DTXSIDs
 #' 
-#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' 
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
+#' 
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
 #' 
 #' @param tissuelist Specifies compartment names and tissues groupings.
 #' Remaining tissues in tissue.data are lumped in the rest of the body.
@@ -194,6 +196,7 @@ parameterize_pbtk <- function(
                        suppress.messages=FALSE,
                        restrictive.clearance=TRUE,
                        minimum.Funbound.plasma=0.0001,
+                       class.exclude=TRUE,
                        million.cells.per.gliver= 110, # 10^6 cells/g-liver Carlile et al. (1997)
                        liver.density= 1.05, # g/mL International Commission on Radiological Protection (1975)
                        kgutabs = NA, # 1/h, Wambaugh et al. (2018)
@@ -223,6 +226,7 @@ parameterize_pbtk <- function(
             dtxsid=dtxsid,
             model="pbtk",
             species=species,
+            class.exclude=class.exclude,
             default.to.human=default.to.human)
   
 # Get the intrinsic hepatic clearance:  
@@ -272,6 +276,7 @@ parameterize_pbtk <- function(
                       chem.cas=chem.cas,
                       species=species,
                       default.to.human=default.to.human,
+                      class.exclude=class.exclude,
                       force.human.fup=force.human.clint.fup,
                       suppress.messages=suppress.messages,
                       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
@@ -365,6 +370,7 @@ parameterize_pbtk <- function(
   outlist <- c(outlist,
     Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
       species=species,
+      class.exclude=class.exclude,
       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
       suppress.messages=suppress.messages))
 
