@@ -48,6 +48,9 @@
 #' @param default.to.human Substitutes missing species-specific values with human values if
 #' TRUE (default is FALSE).
 #' 
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' 
 #' @param force.human.clint.fup Uses human hepatic intrinsic clearance and fraction
 #' of unbound plasma in calculation of partition coefficients for rats if true.
 #' 
@@ -129,6 +132,7 @@ parameterize_steadystate <- function(
                               species="Human",
                               clint.pvalue.threshold=0.05,
                               default.to.human=FALSE,
+                              class.exclude=TRUE,
                               force.human.clint.fup=FALSE,
                               adjusted.Funbound.plasma=TRUE,
                               adjusted.Clint=TRUE,
@@ -170,6 +174,7 @@ parameterize_steadystate <- function(
               dtxsid=dtxsid,
               model="3compartmentss",
               species=species,
+              class.exclude=class.exclude,
               default.to.human=default.to.human)
 
   #Capitalize the first letter of species only:
@@ -317,6 +322,7 @@ parameterize_steadystate <- function(
             chem.cas=chem.cas,
             dtxsid=dtxsid,
             species=species,
+            class.exclude=class.exclude,
             adjusted.Funbound.plasma=fup.corrected,
             suppress.messages=TRUE)
   Params[["Rblood2plasma"]] <- Rb2p

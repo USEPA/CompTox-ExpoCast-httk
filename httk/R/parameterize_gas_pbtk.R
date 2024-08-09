@@ -61,6 +61,9 @@
 #' (below) gives another option for calculating Qalv (Alveolar ventilation) 
 #' in case pulmonary ventilation rate is not known 
 #' 
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' 
 #' @param VT Tidal volume (L), to be modulated especially as part of simulating
 #' the state of exercise
 #' 
@@ -211,6 +214,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                               suppress.messages=FALSE,
                               minimum.Funbound.plasma=0.0001,
                               Caco2.options=NULL,
+                              class.exclude=TRUE,
                               ...)
 {
   physiology.data <- physiology.data
@@ -236,6 +240,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
             dtxsid=dtxsid,
             model="gas_pbtk",
             species=species,
+            class.exclude=class.exclude,
             default.to.human=default.to.human)
             
   if (is(tissuelist,'list')==FALSE) stop("tissuelist must be a list of vectors.") 
@@ -286,6 +291,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   schmitt.params <- parameterize_schmitt(chem.cas=chem.cas,
                                          species=species,
                                          default.to.human=default.to.human,
+                                         class.exclude=class.exclude,
                                          force.human.fup=force.human.clint.fup,
                                          suppress.messages=TRUE,
                                          minimum.Funbound.plasma=minimum.Funbound.plasma)
@@ -416,6 +422,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   outlist <- c(outlist,
     Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
       species=species,
+      class.exclude=class.exclude,
       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
       suppress.messages=TRUE))
     
