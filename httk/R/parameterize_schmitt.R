@@ -29,6 +29,9 @@
 #' @param default.to.human Substitutes missing fraction of unbound plasma with
 #' human values if true.
 #' 
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' 
 #' @param force.human.fup Returns human fraction of unbound plasma in
 #' calculation for rats if true.
 #' When species is specified as rabbit, dog, or mouse, the human unbound
@@ -91,6 +94,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
                           force.human.fup=FALSE,
                           adjusted.Funbound.plasma=TRUE,
                           suppress.messages=FALSE,
+                          class.exclude=TRUE,
                           minimum.Funbound.plasma=0.0001)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -128,6 +132,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
                 dtxsid=dtxsid,
                 model="schmitt",
                 species=species,
+                class.exclude=class.exclude,
                 default.to.human=default.to.human
                 )
   } else {

@@ -411,14 +411,17 @@ specification in compartment_units for model ", model)
 # necessarily need all parameters associated with a given model to do this:)
   if (is.null(parameters))
   {
-    parameters <- do.call(parameterize_function, args=purrr::compact(c(list(
-      chem.cas=chem.cas,
-      chem.name=chem.name,
-      dtxsid=dtxsid,
-      species=species,
-      suppress.messages=suppress.messages,
-      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-      minimum.Funbound.plasma=minimum.Funbound.plasma),parameterize.arg.list))) 
+    parameters <- do.call(parameterize_function, args=purrr::compact(c(
+      list(
+        chem.cas=chem.cas,
+        chem.name=chem.name,
+        dtxsid=dtxsid,
+        species=species,
+        suppress.messages=suppress.messages,
+        adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+        minimum.Funbound.plasma=minimum.Funbound.plasma
+        ),
+      parameterize.arg.list))) 
   } else {
     if (!all(param_names %in% names(parameters)))
     {

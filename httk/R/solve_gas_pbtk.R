@@ -140,6 +140,9 @@
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
 #' 
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' 
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
 #' hematocrit, Funbound.plasma, and Krbc2pu.
@@ -268,6 +271,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            # input.units = "uM",
                            output.units=NULL,
                            default.to.human=FALSE,
+                           class.exclude=TRUE,
                            recalc.blood2plasma=FALSE,
                            recalc.clearance=FALSE,
                            adjusted.Funbound.plasma=TRUE,
@@ -419,6 +423,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
     parameterize.arg.list = list(
       regression=regression,
       default.to.human=default.to.human,
+      class.exclude=class.exclude,
       restrictive.clearance = restrictive.clearance,
       exercise = exercise,
       vmax = vmax,
