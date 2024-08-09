@@ -47,51 +47,79 @@
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
+#' 
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
+#' 
 #' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
+#' 
 #' @param times Optional time sequence for specified number of days.  Dosing
 #' sequence begins at the beginning of times.
+#' 
 #' @param parameters Chemical parameters from parameterize_pbtk function,
 #' overrides chem.name and chem.cas.
+#' 
 #' @param days Length of the simulation.
+#' 
 #' @param tsteps The number of time steps per hour.
+#' 
 #' @param daily.dose Total daily dose, defaults to mg/kg BW.
+#' 
 #' @param dose Amount of a single, initial oral dose in mg/kg BW. 
+#' 
 #' @param doses.per.day Number of doses per day.
+#' 
 #' @param initial.values Vector containing the initial concentrations or
 #' amounts of the chemical in specified tissues with units corresponding to
 #' output.units.  Defaults are zero.
+#' 
 #' @param plots Plots all outputs if true.
+#' 
 #' @param suppress.messages Whether or not the output message is suppressed.
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#' 
 #' @param iv.dose Simulates a single i.v. dose if true.
+#' 
 #' @param input.units Input units of interest assigned to dosing, defaults to
 #' mg/kg BW
+#' 
 #' @param output.units A named vector of output units expected for the model
 #' results. Default, NULL, returns model results in units specified in the
 #' 'modelinfo' file. See table below for details.
+#' 
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
+#' 
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' 
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
 #' hematocrit, Funbound.plasma, and Krbc2pu.
+#' 
 #' @param recalc.clearance Recalculates the the hepatic clearance
 #' (Clmetabolism) with new million.cells.per.gliver parameter.
+#' 
 #' @param dosing.matrix Vector of dosing times or a matrix consisting of two
 #' columns or rows named "dose" and "time" containing the time and amount, in
 #' mg/kg BW, of each dose.
+#' 
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE along with partition coefficients calculated with this value.
+#' 
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
+#' 
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
+#' 
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#' 
 #' @param Caco2.options A list of options to use when working with Caco2 apical to
 #' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
 #' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
@@ -104,6 +132,7 @@
 #' @param monitor.vars Which variables are returned as a function of time. 
 #' The default value of NULL provides "Cgut", "Cliver", "Cven", "Clung", "Cart", 
 #' "Crest", "Ckidney", "Cplasma", "Atubules", "Ametabolized", and "AUC"
+#'
 #' @param ... Additional arguments passed to the integrator (deSolve).
 #'
 #' @return A matrix of class deSolve with a column for time(in days), each
@@ -196,6 +225,7 @@ solve_pbtk <- function(chem.name = NULL,
                     # output.units='uM',
                     output.units=NULL,
                     default.to.human=FALSE,
+                    class.exclude=TRUE,
                     recalc.blood2plasma=FALSE,
                     recalc.clearance=FALSE,
                     dosing.matrix=NULL,
@@ -239,7 +269,8 @@ solve_pbtk <- function(chem.name = NULL,
                       clint.pvalue.threshold=0.05,
                       restrictive.clearance = restrictive.clearance,
                       regression=regression,
-                      Caco2.options=Caco2.options),
+                      Caco2.options=Caco2.options,
+                      class.exclude=class.exclude),
     ...)
   
   return(out) 
