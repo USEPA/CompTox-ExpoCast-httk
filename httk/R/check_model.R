@@ -65,6 +65,14 @@ check_model <- function(chem.name=NULL,
                              species=species,
                              class.exclude=class.exclude,
                              suppress.messages=TRUE)
+  good.chems.nophyschem <- get_cheminfo(info=c("Compound",
+                                    "CAS",
+                                    "DTXSID"),
+                             model=model,
+                             species=species,
+                             class.exclude=class.exclude,
+                             physchem.exclude=FALSE,
+                             suppress.messages=TRUE)
   if (tolower(species) != "human" & default.to.human)
   {
     good.chems <- rbind(good.chems,
@@ -79,17 +87,21 @@ check_model <- function(chem.name=NULL,
   }
                                                 
   chem.present <- FALSE
+  chem.present.nophyschem <- FALSE
   if (!is.null(chem.cas))
   { 
     if (chem.cas %in% good.chems[,"CAS"]) chem.present <- TRUE
+    if (chem.cas %in% good.chems.nophyschem[,"CAS"]) chem.present.nophyschem <- TRUE
   }
   if (!is.null(dtxsid))
   {
-     if (dtxsid %in% good.chems[,"DTXSID"]) chem.present <- TRUE
+    if (dtxsid %in% good.chems[,"DTXSID"]) chem.present <- TRUE
+    if (dtxsid %in% good.chems.nophyschem[,"DTXSID"]) chem.present.nophyschem <- TRUE
   }
   if (!is.null(chem.name))
   {
     if (chem.name %in% good.chems[,"Compound"]) chem.present <- TRUE
+    if (chem.name %in% good.chems.nophyschem[,"Compound"]) chem.present.nophyschem <- TRUE
   }  
   
   if (!(chem.present)) 
@@ -112,6 +124,18 @@ check_model <- function(chem.name=NULL,
           ", named: ",
           chem.name,
           " is outside the chemical class domain for model ",
+          model,
+          ". See help(get_cheminfo)."
+          ))
+      } else if (chem.present.nophyschem)
+      {
+        stop(paste0("Chemical CAS: ",
+          chem.cas,
+          ", DTXSID: ",
+          dtxsid,
+          ", named: ",
+          chem.name,
+          " is outside the physcio-chemical property domain for model ",
           model,
           ". See help(get_cheminfo)."
           ))
