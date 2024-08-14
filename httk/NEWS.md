@@ -1,4 +1,4 @@
-# httk 2.4.0
+# httk 2.4.0 (2024-8-14)
 This release accompanies the submission of the new manuscript
 "Enabling Transparent Toxicokinetic Modeling for Public Health Risk Assessment"
 and includes changes intended to better faciliate development of new HTTK
@@ -38,7 +38,7 @@ provided by reviewers at ALTEX.
 * Added internal function 'check_model' to provide more informative error messages when key model parameters are missing
 * Updated scoping on several functions so that data.tables are handled locally within the functions and not passed by reference.
 
-# httk 2.3.1 (2023-3-19)
+# httk 2.3.1 (2024-3-19)
 This patch addresses a number of bugs.
 
 ## Bug Fixes
