@@ -99,8 +99,8 @@
 #' #using the direct-resampling method
 #' set.seed(42)
 #'
-#' # Pull mean vchemical=specific values:
-#' chem.props <- parameterize_pbtk(chem.name="bisphenolaf")
+#' # Pull mean chemical=specific values:
+#' chem.props <- parameterize_pbtk(chem.name="bisphenolb")
 #'
 #' # Convert to data.table with one row per sample:
 #' parameters.dt <- monte_carlo(chem.props,samples=100)
@@ -110,6 +110,7 @@
 #'
 #' # Overwrite parameters specified by httk-pop:
 #' parameters.dt[,names(pop):=pop]
+#'
 #' # Vary in vitro parameters:
 #' parameters.dt <- invitro_mc(parameters.dt,samples=100)
 #' }
