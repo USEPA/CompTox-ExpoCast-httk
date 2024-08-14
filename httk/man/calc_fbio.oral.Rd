@@ -94,6 +94,8 @@ liver clearance if FALSE.}
 
 \item{Caco2.Pab.default}{(Numeric) Caco2 apical to basolateral data.
 (Defaults to  1.6.) (Not applicable for `calc_fbio.oral`.)}
+
+\item{Caco2.Pab}{(Numeric) Caco2 apical to basolaterial permeability used by calc_peff}
 }
 \value{
 \item{fbio.oral}{Oral bioavailability, the fraction of oral dose 
