@@ -26,6 +26,8 @@
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' 
+#' @param model Model to be checked, modelinfo files specify the requrements of each model.
+#' 
 #' @param default.to.human Substitutes missing fraction of unbound plasma with
 #' human values if true.
 #' 
@@ -40,16 +42,6 @@
 #' @keywords Parameter 
 #'
 #' @seealso \code{\link{get_cheminfo}}
-#'
-#' @examples
-#' # Should work:
-#' check_model(chem.cas="80-05-7",model="pbtk",species="rat")
-#' # Should work:
-#' check_model(chem.cas="80-05-7",model="pbtk",species="human")
-#' # Should throw an error:
-#' check_model(chem.cas="80-05-1",model="pbtk",species="human")
-#' # Should throw an error:
-#' check_model(chem.cas="80-05-1",model="pbtk",species="rat")
 check_model <- function(chem.name=NULL,
                         chem.cas=NULL,
                         dtxsid=NULL,

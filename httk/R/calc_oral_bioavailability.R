@@ -68,6 +68,8 @@
 #' @param Caco2.Pab.default (Numeric) Caco2 apical to basolateral data.
 #' (Defaults to  1.6.) (Not applicable for `calc_fbio.oral`.)
 #' 
+#' @param Caco2.Pab (Numeric) Caco2 apical to basolaterial permeability used by calc_peff
+#'
 #' @param restrictive.clearance Protein binding not taken into account (set to 1) in 
 #' liver clearance if FALSE.
 #' 
@@ -108,6 +110,10 @@ calc_fbio.oral <- function(parameters = NULL,
   restrictive.clearance = FALSE
   )
 {
+  ## Setting up binding for Global Variables ##
+  hepatic.bioavailability <- NULL
+  ####
+  
   # Determine Fhep.oral
   if (is.null(parameters))
   {

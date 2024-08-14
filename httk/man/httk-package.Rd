@@ -12,7 +12,7 @@ Pre-made models that can be rapidly tailored to various chemicals and species us
 Useful links:
 \itemize{
   \item \url{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}
-  \item Report bugs at \url{https://github.com/USEPA/CompTox-ExpoCast-httk}
+  \item Report bugs at \url{https://github.com/USEPA/CompTox-ExpoCast-httk/issues}
 }
 
 }
