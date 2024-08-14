@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2024-03-16 r86144 ucrt) -- "Unsuffered Consequences"
+R Under development (unstable) (2024-08-07 r86984 ucrt) -- "Unsuffered Consequences"
 Copyright (C) 2024 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
@@ -75,12 +75,12 @@ The model outputs are provided in the following units:
 
      time   Cgut Cliver    Cven  Clung    Cart  Crest Ckidney Cplasma Calvppmv
 [1,] 0.00 0.0000 0.0000 0.00000 0.0000 0.00000 0.0000   0.000 0.00000        0
-[2,] 0.05 0.5881 0.1674 0.01696 0.2847 0.03926 0.1007   0.941 0.02133        0
-[3,] 0.10 0.7285 0.2085 0.02505 0.3882 0.04737 0.1958   1.142 0.03152        0
+[2,] 0.05 0.6910 0.7195 0.02561 0.3267 0.04785 0.1124   1.131 0.03222        0
+[3,] 0.10 0.9749 1.1510 0.04232 0.5084 0.06458 0.2433   1.547 0.05324        0
      Cendexhppmv Cmixexhppmv Cmuc Atubules Ametabolized       AUC
-[1,]   0.000e+00     0.01227    0 0.000000        0.000 0.0000000
-[2,]   9.840e-07     0.01227 1866 0.009153        2.026 0.0006988
-[3,]   1.966e-06     0.01227 3733 0.021120        5.476 0.0020270
+[1,]   0.000e+00         0.3    0  0.00000       0.0000 0.0000000
+[2,]   2.383e-05         0.3 1866  0.01015       0.1612 0.0009291
+[3,]   4.771e-05         0.3 3733  0.02571       0.5838 0.0030810
 Warning messages:
 1: In solve_gas_pbtk(chem.name = "bisphenol a", times = c(0, 0.1, 0.05),  :
   Henry's constant, as a measure of volatility, is smaller for the
