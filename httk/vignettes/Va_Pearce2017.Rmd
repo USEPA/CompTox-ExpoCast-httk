@@ -667,6 +667,7 @@ chem.list <- get_cheminfo(model='pbtk', suppress.messages = TRUE)[seq(
 for (this.cas in chem.list) {
     css.info <- calc_css(chem.cas = this.cas,
                          doses.per.day = 1,
+                         model="pbtk",
                          suppress.messages = TRUE)
     css.data[this.cas,"days"] <- css.info[["the.day"]]
     css.data[this.cas,"avg"] <- css.info[["avg"]]

@@ -10,4 +10,7 @@ head(solve_fetal_pbtk(chem.name = 'bisphenol a', daily.dose = 1,
 head(solve_fetal_pbtk(chem.cas="80-05-7"))
 head(solve_fetal_pbtk(parameters=parameterize_fetal_pbtk(chem.cas="80-05-7")))
 
+p <- parameterize_fetal_pbtk(chem.name='bisphenol a')[sort(names(parameterize_fetal_pbtk(chem.name='bisphenol a')))]
+for (this.param in sort(tolower(names(p)))) cat(paste(this.param,": ",p[[this.param]],"\n"))
+
 quit("no")
