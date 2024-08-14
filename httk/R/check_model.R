@@ -135,7 +135,7 @@ check_model <- function(chem.name=NULL,
           dtxsid,
           ", named: ",
           chem.name,
-          " is outside the physcio-chemical property domain for model ",
+          " is outside the physico-chemical property domain for model ",
           model,
           ". See help(get_cheminfo)."
           ))
