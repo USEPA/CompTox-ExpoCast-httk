@@ -10,6 +10,7 @@ check_model(
   dtxsid = NULL,
   model = NULL,
   species = NULL,
+  class.exclude = TRUE,
   default.to.human = FALSE
 )
 }
@@ -28,6 +29,9 @@ either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
+
+\item{class.exclude}{Exclude chemical classes identified as outside of 
+domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
 
 \item{default.to.human}{Substitutes missing fraction of unbound plasma with
 human values if true.}

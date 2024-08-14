@@ -77,8 +77,12 @@
 #' vitro clearance assay result has a p-values greater than the threshold are
 #' set to zero.
 #' 
+#' @param physchem.exclude Exclude chemicals on the basis of physico-chemical
+#' properties (currently only Henry's law constant) as specified by 
+#' the relevant modelinfo_[MODEL] file (default TRUE).
+#' 
 #' @param class.exclude Exclude chemical classes identified as outside of 
-#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' domain of applicability by the relevant modelinfo_[MODEL] file (default TRUE).
 #' 
 #' @param suppress.messages Whether or not the output messages are suppressed 
 #' (default FALSE).
@@ -190,6 +194,7 @@ get_cheminfo <- function(info="CAS",
                          median.only=FALSE,
                          fup.ci.cutoff=TRUE,
                          clint.pvalue.threshold=0.05,
+                         physchem.exclude=TRUE,
                          class.exclude=TRUE,
                          suppress.messages=FALSE)
 {
@@ -558,7 +563,8 @@ For model ", model, " each chemical must have non-NA values for:",
     }
     
     # If we need to remove volatile compounds:
-    if(!is.null(log.henry.threshold)){
+    if(physchem.exclude & !is.null(log.henry.threshold))
+    {
       # keep compounds with logHenry constant less than threshold & 'NA'
       log.henry.pass <- 
         chem.physical_and_invitro.data[,"logHenry"] < 
@@ -572,6 +578,7 @@ For model ", model, " each chemical must have non-NA values for:",
         warning("Excluding volatile compounds defined as log.Henry >= ",log.henry.threshold,".")
       }
     }
+    
     # If we need to remove compounds belonging to a given chemical class:
     if (class.exclude & !is.null(chem.class.filt))
     {

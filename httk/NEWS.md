@@ -1,8 +1,13 @@
-# httk 2.3.2
-This patch addresses general model clarity and incorporates comments received
+# httk 2.4.0
+This release accompanies the submission of the new manuscript
+"Enabling Transparent Toxicokinetic Modeling for Public Health Risk Assessment"
+and includes changes intended to better faciliate development of new HTTK
+models through improved model clarity.
+
+In addition we have incorporated comments received
 on manuscript "Impact of Gut Permeability on Estimation of 
 Oral Bioavailability for Chemicals in Commerce and the Environment" 
-provided by reviewers at ALTEX
+provided by reviewers at ALTEX.
 
 ## Bug Fixes
 * Cleaned up functions for model 3compartment
