@@ -27,6 +27,8 @@ CAS, name, or DTXISD}
  -- if parameters is not specified then the chemical must be identified by 
 either CAS, name, or DTXSIDs}
 
+\item{model}{Model to be checked, modelinfo files specify the requrements of each model.}
+
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
@@ -50,16 +52,6 @@ species try default.to.human = TRUE (there are many more values for human than
 any other species). If working in human, try first using
 \code{\link{load_dawson2021}}, \code{\link{load_sipes2017}}, or
 \code{\link{load_pradeep2020}}.
-}
-\examples{
-# Should work:
-check_model(chem.cas="80-05-7",model="pbtk",species="rat")
-# Should work:
-check_model(chem.cas="80-05-7",model="pbtk",species="human")
-# Should throw an error:
-check_model(chem.cas="80-05-1",model="pbtk",species="human")
-# Should throw an error:
-check_model(chem.cas="80-05-1",model="pbtk",species="rat")
 }
 \seealso{
 \code{\link{get_cheminfo}}
