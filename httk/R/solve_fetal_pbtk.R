@@ -146,15 +146,14 @@
 #'
 #' # With adjustement to fraction unbound plasma for fetus:
 #' fetal_parms_fup_adjusted <- 
-#'   parameterize_fetal_pbtk(chem.name = 'perfluorooctane sulfonic acid')
+#'   parameterize_fetal_pbtk(chem.name = "triclosan")
 #' head(solve_fetal_pbtk(parameters = fetal_parms_fup_adjusted))
-#' 
+#'  
 #' # Without adjustement to fraction unbound plasma for fetus:
 #' fetal_parms_fup_unadjusted <-  
-#'   parameterize_fetal_pbtk(chem.name = 'perfluorooctane sulfonic acid',
-#'                                 fetal_fup_adjustment = FALSE)
+#'   parameterize_fetal_pbtk(chem.name = "triclosan",
+#'                           fetal_fup_adjustment = FALSE)
 #' head(solve_fetal_pbtk(parameters = fetal_parms_fup_unadjusted))
-#' 
 #' 
 #' @export solve_fetal_pbtk
 #'

@@ -153,4 +153,152 @@ Set recalc.blood2plasma to TRUE if desired.
   Clearance not recalculated. 
 Set recalc.clearance to TRUE if desired.
 > 
+> p <- parameterize_fetal_pbtk(chem.name='bisphenol a')[sort(names(parameterize_fetal_pbtk(chem.name='bisphenol a')))]
+> for (this.param in sort(tolower(names(p)))) cat(paste(this.param,": ",p[[this.param]],"\n"))
+adipose_density :  0.95 
+amnf_density :  1.01 
+arterial_blood_fraction :  0.16 
+brain_density :  1.04 
+bw :   
+bw_cubic_theta1 :   
+bw_cubic_theta2 :   
+bw_cubic_theta3 :   
+caco2.pab :   
+caco2.pab.dist :   
+clint :   
+clint.dist :   
+clmetabolismc :   
+fabsgut :   
+fblood_weight_ratio :  80 
+fbw_gompertz_theta0 :   
+fbw_gompertz_theta1 :   
+fbw_gompertz_theta2 :   
+ffmx_density :  1.1 
+fhematocrit_cubic_theta1 :  4.5061 
+fhematocrit_cubic_theta2 :  -0.18487 
+fhematocrit_cubic_theta3 :  0.0026766 
+fhep.assay.correction :   
+fraction_unbound_plasma_fetus :   
+funbound.plasma :   
+funbound.plasma.adjustment :   
+funbound.plasma.dist :   
+gut_density :  1.04 
+hematocrit_quadratic_theta0 :  39.192 
+hematocrit_quadratic_theta1 :  -0.10562 
+hematocrit_quadratic_theta2 :  -0.00071045 
+kadipose2pu :   
+kfbrain2pu :   
+kfgut2pu :   
+kfkidney2pu :   
+kfliver2pu :   
+kflung2pu :   
+kfplacenta2pu :   
+kfrbc2pu :   
+kfrest2pu :   
+kfthyroid2pu :   
+kgut2pu :   
+kgutabs :  0.3711 
+kidney_density :  1.05 
+kkidney2pu :   
+kliver2pu :   
+klung2pu :   
+kplacenta2pu :   
+krbc2pu :   
+krest2pu :   
+kthyroid2pu :   
+liver_density :  1.05 
+lung_density :  1.05 
+ma :   
+million.cells.per.gliver :  110 
+mw :   
+ph_plasma_fet :   
+ph_plasma_mat :   
+pka_accept :   
+pka_donor :   
+placenta_density :  1.02 
+pow :   
+pre_pregnant_bw :   
+qadipose_percent_initial :   
+qadipose_percent_terminal :   
+qbrain_percent :   
+qcardiac_cubic_theta0 :   
+qcardiac_cubic_theta1 :   
+qcardiac_cubic_theta2 :   
+qcardiac_cubic_theta3 :   
+qfbrain_percent :   
+qfda_logistic_theta0 :   
+qfda_logistic_theta1 :   
+qfda_logistic_theta2 :   
+qfdv_gompertz_theta0 :   
+qfdv_gompertz_theta1 :   
+qfdv_gompertz_theta2 :   
+qfgut_percent :   
+qfkidney_percent :   
+qfliver_percent :   
+qflvtl_logistic_theta0 :   
+qflvtl_logistic_theta1 :   
+qflvtl_logistic_theta2 :   
+qfnonplacental_percent :   
+qfplacenta_logistic_theta0 :   
+qfplacenta_logistic_theta1 :   
+qfplacenta_logistic_theta2 :   
+qfrvtl_logistic_theta0 :   
+qfrvtl_logistic_theta1 :   
+qfrvtl_logistic_theta2 :   
+qfthyroid_percent :   
+qgfr_quadratic_theta0 :   
+qgfr_quadratic_theta1 :   
+qgfr_quadratic_theta2 :   
+qgut_percent :   
+qgut_percent_initial :   
+qgut_percent_terminal :   
+qkidney_cubic_theta0 :   
+qkidney_cubic_theta1 :   
+qkidney_cubic_theta2 :   
+qkidney_cubic_theta3 :   
+qkidney_percent :   
+qliver_percent_initial :   
+qliver_percent_terminal :   
+qplacenta_linear_theta1 :   
+qthyroid_percent_initial :   
+qthyroid_percent_terminal :   
+term :  40 
+thyroid_density :  1.05 
+vamnf_logistic_theta0 :   
+vamnf_logistic_theta1 :   
+vamnf_logistic_theta2 :   
+venous_blood_fraction :  0.595 
+vgutc :   
+vkidneyc :   
+vliverc :   
+vlungc :   
+vplacenta_cubic_theta1 :   
+vplacenta_cubic_theta2 :   
+vplacenta_cubic_theta3 :   
+vplasma_mod_logistic_theta0 :   
+vplasma_mod_logistic_theta1 :   
+vplasma_mod_logistic_theta2 :   
+vplasma_mod_logistic_theta3 :   
+vthyroidc :   
+wadipose_linear_theta0 :   
+wadipose_linear_theta1 :   
+wfbrain_gompertz_theta0 :   
+wfbrain_gompertz_theta1 :   
+wfbrain_gompertz_theta2 :   
+wfgut_gompertz_theta0 :   
+wfgut_gompertz_theta1 :   
+wfgut_gompertz_theta2 :   
+wfkidney_gompertz_theta0 :   
+wfkidney_gompertz_theta1 :   
+wfkidney_gompertz_theta2 :   
+wfliver_gompertz_theta0 :   
+wfliver_gompertz_theta1 :   
+wfliver_gompertz_theta2 :   
+wflung_gompertz_theta0 :   
+wflung_gompertz_theta1 :   
+wflung_gompertz_theta2 :   
+wfthyroid_gompertz_theta0 :   
+wfthyroid_gompertz_theta1 :   
+wfthyroid_gompertz_theta2 :   
+> 
 > quit("no")
