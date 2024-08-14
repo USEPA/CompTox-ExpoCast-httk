@@ -425,13 +425,12 @@ Set species=\"Human\" to run httkpop model.')
                              parameters.dt=parameters.dt,
                              samples=samples,
                              adjusted.Clint = adjusted.Clint,
-                             adjusted.Funbound.plasma = adjusted.Funbound.plasma,
+                             adjusted.Funbound.plasma = adjusted.Funbound.plasma),
                              Caco2.options[names(Caco2.options)[
                                !names(Caco2.options) %in%
 # invitro_mc doesn't make use of these arguments because we've already called
 # parameterize_[MODEL]:
-                               c("Caco2.Pab.default", "overwrite.invivo")]]
-                             ),
+                               c("Caco2.Pab.default", "overwrite.invivo")]],
                              invitro.mc.arg.list
                            )
                          )

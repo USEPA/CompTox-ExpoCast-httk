@@ -169,7 +169,7 @@ invitro_mc <- function(parameters.dt=NULL,
     clint.pop.mc <- FALSE
   }
   # Are we doing fup measurmement Monte Carlo?
-  if (is.null(clint.meas.cv))
+  if (is.null(fup.meas.cv))
   {
     fup.meas.mc <- FALSE
   }
