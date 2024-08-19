@@ -2125,6 +2125,22 @@ if (dim(dsstox)[1]>0)
     dsstox <- rbind(not.this.name,this.row)
   }
   
+  # We just did a by-name search, correct bad CASRN and DTXSID
+  for (this.name in unique(dsstox$PREFERRED_NAME))
+  {
+    this.dtxsid <- dsstox[dsstox$PREFERRED_NAME==this.name,"DTXSID"][1]
+    this.cas <- dsstox[dsstox$PREFERRED_NAME==this.name,"CASRN"][1]
+    chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound ==
+                                   this.name,"DTXSID"] <- this.dtxsid
+    chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound ==
+                                   this.name,"CAS"] <- this.cas
+  }
+
+  # Make sure there are no duplicate rows after reading CAS and DTXSID from dashboard:
+  chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
+                                          !duplicated(CAS) &
+                                          !duplicated(DTXSID))
+  
   chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,
                                                          !is.na(CASRN) &
                                                          !(CASRN %in% "N/A")),
@@ -2155,7 +2171,8 @@ chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
 #
 #
 
-write.table(chem.physical_and_invitro.data[,c("SMILES.desalt","CAS")],
+write.table(subset(chem.physical_and_invitro.data,SMILES.desalt != "N/A")[,
+            c("SMILES.desalt","CAS")],
   file="HTTK-AllChems.smi",
   row.names=F,
   sep="\t",
@@ -2201,7 +2218,6 @@ chem.physical_and_invitro.data <- add_chemtable(
     ),
   reference=paste("OPERAv",OPERA.VERSION,sep=""),
   overwrite=T)
-
 
 #
 #
