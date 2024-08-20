@@ -304,7 +304,7 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 {
   /* local */ double Cinh;
 
-  Cinh = Cinhppmv / 24.45 ; // ppmv -> umol/L 
+  Cinh = Cinhppmv / 24.45 ;
 
   yout[ID_Cgut] = y[ID_Agut] / Vgut ;
 
@@ -342,7 +342,7 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   ydot[ID_Agut] = kgutabs * y[ID_Agutlumen] + Qgut * ( yout[ID_Cart] - yout[ID_Cgut] * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma ) ;
 
-  ydot[ID_Aliver] = Qliver * yout[ID_Cart] + Qgut * yout[ID_Cgut] * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma - ( Qliver + Qgut ) * yout[ID_Cliver] / Kliver2pu / Fraction_unbound_plasma * Rblood2plasma - Clmetabolism * yout[ID_Cliver] / Kliver2pu / Fraction_unbound_plasma - Vmax * yout[ID_Cliver] / Kliver2pu / ( Km + yout[ID_Cliver] / Kliver2pu ) ;
+  ydot[ID_Aliver] = Qliver * yout[ID_Cart] + Qgut * yout[ID_Cgut] * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma - ( Qliver + Qgut ) * yout[ID_Cliver] / Kliver2pu / Fraction_unbound_plasma * Rblood2plasma - Clmetabolism * yout[ID_Cliver] / Kliver2pu / Fraction_unbound_plasma * Rblood2plasma - Vmax * yout[ID_Cliver] / Kliver2pu / ( Km + yout[ID_Cliver] / Kliver2pu ) ;
 
   ydot[ID_Aven] = ( ( Qliver + Qgut ) * yout[ID_Cliver] / Kliver2pu + Qkidney * yout[ID_Ckidney] / Kkidney2pu + Qrest * yout[ID_Crest] / Krest2pu + Qlung * yout[ID_Clung] / Klung2pu ) * Rblood2plasma / Fraction_unbound_plasma - Qcardiac * yout[ID_Cven] ;
 
@@ -361,7 +361,7 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
   ydot[ID_AUC] = yout[ID_Cven] / Rblood2plasma ;
 
   ydot[ID_Ainh] = ( Qalv * (  Cinh - yout[ID_Calv] ) ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - Cinh ) ;
-  
+
   ydot[ID_Aexh] = ( Qalv * yout[ID_Calv] ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ;
 
   ydot[ID_Amuc] = ( kUrt * ( Cinh - ( yout[ID_Cmuc] / Kmuc2air ) ) ) - ( kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ) ;

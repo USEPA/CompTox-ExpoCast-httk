@@ -9,9 +9,7 @@ calc_analytic_css_pbtk(
   chem.cas = NULL,
   dtxsid = NULL,
   parameters = NULL,
-  dosing = list(daily.dose = 1),
-  hourly.dose = NULL,
-  dose.units = "mg",
+  hourly.dose = 1/24,
   concentration = "plasma",
   suppress.messages = FALSE,
   recalc.blood2plasma = FALSE,
@@ -37,14 +35,7 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 parameterize_1comp(for model = '1compartment') or parameterize_steadystate 
 (for model = '3compartmentss'), overrides chem.name and chem.cas.}
 
-\item{dosing}{List of dosing metrics used in simulation, which includes
-the namesake entries of a model's associated dosing.params. For steady-state
-calculations this is likely to be either "daily.dose" for oral exposures or
-"Cinhaled" for inhalation.}
-
 \item{hourly.dose}{Hourly dose rate mg/kg BW/h.}
-
-\item{dose.units}{The units associated with the dose received.}
 
 \item{concentration}{Desired concentration type, 'blood', 'tissue', or default 'plasma'.}
 
@@ -52,7 +43,7 @@ calculations this is likely to be either "daily.dose" for oral exposures or
 
 \item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical 
 in the blood to plasma using the input parameters. Use this if you have 
-altered hematocrit, Funbound.plasma, or Krbc2pu.}
+'altered hematocrit, Funbound.plasma, or Krbc2pu.}
 
 \item{tissue}{Desired tissue conentration (defaults to whole body 
 concentration.)}
@@ -67,13 +58,12 @@ as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is tr
 bioactive in vivo. Only works with tissue = NULL in current implementation.}
 
 \item{Caco2.options}{A list of options to use when working with Caco2 apical to
-basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
-Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
+basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
 Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
 fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-See \code{\link{get_fbio}} for further details.}
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
 
 \item{...}{Additional parameters passed to parameterize function if 
 parameters is NULL.}
@@ -83,13 +73,12 @@ Steady state plasma concentration in mg/L units
 }
 \description{
 This function calculates the analytic steady state concentration (mg/L) as a result
-of constant oral infusion dosing. 
-Concentrations are returned for plasma by default, but various
+of oral infusion dosing. Concentrations are returned for plasma by default, but various
 tissues or blood concentrations can also be given as specified.
 }
 \details{
-The PBTK model \insertCite{pearce2017httk}{httk} predicts the amount of chemical in
-various tissues of the body. A system of ordinary
+The PBTK model (Pearce et al., 2017) predicts the amount of chemical in
+various tissues of the body. A system of oridinary
 differential equations describes how the amounts in each tissue change as 
 a function of time. The analytic steady-state equation was found by 
 algebraically solving for the tissue concentrations that result in each
@@ -103,16 +92,16 @@ C_ven_ss =(dose rate * (Q_liver + Q_gut) / (f_up/Rb2p*Cl_metabolism + (Q_liver +
       C_ss = C_ven_ss/Rb2p}
 \deqn{C^{ss}_{tissue} = \frac{K_{tissue:fuplasma}*f_{up}}{R_{b:p}}*C^{ss}_{ven}}{%
        C_tissue_ss = K_tissue2fuplasma*f_up*C_ven_ss/Rb2p}
- where Q_cardiac is the cardiac output, Q_gfr is the glomerular filtration
+ where Q_cardiac is the cardiace output, Q_gfr is the glomerular filtration
 rate in the kidney, other Q's indicate blood flows to various tissues, 
 Cl_metabolism is the chemical-specific whole liver metabolism clearance,
-f_up is the chemical-specific fraction unbound in plasma, R_b2p is the 
+f_up is the chemical-specific fraction unbound n plasma, R_b2p is the 
 chemical specific ratio of concentrations in blood:plasma, K_tissue2fuplasma
-is the chemical- and tissue-specific equilibrium partition coefficient
+is the chemical- and tissue-specufic equilibrium partition coefficient
 and dose rate has  units of mg/kg/day.
 }
 \references{
-\insertAllCited{}
+\insertRef{pearce2017httk}{httk}
 }
 \seealso{
 \code{\link{calc_analytic_css}}

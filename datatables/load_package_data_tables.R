@@ -80,7 +80,7 @@ check_duplicates <- function(
 PKandTISSUEDATAFILE <- "pkdata.xlsx"
 
 physiology.data <- set.precision(read_excel(PKandTISSUEDATAFILE,
-  sheet="Basic PK"))[1:18,]
+  sheet="Basic PK"))[1:16,]
 # Write to text so Git can track changes:
 write.table(physiology.data,
   file="Basic-Physiology.txt",
@@ -1155,7 +1155,6 @@ chem.physical_and_invitro.data <- add_chemtable(
   species="Rat",     
   overwrite=T)
 
-
 chem.physical_and_invitro.data <- check_duplicates(
   chem.physical_and_invitro.data, check.cols="Compound")
 
@@ -1238,49 +1237,12 @@ for (this.row in 1:dim(sipes.bad.cas)[1])
 # LogP of -27.9 is probably bad:
 sipes2017[sipes2017$CAS=="40077-57-4","logP"] <- NA
 
-dim(sipes2017)
-
-# write.table(sipes2017[,1:2],file="Sipes2017forDashboard.txt",
-#             row.names=FALSE,
-#             quote=FALSE,
-#             sep="\t")
-
-# Get the DTXSIDs and updated CASRN from the CCD:
-sipes2017.ccd <- as.data.frame(read_excel("Sipes2017fromDashboard.xlsx",
-                                          sheet=2))
-# Get rid of problematic CAS:
-sipes2017.ccd.bad <- subset(sipes2017.ccd,
-                        regexpr("two or more", FOUND_BY)!=-1 |
-                        regexpr("Found 0 results", FOUND_BY)!= -1)
-sipes2017.ccd <- subset(sipes2017.ccd, !(INPUT %in%sipes2017.ccd.bad$INPUT))
-sipes2017 <- subset(sipes2017, !(CAS %in%sipes2017.ccd.bad$INPUT))
-dim(sipes2017)
-                        
-# Change deleted CAS to what CCD reports:
-sipes2017.ccd.deleted <- subset(sipes2017.ccd,
-                        regexpr("Deleted", FOUND_BY)!=-1)
-for (this.cas in sipes2017.ccd.deleted$INPUT)
-{
-   correct.cas <- sipes2017.ccd.deleted[sipes2017.ccd.deleted$INPUT==this.cas,
-                                       "CASRN"]
-   sipes2017[sipes2017$CAS==this.cas, "CAS"] <- correct.cas
-}
-dim(sipes2017)
-
-# merge in DTXSIDs:
-sipes2017 <- merge(sipes2017,sipes2017.ccd[,c("DTXSID","CASRN")],
-                   by.x = "CAS",
-                   by.y = "CASRN")          
-dim(sipes2017)
-
-
-
 # Store the chemical physprop, but don't add Fup and Clint yet:
 chem.physical_and_invitro.data <- add_chemtable(sipes2017,
                                   current.table=chem.physical_and_invitro.data,
                                   data.list=list(Compound='Compound', 
                                     CAS='CAS',
-                                    DTXSID="DTXSID", 
+                         #           DTXSID="DTXSID", 
 #                                    MW = 'MW', 
 #                                    logP = 'logP',
 #                                    pKa_Donor = 'pKa_Donor', 
@@ -2237,21 +2199,6 @@ chem.physical_and_invitro.data table -- written to nodtxsid.txt.\n")
     file="nodtxsid.txt",row.names=FALSE)
   chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
     !is.na(DTXSID))
-}
-
-# Assign compound name from CCD for chemicals with unique DTXSID but duplicate
-# compound names:
-dup.compounds <- read.csv("duplicate_names.csv")
-for (this.chem in dup.compounds$DTXSID)
-{
-  this.row.dup <- which(dup.compounds$DTXSID == this.chem)
-  this.row.table <- which(chem.physical_and_invitro.data$DTXSID == this.chem)
-  chem.physical_and_invitro.data[this.row.table, "CAS"] <-
-    dup.compounds[this.row.dup, "CASRN"]
-  chem.physical_and_invitro.data[this.row.table, "Compound"] <-
-    dup.compounds[this.row.dup, "PREFERRED_NAME"]
-  chem.physical_and_invitro.data[this.row.table, "Formula"] <-
-    dup.compounds[this.row.dup, "MOLECULAR_FORMULA"]
 }
 
 chem.physical_and_invitro.data <- check_duplicates(

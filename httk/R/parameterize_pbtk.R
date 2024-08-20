@@ -42,14 +42,12 @@
 #' @param dtxsid EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})   
 #' -- the chemical must be identified by either CAS, name, or DTXSIDs
 #' 
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' 
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
-#' 
-#' @param class.exclude Exclude chemical classes identified as outside of 
-#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
 #' 
 #' @param tissuelist Specifies compartment names and tissues groupings.
 #' Remaining tissues in tissue.data are lumped in the rest of the body.
@@ -80,13 +78,12 @@
 #' this value (default is 0.0001).      
 #' 
 #' @param Caco2.options A list of options to use when working with Caco2 apical to
-#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
-#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
 #' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
 #' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 #' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-#' See \code{\link{get_fbio}} for further details.
 #' 
 #' @param minimum.Funbound.plasma \eqn{f_{up}} is not allowed to drop below
 #' this value (default is 0.0001).                                
@@ -95,7 +92,7 @@
 #'
 #' @param liver.density Liver density (defaults to 1.05 g/mL from International Commission on Radiological Protection (1975))
 #'
-#' @param kgutabs Oral absorption rate from gut (determined from Peff)
+#' @param kgutabs Oral absorption rate from gut (defaults to 2.18 1/h from Wambaugh et al. (2018))
 #' 
 #' @return \item{BW}{Body Weight, kg.} 
 #' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
@@ -196,10 +193,9 @@ parameterize_pbtk <- function(
                        suppress.messages=FALSE,
                        restrictive.clearance=TRUE,
                        minimum.Funbound.plasma=0.0001,
-                       class.exclude=TRUE,
                        million.cells.per.gliver= 110, # 10^6 cells/g-liver Carlile et al. (1997)
                        liver.density= 1.05, # g/mL International Commission on Radiological Protection (1975)
-                       kgutabs = NA, # 1/h, Wambaugh et al. (2018)
+                       kgutabs = 2.18, # 1/h, Wambaugh et al. (2018)
                        Caco2.options = NULL
                        )
 {
@@ -219,15 +215,6 @@ parameterize_pbtk <- function(
   chem.cas <- out$chem.cas
   chem.name <- out$chem.name
   dtxsid <- out$dtxsid
-
-# Make sure we have all the parameters we need:
-  check_model(chem.cas=chem.cas, 
-            chem.name=chem.name,
-            dtxsid=dtxsid,
-            model="pbtk",
-            species=species,
-            class.exclude=class.exclude,
-            default.to.human=default.to.human)
   
 # Get the intrinsic hepatic clearance:  
   Clint.list <- get_clint(
@@ -276,7 +263,6 @@ parameterize_pbtk <- function(
                       chem.cas=chem.cas,
                       species=species,
                       default.to.human=default.to.human,
-                      class.exclude=class.exclude,
                       force.human.fup=force.human.clint.fup,
                       suppress.messages=suppress.messages,
                       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
@@ -348,8 +334,8 @@ parameterize_pbtk <- function(
   # Create the list of parameters:
   BW <- this.phys.data["Average BW"]
   hematocrit = this.phys.data["Hematocrit"]
-  
   outlist <- c(outlist,list(BW = as.numeric(BW),
+                            kgutabs = kgutabs, # 1/h
                             Funbound.plasma = fup, # unitless fraction
                             Funbound.plasma.dist = schmitt.params$Funbound.plasma.dist,
                             hematocrit = as.numeric(hematocrit), # unitless ratio
@@ -370,7 +356,6 @@ parameterize_pbtk <- function(
   outlist <- c(outlist,
     Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
       species=species,
-      class.exclude=class.exclude,
       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
       suppress.messages=suppress.messages))
 
@@ -400,7 +385,7 @@ parameterize_pbtk <- function(
    
 # Oral bioavailability parameters:
   outlist <- c(
-    outlist, do.call(get_fbio, args=purrr::compact(c(
+    outlist, do.call(get_fabsgut, args=purrr::compact(c(
     list(
       parameters=outlist,
       dtxsid=dtxsid,
@@ -411,9 +396,6 @@ parameterize_pbtk <- function(
       ),
     Caco2.options))
     ))
-
-  # If provided by argument:
-  if (!is.na(kgutabs)) outlist[["kgutabs"]] <- kgutabs
 
   # Only include parameters specified in modelinfo:
   outlist <- outlist[model.list[["pbtk"]]$param.names]

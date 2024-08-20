@@ -601,16 +601,12 @@ knitr::kable(physiology.data[,c("Parameter","Units","Wolverine")],
              digits=3)
 ```
 
-The tissue volumes and flows are stored separately in tissue.data. Physiological parameters are in the table physiology.data.
+The tissue volumes and flows are stored separately in tissue.data
 ```{r add_a_species2, eval = execute.vignette}
 new.tissue.data <- subset(tissue.data,Species=="Rabbit")
 new.tissue.data$Species <- "Wolverine"
 
 tissue.data <- rbind(tissue.data,new.tissue.data)
-
-new.physiology.data <- physiology.data[,"Rabbit"]
-physiology.data <- rbind(physiology.data, new.physiology.data)
-colnames(physiology.data)[length(colnames(physiology.data))] <- "Wolverine"
 ```
 
 Now we can make predictions for wolverines!

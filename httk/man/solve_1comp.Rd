@@ -22,6 +22,9 @@ solve_1comp(
   iv.dose = FALSE,
   input.units = "mg/kg",
   output.units = NULL,
+  method = "lsoda",
+  rtol = 1e-08,
+  atol = 1e-12,
   default.to.human = FALSE,
   recalc.blood2plasma = FALSE,
   recalc.clearance = FALSE,
@@ -80,6 +83,12 @@ output.units.  Defaults are zero.}
 results. Default, NULL, returns model results in units specified in the
 'modelinfo' file. See table below for details.}
 
+\item{method}{Method used by integrator (deSolve).}
+
+\item{rtol}{Argument passed to integrator (deSolve).}
+
+\item{atol}{Argument passed to integrator (deSolve).}
+
 \item{default.to.human}{Substitutes missing rat values with human values if
 true.}
 
@@ -111,15 +120,14 @@ Defaults value of NULL provides "Agutlumen", "Ccompartment", "Ametabolized",
 "AUC"}
 
 \item{Caco2.options}{A list of options to use when working with Caco2 apical to
-basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
-Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
+basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
+Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
 Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
 fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-See \code{\link{get_fbio}} for further details.}
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
 
-\item{...}{Additional arguments passed to the integrator (deSolve).}
+\item{...}{Additional arguments passed to the integrator.}
 }
 \value{
 A matrix with a column for time(in days) and a column for the
@@ -128,14 +136,7 @@ compartment and the area under the curve (concentration only).
 \description{
 This function solves for the amount or concentration of a chemical in plasma
 for a one compartment model as a function of time based on the dose and
-dosing frequency. 
-The model describes blood concentrations in a single compartment. 
-The volume of distribution
-depends on the physical volume of each tissue and the predicted chemical 
-partitioning into those volumes. 
-Plasma concentration in compartment x is given by 
-\eqn{C_{plasma} = \frac{C_{blood}}{R_{b2p}}} for a tissue independent value of 
-\eqn{R_{b2p}}.
+dosing frequency.
 }
 \details{
 Note that the timescales for the model parameters have units of hours while 

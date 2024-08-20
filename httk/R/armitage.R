@@ -103,15 +103,8 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' the model published in Armitage et al. (2014) include binding to plastic walls
 #' and lipid and protein compartments in cells.
 #' 
-#' @param chem.name A single or vector of name(s)) of desired chemical(s).
-#' @param chem.cas A single or vector of Chemical Abstracts Service Registry 
-#' Number(s) (CAS-RN) of desired chemical(s).
-#' @param dtxsid A single or vector ofEPA's DSSTox Structure ID(s) 
-#' (\url{https://comptox.epa.gov/dashboard})  
 #' 
-#' @param casrn.vector A deprecated argument specifying a single or vector of 
-#' Chemical Abstracts Service Registry 
-#' Number(s) (CAS-RN) of desired chemical(s).
+#' @param casrn.vector For vector or single value, CAS number
 #' 
 #' @param nomconc.vector For vector or single value, micromolar (uM = mol/L) nominal 
 #' concentration (e.g. AC50 value)
@@ -253,7 +246,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' cslip \tab Concentration in serum lipids\tab uM=umol/L \cr         
 #' cdom \tab Concentration in dissolved organic matter\tab uM=umol/L \cr          
 #' ccells \tab Concentration in cells\tab uM=umol/L \cr        
-#' cplastic \tab Concentration in plastic\tab uM=umol/m^2 \cr      
+#' cplastic \tab Concentration in plastic\tab uM=umol/L \cr      
 #' mwat_s \tab Mass dissolved in water \tab umols \cr        
 #' mair \tab Mass in air/head space \tab umols \cr          
 #' mbsa \tab Mass bound to bovine serum albumin \tab umols \cr          
@@ -337,10 +330,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' print(out)
 #' 
 #' @export armitage_eval
-armitage_eval <- function(chem.cas=NULL,
-                          chem.name=NULL,
-                          dtxsid = NULL,
-                          casrn.vector = NA_character_, # vector of CAS numbers
+armitage_eval <- function(casrn.vector = NA_character_, # vector of CAS numbers
                           nomconc.vector = 1, # nominal concentration vector (e.g. apparent AC50 values) in uM = umol/L
                           this.well_number = 384,
                           this.FBSf = NA_real_, # Must be set if not in tcdata, this is the most senstive parameter in the model.
@@ -407,26 +397,8 @@ armitage_eval <- function(chem.cas=NULL,
   Fneutral <- MW <- NULL
   #End R CMD CHECK appeasement.
   
-  if (all(is.na(tcdata)))
-  {
-    if (length(casrn.vector) > 1) chem.cas <- casrn.vector
-    else if (!is.na(casrn.vector)) chem.cas <- casrn.vector
-    
-    if (is.null(chem.cas) & 
-      is.null(chem.name) & 
-      is.null(dtxsid)) 
-    stop('chem.name, chem.cas, or dtxsid must be specified.')
-
-    out <- get_chem_id(chem.cas=chem.cas,
-                     chem.name=chem.name,
-                     dtxsid=dtxsid)
-    chem.cas <- out$chem.cas
-    chem.name <- out$chem.name
-    dtxsid <- out$dtxsid
-
-    tcdata <- data.table(DTXSID = dtxsid,
-                         Compound = chem.name,
-                         casrn = chem.cas,
+  if(all(is.na(tcdata))){
+    tcdata <- data.table(casrn = casrn.vector,
                          nomconc = nomconc.vector,
                          well_number = this.well_number,
                          sarea = this.sarea,
@@ -456,8 +428,7 @@ armitage_eval <- function(chem.cas=NULL,
     
     if(any(is.na(tcdata[missing.rows, well_number]))){
       print(paste0("Either well_number or geometry must be defined for rows: ", 
-                   paste(which(tcdata[, is.na(sarea) & is.na(well_number)]),
-                         collapse = ",")))
+                   paste(which(tcdata[, is.na(sarea) & is.na(well_number)]),collapse = ",")))
       stop()
     }else{
       temp <- armitage_estimate_sarea(tcdata[missing.rows,])
@@ -474,16 +445,11 @@ armitage_eval <- function(chem.cas=NULL,
   }
   
   # Check if required phys-chem parameters are provided:
-  if(!all(c("gkow","logHenry","gswat","MP","MW") %in% names(tcdata)))
-  {
+  if(!all(c("gkow","logHenry","gswat","MP","MW") %in% names(tcdata))){
   # If not, pull them:
     tcdata[, c("gkow","logHenry","logWSol","MP","MW") := 
-             as.data.frame(get_physchem_param(param = c("logP",
-                                                        "logHenry",
-                                                        "logWSol",
-                                                        "MP",
-                                                        "MW"), 
-                                chem.cas = casrn))]
+             as.data.frame(get_physchem_param(param = c("logP","logHenry","logWSol","MP","MW"), 
+                                chem.cas = casrn),row.names = casrn)]
   }
 
   # Convevert from chem.physical_and_invitro.data units to Armitage model units:
@@ -494,15 +460,13 @@ armitage_eval <- function(chem.cas=NULL,
   # components:
   if (restrict.ion.partitioning)
   {
-     if (!all(c("pKa_Donor","pKa_Accept") %in% names(tcdata)))
-     {
-     # If not, pull them:
-       tcdata[, "pKa_Donor" := as.data.frame(get_physchem_param(
-                param = "pKa_Donor", chem.cas = casrn), row.names = casrn)]
-       tcdata[, "pKa_Accept" := as.data.frame(get_physchem_param(
-                param = "pKa_Accept", chem.cas = casrn),row.names = casrn)]
-     }
-     
+    if (!all(c("pKa_Donor","pKa_Accept") %in% names(tcdata)))
+    {
+    # If not, pull them:
+      tcdata[, c("pKa_Donor","pKa_Accept") := 
+               as.data.frame(get_physchem_param(param = c("pKa_Donor","pKa_Accept"), 
+                                  chem.cas = casrn),row.names = casrn)]
+    }
     # Calculate the fraction neutral:
     tcdata[, Fneutral := apply(.SD,1,function(x) calc_ionization(
         pH = this.pH,    
@@ -512,30 +476,23 @@ armitage_eval <- function(chem.cas=NULL,
   } else tcdata[, Fneutral := 1]
   
   manual.input.list <- list(Tsys=this.Tsys, Tref=this.Tref,
-                            option.kbsa2=this.option.kbsa2, 
-                            option.swat2=this.option.swat2,
-                            FBSf=this.FBSf, pseudooct=this.pseudooct, 
-                            memblip=this.memblip,
-                            nlom=this.nlom, P_nlom=this.P_nlom, 
-                            P_dom=this.P_dom, P_cells=this.P_cells,
-                            csalt=this.csalt, celldensity=this.celldensity, 
-                            cellmass=this.cellmass, f_oc=this.f_oc,
-                            conc_ser_alb = this.conc_ser_alb, 
-                            conc_ser_lip = this.conc_ser_lip, Vdom = this.Vdom)
+                            option.kbsa2=this.option.kbsa2, option.swat2=this.option.swat2,
+                            FBSf=this.FBSf, pseudooct=this.pseudooct, memblip=this.memblip,
+                            nlom=this.nlom, P_nlom=this.P_nlom, P_dom=this.P_dom, P_cells=this.P_cells,
+                            csalt=this.csalt, celldensity=this.celldensity, cellmass=this.cellmass, f_oc=this.f_oc,
+                            conc_ser_alb = this.conc_ser_alb, conc_ser_lip = this.conc_ser_lip, Vdom = this.Vdom)
   
   check.list <- c("dsm","duow","duaw","dumw",
                   "gkmw","gkcw","gkbsa","gkpl","ksalt")
   
   req.list <- c("Tsys","Tref","option.kbsa2","option.swat2",
                 "FBSf","pseudooct","memblip","nlom","P_nlom","P_dom","P_cells",
-                "csalt","celldensity","cellmass","f_oc","conc_ser_alb",
-                "conc_ser_lip","Vdom")
+                "csalt","celldensity","cellmass","f_oc","conc_ser_alb","conc_ser_lip","Vdom")
   if(!all(check.list%in%names(tcdata))){
     tcdata[,check.list[!(check.list %in% names(tcdata))]] <- as.double(NA)}
   
   if(!all(req.list%in%names(tcdata))){
-    tcdata[,req.list[!(req.list %in% names(tcdata))]] <- 
-    manual.input.list[!(names(manual.input.list) %in% names(tcdata))]}
+    tcdata[,req.list[!(req.list %in% names(tcdata))]] <- manual.input.list[!(names(manual.input.list) %in% names(tcdata))]}
   
   R <- 8.3144621 # J/(mol*K)
   
@@ -593,8 +550,8 @@ armitage_eval <- function(chem.cas=NULL,
   tcdata[!(is.na(gkbsa)),gkbsa:=gkbsa-duow*Tcor] %>%
     .[!(is.na(gkbsa)),kbsa:=10^gkbsa]
 
-  tcdata[option.kbsa2==TRUE & is.na(gkbsa) & gkow<4.5, kbsa:=10^(1.08*gkow-0.7)] %>%
-    .[option.kbsa2==TRUE & is.na(gkbsa) & gkow>=4.5, kbsa:=10^(0.37*gkow+2.56)]
+  tcdata[option.kbsa2==TRUE & is.na(gkbsa) & gkaw<4.5, kbsa:=10^(1.08*gkow-0.7)] %>%
+    .[option.kbsa2==TRUE & is.na(gkbsa) & gkaw>=4.5, kbsa:=10^(0.37*gkow+2.56)]
 
   tcdata[option.kbsa2==FALSE & is.na(gkbsa),kbsa:=10^(0.71*gkow+0.42)]
 
@@ -606,7 +563,7 @@ armitage_eval <- function(chem.cas=NULL,
     .[MP>298.15,ss.GSE:=ss.GSE*10^(-1*ksalt*csalt)] %>%
     .[,swat_L:=swat/F_ratio] %>%
     .[,kow:=Fneutral*kow/(10^(-1*ksalt*csalt))] %>%
-    .[,kaw:=Fneutral*kaw/(10^(-1*ksalt*csalt))] %>%
+    .[,kaw:=kaw/(10^(-1*ksalt*csalt))] %>%
     .[,kcw:=Fneutral*kcw/(10^(-1*ksalt*csalt))] %>%
     .[,kbsa:=Fneutral*kbsa/(10^(-1*ksalt*csalt))]
 
