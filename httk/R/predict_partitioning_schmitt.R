@@ -47,50 +47,35 @@
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
 #' specified. 
-#'
 #' @param chem.cas Either the chemical name or the CAS number must be
 #' specified. 
-#'
 #' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
-#'
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
-#'
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
-#'
 #' @param parameters Chemical parameters from \code{\link{parameterize_schmitt}}
 #' overrides chem.name, dtxsid, and chem.cas.
-#'
 #' @param alpha Ratio of Distribution coefficient D of totally charged species
 #' and that of the neutral form
-#'
 #' @param adjusted.Funbound.plasma Whether or not to use Funbound.plasma
 #' adjustment.
-#'
 #' @param regression Whether or not to use the regressions.  Regressions are
 #' used by default.
-#'
 #' @param regression.list Tissues to use regressions on.
-#'
 #' @param tissues Vector of desired partition coefficients.  Returns all by
 #' default.
-#'
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
-#'
 #' @param suppress.messages Whether or not the output message is suppressed.
-#'
 #' @param model Model for which partition coefficients are neeeded (for example,
 #' "pbtk", "3compartment")
 #'
 #' @seealso \code{\link{parameterize_schmitt}}
 #'
 #' @seealso \code{\link{tissue.data}}
-#'
-#' @seealso \code{\link{calc_ma}}
 #' 
 #' @return Returns tissue to unbound plasma partition coefficients for each
 #' tissue.
@@ -177,14 +162,10 @@ predict_partitioning_schmitt <- function(
       dtxsid=dtxsid,
       species=species,
       default.to.human=default.to.human,
-      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
       minimum.Funbound.plasma=minimum.Funbound.plasma,
       suppress.messages=suppress.messages)
     user.params <- F
   } else {
-  # Work with local copy of parameters in function(scoping):
-    if (is.data.table(parameters)) parameters <- copy(parameters)
-    
     user.params <- T
     if (!"plasma.pH"%in%names(parameters)) parameters$plasma.pH <- 7.4
     if (!"Fprotein.plasma"%in%names(parameters)) 
@@ -209,9 +190,10 @@ Fraction unbound for species below limit of detection, cannot predict partitioni
 # If we don't have a measured value, use Yun & Edgington (2013):
   if (any(is.na(parameters$MA)))
   {
+     if (!suppress.messages) warning(
+"Membrane affintity (MA) predicted with method of Yun and Edginton (2013)")  
     parameters$MA[is.na(parameters$MA)] <- 
-      calc_ma(parameters = parameters,
-              suppress.messages = suppress.messages)
+      10^(1.294 + 0.304 * log10(parameters$Pow))
   }   
   
   if(! tolower(species) %in% c('rat','human')){

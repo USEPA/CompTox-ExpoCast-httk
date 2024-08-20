@@ -95,9 +95,8 @@ calc_hep_bioavailability <- function(
   
   if (!"Clmetabolismc" %in% names(parameters))
     parameters[["Clmetabolismc"]] <- calc_hep_clearance(parameters=parameters,
-                                                        restrictive.clearance=restrictive.clearance,
-                                                        hepatic.model='unscaled',
-                                                        suppress.messages=TRUE) #L/h/kg body weight
+                                                           hepatic.model='unscaled',
+                                                           suppress.messages=TRUE)#L/h/kg body weight
   
   if (!all(c("Qtotal.liverc","Funbound.plasma","Clmetabolismc","Rblood2plasma") 
     %in% names(parameters))) 
@@ -110,10 +109,19 @@ calc_hep_bioavailability <- function(
     parameters$Qtotal.liverc <- parameters$Qtotal.liverc/parameters$BW^0.25 
   }
 
-  bioavail <- (parameters$Qtotal.liverc / 
+  if (restrictive.clearance) 
+  {
+    bioavail <- (parameters$Qtotal.liverc / 
+    (parameters$Qtotal.liverc + 
+    parameters$Funbound.plasma * 
+      parameters$Clmetabolismc / 
+      parameters$Rblood2plasma))
+  } else {
+    bioavail <- (parameters$Qtotal.liverc / 
     (parameters$Qtotal.liverc + 
       parameters$Clmetabolismc / 
       parameters$Rblood2plasma))
+  }
       
   return(set_httk_precision(bioavail))
 }

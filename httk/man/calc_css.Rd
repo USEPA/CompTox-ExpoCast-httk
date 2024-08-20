@@ -13,8 +13,6 @@ calc_css(
   f = 0.01,
   daily.dose = 1,
   doses.per.day = 3,
-  dose.units = "mg/kg",
-  route = "oral",
   days = 21,
   output.units = "uM",
   suppress.messages = FALSE,
@@ -51,12 +49,7 @@ the average concentration must come within to be considered at steady state.}
 
 \item{daily.dose}{Total daily dose, mg/kg BW.}
 
-\item{doses.per.day}{Number of oral doses per day.}
-
-\item{dose.units}{The units associated with the dose received.}
-
-\item{route}{Route of exposure (either "oral", "iv", or "inhalation"
-default "oral").}
+\item{doses.per.day}{Number of doses per day.}
 
 \item{days}{Initial number of days to run simulation that is multiplied on
 each iteration.}

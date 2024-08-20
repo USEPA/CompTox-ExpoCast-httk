@@ -64,27 +64,12 @@ httkpop_mc <- function(model,
 
 # Generate the initial physiology data from NHANES biometrics:
   if (is.null(httkpop.dt))
-  {
-     httkpop.dt <- do.call(
+    httkpop.dt <- do.call(
                         httkpop_generate,
                         args=list(nsamp=samples,...))
-  } else {
-    # Needed for scoping (work with local table only):
-    httkpop.dt <- copy(httkpop.dt)  
-  }
-  
   # Convert HTTK-Pop-generated parameters to HTTK physiological parameters
-  physiology.dt <- httkpop.dt
-  if (!is.null(model.list[[model]]$calc.standard.httkpop2httk))
-  {
-    if (model.list[[model]]$calc.standard.httkpop2httk)
-    {
-      physiology.dt <- httkpop_biotophys_default(indiv_dt = httkpop.dt)
-    }
-  } else {
-    warning(paste0("Warning calc.standard.httkpop2httk not set in modelinfo file for model ",
-                   model))
-  }
+  if (model.list[[model]]$calc.standard.httkpop2httk)
+    physiology.dt <- httkpop_biotophys_default(indiv_dt = httkpop.dt)
   
   # set precision:
   cols <- colnames(physiology.dt)

@@ -4,31 +4,29 @@
 # "Evaluation of a rapid, generic human gestational dose model."
 # Reproductive Toxicology 113 (2022): 172-188.
 
-# Model identifier for the model.list:
-THIS.MODEL <- "fetal_pbtk" 
 
 #Analytic expression for steady-state plasma concentration.
-#model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_fetal_pbtk" <function not yet developed
+#model.list[["fetal_pbtk"]]$analytic.css.func <- "calc_analytic_css_fetal_pbtk" <function not yet developed
 
 # When calculating steady-state, which compartment do we test? 
 # ("C" is preprended):
-model.list[[THIS.MODEL]]$steady.state.compartment <- "plasma"
+model.list[["fetal_pbtk"]]$steady.state.compartment <- "plasma"
                                               
 # What units does the analytic function return:
-model.list[[THIS.MODEL]]$steady.state.units <- "mg/L"
+model.list[["fetal_pbtk"]]$steady.state.units <- "mg/L"
 
 # Function used for generating model parameters:
-model.list[[THIS.MODEL]]$parameterize.func <- "parameterize_fetal_pbtk"
+model.list[["fetal_pbtk"]]$parameterize.func <- "parameterize_fetal_pbtk"
 
 # Function called for running the model:
-model.list[[THIS.MODEL]]$solve.func <- "solve_fetal_pbtk"
+model.list[["fetal_pbtk"]]$solve.func <- "solve_fetal_pbtk"
 
 # Here are the tissues from tissue.data that are considered (for example,
 # do we include placenta or not? Here, yes we do). They should correspond
 # in name to the names present in the tissue.data object, if the parameters
 # necessary for describing the tissue/compartment aren't going to be provided
 # otherwise.
-model.list[[THIS.MODEL]]$alltissues=c(
+model.list[["fetal_pbtk"]]$alltissues=c(
   "adipose",
   "bone",            
   "brain",           
@@ -49,7 +47,7 @@ model.list[[THIS.MODEL]]$alltissues=c(
 # the model: The fetal_pbtk model has liver, kidney, gut, and lung compartments
 # that draw info from tissue.data; everything else from alltissues should be 
 # lumped.
-model.list[[THIS.MODEL]]$tissuelist=list(
+model.list[["fetal_pbtk"]]$tissuelist=list(
   adipose = c("adipose"),
   brain = c("brain"),
   gut = c("gut"),
@@ -63,7 +61,7 @@ model.list[[THIS.MODEL]]$tissuelist=list(
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
-model.list[[THIS.MODEL]]$param.names <- c(
+model.list[["fetal_pbtk"]]$param.names <- c(
   "pre_pregnant_BW",
   "BW",                           
   "Clint",
@@ -219,7 +217,7 @@ model.list[[THIS.MODEL]]$param.names <- c(
 #
 # String representations of the R version of names of
 # the parameters are assigned to the C variable name in this scheme.
-model.list[[THIS.MODEL]]$Rtosolvermap <- list(
+model.list[["fetal_pbtk"]]$Rtosolvermap <- list(
   pre_pregnant_BW = "pre_pregnant_BW",
   Clmetabolismc = "Clmetabolismc",
   kgutabs = "kgutabs",
@@ -353,7 +351,7 @@ model.list[[THIS.MODEL]]$Rtosolvermap <- list(
 
 # This function translates the R model parameters into the compiled model
 # parameters:
-model.list[[THIS.MODEL]]$compiled.parameters.init <- "getParmsfetal_pbtk"
+model.list[["fetal_pbtk"]]$compiled.parameters.init <- "getParmsfetal_pbtk"
 
 # This needs to be a global variable so that R CMD check --as-cran can test
 # the code (the HTTK package does not use this):
@@ -363,7 +361,7 @@ compiled_parameters_init <- "getParmsfetal_pbtk"
 # calculate the derivative of the system of equations describing the model.
 # The order agrees with the order present in the associated .model / .C 
 # file's listing of parameters. 
-model.list[[THIS.MODEL]]$compiled.param.names <- c(
+model.list[["fetal_pbtk"]]$compiled.param.names <- c(
   "pre_pregnant_BW",
   "Clmetabolismc",
   "Clmetabolism",
@@ -507,15 +505,15 @@ model.list[[THIS.MODEL]]$compiled.param.names <- c(
 )
 
 # This function initializes the state vector for the compiled model:
-model.list[[THIS.MODEL]]$compiled.init.func <- "initmodfetal_pbtk"
+model.list[["fetal_pbtk"]]$compiled.init.func <- "initmodfetal_pbtk"
 
 # This is the function that calculates the derivative of the model as a function
 # of time, state, and parameters:
-model.list[[THIS.MODEL]]$derivative.func <- "derivsfetal_pbtk"
+model.list[["fetal_pbtk"]]$derivative.func <- "derivsfetal_pbtk"
 
 # This is the ORDERED list of variables returned by the derivative function
 # (from Model variables: Outputs):
-model.list[[THIS.MODEL]]$derivative.output.names <- c(
+model.list[["fetal_pbtk"]]$derivative.output.names <- c(
   "Cgut",
   "Cliver",
   "Cven",
@@ -565,7 +563,7 @@ model.list[[THIS.MODEL]]$derivative.output.names <- c(
 
 #Which variables to track by default (should be able to build this from
 #state vars and outputs):
-model.list[[THIS.MODEL]]$default.monitor.vars <- c(
+model.list[["fetal_pbtk"]]$default.monitor.vars <- c(
   "Cgut",
   "Cliver",
   "Cven",
@@ -595,42 +593,36 @@ model.list[[THIS.MODEL]]$default.monitor.vars <- c(
   "Rfblood2plasma")
 
 # Allowable units assigned to dosing input:
-model.list[[THIS.MODEL]]$allowed.units.input <- list(
+model.list[["fetal_pbtk"]]$allowed.units.input <- list(
   "oral" = c('umol','mg','mg/kg'),
   "iv" = c('umol','mg','mg/kg'))
 
 # Allowable units assigned to entries in the output columns of the ode system
-model.list[[THIS.MODEL]]$allowed.units.output <- list(
+model.list[["fetal_pbtk"]]$allowed.units.output <- list(
   "oral" = c('uM','mg/L','umol','mg','uM*days',
              'mg/L*days',"unitless","L"),
   "iv" = c('uM','mg/L','umol','mg','uM*days',
              'mg/L*days',"unitless","L"))
 
 ## These parameters specify the exposure scenario simulated by the model:
-model.list[[THIS.MODEL]]$routes <- list(
+model.list[["fetal_pbtk"]]$routes <- list(
   "oral" = list(
-    # We need to know which compartment gets the dose 
+# We need to know which compartment gets the dose 
     "entry.compartment" = "Agutlumen",
-    # desolve events can take the values "add" to add dose C1 <- C1 + dose,
-    # "replace" to change the value C1 <- dose
-    # or "multiply" to change the value to C1 <- C1*dose
-    "dose.type" = "add",
-    "dosing.params" = c("daily.dose",
-                        "initial.dose",
-                        "doses.per.day",
-                        "dosing.matrix")),
+# desolve events can take the values "add" to add dose C1 <- C1 + dose,
+# "replace" to change the value C1 <- dose
+# or "multiply" to change the value to C1 <- C1*dose
+    "dose.type" = "add"),
   "iv" = list(
     "entry.compartment" = "Aven",
-    "dose.type" = "add",
-    "dosing.params" = c("initial.dose",
-                        "dosing.matrix"))
+    "dose.type" = "add")
   )
 
 # ORDERED LIST of state variables (must match Model variables: 
 # States in C code, each of which is associated with a differential equation),
 # mostly calculated in amounts, though AUC (area under plasma concentration
 # curve) also appears here: 
-model.list[[THIS.MODEL]]$state.vars <- c(
+model.list[["fetal_pbtk"]]$state.vars <- c(
   "Agutlumen",
   "Agut",
   "Aliver",
@@ -661,7 +653,7 @@ model.list[[THIS.MODEL]]$state.vars <- c(
 # variables of the model system including state variables and any transformed
 # outputs (for example, concentrations calculated from amounts.)
 # AUC values should also be included.
-model.list[[THIS.MODEL]]$compartment.units <- c(
+model.list[["fetal_pbtk"]]$compartment.units <- c(
   "Agutlumen" = "umol",
   "Agut" = "umol",
   "Aliver" = "umol",
@@ -734,10 +726,10 @@ model.list[[THIS.MODEL]]$compartment.units <- c(
 
 # Compartment state of matter, needed for proper unit conversion, if all
 # comaprtments of the same only include one state and set it to "all":
-model.list[[THIS.MODEL]]$compartment.state <- list(liquid="all")
+model.list[["fetal_pbtk"]]$compartment.state <- list(liquid="all")
        
 #Parameters needed to make a prediction (this is used by get_cheminfo):
-model.list[[THIS.MODEL]]$required.params <- c(
+model.list[["fetal_pbtk"]]$required.params <- c(
   "Clint",
   "Funbound.plasma",
   "Pow",
@@ -747,20 +739,19 @@ model.list[[THIS.MODEL]]$required.params <- c(
   )
 
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
-model.list[[THIS.MODEL]]$calcpc <- TRUE
+model.list[["fetal_pbtk"]]$calcpc <- TRUE
   
 # Do we need to recalculate first pass metabolism when doing Monte Carlo?
-model.list[[THIS.MODEL]]$firstpass <- FALSE
+model.list[["fetal_pbtk"]]$firstpass <- FALSE
 
 # Do we ignore the Fups where the value was below the limit of detection?
-model.list[[THIS.MODEL]]$exclude.fup.zero <- TRUE
+model.list[["fetal_pbtk"]]$exclude.fup.zero <- TRUE
 
 # These are the parameter names needed to describe steady-state dosing:
-model.list[[THIS.MODEL]]$css.dosing.params <- list(
-  oral=c("hourly.dose"))
+model.list[["fetal_pbtk"]]$css.dosing.params <- c("hourly.dose")
 
 # Filter out volatile compounds with Henry's Law Constant Threshold
-model.list[[THIS.MODEL]]$log.henry.threshold <- c(-4.5)
+model.list[["fetal_pbtk"]]$log.henry.threshold <- c(-4.5)
 
 # Filter out compounds belonging to select chemical classes
-model.list[[THIS.MODEL]]$chem.class.filt <- c("PFAS")
+model.list[["fetal_pbtk"]]$chem.class.filt <- c("PFAS")

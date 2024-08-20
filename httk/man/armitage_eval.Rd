@@ -5,9 +5,6 @@
 \title{Evaluate the updated Armitage model}
 \usage{
 armitage_eval(
-  chem.cas = NULL,
-  chem.name = NULL,
-  dtxsid = NULL,
   casrn.vector = NA_character_,
   nomconc.vector = 1,
   this.well_number = 384,
@@ -39,17 +36,7 @@ armitage_eval(
 )
 }
 \arguments{
-\item{chem.cas}{A single or vector of Chemical Abstracts Service Registry 
-Number(s) (CAS-RN) of desired chemical(s).}
-
-\item{chem.name}{A single or vector of name(s)) of desired chemical(s).}
-
-\item{dtxsid}{A single or vector ofEPA's DSSTox Structure ID(s) 
-(\url{https://comptox.epa.gov/dashboard})}
-
-\item{casrn.vector}{A deprecated argument specifying a single or vector of 
-Chemical Abstracts Service Registry 
-Number(s) (CAS-RN) of desired chemical(s).}
+\item{casrn.vector}{For vector or single value, CAS number}
 
 \item{nomconc.vector}{For vector or single value, micromolar (uM = mol/L) nominal 
 concentration (e.g. AC50 value)}
@@ -187,7 +174,7 @@ calb \tab Concentration in serum albumin\tab uM=umol/L \cr
 cslip \tab Concentration in serum lipids\tab uM=umol/L \cr         
 cdom \tab Concentration in dissolved organic matter\tab uM=umol/L \cr          
 ccells \tab Concentration in cells\tab uM=umol/L \cr        
-cplastic \tab Concentration in plastic\tab uM=umol/m^2 \cr      
+cplastic \tab Concentration in plastic\tab uM=umol/L \cr      
 mwat_s \tab Mass dissolved in water \tab umols \cr        
 mair \tab Mass in air/head space \tab umols \cr          
 mbsa \tab Mass bound to bovine serum albumin \tab umols \cr          

@@ -1,29 +1,22 @@
-# Physiologically-Based Toxicokinetic Model including Gas Inhalation
-#
-# Linakis et al. (2020), Journal of Exposure Science and Environmental Epidemiology
-
-# Model identifier for the model.list:
-THIS.MODEL <- "gas_pbtk"
-
 #Analytic expression for steady-state plasma concentration.
-#model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_gas" # added by MB 4/8/2020
+#model.list[["gas_pbtk"]]$analytic.css.func <- "calc_analytic_css_gas" # added by MB 4/8/2020
 
 # When calculating steady-state, which compartment do we test? 
 # ("C" is preprended):
-model.list[[THIS.MODEL]]$steady.state.compartment <- "plasma"
+model.list[["gas_pbtk"]]$steady.state.compartment <- "plasma"
 
 # What units does the analytic function return:
-model.list[[THIS.MODEL]]$steady.state.units <- "mg/L"
+model.list[["gas_pbtk"]]$steady.state.units <- "mg/L"
 
 # The is the R function for generating model parameters:
-model.list[[THIS.MODEL]]$parameterize.func <- "parameterize_gas_pbtk" 
+model.list[["gas_pbtk"]]$parameterize.func <- "parameterize_gas_pbtk" 
 
 # Function called for running the model:
-model.list[[THIS.MODEL]]$solve.func <- "solve_gas_pbtk"
+model.list[["gas_pbtk"]]$solve.func <- "solve_gas_pbtk"
 
 # Here are the tissues from tissue.data that are considered (for example,
 # do we include placenta or not?):
-model.list[[THIS.MODEL]]$alltissues=c(
+model.list[["gas_pbtk"]]$alltissues=c(
   "adipose",
   "bone",            
   "brain",           
@@ -42,7 +35,7 @@ model.list[[THIS.MODEL]]$alltissues=c(
 # the model: The gas PBTK model has liver, kidney, gut, and lung compartments 
 # that draw info from tissue.data; everything else from alltissues should be 
 # lumped.
-model.list[[THIS.MODEL]]$tissuelist=list(
+model.list[["gas_pbtk"]]$tissuelist=list(
   liver=c("liver"),
   kidney=c("kidney"),
   lung=c("lung"),
@@ -51,7 +44,7 @@ model.list[[THIS.MODEL]]$tissuelist=list(
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
-model.list[[THIS.MODEL]]$param.names <- c(
+model.list[["gas_pbtk"]]$param.names <- c(
   "BW",
   "Clint",
   "Clint.dist",
@@ -102,7 +95,7 @@ model.list[[THIS.MODEL]]$param.names <- c(
                     
 # This subset of R parameters are needed to initially parametrize the compiled
 # code for the solver: (must match ORDER under "parameters" in C code)
-model.list[[THIS.MODEL]]$Rtosolvermap <- list(
+model.list[["gas_pbtk"]]$Rtosolvermap <- list(
   BW="BW",
   Clmetabolismc="Clmetabolismc",
   vmax = "vmax", #MWL 8-1-19
@@ -139,11 +132,11 @@ model.list[[THIS.MODEL]]$Rtosolvermap <- list(
 
 # This function translates the R model parameters into the compiled model
 # parameters:
-model.list[[THIS.MODEL]]$compiled.parameters.init <- "getParms_gas_pbtk"
+model.list[["gas_pbtk"]]$compiled.parameters.init <- "getParms_gas_pbtk"
 
 # This is the ORDERED full list of parameters used by the compiled code to 
 # calculate the derivative of the system of equations describing the model 
-model.list[[THIS.MODEL]]$compiled.param.names <- c(
+model.list[["gas_pbtk"]]$compiled.param.names <- c(
   "BW",
   "Clmetabolismc",
   "vmax",
@@ -201,21 +194,21 @@ model.list[[THIS.MODEL]]$compiled.param.names <- c(
 )
 
 # This function initializes the state vector for the compiled model:
-model.list[[THIS.MODEL]]$compiled.init.func <- "initmod_gas_pbtk"
+model.list[["gas_pbtk"]]$compiled.init.func <- "initmod_gas_pbtk"
 
 # This is the function that calculates the derviative of the model as a function
 # of time, state, and parameters:
-model.list[[THIS.MODEL]]$derivative.func <- "derivs_gas_pbtk"
+model.list[["gas_pbtk"]]$derivative.func <- "derivs_gas_pbtk"
 
 # This is the ORDERED list of input variables given to the C code by the solver
 # (from Forcing (Input) functions -- forc):
-model.list[[THIS.MODEL]]$input.var.names <- c(
+model.list[["gas_pbtk"]]$input.var.names <- c(
   "Cinhppmv"
   )
   
 # This is the ORDERED list of variables returned by the derivative function
 # (from Model variables: Outputs):
-model.list[[THIS.MODEL]]$derivative.output.names <- c(
+model.list[["gas_pbtk"]]$derivative.output.names <- c(
   "Cgut",
   "Cliver",
   "Cven",
@@ -225,18 +218,18 @@ model.list[[THIS.MODEL]]$derivative.output.names <- c(
   "Ckidney",
   "Cplasma",
   "Aplasma",
-  "Calvppmv", # SED 06-12-2021
   "Calv",
-  "Cendexhppmv", # SED 06-12-2021
+  "Calvppmv", # SED 06-12-2021
   "Cendexh",
-  "Cmixexhppmv", # SED 06-12-2021
+  "Cendexhppmv", # SED 06-12-2021
   "Cmixexh",
+  "Cmixexhppmv", # SED 06-12-2021
   "Cmuc"
   )
 
 #list of variables to be monitored (plotted). This list should be able to be
 #constructed from states and outputs. 
-model.list[[THIS.MODEL]]$default.monitor.vars <- c(
+model.list[["gas_pbtk"]]$default.monitor.vars <- c(
   "Cgut",
   "Cliver",
   "Cven",
@@ -258,13 +251,13 @@ model.list[[THIS.MODEL]]$default.monitor.vars <- c(
   )
 
 # Allowable units assigned to dosing input:
-model.list[[THIS.MODEL]]$allowed.units.input <- list(
+model.list[["gas_pbtk"]]$allowed.units.input <- list(
     "oral" = c('umol','mg','mg/kg'),
     "iv" = c('umol','mg','mg/kg'),
     "inhalation" = c('ppmv','mg/L','mg/m^3','uM','umol','mg'))
 
 # Allowable units assigned to entries in the output columns of the ode system
-model.list[[THIS.MODEL]]$allowed.units.output <- list(
+model.list[["gas_pbtk"]]$allowed.units.output <- list(
        "oral" = c('uM','mg/L','ppmv','umol','mg','uM*days',
                   'mg/L*days','mg/m^3','mg/m^3*days'),
        "iv" = c('uM','mg/L','ppmv','umol','mg','uM*days','mg/L*days',
@@ -276,7 +269,7 @@ model.list[[THIS.MODEL]]$allowed.units.output <- list(
 # variables of the model system including state variables and any transformed
 # outputs (for example, concentrations calculated from amounts.)
 # AUC values should also be included.
-model.list[[THIS.MODEL]]$compartment.units <- c(
+model.list[["gas_pbtk"]]$compartment.units <- c(
                                           "Ainh"="umol",
                                           "Aexh"="umol",
                                           "Aart"="umol",
@@ -312,7 +305,7 @@ model.list[[THIS.MODEL]]$compartment.units <- c(
 
 # Compartment state of matter, needed for proper unit conversion, if all
 # comaprtments of the same only include one state and set it to "all":
-model.list[[THIS.MODEL]]$compartment.state <- list(
+model.list[["gas_pbtk"]]$compartment.state <- list(
   liquid = c("Ainh",
              "Aexh",
              "Aart",
@@ -349,41 +342,34 @@ model.list[[THIS.MODEL]]$compartment.state <- list(
   )
 
 # These parameters specify the exposure scenario simulated by the model:
-#model.list[[THIS.MODEL]]$dosing.params <- c(
-#  "initial.dose",
-#  "daily.dose",
-#  "doses.per.day",
-#  "dosing.matrix",
-#  "forcings")
+model.list[["gas_pbtk"]]$dosing.params <- c(
+  "initial.dose",
+  "daily.dose",
+  "doses.per.day",
+  "dosing.matrix",
+  "forcings")
 
-model.list[[THIS.MODEL]]$routes <- list(
+model.list[["gas_pbtk"]]$routes <- list(
   "oral" = list(
-    # We need to know which compartment gets the dose 
+# We need to know which compartment gets the dose 
     "entry.compartment" = "Agutlumen",
-    # desolve events can take the values "add" to add dose C1 <- C1 + dose,
-    # "replace" to change the value C1 <- dose
-    # or "multiply" to change the value to C1 <- C1*dose
-    "dose.type" = "add",
-    "dosing.params" = c("daily.dose",
-                        "initial.dose",
-                        "doses.per.day",
-                        "dosing.matrix")),
+# desolve events can take the values "add" to add dose C1 <- C1 + dose,
+# "replace" to change the value C1 <- dose
+# or "multiply" to change the value to C1 <- C1*dose
+    "dose.type" = "add"),
   "iv" = list(
     "entry.compartment" = "Aven",
-    "dose.type" = "add",
-    "dosing.params" = c("initial.dose",
-                        "dosing.matrix")),
+    "dose.type" = "add"),
   "inhalation" = list(
     "entry.compartment" = "Cinhppmv",
-    "dose.type" = "replace",
-    "dosing.params" = "forcings")   
+    "dose.type" = "replace")   
   )
 
 # This ORDERED LIST of variables are always calculated in amounts (must match
 # Model variables: States in C code): 
 # NOTE: C code Input variables (i.e. those that get forcing data) should not 
 #       be included in this list. See 'input.var.names' for C Input variables.
-model.list[[THIS.MODEL]]$state.vars <- c(
+model.list[["gas_pbtk"]]$state.vars <- c(
     "Agutlumen",
     "Agut",
     "Aliver",
@@ -401,7 +387,7 @@ model.list[[THIS.MODEL]]$state.vars <- c(
     )        
        
 #Parameters needed to make a prediction (this is used by get_cheminfo):
-model.list[[THIS.MODEL]]$required.params <- c(
+model.list[["gas_pbtk"]]$required.params <- c(
   "Clint",
   "Funbound.plasma",
   "Pow",
@@ -412,32 +398,28 @@ model.list[[THIS.MODEL]]$required.params <- c(
    )
 
 # Do we ignore the Fups where the value was below the limit of detection?
-model.list[[THIS.MODEL]]$exclude.fup.zero <- TRUE
+model.list[["gas_pbtk"]]$exclude.fup.zero <- TRUE
   
 #Key forcings objects and names: name of forcing function as it appears in 
 #.c model code for specification to ode solver (initforc), fcontrol list
 #of arguments for fine-tuning inhalation forcing function in conjunction
 #with existing ode integrator methods. Forcings series handled in model 
 #solver itself
-model.list[[THIS.MODEL]]$forcings.materials <- list(initforc="initforc_gas_pbtk",
+model.list[["gas_pbtk"]]$forcings.materials <- list(initforc="initforc_gas_pbtk",
   fcontrol = list(method='constant',rule=2,f=0))
 
 # These are the parameter names needed to describe steady-state dosing:
-model.list[[THIS.MODEL]]$css.dosing.params <- list(
-  inhalation=c("exp.conc", "period", "exp.duration"),
-  oral=c("hourly.dose"))
-  
+model.list[["gas_pbtk"]]$css.dosing.params <- c("exp.conc", "period", "exp.duration")
 
 # Function for calculating Clmetabolismc after Clint is varied:
-model.list[[THIS.MODEL]]$propagateuv.func <- "propagate_invitrouv_pbtk"
-
+model.list[["gas_pbtk"]]$propagateuv.func <- "propagate_invitrouv_pbtk"
 # If httk-pop is enabled:
 # Function for converting httk-pop physiology to model parameters:
-model.list[[THIS.MODEL]]$convert.httkpop.func <- NULL
+model.list[["gas_pbtk"]]$convert.httkpop.func <- NULL
 # We want all the standard physiological calculations performed:
-model.list[[THIS.MODEL]]$calc.standard.httkpop2httk <- TRUE
+model.list[["gas_pbtk"]]$calc.standard.httkpop2httk <- TRUE
 # These are the model parameters that are impacted by httk-pop:
-model.list[[THIS.MODEL]]$httkpop.params <- c(
+model.list[["gas_pbtk"]]$httkpop.params <- c(
   "BW",
   "Fabsgut",
   "hematocrit",
@@ -458,17 +440,14 @@ model.list[[THIS.MODEL]]$httkpop.params <- c(
   "Vvenc")
 
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
-model.list[[THIS.MODEL]]$calcpc <- TRUE
+model.list[["gas_pbtk"]]$calcpc <- TRUE
 
 
 # Do we need to recalculate first pass metabolism when doing Monte Carlo?
-model.list[[THIS.MODEL]]$firstpass <- FALSE
+model.list[["gas_pbtk"]]$firstpass <- FALSE
 
 # Do we ignore the Fups where the value was below the limit of detection?
-# model.list[[THIS.MODEL]]$exclude.fup.zero <- TRUE
+# model.list[["gas_pbtk"]]$exclude.fup.zero <- TRUE
 
 # Filter out compounds belonging to select chemical classes
-model.list[[THIS.MODEL]]$chem.class.filt <- c("PFAS")
-
-# Different systems of equations are better suited to different ODE solvers:
-model.list[[THIS.MODEL]]$default.solver.method <- "lsode"
+model.list[["gas_pbtk"]]$chem.class.filt <- c("PFAS")

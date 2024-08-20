@@ -165,7 +165,7 @@ parallel::clusterExport(cl = cluster,
               varlist = 'tmpfun')
 #Set seeds on all workers for reproducibility
 parallel::clusterSetRNGStream(cluster, 
-                              010180)
+                              TeachingDemos::char2seed("Caroline Ring"))
 out_vi <- parallel::clusterMap(cl=cluster,
                   fun = tmpfun,
                   gendernum=gendernum,
