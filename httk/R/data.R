@@ -1338,35 +1338,23 @@
 #'
 #' This data set contains values from Davies and Morris (1993) necessary to
 #' paramaterize a toxicokinetic model for human, mouse, rat, dog, or rabbit.
-#' The temperature for each species are taken from Reece (2015),
-#' Jordon (1995), and Stammers (1926). Mean residence time for the small 
-#' intestine is from Grandoni et al. (2019). Human small intestine radius is
-#' from Yu et al. (1999). Rat small intestine radius is from Griffin and
-#' O'Driscoll (2008).
+#' The temperature for each species are taken from Robertshaw et al. (2004),
+#' Gordon (1993), and Stammers(1926).
+#'
 #'
 #' @docType data
-#' 
-#' @format A data.frame containing 18 rows and 7 columns.
-#' 
+#' @format A data.frame containing 11 rows and 7 columns.
 #' @author John Wambaugh and Nisha Sipes
-#' 
-#' @references 
-#' \insertRef{davies1993physiological}{httk}
-#' 
-#' \insertRef{brown1997physiological}{httk}
-#'
-#' \insertRef{birnbaum1994physiological}{httk}
-#'
-#' \insertRef{reece201514}{httk}
-#'
-#' \insertRef{stammers1926blood}{httk}
-#' 
-#' \insertRef{jordan1995temperature}{httk}
-#'
-#' \insertRef{grandoni2019building}{httk}
-#'
-#' \insertRef{griffin2008models}{httk} 
-#'
+#' @references Davies, B. and Morris, T. (1993). Physiological Parameters in
+#' Laboratory Animals and Humans. Pharmaceutical Research 10(7), 1093-1095,
+#' 10.1023/a:1018943613122.  %gfr and other flows Anderson and Holford (2009)
+#' %scaling gfr by 3/4 Robertshaw, D., Temperature Regulation and Thermal
+#' Environment, in Dukes' Physiology of Domestic Animals, 12th ed., Reece W.O.,
+#' Ed. Copyright 2004 by Cornell University.  Stammers (1926) The blood count
+#' and body temperature in normal rats Gordon (1993) Temperature Regulation in
+#' Laboratory Rodents
+#' @source Wambaugh, John F., et al. "Toxicokinetic triage for environmental
+#' chemicals." Toxicological Sciences (2015): 228-237.
 #' @keywords data
 "physiology.data"
 
@@ -1380,55 +1368,40 @@
 #' parameterization of toxicokinetic models for human, mouse, rat, dog, or
 #' rabbit. Tissue volumes were calculated by converting the fractional mass of
 #' each tissue with its density (both from ICRP), lumping the remaining tissues
-#' into the rest-of-body, excluding the mass of the gastrointestinal contents.
-#'
-#' Many of the parameters were compiled initially in Table 2 of Schmitt (2009).
-#' The full list of tissue variables described is:
-#' \tabular{lll}{
-#' \strong{Variable} \tab \strong{Description} \tab \strong{Units} \cr
-#' Fcell \tab Cellular fraction of total tissue volume \tab fraction \cr
-#' Fint \tab Interstitial fraction of total tissue volume \tab fraction \cr
-#' FWc \tab Fraction of cell volume that is water \tab fraction \cr
-#' FLc \tab Fraction of cell volume that is lipid \tab fraction \cr
-#' FPc \tab Fraction of cell volume that is protein \tab fraction \cr
-#' Fn_Lc \tab Fraction of cellular lipid tht is neutral lipid \tab fraction \cr
-#' Fn_PLc \tab Fraction of cellular lipid tht is neutral phospholipid \tab fraction \cr
-#' Fa_PLc \tab Fraction of cellular lipid tht is acidic phospholipid \tab fraction \cr
-#' pH \tab Negative logarithm of H+ ion concentration \tab unitless\cr
-#' Density \tab Tissue density \tab g/cm^3 \cr
-#' Vol \tab Tissue volume \tab L/kg \cr
-#' Flow \tab Blood flow to tissue \tab mL/min/kg^(3/4) \cr
-#' }
+#' into the rest-of-body, excluding the mass of the gastrointestinal contents
 #'
 #' New tissues can be added to this table to generate
 #' their partition coefficients.
 #'
+#' The tissue data needed for calculating partition coefficients include: 
+#' cellular and water fractions of 
+#' total volume, lipid and protein  fractions of cellular volume, lipid 
+#' fractions of the total lipid volume, the pH of each tissue,
+#' and the fractional volume of protein in plasma. 
+#'
 #' @seealso \code{\link{predict_partitioning_schmitt}}
 #' 
 #' @docType data
-#' 
-#' @format A data.frame containing 406 rows and 5 columns.
-#' \tabular{ll}{
-#' \strong{Column} \tab \strong{Description} \cr
-#' Tissue \tab The tissue being described \cr                      
-#' Species \tab The species being described \cr                      
-#' Reference \tab The reference for the value reported \cr                      
-#' variable \tab The aspect of the tissue being characterized \cr                      
-#' value \tab The value for the variable for the given tissue and species \cr                      
-#' }
-#' 
+#' @format A data.frame containing 13 rows and 20 columns.
 #' @author John Wambaugh, Robert Pearce, and Nisha Sipes
-#' 
-#' @references
-#' \insertRef{birnbaum1994physiological}{httk}
+#' @references Birnbaum, L and Brown, R and Bischoff, K and Foran, J and
+#' Blancato, J and Clewell, H and Dedrick, R (1994). Physiological parameter
+#' values for PBPK model. International Life Sciences Institute, Risk Science
+#' Institute, Washington, DC
 #'
-#' \insertRef{ruark2014predicting}{httk}
+#' Ruark, Christopher D., et al. "Predicting passive and active tissue: plasma
+#' partition coefficients: Interindividual and interspecies variability."
+#' Journal of pharmaceutical sciences 103.7 (2014): 2189-2198.
 #'
-#' \insertRef{schmitt2008general}{httk}
+#' Schmitt, W. (2008). General approach for the calculation of tissue to plasma
+#' partition coefficients. Toxicology in vitro : an international journal
+#' published in association with BIBRA 22(2), 457-67,
+#' 10.1016/j.tiv.2007.09.010.
 #'
-#' \insertRef{snyder1974report}{httk}
+#' ICRP. Report of the Task Group on Reference Man. ICRP Publication 23 1975
 #'
-#' \insertRef{wambaugh2015toxicokinetic}{httk}
+#' Wambaugh, John F., et al. "Toxicokinetic triage for environmental
+#' chemicals." Toxicological Sciences (2015): 228-237.
 #'
 #' @examples
 #' # We can add thyroid to the tissue data by making a row containing
@@ -1474,6 +1447,7 @@
 #' @docType data
 #' @format A data.frame containing x rows and y columns.
 #' @author Matt Linakis
+#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
 #'
 #' @source Matt Linakis
 #' @keywords data
@@ -1481,43 +1455,12 @@
 
 #' Concentration data involved in Linakis 2020 vignette analysis.
 #'
-#' These rat and human TK concentration vs. time (CvT) data are drawn from
-#' the CvTdb (Sayre et el., 2020). Concentrations have all been converted to
-#' the units of uM. All data are from inhalation studies.
-#'
-#' Abbreviations used for sampling matrix:
-#' BL : blood
-#' EEB : end-exhaled breath
-#' MEB : mixed exhaled breath
-#' VBL : venous blood
-#' ABL : arterial blood
-#' EB : unspecified exhaled breath sample (assumed to be EEB)
-#' PL: plasma
-#' +W with work/exercise
-#'
-#' \tabular{ll}{
-#' \strong{Column Name} \tab \strong{Description} \cr
-#'  PREFERRED_NAME        \tab Substance preferred name \cr                      
-#'  DTXSID     \tab Identifier for CompTox Chemical Dashboard \cr
-#'  CASRN  \tab Chemical abstracts service registration number\cr
-#'  AVERAGE_MASS  \tab Substance molecular weight g/mol \cr
-#'   DOSE DOSE_U   \tab Inhalation exposure concentration in parts per million \cr  
-#'  EXP_LENGTH   \tab Duration of inhalation exposur \cr
-#'   TIME  \tab  Measurment time \cr          
-#'  TIME_U   \tab  Time units for all times reported \cr 
-#'  CONC_SPECIES  \tab Species for study \cr 
-#'  SAMPLING_MATRIX   \tab Matrix analyzed \cr 
-#'  SOURCE_CVT   \tab Data source identifier within CvTdb \cr 
-#'  ORIG_CONC_U   \tab Original reported units for concentration \cr 
-#'  CONCENTRATION   \tab Analyte concentration in uM units\cr 
-#' }
 #'
 #' @docType data
-#' @format A data.frame containing 2142 rows and 16 columns.
+#' @format A data.frame containing x rows and y columns.
 #' @author Matt Linakis
-#' @references 
-#' \insertRef{linakis2020development}{httk}
-#' \insertRef{sayre2020database}{httk}
+#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
+#'
 #' @source Matt Linakis
 #' @keywords data
 "concentration_data_Linakis2020"
@@ -1754,7 +1697,7 @@
 
 #' ToxCast Example Data
 #' The main page for the ToxCast data is here:
-#' https://www.epa.gov/comptox-tools/exploring-toxcast-data
+#' https://www.epa.gov/chemical-research/exploring-toxcast-data-downloadable-data
 #' Most useful to us is a single file containing all the hits across all chemcials
 #' and assays:
 #' https://clowder.edap-cluster.com/datasets/6364026ee4b04f6bb1409eda?space=62bb560ee4b07abf29f88fef
@@ -1795,10 +1738,6 @@
 #' orientation.
 #' These data were either measured by EPA or collected by other others, as
 #' indicated by the column 'Data Origin'.
-#' Anywhere that the values is reported by three numbers separated by a comma 
-#' (this also happens for plasma protein binding) the three values are: median, 
-#' lower 95 percent confidence intervals, upper 95 percent confidence interval. Unless you are 
-#' doing monte carlo work it makes sense to ignore the second and third values.
 #'
 #' \tabular{lll}{
 #' \strong{Column Name} \tab \strong{Description} \tab \strong{Units} \cr

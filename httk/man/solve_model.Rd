@@ -23,16 +23,15 @@ solve_model(
   species = "Human",
   input.units = "mg/kg",
   output.units = NULL,
-  method = NULL,
-  rtol = 1e-06,
-  atol = 1e-06,
+  method = "lsoda",
+  rtol = 1e-08,
+  atol = 1e-12,
   recalc.blood2plasma = FALSE,
   recalc.clearance = FALSE,
   restrictive.clearance = TRUE,
   adjusted.Funbound.plasma = TRUE,
   minimum.Funbound.plasma = 1e-04,
   parameterize.arg.list = list(),
-  small.time = 1e-04,
   ...
 )
 }
@@ -65,8 +64,8 @@ of most httk models, these should include "initial.dose", "doses.per.day",
 precise dose regimen specification, and is a matrix consisting of two
 columns or rows named "time" and "dose" containing the time and amount of 
 each dose. If none of the namesake entries of the dosing list is set to a
-non-NULL value, solve_model uses a default initial dose of 1 mg/kg BW along with the 
-dose type (add/multiply) specified for a given route (for example, add the dose to gut
+non-NULL value, solve_model uses a default dose of 1 mg/kg BW along with the 
+dose type (add/multiply) specified for a given route (e.g. add the dose to gut
 lumen for oral route)}
 
 \item{days}{Simulated period. Default 10 days.}
@@ -101,10 +100,9 @@ Defaults to NULL, and will provide values in model units if unspecified.}
 
 \item{method}{Method used by integrator (deSolve).}
 
-\item{rtol}{Relative tolerance used by integrator (deSolve) to determine 
-numerical precision -- defaults to 1e-6.}
+\item{rtol}{Argument passed to integrator (deSolve).}
 
-\item{atol}{Absolute tolerance used by integrator (deSolve) to determine}
+\item{atol}{Argument passed to integrator (deSolve).}
 
 \item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical
 in the blood to plasma using the input parameters, calculated with
@@ -125,10 +123,6 @@ dataset)}
 
 \item{parameterize.arg.list}{Additional parameterized passed to the model
 parameterization function.}
-
-\item{small.time}{A tiny amount of time used to provide predictions on either
-side of an instaneous event (like an iv injection). This helps ensure that
-abrupt changes plot well. Defaults to 1e-4.}
 
 \item{...}{Additional arguments passed to the integrator.}
 }
@@ -187,16 +181,15 @@ to the user unless the times argument is used, in which case only the time
 points specified by that argument are provided.
 }
 \examples{
-# The various "solve_x" functions are wrappers for solve_model:
+# The varrious "solve_x" functions are wrappers for solve_model:
 head(solve_pbtk(chem.name="Terbufos", days=1))
 
-head(solve_model(chem.name="Terbufos",model="pbtk",
+head(solve_model(chem.name="Terbufos",model="pbtk",dosing=list(
+                 initial.dose = 1, # Assume dose is in mg/kg BW/day  
+                 doses.per.day=NULL,
+                 dosing.matrix = NULL,
                  days=1,
-                 dosing=list(
-                   initial.dose = 1, # Assume dose is in mg/kg BW/day  
-                   doses.per.day=NULL,
-                   dosing.matrix = NULL,
-                   daily.dose = NULL)))
+                 daily.dose = NULL)))
 
 # A dose matrix specifies times and magnitudes of doses:
 dm <- matrix(c(0,1,2,5,5,5),nrow=3)
@@ -208,23 +201,19 @@ solve_pbtk(chem.name="Methenamine",
            days=2.5,
            daily.dose=NULL)
 
-solve_model(chem.name="Methenamine",
-            model="pbtk",
+solve_model(chem.name="Methenamine",model="pbtk",dosing=list(
+            initial.dose =NULL,
+            doses.per.day=NULL,
+            daily.dose=NULL,
             days=2.5,
-            dosing=list(
-              initial.dose =NULL,
-              doses.per.day=NULL,
-              daily.dose=NULL,
-              dosing.matrix=dm))
+            dosing.matrix=dm))
 
-solve_model(chem.name="Besonprodil",
-            model="pbtk",
+solve_model(chem.name="Besonprodil",model="pbtk",dosing=list(
+            initial.dose =NULL,
+            doses.per.day=4,
+            daily.dose=1,
             days=2.5,
-            dosing=list(
-              initial.dose=NULL,
-              doses.per.day=4,
-              daily.dose=1,
-              dosing.matrix=NULL))
+            dosing.matrix=NULL))
   
 solve_pbtk(chem.name="Besonprodil",
            daily.dose=1,

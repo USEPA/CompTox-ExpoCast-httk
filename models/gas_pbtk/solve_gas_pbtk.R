@@ -3,25 +3,6 @@
 #' This function solves for the amounts or concentrations of a chemical
 #' in different tissues as functions of time as a result of inhalation 
 #' exposure to an ideal gas.
-#' In this PBTK formulation. \eqn{C_{tissue}} is the concentration in tissue at 
-#' time t. Since the perfusion limited partition coefficients describe 
-#' instantaneous equilibrium between the tissue and the free fraction in 
-#' plasma, the whole plasma concentration is 
-#' \eqn{C_{tissue,plasma} = \frac{1}{f_{up}*K_{tissue2fup}}*C_{tissue}}. 
-#' Note that we use a single, 
-#' constant value of \eqn{f_{up}} across all tissues. Corespondingly the free 
-#' plasma 
-#' concentration is modeled as 
-#' \eqn{C_{tissue,free plasma} = \frac{1}{K_{tissue2fup}}*C_tissue}. 
-#' The amount of blood flowing from tissue x is \eqn{Q_{tissue}} (L/h) at a 
-#' concentration 
-#' \eqn{C_{x,blood} = \frac{R_{b2p}}{f_{up}*K_{tissue2fup}}*C_{tissue}}, where 
-#' we use a 
-#' single \eqn{R_{b2p}} value throughout the body.
-#' Metabolic clearance is modelled as being from the total plasma 
-#' concentration here, though it is restricted to the free fraction in 
-#' \code{\link{calc_hep_clearance}} by default. Renal clearance via 
-#' glomerulsr filtration is from the free plasma concentration.
 #' 
 #' The default dosing scheme involves a specification of the start time
 #' of exposure (exp.start.time), the concentration of gas inhaled (exp.conc),
@@ -50,7 +31,7 @@
 #' AUC is the area under the curve of the plasma concentration.
 #' 
 #' Model Figure from \insertCite{linakis2020development}{httk}:
-#' \if{html}{\figure{gaspbtk.jpg}{options: width="100\%" alt="Figure: Gas PBTK 
+#' \if{html}{\figure{gaspbtk.png}{options: width="60\%" alt="Figure: Gas PBTK 
 #' Model Schematic"}}
 #' \if{latex}{\figure{gaspbtk.pdf}{options: width=12cm alt="Figure: Gas PBTK 
 #' Model Schematic"}}
@@ -72,124 +53,81 @@
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
-#' 
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
-#' 
 #' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
-#' 
 #' @param parameters Chemical parameters from parameterize_gas_pbtk (or other
 #' bespoke) function, overrides chem.name and chem.cas.
-#' 
 #' @param times Optional time sequence for specified number of days.  Dosing
 #' sequence begins at the beginning of times.
-#' 
 #' @param days Length of the simulation.
-#' 
 #' @param tsteps The number of time steps per hour.
-#' 
 #' @param daily.dose Total daily dose
-#' 
 #' @param doses.per.day Number of doses per day.
-#' 
 #' @param dose Amount of a single dose
-#' 
 #' @param dosing.matrix Vector of dosing times or a matrix consisting of two
 #' columns or rows named "dose" and "time" containing the time and amount of 
 #' each dose. 
-#' 
 #' @param forcings Manual input of 'forcings' data series argument for ode
 #' integrator. If left unspecified, 'forcings' defaults to NULL, and then other 
 #' input parameters (see exp.start.time, exp.conc, exp.duration, and period)
 #' provide the necessary information to assemble a forcings data series. 
-#' 
 #' @param exp.start.time Start time in specifying forcing exposure series,
 #' default 0. 
-#' 
 #' @param exp.conc Specified inhalation exposure concentration for use in 
 #' assembling "forcings" data series argument for integrator. Defaults to
-#' units of ppmv.
-#' 
+#' units of uM
 #' @param period For use in assembling forcing function data series 'forcings'
 #' argument, specified in hours
-#' 
 #' @param exp.duration For use in assembling forcing function data 
 #' series 'forcings' argument, specified in hours
-#' 
 #' @param initial.values Vector containing the initial concentrations or
 #' amounts of the chemical in specified tissues with units corresponding to
 #' those specified for the model outputs. Default values are zero.
-#' 
 #' @param plots Plots all outputs if true.
-#' 
 #' @param suppress.messages Whether or not the output message is suppressed.
-#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
-#' 
-#' @param iv.dose Simulates a single i.v. dose if true.
-#' 
 #' @param input.units Input units of interest assigned to dosing, including 
-#' forcings. Defaults to "ppmv" as applied to the default forcings scheme.
-#' 
-#' @param output.units A named vector of output units expected for the model
-#' results. Default, NULL, returns model results in units specified in the
-#' 'modelinfo' file. See table below for details.
-#' 
+#' forcings. Defaults to "uM" as applied to the default forcings scheme.
+#' @param method Method used by integrator (deSolve).
+#' @param rtol Argument passed to integrator (deSolve).
+#' @param atol Argument passed to integrator (deSolve).
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
-#' 
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
 #' hematocrit, Funbound.plasma, and Krbc2pu.
-#' 
 #' @param recalc.clearance Recalculates the hepatic clearance
 #' (Clmetabolism) with new million.cells.per.gliver parameter.
-#' 
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE along with partition coefficients calculated with this value.
-#' 
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
-#' 
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
-#' 
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
-#' 
 #' @param monitor.vars Which variables are returned as a function of time. 
 #' Defaults value of NULL provides "Cgut", "Cliver", "Cven", "Clung", "Cart",
 #' "Crest", "Ckidney", "Cplasma", "Calv", "Cendexh", "Cmixexh", "Cmuc", 
 #' "Atubules", "Ametabolized", "AUC"
-#' 
 #' @param vmax Michaelis-Menten vmax value in reactions/min
-#' 
 #' @param km Michaelis-Menten concentration of half-maximal reaction velocity
 #' in desired output concentration units. 
-#' 
 #' @param exercise Logical indicator of whether to simulate an exercise-induced
 #' heightened respiration rate
-#' 
 #' @param fR Respiratory frequency (breaths/minute), used especially to adjust
 #' breathing rate in the case of exercise. This parameter, along with VT and VD
 #' (below) gives another option for calculating Qalv (Alveolar ventilation) 
 #' in case pulmonary ventilation rate is not known 
-#' 
 #' @param VT Tidal volume (L), to be modulated especially as part of simulating
 #' the state of exercise
-#' 
 #' @param VD Anatomical dead space (L), to be modulated especially as part of
 #' simulating the state of exercise
-#' 
-#' @param ... Additional arguments passed to the integrator (deSolve).
-#' (Note: There are precision differences between M1 Mac and other OS systems
-#' for this function due to how long doubles are handled. To replicate results
-#' between various OS systems we suggest changing the default method of "lsoda"
-#' to "lsode" and also adding the argument mf = 10.
-#' See [deSolve::ode()] for further details.)
+#' @param ... Additional arguments passed to the integrator.
 #'
 #' @return A matrix of class deSolve with a column for time(in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
@@ -204,44 +142,24 @@
 #'
 #' @keywords Solve
 #'
-#' @seealso \code{\link{solve_model}}
-#'
-#' @seealso \code{\link{parameterize_gas_pbtk}}
-#'
 #' @examples
-#' \donttest{
 #' 
 #' solve_gas_pbtk(chem.name = 'pyrene', exp.conc = 1, period = 24, expduration = 24)
 #' 
-#' out <- solve_gas_pbtk(chem.name='pyrene',
-#'                       exp.conc = 0, doses.per.day = 2,
-#'                       daily.dose = 3, input.units = "umol",
-#'                       days=2.5, 
-#'                       plots=TRUE, initial.values=c(Aven=20))
+#' \donttest{
+#' out <- solve_gas_pbtk(chem.name='pyrene',exp.conc = 0, doses.per.day = 2,
+#' daily.dose = 3, plots=TRUE,initial.values=c(Aven=20))
 #' 
-#' out <- solve_gas_pbtk(chem.name = 'pyrene', exp.conc = 3, 
-#'                       period = 24, days=2.5,
-#'                       exp.duration = 6, exercise = TRUE)
+#' out <- solve_gas_pbtk(chem.name = 'pyrene',exp.conc = 3, period = 24,
+#' exp.duration = 6, exercise = TRUE)
 #'                   
 #' params <- parameterize_gas_pbtk(chem.cas="80-05-7")
-#' solve_gas_pbtk(parameters=params, days=2.5)
-#' 
-#' # Oral dose with exhalation as a route of elimination:
-#' out <- solve_gas_pbtk(chem.name = 'bisphenol a', exp.conc = 0, dose=100,
-#'                       days=2.5, input.units="mg/kg")
-#'
-#' # Note that different model compartments for this model have different units 
-#' # and that the final units can be controlled with the output.units argument:
-#' head(solve_gas_pbtk(chem.name="lindane", days=2.5))
-#' # Convert all compartment units to mg/L:
-#' head(solve_gas_pbtk(chem.name="lindane", days=2.5, output.units="mg/L"))
-#' # Convert just the plasma to mg/L:
-#' head(solve_gas_pbtk(chem.name="lindane", days=2.5, 
-#'                     output.units=list(Cplasma="mg/L")))
+#' solve_gas_pbtk(parameters=params)
 #' }
 #' 
 #' @export solve_gas_pbtk
-#' 
+#' @useDynLib httk
+#' @import deSolve
 #' @importFrom Rdpack reprompt
 solve_gas_pbtk <- function(chem.name = NULL,
                            chem.cas = NULL,
@@ -263,21 +181,19 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            plots=FALSE,
                            suppress.messages=FALSE,
                            species="Human",
-                           iv.dose=FALSE,
-                           input.units = "ppmv", # assume input units are ppmv with updated inhalation model
-                           # input.units = "uM",
-                           output.units=NULL,
+                           input.units = "uM", 
+                           method="lsoda",rtol=1e-8,atol=1e-12,
                            default.to.human=FALSE,
                            recalc.blood2plasma=FALSE,
                            recalc.clearance=FALSE,
                            adjusted.Funbound.plasma=TRUE,
                            regression=TRUE,
-                           restrictive.clearance = TRUE,
+                           restrictive.clearance = T,
                            minimum.Funbound.plasma=0.0001,
                            monitor.vars=NULL,
                            vmax = 0,
                            km = 1,
-                           exercise = FALSE,
+                           exercise = F,
                            fR = 12,
                            VT = 0.75,
                            VD = 0.15,
@@ -291,32 +207,6 @@ solve_gas_pbtk <- function(chem.name = NULL,
        inhalation exposure and rest in the default case.")
   }
   
-  # Screen whether exposure and dosing are both indicated to occur
-  if((exp.conc!=0 | is.null(forcings)==FALSE) & (is.null(dose)==FALSE | is.null(daily.dose)==FALSE)){
-    stop("Currently, 'httk' only evaluates the model using the exposure or dose",
-         " route but not both simultaneously. If exposure is the goal, then",
-         " set dose and/or daily.dose to NULL.  If dose is the goal, then",
-         " set exp.conc to 0.")
-  }
-  
-  # Obtain the appropriate route for compound exposure/dosing.
-  if(exp.conc!=0 | is.null(forcings)==FALSE){
-    route <- "inhalation"
-    
-    # if(input.units!="ppmv"){
-    #   stop("The ",input.units," units are not appropriate for the exposure route. ",
-    #        "Review input units for doses and update argument. ",
-    #        "Several suggestions 'umol', 'mg', or an alternative input.")
-    # }
-  }else if(is.null(dose)==FALSE | is.null(daily.dose)==FALSE){
-    route <- ifelse(iv.dose,yes = "iv",no = "oral")
-    
-    if(input.units=="ppmv"){
-      stop("The 'ppmv' units are not appropriate for the dosing routes. ",
-           "Review input units for doses and update argument. ",
-           "Several suggestions 'umol', 'mg', or an alternative input.")
-    }
-  }
   
   #Look up the chemical name/CAS to get some info about the chemical in
   #question and screen it for relevance of its logHenry value. Should not
@@ -382,17 +272,16 @@ solve_gas_pbtk <- function(chem.name = NULL,
     forcings = forcings_gen(exp.conc, period, exp.start.time = 0, exp.duration, days) 
   }
       
-  # Describe the dose regimen:
-  dosing <- list(
-    initial.dose=dose,
-    dosing.matrix=dosing.matrix,
-    daily.dose=daily.dose,
-    doses.per.day=doses.per.day,
-    forcings=forcings
-    )
-  # Limit to only the needed dosing parameters:
-  dosing <- dosing[names(dosing) %in%
-                     model.list[["gas_pbtk"]]$routes[[route]]$dosing.params]
+      #Comment out tentative alternate scheme to forcings for now
+      ###
+    #Nrep <- ceiling((days - exp.start.time)/period)
+# We want the start and stop timeS:
+    #time <- sort(c(period * (0:(Nrep - 1)), # Start times
+      #period * (0:(Nrep - 1))+exp.duration)) # End times
+    #dose  <- rep(c(exp.conc,0), Nrep)
+    #dosing.matrix = cbind(dose,time)
+      ###
+  
   
   #Now make call to solve_model with gas model specific arguments configured 
   out <- solve_model(
@@ -402,8 +291,13 @@ solve_gas_pbtk <- function(chem.name = NULL,
     times=times,
     parameters=parameters,
     model="gas_pbtk",
-    route=route,
-    dosing=dosing,
+    route='inhalation',
+    dosing=list(
+      initial.dose=dose,
+      dosing.matrix=dosing.matrix,
+      daily.dose=daily.dose,
+      doses.per.day=doses.per.day,
+      forcings=forcings),
     days=days,
     tsteps = tsteps, # tsteps is number of steps per hour
     initial.values=initial.values,
@@ -411,8 +305,8 @@ solve_gas_pbtk <- function(chem.name = NULL,
     monitor.vars=monitor.vars,
     suppress.messages=suppress.messages,
     species=species,
-    input.units=input.units,
-    output.units=output.units,
+    input.units = input.units,
+    method=method,rtol=rtol,atol=atol,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
