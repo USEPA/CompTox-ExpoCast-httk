@@ -1,9 +1,9 @@
-/* firsttrimester/model_1tri_pbtk_v2-raw.c for R deSolve package
+/* firsttrimester/model_1tri_pbtk-raw.c for R deSolve package
    ___________________________________________________
 
-   Model File:  firsttrimester/model_1tri_pbtk_v2.model
+   Model File:  firsttrimester/model_1tri_pbtk.model
 
-   Date:  Thu Feb 29 09:16:55 2024
+   Date:  Thu Feb 08 16:17:32 2024
 
    Created by:  "C:/Users/ktruong/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/httk-dev/models/mod.exe v6.1.0"
     -- a model preprocessor by Don Maszle
@@ -29,7 +29,7 @@
      Ametabolized = 0.0,
      AUC = 0.0,
 
-   22 Outputs:
+   18 Outputs:
     "Cgut",
     "Cliver",
     "Ckidney",
@@ -48,10 +48,6 @@
     "Vadipose",
     "Vrest",
     "hematocrit",
-    "Vconceptus",
-    "Qconceptus",
-    "Vffmx",
-    "Vallx",
 
    0 Inputs:
 
@@ -184,10 +180,6 @@
 #define ID_Vadipose 0x0000f
 #define ID_Vrest 0x00010
 #define ID_hematocrit 0x00011
-#define ID_Vconceptus 0x00012
-#define ID_Qconceptus 0x00013
-#define ID_Vffmx 0x00014
-#define ID_Vallx 0x00015
 
 /* Parameters */
 static double parms[86];
@@ -279,64 +271,64 @@ static double parms[86];
 #define Qconceptus_final parms[84]
 #define Qconceptus_initial parms[85]
 
-/* Forcing (Input) functions */
-static double forc[0];
-
-
-/* Function definitions for delay differential equations */
-
-int Nout=1;
-int nr[1]={0};
-double ytau[1] = {0.0};
-
-static double yini[14] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
-
-void lagvalue(double T, int *nr, int N, double *ytau) {
-  static void(*fun)(double, int*, int, double*) = NULL;
-  if (fun == NULL)
-    fun = (void(*)(double, int*, int, double*))R_GetCCallable("deSolve", "lagvalue");
-  return fun(T, nr, N, ytau);
-}
-
-double CalcDelay(int hvar, double dTime, double delay) {
-  double T = dTime-delay;
-  if (dTime > delay){
-    nr[0] = hvar;
-    lagvalue( T, nr, Nout, ytau );
-}
-  else{
-    ytau[0] = yini[hvar];
-}
-  return(ytau[0]);
-}
+// /* Forcing (Input) functions */
+// static double forc[0];
+// 
+// 
+// /* Function definitions for delay differential equations */
+// 
+// int Nout=1;
+// int nr[1]={0};
+// double ytau[1] = {0.0};
+// 
+// static double yini[14] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
+// 
+// void lagvalue(double T, int *nr, int N, double *ytau) {
+//   static void(*fun)(double, int*, int, double*) = NULL;
+//   if (fun == NULL)
+//     fun = (void(*)(double, int*, int, double*))R_GetCCallable("deSolve", "lagvalue");
+//   return fun(T, nr, N, ytau);
+// }
+// 
+// double CalcDelay(int hvar, double dTime, double delay) {
+//   double T = dTime-delay;
+//   if (dTime > delay){
+//     nr[0] = hvar;
+//     lagvalue( T, nr, Nout, ytau );
+// }
+//   else{
+//     ytau[0] = yini[hvar];
+// }
+//   return(ytau[0]);
+// }
 
 /*----- Initializers */
-void initmod (void (* odeparms)(int *, double *))
+void initmod_firsttrimester (void (* odeparms)(int *, double *))
 {
   int N=86;
   odeparms(&N, parms);
 }
 
-void initforc (void (* odeforcs)(int *, double *))
-{
-  int N=0;
-  odeforcs(&N, forc);
-}
+// void initforc (void (* odeforcs)(int *, double *))
+// {
+//   int N=0;
+//   odeforcs(&N, forc);
+// }
+// 
+// 
+// /* Calling R code will ensure that input y has same
+//    dimension as yini */
+// void initState (double *y)
+// {
+//   int i;
+// 
+//   for (i = 0; i < sizeof(yini) / sizeof(yini[0]); i++)
+//   {
+//     yini[i] = y[i];
+//   }
+// }
 
-
-/* Calling R code will ensure that input y has same
-   dimension as yini */
-void initState (double *y)
-{
-  int i;
-
-  for (i = 0; i < sizeof(yini) / sizeof(yini[0]); i++)
-  {
-    yini[i] = y[i];
-  }
-}
-
-void getParms (double *inParms, double *out, int *nout) {
+void getParms_firsttrimester (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
 
   int i;
@@ -370,18 +362,22 @@ void getParms (double *inParms, double *out, int *nout) {
   }
 /*----- Dynamics section */
 
-void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
+void derivs_firsttrimester (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
 {
   /* local */ double tw;
   /* local */ double BW;
   /* local */ double Wadipose;
   /* local */ double Vplasma;
   /* local */ double Vrbcs;
+  /* local */ double Vconceptus;
+  /* local */ double Vffmx;
+  /* local */ double Vallx;
   /* local */ double Qcardiac;
   /* local */ double Qgut;
   /* local */ double Qkidney;
   /* local */ double Qliver;
   /* local */ double Qthyroid;
+  /* local */ double Qconceptus;
   /* local */ double Qadipose;
   /* local */ double Qrest;
   /* local */ double Qgfr;
@@ -407,13 +403,13 @@ void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, in
 
   yout[ID_Vadipose] = 1 / adipose_density * Wadipose ;
 
-  yout[ID_Vconceptus] = Vconceptus_initial + ( ( Vconceptus_final - Vconceptus_initial ) / 13 ) * tw ;
+  Vconceptus = Vconceptus_initial + ( ( Vconceptus_final - Vconceptus_initial ) / 13 ) * tw ;
 
-  yout[ID_Vffmx] = 1 / ffmx_density * ( BW - Wadipose - yout[ID_Vconceptus] ) ;
+  Vffmx = 1 / ffmx_density * ( BW - Wadipose - Vconceptus ) ;
 
-  yout[ID_Vallx] = yout[ID_Vart] + yout[ID_Vven] + Vthyroid + Vkidney + Vgut + Vliver + Vlung ;
+  Vallx = yout[ID_Vart] + yout[ID_Vven] + Vthyroid + Vkidney + Vgut + Vliver + Vlung ;
 
-  yout[ID_Vrest] = yout[ID_Vffmx] - yout[ID_Vallx] ;
+  yout[ID_Vrest] = Vffmx - Vallx ;
 
   Qcardiac = 24 * ( Qcardiac_cubic_theta0 + Qcardiac_cubic_theta1 * tw + Qcardiac_cubic_theta2 * pow ( tw , 2 ) + Qcardiac_cubic_theta3 * pow ( tw , 3 ) ) ;
 
@@ -425,11 +421,11 @@ void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, in
 
   Qthyroid = 0.01 * ( Qthyroid_percent_initial + ( Qthyroid_percent_terminal - Qthyroid_percent_initial ) / term * tw ) * Qcardiac ;
 
-  yout[ID_Qconceptus] = Qconceptus_initial + ( ( Qconceptus_final - Qconceptus_initial ) / 13 ) * tw ;
+  Qconceptus = Qconceptus_initial + ( ( Qconceptus_final - Qconceptus_initial ) / 13 ) * tw ;
 
   Qadipose = 0.01 * ( Qadipose_percent_initial + ( Qadipose_percent_terminal - Qadipose_percent_initial ) / term * tw ) * Qcardiac ;
 
-  Qrest = Qcardiac - ( Qgut + Qkidney + Qliver + Qthyroid + yout[ID_Qconceptus] + Qadipose ) ;
+  Qrest = Qcardiac - ( Qgut + Qkidney + Qliver + Qthyroid + Qconceptus + Qadipose ) ;
 
   Qgfr = 60 * 24 * 0.001 * ( Qgfr_quadratic_theta0 + Qgfr_quadratic_theta1 * tw + Qgfr_quadratic_theta2 * pow ( tw , 2 ) ) ;
 
@@ -455,7 +451,7 @@ void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, in
 
   yout[ID_Cthyroid] = y[ID_Athyroid] / Vthyroid ;
 
-  yout[ID_Cconceptus] = ( yout[ID_Vconceptus] > 0 ? y[ID_Aconceptus] / yout[ID_Vconceptus] : 0 ) ;
+  yout[ID_Cconceptus] = ( Vconceptus > 0 ? y[ID_Aconceptus] / Vconceptus : 0 ) ;
 
   Kconceptus2pu = Kconceptus2pu_initial + ( ( Kconceptus2pu_final - Kconceptus2pu_initial ) / 13 ) * tw ;
 
@@ -465,7 +461,7 @@ void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, in
 
   ydot[ID_Aliver] = Qliver * y[ID_Aart] / yout[ID_Vart] + Qgut * y[ID_Agut] / Vgut * yout[ID_Rblood2plasma] / Kgut2pu / Fraction_unbound_plasma - ( Qliver + Qgut ) * y[ID_Aliver] / Vliver / Kliver2pu / Fraction_unbound_plasma * yout[ID_Rblood2plasma] - Clmetabolism * y[ID_Aliver] / Vliver / Kliver2pu ;
 
-  ydot[ID_Aven] = ( ( Qliver + Qgut ) * y[ID_Aliver] / Vliver / Kliver2pu + Qkidney * y[ID_Akidney] / Vkidney / Kkidney2pu + Qadipose * y[ID_Aadipose] / yout[ID_Vadipose] / Kadipose2pu + Qrest * y[ID_Arest] / yout[ID_Vrest] / Krest2pu + Qthyroid * y[ID_Athyroid] / Vthyroid / Kthyroid2pu + yout[ID_Qconceptus] * yout[ID_Cconceptus] / Kconceptus2pu ) * yout[ID_Rblood2plasma] / Fraction_unbound_plasma - Qcardiac * y[ID_Aven] / yout[ID_Vven] ;
+  ydot[ID_Aven] = ( ( Qliver + Qgut ) * y[ID_Aliver] / Vliver / Kliver2pu + Qkidney * y[ID_Akidney] / Vkidney / Kkidney2pu + Qadipose * y[ID_Aadipose] / yout[ID_Vadipose] / Kadipose2pu + Qrest * y[ID_Arest] / yout[ID_Vrest] / Krest2pu + Qthyroid * y[ID_Athyroid] / Vthyroid / Kthyroid2pu + Qconceptus * yout[ID_Cconceptus] / Kconceptus2pu ) * yout[ID_Rblood2plasma] / Fraction_unbound_plasma - Qcardiac * y[ID_Aven] / yout[ID_Vven] ;
 
   ydot[ID_Alung] = Qcardiac * ( y[ID_Aven] / yout[ID_Vven] - y[ID_Alung] / Vlung * yout[ID_Rblood2plasma] / Klung2pu / Fraction_unbound_plasma ) ;
 
@@ -485,26 +481,26 @@ void derivs (int *neq, double *pdTime, double *y, double *ydot, double *yout, in
 
   ydot[ID_Athyroid] = Qthyroid * ( y[ID_Aart] / yout[ID_Vart] - y[ID_Athyroid] / Vthyroid / Kthyroid2pu / Fraction_unbound_plasma * yout[ID_Rblood2plasma] ) ;
 
-  ydot[ID_Aconceptus] = yout[ID_Qconceptus] * ( y[ID_Aart] / yout[ID_Vart] - yout[ID_Cconceptus] / Kconceptus2pu / Fraction_unbound_plasma * yout[ID_Rblood2plasma] ) ;
+  ydot[ID_Aconceptus] = Qconceptus * ( y[ID_Aart] / yout[ID_Vart] - yout[ID_Cconceptus] / Kconceptus2pu / Fraction_unbound_plasma * yout[ID_Rblood2plasma] ) ;
 
 } /* derivs */
 
 
 /*----- Jacobian calculations: */
-void jac (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
+void jac_firsttrimester (int *neq, double *t, double *y, int *ml, int *mu, double *pd, int *nrowpd, double *yout, int *ip)
 {
 
 } /* jac */
 
 
 /*----- Events calculations: */
-void event (int *n, double *t, double *y)
+void event_firsttrimester (int *n, double *t, double *y)
 {
 
 } /* event */
 
 /*----- Roots calculations: */
-void root (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
+void root_firsttrimester (int *neq, double *t, double *y, int *ng, double *gout, double *out, int *ip)
 {
 
 } /* root */

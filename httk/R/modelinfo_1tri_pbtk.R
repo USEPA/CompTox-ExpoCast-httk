@@ -396,11 +396,7 @@ model.list[["1tri_pbtk"]]$derivative.output.names <- c(
   "Vart",
   "Vadipose",
   "Vrest",
-  "hematocrit", 
-  "Vconceptus",
-  "Qconceptus",
-  "Vffmx",
-  "Vallx"
+  "hematocrit"
   )
 
 #Which variables to track by default (should be able to build this from
@@ -435,9 +431,9 @@ model.list[["1tri_pbtk"]]$allowed.units.input <- list(
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[["1tri_pbtk"]]$allowed.units.output <- list(
   "oral" = c('uM','mg/L','umol','mg','uM*days',
-             'mg/L*days',"unitless", "L", "L/day"),
+             'mg/L*days',"unitless", "L"),
   "iv" = c('uM','mg/L','umol','mg','uM*days',
-             'mg/L*days',"unitless", "L", "L/day"))
+             'mg/L*days',"unitless", "L"))
 
 ## These parameters specify the exposure scenario simulated by the model:
 model.list[["1tri_pbtk"]]$routes <- list(
@@ -515,11 +511,7 @@ model.list[["1tri_pbtk"]]$compartment.units <- c(
   "Vart" = "L",
   "Vadipose" = "L",
   "Vrest" = "L",
-  "hematocrit" = "unitless", 
-  "Vconceptus" = "L",
-  "Qconceptus" = "L/day",
-  "Vffmx" = "L",
-  "Vallx" = "L"
+  "hematocrit" = "unitless"
   )
 
 # Compartment state of matter, needed for proper unit conversion, if all
