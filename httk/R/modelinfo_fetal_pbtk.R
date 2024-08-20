@@ -553,7 +553,13 @@ model.list[[THIS.MODEL]]$derivative.output.names <- c(
   "Vfgut",
   "Vflung",
   "Vfrest", 
-  "fhematocrit"
+  "fhematocrit", 
+  "Vven",
+  "Vart",
+  "Vadipose",
+  "Vrest",
+  "Vffmx",
+  "Vallx"
   )
 
 
@@ -717,7 +723,13 @@ model.list[[THIS.MODEL]]$compartment.units <- c(
   "Vfgut" = "L",
   "Vflung" = "L",
   "Vfrest" = "L", 
-  "fhematocrit" = "unitless"
+  "fhematocrit" = "unitless", 
+  "Vven" = "L",
+  "Vart" = "L",
+  "Vadipose" = "L",
+  "Vrest" = "L",
+  "Vffmx" = "L",
+  "Vallx" = "L"
   )
 
 # Compartment state of matter, needed for proper unit conversion, if all
