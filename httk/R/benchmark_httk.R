@@ -146,14 +146,16 @@ benchmark_httk <- function(
   ## Setting up binding for Global Variables ##
   Compound <- Source <- Reference <- fu <- Exp_PC <- Tissue <- Species <- 
     CAS <- logMA <- Benchmark <- Version <- Value <- NULL
+  SLE.AUC <- SLE.Cmax <- SLE.nomc <- SLE.wetmore <- NULL
   ## Call a copy of the data.tables from httk - local copy from the package 
-  chem.ivv.PK.agg <- copy(httk::chem.invivo.PK.aggregate.data)
-  chem.ivv.PK.sum <- copy(httk::chem.invivo.PK.summary.data)
+  chem.ivv.PK.agg <- data.table::copy(httk::chem.invivo.PK.aggregate.data)
+  chem.ivv.PK.sum <- data.table::copy(httk::chem.invivo.PK.summary.data)
   ####
   benchmarks <- list()
 
   if (basic.check)
   {
+    cat("Running Basic check...\n")
     MW.BPA <- httk::chem.physical_and_invitro.data[chem.physical_and_invitro.data$CAS=="80-05-7","MW"] 
     set.seed(1234)
     if (!("method" %in% formalArgs(calc_mc_css)) |
@@ -202,10 +204,12 @@ benchmark_httk <- function(
                    suppress.messages=suppress.messages)[500,"Cplasma"] *
         1000/MW.BPA, 4)
       )
+      print(benchmarks[["basic"]])
   }
   
   if (calc_mc_css.check)
   {
+    cat("Running Monte Carlo Steady-State Plasma Concentration check...\n")
 # Get the chemicals with SimCYP numbers:
     if (exists("get_lit_cheminfo")) wetmore.chems <- get_lit_cheminfo()
     else wetmore.chems <- get_wetmore_cheminfo()
@@ -295,28 +299,43 @@ benchmark_httk <- function(
         css.table <- rbind(css.table, this.row)
     }
 
+    css.table$SLE.wetmore <- signif(log10(css.table$Wetmore/css.table$MC)^2, 4)
+    css.table$SLE.nomc<- signif(log10(css.table$Analytic/css.table$MC)^2, 4)
     
-    RMSLE.wetmore <- signif(mean(log10(css.table$Wetmore/css.table$MC)^2,
+    RMSLE.wetmore <- signif(mean(css.table$SLE.wetmore,
                             na.rm=TRUE)^(1/2),4)
-    RMSLE.nomc <- signif(mean(log10(css.table$Analytic/css.table$MC)^2,
+    RMSLE.nomc <- signif(mean(css.table$SLE.nomc,
                          na.rm=TRUE)^(1/2),4)
+                         
+ # Write out values with more than two orders of magnitude error:
+    write.table(format(subset(css.table, SLE.wetmore>4), digits=3),
+                row.names=FALSE,
+                sep="\t",
+                file="calcmccss_check_wetmore.txt")
+    write.table(format(subset(css.table, SLE.nomc>4), digits=3),
+                row.names=FALSE,
+                sep="\t",
+                file="calcmccss_check_nomc.txt")
     
     benchmarks[["calc_mc_css"]] <- list(
                       RMSLE.Wetmore = RMSLE.wetmore,
                       N.Wetmore = sum(!is.na(css.table$Wetmore/css.table$MC)),
                       RMSLE.noMC = RMSLE.nomc,
                       N.noMC = sum(!is.na(css.table$Wetmore/css.table$MC)))
+    print(benchmarks[["calc_mc_css"]])
   }
   
   if (in_vivo_stats.check)
   {
-    # Subset 'FitData' - exclude Bensulide for <justification for exclusion>
+    cat("Running In Vivo PK Stats check...\n")
+    # Subset 'FitData' - exclude Bensulide for poor data in Wambaugh et al. 2018
     FitData <- subset(chem.ivv.PK.agg,
-                      Compound!="Bensulide" |
-                      Source=="Wambaugh et al. (2018), NHEERL/RTI")
-    # Subset 'FitData' - exclude Propyzamide for <justification for exclusion>
-    FitData <- subset(FitData,Compound!="Propyzamide" |
-                      Source=="Wambaugh et al. (2018), NHEERL/RTI")
+                      !(Compound=="Bensulide" &
+                      Source=="Wambaugh et al. (2018), NHEERL/RTI"))
+    # Subset 'FitData' - exclude Propyzamide for poor data in Wambaugh et al. 2018
+    FitData <- subset(FitData,
+                      !(Compound=="Propyzamide" &
+                      Source=="Wambaugh et al. (2018), NHEERL/RTI"))
     if ("parameterize.args" %in% formalArgs(calc_analytic_css))
     {
       FitData$Css.pred <- sapply(FitData$CAS,
@@ -359,13 +378,14 @@ benchmark_httk <- function(
                               as.numeric(FitData$Css))^2,
                          na.rm=TRUE)^(1/2),4) 
     
-    # Subset 'FitData2' - exclude Bensulide for <justification for exclusion>
+    # Subset 'FitData2' - exclude Bensulide for poor data in Wambaugh et al. 2018
     FitData2 <- subset(chem.ivv.PK.sum,
-                      Compound!="Bensulide" |
-                      Reference %in% c("RTI 2015","NHEERL 2015"))
-    # Subset 'FitData2' - exclude Propyzamide for <justification for exclusion>
-    FitData2 <- subset(FitData2,Compound!="Propyzamide" |
-                      Reference %in% c("RTI 2015","NHEERL 2015"))
+                      !(Compound=="Bensulide" & 
+                      Reference %in% c("RTI 2015","NHEERL 2015")))
+    # Subset 'FitData2' - exclude Propyzamide for poor data in Wambaugh et al. 2018
+    FitData2 <- subset(FitData2,
+                      !(Compound=="Propyzamide" &
+                      Reference %in% c("RTI 2015","NHEERL 2015")))
     # v1.1 did not have an argument "dose" for calc_stats:
     if ("dose" %in% formalArgs(calc_stats)) 
     {
@@ -407,14 +427,26 @@ benchmark_httk <- function(
           NA))
     }
     FitData2$Pred.AUC <- unlist(lapply(out,function(x) as.numeric(x["AUC"])*24))
-    FitData2$Pred.Cmax <- unlist(lapply(out,function(x) x["peak"]))    
+    FitData2$Pred.Cmax <- unlist(lapply(out,function(x) x["peak"])) 
+    FitData2$SLE.AUC <- log10(as.numeric(FitData2$Pred.AUC) /
+                          as.numeric(FitData2$AUC))^2
+    FitData2$SLE.Cmax <- log10(as.numeric(FitData2$Pred.Cmax) /
+                          as.numeric(FitData2$Cmax))^2
     
-    RMSLE.invivoauc <- signif(mean(log10(as.numeric(FitData2$Pred.AUC) /
-                          as.numeric(FitData2$AUC))^2,
-                          na.rm=TRUE)^(1/2),4)
-    RMSLE.invivocmax <- signif(mean(log10(as.numeric(FitData2$Pred.Cmax) /
-                          as.numeric(FitData2$Cmax))^2,
-                          na.rm=TRUE)^(1/2),4)                     
+    RMSLE.invivoauc <- signif(sqrt(mean(FitData2$SLE.AUC,
+                          na.rm=TRUE)),4)
+    RMSLE.invivocmax <- signif(sqrt(mean(FitData2$SLE.Cmax,
+                          na.rm=TRUE)),4)       
+     
+ # Write out values with more than two orders of magnitude error:
+    write.table(format(subset(FitData2, SLE.AUC>4), digits=3),
+                row.names=FALSE,
+                sep="\t",
+                file="invivostats_check_badauc.txt")
+    write.table(format(subset(FitData2, SLE.Cmax>4), digits=3),
+                row.names=FALSE,
+                sep="\t",
+                file="invivostats_check_badcmax.txt")
 
     benchmarks[["in_vivo_stats"]] <- list(
                                           RMSLE.InVivoCss = RMSLE.invivocss,
@@ -430,11 +462,13 @@ benchmark_httk <- function(
                                             as.numeric(FitData2$Pred.Cmax) /
                                             as.numeric(FitData2$Cmax)))
                                         )
+    print(benchmarks[["in_vivo_stats"]])
   }
 
   #
   if (tissuepc.check)
   {
+    cat("Running Tissue Partition Coefficients check...\n")
     pc.table <- NULL
     # Subset 'pc.data' - exclude chemicals for <justification for exclusion>
     pc.data <- subset(pc.data,fu != 0 & Exp_PC != 0 & Tissue %in% c("Adipose","Bone","Brain","Gut",
@@ -518,7 +552,8 @@ benchmark_httk <- function(
           regression=FALSE,
           suppress.messages=TRUE)
       }
-      for(this.tissue in subset(pc.data,CAS==this.cas)[,'Tissue']){
+      for(this.tissue in subset(pc.data,CAS==this.cas)[,'Tissue'])
+      {
         if(this.tissue == 'Blood Cells') this.pc <- 'rbc'
         else this.pc <- this.tissue
         pc.table <- rbind(pc.table,
@@ -572,19 +607,26 @@ benchmark_httk <- function(
     pc.table <- cbind(pc.table,fup.improvement,ma.improvement, final.improvement,
                       final.error,init.error,ma.error,fup.error)
     
-    if (any(!is.na(final.error))) RMSLE.TissuePC <- (mean(
-        final.error^2, na.rm=TRUE))^(1/2)
-    else RMSLE.TissuePC <- (mean(
-        init.error^2, na.rm=TRUE))^(1/2)
+    if (any(!is.na(final.error))) SLE.TissuePC <- signif(final.error^2, 4)
+    else SLE.TissuePC <- signif(init.error^2, 4)
+                         
+ # Write out values with more than two orders of magnitude error:
+    write.table(format(subset(pc.table, SLE.TissuePC>4), digits=3),
+                row.names=FALSE,
+                sep="\t",
+                file="tissuepc_check.txt")
     
-    benchmarks[["tissuepc"]] <- list(RMSLE.TissuePC = signif(RMSLE.TissuePC,4),
+    benchmarks[["tissuepc"]] <- list(RMSLE.TissuePC = 
+                                       signif(sqrt(mean(SLE.TissuePC)), 4),
                                      N.TissuePC = 
-                                       length(final.error[!is.na(final.error)]))
-    
+                                       length(SLE.TissuePC[
+                                              !is.na(SLE.TissuePC)]))
+    print(benchmarks[["tissuepc"]])
   }
     
   if (make.plots)
   {
+    cat("Making plots...\n")
     plot.table <- NULL
     for (this.check in names(benchmarks))
       for (this.benchmark in names(benchmarks[[this.check]]))
@@ -657,3 +699,28 @@ benchmark_httk <- function(
 #                      in_vivo_stats.check=FALSE,
 #                      tissuepc.check=TRUE, 
 #                      make.plots=FALSE)
+
+
+## Root mean squared log10 Error (RMSLE): 
+# sqrt(mean(log10(Xpred+1)-log10(Xobs+1))2)
+# use this
+calc_RMSLE <- function(in.table,
+                       pred.col="Conc.pred",
+                       obs.col="Conc.obs",
+                       sigfig=4,zeroval=1e-6)
+{
+# Get red of NA's:
+  in.table <- subset(in.table, 
+                      !is.na(in.table[,pred.col]) & 
+                      !is.na(in.table[,obs.col]))
+
+# How to handle very small values which diverge to negative infinity:
+  for (this.col in c(pred.col, obs.col))
+    in.table[in.table[,this.col] < zeroval,this.col] <- zeroval
+
+  return(signif(
+    sqrt(mean((log10(in.table[,pred.col] /
+                       in.table[,obs.col]))^2,
+                   na.rm=TRUE)),
+    sigfig))
+}

@@ -14,7 +14,8 @@ provided by reviewers at ALTEX.
 * Corrected error where non-restrictive clearance option was not working for model pbtk
 * Set restrictive.clearance=TRUE by defailt in 'calc_hep_clearance' when model = "unscaled"
 * Corrected compartment names for model "gas_pbk" -- "Calv", "Cendexh", and "Cmixexh" were being returned in ppmv units, while "Calvppmv", "Cendexhppmv", and "Cmixexhppmv" were in uM
-* Calculation of Fabs corrected for non-human species to follow Yu and Amidon (1999) using small intestine mean residence time and radius. (Thank you ALTEX reviewers) 
+* Calculation of Fabs corrected for non-human species to follow Yu and Amidon (1999) using small intestine mean residence time and radius. (Thank you ALTEX reviewers)
+* Intestinal flow rate correction to the Qgut model now scales with body weight (rodent Fgut was being predicted way too low) 
 * Corrected units of Peff in calculation of Fabs by 'calc_fabs.oral'-- calculations now indicate that more chemicals are poorly absorbed.
 * Revised 'calc_css' to handle models with no specified analytic solution
 * Revised ionization code in 'armitage_eval' so that pka_donor and pka_accept values now correctly used (thank you Meredith Scherer)
@@ -24,10 +25,12 @@ provided by reviewers at ALTEX.
 
 ## Enhancements
 * A physiology data table from 'httkpop_generate' can now be passed to 'calc_mc_css' and 'calc_mc_tk' (and 'calc_mc_css' via ...) so that a consistent populatin can be used across monte carlo runs. See argument httkpop.dt.
+* Physico-chemical properties are now retrieved from the CompTox Chemicals Dashboard programmatically using [R package ctxR](https://cran.r-project.org/package=ctxR) (Thank you Paul Kruse)
 * 'calc_fabs.oral' now calculates oral uptake rate kgutabs using Caco-2 permeability, according to method of Lennernas (1997) (Thank you ALTEX reviewers)
 * Revised and changed name of 'get_fabsgut' to 'get_fbio' and modified function to use 'calc_fbio.oral' rather than call oral bioavailability subfunctions directly
 * Replaced conversion of human effective gut permeability to rat using Wahajudin et al. (2011) regression (Thank you ALTEX reviewers) 
-* Cleaned up code for various ODE models to make them more consistent and better annotated (more comments)
+* Loading message displaying version now appears when package is loaded (thank you EPA NAMs class)
+* Cleaned up code for various ODE models to make them more consistent and better annotated (added more comments)
 * Reordered variables in modelinfo files for consistency so that diff can be used more easily to compare two models
 * Modified 'calc_kair' to only allow neutral chemical fraction to partition into air  (thank you Jon Arnot)
 * Updated help files describing models
