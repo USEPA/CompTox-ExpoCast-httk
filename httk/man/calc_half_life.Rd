@@ -76,8 +76,10 @@ rate from the one compartment model.
 \examples{
 
 calc_half_life(chem.name="Bisphenol A")
+\donttest{
 calc_half_life(chem.name="Bisphenol A",species="Rat")
 calc_half_life(chem.cas="80-05-7")
+}
 
 }
 \seealso{
