@@ -62,7 +62,7 @@ Warning messages:
 > 
 > ##head(solve_1comp(chem.name="bisphenol a"))
 > #head(solve_1comp(chem.cas="80-05-7"))
-> head(solve_1comp(parameters=parameterize_1comp(chem.cas="80-05-7")))
+> head(solve_1comp(parameters=parameterize_1comp(chem.cas="80-05-7"),days=1))
 Human volume of distribution returned in units of L/kg BW.
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
@@ -166,30 +166,30 @@ Volume of distribution returned in units of L/kg BW.
 Human volume of distribution returned in units of L/kg BW.
 Human volume of distribution returned in units of L/kg BW.
 There were 12 warnings (use warnings() to see them)
-> for (this.param in sort(tolower(names(p)))) cat(paste(this.param,": ",p[[this.param]],"\n"))
-bw :   
-caco2.pab :   
-caco2.pab.dist :   
-clint :   
-clint.dist :   
-fabsgut :   
-fhep.assay.correction :   
-funbound.plasma :   
-funbound.plasma.adjustment :   
-funbound.plasma.dist :   
+> for (this.param in order(sort(tolower(names(p))))) cat(paste(names(p)[this.param],": ",p[[this.param]],"\n"))
+BW :  70 
+Caco2.Pab :  1.6 
+Caco2.Pab.dist :  NA 
+Clint :  0 
+Clint.dist :  NA 
+Fabsgut :  0.6448 
+Fhep.assay.correction :  0.9561 
+Funbound.plasma :  0.747 
+Funbound.plasma.adjustment :  0.996 
+Funbound.plasma.dist :  NA 
 hematocrit :  0.44 
 hepatic.bioavailability :  1 
 kelim :  0.1091 
 kgutabs :  2.18 
 liver.density :  1.05 
-ma :   
+MA :  19 
 million.cells.per.gliver :  110 
-mw :   
-pka_accept :   
-pka_donor :   
+MW :  440.4 
+pKa_Accept :  8.09 
+pKa_Donor :  2.81 
 plasma.vol :  0.04286 
-pow :   
-rblood2plasma :   
-vdist :   
+Pow :  0.8903 
+Rblood2plasma :  0.8419 
+Vdist :  0.7338 
 > 
 > quit("no")
