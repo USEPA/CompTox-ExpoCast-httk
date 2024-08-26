@@ -120,6 +120,7 @@ end of the simulation.
 
 calc_css(chem.name='Bisphenol-A',doses.per.day=5,f=.001,output.units='mg/L')
 
+\donttest{
 parms <- parameterize_3comp(chem.name='Bisphenol-A')
 parms$Funbound.plasma <- .07
 calc_css(chem.name='Bisphenol-A',parameters=parms,model='3compartment')
@@ -139,6 +140,7 @@ element_text(size = 16), plot.title = element_text(size = 17)) +
 ggtitle("Bisphenol A")
 
 print(c.vs.t)
+} 
 
 }
 \seealso{

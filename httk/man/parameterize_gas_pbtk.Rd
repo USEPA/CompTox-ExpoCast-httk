@@ -177,6 +177,7 @@ was first described by Linakis et al. (2020).
 \examples{
 parameters <- parameterize_gas_pbtk(chem.cas='129-00-0')
 
+\donttest{
 parameters <- parameterize_gas_pbtk(chem.name='pyrene',species='Rat')
 
 parameterize_gas_pbtk(chem.cas = '56-23-5')
@@ -188,6 +189,7 @@ compartments <- list(liver=c("liver"),fast=c("heart","brain","muscle","kidney"),
                       lung=c("lung"),gut=c("gut"),slow=c("bone"))
 parameterize_gas_pbtk(chem.name="Bisphenol a",species="Rat",default.to.human=TRUE,
                    tissuelist=compartments) 
+}
 
 }
 \references{

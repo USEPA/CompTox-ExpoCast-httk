@@ -94,6 +94,7 @@
 #' 
 #' calc_css(chem.name='Bisphenol-A',doses.per.day=5,f=.001,output.units='mg/L')
 #' 
+#'\donttest{
 #' parms <- parameterize_3comp(chem.name='Bisphenol-A')
 #' parms$Funbound.plasma <- .07
 #' calc_css(chem.name='Bisphenol-A',parameters=parms,model='3compartment')
@@ -113,7 +114,8 @@
 #' ggtitle("Bisphenol A")
 #'
 #' print(c.vs.t)
-#' 
+#'} 
+#'
 #' @importFrom purrr compact 
 #' @export calc_css
 calc_css <- function(chem.name=NULL,

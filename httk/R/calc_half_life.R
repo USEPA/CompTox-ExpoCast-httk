@@ -44,9 +44,11 @@
 #' @examples
 #' 
 #' calc_half_life(chem.name="Bisphenol A")
+#'\donttest{
 #' calc_half_life(chem.name="Bisphenol A",species="Rat")
 #' calc_half_life(chem.cas="80-05-7")
-#' 
+#'}
+#'
 #' @export calc_half_life
 calc_half_life <- function (chem.cas = NULL, chem.name = NULL, dtxsid = NULL,
                             parameters = NULL, species = "Human",
