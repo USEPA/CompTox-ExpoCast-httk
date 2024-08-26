@@ -1,4 +1,4 @@
-"CAS","Drug","Tissue","Species","fu","A/B/N","LogP","Exp_PC"
+"CAS","Drug","Tissue","Species","fu","A.B.N","LogP","Exp_PC"
 "94-75-7","2,4-Dichlorophenoxyacetic acid","Brain","Rat",0.05,"A",2.81,1.42
 "69655-05-6","2',3'-Dideoxyinosine","Brain","Rat",0.97,"A",-1.2,0.445
 "69655-05-6","2',3'-Dideoxyinosine","Gut","Rat",0.97,"A",-1.2,0.51

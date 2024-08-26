@@ -153,6 +153,7 @@ concentration in vitro should be converted to cfree.invitro using
 calc_analytic_css(chem.name='Bisphenol-A',output.units='mg/L',
                  model='3compartment',concentration='blood')
 
+\donttest{
 calc_analytic_css(chem.name='Bisphenol-A',tissue='liver',species='rabbit',
                  parameterize.args = list(
                                 default.to.human=TRUE,
@@ -174,6 +175,7 @@ calc_analytic_css(chem.name="Tacrine",model="pbtk")
 calc_analytic_css(chem.name="Dicofol",model="1compartment")
 calc_analytic_css(chem.name="Diflubenzuron",model="3compartment")
 calc_analytic_css(chem.name="Theobromine",model="3compartmentss")
+}
 
 }
 \references{
