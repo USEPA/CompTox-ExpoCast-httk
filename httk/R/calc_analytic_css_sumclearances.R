@@ -53,8 +53,8 @@
 #'
 #' @keywords 3compss2
 #'
-#' @export calc_analytic_css_3compss2
-calc_analytic_css_3compss2 <- function(chem.name=NULL,
+#' @export calc_analytic_css_sumclearances
+calc_analytic_css_sumclearances <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid = NULL,
                                    parameters=NULL,
