@@ -122,7 +122,7 @@ to run. So, to speed up how fast these examples run, we specify here that we
 only want to use 25 samples, even though the actual **httk** default is 1000.
 Increase this number to get more stable (and accurate) results:
 ```{r MC_samples, eval = execute.vignette}
-NSAMP <- 25
+NSAMP <- 10
 ```
 
 # Examples
