@@ -13,7 +13,7 @@ calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="brain")
 
 ##head(solve_1comp(chem.name="bisphenol a"))
 #head(solve_1comp(chem.cas="80-05-7"))
-head(solve_1comp(parameters=parameterize_1comp(chem.cas="80-05-7")))
+head(solve_1comp(parameters=parameterize_1comp(chem.cas="80-05-7"),days=1))
 
 calc_vdist(chem.name="triclosan")
 calc_vdist(chem.cas="80-05-7")
@@ -26,6 +26,6 @@ params <- parameterize_pbtk(chem.name="triclosan")
 calc_vdist(parameters=params)
 
 p <- parameterize_1comp(chem.name="Aminopterin")[sort(names(parameterize_1comp(chem.name="Aminopterin")))]
-for (this.param in sort(tolower(names(p)))) cat(paste(this.param,": ",p[[this.param]],"\n"))
+for (this.param in order(sort(tolower(names(p))))) cat(paste(names(p)[this.param],": ",p[[this.param]],"\n"))
 
 quit("no")
