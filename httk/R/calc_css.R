@@ -232,11 +232,15 @@ calc_css <- function(chem.name=NULL,
     restrictive.clearance=restrictive.clearance
   )
   # Check to see if there is analytic Css funtion:
-  if (!is.null(model.list[["gas_pbtk"]]$analytic.css.func))
+  if (!is.null(model.list[[model]]$analytic.css.func))
+  {
      css <- do.call("calc_analytic_css", 
-                 args=purrr::compact(analyticcss_params))
+                 args=purrr::compact(c(
+                                       analyticcss_params)))
+  } else {
   # Otherwise set css to infinite:
-  css <- Inf
+    css <- Inf
+  }
   
   # Use this conentration to cutoff the iterations:
   target.conc <- (1 - f) * css 

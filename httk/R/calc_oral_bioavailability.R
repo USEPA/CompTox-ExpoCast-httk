@@ -68,6 +68,8 @@
 #' @param Caco2.Pab.default (Numeric) Caco2 apical to basolateral data.
 #' (Defaults to  1.6.) (Not applicable for `calc_fbio.oral`.)
 #' 
+#' @param Caco2.Pab (Numeric) Caco2 apical to basolaterial permeability used by calc_peff
+#'
 #' @param restrictive.clearance Protein binding not taken into account (set to 1) in 
 #' liver clearance if FALSE.
 #' 
@@ -108,6 +110,10 @@ calc_fbio.oral <- function(parameters = NULL,
   restrictive.clearance = FALSE
   )
 {
+  ## Setting up binding for Global Variables ##
+  hepatic.bioavailability <- NULL
+  ####
+  
   # Determine Fhep.oral
   if (is.null(parameters))
   {
@@ -551,36 +557,45 @@ calc_fgut.oral <- function(parameters = NULL,
     } else {
       if (tolower(species) != "human") 
         if (!suppress.messages)
-          warning("Human intestinal permeability and microvilli blood flow used to calculate fraction absorbed by gut")
+          warning("Human intestinal permeability and microvilli blood flow fraction used to calculate fraction absorbed by gut")
       
       # m2 area intestine -- Yang et al. (2007)
-      Asmallintestine <- 0.66/70*parameters$BW
+      Asmallintestine <- signif(0.66/70*parameters$BW,4)
     }
     
     # Define a rate of intestinal transport to compete with absorption for poorly
     # absorbed chemicals:
-    Qintesttransport <- 0.1
+    Qintesttransport <- 0.1*parameters$BW^(3/4)/70^(3/4) # L/h
     
     # Calculate Qvilli based on Qsmallintestine
     # Tateishi 1997 -- Human Qsmallintestine = 38 ml/min/100 g
     # Weight small intestine -- 1.5875 kg -- 15.875 100 g
-    # Fraction of blood flow to gut going to small intestine:
+    #
+    # Fraction of blood flow to gut (Qgut) going to small intestine:
     # For 70 kg human Qtotal.liver = 86.96 L/h (parameterize_pbtk)
     # and Qgut = 68.99 L/h (parameterize_pbtk)
-    Qsmallintestinehuman <- 38.7 /1000*60*15.8757 # L/h
-    Qsmallintestinef <- Qsmallintestinehuman / 68.99 # Works out to roughly 53%
-    if(!is.null(parameters$Qtotal.liverc)){
-      this.Qsmallintestinehuman <- Qsmallintestinef *
-        68.99/86.96*parameters$Qtotal.liverc*parameters$BW^(3/4)
-      Qvilli <- 18/Qsmallintestinehuman*this.Qsmallintestinehuman
-    } else if(!is.null(parameters$Qgutf)){
-      this.Qsmallintestinehuman <- Qsmallintestinef *
-        parameters$Qgutf*parameters$Qcardiacc*parameters$BW^(3/4)
-      Qvilli <- 18/Qsmallintestinehuman*this.Qsmallintestinehuman
+    Qsmallintestine.averagehuman <- 38.7 /1000*60*15.8757 # Qsmallintestinehuman L/h
+    Qsmallintestinef <- Qsmallintestine.averagehuman / 68.99 # Fraction works out to roughly 53%
+    Qvilli.averagehuman <- 18 # L/h blood flow to microvilli of intestinal lumen, Yang et al. (2007)
+    Qvillif <- Qvilli.averagehuman/Qsmallintestine.averagehuman # Fraction of intestinal blood flow that goes to villi
+    if (!is.null(parameters$Qtotal.liverc))
+    {
+      # Blood flow to small intestine scaled to body weight of individiaul:
+      this.Qsmallintestine <- Qsmallintestinef * # Fraction of blood flow to gut that goes to small intestine
+        68.99/86.96* # Fraction of total liver flow that goes to gut
+        parameters$Qtotal.liverc * # Total blood flow to liver L/h/kg^(3/4)
+        parameters$BW^(3/4) # Body weight to three fourths pawer
+    } else if (!is.null(parameters$Qgutf)) {
+      # Blood flow to small intestine scaled to body weight of individiaul:
+      this.Qsmallintestine <- Qsmallintestinef * # Fraction of blood flow to gut that goes to small intestine
+        parameters$Qgutf * # Fraction of cardiac output that goes to gut
+        parameters$Qcardiacc*parameters$BW^(3/4) # Cardiac output L/h
     } else {
       warning("Because model used does not provide Qtotal.liver or Qgutf, the Yang et al. (2007) value of 18 L/h was used to calculate fraction absorbed by gut")
-      Qvilli <- 18 # L/h blood flow to microvilli of intestinal lumen
-    }    
+      this.Qsmallintestine <- Qsmallintestine.averagehuman # L/h
+    } 
+    # Blood flow to villi L/h 
+    Qvilli <- Qvillif * this.Qsmallintestine   
     # permeability clearance (CLperm) Yang et al. (2007) equation 8:
     CLperm <- peff * Asmallintestine * 1000/10^4/100*3600 # 10^-4 cm / s * m2 * 1000 L / m^3 / 10^4 * 1 m / 100 cm * 3600 s / h = L / h
     # Qgut "in terms of fundamental parameters" -- Yang et al. (2007) equation 6:
