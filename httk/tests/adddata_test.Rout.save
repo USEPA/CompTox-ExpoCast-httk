@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2024-03-16 r86144 ucrt) -- "Unsuffered Consequences"
+R Under development (unstable) (2024-08-07 r86984 ucrt) -- "Unsuffered Consequences"
 Copyright (C) 2024 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
@@ -39,6 +39,8 @@ For model 3compartmentss each chemical must have non-NA values for:Human.Clint, 
   Excluding compounds that do not have a clint value or distribution of clint values.
 5: In get_cheminfo() :
   Excluding volatile compounds defined as log.Henry >= -4.5.
+6: In get_cheminfo() :
+  Excluding compounds that are categorized in one or more of the following chemical classes: PFAS.
 > 
 > fake <- data.frame(Compound="Tester",
 +                    CASRN="222-11-1",
@@ -66,16 +68,16 @@ For model 3compartmentss each chemical must have non-NA values for:Human.Clint, 
 > 
 > calc_css(chem.name="Tester")
 $avg
-[1] 44.26
+[1] 32.74
 
 $frac
-[1] 0.979
+[1] 0.9916
 
 $max
-[1] 44.75
+[1] 32.82
 
 $the.day
-[1] 101
+[1] 125
 
 Warning messages:
 1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
@@ -123,5 +125,7 @@ For model 3compartmentss each chemical must have non-NA values for:Human.Clint, 
   Excluding compounds that do not have a clint value or distribution of clint values.
 5: In get_cheminfo() :
   Excluding volatile compounds defined as log.Henry >= -4.5.
+6: In get_cheminfo() :
+  Excluding compounds that are categorized in one or more of the following chemical classes: PFAS.
 > 
 > quit("no")

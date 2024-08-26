@@ -151,8 +151,12 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
                    convert_units(MW = parameters[["MW"]],
                                  dose.units,
                                  "mg") # mg/kg/h
-
-  Css <- hourly.dose / parameters[["kelim"]] / parameters[["Vdist"]]
+                                 
+  Css <- hourly.dose *
+  # Oral bioavailability:
+           parameters[["Fabsgut"]] * parameters[["hepatic.bioavailability"]] /
+  # Clearance:
+           parameters[["kelim"]] / parameters[["Vdist"]]
   # Convert to plasma concentration:
   Css <- Css/parameters[["Rblood2plasma"]]
   
