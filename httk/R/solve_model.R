@@ -167,6 +167,7 @@
 #'                    dosing.matrix = NULL,
 #'                    daily.dose = NULL)))
 #'
+#' \donttest{
 #' # A dose matrix specifies times and magnitudes of doses:
 #' dm <- matrix(c(0,1,2,5,5,5),nrow=3)
 #' colnames(dm) <- c("time","dose")
@@ -200,6 +201,7 @@
 #'            dose=NULL,
 #'            doses.per.day=4,
 #'            days=2.5)
+#' } 
 #' 
 #' @export solve_model
 #'

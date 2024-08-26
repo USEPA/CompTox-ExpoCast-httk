@@ -36,7 +36,7 @@
 #' 
 #' @examples
 #' 
-#' \dontrun{
+#' \donttest{
 #' # For chemicals with Honda et al. (2023) Caco2 Pab QSPR predictions, 
 #' # add them to our chemical information wherever measured values are 
 #' # unavailable:
