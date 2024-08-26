@@ -1,4 +1,4 @@
-#' Calculate the steady state concentration for the three compartment
+#' Calculate the steady state concentration for the sum of clearances
 #' steady-state model with exhalation
 #'
 #' This function calculates the analytic steady state plasma or venous blood 
@@ -13,10 +13,7 @@
 #' @param dtxsid EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})   
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #'
-#' @param parameters Chemical parameters from parameterize_pbtk (for model = 
-#' 'pbtk'), parameterize_3comp (for model = '3compartment), 
-#' parameterize_1comp(for model = '1compartment') or parameterize_steadystate 
-#' (for model = '3compartmentss'), overrides chem.name and chem.cas.
+#' @param parameters Chemical parameters from \code{\link{parameterize_sumclearances}} overrides chem.name and chem.cas.
 #'
 #' @param hourly.dose Hourly dose rate mg/kg BW/h.
 #'
@@ -49,9 +46,9 @@
 #'
 #' @seealso \code{\link{parameterize_steadystate}}
 #'
-#' @author ohn Wambaugh
+#' @author John Wambaugh
 #'
-#' @keywords 3compss2
+#' @keywords sumclearances
 #'
 #' @export calc_analytic_css_sumclearances
 calc_analytic_css_sumclearances <- function(chem.name=NULL,
@@ -74,12 +71,12 @@ calc_analytic_css_sumclearances <- function(chem.name=NULL,
 {
   if (!is.null(hourly.dose))
   {
-     warning("calc_analytic_css_3compss deprecated argument hourly.dose replaced with new argument dose, value given assigned to dosing.")
+     warning("calc_analytic_css_sumclearances deprecated argument hourly.dose replaced with new argument dose, value given assigned to dosing.")
      dosing <- list(daily.dose = 24*hourly.dose)
   }
   
 # Load from modelinfo file:
-  THIS.MODEL <- "3compartmentss2"
+  THIS.MODEL <- "sumclearances"
   param.names <- model.list[[THIS.MODEL]]$param.names
   param.names.schmitt <- model.list[["schmitt"]]$param.names
   parameterize_function <- model.list[[THIS.MODEL]]$parameterize.func
@@ -224,7 +221,7 @@ calc_analytic_css_sumclearances <- function(chem.name=NULL,
   if (!is.null(tissue))
   {
     # We need logP, the pKa's, and membrane affinity, which currently isn't one 
-    # of the 3compss parameters, so unless the user provides these parameters,
+    # of the sumclearances parameters, so unless the user provides these parameters,
     # they need to give a chemical identifier like chem.name/chem.cas/dtxsid, or
     # we can't find them in the chem.physical_and_invitro.data set and run:
     if (!any(c("Pow", "MA", "pKa_Accept", "pKa_Donor") %in% 

@@ -95,18 +95,21 @@ calc_kair <- function(
       is.null(parameters)) 
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
 
-  # Look up the chemical name/CAS, depending on what was provided:
-  if (any(is.null(chem.cas),is.null(chem.name),is.null(dtxsid)))
+  if (is.null(parameters))
   {
-    out <- get_chem_id(
-            chem.cas=chem.cas,
-            chem.name=chem.name,
-            dtxsid=dtxsid)
-    chem.cas <- out$chem.cas
-    chem.name <- out$chem.name                                
-    dtxsid <- out$dtxsid
+    # Look up the chemical name/CAS, depending on what was provided:
+    if (any(is.null(chem.cas),is.null(chem.name),is.null(dtxsid)))
+    {
+      out <- get_chem_id(
+              chem.cas=chem.cas,
+              chem.name=chem.name,
+              dtxsid=dtxsid)
+      chem.cas <- out$chem.cas
+      chem.name <- out$chem.name                                
+      dtxsid <- out$dtxsid
+    }
   }
-
+  
   if (is.null(parameters) |  (!("logHenry" %in% names(parameters)))) 
   { 
     #henry's law in atm * m^3 / mol, converted atm to Pa
@@ -170,7 +173,7 @@ calc_kair <- function(
     Funbound.plasma <- parameters$Funbound.plasma
     Pow <- parameters$Pow
   } else {
-    params <- parameterize_steadystate(
+    params <- parameterize_sumclearances(
                                        chem.cas=chem.cas,
                                        chem.name=chem.name,
                                        dtxsid=dtxsid,
