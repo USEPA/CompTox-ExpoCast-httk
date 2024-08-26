@@ -105,7 +105,7 @@ Warning messages:
 6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > 
-> head(solve_3comp(chem.name="bisphenol a"))
+> head(solve_3comp(chem.name="bisphenol a",days=1))
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
 AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
@@ -141,7 +141,7 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
-> head(solve_3comp(chem.cas="80-05-7"))
+> head(solve_3comp(chem.cas="80-05-7",days=1))
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
 AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
@@ -177,7 +177,7 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
-> head(solve_3comp(parameters=parameterize_3comp(chem.cas="80-05-7")))
+> head(solve_3comp(parameters=parameterize_3comp(chem.cas="80-05-7"),days=1))
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
 AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
@@ -249,7 +249,7 @@ Warning messages:
 > head(initial_default_dose_target)
 [1] 306.6141
 > 
-> out_default_dosing = solve_3comp(chem.name = "bisphenol a")
+> out_default_dosing = solve_3comp(chem.name = "bisphenol a",days=2)
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
 AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
@@ -282,7 +282,8 @@ Aintestine
      197.5 
 > 
 > out_nondefault_dosing = solve_3comp(chem.name = "bisphenol a", 
-+                                     daily.dose =3,doses.per.day = 5)
++                                     daily.dose =3,doses.per.day = 5,
++                                     days=2)
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
 AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
@@ -321,38 +322,38 @@ Aintestine
 > 
 > p <- parameterize_3comp(chem.name="Aminopterin")[sort(names(parameterize_3comp(chem.name="Aminopterin")))]
 There were 16 warnings (use warnings() to see them)
-> for (this.param in sort(tolower(names(p)))) cat(paste(this.param,": ",p[[this.param]],"\n"))
-bw :   
-caco2.pab :   
-caco2.pab.dist :   
-clint :   
-clint.dist :   
-clmetabolismc :   
-fabsgut :   
-fhep.assay.correction :   
-funbound.plasma :   
-funbound.plasma.adjustment :   
-funbound.plasma.dist :   
+> for (this.param in order(sort(tolower(names(p))))) cat(paste(names(p)[this.param],": ",p[[this.param]],"\n"))
+BW :  70 
+Caco2.Pab :  1.6 
+Caco2.Pab.dist :  NA 
+Clint :  0 
+Clint.dist :  NA 
+Clmetabolismc :  0 
+Fabsgut :  0.6448 
+Fhep.assay.correction :  0.9561 
+Funbound.plasma :  0.747 
+Funbound.plasma.adjustment :  0.996 
+Funbound.plasma.dist :  NA 
 hematocrit :  0.44 
-kgut2pu :   
+Kgut2pu :  1.68 
 kgutabs :  0.3711 
-kliver2pu :   
-krbc2pu :   
-krest2pu :   
+Kliver2pu :  3.803 
+Krbc2pu :  0.8576 
+Krest2pu :  0.9856 
 liver.density :  1.05 
-ma :   
+MA :  19 
 million.cells.per.gliver :  110 
-mw :   
-pka_accept :   
-pka_donor :   
-pow :   
-qcardiacc :   
-qgfrc :   
-qgutf :   
-qliverf :   
-rblood2plasma :   
-vgutc :   
-vliverc :   
-vrestc :   
+MW :  440.4 
+pKa_Accept :  8.09 
+pKa_Donor :  2.81 
+Pow :  0.8903 
+Qcardiacc :  13.88 
+Qgfrc :  0.3099 
+Qgutf :  0.2054 
+Qliverf :  0.0535 
+Rblood2plasma :  0.8419 
+Vgutc :  0.0158 
+Vliverc :  0.02448 
+Vrestc :  0.7879 
 > 
 > quit("no")

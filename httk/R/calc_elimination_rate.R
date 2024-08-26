@@ -72,9 +72,11 @@
 #' @examples
 #' 
 #' calc_elimination_rate(chem.name="Bisphenol A")
+#'\dontrun{
 #' calc_elimination_rate(chem.name="Bisphenol A",species="Rat")
 #' calc_elimination_rate(chem.cas="80-05-7")
-#' 
+#'}
+#'
 #' @export calc_elimination_rate
 
 calc_elimination_rate <- function(chem.cas=NULL,

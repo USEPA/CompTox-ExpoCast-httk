@@ -194,8 +194,24 @@ install.packages("readxl")
 install.packages("ggplot2")
 ```
 
+### eval = execute.vignette
+If you are using the RMarkdown version of this vignette (extension, .RMD) you
+will be able to see that several chunks of code in this vignette
+have the statement "eval = execute.vignette". The next chunk of code, by default,
+sets execute.vignette = FALSE.  This means that the code is included (and necessary) but was
+not run when the vignette was built. We do this because some steps require 
+extensive computing time and the checks on CRAN limit how long we can spend
+building the package. If you want this vignette to work, you must run all code,
+either by cutting and pasting it into R. Or, if viewing the .RMD file, you can
+either change execute.vignette to TRUE or press "play" (the green arrow) on
+each chunk in RStudio.
+```{r runchunks, eval = TRUE}
+# Set whether or not the following chunks will be executed (run):
+execute.vignette <- FALSE
+```
+
 ## Load the necessary packages:
-```{r load_packages, eval = TRUE}
+```{r load_packages, eval = execute.vignette}
 library(httk)
 library(readxl)
 library(ggplot2)
@@ -209,7 +225,7 @@ sequence is used). However, the more samples that are used, the longer it takes
 to run. So, to speed up how fast these examples run, we specify here that we
 only want to use 25 samples, even though the actual **httk** default is 1000.
 Increase this number to get more stable (and accurate) results:
-```{r MC_samples, eval = TRUE}
+```{r MC_samples, eval = execute.vignette}
 NSAMP <- 25
 ```
 
@@ -410,7 +426,7 @@ steady-state plasma concentration resulting from an ongoing 1 mg/kg/day
 exposure.
 
 ## Steady State Plasma Concentration $C_{ss}$
-```{r calc_css1, eval = TRUE}
+```{r calc_css1, eval = execute.vignette}
 for (this.id in unique(toxcast.table$DTXSID))
 {
 # get_cheminfo() gives a list of all the CAS numbers for which HTTK will work:
@@ -432,7 +448,7 @@ for (this.id in unique(toxcast.table$DTXSID))
 Let's look at just the relevant columns from our table. Any Css values of "NA" 
 (not a number) indicate that we don't currently have *in vitro* TK data for 
 those chemicals:
-```{r css_table1, eval = TRUE}
+```{r css_table1, eval = execute.vignette}
 knitr::kable(toxcast.table[1:10,c("Compound","Q10.AC50","Css","Css.Type")], 
                                 caption = "Summarized ToxCast Data",
              floating.environment="sidewaystable")
@@ -449,14 +465,14 @@ load the table of quantitative structure-property relationship (QSPR) model
 predictions from the 
 [Sipes et al. (2017)](https://doi.org/10.1021/acs.est.7b00650) 
 supplemental material:
-```{r load_qspr, eval = TRUE}
+```{r load_qspr, eval = execute.vignette}
 load_sipes2017()
 ```
 Now go through the list of chemicals again but only calculate if we didn't 
 already have a value (NOTE: load_sipes2017 will not overwrite the *in vitro*
 data by default, so you'll still get the same answer if you use the same random 
 number seed, but you would also be wasting time):
-```{r calc_css2, eval = TRUE}
+```{r calc_css2, eval = execute.vignette}
 for (this.id in unique(toxcast.table$DTXSID))
 {
   if (this.id %in% get_cheminfo(info="dtxsid", suppress.messages=TRUE) &
@@ -484,7 +500,7 @@ for those chemicals (note that there are also predictions available from
 (load_pradeep2020) and 
 [Dawson et al. (2021)](https://doi.org/10.1021/acs.est.0c06117) 
 (load_dawson2021):
-```{r css_table2, eval = TRUE}
+```{r css_table2, eval = execute.vignette}
 knitr::kable(toxcast.table[1:10,c("Compound","Q10.AC50","Css","Css.Type")], 
                                 caption = "Summarized ToxCast Data",
              floating.environment="sidewaystable")
@@ -514,12 +530,12 @@ ending up with a dose rate with units of mg/kd/day that will product the
 $$AED = \frac{AC_{50}}{C_{ss}\left(1~mg/kg/day\right)}~mg/kg/day$$
 where b0oth $AC_{50}$ and $C_{ss}$ must have the same units. 
 Do not forget that the ToxCast concentrations are given on the log-10 scale:
-```{r calc_equivalent_dose16, eval = TRUE}
+```{r calc_equivalent_dose16, eval = execute.vignette}
 toxcast.table$EquivDose <- signif(10^toxcast.table$Q10.AC50 / toxcast.table$Css,
                                   3)
 ```
 Look at the table again:
-```{r display_table2, eval = TRUE}
+```{r display_table2, eval = execute.vignette}
 knitr::kable(toxcast.table[1:10,c("Compound","Q10.AC50","Css","EquivDose")], 
                                  caption = "Summarized ToxCast Data",
               floating.environment="sidewaystable")          
@@ -589,7 +605,7 @@ for (this.col in 4:36)
 save(example.seem,file="introtoivive-seem.Rdata",version=2)
 ```
 Merge the consensus model predictions with your table:
-```{r mergetoxexposure, eval = TRUE}
+```{r mergetoxexposure, eval = execute.vignette}
 example.seem <- httk::example.seem
 toxcast.table <- merge(toxcast.table,
                        example.seem[,c(
@@ -607,12 +623,12 @@ toxcast.table <- merge(toxcast.table,
 Now we can calculate a bioactivity:exposure ratio (BER), which is a risk-like 
 metric since it takes hazard, dose-response, and exposure into account
 ([Wetmore, 2015](https://doi.org/10.1093/toxsci/kfv171)):
-```{r calc_ber, eval = TRUE}
+```{r calc_ber, eval = execute.vignette}
 toxcast.table$BER <- signif(toxcast.table$EquivDose/toxcast.table$seem3.u95, 3)
 ``` 
 
 Reorder your table by BER:
-```{r sort_by_ber, eval = TRUE}
+```{r sort_by_ber, eval = execute.vignette}
 toxcast.table <- toxcast.table[order(toxcast.table$BER),]
 knitr::kable(toxcast.table[1:10,c("Compound","EquivDose","seem3.u95","Pathway","BER")], 
                                  caption = "Bioactivity:Exposure Ratios",
@@ -621,7 +637,7 @@ knitr::kable(toxcast.table[1:10,c("Compound","EquivDose","seem3.u95","Pathway","
 
 ## Make a BER plot
 Convert the chemical names into factors for plotting:
-```{r chem_name_factors, eval = TRUE}
+```{r chem_name_factors, eval = execute.vignette}
 toxcast.table$Compound <- factor(toxcast.table$Compound,
                                     levels=toxcast.table$Compound)
 ```
@@ -629,7 +645,7 @@ Then we can create a plot where the BER for each chemical is shown by the margin
 between putative hazard (in red) and estimated exposure (in blue). The wider
 the margin, the lesser the risk. Chemicals are arranged from left-to-right by
 increasing margin (that is, decreasing risk).
-```{r ber_plot, eval = TRUE}
+```{r ber_plot, eval = execute.vignette}
 BER.plot <- ggplot(data=toxcast.table) +
   geom_segment(aes(x=Compound,
                    xend=Compound,
