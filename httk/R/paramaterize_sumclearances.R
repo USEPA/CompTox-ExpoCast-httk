@@ -286,23 +286,6 @@ parameterize_sumclearances <- function(
     fup.adjustment <- NA
   } 
 
-  # Exhalation parameters:
-  # Get the blood:air and mucus:air partition coefficients:
-  Kx2air <- calc_kair(chem.name=chem.name,
-                      chem.cas=chem.cas,
-                      dtxsid=dtxsid,
-                      species=species,
-                      default.to.human=default.to.human,
-                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                      suppress.messages=suppress.messages)
-  
-  Kwater2air <- Kx2air$Kwater2air
-  Kblood2air <- Kx2air$Kblood2air
-  Kmuc2air <- Kx2air$Kmuc2air
-    
-  Vdot <- as.numeric(this.phys.data["Pulmonary Ventilation Rate"])
-  Qalvc <- Vdot * (0.67) #L/h/kg^0.75 
-
   Params <- list()
   Params[["Clint"]] <- Clint.point # uL/min/10^6
   Params[["Clint.dist"]] <- Clint.dist
@@ -319,6 +302,23 @@ parameterize_sumclearances <- function(
   Params[["million.cells.per.gliver"]] <- 110 # 10^6 cells/g-liver
   Params[["Vliverc"]] <- Vliverc # L/kg BW
   Params[["liver.density"]] <- 1.05 # g/mL
+  
+  
+  # Exhalation parameters:
+  # Get the blood:air and mucus:air partition coefficients:
+  Kx2air <- calc_kair(parameters=Params,
+                      species=species,
+                      default.to.human=default.to.human,
+                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                      suppress.messages=suppress.messages)
+  
+  Kwater2air <- Kx2air$Kwater2air
+  Kblood2air <- Kx2air$Kblood2air
+  Kmuc2air <- Kx2air$Kmuc2air
+    
+  Vdot <- as.numeric(this.phys.data["Pulmonary Ventilation Rate"])
+  Qalvc <- Vdot * (0.67) #L/h/kg^0.75 
+
   Params[["Kblood2air"]] <- Kblood2air
   Params[["Qalvc"]] <- Qalvc
   
