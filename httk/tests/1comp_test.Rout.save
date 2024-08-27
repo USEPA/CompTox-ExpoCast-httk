@@ -166,7 +166,8 @@ Volume of distribution returned in units of L/kg BW.
 Human volume of distribution returned in units of L/kg BW.
 Human volume of distribution returned in units of L/kg BW.
 There were 12 warnings (use warnings() to see them)
-> for (this.param in names(p)) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
+> # Try to standardize order of variable names
+> for (this.param in names(p)[order(toupper(names(p)))]) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
 BW: 70
 Caco2.Pab: 1.6
 Caco2.Pab.dist: NA

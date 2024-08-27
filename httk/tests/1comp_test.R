@@ -26,6 +26,7 @@ params <- parameterize_pbtk(chem.name="triclosan")
 calc_vdist(parameters=params)
 
 p <- parameterize_1comp(chem.name="Aminopterin")[sort(names(parameterize_1comp(chem.name="Aminopterin")))]
-for (this.param in names(p)) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
+# Try to standardize order of variable names
+for (this.param in names(p)[order(toupper(names(p)))]) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
 
 quit("no")

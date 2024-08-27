@@ -10,6 +10,7 @@ calc_analytic_css(chem.cas="80-05-7",model="3compartmentss")
 calc_analytic_css(parameters=parameterize_steadystate(chem.cas="80-05-7"),model="3compartmentss")
 
 p <- parameterize_steadystate(chem.name="Aminopterin")[sort(names(parameterize_steadystate(chem.name="Aminopterin")))]
-for (this.param in names(p)) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
+# Try to standardize order of variable names
+for (this.param in names(p)[order(toupper(names(p)))]) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
 
 quit("no")
