@@ -322,7 +322,8 @@ Aintestine
 > 
 > p <- parameterize_3comp(chem.name="Aminopterin")[sort(names(parameterize_3comp(chem.name="Aminopterin")))]
 There were 16 warnings (use warnings() to see them)
-> for (this.param in names(p)) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
+> # Try to standardize order of variable names
+> for (this.param in names(p)[order(toupper(names(p)))]) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
 BW: 70
 Caco2.Pab: 1.6
 Caco2.Pab.dist: NA
@@ -355,4 +356,5 @@ Rblood2plasma: 0.8419
 Vgutc: 0.0158
 Vliverc: 0.02448
 Vrestc: 0.7879
+> 
 > quit("no")

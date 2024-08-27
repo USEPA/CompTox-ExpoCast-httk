@@ -138,7 +138,8 @@ Warning messages:
   Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.
 8: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
-> for (this.param in names(p)) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
+> # Try to standardize order of variable names
+> for (this.param in names(p)[order(toupper(names(p)))]) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
 BW: 70
 Clint: 56.4
 Clint.dist: NA
