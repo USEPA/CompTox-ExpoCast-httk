@@ -222,45 +222,46 @@ Set recalc.clearance to TRUE if desired.
 > 
 > p <- parameterize_pbtk(chem.name="Aminopterin")[sort(names(parameterize_pbtk(chem.name="Aminopterin")))]
 There were 16 warnings (use warnings() to see them)
-> for (this.param in order(sort(tolower(names(p))))) cat(paste(names(p)[this.param],": ",p[[this.param]],"\n"))
-BW :  70 
-Caco2.Pab :  1.6 
-Caco2.Pab.dist :  NA 
-Clint :  0 
-Clint.dist :  NA 
-Clmetabolismc :  0 
-Fabsgut :  0.6448 
-Fhep.assay.correction :  0.9561 
-Funbound.plasma :  0.747 
-Funbound.plasma.adjustment :  0.996 
-Funbound.plasma.dist :  NA 
-hematocrit :  0.44 
-Kgut2pu :  1.68 
-kgutabs :  0.3711 
-Kkidney2pu :  3.569 
-Kliver2pu :  3.803 
-Klung2pu :  1.229 
-Krbc2pu :  0.8576 
-Krest2pu :  0.9694 
-liver.density :  1.05 
-MA :  19 
-million.cells.per.gliver :  110 
-MW :  440.4 
-pKa_Accept :  8.09 
-pKa_Donor :  2.81 
-Pow :  0.8903 
-Qcardiacc :  13.88 
-Qgfrc :  0.3099 
-Qgutf :  0.2054 
-Qkidneyf :  0.2214 
-Qliverf :  0.0535 
-Rblood2plasma :  0.8419 
-Vartc :  0.03827 
-Vgutc :  0.0158 
-Vkidneyc :  0.00419 
-Vliverc :  0.02448 
-Vlungc :  0.007235 
-Vrestc :  0.7765 
-Vvenc :  0.03827 
+> # Try to standardize order of variable names
+> for (this.param in names(p)[order(toupper(names(p)))]) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
+BW: 70
+Caco2.Pab: 1.6
+Caco2.Pab.dist: NA
+Clint: 0
+Clint.dist: NA
+Clmetabolismc: 0
+Fabsgut: 0.6448
+Fhep.assay.correction: 0.9561
+Funbound.plasma: 0.747
+Funbound.plasma.adjustment: 0.996
+Funbound.plasma.dist: NA
+hematocrit: 0.44
+Kgut2pu: 1.68
+kgutabs: 0.3711
+Kkidney2pu: 3.569
+Kliver2pu: 3.803
+Klung2pu: 1.229
+Krbc2pu: 0.8576
+Krest2pu: 0.9694
+liver.density: 1.05
+MA: 19
+million.cells.per.gliver: 110
+MW: 440.4
+pKa_Accept: 8.09
+pKa_Donor: 2.81
+Pow: 0.8903
+Qcardiacc: 13.88
+Qgfrc: 0.3099
+Qgutf: 0.2054
+Qkidneyf: 0.2214
+Qliverf: 0.0535
+Rblood2plasma: 0.8419
+Vartc: 0.03827
+Vgutc: 0.0158
+Vkidneyc: 0.00419
+Vliverc: 0.02448
+Vlungc: 0.007235
+Vrestc: 0.7765
+Vvenc: 0.03827
 > 
 > quit("no")
