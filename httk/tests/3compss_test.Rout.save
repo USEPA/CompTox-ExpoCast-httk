@@ -81,7 +81,8 @@ Warning messages:
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
 6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
-> for (this.param in names(p)) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
+> # Try to standardize order of variable names
+> for (this.param in names(p)[order(toupper(names(p)))]) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
 BW: 70
 Caco2.Pab: 1.6
 Caco2.Pab.dist: NA
