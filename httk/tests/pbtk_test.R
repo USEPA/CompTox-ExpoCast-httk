@@ -16,6 +16,6 @@ head(solve_pbtk(chem.cas="80-05-7",days=1))
 head(solve_pbtk(parameters=parameterize_pbtk(chem.cas="80-05-7"),days=1))
 
 p <- parameterize_pbtk(chem.name="Aminopterin")[sort(names(parameterize_pbtk(chem.name="Aminopterin")))]
-for (this.param in order(sort(tolower(names(p))))) cat(paste(names(p)[this.param],": ",p[[this.param]],"\n"))
+for (this.param in names(p)) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
 
 quit("no")
