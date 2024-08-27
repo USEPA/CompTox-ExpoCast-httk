@@ -18,6 +18,7 @@ head(solve_gas_pbtk(
   method = "lsode",mf = 10))
 
 p <- parameterize_gas_pbtk(chem.name="styrene")[sort(names(parameterize_gas_pbtk(chem.name="styrene")))]
-for (this.param in order(sort(tolower(names(p))))) cat(paste(names(p)[this.param],": ",p[[this.param]],"\n"))
+# Try to standardize order of variable names
+for (this.param in names(p)[order(toupper(names(p)))]) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
 
 quit("no")
