@@ -169,6 +169,10 @@ parameterize_3comp2 <- function(
     Caco2.options))
     )
   parms <- c(parms, gasparms["Qalvc"], gasparms["Kblood2air"])
+  parms[["logHenry"]] <- get_physchem_param(param = 'logHenry', 
+                                  chem.cas=chem.cas,
+                                  chem.name=chem.name,
+                                  dtxsid=dtxsid) #for log base 10 compiled Henry's law values
  
   return(lapply(parms[model.list[["3compartment2"]]$param.names],
                 set_httk_precision))                   

@@ -302,26 +302,7 @@ parameterize_sumclearances <- function(
   Params[["million.cells.per.gliver"]] <- 110 # 10^6 cells/g-liver
   Params[["Vliverc"]] <- Vliverc # L/kg BW
   Params[["liver.density"]] <- 1.05 # g/mL
-  
-  
-  # Exhalation parameters:
-  # Get the blood:air and mucus:air partition coefficients:
-  Kx2air <- calc_kair(parameters=Params,
-                      species=species,
-                      default.to.human=default.to.human,
-                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                      suppress.messages=suppress.messages)
-  
-  Kwater2air <- Kx2air$Kwater2air
-  Kblood2air <- Kx2air$Kblood2air
-  Kmuc2air <- Kx2air$Kmuc2air
-    
-  Vdot <- as.numeric(this.phys.data["Pulmonary Ventilation Rate"])
-  Qalvc <- Vdot * (0.67) #L/h/kg^0.75 
 
-  Params[["Kblood2air"]] <- Kblood2air
-  Params[["Qalvc"]] <- Qalvc
-  
 # Blood to plasma ratio:
   Rb2p <- available_rblood2plasma(
             chem.name=chem.name,
@@ -331,6 +312,30 @@ parameterize_sumclearances <- function(
             adjusted.Funbound.plasma=fup.corrected,
             suppress.messages=TRUE)
   Params[["Rblood2plasma"]] <- Rb2p
+  
+# Exhalation parameters:
+# Phys-chem needed to calculate blood:air partition coefficient:
+  Params[["logHenry"]] <- get_physchem_param(param = 'logHenry', 
+                                  chem.cas=chem.cas,
+                                  chem.name=chem.name,
+                                  dtxsid=dtxsid) #for log base 10 compiled Henry's law values
+  Params[["pKa_Donor"]] <- pKa_Donor
+  Params[["pKa_Accept"]] <- pKa_Accept
+  Params[["Pow"]] <- Pow 
+# Get the blood:air and mucus:air partition coefficients:
+  Kx2air <- calc_kair(parameters=Params,
+                      species=species,
+                      default.to.human=default.to.human,
+                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                      suppress.messages=suppress.messages)
+  Kwater2air <- Kx2air$Kwater2air
+  Kblood2air <- Kx2air$Kblood2air
+  Kmuc2air <- Kx2air$Kmuc2air
+  Params[["Kblood2air"]] <- Kblood2air
+# Ventilation rate:    
+  Vdot <- as.numeric(this.phys.data["Pulmonary Ventilation Rate"])
+  Qalvc <- Vdot * (0.67) #L/h/kg^0.75 
+  Params[["Qalvc"]] <- Qalvc
   
 # Oral bioavailability parameters:
 # Need to have a parameter with this name to calculate clearance, but need 
