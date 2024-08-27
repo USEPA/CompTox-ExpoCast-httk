@@ -154,7 +154,8 @@ Set recalc.blood2plasma to TRUE if desired.
 Set recalc.clearance to TRUE if desired.
 > 
 > p <- parameterize_fetal_pbtk(chem.name='bisphenol a')[sort(names(parameterize_fetal_pbtk(chem.name='bisphenol a')))]
-> for (this.param in names(p)) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
+> # Try to standardize order of variable names
+> for (this.param in names(p)[order(toupper(names(p)))]) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
 adipose_density: 0.95
 amnf_density: 1.01
 arterial_blood_fraction: 0.16
