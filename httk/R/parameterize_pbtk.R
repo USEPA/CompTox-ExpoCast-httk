@@ -51,6 +51,10 @@
 #' @param class.exclude Exclude chemical classes identified as outside of 
 #' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
 #' 
+#' @param physchem.exclude Exclude chemicals on the basis of physico-chemical
+#' properties (currently only Henry's law constant) as specified by 
+#' the relevant modelinfo_[MODEL] file (default TRUE).
+#' 
 #' @param tissuelist Specifies compartment names and tissues groupings.
 #' Remaining tissues in tissue.data are lumped in the rest of the body.
 #' However, \code{\link{solve_pbtk}} only works with the default parameters.
@@ -197,6 +201,7 @@ parameterize_pbtk <- function(
                        restrictive.clearance=TRUE,
                        minimum.Funbound.plasma=0.0001,
                        class.exclude=TRUE,
+                       physchem.exclude=TRUE,
                        million.cells.per.gliver= 110, # 10^6 cells/g-liver Carlile et al. (1997)
                        liver.density= 1.05, # g/mL International Commission on Radiological Protection (1975)
                        kgutabs = NA, # 1/h, Wambaugh et al. (2018)
@@ -227,6 +232,7 @@ parameterize_pbtk <- function(
             model="pbtk",
             species=species,
             class.exclude=class.exclude,
+            physchem.exclude=physchem.exclude,
             default.to.human=default.to.human)
   
 # Get the intrinsic hepatic clearance:  

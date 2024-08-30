@@ -92,6 +92,9 @@ model.list[[THIS.MODEL]]$invitro.params <- c("BW",
 # Do we ignore the Fups where the alue was below the limit of detection?
 model.list[[THIS.MODEL]]$exclude.fup.zero <- FALSE
 
+# Filter out compounds belonging to select chemical classes
+model.list[[THIS.MODEL]]$chem.class.filt <- c("PFAS")
+
 # These are the parameter names needed to describe steady-state dosing:
 model.list[[THIS.MODEL]]$css.dosing.params <- c("hourly.dose")
 

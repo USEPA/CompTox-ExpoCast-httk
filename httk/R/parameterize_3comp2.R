@@ -152,6 +152,7 @@ parameterize_3comp2 <- function(
              suppress.messages = suppress.messages,
              restrictive.clearance = restrictive.clearance,
              minimum.Funbound.plasma = minimum.Funbound.plasma,
+             physchem.exclude=FALSE,
              Caco2.options = Caco2.options)
                               
   parms$Qkidneyf <- parms$Vvenc <- parms$Vartc <- NULL
