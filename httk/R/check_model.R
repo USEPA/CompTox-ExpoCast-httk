@@ -34,6 +34,10 @@
 #' @param class.exclude Exclude chemical classes identified as outside of 
 #' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
 #' 
+#' @param physchem.exclude Exclude chemicals on the basis of physico-chemical
+#' properties (currently only Henry's law constant) as specified by 
+#' the relevant modelinfo_[MODEL] file (default TRUE).
+#' 
 #' @return Stops code from running if all parameters needed for model
 #' are not available, otherwise does nothing.
 #'
@@ -48,6 +52,7 @@ check_model <- function(chem.name=NULL,
                         model=NULL,
                         species=NULL,
                         class.exclude=TRUE,
+                        physchem.exclude=TRUE,
                         default.to.human=FALSE)
 {
   good.chems <- get_cheminfo(info=c("Compound",
@@ -56,6 +61,7 @@ check_model <- function(chem.name=NULL,
                              model=model,
                              species=species,
                              class.exclude=class.exclude,
+                             physchem.exclude=physchem.exclude,
                              suppress.messages=TRUE)
   good.chems.nophyschem <- get_cheminfo(info=c("Compound",
                                     "CAS",
@@ -74,6 +80,7 @@ check_model <- function(chem.name=NULL,
                                      model=model,
                                      species="Human",
                                      class.exclude=class.exclude,
+                                     physchem.exclude=physchem.exclude,
                                      suppress.messages=TRUE)
                         )       
   }

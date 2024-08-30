@@ -36,7 +36,7 @@
 #'
 #' @author John Wambaugh
 #'
-#'@references Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. 
+#'@references 
 #' \insertRef{rowland1973clearance}{httk}
 #' 
 #' @keywords physiology 
