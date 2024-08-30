@@ -74,6 +74,7 @@ model.list[[THIS.MODEL]]$param.names <- c(
   "Krest2pu",
   "kUrtc",
   "liver.density",
+  "logHenry",
   "MA",
   "million.cells.per.gliver",
   "MW",
