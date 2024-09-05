@@ -38,14 +38,21 @@ The model outputs are provided in the following units:
 	umol: Atubules, Ametabolized
 	uM*days: AUC
 
-     time   Cgut Cliver    Cven  Clung    Cart  Crest Ckidney Cplasma  Calvppmv
-[1,] 0.00 0.0000 0.0000 0.00000 0.0000 0.00000 0.0000   0.000 0.00000 0.000e+00
-[2,] 0.05 0.9644 0.8895 0.02384 0.4072 0.05132 0.1226   1.597 0.03164 1.298e-06
-[3,] 0.10 1.5220 1.7390 0.04374 0.7268 0.07478 0.2932   2.376 0.05805 1.891e-06
-     Cendexhppmv Cmixexhppmv Cmuc  Atubules Ametabolized       AUC
-[1,]      0.0000      0.3000    0 0.0000000      0.00000 0.0000000
-[2,]      0.0968      0.3678 1543 0.0007566      0.01178 0.0008709
-[3,]      0.1612      0.4129 2584 0.0020170      0.05068 0.0031180
+      time     Cgut   Cliver     Cven    Clung     Cart    Crest  Ckidney
+[1,] 0e+00 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000
+[2,] 1e-04 0.000456 0.000077 0.000001 0.000122 0.005813 0.000022 0.001848
+[3,] 5e-02 0.964400 0.889500 0.023840 0.407200 0.051320 0.122600 1.597000
+[4,] 1e-01 1.522000 1.739000 0.043740 0.726800 0.074780 0.293200 2.376000
+      Cplasma Calvppmv Cendexhppmv Cmixexhppmv     Cmuc Atubules Ametabolized
+[1,] 0.000000    0e+00    0.000000      0.3000    0.000 0.000000      0.00000
+[2,] 0.000002    0e+00    0.000254      0.3002    3.731 0.000000      0.00000
+[3,] 0.031640    1e-06    0.096800      0.3678 1543.000 0.000757      0.01178
+[4,] 0.058050    2e-06    0.161200      0.4129 2584.000 0.002017      0.05068
+          AUC
+[1,] 0.000000
+[2,] 0.000000
+[3,] 0.000871
+[4,] 0.003118
 Warning messages:
 1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
   Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
@@ -66,14 +73,21 @@ The model outputs are provided in the following units:
 	umol: Atubules, Ametabolized
 	uM*days: AUC
 
-     time   Cgut Cliver    Cven  Clung    Cart  Crest Ckidney Cplasma  Calvppmv
-[1,] 0.00 0.0000 0.0000 0.00000 0.0000 0.00000 0.0000   0.000 0.00000 0.000e+00
-[2,] 0.05 0.9644 0.8895 0.02384 0.4072 0.05132 0.1226   1.597 0.03164 1.298e-06
-[3,] 0.10 1.5220 1.7390 0.04374 0.7268 0.07478 0.2932   2.376 0.05805 1.891e-06
-     Cendexhppmv Cmixexhppmv Cmuc  Atubules Ametabolized       AUC
-[1,]      0.0000      0.3000    0 0.0000000      0.00000 0.0000000
-[2,]      0.0968      0.3678 1543 0.0007566      0.01178 0.0008709
-[3,]      0.1612      0.4129 2584 0.0020170      0.05068 0.0031180
+      time     Cgut   Cliver     Cven    Clung     Cart    Crest  Ckidney
+[1,] 0e+00 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000
+[2,] 1e-04 0.000456 0.000077 0.000001 0.000122 0.005813 0.000022 0.001848
+[3,] 5e-02 0.964400 0.889500 0.023840 0.407200 0.051320 0.122600 1.597000
+[4,] 1e-01 1.522000 1.739000 0.043740 0.726800 0.074780 0.293200 2.376000
+      Cplasma Calvppmv Cendexhppmv Cmixexhppmv     Cmuc Atubules Ametabolized
+[1,] 0.000000    0e+00    0.000000      0.3000    0.000 0.000000      0.00000
+[2,] 0.000002    0e+00    0.000254      0.3002    3.731 0.000000      0.00000
+[3,] 0.031640    1e-06    0.096800      0.3678 1543.000 0.000757      0.01178
+[4,] 0.058050    2e-06    0.161200      0.4129 2584.000 0.002017      0.05068
+          AUC
+[1,] 0.000000
+[2,] 0.000000
+[3,] 0.000871
+[4,] 0.003118
 Warning messages:
 1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
   Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
@@ -96,14 +110,21 @@ The model outputs are provided in the following units:
 	umol: Atubules, Ametabolized
 	uM*days: AUC
 
-     time   Cgut Cliver    Cven  Clung    Cart  Crest Ckidney Cplasma  Calvppmv
-[1,] 0.00 0.0000 0.0000 0.00000 0.0000 0.00000 0.0000   0.000 0.00000 0.000e+00
-[2,] 0.05 0.9644 0.8895 0.02384 0.4072 0.05132 0.1226   1.597 0.03164 1.298e-06
-[3,] 0.10 1.5220 1.7390 0.04374 0.7268 0.07478 0.2932   2.376 0.05805 1.891e-06
-     Cendexhppmv Cmixexhppmv Cmuc  Atubules Ametabolized       AUC
-[1,]      0.0000      0.3000    0 0.0000000      0.00000 0.0000000
-[2,]      0.0968      0.3678 1543 0.0007566      0.01178 0.0008709
-[3,]      0.1612      0.4129 2584 0.0020170      0.05068 0.0031180
+      time     Cgut   Cliver     Cven    Clung     Cart    Crest  Ckidney
+[1,] 0e+00 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000
+[2,] 1e-04 0.000456 0.000077 0.000001 0.000122 0.005813 0.000022 0.001848
+[3,] 5e-02 0.964400 0.889500 0.023840 0.407200 0.051320 0.122600 1.597000
+[4,] 1e-01 1.522000 1.739000 0.043740 0.726800 0.074780 0.293200 2.376000
+      Cplasma Calvppmv Cendexhppmv Cmixexhppmv     Cmuc Atubules Ametabolized
+[1,] 0.000000    0e+00    0.000000      0.3000    0.000 0.000000      0.00000
+[2,] 0.000002    0e+00    0.000254      0.3002    3.731 0.000000      0.00000
+[3,] 0.031640    1e-06    0.096800      0.3678 1543.000 0.000757      0.01178
+[4,] 0.058050    2e-06    0.161200      0.4129 2584.000 0.002017      0.05068
+          AUC
+[1,] 0.000000
+[2,] 0.000000
+[3,] 0.000871
+[4,] 0.003118
 Warning messages:
 1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
   Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
