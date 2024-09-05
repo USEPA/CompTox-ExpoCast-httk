@@ -280,9 +280,9 @@ calc_css <- function(chem.name=NULL,
   additional.days <- days
 
   # Calculate the fractional change on the last simulated day:
-  conc.delta <- (out[match((additional.days - 1),out[,'time']),target] -
-                out[match((additional.days - 2),out[,'time']),target]) /
-                out[match((additional.days - 2),out[,'time']),target] 
+  conc.delta <- (out[match((additional.days - 1), floor(out[,'time'])), target] -
+                out[match((additional.days - 2), floor(out[,'time'])), target]) /
+                out[match((additional.days - 2), floor(out[,'time'])), target] 
 #  # For the 3-compartment model:  
 #  colnames(out)[colnames(out)=="Csyscomp"]<-"Cplasma"
 
@@ -317,9 +317,9 @@ calc_css <- function(chem.name=NULL,
     Final_Conc <- out[dim(out)[1],monitor.vars]
   
 # Calculate the fractional change on the last simulated day:
-  conc.delta <- (out[match((additional.days - 1),out[,'time']),target] -
-                out[match((additional.days - 2),out[,'time']),target]) /
-                out[match((additional.days - 2),out[,'time']),target] 
+  conc.delta <- (out[match((additional.days - 1), floor(out[,'time'])), target] -
+                out[match((additional.days - 2), floor(out[,'time'])), target]) /
+                out[match((additional.days - 2), floor(out[,'time'])), target] 
         
     if(total.days > 36500) break 
   }

@@ -22,6 +22,7 @@ provided by reviewers at ALTEX.
 * Corrected bug in 'solve_model' when only specific times requesed and plots=TRUE (thank you Kimberly Troung)
 * Corrected bug with 'get_chem_id' when using 'add_chemtable' without DTXSIDs (thank you Marc Beal and Miyuki Breen)
 * Corrected bug with 'creater_mc_samples' where arguments were not getting passed to 'invitro_mc' (thank you Hsing-Chieh Lin and Weihsueh Chiu)
+* Corrected bug in 'solve_model' where tsteps was ignored if times were specified
 
 ## Enhancements
 * A physiology data table from 'httkpop_generate' can now be passed to 'calc_mc_css' and 'calc_mc_tk' (and 'calc_mc_css' via ...) so that a consistent populatin can be used across monte carlo runs. See argument httkpop.dt.
@@ -40,6 +41,8 @@ provided by reviewers at ALTEX.
 * Revised 'calc_css' to better calculate the day on which steady-state is reached
 * Added internal function 'check_model' to provide more informative error messages when key model parameters are missing
 * Updated scoping on several functions so that data.tables are handled locally within the functions and not passed by reference.
+* Precision of time points added by tsteps argument in 'solve_model' now limited to ten times higher than small.time
+* Additional time points now reported in 'solve_model' immediately after dose events to improve plotting
 
 # httk 2.3.1 (2024-3-19)
 This patch addresses a number of bugs.
