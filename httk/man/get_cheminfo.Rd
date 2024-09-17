@@ -13,6 +13,7 @@ get_cheminfo(
   median.only = FALSE,
   fup.ci.cutoff = TRUE,
   clint.pvalue.threshold = 0.05,
+  physchem.exclude = TRUE,
   class.exclude = TRUE,
   suppress.messages = FALSE
 )
@@ -48,8 +49,12 @@ This value should be between (0,1). Default is `NULL` specifying no filtering.}
 vitro clearance assay result has a p-values greater than the threshold are
 set to zero.}
 
+\item{physchem.exclude}{Exclude chemicals on the basis of physico-chemical
+properties (currently only Henry's law constant) as specified by 
+the relevant modelinfo_[MODEL] file (default TRUE).}
+
 \item{class.exclude}{Exclude chemical classes identified as outside of 
-domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
+domain of applicability by the relevant modelinfo_[MODEL] file (default TRUE).}
 
 \item{suppress.messages}{Whether or not the output messages are suppressed 
 (default FALSE).}
@@ -90,7 +95,7 @@ This function lists information on all the chemicals within HTTK for which
 there are sufficient data for the specified model and species. 
 By default the function returns only CAS (that is, info="CAS"). 
 The type of information available includes chemical identifiers 
-("Compound", "CASRN", "DTXSID"), in vitro
+("Compound", "CAS", "DTXSID"), in vitro
 measurements ("Clint", "Clint.pvalue", "Funbound plasma", "Rblood2plasma"), 
 and physico-chemical information ("Formula", "logMA", "logP", "MW",
 "pKa_Accept", "pKa_Donor"). The argument "info" can be a single type of 

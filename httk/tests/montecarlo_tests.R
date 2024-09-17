@@ -7,7 +7,7 @@ library(httk)
 
 # Reduce the number of samples used by Monte Carlo to decrease runtime for
 # CRAN checks (never use predictions with only ten draws):
-NSAMP <- 10
+NSAMP <- 5
 
 #
 #
@@ -84,7 +84,8 @@ parameter.dt <- create_mc_samples(chem.cas="335104-84-2",
                                     samples=NSAMP)
 calc_mc_oral_equiv(conc=100,
                    parameters=parameter.dt,
-                   model="pbtk")
+                   model="pbtk",
+                   samples=NSAMP)
 
 # do test of passing single set of parameters
 params <- parameterize_steadystate(chem.cas="80-05-7")
@@ -101,7 +102,8 @@ css4 <- calc_mc_css(
   species = "Human", 
   httkpop=FALSE, 
   invitrouv=FALSE, 
-  return.samples=TRUE)
+  return.samples=TRUE,
+  samples=NSAMP)
 set.seed(1234)
 css5 <- calc_mc_css(
   parameters=params, 
@@ -110,7 +112,8 @@ css5 <- calc_mc_css(
   species = "Human", 
   httkpop=TRUE, 
   invitrouv=TRUE, 
-  return.samples=TRUE)
+  return.samples=TRUE,
+  samples=NSAMP)
 
 # If we turn off all the montecarlo the samples should all be the same and
 # give us the same result as calc_analytic_css:
@@ -122,7 +125,8 @@ css1 <- calc_mc_css(
   species = "Human", 
   httkpop=FALSE, 
   invitrouv=FALSE, 
-  return.samples=TRUE)
+  return.samples=TRUE,
+  samples=NSAMP)
 set.seed(1234)
 css2 <- calc_analytic_css(
   chem.cas = "80-05-7", 

@@ -9,7 +9,9 @@ calc_analytic_css_1comp(
   chem.cas = NULL,
   dtxsid = NULL,
   parameters = NULL,
-  hourly.dose = 1/24,
+  dosing = list(daily.dose = 1),
+  hourly.dose = NULL,
+  dose.units = "mg",
   concentration = "plasma",
   suppress.messages = FALSE,
   recalc.blood2plasma = FALSE,
@@ -35,7 +37,14 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 parameterize_1comp(for model = '1compartment') or parameterize_steadystate 
 (for model = '3compartmentss'), overrides chem.name and chem.cas.}
 
+\item{dosing}{List of dosing metrics used in simulation, which includes
+the namesake entries of a model's associated dosing.params. For steady-state
+calculations this is likely to be either "daily.dose" for oral exposures or
+"Cinhaled" for inhalation.}
+
 \item{hourly.dose}{Hourly dose rate mg/kg BW/h.}
+
+\item{dose.units}{The units associated with the dose received.}
 
 \item{concentration}{Desired concentration type, 'blood' or default 'plasma'.}
 
@@ -64,7 +73,7 @@ Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calcu
 fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-See \code{\link{get_fabsgut}} for further details.}
+See \code{\link{get_fbio}} for further details.}
 
 \item{...}{Additional parameters passed to parameterize function if 
 parameters is NULL.}

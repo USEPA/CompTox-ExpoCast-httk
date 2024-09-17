@@ -32,6 +32,10 @@ This function checks for chemical-specific in vitro measurements of the
 Caco-2 membrane permeability 
 in the \code{\link{chem.physical_and_invitro.data}} table. If no value is 
 available argument \code{Caco2.Pab.default} is returned.
+Anywhere that the values is reported by three numbers separated by a comma 
+(this also happens for plasma protein binding) the three values are: median, 
+lower 95 percent confidence intervals, upper 95 percent confidence interval. Unless you are 
+doing monte carlo work it makes sense to ignore the second and third values.
 }
 \author{
 John Wambaugh

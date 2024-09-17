@@ -1338,23 +1338,35 @@
 #'
 #' This data set contains values from Davies and Morris (1993) necessary to
 #' paramaterize a toxicokinetic model for human, mouse, rat, dog, or rabbit.
-#' The temperature for each species are taken from Robertshaw et al. (2004),
-#' Gordon (1993), and Stammers(1926).
-#'
+#' The temperature for each species are taken from Reece (2015),
+#' Jordon (1995), and Stammers (1926). Mean residence time for the small 
+#' intestine is from Grandoni et al. (2019). Human small intestine radius is
+#' from Yu et al. (1999). Rat small intestine radius is from Griffin and
+#' O'Driscoll (2008).
 #'
 #' @docType data
-#' @format A data.frame containing 11 rows and 7 columns.
+#' 
+#' @format A data.frame containing 18 rows and 7 columns.
+#' 
 #' @author John Wambaugh and Nisha Sipes
-#' @references Davies, B. and Morris, T. (1993). Physiological Parameters in
-#' Laboratory Animals and Humans. Pharmaceutical Research 10(7), 1093-1095,
-#' 10.1023/a:1018943613122.  %gfr and other flows Anderson and Holford (2009)
-#' %scaling gfr by 3/4 Robertshaw, D., Temperature Regulation and Thermal
-#' Environment, in Dukes' Physiology of Domestic Animals, 12th ed., Reece W.O.,
-#' Ed. Copyright 2004 by Cornell University.  Stammers (1926) The blood count
-#' and body temperature in normal rats Gordon (1993) Temperature Regulation in
-#' Laboratory Rodents
-#' @source Wambaugh, John F., et al. "Toxicokinetic triage for environmental
-#' chemicals." Toxicological Sciences (2015): 228-237.
+#' 
+#' @references 
+#' \insertRef{davies1993physiological}{httk}
+#' 
+#' \insertRef{brown1997physiological}{httk}
+#'
+#' \insertRef{birnbaum1994physiological}{httk}
+#'
+#' \insertRef{reece201514}{httk}
+#'
+#' \insertRef{stammers1926blood}{httk}
+#' 
+#' \insertRef{jordan1995temperature}{httk}
+#'
+#' \insertRef{grandoni2019building}{httk}
+#'
+#' \insertRef{griffin2008models}{httk} 
+#'
 #' @keywords data
 "physiology.data"
 
@@ -1462,7 +1474,6 @@
 #' @docType data
 #' @format A data.frame containing x rows and y columns.
 #' @author Matt Linakis
-#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
 #'
 #' @source Matt Linakis
 #' @keywords data
@@ -1470,12 +1481,43 @@
 
 #' Concentration data involved in Linakis 2020 vignette analysis.
 #'
+#' These rat and human TK concentration vs. time (CvT) data are drawn from
+#' the CvTdb (Sayre et el., 2020). Concentrations have all been converted to
+#' the units of uM. All data are from inhalation studies.
+#'
+#' Abbreviations used for sampling matrix:
+#' BL : blood
+#' EEB : end-exhaled breath
+#' MEB : mixed exhaled breath
+#' VBL : venous blood
+#' ABL : arterial blood
+#' EB : unspecified exhaled breath sample (assumed to be EEB)
+#' PL: plasma
+#' +W with work/exercise
+#'
+#' \tabular{ll}{
+#' \strong{Column Name} \tab \strong{Description} \cr
+#'  PREFERRED_NAME        \tab Substance preferred name \cr                      
+#'  DTXSID     \tab Identifier for CompTox Chemical Dashboard \cr
+#'  CASRN  \tab Chemical abstracts service registration number\cr
+#'  AVERAGE_MASS  \tab Substance molecular weight g/mol \cr
+#'   DOSE DOSE_U   \tab Inhalation exposure concentration in parts per million \cr  
+#'  EXP_LENGTH   \tab Duration of inhalation exposur \cr
+#'   TIME  \tab  Measurment time \cr          
+#'  TIME_U   \tab  Time units for all times reported \cr 
+#'  CONC_SPECIES  \tab Species for study \cr 
+#'  SAMPLING_MATRIX   \tab Matrix analyzed \cr 
+#'  SOURCE_CVT   \tab Data source identifier within CvTdb \cr 
+#'  ORIG_CONC_U   \tab Original reported units for concentration \cr 
+#'  CONCENTRATION   \tab Analyte concentration in uM units\cr 
+#' }
 #'
 #' @docType data
-#' @format A data.frame containing x rows and y columns.
+#' @format A data.frame containing 2142 rows and 16 columns.
 #' @author Matt Linakis
-#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
-#'
+#' @references 
+#' \insertRef{linakis2020development}{httk}
+#' \insertRef{sayre2020database}{httk}
 #' @source Matt Linakis
 #' @keywords data
 "concentration_data_Linakis2020"
@@ -1753,6 +1795,10 @@
 #' orientation.
 #' These data were either measured by EPA or collected by other others, as
 #' indicated by the column 'Data Origin'.
+#' Anywhere that the values is reported by three numbers separated by a comma 
+#' (this also happens for plasma protein binding) the three values are: median, 
+#' lower 95 percent confidence intervals, upper 95 percent confidence interval. Unless you are 
+#' doing monte carlo work it makes sense to ignore the second and third values.
 #'
 #' \tabular{lll}{
 #' \strong{Column Name} \tab \strong{Description} \tab \strong{Units} \cr

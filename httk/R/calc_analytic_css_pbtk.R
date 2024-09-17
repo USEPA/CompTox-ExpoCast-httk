@@ -1,11 +1,12 @@
 #'Calculate the analytic steady state plasma concentration for model pbtk.
 #'
 #' This function calculates the analytic steady state concentration (mg/L) as a result
-#' of oral infusion dosing. Concentrations are returned for plasma by default, but various
+#' of constant oral infusion dosing. 
+#' Concentrations are returned for plasma by default, but various
 #' tissues or blood concentrations can also be given as specified.
 #' 
-#' The PBTK model (Pearce et al., 2017) predicts the amount of chemical in
-#' various tissues of the body. A system of oridinary
+#' The PBTK model \insertCite{pearce2017httk}{httk} predicts the amount of chemical in
+#' various tissues of the body. A system of ordinary
 #' differential equations describes how the amounts in each tissue change as 
 #' a function of time. The analytic steady-state equation was found by 
 #' algebraically solving for the tissue concentrations that result in each
@@ -19,39 +20,57 @@
 #'       C_ss = C_ven_ss/Rb2p}
 #' \deqn{C^{ss}_{tissue} = \frac{K_{tissue:fuplasma}*f_{up}}{R_{b:p}}*C^{ss}_{ven}}{%
 #'        C_tissue_ss = K_tissue2fuplasma*f_up*C_ven_ss/Rb2p}
-#'  where Q_cardiac is the cardiace output, Q_gfr is the glomerular filtration
+#'  where Q_cardiac is the cardiac output, Q_gfr is the glomerular filtration
 #' rate in the kidney, other Q's indicate blood flows to various tissues, 
 #' Cl_metabolism is the chemical-specific whole liver metabolism clearance,
-#' f_up is the chemical-specific fraction unbound n plasma, R_b2p is the 
+#' f_up is the chemical-specific fraction unbound in plasma, R_b2p is the 
 #' chemical specific ratio of concentrations in blood:plasma, K_tissue2fuplasma
-#' is the chemical- and tissue-specufic equilibrium partition coefficient
+#' is the chemical- and tissue-specific equilibrium partition coefficient
 #' and dose rate has  units of mg/kg/day. 
 #' 
+
 #'@param chem.name Either the chemical name, CAS number, or the parameters must 
 #' be specified.
+#' 
 #'@param chem.cas Either the chemical name, CAS number, or the parameters must 
 #' be specified.
+#' 
 #' @param dtxsid EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})    
 #' the chemical must be identified by either CAS, name, or DTXSIDs
+#' 
 #'@param parameters Chemical parameters from parameterize_pbtk (for model = 
 #' 'pbtk'), parameterize_3comp (for model = '3compartment), 
 #' parameterize_1comp(for model = '1compartment') or parameterize_steadystate 
 #' (for model = '3compartmentss'), overrides chem.name and chem.cas.
+#' 
 #'@param hourly.dose Hourly dose rate mg/kg BW/h.
+#' 
 #'@param concentration Desired concentration type, 'blood', 'tissue', or default 'plasma'.
+#' 
 #'@param suppress.messages Whether or not the output message is suppressed.
+#' 
 #'@param recalc.blood2plasma Recalculates the ratio of the amount of chemical 
 #' in the blood to plasma using the input parameters. Use this if you have 
-#''altered hematocrit, Funbound.plasma, or Krbc2pu.
+#' altered hematocrit, Funbound.plasma, or Krbc2pu.
+#' 
 #'@param tissue Desired tissue conentration (defaults to whole body 
 #' concentration.)
+#' 
 #'@param restrictive.clearance If TRUE (default), then only the fraction of
 #' chemical not bound to protein is available for metabolism in the liver. If 
 #' FALSE, then all chemical in the liver is metabolized (faster metabolism due
 #' to rapid off-binding). 
+#' 
 #'@param bioactive.free.invivo If FALSE (default), then the total concentration is treated
 #' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 #' bioactive in vivo. Only works with tissue = NULL in current implementation.
+#' 
+#' @param dosing List of dosing metrics used in simulation, which includes
+#' the namesake entries of a model's associated dosing.params. For steady-state
+#' calculations this is likely to be either "daily.dose" for oral exposures or
+#' "Cinhaled" for inhalation.
+#'
+#' @param dose.units The units associated with the dose received.
 #' 
 #' @param Caco2.options A list of options to use when working with Caco2 apical to
 #' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
@@ -60,28 +79,30 @@
 #' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 #' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-#' See \code{\link{get_fabsgut}} for further details.
+#' See \code{\link{get_fbio}} for further details.
 #' 
 #'@param ... Additional parameters passed to parameterize function if 
 #' parameters is NULL.
 #'  
-#'@return Steady state plasma concentration in mg/L units
+#' @return Steady state plasma concentration in mg/L units
 #'
 #' @seealso \code{\link{calc_analytic_css}}
 #'
 #' @seealso \code{\link{parameterize_pbtk}}
 #'
-#'@author Robert Pearce and John Wambaugh
+#' @author Robert Pearce and John Wambaugh
 #'
 #' @references 
-#' \insertRef{pearce2017httk}{httk}
+#' \insertAllCited{}
 #'
-#'@keywords pbtk                           
+#' @keywords pbtk
 calc_analytic_css_pbtk <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid = NULL,
                                    parameters=NULL,
-                                   hourly.dose=1/24,
+                                   dosing=list(daily.dose=1),
+                                   hourly.dose = NULL,
+                                   dose.units = "mg",
                                    concentration='plasma',
                                    suppress.messages=FALSE,
                                    recalc.blood2plasma=FALSE,
@@ -91,16 +112,17 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
                                    Caco2.options = list(),
                                    ...)
 {
-  #R CMD CHECK throws notes about "no visible binding for global variable", for
-  #each time a data.table column name is used without quotes. To appease R CMD
-  #CHECK, a variable has to be created for each of these column names and set to
-  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
-  #this is pointless and annoying.
-  dose <- NULL
-  #End R CMD CHECK appeasement.
+  if (!is.null(hourly.dose))
+  {
+     warning("calc_analytic_css_3compss deprecated argument hourly.dose replaced with new argument dose, value given assigned to dose")
+     dosing <- list(daily.dose = 24*hourly.dose)
+  }
   
-  param.names.pbtk <- model.list[["pbtk"]]$param.names
+# Load from modelinfo file:
+  THIS.MODEL <- "pbtk"
+  param.names <- model.list[[THIS.MODEL]]$param.names
   param.names.schmitt <- model.list[["schmitt"]]$param.names
+  parameterize_function <- model.list[[THIS.MODEL]]$parameterize.func
     
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -120,20 +142,25 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
     chem.name <- out$chem.name                                
     dtxsid <- out$dtxsid  
 
-    parameters <- parameterize_pbtk(chem.cas=chem.cas,
-                                    chem.name=chem.name,
-                                    suppress.messages=suppress.messages,
-                                    Caco2.options = Caco2.options,
-                                    ...) 
+    parameters <- do.call(what=parameterize_function, 
+                          args=purrr::compact(c(
+                            list(chem.cas=chem.cas,
+                                 chem.name=chem.name,
+                                 suppress.messages=suppress.messages,
+                                 Caco2.options = Caco2.options,
+                                 restrictive.clearance = restrictive.clearance
+                                 ),
+                            ...)))
+                                    
     if (recalc.blood2plasma) 
     {
       warning("Argument recalc.blood2plasma=TRUE ignored because parameters is NULL.")
     }
   } else {
-    if (!all(param.names.pbtk %in% names(parameters)))
+    if (!all(param.names %in% names(parameters)))
     {
       stop(paste("Missing parameters:",
-           paste(param.names.pbtk[which(!param.names.pbtk %in% names(parameters))],
+           paste(param.names[which(!param.names %in% names(parameters))],
              collapse=', '),
            ".  Use parameters from parameterize_pbtk.")) 
     }
@@ -141,9 +168,20 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
       parameters[['Rblood2plasma']] <- 1 - 
         parameters[['hematocrit']] + 
         parameters[['hematocrit']] * parameters[['Krbc2pu']] * parameters[['Funbound.plasma']]
+
     }
   }
   
+  BW <- parameters$BW
+    
+  # Dose rate:
+  hourly.dose <- dosing[["daily.dose"]] /
+                   BW /
+                   24 *
+                   convert_units(MW = parameters[["MW"]],
+                                 dose.units,
+                                 "mg") # mg/kg/h
+                                 
   Qcardiac <-  parameters[["Qcardiacc"]] / parameters[['BW']]^0.25 # L/h/kg
   Qgfr <-  parameters[["Qgfrc"]] / parameters[['BW']]^0.25 # L/h/kg   
   Clmetabolism <-  parameters[["Clmetabolismc"]] # L/h/kg
@@ -155,16 +193,14 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
   Qrest <- Qcardiac-Qgut-Qliver-Qkidney # L/h/kg
   Rblood2plasma <- parameters[['Rblood2plasma']]
   fup <- parameters[["Funbound.plasma"]]
-  if (!restrictive.clearance) Clmetabolism <- Clmetabolism / fup
-  
-  hourly.dose <- hourly.dose * parameters$Fabsgut
   
 # Css for venous blood:
-  Cven.ss <- (hourly.dose * (Qliver + Qgut) / 
-         (fup * Clmetabolism / Rblood2plasma + (Qliver + Qgut))) / 
+  Cven.ss <- parameters$Fabsgut *
+         (hourly.dose * (Qliver + Qgut) / 
+         (Clmetabolism / Rblood2plasma + (Qliver + Qgut))) / 
          (Qcardiac - 
          (Qliver + Qgut)**2 /
-         (fup * Clmetabolism / Rblood2plasma + (Qliver + Qgut)) - 
+         (Clmetabolism / Rblood2plasma + (Qliver + Qgut)) - 
          Qkidney +
          Qgfr * fup / Rblood2plasma  - 
          Qrest)
@@ -201,7 +237,7 @@ calc_analytic_css_pbtk <- function(chem.name=NULL,
     {
       Qgut <- parameters$Qgutf * parameters$Qcardiacc / parameters$BW^0.25
       Css <- parameters[['Kgut2pu']] * parameters[['Funbound.plasma']] * 
-        (Css + dose / (Qgut * parameters[['Rblood2plasma']]))
+        (Css + hourly.dose / (Qgut * parameters[['Rblood2plasma']]))
     } else if (tissue == 'liver') {
       Qliver <- (parameters$Qgutf + parameters$Qliverf) * parameters$Qcardiacc / 
         parameters$BW^0.25

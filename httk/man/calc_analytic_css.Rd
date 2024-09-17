@@ -10,11 +10,10 @@ calc_analytic_css(
   dtxsid = NULL,
   parameters = NULL,
   species = "human",
-  daily.dose = 1,
+  daily.dose = NULL,
+  dose = 1,
+  dose.units = "mg/kg/day",
   route = "oral",
-  exp.conc = 1,
-  period = 24,
-  exp.duration = 24,
   output.units = "uM",
   model = "pbtk",
   concentration = "plasma",
@@ -48,17 +47,12 @@ default "Human").}
 
 \item{daily.dose}{Total daily dose, mg/kg BW.}
 
+\item{dose}{The amount of chemial to which the individual is exposed.}
+
+\item{dose.units}{The units associated with the dose received.}
+
 \item{route}{Route of exposure (either "oral", "iv", or "inhalation"
 default "oral").}
-
-\item{exp.conc}{Specified inhalation exposure concentration for use in assembling
-'forcings' data series argument for integrator. Defaults to uM/L}
-
-\item{period}{For use in assembling forcing function data series 'forcings'
-argument, specified in hours}
-
-\item{exp.duration}{For use in assembling forcing function data 
-series 'forcings' argument, specified in hours}
 
 \item{output.units}{Units for returned concentrations, defaults to uM 
 (specify units = "uM") but can also be mg/L.}
@@ -105,7 +99,7 @@ Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calcu
 fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-See \code{\link{get_fabsgut}} for further details.}
+See \code{\link{get_fbio}} for further details.}
 
 \item{parameterize.args}{List of arguments passed to model's associated
 parameterization function, including default.to.human, 
@@ -159,6 +153,7 @@ concentration in vitro should be converted to cfree.invitro using
 calc_analytic_css(chem.name='Bisphenol-A',output.units='mg/L',
                  model='3compartment',concentration='blood')
 
+\donttest{
 calc_analytic_css(chem.name='Bisphenol-A',tissue='liver',species='rabbit',
                  parameterize.args = list(
                                 default.to.human=TRUE,
@@ -180,6 +175,7 @@ calc_analytic_css(chem.name="Tacrine",model="pbtk")
 calc_analytic_css(chem.name="Dicofol",model="1compartment")
 calc_analytic_css(chem.name="Diflubenzuron",model="3compartment")
 calc_analytic_css(chem.name="Theobromine",model="3compartmentss")
+}
 
 }
 \references{
