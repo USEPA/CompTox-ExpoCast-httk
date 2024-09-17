@@ -123,7 +123,7 @@
 #' @param Caco2.options Arguments describing how to handle Caco2 absorption data
 #' that are passed to \code{\link{invitro_mc}} and the parameterize_[MODEL] 
 #' functions.
-#' See \code{\link{get_fabsgut}} for further details.
+#' See \code{\link{get_fbio}} for further details.
 #'
 #' @param adjusted.Funbound.plasma Uses 
 #' \insertCite{pearce2017evaluation;textual}{httk} lipid binding adjustment
@@ -152,15 +152,46 @@
 #' # We can use the Monte Carlo functions by passing a table
 #' # where each row represents a different Monte Carlo draw of parameters:
 #' p <- create_mc_samples(chem.cas="80-05-7")
+#'
 #' # Use data.table for steady-state plasma concentration (Css) Monte Carlo:
 #' calc_mc_css(parameters=p)
+#'
 #' # Using the same table gives the same answer:
 #' calc_mc_css(parameters=p)
+#'
 #' # Use Css for 1 mg/kg/day for simple reverse toxicokinetics 
 #' # in Vitro-In Vivo Extrapolation to convert 15 uM to mg/kg/day:
 #' 15/calc_mc_css(parameters=p, output.units="uM")
+#'
 #' # Can do the same with calc_mc_oral_equiv:
 #' calc_mc_oral_equiv(15, parameters=p)
+#'
+#' #Generate a population using the virtual-individuals method,
+#' #including 80 females and 20 males,
+#' #including only ages 20-65,
+#' #including only Mexican American and
+#' #Non-Hispanic Black individuals,
+#' #including only non-obese individuals
+#' set.seed(42)
+#' mypop <- httkpop_generate(method = 'virtual individuals',
+#'                           gendernum=list(Female=80,
+#'                           Male=20),
+#'                           agelim_years=c(20,65),
+#'                           reths=c('Mexican American',
+#'                           'Non-Hispanic Black'),
+#'                           weight_category=c('Underweight',
+#'                           'Normal',
+#'                           'Overweight'))
+#' # Including a httkpop.dt argument will overwrite the number of sample and
+#' # the httkpop on/off logical switch:
+#' samps1 <- create_mc_samples(chem.name="bisphenola",
+#'                            httkpop=FALSE,
+#'                            httkpop.dt=mypop)
+#' samps2 <- create_mc_samples(chem.name="bisphenola",
+#'                            httkpop.dt=mypop)
+#' # But we can turn httkpop off altogether if desired:
+#' samps3 <- create_mc_samples(chem.name="bisphenola",
+#'                            httkpop=FALSE)
 #' }
 #'
 #' @import stats
@@ -205,6 +236,24 @@ create_mc_samples <- function(chem.cas=NULL,
 # ERROR CHECKING AND INITIALIZATION:
 #
 #
+
+ # If user supplied httkpot.dt make sure our MC simulation matches:
+ if (!is.null(httkpop.dt))
+ {
+   if (samples != dim(httkpop.dt)[1])
+   {
+     samples <- dim(httkpop.dt)[1]
+     warning(paste0("samples set to ",
+                    dim(httkpop.dt)[1],
+                    " to match number of rows in httkpop.dt supplied as argument"
+                    ))
+   }
+   if (!httkpop)
+   {
+     httkpop <- TRUE
+     warning("httkpop set to TRUE because httkpop.dt supplied as argument.")
+   }
+ }
 
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -332,7 +381,7 @@ create_mc_samples <- function(chem.cas=NULL,
   # we use purrr::compact to drop NULL values from arguments list:
       parameters.dt <- do.call(converthttkpopfun, args=purrr::compact(c(list(
                        parameters.dt=parameters.dt,
-                       httkpop.dt=httkpop.dt),
+                       physiology.dt=physiology.dt),
                        convert.httkpop.arg.list)))
    } else {
     if(httkpop==TRUE) 
@@ -370,17 +419,22 @@ Set species=\"Human\" to run httkpop model.')
   if (invitrouv) 
   {
     parameters.dt <- do.call(invitro_mc,
-                       args=unique(purrr::compact(c(list(
-                         parameters.dt=parameters.dt,
-                         samples=samples),
-                         invitro.mc.arg.list,
-                         adjusted.Clint = adjusted.Clint,
-                         adjusted.Funbound.plasma = adjusted.Funbound.plasma,
-                         Caco2.options[names(Caco2.options)[
-                           !names(Caco2.options) %in%
+                       args=purrr::compact(
+                         unique(c(
+                           list(
+                             parameters.dt=parameters.dt,
+                             samples=samples,
+                             adjusted.Clint = adjusted.Clint,
+                             adjusted.Funbound.plasma = adjusted.Funbound.plasma),
+                             Caco2.options[names(Caco2.options)[
+                               !names(Caco2.options) %in%
 # invitro_mc doesn't make use of these arguments because we've already called
 # parameterize_[MODEL]:
-                             c("Caco2.Pab.default", "overwrite.invivo")]]))))
+                               c("Caco2.Pab.default", "overwrite.invivo")]],
+                             invitro.mc.arg.list
+                           )
+                         ))
+                       )
   } else {
   # Clint and fup are adjusted within invitro_mc, if not called we need to adjust them here:
   #
@@ -466,6 +520,7 @@ Set species=\"Human\" to run httkpop model.')
       PCs <- do.call(predict_partitioning_schmitt, args=purrr::compact(list(
                parameters=parameters.dt,
                args.schmitt,
+               tissues=model.list[[model]]$alltissues,
                suppress.messages=TRUE)))
 # Store the red blood cell to unbound plasma partition coefficient if we need
 # it later:
@@ -522,17 +577,22 @@ Set species=\"Human\" to run httkpop model.')
     parameters.dt[,Rblood2plasma := calc_rblood2plasma(
                                       hematocrit=hematocrit,
                                       Krbc2pu=Krbc2pu,
-                                      Funbound.plasma=Funbound.plasma)] 
+                                      Funbound.plasma=Funbound.plasma,
+# We can set this to TRUE because the value in Funbound.plasma is either adjusted
+# or not adjusted already:
+                                      adjusted.Funbound.plasma=TRUE)]
+                             
                                       
     if (any(is.na(parameters.dt$Rblood2plasma)))
-    {
+    {                                       
       parameters.dt[is.na(Rblood2plasma),
                           Rblood2plasma := available_rblood2plasma(
                             chem.cas=chem.cas,
                             chem.name=chem.name,
                             dtxsid=dtxsid,
                             species=species,
-                            adjusted.Funbound.plasma=TRUE,
+# We can set this to TRUE because the value in Funbound.plasma is either adjusted
+# or not adjusted already:                           adjusted.Funbound.plasma=TRUE,
                             suppress.messages=suppress.messages)]
     }
   }

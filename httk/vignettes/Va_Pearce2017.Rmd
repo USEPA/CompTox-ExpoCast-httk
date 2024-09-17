@@ -108,10 +108,10 @@ packageVersion("httk")
 
 ### Control run speed
 To speed up how fast these examples run, we only simulate every $N^{th}$ chemical
-(currently 15) -- to get all chemicals with data set SKIP.CHEMS to 1:
+(currently 50) -- to get all chemicals with data set SKIP.CHEMS to 1:
 ```{r chemical_thining, eval = execute.vignette}
 NUM.CHEMS <- length(get_cheminfo(model="pbtk", suppress.messages = TRUE))
-SKIP.CHEMS <- 25
+SKIP.CHEMS <- 50
 ```
 
 Similarly, portions of this vignette use Monte Carlo sampling to simulate variability and
@@ -122,7 +122,7 @@ to run. So, to speed up how fast these examples run, we specify here that we
 only want to use 25 samples, even though the actual **httk** default is 1000.
 Increase this number to get more stable (and accurate) results:
 ```{r MC_samples, eval = execute.vignette}
-NSAMP <- 25
+NSAMP <- 10
 ```
 
 # Examples
@@ -601,12 +601,16 @@ knitr::kable(physiology.data[,c("Parameter","Units","Wolverine")],
              digits=3)
 ```
 
-The tissue volumes and flows are stored separately in tissue.data
+The tissue volumes and flows are stored separately in tissue.data. Physiological parameters are in the table physiology.data.
 ```{r add_a_species2, eval = execute.vignette}
 new.tissue.data <- subset(tissue.data,Species=="Rabbit")
 new.tissue.data$Species <- "Wolverine"
 
 tissue.data <- rbind(tissue.data,new.tissue.data)
+
+new.physiology.data <- physiology.data[,"Rabbit"]
+physiology.data <- rbind(physiology.data, new.physiology.data)
+colnames(physiology.data)[length(colnames(physiology.data))] <- "Wolverine"
 ```
 
 Now we can make predictions for wolverines!
@@ -663,6 +667,7 @@ chem.list <- get_cheminfo(model='pbtk', suppress.messages = TRUE)[seq(
 for (this.cas in chem.list) {
     css.info <- calc_css(chem.cas = this.cas,
                          doses.per.day = 1,
+                         model="pbtk",
                          suppress.messages = TRUE)
     css.data[this.cas,"days"] <- css.info[["the.day"]]
     css.data[this.cas,"avg"] <- css.info[["avg"]]
