@@ -36,19 +36,24 @@ parallel tube, dispersion, or default well-stirred.}
 
 \item{suppress.messages}{Whether or not to suppress the output message.}
 
-\item{well.stirred.correction}{Uses correction in calculation of hepatic
-clearance for well-stirred model if TRUE for hepatic.model well-stirred.
-This assumes clearance relative to amount unbound in whole blood instead of
-plasma, but converted to use with plasma concentration.}
+\item{well.stirred.correction}{Uses the \insertCite{yang2007misuse}{httk} 
+blood:plasma ratio correction in the calculation of hepatic
+clearance for well-stirred model if TRUE if argument hepatic.model =
+"well-stirred".}
 
-\item{restrictive.clearance}{Protein binding not taken into account (set to
-1) in liver clearance if FALSE.}
+\item{restrictive.clearance}{If TRUE (default)
+the rate of metabolism is restricted
+to the unbound fraction of chemical. If FALSE the free fraction is set to 1
+(that is, plasma protein binding is weak
+and metabolzied chemical is rapidly replaced)}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
-\item{adjusted.Funbound.plasma}{Uses Pearce et al. (2017) lipid binding adjustment
-for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).}
+\item{adjusted.Funbound.plasma}{Uses the 
+\insertCite{pearce2017evaluation}{httk} lipid binding adjustment
+for Funbound.plasma (which also impacts partition coefficients such as 
+blood:plasma ratio) when set to TRUE (Default).}
 
 \item{...}{Additional parameters passed to parameterize_steadystate if
 parameters is NULL.}
@@ -58,9 +63,21 @@ parameters is NULL.}
 }
 \description{
 This function calculates the hepatic clearance in plasma for using the
-Houston (2004) are also available. In vitro measured hepatic clearace is 
-corrected for the free fraction in the assay using the model of Kilford et 
-al. (2008).
+"well-stirred" model by default. Other scaling options from 
+\insertCite{ito2004comparison}{httk} are also available.
+Parameters for scaling from flow-free intrinsic-hepatic clearance to 
+whole-liver metabolism rate are taken from 
+\insertCite{carlile1997scaling}{httk}.
+In vitro measured hepatic clearace is 
+corrected for estimated binding in the in vitro clearance assay 
+using the model of \insertCite{kilford2008hepatocellular}{httk}.
+The agument restrictive.clearance (defaults to TRUE) describes the
+significance (or lack thereof) of plasma protein binding in metabolism. 
+Restrictive clearance assumes that only the free fraction of chemical in
+plasma is available for metabolism. 
+Non-restrictive clearance assumes that the compound is weakly bound to
+plasma protein and any free chemical metabolized is instantly
+replaced. For non-restrictive clearance the effective fup = 1.
 }
 \examples{
 
@@ -69,16 +86,7 @@ calc_hep_clearance(chem.name="Ibuprofen",well.stirred.correction=FALSE)
 
 }
 \references{
-Ito, K., & Houston, J. B. (2004). "Comparison of the use of liver models for 
-predicting drug clearance using in vitro kinetic data from hepatic microsomes 
-and isolated hepatocytes." Pharmaceutical Research, 21(5), 785-792.
-
-Carlile, David J., Katayoun Zomorodi, and J. Brian Houston. "Scaling factors 
-to relate drug metabolic clearance in hepatic microsomes, isolated 
-hepatocytes, and the intact liver: studies with induced livers involving 
-diazepam." Drug metabolism and disposition 25.8 (1997): 903-911.
-
-\insertRef{kilford2008hepatocellular}{httk}
+\insertAllCited{}
 }
 \author{
 John Wambaugh and Robert Pearce

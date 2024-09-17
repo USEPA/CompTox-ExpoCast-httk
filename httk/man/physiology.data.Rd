@@ -5,11 +5,7 @@
 \alias{physiology.data}
 \title{Species-specific physiology parameters}
 \format{
-A data.frame containing 11 rows and 7 columns.
-}
-\source{
-Wambaugh, John F., et al. "Toxicokinetic triage for environmental
-chemicals." Toxicological Sciences (2015): 228-237.
+A data.frame containing 18 rows and 7 columns.
 }
 \usage{
 physiology.data
@@ -17,18 +13,28 @@ physiology.data
 \description{
 This data set contains values from Davies and Morris (1993) necessary to
 paramaterize a toxicokinetic model for human, mouse, rat, dog, or rabbit.
-The temperature for each species are taken from Robertshaw et al. (2004),
-Gordon (1993), and Stammers(1926).
+The temperature for each species are taken from Reece (2015),
+Jordon (1995), and Stammers (1926). Mean residence time for the small 
+intestine is from Grandoni et al. (2019). Human small intestine radius is
+from Yu et al. (1999). Rat small intestine radius is from Griffin and
+O'Driscoll (2008).
 }
 \references{
-Davies, B. and Morris, T. (1993). Physiological Parameters in
-Laboratory Animals and Humans. Pharmaceutical Research 10(7), 1093-1095,
-10.1023/a:1018943613122.  %gfr and other flows Anderson and Holford (2009)
-%scaling gfr by 3/4 Robertshaw, D., Temperature Regulation and Thermal
-Environment, in Dukes' Physiology of Domestic Animals, 12th ed., Reece W.O.,
-Ed. Copyright 2004 by Cornell University.  Stammers (1926) The blood count
-and body temperature in normal rats Gordon (1993) Temperature Regulation in
-Laboratory Rodents
+\insertRef{davies1993physiological}{httk}
+
+\insertRef{brown1997physiological}{httk}
+
+\insertRef{birnbaum1994physiological}{httk}
+
+\insertRef{reece201514}{httk}
+
+\insertRef{stammers1926blood}{httk}
+
+\insertRef{jordan1995temperature}{httk}
+
+\insertRef{grandoni2019building}{httk}
+
+\insertRef{griffin2008models}{httk}
 }
 \author{
 John Wambaugh and Nisha Sipes

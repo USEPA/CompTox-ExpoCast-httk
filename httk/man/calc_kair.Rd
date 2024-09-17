@@ -12,7 +12,9 @@ calc_kair(
   species = "Human",
   adjusted.Funbound.plasma = TRUE,
   default.to.human = FALSE,
-  suppress.messages = FALSE
+  suppress.messages = FALSE,
+  pH = 7.4,
+  alpha = 0.001
 )
 }
 \arguments{
@@ -41,6 +43,11 @@ for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Def
 TRUE (default is FALSE).}
 
 \item{suppress.messages}{Whether or not the output messages are suppressed.}
+
+\item{pH}{pH where ionization is evaluated.}
+
+\item{alpha}{Ratio of Distribution coefficient D of totally charged species
+and that of the neutral form}
 }
 \value{
 A named list containing the blood:air, water:air, and mucus:air 
@@ -82,6 +89,9 @@ Toxicological Sciences 63.2 (2001): 160-172.
 Scott, John W., et al. "Tuning to odor solubility and sorption pattern in 
 olfactory epithelial responses." Journal of Neuroscience 34.6 (2014): 
 2025-2036.
+}
+\seealso{
+\code{\link{calc_dow}}
 }
 \author{
 John Wambaugh and Matt Linakis

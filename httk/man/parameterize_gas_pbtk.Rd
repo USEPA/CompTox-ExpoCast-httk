@@ -26,6 +26,7 @@ parameterize_gas_pbtk(
   suppress.messages = FALSE,
   minimum.Funbound.plasma = 1e-04,
   Caco2.options = NULL,
+  class.exclude = TRUE,
   ...
 )
 }
@@ -97,7 +98,10 @@ Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calcu
 fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-See \code{\link{get_fabsgut}} for further details.}
+See \code{\link{get_fbio}} for further details.}
+
+\item{class.exclude}{Exclude chemical classes identified as outside of 
+domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
 
 \item{...}{Other parameters}
 }
@@ -173,6 +177,7 @@ was first described by Linakis et al. (2020).
 \examples{
 parameters <- parameterize_gas_pbtk(chem.cas='129-00-0')
 
+\donttest{
 parameters <- parameterize_gas_pbtk(chem.name='pyrene',species='Rat')
 
 parameterize_gas_pbtk(chem.cas = '56-23-5')
@@ -184,6 +189,7 @@ compartments <- list(liver=c("liver"),fast=c("heart","brain","muscle","kidney"),
                       lung=c("lung"),gut=c("gut"),slow=c("bone"))
 parameterize_gas_pbtk(chem.name="Bisphenol a",species="Rat",default.to.human=TRUE,
                    tissuelist=compartments) 
+}
 
 }
 \references{

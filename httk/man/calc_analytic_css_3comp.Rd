@@ -2,14 +2,16 @@
 % Please edit documentation in R/calc_analytic_css_3comp.R
 \name{calc_analytic_css_3comp}
 \alias{calc_analytic_css_3comp}
-\title{Calculate the analytic steady state concentration for model 3comp}
+\title{Calculate the analytic steady state concentration for model 3compartment}
 \usage{
 calc_analytic_css_3comp(
   chem.name = NULL,
   chem.cas = NULL,
   dtxsid = NULL,
   parameters = NULL,
-  hourly.dose = 1/24,
+  dosing = list(daily.dose = 1),
+  hourly.dose = NULL,
+  dose.units = "mg",
   concentration = "plasma",
   suppress.messages = FALSE,
   recalc.blood2plasma = FALSE,
@@ -35,7 +37,14 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 parameterize_1comp(for model = '1compartment') or parameterize_steadystate 
 (for model = '3compartmentss'), overrides chem.name and chem.cas.}
 
+\item{dosing}{List of dosing metrics used in simulation, which includes
+the namesake entries of a model's associated dosing.params. For steady-state
+calculations this is likely to be either "daily.dose" for oral exposures or
+"Cinhaled" for inhalation.}
+
 \item{hourly.dose}{Hourly dose rate mg/kg BW/h.}
+
+\item{dose.units}{The units associated with the dose received.}
 
 \item{concentration}{Desired concentration type, 'blood' or default 'plasma'.}
 
@@ -43,7 +52,7 @@ parameterize_1comp(for model = '1compartment') or parameterize_steadystate
 
 \item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical 
 in the blood to plasma using the input parameters. Use this if you have 
-'altered hematocrit, Funbound.plasma, or Krbc2pu.}
+altered hematocrit, Funbound.plasma, or Krbc2pu.}
 
 \item{tissue}{Desired tissue conentration (defaults to whole body 
 concentration.)}
@@ -64,7 +73,7 @@ Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calcu
 fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-See \code{\link{get_fabsgut}} for further details.}
+See \code{\link{get_fbio}} for further details.}
 
 \item{...}{Additional parameters passed to parameterize function if 
 parameters is NULL.}
@@ -73,11 +82,26 @@ parameters is NULL.}
 Steady state plasma concentration in mg/L units
 }
 \description{
-This function calculates the analytic steady state plasma or venous blood 
-concentrations as a result of infusion dosing.
+This function calculates the analytic steady state plasma or blood 
+concentrations as a result of constant oral infusion dosing.
+The three compartment model \insertCite{pearce2017httk}{httk}
+describes the amount of chemical in
+three key tissues of the body: the liver, the portal vein (essentially, oral absorption
+from the gut), and a systemic compartment ("sc") representing the rest of the body.
+See \code{\link{solve_3comp}} for additional details. The analytical
+steady-state solution for the the three compartment model is:
+\deqn{C^{ss}_{plasma} = \frac{dose}{f_{up}*Q_{GFR} + Cl_{h} + \frac{Cl_{h}}{Q_{l}}\frac{f_{up}}{R_{b:p}}Q_{GFR}}}
+\deqn{C^{ss}_{blood} = R_{b:p}*C^{ss}_{plasma}}
+ where Q_GFR is the glomerular filtration
+rate in the kidney, Q_l is the total liver blood flow (hepatic artery plus
+total vein),
+Cl_h is the chemical-specific whole liver metabolism 
+clearance (scaled up from intrinsic clearance, which does not depend on flow),
+f_up is the chemical-specific fraction unbound in plasma, R_b:p is the 
+chemical specific ratio of concentrations in blood:plasma.
 }
 \references{
-\insertRef{pearce2017httk}{httk}
+\insertAllCited{}
 }
 \seealso{
 \code{\link{calc_analytic_css}}
@@ -88,3 +112,4 @@ concentrations as a result of infusion dosing.
 Robert Pearce and John Wambaugh
 }
 \keyword{3compartment}
+\keyword{analyticCss}
