@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2024-03-16 r86144 ucrt) -- "Unsuffered Consequences"
+R Under development (unstable) (2024-08-07 r86984 ucrt) -- "Unsuffered Consequences"
 Copyright (C) 2024 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
@@ -23,12 +23,63 @@ Type 'q()' to quit R.
 > rm(list=ls()) 
 > 
 > library(httk)
+>                   
+> p <- parameterize_pbtk(chem.cas="80-05-7")
+Warning messages:
+1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Clint is provided as a distribution.
+2: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
+  Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
+3: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Fraction unbound is provided as a distribution.
+4: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
+  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
+5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo measured Rblood2plasma used.
+6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+  Default value of 1.6 used for Caco2 permeability.
+> print(p[["MW"]])
+[1] 228.3
+> print(p[["BW"]])
+[1] 70
+> print(p[["Fabsgut"]])
+[1] 0.6441
 > 
+> # calculate what initial dose of 1 mg/kg should be in uM in the gut:
+> initial.dose <- signif(1/1e3*1e6/p[["MW"]]*p[["BW"]]*p[["Fabsgut"]],
++                        4)
+> # This should be the same as what solve_pbtk givesus:
+> initial.dose == solve_pbtk(chem.cas="80-05-7",days=1)[1,"Agutlumen"]
+None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
+
+AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
+The model outputs are provided in the following units:
+	umol: Agutlumen, Atubules, Ametabolized
+	uM: Cgut, Cliver, Cven, Clung, Cart, Crest, Ckidney, Cplasma
+	uM*days: AUC
+
+Agutlumen 
+     TRUE 
+Warning messages:
+1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Clint is provided as a distribution.
+2: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
+  Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
+3: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Fraction unbound is provided as a distribution.
+4: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
+  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
+5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human in vivo measured Rblood2plasma used.
+6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+  Default value of 1.6 used for Caco2 permeability.
+> 
+>                   
 > # By default we now include calculation of Fabs and Fgut (always had Fhep):
 > calc_analytic_css(chem.name="bisphenol a",
 +                   model="pbtk")
 Plasma concentration returned in uM units.
-[1] 1.259
+[1] 0.9417
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -48,7 +99,7 @@ Warning messages:
 +                   model="pbtk",
 +                   Caco2.options=list(keepit100=TRUE))
 Plasma concentration returned in uM units.
-[1] 1.463
+[1] 1.462
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -65,7 +116,7 @@ Warning messages:
 > 
 > # By default we now include calculation of Fabs and Fgut (we explicitly model
 > # first-pass hepatic metabolism in the model "pbtk")
-> head(solve_pbtk(chem.cas="80-05-7"))
+> head(solve_pbtk(chem.cas="80-05-7",days=1))
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
 AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
@@ -74,20 +125,20 @@ The model outputs are provided in the following units:
 	uM: Cgut, Cliver, Cven, Clung, Cart, Crest, Ckidney, Cplasma
 	uM*days: AUC
 
-           time Agutlumen  Cgut  Cliver    Cven    Clung      Cart     Crest
-[1,] 0.00000000    263.90  0.00  0.0000 0.00000 0.000000 0.0000000 0.000e+00
-[2,] 0.00100000    250.40 11.60  0.3535 0.00219 0.006982 0.0003398 5.172e-06
-[3,] 0.01041667    153.00 62.08 20.4900 0.24610 2.023000 0.2145000 5.680e-02
-[4,] 0.02083333     88.72 63.01 42.3500 0.58480 5.095000 0.5606000 3.564e-01
-[5,] 0.03125000     51.45 51.12 50.8900 0.77210 6.850000 0.7620000 8.430e-01
-[6,] 0.04166667     29.83 39.15 49.9000 0.82150 7.345000 0.8209000 1.381e+00
-       Ckidney  Cplasma  Atubules Ametabolized       AUC
-[1,] 0.000e+00 0.000000 0.000e+00     0.000000 0.000e+00
-[2,] 3.918e-04 0.002755 3.700e-07     0.001339 7.780e-07
-[3,] 2.699e+00 0.309600 4.154e-03     0.951800 1.198e-03
-[4,] 1.065e+01 0.735700 2.683e-02     4.729000 6.760e-03
-[5,] 1.690e+01 0.971300 6.559e-02    10.270000 1.583e-02
-[6,] 1.960e+01 1.033000 1.116e-01    16.200000 2.639e-02
+       time Agutlumen    Cgut    Cliver     Cven  Clung    Cart    Crest
+[1,] 0.0000     197.5  0.0000  0.000000 0.000000 0.0000 0.00000 0.000000
+[2,] 0.0001     197.3  0.1582  0.000479 0.000001 0.0000 0.00000 0.000000
+[3,] 0.0104     180.0 10.1300  3.063000 0.036390 0.2967 0.03130 0.007976
+[4,] 0.0208     164.1 13.6200  7.596000 0.102500 0.8846 0.09679 0.056220
+[5,] 0.0312     149.6 14.7600 11.110000 0.162000 1.4230 0.15740 0.149600
+[6,] 0.0416     136.3 14.9800 13.380000 0.206900 1.8320 0.20360 0.275500
+     Ckidney  Cplasma Atubules Ametabolized      AUC
+[1,]  0.0000 0.000000 0.000000     0.000000 0.000000
+[2,]  0.0000 0.000001 0.000000     0.000000 0.000000
+[3,]  0.3831 0.045780 0.000583     0.003302 0.000170
+[4,]  1.7530 0.128900 0.004221     0.018490 0.001074
+[5,]  3.2900 0.203700 0.011570     0.045260 0.002818
+[6,]  4.5510 0.260300 0.021980     0.080160 0.005247
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -103,7 +154,7 @@ Warning messages:
   Default value of 1.6 used for Caco2 permeability.
 > # Therefore if we set Fabs = Fgut = 1 with keetit100=TRUE, we should get a
 > # higher tissue concentrations:
-> head(solve_pbtk(chem.cas="80-05-7",
+> head(solve_pbtk(chem.cas="80-05-7",days=1,
 +                 Caco2.options=list(keepit100=TRUE)))
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
@@ -113,20 +164,20 @@ The model outputs are provided in the following units:
 	uM: Cgut, Cliver, Cven, Clung, Cart, Crest, Ckidney, Cplasma
 	uM*days: AUC
 
-           time Agutlumen  Cgut  Cliver     Cven    Clung      Cart     Crest
-[1,] 0.00000000    306.60  0.00  0.0000 0.000000 0.000000 0.0000000 0.000e+00
-[2,] 0.00100000    291.00 13.48  0.4107 0.002545 0.008112 0.0003948 6.010e-06
-[3,] 0.01041667    177.80 72.13 23.8100 0.285900 2.350000 0.2492000 6.599e-02
-[4,] 0.02083333    103.10 73.21 49.2100 0.679500 5.920000 0.6513000 4.141e-01
-[5,] 0.03125000     59.77 59.40 59.1300 0.897100 7.958000 0.8853000 9.794e-01
-[6,] 0.04166667     34.66 45.49 57.9700 0.954400 8.534000 0.9538000 1.605e+00
-       Ckidney  Cplasma  Atubules Ametabolized       AUC
-[1,] 0.000e+00 0.000000 0.000e+00     0.000000 0.000e+00
-[2,] 4.552e-04 0.003201 4.300e-07     0.001555 9.040e-07
-[3,] 3.135e+00 0.359700 4.826e-03     1.106000 1.392e-03
-[4,] 1.237e+01 0.854800 3.117e-02     5.495000 7.854e-03
-[5,] 1.964e+01 1.129000 7.620e-02    11.940000 1.839e-02
-[6,] 2.277e+01 1.201000 1.296e-01    18.820000 3.066e-02
+       time Agutlumen  Cgut    Cliver     Cven    Clung   Cart   Crest Ckidney
+[1,] 0.0000    306.60  0.00  0.000000 0.000000 0.000000 0.0000 0.00000   0.000
+[2,] 0.0001    305.00  1.44  0.004367 0.000005 0.000002 0.0000 0.00000   0.000
+[3,] 0.0104    177.90 72.10 23.760000 0.285200 2.344000 0.2485 0.06568   3.123
+[4,] 0.0208    103.30 73.24 49.150000 0.678500 5.911000 0.6502 0.41250  12.340
+[5,] 0.0312     59.93 59.47 59.110000 0.896400 7.952000 0.8846 0.97640  19.620
+[6,] 0.0416     34.78 45.57 58.000000 0.954400 8.533000 0.9537 1.60100  22.760
+      Cplasma Atubules Ametabolized      AUC
+[1,] 0.000000 0.000000      0.00000 0.000000
+[2,] 0.000006 0.000000      0.00000 0.000000
+[3,] 0.358800 0.004803      0.02682 0.001386
+[4,] 0.853500 0.031050      0.13340 0.007826
+[5,] 1.128000 0.075960      0.28980 0.018340
+[6,] 1.201000 0.129300      0.45730 0.030580
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -159,6 +210,8 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
+4: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+  calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
 > # The monte carlo Css should be higher with keepit100-TRUE
 > set.seed(1234)
 > Css1.100 <- calc_mc_css(chem.cas="15972-60-8",
@@ -173,6 +226,8 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
+4: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+  calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
 > Css1.caco < Css1.100
  95% 
 TRUE 
@@ -182,18 +237,22 @@ TRUE
 +                          samples=NSAMP,
 +                          which.quantile=0.5)
 Human plasma concentration returned in mg/L units for 0.5 quantile.
-Warning message:
-In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+Warning messages:
+1: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Clint is provided as a distribution.
+2: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+  calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
 > set.seed(1234)
 > Css2.100 <- calc_mc_css(dtxsid="DTXSID6034392",
 +                         samples=NSAMP,
 +                         Caco2.options = list(keepit100=TRUE),
 +                         which.quantile=0.5)
 Human plasma concentration returned in mg/L units for 0.5 quantile.
-Warning message:
-In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+Warning messages:
+1: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Clint is provided as a distribution.
+2: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+  calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
 > Css2.caco < Css2.100
  50% 
 TRUE 

@@ -4,7 +4,19 @@
 rm(list=ls()) 
 
 library(httk)
+                  
+p <- parameterize_pbtk(chem.cas="80-05-7")
+print(p[["MW"]])
+print(p[["BW"]])
+print(p[["Fabsgut"]])
 
+# calculate what initial dose of 1 mg/kg should be in uM in the gut:
+initial.dose <- signif(1/1e3*1e6/p[["MW"]]*p[["BW"]]*p[["Fabsgut"]],
+                       4)
+# This should be the same as what solve_pbtk givesus:
+initial.dose == solve_pbtk(chem.cas="80-05-7",days=1)[1,"Agutlumen"]
+
+                  
 # By default we now include calculation of Fabs and Fgut (always had Fhep):
 calc_analytic_css(chem.name="bisphenol a",
                   model="pbtk")
@@ -16,10 +28,10 @@ calc_analytic_css(chem.name="bisphenol a",
 
 # By default we now include calculation of Fabs and Fgut (we explicitly model
 # first-pass hepatic metabolism in the model "pbtk")
-head(solve_pbtk(chem.cas="80-05-7"))
+head(solve_pbtk(chem.cas="80-05-7",days=1))
 # Therefore if we set Fabs = Fgut = 1 with keetit100=TRUE, we should get a
 # higher tissue concentrations:
-head(solve_pbtk(chem.cas="80-05-7",
+head(solve_pbtk(chem.cas="80-05-7",days=1,
                 Caco2.options=list(keepit100=TRUE)))
 
 # Reduce the number of samples used by Monte Carlo to decrease runtime for

@@ -12,7 +12,7 @@ Pre-made models that can be rapidly tailored to various chemicals and species us
 Useful links:
 \itemize{
   \item \url{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}
-  \item Report bugs at \url{https://github.com/USEPA/CompTox-ExpoCast-httk}
+  \item Report bugs at \url{https://github.com/USEPA/CompTox-ExpoCast-httk/issues}
 }
 
 }
@@ -40,6 +40,7 @@ Other contributors:
   \item Jimena Davis [contributor]
   \item Elaina Kenyon \email{kenyon.elaina@epa.gov} (\href{https://orcid.org/0000-0001-8781-2391}{ORCID}) [contributor]
   \item Katie Paul Friedman \email{Paul-Friedman.Katie@epa.gov} (\href{https://orcid.org/0000-0002-2710-1691}{ORCID}) [contributor]
+  \item Meredith Scherer \email{Scherer.Meredith@epa.gov} (\href{https://orcid.org/0000-0002-9785-7363}{ORCID}) [contributor]
   \item James Sluka \email{jsluka@indiana.edu} (\href{https://orcid.org/0000-0002-5901-1404}{ORCID}) [contributor]
   \item Noelle Sinski \email{Noelle.Sinski@icf.com} [contributor]
   \item Nisha Sipes \email{sipes.nisha@epa.gov} (\href{https://orcid.org/0000-0003-4203-6426}{ORCID}) [contributor]

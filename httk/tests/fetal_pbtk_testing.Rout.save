@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2024-03-16 r86144 ucrt) -- "Unsuffered Consequences"
+R Under development (unstable) (2024-08-07 r86984 ucrt) -- "Unsuffered Consequences"
 Copyright (C) 2024 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
@@ -37,34 +37,34 @@ The model outputs are provided in the following units:
 	uM*days: AUC, fAUC
 	L/d: Qcardiac, Qthyroid
 
-     time Agutlumen   Cgut Cliver  Cven Clung  Cart Cadipose Crest Ckidney
-[1,]   91 0.000e+00  0.000  0.000 0.000 0.000 0.000    0.000 0.000   0.000
-[2,]   92 2.047e-06  5.906  8.418 1.576 3.309 1.577    2.679 2.301   9.061
-[3,]   93 2.047e-06  9.405 13.410 2.510 5.270 2.510    4.266 3.665  14.430
-[4,]   94 2.047e-06 11.480 16.360 3.062 6.433 3.063    5.206 4.473  17.610
-[5,]   95 2.047e-06 12.710 18.120 3.389 7.122 3.390    5.764 4.952  19.500
-[6,]   96 2.047e-06 13.440 19.160 3.583 7.531 3.584    6.095 5.237  20.620
-     Cplasma Atubules Ametabolized Rblood2plasma    AUC   fAUC Aplacenta
-[1,]  0.0000    0.000         0.00         3.390 0.0000 0.0000    0.0000
-[2,]  0.4653    1.880        66.52         3.388 0.3601 0.2806    0.1829
-[3,]  0.7409    5.658       196.90         3.387 1.0820 0.8467    0.2976
-[4,]  0.9044   10.570       365.10         3.386 2.0190 1.5820    0.3709
-[5,]  1.0010   16.150       555.80         3.385 3.0830 2.4180    0.4193
-[6,]  1.0590   22.140       759.70         3.384 4.2220 3.3130    0.4525
-     Cplacenta Cfliver Cfven Cfart  Cfgut Cflung Cfrest Cfthyroid Cfkidney
-[1,]     0.000    0.00 0.000 0.000  0.000  0.000  0.000     0.000    0.000
-[2,]     1.676    7.84 1.394 1.394  5.614  3.226  2.178     3.069    8.439
-[3,]     2.669   12.49 2.228 2.228  8.941  5.138  3.469     4.887   13.440
-[4,]     3.258   15.24 2.728 2.728 10.910  6.271  4.234     5.966   16.410
-[5,]     3.607   16.87 3.030 3.030 12.080  6.944  4.689     6.605   18.170
-[6,]     3.814   17.84 3.213 3.213 12.780  7.343  4.958     6.985   19.210
-     Cfbrain Cfplasma Rfblood2plasma Qcardiac Qthyroid
-[1,]   0.000   0.0000          3.788     8656    118.6
-[2,]   2.452   0.3669          3.800     8673    118.7
-[3,]   3.906   0.5843          3.812     8690    118.8
-[4,]   4.767   0.7132          3.824     8707    118.9
-[5,]   5.279   0.7897          3.836     8724    119.0
-[6,]   5.582   0.8352          3.848     8741    119.1
+         time Agutlumen    Cgut    Cliver      Cven    Clung    Cart Cadipose
+[1,] 90.99990     0.000 0.00000 0.0000000 0.000e+00 0.000000 0.0e+00   0.0000
+[2,] 91.00000     0.000 0.00000 0.0000000 0.000e+00 0.000000 0.0e+00   0.0000
+[3,] 91.00010    57.410 0.04509 0.0005921 4.540e-06 0.000001 1.0e-07   0.0000
+[4,] 91.33323     2.954 2.09200 2.9590000 5.400e-01 1.133000 5.4e-01   0.8699
+[5,] 91.33333     2.951 2.09200 2.9590000 5.401e-01 1.133000 5.4e-01   0.8699
+[6,] 91.33343    60.360 2.13700 2.9600000 5.401e-01 1.133000 5.4e-01   0.8700
+      Crest Ckidney   Cplasma Atubules Ametabolized Rblood2plasma     AUC
+[1,] 0.0000 0.0e+00 0.000e+00   0.0000       0.0000         3.390 0.00000
+[2,] 0.0000 0.0e+00 0.000e+00   0.0000       0.0000         3.390 0.00000
+[3,] 0.0000 1.0e-08 1.340e-06   0.0000       0.0000         3.390 0.00000
+[4,] 0.7718 3.1e+00 1.593e-01   0.2141       0.1961         3.389 0.04107
+[5,] 0.7718 3.1e+00 1.593e-01   0.2142       0.1962         3.389 0.04108
+[6,] 0.7719 3.1e+00 1.594e-01   0.2143       0.1963         3.389 0.04110
+        fAUC Aplacenta Cplacenta Cfliver  Cfven  Cfart Cfgut Cflung Cfrest
+[1,] 0.00000   0.00000    0.0000   0.000 0.0000 0.0000  0.00  0.000 0.0000
+[2,] 0.00000   0.00000    0.0000   0.000 0.0000 0.0000  0.00  0.000 0.0000
+[3,] 0.00000   0.00000    0.0000   0.000 0.0000 0.0000  0.00  0.000 0.0000
+[4,] 0.03146   0.06167    0.5733   2.667 0.4737 0.4737  1.91  1.098 0.7407
+[5,] 0.03148   0.06168    0.5733   2.667 0.4737 0.4737  1.91  1.098 0.7407
+[6,] 0.03149   0.06168    0.5734   2.667 0.4737 0.4737  1.91  1.098 0.7407
+     Cfthyroid Cfkidney Cfbrain Cfplasma Rfblood2plasma Qcardiac Qthyroid
+[1,]     0.000    0.000  0.0000   0.0000          3.788     8656    118.6
+[2,]     0.000    0.000  0.0000   0.0000          3.788     8656    118.6
+[3,]     0.000    0.000  0.0000   0.0000          3.788     8656    118.6
+[4,]     1.044    2.871  0.8332   0.1249          3.792     8661    118.6
+[5,]     1.044    2.871  0.8332   0.1249          3.792     8661    118.6
+[6,]     1.045    2.871  0.8332   0.1249          3.792     8661    118.6
 > head(solve_fetal_pbtk(chem.cas="80-05-7"))
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
@@ -77,34 +77,34 @@ The model outputs are provided in the following units:
 	uM*days: AUC, fAUC
 	L/d: Qcardiac, Qthyroid
 
-     time Agutlumen   Cgut Cliver   Cven  Clung   Cart Cadipose  Crest Ckidney
-[1,]   91     230.3 0.0000 0.0000 0.0000 0.0000 0.0000   0.0000 0.0000  0.0000
-[2,]   92       0.0 4.9130 7.0030 1.3110 2.7530 1.3120   2.2280 1.9140  7.5370
-[3,]   93       0.0 2.9140 4.1540 0.7776 1.6330 0.7777   1.3220 1.1350  4.4710
-[4,]   94       0.0 1.7290 2.4650 0.4613 0.9690 0.4614   0.7843 0.6738  2.6530
-[5,]   95       0.0 1.0270 1.4630 0.2737 0.5752 0.2738   0.4656 0.4000  1.5750
-[6,]   96       0.0 0.6097 0.8691 0.1625 0.3416 0.1626   0.2765 0.2375  0.9354
-     Cplasma Atubules Ametabolized Rblood2plasma    AUC   fAUC Aplacenta
-[1,] 0.00000    0.000         0.00         3.390 0.0000 0.0000   0.00000
-[2,] 0.38700    2.663        92.96         3.388 0.5100 0.3988   0.15220
-[3,] 0.22960    4.240       146.10         3.387 0.8115 0.6366   0.09219
-[4,] 0.13620    5.178       177.70         3.386 0.9903 0.7776   0.05587
-[5,] 0.08087    5.735       196.40         3.385 1.0960 0.8613   0.03386
-[6,] 0.04803    6.066       207.50         3.384 1.1600 0.9111   0.02053
-     Cplacenta Cfliver  Cfven  Cfart  Cfgut Cflung Cfrest Cfthyroid Cfkidney
-[1,]    0.0000  0.0000 0.0000 0.0000 0.0000 0.0000 0.0000    0.0000   0.0000
-[2,]    1.3940  6.5220 1.1600 1.1600 4.6700 2.6840 1.8120    2.5530   7.0200
-[3,]    0.8270  3.8690 0.6902 0.6902 2.7700 1.5920 1.0750    1.5140   4.1640
-[4,]    0.4907  2.2960 0.4109 0.4109 1.6440 0.9446 0.6378    0.8986   2.4710
-[5,]    0.2913  1.3630 0.2447 0.2447 0.9760 0.5608 0.3787    0.5335   1.4670
-[6,]    0.1730  0.8094 0.1458 0.1458 0.5797 0.3331 0.2249    0.3169   0.8714
-     Cfbrain Cfplasma Rfblood2plasma Qcardiac Qthyroid
-[1,]  0.0000  0.00000          3.788     8656    118.6
-[2,]  2.0400  0.30520          3.800     8673    118.7
-[3,]  1.2100  0.18100          3.812     8690    118.8
-[4,]  0.7181  0.10740          3.824     8707    118.9
-[5,]  0.4263  0.06378          3.836     8724    119.0
-[6,]  0.2532  0.03788          3.848     8741    119.1
+        time Agutlumen   Cgut   Cliver      Cven    Clung      Cart Cadipose
+[1,] 91.0000 1.724e+02 0.0000 0.000000 0.000e+00 0.000000 0.0000000    0.000
+[2,] 91.0001 1.722e+02 0.1353 0.001776 1.362e-05 0.000003 0.0000003    0.000
+[3,] 92.0000 2.336e-02 6.1920 8.954000 1.655e+00 3.475000 1.6550000    2.748
+[4,] 93.0000 3.170e-06 6.0160 8.701000 1.608e+00 3.376000 1.6080000    2.670
+[5,] 94.0000 0.000e+00 5.8460 8.454000 1.562e+00 3.281000 1.5620000    2.595
+[6,] 95.0000 0.000e+00 5.6800 8.215000 1.517e+00 3.188000 1.5170000    2.521
+     Crest   Ckidney   Cplasma Atubules Ametabolized Rblood2plasma    AUC
+[1,] 0.000 0.000e+00 0.000e+00    0.000    0.000e+00         3.390 0.0000
+[2,] 0.000 4.000e-08 4.020e-06    0.000    1.000e-08         3.390 0.0000
+[3,] 2.390 9.509e+00 4.885e-01    2.349    2.012e+00         3.388 0.4499
+[4,] 2.323 9.240e+00 4.747e-01    4.869    4.107e+00         3.387 0.9315
+[5,] 2.257 8.978e+00 4.613e-01    7.321    6.143e+00         3.386 1.4000
+[6,] 2.193 8.724e+00 4.482e-01    9.709    8.121e+00         3.385 1.8540
+       fAUC Aplacenta Cplacenta Cfliver Cfven Cfart Cfgut Cflung Cfrest
+[1,] 0.0000    0.0000 0.000e+00   0.000 0.000 0.000 0.000  0.000  0.000
+[2,] 0.0000    0.0000 1.000e-08   0.000 0.000 0.000 0.000  0.000  0.000
+[3,] 0.3511    0.1919 1.759e+00   8.202 1.459 1.459 5.874  3.376  2.278
+[4,] 0.7296    0.1905 1.709e+00   7.971 1.423 1.423 5.708  3.281  2.214
+[5,] 1.0970    0.1891 1.661e+00   7.745 1.387 1.387 5.546  3.188  2.151
+[6,] 1.4550    0.1875 1.613e+00   7.525 1.351 1.351 5.389  3.097  2.090
+     Cfthyroid Cfkidney Cfbrain Cfplasma Rfblood2plasma Qcardiac Qthyroid
+[1,]     0.000    0.000   0.000   0.0000          3.788     8656    118.6
+[2,]     0.000    0.000   0.000   0.0000          3.788     8656    118.6
+[3,]     3.211    8.828   2.564   0.3840          3.800     8673    118.7
+[4,]     3.120    8.579   2.491   0.3731          3.812     8690    118.8
+[5,]     3.032    8.335   2.420   0.3626          3.824     8707    118.9
+[6,]     2.946    8.099   2.352   0.3523          3.836     8724    119.0
 > head(solve_fetal_pbtk(parameters=parameterize_fetal_pbtk(chem.cas="80-05-7")))
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
@@ -117,34 +117,34 @@ The model outputs are provided in the following units:
 	uM*days: AUC, fAUC
 	L/d: Qcardiac, Qthyroid
 
-     time Agutlumen   Cgut Cliver   Cven  Clung   Cart Cadipose  Crest Ckidney
-[1,]   91     230.3 0.0000 0.0000 0.0000 0.0000 0.0000   0.0000 0.0000  0.0000
-[2,]   92       0.0 4.9130 7.0030 1.3110 2.7530 1.3120   2.2280 1.9140  7.5370
-[3,]   93       0.0 2.9140 4.1540 0.7776 1.6330 0.7777   1.3220 1.1350  4.4710
-[4,]   94       0.0 1.7290 2.4650 0.4613 0.9690 0.4614   0.7843 0.6738  2.6530
-[5,]   95       0.0 1.0270 1.4630 0.2737 0.5752 0.2738   0.4656 0.4000  1.5750
-[6,]   96       0.0 0.6097 0.8691 0.1625 0.3416 0.1626   0.2765 0.2375  0.9354
-     Cplasma Atubules Ametabolized Rblood2plasma    AUC   fAUC Aplacenta
-[1,] 0.00000    0.000         0.00         3.390 0.0000 0.0000   0.00000
-[2,] 0.38700    2.663        92.96         3.388 0.5100 0.3988   0.15220
-[3,] 0.22960    4.240       146.10         3.387 0.8115 0.6366   0.09219
-[4,] 0.13620    5.178       177.70         3.386 0.9903 0.7776   0.05587
-[5,] 0.08087    5.735       196.40         3.385 1.0960 0.8613   0.03386
-[6,] 0.04803    6.066       207.50         3.384 1.1600 0.9111   0.02053
-     Cplacenta Cfliver  Cfven  Cfart  Cfgut Cflung Cfrest Cfthyroid Cfkidney
-[1,]    0.0000  0.0000 0.0000 0.0000 0.0000 0.0000 0.0000    0.0000   0.0000
-[2,]    1.3940  6.5220 1.1600 1.1600 4.6700 2.6840 1.8120    2.5530   7.0200
-[3,]    0.8270  3.8690 0.6902 0.6902 2.7700 1.5920 1.0750    1.5140   4.1640
-[4,]    0.4907  2.2960 0.4109 0.4109 1.6440 0.9446 0.6378    0.8986   2.4710
-[5,]    0.2913  1.3630 0.2447 0.2447 0.9760 0.5608 0.3787    0.5335   1.4670
-[6,]    0.1730  0.8094 0.1458 0.1458 0.5797 0.3331 0.2249    0.3169   0.8714
-     Cfbrain Cfplasma Rfblood2plasma Qcardiac Qthyroid
-[1,]  0.0000  0.00000          3.788     8656    118.6
-[2,]  2.0400  0.30520          3.800     8673    118.7
-[3,]  1.2100  0.18100          3.812     8690    118.8
-[4,]  0.7181  0.10740          3.824     8707    118.9
-[5,]  0.4263  0.06378          3.836     8724    119.0
-[6,]  0.2532  0.03788          3.848     8741    119.1
+        time Agutlumen   Cgut   Cliver      Cven    Clung      Cart Cadipose
+[1,] 91.0000 1.724e+02 0.0000 0.000000 0.000e+00 0.000000 0.0000000    0.000
+[2,] 91.0001 1.722e+02 0.1353 0.001776 1.362e-05 0.000003 0.0000003    0.000
+[3,] 92.0000 2.336e-02 6.1920 8.954000 1.655e+00 3.475000 1.6550000    2.748
+[4,] 93.0000 3.170e-06 6.0160 8.701000 1.608e+00 3.376000 1.6080000    2.670
+[5,] 94.0000 0.000e+00 5.8460 8.454000 1.562e+00 3.281000 1.5620000    2.595
+[6,] 95.0000 0.000e+00 5.6800 8.215000 1.517e+00 3.188000 1.5170000    2.521
+     Crest   Ckidney   Cplasma Atubules Ametabolized Rblood2plasma    AUC
+[1,] 0.000 0.000e+00 0.000e+00    0.000    0.000e+00         3.390 0.0000
+[2,] 0.000 4.000e-08 4.020e-06    0.000    1.000e-08         3.390 0.0000
+[3,] 2.390 9.509e+00 4.885e-01    2.349    2.012e+00         3.388 0.4499
+[4,] 2.323 9.240e+00 4.747e-01    4.869    4.107e+00         3.387 0.9315
+[5,] 2.257 8.978e+00 4.613e-01    7.321    6.143e+00         3.386 1.4000
+[6,] 2.193 8.724e+00 4.482e-01    9.709    8.121e+00         3.385 1.8540
+       fAUC Aplacenta Cplacenta Cfliver Cfven Cfart Cfgut Cflung Cfrest
+[1,] 0.0000    0.0000 0.000e+00   0.000 0.000 0.000 0.000  0.000  0.000
+[2,] 0.0000    0.0000 1.000e-08   0.000 0.000 0.000 0.000  0.000  0.000
+[3,] 0.3511    0.1919 1.759e+00   8.202 1.459 1.459 5.874  3.376  2.278
+[4,] 0.7296    0.1905 1.709e+00   7.971 1.423 1.423 5.708  3.281  2.214
+[5,] 1.0970    0.1891 1.661e+00   7.745 1.387 1.387 5.546  3.188  2.151
+[6,] 1.4550    0.1875 1.613e+00   7.525 1.351 1.351 5.389  3.097  2.090
+     Cfthyroid Cfkidney Cfbrain Cfplasma Rfblood2plasma Qcardiac Qthyroid
+[1,]     0.000    0.000   0.000   0.0000          3.788     8656    118.6
+[2,]     0.000    0.000   0.000   0.0000          3.788     8656    118.6
+[3,]     3.211    8.828   2.564   0.3840          3.800     8673    118.7
+[4,]     3.120    8.579   2.491   0.3731          3.812     8690    118.8
+[5,]     3.032    8.335   2.420   0.3626          3.824     8707    118.9
+[6,]     2.946    8.099   2.352   0.3523          3.836     8724    119.0
 Warning messages:
 1: In solve_model(chem.name = chem.name, chem.cas = chem.cas, dtxsid = dtxsid,  :
   Rblood2plasma not recalculated. 
@@ -152,5 +152,152 @@ Set recalc.blood2plasma to TRUE if desired.
 2: In solve_model(chem.name = chem.name, chem.cas = chem.cas, dtxsid = dtxsid,  :
   Clearance not recalculated. 
 Set recalc.clearance to TRUE if desired.
+> 
+> p <- parameterize_fetal_pbtk(chem.name='bisphenol a')[sort(names(parameterize_fetal_pbtk(chem.name='bisphenol a')))]
+> # Try to standardize order of variable names
+> for (this.param in names(p)[order(toupper(names(p)))]) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
+adipose_density: 0.95
+amnf_density: 1.01
+arterial_blood_fraction: 0.16
+brain_density: 1.04
+BW: 61.1
+BW_cubic_theta1: -0.010614
+BW_cubic_theta2: 0.029161
+BW_cubic_theta3: -0.00050203
+Clint: 29.51
+Clint.dist: 19.9,10.2,29.8,0
+Clmetabolismc: 0.1219
+Fabsgut: 0.6441
+fblood_weight_ratio: 80
+fBW_gompertz_theta0: 0.0018282
+fBW_gompertz_theta1: 1.1735
+fBW_gompertz_theta2: 0.077577
+ffmx_density: 1.1
+fhematocrit_cubic_theta1: 4.5061
+fhematocrit_cubic_theta2: -0.18487
+fhematocrit_cubic_theta3: 0.0026766
+Fhep.assay.correction: 0.6744
+Fraction_unbound_plasma_fetus: 0.03111
+Funbound.plasma: 0.02434
+Funbound.plasma.adjustment: 0.6321
+Funbound.plasma.dist: 0.0385,0.0334,0.0456
+gut_density: 1.04
+hematocrit_quadratic_theta0: 39.192
+hematocrit_quadratic_theta1: -0.10562
+hematocrit_quadratic_theta2: -0.00071045
+Kadipose2pu: 230.8
+Kfbrain2pu: 214.6
+Kfgut2pu: 491.7
+Kfkidney2pu: 739
+Kfliver2pu: 686.6
+Kflung2pu: 282.6
+Kfplacenta2pu: 147.2
+Kfrbc2pu: 301.9
+Kfrest2pu: 190.7
+Kfthyroid2pu: 268.8
+Kgut2pu: 520.6
+kgutabs: 0.3711
+kidney_density: 1.05
+Kkidney2pu: 800.3
+Kliver2pu: 753.2
+Klung2pu: 292.2
+Kplacenta2pu: 147.9
+Krbc2pu: 301.5
+Krest2pu: 200.9
+Kthyroid2pu: 268.9
+liver_density: 1.05
+lung_density: 1.05
+MA: 28840
+million.cells.per.gliver: 110
+MW: 228.3
+pH_Plasma_fet: 7.28
+pH_Plasma_mat: 7.38
+pKa_Accept: NA
+pKa_Donor: 9.46
+placenta_density: 1.02
+Pow: 2089
+pre_pregnant_BW: 61.1
+Qadipose_percent_initial: 8.5
+Qadipose_percent_terminal: 7.8
+Qbrain_percent: 12
+Qcardiac_cubic_theta0: 301.78
+Qcardiac_cubic_theta1: 3.2512
+Qcardiac_cubic_theta2: 0.15947
+Qcardiac_cubic_theta3: -0.0047059
+Qfbrain_percent: 14.3
+Qfda_logistic_theta0: 1125.3
+Qfda_logistic_theta1: 0.18031
+Qfda_logistic_theta2: 35.939
+Qfdv_gompertz_theta0: 1.892
+Qfdv_gompertz_theta1: 0.098249
+Qfdv_gompertz_theta2: 0.0064374
+Qfgut_percent: 6.8
+Qfkidney_percent: 5.4
+Qfliver_percent: 6.5
+Qflvtl_logistic_theta0: 506.3
+Qflvtl_logistic_theta1: 0.21916
+Qflvtl_logistic_theta2: 30.231
+Qfnonplacental_percent: 75
+Qfplacenta_logistic_theta0: 262.2
+Qfplacenta_logistic_theta1: 0.22183
+Qfplacenta_logistic_theta2: 28.784
+Qfrvtl_logistic_theta0: 2466.5
+Qfrvtl_logistic_theta1: 0.14837
+Qfrvtl_logistic_theta2: 43.108
+Qfthyroid_percent: 1.5
+Qgfr_quadratic_theta0: 113.73
+Qgfr_quadratic_theta1: 3.5784
+Qgfr_quadratic_theta2: -0.067272
+Qgut_percent: 16
+Qgut_percent_initial: 17
+Qgut_percent_terminal: 12.5
+Qkidney_cubic_theta0: 53.248
+Qkidney_cubic_theta1: 3.6447
+Qkidney_cubic_theta2: -0.15357
+Qkidney_cubic_theta3: 0.0016968
+Qkidney_percent: 18
+Qliver_percent_initial: 27
+Qliver_percent_terminal: 20
+Qplacenta_linear_theta1: 0.059176
+Qthyroid_percent_initial: 1.5
+Qthyroid_percent_terminal: 1.1
+term: 40
+thyroid_density: 1.05
+Vamnf_logistic_theta0: 822.34
+Vamnf_logistic_theta1: 0.26988
+Vamnf_logistic_theta2: 20.15
+venous_blood_fraction: 0.595
+Vgutc: 0.019
+Vkidneyc: 0.00458
+Vliverc: 0.0233
+Vlungc: 0.0158
+Vplacenta_cubic_theta1: -1.7646
+Vplacenta_cubic_theta2: 0.91775
+Vplacenta_cubic_theta3: -0.011543
+Vplasma_mod_logistic_theta0: 1.2406
+Vplasma_mod_logistic_theta1: 0.31338
+Vplasma_mod_logistic_theta2: 17.813
+Vplasma_mod_logistic_theta3: 2.4958
+Vthyroidc: 0.000283
+Wadipose_linear_theta0: 17.067
+Wadipose_linear_theta1: 0.14937
+Wfbrain_gompertz_theta0: 0.01574
+Wfbrain_gompertz_theta1: 0.70707
+Wfbrain_gompertz_theta2: 0.064827
+Wfgut_gompertz_theta0: 0.00081828
+Wfgut_gompertz_theta1: 0.65028
+Wfgut_gompertz_theta2: 0.047724
+Wfkidney_gompertz_theta0: 6.3327e-05
+Wfkidney_gompertz_theta1: 1.0409
+Wfkidney_gompertz_theta2: 0.076435
+Wfliver_gompertz_theta0: 0.0074774
+Wfliver_gompertz_theta1: 0.65856
+Wfliver_gompertz_theta2: 0.061662
+Wflung_gompertz_theta0: 0.00030454
+Wflung_gompertz_theta1: 1.0667
+Wflung_gompertz_theta2: 0.084604
+Wfthyroid_gompertz_theta0: 0.0038483
+Wfthyroid_gompertz_theta1: 0.30799
+Wfthyroid_gompertz_theta2: 0.0398
 > 
 > quit("no")
