@@ -2,11 +2,14 @@
 #' 
 #' This function initializes the parameters needed in the functions
 #' \code{\link{calc_mc_css}}, \code{\link{calc_mc_oral_equiv}}, and 
-#' \code{\link{calc_analytic_css}} for the three
-#' compartment steady state model ('3compartmentss') as used in 
-#' Rotroff et al. (2010), Wetmore et al. (2012), Wetmore et al. (2015), and 
-#' elsewhere. By assuming that enough time has passed to reach steady-state, we
-#' eliminate the need for tissue-specific parititon coefficients because we 
+#' \code{\link{calc_analytic_css}} for the PFAS-aware version of the
+#' sum of clerances model ("sumclearancespfas"). The model is described in
+#' Wambaugh et al. (in preparation). 
+#' For PFAS compounds the effectiveness of glomerular filtration in the kidneys
+#' is set according to the half-life predicted by the Dawson et al. (2023)
+#' model.
+#' By assuming that enough time has passed to reach steady-state, we
+#' eliminate the need for tissue-specific partition coefficients because we 
 #' assume all tissues have come to equilibrium with the unbound concentration
 #' in plasma. However, we still use chemical properties to predict the 
 #' blood:plasma ratio for estimating first-pass hepatic metabolism for oral
@@ -29,6 +32,9 @@
 #' 
 #' @param default.to.human Substitutes missing species-specific values with human values if
 #' TRUE (default is FALSE).
+#' 
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
 #' 
 #' @param force.human.clint.fup Uses human hepatic intrinsic clearance and fraction
 #' of unbound plasma in calculation of partition coefficients for rats if true.
@@ -73,14 +79,13 @@
 #' @author John Wambaugh
 #'
 #' @references 
-#' Pearce, Robert G., et al. "Httk: R package for high-throughput 
-#' toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 #'
-#' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
-#' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
-#' hepatocyte incubations using microsomal binding or drug lipophilicity data.
-#' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+#' \insertRef{pearce2017httk}{httk}
 #'
+#' \insertRef{kilford2008hepatocellular}{httk}
+#'
+#' \insertRef{dawson2023machine}
+#' 
 #' @seealso \code{\link{calc_analytic_css_3compss}}
 #'
 #' @seealso \code{\link{apply_clint_adjustment}}
@@ -107,6 +112,7 @@ parameterize_pfassteadystate <- function(
                               restrict.doa = "ClassModDomain",
                               clint.pvalue.threshold=0.05,
                               default.to.human=FALSE,
+                              class.exclude=TRUE,
                               force.human.clint.fup=FALSE,
                               adjusted.Funbound.plasma=TRUE,
                               adjusted.Clint=TRUE,
@@ -141,7 +147,16 @@ parameterize_pfassteadystate <- function(
   chem.name <- out$chem.name                                
   dtxsid <- out$dtxsid
 
-  #Capitilize the first letter of species only:
+  # Make sure we have all the parameters we need:
+  check_model(chem.cas=chem.cas, 
+              chem.name=chem.name,
+              dtxsid=dtxsid,
+              model="sumclearancespfas",
+              species=species,
+              class.exclude=class.exclude,
+              default.to.human=default.to.human)
+  
+  #Capitalize the first letter of species only:
   species <- tolower(species)
   substring(species,1,1) <- toupper(substring(species,1,1))
 

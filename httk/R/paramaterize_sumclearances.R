@@ -1,4 +1,4 @@
-#' Parameters for a three-compartment toxicokinetic model at steady-state
+#' Parameters for a three-compartment model at steady-state with exhalation
 #' 
 #' This function initializes the parameters needed in the functions
 #' \code{\link{calc_mc_css}}, \code{\link{calc_mc_oral_equiv}}, and 
@@ -6,7 +6,7 @@
 #' compartment steady state model ('3compartmentss') as used in 
 #' Rotroff et al. (2010), Wetmore et al. (2012), Wetmore et al. (2015), and 
 #' elsewhere. By assuming that enough time has passed to reach steady-state, we
-#' eliminate the need for tissue-specific partition coefficients because we 
+#' eliminate the need for tissue-specific parititon coefficients because we 
 #' assume all tissues have come to equilibrium with the unbound concentration
 #' in plasma. However, we still use chemical properties to predict the 
 #' blood:plasma ratio for estimating first-pass hepatic metabolism for oral
@@ -48,9 +48,6 @@
 #' @param default.to.human Substitutes missing species-specific values with human values if
 #' TRUE (default is FALSE).
 #' 
-#' @param class.exclude Exclude chemical classes identified as outside of 
-#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
-#' 
 #' @param force.human.clint.fup Uses human hepatic intrinsic clearance and fraction
 #' of unbound plasma in calculation of partition coefficients for rats if true.
 #' 
@@ -80,7 +77,7 @@
 #' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 #' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-#' See \code{\link{get_fbio}} for further details.
+#' See \code{\link{get_fabsgut}} for further details.
 #' 
 #' @param ... Other parameters
 #' 
@@ -101,19 +98,13 @@
 #' \item{hepatic.bioavailability}{Fraction of dose remaining after first pass
 #' clearance, calculated from the corrected well-stirred model.}
 #'
-#' @author John Wambaugh and Greg Honda
+#' @author John Wambaugh
 #'
 #' @references 
 #'
 #' \insertRef{pearce2017httk}{httk}
 #'
 #' \insertRef{kilford2008hepatocellular}{httk}
-#' 
-#' \insertRef{rotroff2010incorporating}
-#' 
-#' \insertRef{wetmore2012integration}
-#' 
-#' \insertRef{wetmore2015incorporating}
 #'
 #' @seealso \code{\link{calc_analytic_css_3compss}}
 #'
@@ -123,17 +114,21 @@
 #'
 #' @seealso \code{\link{physiology.data}}
 #'
-#' @keywords pfassteadystate
+#' @examples
 #' 
-#' @export parameterize_steadystate
-parameterize_steadystate <- function(
+#'  parameters <- parameterize_steadystate(chem.name='Bisphenol-A',species='Rat')
+#'  parameters <- parameterize_steadystate(chem.cas='80-05-7')
+#'
+#' @keywords 3compss2
+#' 
+#' @export parameterize_sumclearances
+parameterize_sumclearances <- function(
                               chem.cas=NULL,
                               chem.name=NULL,
                               dtxsid=NULL,
                               species="Human",
                               clint.pvalue.threshold=0.05,
                               default.to.human=FALSE,
-                              class.exclude=TRUE,
                               force.human.clint.fup=FALSE,
                               adjusted.Funbound.plasma=TRUE,
                               adjusted.Clint=TRUE,
@@ -168,15 +163,6 @@ parameterize_steadystate <- function(
   chem.cas <- out$chem.cas
   chem.name <- out$chem.name                                
   dtxsid <- out$dtxsid
-
-# Make sure we have all the parameters we need:
-  check_model(chem.cas=chem.cas, 
-              chem.name=chem.name,
-              dtxsid=dtxsid,
-              model="3compartmentss",
-              species=species,
-              class.exclude=class.exclude,
-              default.to.human=default.to.human)
 
   #Capitalize the first letter of species only:
   species <- tolower(species)
@@ -298,8 +284,8 @@ parameterize_steadystate <- function(
   } else {
     fup.corrected <- fup.point
     fup.adjustment <- NA
-  }
-  
+  } 
+
   Params <- list()
   Params[["Clint"]] <- Clint.point # uL/min/10^6
   Params[["Clint.dist"]] <- Clint.dist
@@ -316,26 +302,50 @@ parameterize_steadystate <- function(
   Params[["million.cells.per.gliver"]] <- 110 # 10^6 cells/g-liver
   Params[["Vliverc"]] <- Vliverc # L/kg BW
   Params[["liver.density"]] <- 1.05 # g/mL
-  
+
 # Blood to plasma ratio:
   Rb2p <- available_rblood2plasma(
             chem.name=chem.name,
             chem.cas=chem.cas,
             dtxsid=dtxsid,
             species=species,
-            class.exclude=class.exclude,
             adjusted.Funbound.plasma=fup.corrected,
             suppress.messages=TRUE)
   Params[["Rblood2plasma"]] <- Rb2p
+  
+# Exhalation parameters:
+# Phys-chem needed to calculate blood:air partition coefficient:
+  Params[["logHenry"]] <- get_physchem_param(param = 'logHenry', 
+                                  chem.cas=chem.cas,
+                                  chem.name=chem.name,
+                                  dtxsid=dtxsid) #for log base 10 compiled Henry's law values
+  Params[["pKa_Donor"]] <- pKa_Donor
+  Params[["pKa_Accept"]] <- pKa_Accept
+  Params[["Pow"]] <- Pow 
+# Get the blood:air and mucus:air partition coefficients:
+  Kx2air <- calc_kair(parameters=Params,
+                      species=species,
+                      default.to.human=default.to.human,
+                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                      suppress.messages=suppress.messages)
+  Kwater2air <- Kx2air$Kwater2air
+  Kblood2air <- Kx2air$Kblood2air
+  Kmuc2air <- Kx2air$Kmuc2air
+  Params[["Kblood2air"]] <- Kblood2air
+# Ventilation rate:    
+  Vdot <- as.numeric(this.phys.data["Pulmonary Ventilation Rate"])
+  Qalvc <- Vdot * (0.67) #L/h/kg^0.75 
+  Params[["Qalvc"]] <- Qalvc
   
 # Oral bioavailability parameters:
 # Need to have a parameter with this name to calculate clearance, but need 
 # clearance to calculate bioavailability:
   Params[["hepatic.bioavailability"]] <- NA
   cl <- calc_hep_clearance(parameters=Params,
-          hepatic.model="unscaled",
+          hepatic.model='unscaled',
           restrictive.clearance = restrictive.clearance,
-          suppress.messages=TRUE) #L/h/kg body weight
+          suppress.messages=TRUE)#L/h/kg body weight
+
           
 # "hepatic bioavailability" simulates first-pass hepatic metabolism since we 
 # don't explicitly model blood from the gut:
@@ -362,6 +372,6 @@ parameterize_steadystate <- function(
     Caco2.options))
     ))
   
-  return(lapply(Params[model.list[["3compartmentss"]]$param.names],
+  return(lapply(Params[model.list[["sumclearances"]]$param.names],
                 set_httk_precision))
 }

@@ -1,16 +1,16 @@
-# Add the 3compartment steady-state model with PFAS resorption
+# Add the 3compartment steady-state model with inhalation to the list of models:
 
 # Model identifier for the model.list:
-THIS.MODEL <- "sumclearancespfas" 
+THIS.MODEL <- "sumclearances" 
 
 #Analytic expression for steady-state plasma concentration.
-model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_3compss2"
+model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_sumclearances"
 
 # What units does the analytic function return:
 model.list[[THIS.MODEL]]$steady.state.units <- "mg/L"
 
 # Function used for generating model parameters:
-model.list[[THIS.MODEL]]$parameterize.func <- "parameterize_pfassteadystate"  
+model.list[[THIS.MODEL]]$parameterize.func <- "parameterize_sumclearances"  
 
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
@@ -26,11 +26,14 @@ model.list[[THIS.MODEL]]$param.names <- c("BW",
                        "Funbound.plasma.adjustment",
                        "hepatic.bioavailability",
                        "liver.density",
+                       "logHenry",
                        "million.cells.per.gliver",
                        "MW",
+                       "pKa_Accept",
+                       "pKa_Donor",
+                       "Pow",
                        "Qtotal.liverc",
                        "Qgfrc",
-                       "resorption.factor",
                        "Rblood2plasma",
                        "Vliverc",
                        "Qalvc",
@@ -89,6 +92,9 @@ model.list[[THIS.MODEL]]$invitro.params <- c("BW",
 # Do we ignore the Fups where the alue was below the limit of detection?
 model.list[[THIS.MODEL]]$exclude.fup.zero <- FALSE
 
+# Filter out compounds belonging to select chemical classes
+model.list[[THIS.MODEL]]$chem.class.filt <- c("PFAS")
+
 # These are the parameter names needed to describe steady-state dosing:
 model.list[[THIS.MODEL]]$css.dosing.params <- c("hourly.dose")
 
@@ -97,4 +103,4 @@ model.list[[THIS.MODEL]]$routes <- list(
     "dosing.params" = c("daily.dose")),
   "inhalation" = list(
     "dosing.params" = c("Cinhppmv"))
-  )
+  )    

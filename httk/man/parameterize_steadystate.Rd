@@ -103,7 +103,7 @@ This function initializes the parameters needed in the functions
 compartment steady state model ('3compartmentss') as used in 
 Rotroff et al. (2010), Wetmore et al. (2012), Wetmore et al. (2015), and 
 elsewhere. By assuming that enough time has passed to reach steady-state, we
-eliminate the need for tissue-specific parititon coefficients because we 
+eliminate the need for tissue-specific partition coefficients because we 
 assume all tissues have come to equilibrium with the unbound concentration
 in plasma. However, we still use chemical properties to predict the 
 blood:plasma ratio for estimating first-pass hepatic metabolism for oral
@@ -128,16 +128,16 @@ Intrinsic hepatic metabolism is used to very roughly estimate
 \ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}
 using \code{\link{calc_fgut.oral}}.
 }
-\examples{
-
- parameters <- parameterize_steadystate(chem.name='Bisphenol-A',species='Rat')
- parameters <- parameterize_steadystate(chem.cas='80-05-7')
-
-}
 \references{
 \insertRef{pearce2017httk}{httk}
 
 \insertRef{kilford2008hepatocellular}{httk}
+
+\insertRef{rotroff2010incorporating}
+
+\insertRef{wetmore2012integration}
+
+\insertRef{wetmore2015incorporating}
 }
 \seealso{
 \code{\link{calc_analytic_css_3compss}}
@@ -151,4 +151,4 @@ using \code{\link{calc_fgut.oral}}.
 \author{
 John Wambaugh and Greg Honda
 }
-\keyword{3compss}
+\keyword{pfassteadystate}

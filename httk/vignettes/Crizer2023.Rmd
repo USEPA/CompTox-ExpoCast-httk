@@ -59,8 +59,8 @@ library(ggpubr)
 library(readxl)
 
 LOC.WD <- "c:/users/jwambaug/"
-PFAS.MODEL.USED <- "3compartmentsspfas"
-NONPFAS.MODEL.USED <- "3compartmentss2"
+PFAS.MODEL.USED <- "sumclearancespfas"
+NONPFAS.MODEL.USED <- "sumclearances"
 ```
 
 Set the sizes of the labels and points in the figure (these settings impact the PNG differently than the figure within RStudio):
@@ -198,7 +198,8 @@ for (this.chem in unique(cl.table$DTXSID))
                                species=this.species,
                                model=PFAS.MODEL.USED,
                                output.units="mg/L",
-                               parameterize.args=list(default.to.human=TRUE),
+                               parameterize.args=list(default.to.human=TRUE,
+                                                      class.exclude=FALSE),
                                suppress.messages=TRUE)
       if (any(cl.table$DTXSID==this.chem &
                cl.table$Species==this.species))
