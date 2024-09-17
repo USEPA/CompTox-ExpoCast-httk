@@ -4,29 +4,32 @@
 # Pearce, Robert G., et al. "Httk: R package for high-throughput 
 # toxicokinetics." Journal of statistical software 79.4 (2017): 1.
 
+# Model identifier for the model.list:
+THIS.MODEL <- "pbtk" 
+
 # Analytic expression for steady-state plasma concentration to be used by
 # calc_analytic_css:
-model.list[["pbtk"]]$analytic.css.func <- "calc_analytic_css_pbtk"
+model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_pbtk"
 
 # What units does the analytic function return in calc_analytic_css:
-model.list[["pbtk"]]$steady.state.units <- "mg/L"
+model.list[[THIS.MODEL]]$steady.state.units <- "mg/L"
 
 # When calculating steady-state with calc_css, which compartment do we test? 
 # ("C" is preprended):
-model.list[["pbtk"]]$steady.state.compartment <- "plasma"
+model.list[[THIS.MODEL]]$steady.state.compartment <- "plasma"
 
 # Function used for generating model parameters:
-model.list[["pbtk"]]$parameterize.func <- "parameterize_pbtk"
+model.list[[THIS.MODEL]]$parameterize.func <- "parameterize_pbtk"
 
 # Function called for running the model:
-model.list[["pbtk"]]$solve.func <- "solve_pbtk"
+model.list[[THIS.MODEL]]$solve.func <- "solve_pbtk"
 
 # Here are the tissues from tissue.data that are considered (for example,
 # do we include placenta or not? Here, yes we do). They should correspond
 # in name to the names present in the tissue.data object, if the parameters
 # necessary for describing the tissue/compartment aren't going to be provided
 # otherwise.
-model.list[["pbtk"]]$alltissues=c(
+model.list[[THIS.MODEL]]$alltissues=c(
   "adipose",
   "bone",            
   "brain",           
@@ -41,11 +44,10 @@ model.list[["pbtk"]]$alltissues=c(
   "red blood cells",
   "rest")
 
-
 # How the tissues from tissue.data are lumped together to form the model:
 # PBTK model has liver, kidney, gut, and lung compartments that draw info
 # from tissue.data; everything else from alltissues should be lumped.
-model.list[["pbtk"]]$tissuelist=list(
+model.list[[THIS.MODEL]]$tissuelist=list(
                          liver=c("liver"),
                          kidney=c("kidney"),
                          lung=c("lung"),
@@ -54,7 +56,7 @@ model.list[["pbtk"]]$tissuelist=list(
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
-model.list[["pbtk"]]$param.names <- c(
+model.list[[THIS.MODEL]]$param.names <- c(
   "BW",
   "Caco2.Pab",
   "Caco2.Pab.dist",
@@ -95,14 +97,10 @@ model.list[["pbtk"]]$param.names <- c(
   "Vrestc",
   "Vvenc")
                     
-# This subset of R parameters are needed to initially parameterize the compiled
-# code for the solver: (must match ORDER under "parameters" in C code, even if 
-# some items are omitted)
-
 #
 # String representations of the R version of names of
 # the parameters are assigned to the C variable name in this scheme.
-model.list[["pbtk"]]$Rtosolvermap <- list(
+model.list[[THIS.MODEL]]$Rtosolvermap <- list(
   BW="BW",
   Clmetabolismc="Clmetabolismc",
   hematocrit="hematocrit",
@@ -126,11 +124,13 @@ model.list[["pbtk"]]$Rtosolvermap <- list(
   Vvenc="Vvenc",
   Fraction_unbound_plasma="Funbound.plasma",
   Rblood2plasma="Rblood2plasma"
+
+
 )
 
 # This function translates the R model parameters into the compiled model
 # parameters:
-model.list[["pbtk"]]$compiled.parameters.init <- "getParmspbtk"
+model.list[[THIS.MODEL]]$compiled.parameters.init <- "getParmspbtk"
 
 # This needs to be a global variable so that R CMD check --as-cran can test
 # the code (the HTTK package does not use this):
@@ -138,7 +138,7 @@ compiled_parameters_init <- "getParmspbtk"
 
 # This is the ORDERED full list of parameters used by the compiled code to 
 # calculate the derivative of the system of equations describing the model 
-model.list[["pbtk"]]$compiled.param.names <- c(
+model.list[[THIS.MODEL]]$compiled.param.names <- c(
   "BW",
   "Clmetabolismc",
   "hematocrit",
@@ -179,15 +179,15 @@ model.list[["pbtk"]]$compiled.param.names <- c(
   )
 
 # This function initializes the state vector for the compiled model:
-model.list[["pbtk"]]$compiled.init.func <- "initmodpbtk"
+model.list[[THIS.MODEL]]$compiled.init.func <- "initmodpbtk"
 
 # This is the function that calculates the derivative of the model as a function
 # of time, state, and parameters:
-model.list[["pbtk"]]$derivative.func <- "derivspbtk"
+model.list[[THIS.MODEL]]$derivative.func <- "derivspbtk"
 
 # This is the ORDERED list of variables returned by the derivative function
 # (from Model variables: Outputs):
-model.list[["pbtk"]]$derivative.output.names <- c(
+model.list[[THIS.MODEL]]$derivative.output.names <- c(
   "Cgut",
   "Cliver",
   "Cven",
@@ -202,7 +202,7 @@ model.list[["pbtk"]]$derivative.output.names <- c(
 
 #list of variables to be monitored (plotted). This list should be able to be
 #constructed from states and outputs. 
-model.list[["pbtk"]]$default.monitor.vars <- c(
+model.list[[THIS.MODEL]]$default.monitor.vars <- c(
   "Cgut",
   "Cliver",
   "Cven",
@@ -217,31 +217,31 @@ model.list[["pbtk"]]$default.monitor.vars <- c(
   )
 
 # Allowable units assigned to dosing input:
-model.list[["pbtk"]]$allowed.units.input <- list(
+model.list[[THIS.MODEL]]$allowed.units.input <- list(
        "oral" = c('umol','mg','mg/kg'),
        "iv" = c('umol','mg','mg/kg'))
 
 # Allowable units assigned to entries in the output columns of the ode system
-model.list[["pbtk"]]$allowed.units.output <- list(
+model.list[[THIS.MODEL]]$allowed.units.output <- list(
        "oral" = c('uM','mg/l','umol','mg','uM*days','mg/L*days'),
        "iv" = c('uM','mg/l','umol','mg','uM*days','mg/L*days'))
 
 ## These parameters specify the exposure scenario simulated by the model:
-#model.list[["pbtk"]]$dosing.params <- c("daily.dose",
+#model.list[[THIS.MODEL]]$dosing.params <- c("daily.dose",
 #  "initial.dose",
 #  "doses.per.day",
 #  "dosing.matrix")
-#model.list[["pbtk"]]$routes <- c("oral","iv")
+#model.list[[THIS.MODEL]]$routes <- c("oral","iv")
 ## We need to know which compartment gets the dose 
-#model.list[["pbtk"]]$dose.variable <- list(oral="Agutlumen",
+#model.list[[THIS.MODEL]]$dose.variable <- list(oral="Agutlumen",
 #  iv="Aven")
 ## Can take the values "add" to add dose C1 <- C1 + dose,
 ##"replace" to change the value C1 <- dose
 ##or "multiply" to change the value to C1 <- C1*dose
-#model.list[["pbtk"]]$dose.type <- list(oral="add",
+#model.list[[THIS.MODEL]]$dose.type <- list(oral="add",
 #  iv="add")
   
-model.list[["pbtk"]]$routes <- list(
+model.list[[THIS.MODEL]]$routes <- list(
   "oral" = list(
 # We need to know which compartment gets the dose 
     "entry.compartment" = "Agutlumen",
@@ -264,7 +264,7 @@ model.list[["pbtk"]]$routes <- list(
 # States in C code, each of which is associated with a differential equation),
 # mostly calculated in amounts, though AUC (area under plasma concentration
 # curve) also appears here: 
-model.list[["pbtk"]]$state.vars <- c(
+model.list[[THIS.MODEL]]$state.vars <- c(
     "Agutlumen",
     "Agut",
     "Aliver",
@@ -282,7 +282,7 @@ model.list[["pbtk"]]$state.vars <- c(
 # variables of the model system including state variables and any transformed
 # outputs (for example, concentrations calculated from amounts.)
 # AUC values should also be included.
-model.list[["pbtk"]]$compartment.units <- c(
+model.list[[THIS.MODEL]]$compartment.units <- c(
     "Agutlumen"="umol",
     "Agut"="umol",
     "Aliver"="umol",
@@ -294,6 +294,7 @@ model.list[["pbtk"]]$compartment.units <- c(
     "Atubules"="umol",
     "Ametabolized"="umol",
     "Cgut"="uM",
+
     "Cliver"="uM",
     "Cven"="uM",
     "Clung"="uM",
@@ -307,10 +308,10 @@ model.list[["pbtk"]]$compartment.units <- c(
 
 # Compartment state of matter, needed for proper unit conversion, if all
 # comaprtments of the same only include one state and set it to "all":
-model.list[["pbtk"]]$compartment.state <- list(liquid="all")
+model.list[[THIS.MODEL]]$compartment.state <- list(liquid="all")
 
 #Parameters needed to make a prediction (this is used by get_cheminfo):
-model.list[["pbtk"]]$required.params <- c(
+model.list[[THIS.MODEL]]$required.params <- c(
   "Clint",
   "Funbound.plasma",
   "Pow",
@@ -320,17 +321,17 @@ model.list[["pbtk"]]$required.params <- c(
   )
 
 # Function for calculating Clmetabolismc after Clint is varied:
-model.list[["pbtk"]]$propagateuv.func <- "propagate_invitrouv_pbtk"
+model.list[[THIS.MODEL]]$propagateuv.func <- "propagate_invitrouv_pbtk"
 
 # If httk-pop is enabled:
 # Function for converting httk-pop physiology to model parameters:
-model.list[["pbtk"]]$convert.httkpop.func <- NULL
+model.list[[THIS.MODEL]]$convert.httkpop.func <- NULL
 
 # We want all the standard physiological calculations performed:
-model.list[["pbtk"]]$calc.standard.httkpop2httk <- TRUE
+model.list[[THIS.MODEL]]$calc.standard.httkpop2httk <- TRUE
 
 # These are the model parameters that are impacted by httk-pop:
-model.list[["pbtk"]]$httkpop.params <- c(
+model.list[[THIS.MODEL]]$httkpop.params <- c(
   "BW",
   "Fabsgut",
   "hematocrit",
@@ -350,23 +351,21 @@ model.list[["pbtk"]]$httkpop.params <- c(
   "Vrestc",
   "Vvenc")
 
-                         
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
-model.list[["pbtk"]]$calcpc <- TRUE
-  
+model.list[[THIS.MODEL]]$calcpc <- TRUE
 
 # Do we need to recalculate first pass metabolism when doing Monte Carlo?
-model.list[["pbtk"]]$firstpass <- FALSE
+model.list[[THIS.MODEL]]$firstpass <- FALSE
 
 # Do we ignore the Fups where the value was below the limit of detection?
-model.list[["pbtk"]]$exclude.fup.zero <- TRUE
+model.list[[THIS.MODEL]]$exclude.fup.zero <- TRUE
 
 # These are the parameter names needed to describe steady-state dosing:
-model.list[["pbtk"]]$css.dosing.params <- list(
+model.list[[THIS.MODEL]]$css.dosing.params <- list(
   oral=c("hourly.dose"))
 
 # Filter out volatile compounds with Henry's Law Constant Threshold
-model.list[["pbtk"]]$log.henry.threshold <- c(-4.5)
+model.list[[THIS.MODEL]]$log.henry.threshold <- c(-4.5)
 
 # Filter out compounds belonging to select chemical classes
-model.list[["pbtk"]]$chem.class.filt <- c("PFAS")
+model.list[[THIS.MODEL]]$chem.class.filt <- c("PFAS")

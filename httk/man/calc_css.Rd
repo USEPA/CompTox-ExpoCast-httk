@@ -13,6 +13,8 @@ calc_css(
   f = 0.01,
   daily.dose = 1,
   doses.per.day = 3,
+  dose.units = "mg/kg",
+  route = "oral",
   days = 21,
   output.units = "uM",
   suppress.messages = FALSE,
@@ -49,7 +51,12 @@ the average concentration must come within to be considered at steady state.}
 
 \item{daily.dose}{Total daily dose, mg/kg BW.}
 
-\item{doses.per.day}{Number of doses per day.}
+\item{doses.per.day}{Number of oral doses per day.}
+
+\item{dose.units}{The units associated with the dose received.}
+
+\item{route}{Route of exposure (either "oral", "iv", or "inhalation"
+default "oral").}
 
 \item{days}{Initial number of days to run simulation that is multiplied on
 each iteration.}
@@ -113,6 +120,7 @@ end of the simulation.
 
 calc_css(chem.name='Bisphenol-A',doses.per.day=5,f=.001,output.units='mg/L')
 
+\donttest{
 parms <- parameterize_3comp(chem.name='Bisphenol-A')
 parms$Funbound.plasma <- .07
 calc_css(chem.name='Bisphenol-A',parameters=parms,model='3compartment')
@@ -132,6 +140,7 @@ element_text(size = 16), plot.title = element_text(size = 17)) +
 ggtitle("Bisphenol A")
 
 print(c.vs.t)
+} 
 
 }
 \seealso{

@@ -20,9 +20,10 @@ parameterize_pbtk(
   suppress.messages = FALSE,
   restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04,
+  class.exclude = TRUE,
   million.cells.per.gliver = 110,
   liver.density = 1.05,
-  kgutabs = 2.18,
+  kgutabs = NA,
   Caco2.options = NULL
 )
 }
@@ -70,11 +71,14 @@ binding is not taken into account (set to 1) in liver clearance if FALSE.}
 \item{minimum.Funbound.plasma}{\eqn{f_{up}} is not allowed to drop below
 this value (default is 0.0001).}
 
+\item{class.exclude}{Exclude chemical classes identified as outside of 
+domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
+
 \item{million.cells.per.gliver}{Hepatocellularity (defaults to 110 10^6 cells/g-liver, from Carlile et al. (1997))}
 
 \item{liver.density}{Liver density (defaults to 1.05 g/mL from International Commission on Radiological Protection (1975))}
 
-\item{kgutabs}{Oral absorption rate from gut (defaults to 2.18 1/h from Wambaugh et al. (2018))}
+\item{kgutabs}{Oral absorption rate from gut (determined from Peff)}
 
 \item{Caco2.options}{A list of options to use when working with Caco2 apical to
 basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
@@ -83,7 +87,7 @@ Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calcu
 fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-See \code{\link{get_fabsgut}} for further details.}
+See \code{\link{get_fbio}} for further details.}
 }
 \value{
 \item{BW}{Body Weight, kg.} 

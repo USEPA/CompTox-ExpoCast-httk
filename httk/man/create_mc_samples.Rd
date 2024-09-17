@@ -124,7 +124,7 @@ parameterize_* function for the model.}
 \item{Caco2.options}{Arguments describing how to handle Caco2 absorption data
 that are passed to \code{\link{invitro_mc}} and the parameterize_[MODEL] 
 functions.
-See \code{\link{get_fabsgut}} for further details.}
+See \code{\link{get_fbio}} for further details.}
 }
 \value{
 A data table where each column corresponds to parameters needed for the 
@@ -176,15 +176,46 @@ different functions.
 # We can use the Monte Carlo functions by passing a table
 # where each row represents a different Monte Carlo draw of parameters:
 p <- create_mc_samples(chem.cas="80-05-7")
+
 # Use data.table for steady-state plasma concentration (Css) Monte Carlo:
 calc_mc_css(parameters=p)
+
 # Using the same table gives the same answer:
 calc_mc_css(parameters=p)
+
 # Use Css for 1 mg/kg/day for simple reverse toxicokinetics 
 # in Vitro-In Vivo Extrapolation to convert 15 uM to mg/kg/day:
 15/calc_mc_css(parameters=p, output.units="uM")
+
 # Can do the same with calc_mc_oral_equiv:
 calc_mc_oral_equiv(15, parameters=p)
+
+#Generate a population using the virtual-individuals method,
+#including 80 females and 20 males,
+#including only ages 20-65,
+#including only Mexican American and
+#Non-Hispanic Black individuals,
+#including only non-obese individuals
+set.seed(42)
+mypop <- httkpop_generate(method = 'virtual individuals',
+                          gendernum=list(Female=80,
+                          Male=20),
+                          agelim_years=c(20,65),
+                          reths=c('Mexican American',
+                          'Non-Hispanic Black'),
+                          weight_category=c('Underweight',
+                          'Normal',
+                          'Overweight'))
+# Including a httkpop.dt argument will overwrite the number of sample and
+# the httkpop on/off logical switch:
+samps1 <- create_mc_samples(chem.name="bisphenola",
+                           httkpop=FALSE,
+                           httkpop.dt=mypop)
+samps2 <- create_mc_samples(chem.name="bisphenola",
+                           httkpop.dt=mypop)
+# But we can turn httkpop off altogether if desired:
+samps3 <- create_mc_samples(chem.name="bisphenola",
+                           httkpop=FALSE)
 }
 
 }

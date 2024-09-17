@@ -28,7 +28,7 @@
 #' 
 #' @param daily.dose Total daily dose, mg/kg BW.
 #' 
-#' @param doses.per.day Number of doses per day.
+#' @param doses.per.day Number of oral doses per day.
 #' 
 #' @param days Initial number of days to run simulation that is multiplied on
 #' each iteration.
@@ -69,6 +69,11 @@
 #' @param dosing The dosing object for more complicated scenarios. Defaults to
 #' repeated \code{daily.dose} spread out over \code{doses.per.day}
 #'
+#' @param dose.units The units associated with the dose received.
+#'
+#' @param route Route of exposure (either "oral", "iv", or "inhalation"
+#' default "oral").
+#'
 #' @param ... Additional arguments passed to model solver (default of
 #' \code{\link{solve_pbtk}}).
 #'
@@ -89,6 +94,7 @@
 #' 
 #' calc_css(chem.name='Bisphenol-A',doses.per.day=5,f=.001,output.units='mg/L')
 #' 
+#'\donttest{
 #' parms <- parameterize_3comp(chem.name='Bisphenol-A')
 #' parms$Funbound.plasma <- .07
 #' calc_css(chem.name='Bisphenol-A',parameters=parms,model='3compartment')
@@ -108,7 +114,8 @@
 #' ggtitle("Bisphenol A")
 #'
 #' print(c.vs.t)
-#' 
+#'} 
+#'
 #' @importFrom purrr compact 
 #' @export calc_css
 calc_css <- function(chem.name=NULL,
@@ -119,6 +126,8 @@ calc_css <- function(chem.name=NULL,
                     f = .01,
                     daily.dose=1,
                     doses.per.day=3,
+                    dose.units = "mg/kg",
+                    route = "oral",
                     days = 21,
                     output.units = "uM",
                     suppress.messages=FALSE,
@@ -212,8 +221,10 @@ calc_css <- function(chem.name=NULL,
     chem.cas = chem.cas,
     dtxsid = dtxsid,
     parameters=parameters,
-    daily.dose=daily.dose,
+    dose=daily.dose,
     concentration='plasma',
+    route=route,
+    dose.units=dose.units,
     model=model,
     output.units = output.units,
     suppress.messages=TRUE,
@@ -222,8 +233,18 @@ calc_css <- function(chem.name=NULL,
     well.stirred.correction=well.stirred.correction,
     restrictive.clearance=restrictive.clearance
   )
-  css <- do.call("calc_analytic_css", 
-                 args=purrr::compact(analyticcss_params))
+  # Check to see if there is analytic Css funtion:
+  if (!is.null(model.list[[model]]$analytic.css.func))
+  {
+     css <- do.call("calc_analytic_css", 
+                 args=purrr::compact(c(
+                                       analyticcss_params)))
+  } else {
+  # Otherwise set css to infinite:
+    css <- Inf
+  }
+  
+  # Use this conentration to cutoff the iterations:
   target.conc <- (1 - f) * css 
 
 # Identify the concentration that we are intending to check for steady-state:
@@ -241,6 +262,8 @@ calc_css <- function(chem.name=NULL,
       parameters=parameters,
     model=model, 
     dosing=dosing,
+    route=route,
+    input.units=dose.units,
     suppress.messages=TRUE,
     days=days,
     output.units = output.units,
@@ -256,15 +279,17 @@ calc_css <- function(chem.name=NULL,
   total.days <- days
   additional.days <- days
 
+  # Calculate the fractional change on the last simulated day:
+  conc.delta <- (out[match((additional.days - 1), floor(out[,'time'])), target] -
+                out[match((additional.days - 2), floor(out[,'time'])), target]) /
+                out[match((additional.days - 2), floor(out[,'time'])), target] 
 #  # For the 3-compartment model:  
 #  colnames(out)[colnames(out)=="Csyscomp"]<-"Cplasma"
 
 # Until we reach steady-state, keep running the solver for longer times, 
 # restarting each time from where we left off:
   while(all(out[,target] < target.conc) & 
-       ((out[match((additional.days - 1),out[,'time']),target]-
-        out[match((additional.days - 2),out[,'time']),target])/
-        out[match((additional.days - 2),out[,'time']),target] > f.change))
+       (conc.delta > f.change))
   {
     if(additional.days < 1000)
     {
@@ -274,13 +299,15 @@ calc_css <- function(chem.name=NULL,
     #}
     total.days <- total.days + additional.days
 
-  out <- do.call(solve_model,
+    out <- do.call(solve_model,
 # we use purrr::compact to drop NULL values from arguments list:
       args=purrr::compact(c(list(    
       parameters=parameters,
       model=model,
       initial.values = Final_Conc[state.vars],  
       dosing=dosing,
+      route=route,
+      input.units=dose.units,
       days = additional.days,
       output.units = output.units,
       restrictive.clearance=restrictive.clearance,
@@ -289,6 +316,11 @@ calc_css <- function(chem.name=NULL,
       ...))))
     Final_Conc <- out[dim(out)[1],monitor.vars]
   
+# Calculate the fractional change on the last simulated day:
+  conc.delta <- (out[match((additional.days - 1), floor(out[,'time'])), target] -
+                out[match((additional.days - 2), floor(out[,'time'])), target]) /
+                out[match((additional.days - 2), floor(out[,'time'])), target] 
+        
     if(total.days > 36500) break 
   }
   
@@ -297,13 +329,11 @@ calc_css <- function(chem.name=NULL,
   {
     # The day the simulation started:
     sim.start.day <- total.days - additional.days
-    # The day the current simulation reached Css:
-    if(any(out[,target] >= target.conc))
-    {
-      sim.css.day <- floor(min(out[out[,target]>=target.conc,"time"]))
-    } else {
-      sim.css.day <- additional.days
-    }
+    
+    # Find the first day the current simulation reached max concentration:
+    sim.css.day <- floor(min(out[which(out[,target]/max(out[,target])==1),
+                         "time"]))
+    
     # The overall day the simulation reached Css:
     css.day <- sim.start.day+sim.css.day
     # Fraction of analytic Css achieved:

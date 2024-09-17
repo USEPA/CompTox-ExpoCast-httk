@@ -22,9 +22,6 @@ solve_1comp(
   iv.dose = FALSE,
   input.units = "mg/kg",
   output.units = NULL,
-  method = "lsoda",
-  rtol = 1e-08,
-  atol = 1e-12,
   default.to.human = FALSE,
   recalc.blood2plasma = FALSE,
   recalc.clearance = FALSE,
@@ -83,12 +80,6 @@ output.units.  Defaults are zero.}
 results. Default, NULL, returns model results in units specified in the
 'modelinfo' file. See table below for details.}
 
-\item{method}{Method used by integrator (deSolve).}
-
-\item{rtol}{Argument passed to integrator (deSolve).}
-
-\item{atol}{Argument passed to integrator (deSolve).}
-
 \item{default.to.human}{Substitutes missing rat values with human values if
 true.}
 
@@ -126,9 +117,9 @@ Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calcu
 fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-See \code{\link{get_fabsgut}} for further details.}
+See \code{\link{get_fbio}} for further details.}
 
-\item{...}{Additional arguments passed to the integrator.}
+\item{...}{Additional arguments passed to the integrator (deSolve).}
 }
 \value{
 A matrix with a column for time(in days) and a column for the
@@ -137,7 +128,14 @@ compartment and the area under the curve (concentration only).
 \description{
 This function solves for the amount or concentration of a chemical in plasma
 for a one compartment model as a function of time based on the dose and
-dosing frequency.
+dosing frequency. 
+The model describes blood concentrations in a single compartment. 
+The volume of distribution
+depends on the physical volume of each tissue and the predicted chemical 
+partitioning into those volumes. 
+Plasma concentration in compartment x is given by 
+\eqn{C_{plasma} = \frac{C_{blood}}{R_{b2p}}} for a tissue independent value of 
+\eqn{R_{b2p}}.
 }
 \details{
 Note that the timescales for the model parameters have units of hours while 
@@ -161,6 +159,7 @@ Compartment Model Schematic"}}
 
 solve_1comp(chem.name='Bisphenol-A', days=1)
 
+\donttest{
 # By storing the model parameters in a vector first, you can potentially
 # edit them before using the model:
 params <- parameterize_1comp(chem.cas="80-05-7")
@@ -178,6 +177,7 @@ solve_1comp(chem.name="Methenamine", dosing.matrix=dm,
 
 solve_1comp(chem.name="Besonprodil", daily.dose=1, dose=NULL,
             days=2.5, doses.per.day=4)
+}
 
 }
 \references{
