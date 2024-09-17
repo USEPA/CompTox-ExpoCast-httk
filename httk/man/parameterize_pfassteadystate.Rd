@@ -20,7 +20,8 @@ parameterize_pfassteadystate(
   restrictive.clearance = TRUE,
   fup.lod.default = 0.005,
   suppress.messages = FALSE,
-  minimum.Funbound.plasma = 1e-04
+  minimum.Funbound.plasma = 1e-04,
+  Caco2.options = NULL
 )
 }
 \arguments{

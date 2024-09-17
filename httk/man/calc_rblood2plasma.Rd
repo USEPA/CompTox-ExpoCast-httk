@@ -16,6 +16,7 @@ calc_rblood2plasma(
   default.to.human = FALSE,
   species = "Human",
   adjusted.Funbound.plasma = TRUE,
+  class.exclude = TRUE,
   suppress.messages = TRUE
 )
 }
@@ -48,6 +49,9 @@ default "Human").}
 
 \item{adjusted.Funbound.plasma}{Whether or not to use Funbound.plasma
 adjustment.}
+
+\item{class.exclude}{Exclude chemical classes identified as outside of 
+domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
 
 \item{suppress.messages}{Determine whether to display certain usage
 feedback.}

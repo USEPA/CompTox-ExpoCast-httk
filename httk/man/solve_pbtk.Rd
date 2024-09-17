@@ -23,6 +23,7 @@ solve_pbtk(
   input.units = "mg/kg",
   output.units = NULL,
   default.to.human = FALSE,
+  class.exclude = TRUE,
   recalc.blood2plasma = FALSE,
   recalc.clearance = FALSE,
   dosing.matrix = NULL,
@@ -84,6 +85,9 @@ results. Default, NULL, returns model results in units specified in the
 \item{default.to.human}{Substitutes missing animal values with human values
 if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 
+\item{class.exclude}{Exclude chemical classes identified as outside of 
+domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
+
 \item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical
 in the blood to plasma using the input parameters, calculated with
 hematocrit, Funbound.plasma, and Krbc2pu.}
@@ -115,7 +119,7 @@ Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calcu
 fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-See \code{\link{get_fabsgut}} for further details.}
+See \code{\link{get_fbio}} for further details.}
 
 \item{monitor.vars}{Which variables are returned as a function of time. 
 The default value of NULL provides "Cgut", "Cliver", "Cven", "Clung", "Cart", 

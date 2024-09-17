@@ -119,7 +119,7 @@ Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calcu
 fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-See \code{\link{get_fabsgut}} for further details.}
+See \code{\link{get_fbio}} for further details.}
 
 \item{monitor.vars}{Which variables are returned as a function of time. 
 Defaults value of NULL provides "Cliver", "Csyscomp", "Atubules", 
@@ -185,6 +185,7 @@ solve_3comp(chem.name='Bisphenol-A',
             days=1,
             tsteps=2)
 
+\donttest{
 # By storing the model parameters in a vector first, you can potentially
 # edit them before using the model:
 params <-parameterize_3comp(chem.cas="80-05-7")
@@ -204,6 +205,7 @@ solve_3comp(chem.name="Methenamine", dosing.matrix=dm,
 solve_3comp(chem.name="Besonprodil",
             daily.dose=1, dose=NULL,
             days=2.5, doses.per.day=4)
+}
 
 }
 \references{

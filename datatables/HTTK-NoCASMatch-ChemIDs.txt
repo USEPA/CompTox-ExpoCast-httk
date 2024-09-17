@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 R-(+)-bisoprolol
 Jnj7
 Jnj8
@@ -13,3 +14,6 @@ Jnj33
 Jnj37
 Roche a
 Roche b
+=======
+Palonosetron
+>>>>>>> main

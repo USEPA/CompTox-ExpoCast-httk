@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2024-03-16 r86144 ucrt) -- "Unsuffered Consequences"
+R Under development (unstable) (2024-08-07 r86984 ucrt) -- "Unsuffered Consequences"
 Copyright (C) 2024 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
@@ -26,14 +26,18 @@ Type 'q()' to quit R.
 > 
 > # Reduce the number of samples used by Monte Carlo to decrease runtime for
 > # CRAN checks (never use predictions with only ten draws):
-> NSAMP <- 10
+> NSAMP <- 5
 > 
 > #
 > #
 > # Test that the underlying PK models give the same answers:
 > calc_analytic_css(chem.cas="15972-60-8")
 Plasma concentration returned in uM units.
+<<<<<<< HEAD
 [1] 0.2428
+=======
+[1] 0.1784
+>>>>>>> main
 Warning messages:
 1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
   Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
@@ -52,7 +56,11 @@ Warning messages:
 > calc_analytic_css(chem.cas="15972-60-8",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
+<<<<<<< HEAD
 [1] 0.496
+=======
+[1] 0.2091
+>>>>>>> main
 Warning messages:
 1: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Membrane affinity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
@@ -66,7 +74,11 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 > calc_analytic_css(chem.cas="15972-60-8",model="pbtk")
 Plasma concentration returned in uM units.
+<<<<<<< HEAD
 [1] 0.2428
+=======
+[1] 0.1784
+>>>>>>> main
 Warning messages:
 1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
   Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
@@ -84,7 +96,11 @@ Warning messages:
   Default value of 1.6 used for Caco2 permeability.
 > calc_analytic_css(chem.cas="15972-60-8",model="3compartment")
 Plasma concentration returned in uM units.
+<<<<<<< HEAD
 [1] 0.2428
+=======
+[1] 0.1784
+>>>>>>> main
 Warning messages:
 1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
   Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
@@ -139,8 +155,13 @@ Warning messages:
 > set.seed(1234)
 > calc_mc_css(chem.cas="116-06-3",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
+<<<<<<< HEAD
  95% 
 3.76 
+=======
+  95% 
+1.477 
+>>>>>>> main
 Warning messages:
 1: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
@@ -152,7 +173,11 @@ Warning messages:
 > calc_mc_css(chem.cas="101-05-3",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
+<<<<<<< HEAD
 13.35 
+=======
+2.369 
+>>>>>>> main
 Warning messages:
 1: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Fraction unbound below limit of detection.
@@ -167,7 +192,11 @@ Warning messages:
 > calc_mc_css(chem.cas="15972-60-8",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
    95% 
+<<<<<<< HEAD
 0.2552 
+=======
+0.1355 
+>>>>>>> main
 Warning messages:
 1: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
@@ -178,7 +207,11 @@ Warning messages:
 > calc_mc_css(dtxsid="DTXSID5041726",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
  95% 
+<<<<<<< HEAD
 2111 
+=======
+1679 
+>>>>>>> main
 Warning messages:
 1: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Fraction unbound is provided as a distribution.
@@ -194,7 +227,11 @@ Warning messages:
 > calc_mc_css(chem.cas="15972-60-8",model="3compartment",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
    95% 
+<<<<<<< HEAD
 0.2125 
+=======
+0.1354 
+>>>>>>> main
 Warning messages:
 1: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Membrane affinity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
@@ -206,14 +243,22 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 4: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
+<<<<<<< HEAD
 5: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+=======
+4: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+>>>>>>> main
   calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",model="1compartment",samples=NSAMP)
 Human volume of distribution returned in units of L/kg BW.
 Human plasma concentration returned in mg/L units for 0.95 quantile.
    95% 
+<<<<<<< HEAD
 0.3525 
+=======
+0.1587 
+>>>>>>> main
 Warning messages:
 1: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Membrane affinity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
@@ -225,13 +270,21 @@ Warning messages:
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
 4: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
   Human in vivo measured Rblood2plasma used.
+<<<<<<< HEAD
 5: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+=======
+4: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+>>>>>>> main
   calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
    95% 
+<<<<<<< HEAD
 0.2125 
+=======
+0.1354 
+>>>>>>> main
 Warning messages:
 1: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Membrane affinity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
@@ -243,13 +296,17 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 4: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
+<<<<<<< HEAD
 5: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+=======
+4: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+>>>>>>> main
   calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
 > 
 > # Should be the same as the mean result:
 > calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
 Plasma concentration returned in mg/L units.
-[1] 11.27
+[1] 8.339
 Warning messages:
 1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
   Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
@@ -273,8 +330,8 @@ Warning messages:
 +   invitrouv=FALSE,
 +   vary.params=list(Pow=0.3))
 Human plasma concentration returned in mg/L units for 0.95 quantile.
-  95% 
-9.151 
+ 95% 
+6.77 
 Warning messages:
 1: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
@@ -298,7 +355,11 @@ Warning messages:
 Human plasma concentration returned in uM units for 0.95 quantile.
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
   95% 
+<<<<<<< HEAD
 2.608 
+=======
+4.568 
+>>>>>>> main
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -313,7 +374,11 @@ Warning messages:
 > signif(10/calc_mc_css(chem.name="bisphenol a",samples=NSAMP,output.units="uM"),4)
 Human plasma concentration returned in uM units for 0.95 quantile.
   95% 
+<<<<<<< HEAD
 2.608 
+=======
+4.568 
+>>>>>>> main
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -332,11 +397,16 @@ Warning messages:
 There were 11 warnings (use warnings() to see them)
 > calc_mc_oral_equiv(conc=100,
 +                    parameters=parameter.dt,
-+                    model="pbtk")
++                    model="pbtk",
++                    samples=NSAMP)
 Human plasma concentration returned in uM units for 0.95 quantile.
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
   95% 
+<<<<<<< HEAD
 1.396 
+=======
+8.673 
+>>>>>>> main
 Warning message:
 In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
   calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
@@ -368,7 +438,8 @@ Plasma concentration returned in uM units.
 +   species = "Human", 
 +   httkpop=FALSE, 
 +   invitrouv=FALSE, 
-+   return.samples=TRUE)
++   return.samples=TRUE,
++   samples=NSAMP)
 Human plasma concentration returned in uM units.
 Warning message:
 In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
@@ -381,7 +452,8 @@ In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
 +   species = "Human", 
 +   httkpop=TRUE, 
 +   invitrouv=TRUE, 
-+   return.samples=TRUE)
++   return.samples=TRUE,
++   samples=NSAMP)
 Human plasma concentration returned in uM units.
 Warning message:
 In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
@@ -397,7 +469,8 @@ In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
 +   species = "Human", 
 +   httkpop=FALSE, 
 +   invitrouv=FALSE, 
-+   return.samples=TRUE)
++   return.samples=TRUE,
++   samples=NSAMP)
 Human plasma concentration returned in uM units.
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
@@ -434,6 +507,10 @@ Warning messages:
 > # Because we can't recalculate Rblood2plasma for 3compartmentss this is not
 > # quite the same but should be close:
 > unique(css4)/css2
+<<<<<<< HEAD
 [1] 0.9488437
+=======
+[1] 0.9301338
+>>>>>>> main
 >                    
 > quit("no")

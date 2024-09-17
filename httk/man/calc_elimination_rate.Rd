@@ -85,8 +85,10 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 \examples{
 
 calc_elimination_rate(chem.name="Bisphenol A")
+\dontrun{
 calc_elimination_rate(chem.name="Bisphenol A",species="Rat")
 calc_elimination_rate(chem.cas="80-05-7")
+}
 
 }
 \references{

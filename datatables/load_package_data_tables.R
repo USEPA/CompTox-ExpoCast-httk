@@ -1,7 +1,7 @@
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
-SCRIPT.VERSION <- "feature/PFAS February 2024"
+SCRIPT.VERSION <- "feature/PFAS September 2024"
 
 ## R Packages ##
 library(reshape)
@@ -9,6 +9,7 @@ library(readxl)
 library(dplyr)
 library(magrittr)
 library(stringr)
+library(ctxR)
 
 # Useful function from HTTK (don't want to load the whole package since we're 
 # trying to build the package here)
@@ -79,7 +80,7 @@ check_duplicates <- function(
 PKandTISSUEDATAFILE <- "pkdata.xlsx"
 
 physiology.data <- set.precision(read_excel(PKandTISSUEDATAFILE,
-  sheet="Basic PK"))[1:16,]
+  sheet="Basic PK"))[1:18,]
 # Write to text so Git can track changes:
 write.table(physiology.data,
   file="Basic-Physiology.txt",
@@ -199,6 +200,7 @@ write.table(tissue.data,
 # CREATE TABLE chem.physical_and_invitro.data 
 #
 
+cat("Loading HTTK data from Wetmore 2012, 2013, 2015\n")
 #Table CLint units are uL/min/10^6 cells:
 Wetmore.tables <- as.data.frame(read_excel("PublishedRawDataTables.xlsx",skip=2))
 colnames(Wetmore.tables) <- c("Compound","CAS","Reference","Species","Clint.1","pValue.1","Clint.10","pValue.10","Fub.1","Fub.10")
@@ -313,7 +315,7 @@ chem.prop <- add_chemtable(WetmorePhaseII.clint.table,
                  Clint.pvalue="P.value"))                 
 
 
-
+cat("Loading HTTK data from Obach 1999\n")
 
 Obach.table <- set.precision(read_excel("Obach1999.xlsx",skip=1))[1:29,]
 #Wrong CAS for Diazepam:
@@ -332,6 +334,8 @@ chem.prop <- add_chemtable(Obach.table,
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
+cat("Loading HTTK data from Jones 2002\n")
+
 Jones.table <- set.precision(read_excel("Jones2002.xlsx"))
 chem.prop <- add_chemtable(Jones.table, 
                current.table=chem.prop,
@@ -344,6 +348,8 @@ chem.prop <- add_chemtable(Jones.table,
 
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
+
+cat("Loading HTTK data from Shibata 2002\n")
 
 # Table Clint units for pooled hepatocytes (lot 70 and 73) are ml/min/10^9 cells
 # conversion factor is x 1000 ml -> ul and x 1/1000 10^9 to 10^6 cells, so no conversion necessary
@@ -363,6 +369,7 @@ chem.prop <- add_chemtable(Shibata2002.table,
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
+cat("Loading HTTK data from Lau 2002\n")
 
 #Table CLint units are uL/min/10^6 cells:
 Lau2002.table <- set.precision(read_excel("Lau2002.xlsx"))[-1,]
@@ -376,6 +383,8 @@ chem.prop <- add_chemtable(Lau2002.table,
 
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
+
+cat("Loading HTTK data from Naritomi 2003\n")
 
 #Table CLint units are uL/min/10^6 cells:
 Naritomi.table <- set.precision(read_excel("Naritomi2003.xlsx",skip=1)[1:18,])
@@ -395,6 +404,8 @@ chem.prop <- add_chemtable(Naritomi.table,
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
+cat("Loading HTTK data from McGinnity2004\n")
+
 #Table CLint units are uL/min/10^6 cells:
 McGinnity.table <- as.data.frame(read_excel("McGinnity2004.xlsx"))[-1,]
 McGinnity.table[McGinnity.table[,"Human Hepatic Clint"]=="<1.0","Human Hepatic Clint"]<-0
@@ -408,6 +419,8 @@ chem.prop <- add_chemtable(McGinnity.table,
 
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
+
+cat("Loading HTTK data from Ito 2004\n")
 
 #Table CLint units are uL/min/10^6 cells:
 Ito.table <- as.data.frame(read_excel("Ito2004.xlsx"))
@@ -424,6 +437,8 @@ chem.prop <- add_chemtable(Ito.table,
 
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
+
+cat("Loading phys-chem data from Schmitt 2008\n")
 
 Schmitt.table <- set.precision(read_excel("Schmitt2008-41817.xlsx"))
 for (this.row in 1:dim(Schmitt.table)[1])
@@ -451,6 +466,8 @@ for (this.row in 1:dim(Schmitt.table)[1])
   chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"logMA",Schmitt.table[this.row,"logMA"],reference=this.reference)
 }
 
+
+cat("Loading HTTK data from Lombardo 2018\n")
 
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
@@ -496,6 +513,8 @@ chem.prop <- add_chemtable(Obach2018.table,
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
+
+cat("Loading HTTK data from TNO\n")
 
 #Table CLint units are L/h/10^6 hepatocytes
 TNO.table <- as.data.frame(read_excel("HT-PBPK compounds-122216.xlsx"))
@@ -714,6 +733,7 @@ sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 #  }
 #}
 
+cat("Loading HTTK data from Tonnelier 2012\n")
 
 #Table CLint units are uL/min/10^6 cells:
 # For Rotroff data they average 1 and 10 uM, but then you get the same numbers
@@ -736,8 +756,6 @@ chem.prop <- add_chemtable(Tonnelier.table,
                  Logp="log KOW",
                  MW="MW (g/mol)"))
 
-
-
 for (this.row in 1:dim(Tonnelier.table)[1])
 {
   this.CAS <- Tonnelier.table[this.row,"CAS"]
@@ -757,6 +775,7 @@ sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
 chem.prop[chem.prop$Compound=="Bensulide",]
 
+cat("Loading HTTK data from Paixao 2012\n")
 
 Paixao2012.table2 <- set.precision(read_excel("Paixao-2012.xlsx",sheet=1))
 Paixao2012.table2$fup <- 1-Paixao2012.table2$fp
@@ -809,6 +828,8 @@ chem.prop <- chem.prop[chem.prop$CAS.Checksum,]
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 chem.prop[chem.prop$Compound=="Abamectin",]
+
+cat("Loading physchem data from Strope 2018\n")
 
 load("CASback.RData")
 Cory.newpKa <- ret.df
@@ -889,6 +910,8 @@ chem.prop <- add_chemtable(to.john,
                  Compound="ChemName",
                  pKa_Accept="pKaTools_BPKA"),reference="Strope 2018")
 
+cat("Loading physchem data from Endo 2011\n")
+
 MA.data <- set.precision(read_excel("Endo-2011.xlsx"))
 this.reference <- "Endo 2011"
 for (this.row in 1:dim(MA.data)[1])
@@ -925,6 +948,8 @@ if (any(sapply(chem.physical_and_invitro.data$CAS,
   stop("Failed CAS checksum in chem.physical_and_invitro.data")
 
 
+cat("Loading HTTK data from Pirovano 2016\n")
+
 cl <- set.precision(read_excel('Pirovano-2016.xlsx'))
 chem.physical_and_invitro.data <- add_chemtable(cl,
   current.table=chem.physical_and_invitro.data,
@@ -936,6 +961,9 @@ chem.physical_and_invitro.data <- add_chemtable(caf.cl,
   data.list=list(Compound='Compound',CAS='CAS',Clint='clint'),
   species='Human',
   reference='Pirovano 2016',overwrite=T)
+  
+cat("Loading HTTK data from Uchimura 2010\n")
+
 rb <- set.precision(read_excel('Uchimura 2010 cas.xlsx'))
 chem.physical_and_invitro.data <- add_chemtable(rb,
   current.table=chem.physical_and_invitro.data,
@@ -951,26 +979,41 @@ rb <- subset(rb,!is.na(Rat.Rb2p))
     Funbound.plasma='Rat.fup',
     CAS='cas'),
   species='Rat',reference='Uchimura 2010',overwrite=F)
+
+cat("Loading HTTK data from Gulden 2002\n")
+  
 fub <- set.precision(read_excel('Gulden 2002.xlsx')) 
 chem.physical_and_invitro.data <- add_chemtable(fub,
   current.table=chem.physical_and_invitro.data,
   data.list=list(Compound='Compound',Funbound.plasma='fup',CAS='CAS',MW='MW'),
   species='Human',reference='Gulden 2002',overwrite=F)
+  
+
+cat("Loading HTTK data from Brown 2007\n")
+
 brown <- set.precision(read_excel('Brown 2007.xlsx'))
 chem.physical_and_invitro.data <- add_chemtable(brown,
   current.table=chem.physical_and_invitro.data,
   data.list=list(Compound='Compound',Clint='Clint',CAS='CAS'),
   species='Human',reference='Brown 2007',overwrite=T)
 
+  
+cat("Loading HTTK data from Jones 2017\n")
+
 #Add Clint data
 jones <- set.precision(read_excel('Jones 2017 human in vitro clearance.xlsx',1))
 jones <- jones[3:12,1:3]
 colnames(jones) <- c('CAS','Compound','Clint')
+
+cat("Loading HTTK data from Wood 2017\n")
+
 wood.rat <- set.precision(read_excel('Wood_2017_Rat_Clint_CLh.xlsx',1))
 wood.rat <- subset(wood.rat,!is.na("Clint (uL/min/10^6 cells)") & 
   Name != 'FK079') # No CAS for FK079
 wood.human <- set.precision(read_excel('Wood 2017 Human Clint and CLh.xlsx',1))
 wood.human <- subset(wood.human,!is.na("Clint (uL/min/10^6 cells)"))
+
+cat("Loading HTTK data from Sternbeck 2012\n")
 
 sternbeck <- set.precision(read_excel('Sternbeck Human Clearance.xlsx',1))
 chem.physical_and_invitro.data <- add_chemtable(jones,
@@ -1007,7 +1050,6 @@ chem.physical_and_invitro.data <- add_chemtable(subset(sternbeck,
   data.list=list(Compound='Name',CAS='CAS',Rblood2plasma='Rb'),
   species='Human',reference='Sternbeck 2012',overwrite=T)
 
-
 #Remove overwritten clint pvalues
 for (this.cas in subset(chem.physical_and_invitro.data,
   Human.Clint.pValue.Reference != Human.Clint.Reference)[,'CAS'])
@@ -1018,6 +1060,8 @@ for (this.cas in subset(chem.physical_and_invitro.data,
     which(chem.physical_and_invitro.data[,'CAS'] == this.cas),
     'Human.Clint.pValue.Reference'] <- NA
 }
+
+cat("Loading partition coefficient data from Pearce 2017\n")
 
 # Load partition coefficient data from Pearce 2017:
 pc.data.raw <- set.precision(read_excel('PC_Data.xlsx'))
@@ -1048,6 +1092,7 @@ chem.physical_and_invitro.data <- add_chemtable(
   overwrite=T)
 
 pc.data <- pc.data.raw[,c('CAS','Drug','Tissue','Species','fu','A/B/N','LogP','Exp_PC')]
+colnames(pc.data)[colnames(pc.data)=="A/B/N"] <- "A.B.N"
 write.csv(pc.data,"Pearce2017-PC-data.txt",row.names=FALSE)
 
 #
@@ -1104,6 +1149,8 @@ chem.physical_and_invitro.data[
 chem.physical_and_invitro.data[
   which(chem.physical_and_invitro.data[,'CAS'] == '58-08-2'),
   'Compound'] <- 'Caffeine'
+
+cat("Loading HTTK data from Honda 2019\n")
 
 #Honda 2019:
 load("Honda2019/wetmore_fup.RData") #Some where rat fups were inappropriately truncated
@@ -1175,6 +1222,8 @@ chem.physical_and_invitro.data <- check_duplicates(
 
 #Load data from Wambaugh 2019:
 
+cat("Loading HTTK data from Wambaugh 2019\n")
+
 load("New-HTTK-raw-2019-05-06.RData")
 
 new.httk.data$Human.Clint <- paste(
@@ -1214,6 +1263,8 @@ chem.physical_and_invitro.data <- check_duplicates(
 #
 # Load predictions from Sipes 2017:
 #
+cat("Loading HTTK predictions from Sipes 2017\n")
+
 sipes2017 <- readRDS("ADMET.data.table.RData")
 
 # Replace "bad" CAS:
@@ -1258,7 +1309,7 @@ dim(sipes2017)
 #             row.names=FALSE,
 #             quote=FALSE,
 #             sep="\t")
-
+                                
 # Get the DTXSIDs and updated CASRN from the CCD:
 sipes2017.ccd <- as.data.frame(read_excel("Sipes2017fromDashboard.xlsx",
                                           sheet=2))
@@ -1311,6 +1362,8 @@ chem.physical_and_invitro.data <- check_duplicates(
 # Data from Paini et al. (2020)
 #
 #
+cat("Loading HTTK data from JRC 2020\n")
+
 JRC.data.clint <- set.precision(read_excel(
   "APCRA-JRC_HepatocyteStability+ProteinBinding_77_Summary.xlsx",
   sheet=2))
@@ -1372,6 +1425,8 @@ chem.physical_and_invitro.data <- check_duplicates(
 # https://doi.org/10.1038/s41370-020-0238-y
 #
 #
+cat("Loading HTTK data from Linakis 2020\n")
+
 volatile.data.raw <- read.csv('Linakis2020.csv',stringsAsFactors = F)
 
 chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
@@ -1398,6 +1453,8 @@ chem.physical_and_invitro.data <- check_duplicates(
 # https://doi.org/10.1021/acs.est.0c06117
 #
 #
+cat("Loading HTTK data from Dawson 2021\n")
+
 dawson2021.training <- as.data.frame(readxl::read_xlsx(
   path = "Dawson2021/S2_Dawson et al. Supporting_Information_Revision_Final_Sharing.xlsx",
   sheet = 3))
@@ -1447,6 +1504,8 @@ chem.physical_and_invitro.data <- check_duplicates(
 # compounds overlapping and thus only values for 0.1uM will appear in the table 
 # for those compounds. The data was uploaded in the same order the data appeared
 # in the paper.
+cat("Loading HTTK data from Black 2021\n")
+
 black.1 <- as.data.frame(readxl::read_xlsx(
   path = "httk upload 1.xlsx",
   sheet = "Black 2021 starting conc 0.1uM"))
@@ -1485,6 +1544,8 @@ chem.physical_and_invitro.data <- check_duplicates(
 # in order to bypass warnings due to conflicts between compound identifiers 
 # (CAS, DTXSID, and Compound Name) with the data that is already present in the
 # chem.physical_and_invitro.data table.
+cat("Loading HTTK data from Williamson 2020\n")
+
 remove_compounds <- c('Dexmedetomidine', 'Diltiazem', 'Selegiline', 'Verlukast') 
 williamson <- as.data.frame(readxl::read_xlsx(
   path = "httk upload 1.xlsx",
@@ -1505,6 +1566,8 @@ chem.physical_and_invitro.data <- check_duplicates(
   chem.physical_and_invitro.data, check.cols = "CAS")
 
 # Yamagata 2017 Data
+cat("Loading HTTK data from Yamagata 2017\n")
+
 yamagata <- as.data.frame(readxl::read_xlsx(
   path = "httk upload 1.xlsx",
   sheet = "Yamagata 2017"))
@@ -1569,6 +1632,8 @@ chem.physical_and_invitro.data <- check_duplicates(
   chem.physical_and_invitro.data, check.cols="Compound")
 
 # Zanelli 2012 Data
+cat("Loading HTTK data from Zanelli 2012\n")
+
 zanelli.2012.data <- as.data.frame(readxl::read_xlsx(
   path = "httk upload 1.xlsx",
   sheet = "Zanelli 2012"))
@@ -1587,7 +1652,9 @@ chem.physical_and_invitro.data <- check_duplicates(
 # Zanelli 2019 has data for the same compounds on two different internal 
 # standards, however all these compounds already exist in the 
 # chem.physical_and_invitro.data with Clint values, thus no new data is 
-# being added. 
+# being added.
+cat("Loading HTTK data from Zanelli 2019\n")
+ 
 zanelli.2019.data.1 <- as.data.frame(readxl::read_xlsx(
   path = "httk upload 1.xlsx",
   sheet = "Zanelli 2019 ISTD MSC1815677"))
@@ -1626,6 +1693,8 @@ chem.physical_and_invitro.data <- check_duplicates(
 # ADD NEW DATA HERE:
 
 # Add new Pab measurements from Honda2023:
+cat("Loading HTTK data from Honda 2024\n")
+
 caco2.dt <- read.csv("CACO-2/TableAllCaco2PabData_10e-6cmps.txt",sep="\t")
 caco2.dt <- subset(caco2.dt,regexpr("DTXSID",dtxsid)!=-1)
 caco2.cas <- read.csv("CACO-2/CASRN-fromCCD.csv")
@@ -2317,190 +2386,167 @@ chem.physical_and_invitro.data <- add_chemtable(droge2019,
 # STOP TO GET NEW PHYSCHEM
 #
 
-#
-#
-# Replace bad CAS where we have DTXSID's
-#
-#
-chem.physical_and_invitro.data[
-  !sapply(chem.physical_and_invitro.data$CAS,CAS.checksum) &
-  regexpr("NOCAS",chem.physical_and_invitro.data$CAS) == -1 &
-  !(is.na(chem.physical_and_invitro.data$DTXSID)),"CAS"] <-
-  chem.physical_and_invitro.data[
-  !sapply(chem.physical_and_invitro.data$CAS,CAS.checksum) &
-  regexpr("NOCAS",chem.physical_and_invitro.data$CAS) == -1 &
-  !(is.na(chem.physical_and_invitro.data$DTXSID)),"DTXSID"]
-
-# Update with DSSTox Information
-# Have to chop this into chunks because the dashboard batch mode can't handle
-# more than 5000 chemicals at once (going with 2000 now for sanity's sake)
-blocks <- seq(1,dim(chem.physical_and_invitro.data)[1],2000)
-blocks <- c(blocks,dim(chem.physical_and_invitro.data)[1]+1)
-for (i in 1:(length(blocks)-1))
-{
-  write.table(chem.physical_and_invitro.data[blocks[i]:(blocks[i+1]-1),"CAS"],
-    file=paste("HTTK-ChemIDs-",i,".txt",sep=""),
-    row.names=F,
-    sep="\t",
-    col.names=F,
-    quote=F)
-  cat(paste("Chemical ID's written to HTTK-ChemIDs-",i,".txt,\n",sep=""))
-  cat(" use that file to Batch Search based on CAS.\n")
-  cat(paste("Save Dashboard output (comma separated values/csv)to HTTK-DSSTox-output-",i,".csv.\n",sep=""))
-}
-cat("Download CAS, MW (average mass), desalted (QSAR-ready) SMILES,\n")
-cat(" formula, DTXSIDs, and OPERA properties.\n")
-cat("Enter \"c\" to continue when ready.\n")
+cat("Run register_ctx_api_key() with your API key:\n")
 browser()
 
-#
-#
-# WAIT UNTIL TABLE IS DOWNLOADED FROM DASHBOARD
-#
-#
+# Find DTXSIDs for chemicals that don't have them
+CAS.table <- subset(chem.physical_and_invitro.data,is.na(DTXSID))
+cat("Looking up missing DTXSID by CAS with CCD API...\n")
+cheminfo.by.cas <- chemical_equal_batch(word_list=CAS.table$CAS)
+NOCAS.table <- subset(CAS.table,
+                      DTXSID %in% subset(cheminfo.by.cas, is.na(dtxsid))$dtxsid)
+cat("Looking up missing DTXSID and CAS by Compound Name with CCD API...\n")
+cheminfo.by.name <- chemical_equal_batch(word_list=NOCAS.table$Compound)
 
-#
-#
-#
-# READ IN DSSTOX INFORMATION
-#
-#
-#
+cheminfo.by.cas <- subset(cheminfo.by.cas, !is.na(dtxsid))
+cheminfo.by.name <- subset(cheminfo.by.name, !is.na(dtxsid))
 
-dsstox <- NULL
-for (i in 1:(length(blocks)-1))
+# Clean up cas numbers:
+for (this.cas in cheminfo.by.cas$searchValue)
 {
-  dsstox <- rbind(dsstox,
-    read.csv(paste("HTTK-DSSTox-output-",i,".csv",sep="")))
+  this.new.index <- which(cheminfo.by.cas$searchValue == this.cas)
+  this.main.index <- which(chem.physical_and_invitro.data$CAS == this.cas)
+  chem.physical_and_invitro.data[this.main.index, "CAS"] <-
+    cheminfo.by.cas[this.new.index, "casrn"]
+  chem.physical_and_invitro.data[this.main.index, "DTXSID"] <-
+    cheminfo.by.cas[this.new.index, "dtxsid"]
 }
-
-# Get rid of the ones that weren't found:
-dsstox <- subset(dsstox,DTXSID!="-")
-dsstox <- subset(dsstox,DTXSID!="N/A")
-
-# Don't use DTXSID as CASRN:
-dsstox[regexpr("DTXSID",dsstox[,"CASRN"])!=-1,"CASRN"] <- NA
-# Calculate log10 Henry's law constnat:
-dsstox[,"logHenry"] <- log10(as.numeric(dsstox[,
-  "HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED"]))
-# Calculate log10 water solubility:
-dsstox[,"logWSol"] <- log10(as.numeric(dsstox[,
-  "WATER_SOLUBILITY_MOL.L_OPERA_PRED"]))
-# Set a reasonable precision for numbers:
-dsstox <- set.precision(dsstox)
-
-chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,
-                                                       !is.na(CASRN) &
-                                                       !(CASRN %in% "N/A")),
-  current.table = chem.physical_and_invitro.data,
-  data.list=list(Compound='PREFERRED_NAME',
-    CAS='CASRN',
-    DTXSID="DTXSID",
-    MW='AVERAGE_MASS',
-    SMILES.desalt='SMILES',
-    Formula="MOLECULAR_FORMULA",
-    logP="OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED",
-    logHenry = "logHenry",
-    logWSol = "logWSol",
-    MP = "MELTING_POINT_DEGC_OPERA_PRED"
-  ),                                                                        
-  reference="EPA",
-  overwrite=T)
-  
-EPA.ref <- paste('CompTox Dashboard',
-  file.info(paste("HTTK-DSSTox-output-",i,".tsv",sep=""))$ctime)
-
-
-#
-# STOP TO TRY TO FIND CHEMICALS WHERE CAS DID NOT WORK
-#
-
-# Get the chemicals we couldn't find by CAS
-write.table(subset(chem.physical_and_invitro.data,
-  is.na(DTXSID))[,"Compound"],
-  file="HTTK-NoCASMatch-ChemIDs.txt",
-  row.names=F,
-  sep="\t",
-  col.names=F,
-  quote=F)
-cat("Chemical with NA DTXSID's written to HTTK-NoCASMatch-ChemIDs.txt, use that file to search based on chemical name. \n")
-cat("Download CAS, MW, desalted (QSAR-ready) SMILES, forumula, DTXSIDs, and OPERA properties.\n")
-cat("Save Dashboard output (csv) to HTTK-NoCASMatch-DSSTox-output.csv.\n")
-cat("Enter \"c\" to continue when ready.\n")
-browser()
-dsstox <- read.csv("HTTK-NoCASMatch-DSSTox-output.csv")
-
-# Get rid of the ones that weren't found:
-dsstox <- subset(dsstox, DTXSID!="-")
-dsstox <- subset(dsstox, DTXSID!="N/A")
-dsstox <- subset(dsstox, !is.na(AVERAGE_MASS))
-dsstox <- subset(dsstox, AVERAGE_MASS != "N/A")
-dsstox <- subset(dsstox, !is.na(OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED))
-dsstox <- subset(dsstox, OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED != "N/A")
-
-if (dim(dsstox)[1]>0)
+                      
+# Clean up cas numbers:
+for (this.name in tolower(cheminfo.by.name$searchValue))
 {
-  # Calculate log10 Henry's law constnat:
-  dsstox[,"logHenry"] <- log10(as.numeric(dsstox[,
-    "HENRYS_LAW_ATM.M3.MOLE_OPERA_PRED"]))
-  # Calculate log10 water solubility:
-  dsstox[,"logWSol"] <- log10(as.numeric(dsstox[,
-    "WATER_SOLUBILITY_MOL.L_OPERA_PRED"]))
-  # Set a reasonable precision for numbers:
-  dsstox <- set.precision(dsstox)
-  
-  #
-  #
-  # Replace any bad CASRN's:
-  #
-  #
-  for (this.row in 1:dim(dsstox)[1])
-    if (!is.na(dsstox[this.row,"CASRN"]))
-    {
-      chem.physical_and_invitro.data[
-        chem.physical_and_invitro.data$Compound ==
-        dsstox[this.row,"PREFERRED_NAME"],"CAS"] <-
-        dsstox[this.row,"CASRN"]
-  }
-  
-  # Pick approved name when there are duplicates:
-  for (this.name in unique(dsstox$INPUT[duplicated(dsstox$INPUT)]))
-  {
-    not.this.name <- subset(dsstox, INPUT!=this.name)
-    this.subset <- subset(dsstox, INPUT==this.name)
-    this.row <- this.subset[regexpr("Approved",this.subset$FOUND_BY)!=-1,]
-    dsstox <- rbind(not.this.name,this.row)
-  }
-  
-  chem.physical_and_invitro.data <- add_chemtable(subset(dsstox,
-                                                         !is.na(CASRN) &
-                                                         !(CASRN %in% "N/A")),
-    current.table = chem.physical_and_invitro.data,
-    data.list=list(Compound='PREFERRED_NAME',
-      CAS='CASRN',
-      DTXSID="DTXSID",
-      MW='AVERAGE_MASS',
-      SMILES.desalt='SMILES',
-      Formula="MOLECULAR_FORMULA",
-      logP="OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED",
-      logHenry = "logHenry",
-      logWSol = "logWSol",
-      MP = "MELTING_POINT_DEGC_OPERA_PRED"
-      ),
-    reference="EPA",
-    overwrite=T)
+  this.new.index <- which(tolower(cheminfo.by.name$searchValue) == this.name)
+  this.main.index <- which(tolower(chem.physical_and_invitro.data$Compound) == this.name)
+  chem.physical_and_invitro.data[this.main.index, "CAS"] <-
+    cheminfo.by.name[this.new.index, "casrn"]
+  chem.physical_and_invitro.data[this.main.index, "DTXSID"] <-
+    cheminfo.by.name[this.new.index, "dtxsid"]
 }
 
 # Make sure there are no duplicate rows after reading CAS and DTXSID from dashboard:
 chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
-                                        !is.na(DTXSID))
-chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
-                                        !duplicated(CAS) &
-                                        !duplicated(DTXSID))
+                                         !is.na(chem.physical_and_invitro.data$DTXSID))
+dup.dtxsid <- chem.physical_and_invitro.data[
+                duplicated(chem.physical_and_invitro.data[,"DTXSID"]),
+                "DTXSID"]
+# Merge data from duplicated rows:
+for (this.id in unique(dup.dtxsid))
+{
+  dup.rows <- which(chem.physical_and_invitro.data[,"DTXSID"] == this.id)
+  first.row <- dup.rows[1]
+  for (extra.row in dup.rows[2:length(dup.rows)])
+  {
+    for (this.col in 8:dim(chem.physical_and_invitro.data)[2])
+    {
+      if (is.na(chem.physical_and_invitro.data[first.row,this.col]) &
+          !is.na(chem.physical_and_invitro.data[extra.row,this.col]))
+        chem.physical_and_invitro.data[first.row,this.col] <-
+        chem.physical_and_invitro.data[extra.row,this.col]
+    }
+  }
+  for (extra.row in dup.rows[length(dup.rows):2])
+  {
+    chem.physical_and_invitro.data <- chem.physical_and_invitro.data[-extra.row,]
+  }
+}
+                                        
+#
+#
+# Interact with CompTox Chemicals Dashboard APIs using R Package ctxR
+#
+#
+cat("Waiting for properties from CCD API...\n")
+CCD <- as.data.frame(get_chemical_details_batch(
+         DTXSID=chem.physical_and_invitro.data$DTXSID, 
+         Projection = 'chemicaldetailall'))
+
+# Calculate log10 Henry's law constnat:
+CCD[,"logHenry_calc"] <- log10(as.numeric(CCD[,
+  "henrysLawAtm"]))
+# Calculate log10 water solubility:
+CCD[,"logWSol_calc"] <- log10(as.numeric(CCD[,
+  "waterSolubilityOpera"]))
+#calculate water:air partition coefficinent (Kwa = Koa / Kow):
+CCD[,"LogPwa_calc"] <- CCD[,"octanolAirPartitionCoeff"] - 
+                       CCD[,"octanolWaterPartition"]
+  
+# Set a reasonable precision for numbers:
+CCD <- set.precision(CCD)
+
+# No duplicated values:
+CCD <- subset(CCD, !duplicated(CCD))
+
+chem.physical_and_invitro.data <- add_chemtable(CCD,
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(
+    CAS='casrn',
+    Compound="preferredName",
+    DTXSID="dtxsid",
+    MW='averageMass',
+    SMILES.desalt='qsarReadySmiles',
+    Formula="molFormula",
+    logP="octanolWaterPartition",
+    logHenry = "logHenry_calc",
+    logWSol = "logWSol_calc",
+    logPwa = "LogPwa_calc",
+    #pKa_Donor="pkaaOperaPred",
+    #pKa_Accept="pkabOperaPred",
+    MP = "meltingPointDegcOperaPred"
+  ),                                                                        
+  reference="EPA-CCD-OPERA",
+  overwrite=TRUE)
+
+EPA.ref <- paste('CompTox Dashboard', Sys.Date())
 
 #
 #
-# CREATE .SMI FILE FOR OPERA (SO WE CAN GET PKA's)
+# PKA's aren't quite right on the CCD API yet, use old values for now:
+#
+#
+#
+OPERA.VERSION <- "2.9"
+cat(paste("Reading HTTK-AllChems-smi_OPERA",OPERA.VERSION,"Pred.csv\n",sep=""))
+opera.preds <- read.csv(paste(
+  "HTTK-AllChems-smi_OPERA",OPERA.VERSION,"Pred.csv",sep=""))
+
+chem.physical_and_invitro.data <- add_chemtable(
+  opera.preds,
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(CAS='MoleculeID',
+    pKa_Donor="pKa_a_pred",
+    pKa_Accept="pKa_b_pred"
+    ),
+  reference=paste("OPERAv",OPERA.VERSION,sep=""),
+  overwrite=T)
+
+# Make sure there are no duplicate rows after reading CAS and DTXSID from dashboard:
+chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
+                                         !is.na(chem.physical_and_invitro.data$DTXSID))
+dup.cas<- chem.physical_and_invitro.data[
+                duplicated(chem.physical_and_invitro.data[,"CAS"]),
+                "CAS"]
+# Merge data from duplicated rows:
+for (this.id in unique(dup.cas))
+{
+  dup.rows <- which(chem.physical_and_invitro.data[,"CAS"] == this.id)
+  first.row <- dup.rows[1]
+  for (this.row in dup.rows[2:length(dup.rows)])
+  {
+    extra.row <- dup.rows[this.row]
+    for (this.col in 8:dim(chem.physical_and_invitro.data)[2])
+    {
+      if (is.na(chem.physical_and_invitro.data[first.row,this.col]) &
+          !is.na(chem.physical_and_invitro.data[extra.row,this.col]))
+        chem.physical_and_invitro.data[first.row,this.col] <-
+        chem.physical_and_invitro.data[extra.row,this.col]
+    }
+    chem.physical_and_invitro.data <- chem.physical_and_invitro.data[-extra.row,]
+  }
+}
+
+#
+#
+# CREATE .SMI FILE FOR OPERA (Not needed currently, but just in case)
 #
 #
 
@@ -2524,44 +2570,7 @@ write.table(good.smiles,
 cat("Chemical QSAR-ready SMILES written to HTTK-AllChems.smi")
 cat(" use that file to in OPERA to generate phys-chem properties including pKa.\n")
 cat("Enter \"c\" to continue when ready.\n")
-browser()
-
-#
-#
-# WAIT UNTIL TABLE IS GENERATED (COULD BE 5+ HOURS)
-#
-#
-
-#
-#
-#
-# READ IN OPERA PREDICTIONS INFORMATION
-#
-#
-#
-OPERA.VERSION <- "2.9"
-cat(paste("Reading HTTK-AllChems-smi_OPERA",OPERA.VERSION,"Pred.csv\n",sep=""))
-opera.preds <- read.csv(paste(
-  "HTTK-AllChems-smi_OPERA",OPERA.VERSION,"Pred.csv",sep=""))
-
-#calculate water:air partition coefficinent (Kwa = Koa / Kow):
-opera.preds$LogPwa_calc <- opera.preds$LogKOA_pred - opera.preds$LogP_pred 
-
-chem.physical_and_invitro.data <- add_chemtable(
-  opera.preds,
-  current.table = chem.physical_and_invitro.data,
-  data.list=list(CAS='MoleculeID',
-    logP="LogP_pred",
-    logHenry = "LogHL_pred",
-    logWSol = "LogWS_pred",
-    logPwa = "LogPwa_calc",
-    MP = "MP_pred",
-    pKa_Donor="pKa_a_pred",
-    pKa_Accept="pKa_b_pred"
-    ),
-  reference=paste("OPERAv",OPERA.VERSION,sep=""),
-  overwrite=T)
-
+#browser()
 
 #
 #
@@ -2642,11 +2651,6 @@ length(unique(chem.physical_and_invitro.data$Compound)) ==
 #
 #
 #
-
-
-
-
-
 
 #
 # CREATE TABLE Wetmore.data

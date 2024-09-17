@@ -70,7 +70,7 @@ model.list <- list()
 #' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 #' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-#' See \code{\link{get_fabsgut}} for further details.
+#' See \code{\link{get_fbio}} for further details.
 #'
 #'@param IVIVE Honda et al. (2019) identified four plausible sets of 
 #'assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions. 
@@ -127,6 +127,7 @@ model.list <- list()
 #'calc_analytic_css(chem.name='Bisphenol-A',output.units='mg/L',
 #'                  model='3compartment',concentration='blood')
 #' 
+#' \donttest{
 #'calc_analytic_css(chem.name='Bisphenol-A',tissue='liver',species='rabbit',
 #'                  parameterize.args = list(
 #'                                 default.to.human=TRUE,
@@ -148,6 +149,7 @@ model.list <- list()
 #' calc_analytic_css(chem.name="Dicofol",model="1compartment")
 #' calc_analytic_css(chem.name="Diflubenzuron",model="3compartment")
 #' calc_analytic_css(chem.name="Theobromine",model="3compartmentss")
+#'}
 #'
 #' @seealso \code{\link{calc_css}}
 #'

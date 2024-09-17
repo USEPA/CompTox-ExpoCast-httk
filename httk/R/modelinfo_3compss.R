@@ -87,8 +87,6 @@ model.list[[THIS.MODEL]]$invitro.params <- c("BW",
                        "hepatic.bioavailability",
                        "Rblood2plasma")
 
-
-
 # Do we ignore the Fups where the alue was below the limit of detection?
 model.list[[THIS.MODEL]]$exclude.fup.zero <- FALSE
 
@@ -97,6 +95,9 @@ model.list[[THIS.MODEL]]$css.dosing.params <- c("hourly.dose")
 
 # Filter out volatile compounds with Henry's Law Constant Threshold
 model.list[[THIS.MODEL]]$log.henry.threshold <- c(-4.5)
+
+# Filter out compounds belonging to select chemical classes
+model.list[[THIS.MODEL]]$chem.class.filt <- c("PFAS")
 
 model.list[[THIS.MODEL]]$routes <- list(
   "oral" = list(
