@@ -1,7 +1,7 @@
 # httk 2.4.0 (2024-8-14)
 This release accompanies the submission of the new manuscript
 "Enabling Transparent Toxicokinetic Modeling for Public Health Risk Assessment"
-and includes changes intended to better faciliate development of new HTTK
+and includes changes intended to better facilitate development of new HTTK
 models through improved model clarity.
 
 In addition we have incorporated comments received
@@ -827,4 +827,4 @@ naming convention.
 * Minor bugs have been corrected. 
 
 # httk 1.1 (2015-03-06)
-Initial public (CRAN) release (March 6, 2015).
+Initial public (CRAN) release (March 6, 2015)
