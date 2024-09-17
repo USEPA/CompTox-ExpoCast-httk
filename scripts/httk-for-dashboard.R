@@ -46,9 +46,13 @@ load_pradeep2020()
 load_honda2023()
  
 # Find all the duplicates:
-# First eliminat NA DTXSIDs (can't do logical tests on them)
+# First eliminate NA DTXSIDs (can't do logical tests on them)
 chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
                                          !is.na(DTXSID))
+# Then eliminate NA Clints (can't do logical tests on them)
+chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
+                                         !is.na(Human.Clint))
+
 # Now check for duplicated DTXSIDs:
 dup.chems <- chem.physical_and_invitro.data$DTXSID[
   duplicated((chem.physical_and_invitro.data$DTXSID))]

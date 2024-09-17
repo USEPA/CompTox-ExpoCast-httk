@@ -171,7 +171,7 @@ vignette("IntroToHTTK")
 John Wambaugh [wambaugh.john@epa.gov]
 
 ### Lead Software Engineer 
-Sarah Davidson [Davidson.Sarah.E@epa.gov]
+Sarah Davidson Fritz [DavidsonFritz.Sarah@epa.gov]
 
 ### Model Authors and Function Developers
 Robert Pearce,
@@ -182,7 +182,7 @@ Matt Linakis [MLINAKIS@ramboll.com], and
 Dustin Kapraun [kapraun.dustin@epa.gov]
 
 ### Bug-Fixes Vignette edits, and Parameter Values
-Miyuki Breen [breen.miyuki@epa.gov], 
+Miyuki Breen, 
 Shannon Bell [Shannon.bell@inotivco.com], 
 Xiaoqing Chang [Xiaoqing.chang@inotivco.com], 
 Todor Antonijevic [tantonijevic@toxstrategies.com], 
