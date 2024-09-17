@@ -61,6 +61,9 @@
 #' (below) gives another option for calculating Qalv (Alveolar ventilation) 
 #' in case pulmonary ventilation rate is not known 
 #' 
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' 
 #' @param VT Tidal volume (L), to be modulated especially as part of simulating
 #' the state of exercise
 #' 
@@ -74,7 +77,7 @@
 #' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 #' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-#' See \code{\link{get_fabsgut}} for further details.
+#' See \code{\link{get_fbio}} for further details.
 #' 
 #' @param ... Other parameters
 #' 
@@ -174,6 +177,7 @@
 #' @examples
 #' parameters <- parameterize_gas_pbtk(chem.cas='129-00-0')
 #' 
+#'\donttest{
 #' parameters <- parameterize_gas_pbtk(chem.name='pyrene',species='Rat')
 #' 
 #' parameterize_gas_pbtk(chem.cas = '56-23-5')
@@ -185,6 +189,7 @@
 #'                       lung=c("lung"),gut=c("gut"),slow=c("bone"))
 #' parameterize_gas_pbtk(chem.name="Bisphenol a",species="Rat",default.to.human=TRUE,
 #'                    tissuelist=compartments) 
+#'}
 #' 
 #' @export parameterize_gas_pbtk
 parameterize_gas_pbtk <- function(chem.cas=NULL,
@@ -211,6 +216,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                               suppress.messages=FALSE,
                               minimum.Funbound.plasma=0.0001,
                               Caco2.options=NULL,
+                              class.exclude=TRUE,
                               ...)
 {
   physiology.data <- physiology.data
@@ -230,6 +236,15 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   chem.name <- out$chem.name                                
   dtxsid <- out$dtxsid
    
+# Make sure we have all the parameters we need:
+  check_model(chem.cas=chem.cas, 
+            chem.name=chem.name,
+            dtxsid=dtxsid,
+            model="gas_pbtk",
+            species=species,
+            class.exclude=class.exclude,
+            default.to.human=default.to.human)
+            
   if (is(tissuelist,'list')==FALSE) stop("tissuelist must be a list of vectors.") 
 
   # Clint has units of uL/min/10^6 cells:
@@ -278,6 +293,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   schmitt.params <- parameterize_schmitt(chem.cas=chem.cas,
                                          species=species,
                                          default.to.human=default.to.human,
+                                         class.exclude=class.exclude,
                                          force.human.fup=force.human.clint.fup,
                                          suppress.messages=TRUE,
                                          minimum.Funbound.plasma=minimum.Funbound.plasma)
@@ -347,7 +363,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   BW <- this.phys.data["Average BW"]
   hematocrit = this.phys.data["Hematocrit"]
   outlist <- c(outlist,list(BW = as.numeric(BW),
-    kgutabs = 2.18, # 1/h 
+#    kgutabs = 2.18, # 1/h 
     Funbound.plasma = fup, # unitless fraction
     Funbound.plasma.dist = schmitt.params$Funbound.plasma.dist,
     hematocrit = as.numeric(hematocrit), # unitless ratio
@@ -389,7 +405,8 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
           liver.density= 1.05, # g/mL
           Dn=0.17,BW=BW,
           Vliverc=lumped_params$Vliverc, #L/kg
-          Qtotal.liverc=(lumped_params$Qtotal.liverc)/1000*60),
+          Qtotal.liverc=
+               (lumped_params$Qtotal.liverf*as.numeric(Qcardiacc))/1000*60),
         suppress.messages=TRUE)), #L/h/kg BW
       million.cells.per.gliver=110, # 10^6 cells/g-liver
       liver.density=1.05)) # g/mL
@@ -407,6 +424,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   outlist <- c(outlist,
     Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
       species=species,
+      class.exclude=class.exclude,
       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
       suppress.messages=TRUE))
     
@@ -414,6 +432,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
   Kx2air <- calc_kair(chem.name=chem.name,
                       chem.cas=chem.cas,
                       dtxsid=dtxsid,
+                      parameters=outlist,
                       species=species,
                       default.to.human=default.to.human,
                       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
@@ -428,15 +447,16 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
     Qalvc = ((fR*60) * (VT - VD))/outlist$BW^0.75 #L/h/kg^0.75, 
     #Added 4-30-19 to allow user-input respiratory and/or work values,
     #assumes input units of L and min^-1
-  } else {
+  } else {                                               
     Vdot <- this.phys.data["Pulmonary Ventilation Rate"]
+    # Linakis et al. (2020) Equation 5 by way of Clewell et al. (2001):
     Qalvc <- Vdot * (0.67) #L/h/kg^0.75
   }
   outlist <- c(outlist,Kblood2air =  Kblood2air,Kmuc2air = Kmuc2air,Qalvc=as.numeric(Qalvc))
     
 # Oral bioavailability parameters:
   outlist <- c(
-    outlist, do.call(get_fabsgut, args=purrr::compact(c(
+    outlist, do.call(get_fbio, args=purrr::compact(c(
     list(
       parameters=outlist,
       dtxsid=dtxsid,

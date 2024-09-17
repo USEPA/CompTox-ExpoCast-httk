@@ -14,6 +14,7 @@ parameterize_schmitt(
   force.human.fup = FALSE,
   adjusted.Funbound.plasma = TRUE,
   suppress.messages = FALSE,
+  class.exclude = TRUE,
   minimum.Funbound.plasma = 1e-04
 )
 }
@@ -48,6 +49,9 @@ fraction is substituted.}
 for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
+
+\item{class.exclude}{Exclude chemical classes identified as outside of 
+domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
 
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our

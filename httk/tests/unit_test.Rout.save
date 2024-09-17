@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2024-03-16 r86144 ucrt) -- "Unsuffered Consequences"
+R Under development (unstable) (2024-08-07 r86984 ucrt) -- "Unsuffered Consequences"
 Copyright (C) 2024 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
@@ -73,29 +73,31 @@ The model outputs are provided in the following units:
 	umol: Atubules, Ametabolized
 	uM*days: AUC
 
-     time   Cgut Cliver    Cven  Clung    Cart  Crest Ckidney Cplasma Calvppmv
-[1,] 0.00 0.0000 0.0000 0.00000 0.0000 0.00000 0.0000   0.000 0.00000        0
-[2,] 0.05 0.5881 0.1674 0.01696 0.2847 0.03926 0.1007   0.941 0.02133        0
-[3,] 0.10 0.7285 0.2085 0.02505 0.3882 0.04737 0.1958   1.142 0.03152        0
-     Cendexhppmv Cmixexhppmv Cmuc Atubules Ametabolized       AUC
-[1,]   0.000e+00     0.01227    0 0.000000        0.000 0.0000000
-[2,]   9.840e-07     0.01227 1866 0.009153        2.026 0.0006988
-[3,]   1.966e-06     0.01227 3733 0.021120        5.476 0.0020270
+      time      Cgut    Cliver      Cven     Clung     Cart     Crest  Ckidney
+[1,] 0e+00 0.0000000 0.0000000 0.0000000 0.0000000 0.000000 0.0000000 0.000000
+[2,] 1e-04 0.0004556 0.0000776 0.0000018 0.0001213 0.005812 0.0000224 0.001836
+[3,] 5e-02 0.6995000 0.7266000 0.0259000 0.3303000 0.048560 0.1135000 1.147000
+[4,] 1e-01 0.9994000 1.1760000 0.0432600 0.5201000 0.066370 0.2477000 1.588000
+       Cplasma Calvppmv Cendexhppmv Cmixexhppmv     Cmuc  Atubules Ametabolized
+[1,] 0.0000000    0e+00   0.0000000      0.3000    0.000 0.0000000       0.0000
+[2,] 0.0000023    0e+00   0.0001616      0.3000    3.733 0.0000017       0.0000
+[3,] 0.0325800    2e-07   0.0740800      0.3056 1841.000 0.0102300       0.1622
+[4,] 0.0544300    2e-07   0.1456000      0.3109 3634.000 0.0261300       0.5917
+           AUC
+[1,] 0.0000000
+[2,] 0.0000000
+[3,] 0.0009357
+[4,] 0.0031250
 Warning messages:
-1: In solve_gas_pbtk(chem.name = "bisphenol a", times = c(0, 0.1, 0.05),  :
-  Henry's constant, as a measure of volatility, is smaller for the
-    queried chemical than for glycerol, a chemical generally considered
-    nonvolatile. Please proceed after having considered whether the inhalation
-    exposure route is nonetheless relevant.
-2: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
-3: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
+2: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
   Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
-4: In parameterize_gas_pbtk(chem.cas = "80-05-7", chem.name = "bisphenol a",  :
+3: In parameterize_gas_pbtk(chem.cas = "80-05-7", chem.name = "bisphenol a",  :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
-5: In parameterize_gas_pbtk(chem.cas = "80-05-7", chem.name = "bisphenol a",  :
+4: In parameterize_gas_pbtk(chem.cas = "80-05-7", chem.name = "bisphenol a",  :
   Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.
-6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+5: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > 
 > # Quit without saving or displaying messages:

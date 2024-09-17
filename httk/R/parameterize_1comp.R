@@ -64,7 +64,7 @@
 #' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 #' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-#' See \code{\link{get_fabsgut}} for further details.
+#' See \code{\link{get_fbio}} for further details.
 #' 
 #' @return \item{Vdist}{Volume of distribution, units of L/kg BW.}
 #' \item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, i.e. the 
@@ -121,7 +121,7 @@
 #'                                   restrictive.clearance=FALSE,
 #'                                   species='rabbit',
 #'                                   default.to.human=TRUE)
-#'  out <- solve_1comp(parameters=parameters)
+#'  out <- solve_1comp(parameters=parameters,days=1)
 #'
 #' @export parameterize_1comp
 parameterize_1comp <- function(
