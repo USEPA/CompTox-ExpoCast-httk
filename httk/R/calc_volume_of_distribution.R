@@ -44,6 +44,9 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' 
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' 
 #' @return \item{Volume of distribution}{Units of L/ kg BW.}
 #' 
 #' @author John Wambaugh and Robert Pearce
@@ -67,6 +70,12 @@
 #' calc_vdist(chem.cas="80-05-7")
 #' calc_vdist(chem.name="Bisphenol A")
 #' calc_vdist(chem.name="Bisphenol A",species="Rat")
+#'
+#' # Create a list of parameters (that you can potentially change):
+#' p <- parameterize_schmitt(chem.name="bisphenola")
+#' 
+#' # Lump the tissues into a single volume of distribution
+#' calc_vdist(parameters=p)
 #' 
 #' @export calc_vdist
 calc_vdist<- function(chem.cas=NULL,
@@ -74,6 +83,7 @@ calc_vdist<- function(chem.cas=NULL,
                       dtxsid=NULL,
                       parameters=NULL,
                       default.to.human=FALSE,
+                      class.exclude=TRUE,
                       species="Human",
                       suppress.messages=FALSE,
                       adjusted.Funbound.plasma=TRUE,
@@ -105,6 +115,7 @@ calc_vdist<- function(chem.cas=NULL,
                             chem.name=chem.name,
                             dtxsid=dtxsid,
                             default.to.human=default.to.human,
+                            class.exclude=class.exclude,
                             species=species,
                             minimum.Funbound.plasma=minimum.Funbound.plasma)
     parameters <- suppressWarnings(predict_partitioning_schmitt(

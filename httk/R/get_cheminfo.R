@@ -70,8 +70,9 @@
 #' 
 #' @param median.only Use median values only for fup and clint.  Default is FALSE.
 #' 
-#' @param fup.ci.cutoff Cutoff for the level of uncertainty in fup estimates.
-#' This value should be between (0,1). Default is `NULL` specifying no filtering.
+#' @param fup.ci.cutoff Boolean eliminating uncertain fup estimates.
+#' If TRUE, fup values whose 95% credible interval
+#' spans 0.1 to 0.9 (or more) are eliminated. Default value is TRUE.
 #' 
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
 #' vitro clearance assay result has a p-values greater than the threshold are
