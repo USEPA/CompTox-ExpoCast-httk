@@ -3,7 +3,7 @@
 #' This function initializes the parameters needed in the functions
 #' \code{\link{calc_mc_css}}, \code{\link{calc_mc_oral_equiv}}, and 
 #' \code{\link{calc_analytic_css}} for the PFAS-aware version of the
-#' sum of clerances model ("sumclearancespfas"). The model is described in
+#' sum of clearances model ("sumclearancespfas"). The model is described in
 #' Wambaugh et al. (in preparation). 
 #' For PFAS compounds the effectiveness of glomerular filtration in the kidneys
 #' is set according to the half-life predicted by the Dawson et al. (2023)
@@ -14,6 +14,24 @@
 #' in plasma. However, we still use chemical properties to predict the 
 #' blood:plasma ratio for estimating first-pass hepatic metabolism for oral
 #' exposures.
+#'
+#' We model systemic oral bioavailability as 
+#' \ifelse{html}{\out{F<sub>bio</sub>=F<sub>abs</sub>*F<sub>gut</sub>*F<sub>hep</sub>}}{\eqn{F_{bio}=F_{abs}*F_{gut}*F_{hep}}}.
+#' \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}}
+#' is estimated from in vitro TK data using 
+#' \code{\link{calc_hep_bioavailability}}.
+#' If \ifelse{html}{\out{F<sub>bio</sub>}}{\eqn{F_{bio}}}
+#' has been measured in vivo and is found in
+#' table \code{\link{chem.physical_and_invitro.data}} then we set 
+#' \ifelse{html}{\out{F<sub>abs</sub>*F<sub>gut</sub>}}{\eqn{F_{abs}*F_{git}}} 
+#' to the measured value divided by 
+#' \ifelse{html}{\out{F<sub>hep</sub>}}{\eqn{F_{hep}}} 
+#' Otherwise, if Caco2 membrane permeability data or predictions
+#' are available \ifelse{html}{\out{F<sub>abs</sub>}}{\eqn{F_{abs}}} is estimated
+#' using \code{\link{calc_fabs.oral}}.
+#' Intrinsic hepatic metabolism is used to very roughly estimate
+#' \ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}
+#' using \code{\link{calc_fgut.oral}}.
 #' 
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- the 
 #' chemical must be identified by either CAS, name, or DTXISD
@@ -57,6 +75,17 @@
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#' 
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' See \code{\link{get_fabsgut}} for further details.
+#' 
+#' @param ... Other parameters
 #'
 #' @return 
 #' \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
@@ -84,7 +113,7 @@
 #'
 #' \insertRef{kilford2008hepatocellular}{httk}
 #'
-#' \insertRef{dawson2023machine}
+#' \insertRef{dawson2023machine}{httk}
 #' 
 #' @seealso \code{\link{calc_analytic_css_3compss}}
 #'
@@ -94,15 +123,10 @@
 #'
 #' @seealso \code{\link{physiology.data}}
 #'
-#' @examples
+#' @keywords sumclearancespfas
 #' 
-#'  parameters <- parameterize_steadystate(chem.name='Bisphenol-A',species='Rat')
-#'  parameters <- parameterize_steadystate(chem.cas='80-05-7')
-#'
-#' @keywords 3compss2
-#' 
-#' @export parameterize_pfassteadystate
-parameterize_pfassteadystate <- function(
+#' @export parameterize_sumclearancespfas
+parameterize_sumclearancespfas <- function(
                               chem.cas=NULL,
                               chem.name=NULL,
                               dtxsid=NULL,
@@ -120,7 +144,8 @@ parameterize_pfassteadystate <- function(
                               fup.lod.default=0.005,
                               suppress.messages=FALSE,
                               minimum.Funbound.plasma=0.0001,
-                              Caco2.options=NULL)
+                              Caco2.options=NULL,
+                              ...)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
 #each time a data.table column name is used without quotes. To appease R CMD
@@ -275,25 +300,8 @@ parameterize_pfassteadystate <- function(
                        )
   } else {
     fup.corrected <- fup.point
+    fup.adjustment <- NA
   } 
-      
-  # Exhalation parameters:
-  # Get the blood:air and mucus:air partition coefficients:
-  Kx2air <- calc_kair(chem.name=chem.name,
-                      chem.cas=chem.cas,
-                      dtxsid=dtxsid,
-                      species=species,
-                      default.to.human=default.to.human,
-                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                      suppress.messages=suppress.messages)
-  
-  Kwater2air <- Kx2air$Kwater2air
-  Kblood2air <- Kx2air$Kblood2air
-  Kmuc2air <- Kx2air$Kmuc2air
-    
-  Vdot <- as.numeric(this.phys.data["Pulmonary Ventilation Rate"])
-  Qalvc <- Vdot * (0.67) #L/h/kg^0.75 
-
 #
 #
 # If PFAS, load Dawson (2023) Machine Learning Model Half-Life Class
@@ -378,9 +386,7 @@ if (regexpr("PFAS", get_physchem_param("Chemical.Class",dtxsid=dtxsid) != -1))
   Params[["million.cells.per.gliver"]] <- 110 # 10^6 cells/g-liver
   Params[["Vliverc"]] <- Vliverc # L/kg BW
   Params[["liver.density"]] <- 1.05 # g/mL
-  Params[["Kblood2air"]] <- Kblood2air
-  Params[["Qalvc"]] <- Qalvc
-  
+ 
 
 # Alter Rb:p for PFAS:
 if (regexpr("PFAS", get_physchem_param("Chemical.Class",dtxsid=dtxsid) != -1))
@@ -395,21 +401,51 @@ if (regexpr("PFAS", get_physchem_param("Chemical.Class",dtxsid=dtxsid) != -1))
   if (ion$fraction_negative > 0.9) Params[['Rblood2plasma']] <- 0.5
   else Params[['Rblood2plasma']] <- 10
 } else {
-  Rb2p <- available_rblood2plasma(chem.name=chem.name,
+  Rb2p <- available_rblood2plasma(
+            chem.name=chem.name,
             chem.cas=chem.cas,
+            dtxsid=dtxsid,
             species=species,
             adjusted.Funbound.plasma=fup.corrected,
             suppress.messages=TRUE)
   Params[["Rblood2plasma"]] <- Rb2p
 }  
-
+  
+# Exhalation parameters:
+# Phys-chem needed to calculate blood:air partition coefficient:
+  Params[["logHenry"]] <- get_physchem_param(param = 'logHenry', 
+                                  chem.cas=chem.cas,
+                                  chem.name=chem.name,
+                                  dtxsid=dtxsid) #for log base 10 compiled Henry's law values
+  Params[["pKa_Donor"]] <- pKa_Donor
+  Params[["pKa_Accept"]] <- pKa_Accept
+  Params[["Pow"]] <- Pow 
+# Get the blood:air and mucus:air partition coefficients:
+  Kx2air <- calc_kair(parameters=Params,
+                      species=species,
+                      default.to.human=default.to.human,
+                      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                      suppress.messages=suppress.messages)
+  Kwater2air <- Kx2air$Kwater2air
+  Kblood2air <- Kx2air$Kblood2air
+  Kmuc2air <- Kx2air$Kmuc2air
+  Params[["Kblood2air"]] <- Kblood2air
+# Ventilation rate:    
+  Vdot <- as.numeric(this.phys.data["Pulmonary Ventilation Rate"])
+  Qalvc <- Vdot * (0.67) #L/h/kg^0.75 
+  Params[["Qalvc"]] <- Qalvc
+  
+# Oral bioavailability parameters:
 # Need to have a parameter with this name to calculate clearance, but need 
 # clearance to calculate bioavailability:
   Params[["hepatic.bioavailability"]] <- NA
   cl <- calc_hep_clearance(parameters=Params,
           hepatic.model='unscaled',
+          restrictive.clearance = restrictive.clearance,
           suppress.messages=TRUE)#L/h/kg body weight
-
+          
+# "hepatic bioavailability" simulates first-pass hepatic metabolism since we 
+# don't explicitly model blood from the gut:
   Params[['hepatic.bioavailability']] <- calc_hep_bioavailability(
     parameters=list(Qtotal.liverc=Qtotal.liverc, # L/h/kg^3/4
                     Funbound.plasma=fup.corrected,
@@ -418,10 +454,10 @@ if (regexpr("PFAS", get_physchem_param("Chemical.Class",dtxsid=dtxsid) != -1))
                     BW=BW),
     restrictive.clearance=restrictive.clearance)
 
-  if (is.na(Params[['hepatic.bioavailability']])) browser()
-  
+  if (is.na(Params[['hepatic.bioavailability']])) browser() 
+
   Params <- c(
-    Params, do.call(get_fabsgut, args=purrr::compact(c(
+    Params, do.call(get_fbio, args=purrr::compact(c(
     list(
       parameters=Params,
       dtxsid=dtxsid,
@@ -431,7 +467,8 @@ if (regexpr("PFAS", get_physchem_param("Chemical.Class",dtxsid=dtxsid) != -1))
       suppress.messages=suppress.messages
       ),
     Caco2.options))
-    )) 
+    ))
   
-  return(lapply(Params[order(tolower(names(Params)))],set_httk_precision))
+  return(lapply(Params[model.list[["sumclearances"]]$param.names],
+                set_httk_precision))
 }

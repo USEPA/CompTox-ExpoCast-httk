@@ -10,7 +10,7 @@ model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_3compss2"
 model.list[[THIS.MODEL]]$steady.state.units <- "mg/L"
 
 # Function used for generating model parameters:
-model.list[[THIS.MODEL]]$parameterize.func <- "parameterize_pfassteadystate"  
+model.list[[THIS.MODEL]]$parameterize.func <- "parameterize_sumclearancespfas"  
 
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe

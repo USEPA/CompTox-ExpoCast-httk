@@ -385,16 +385,16 @@ for (this.sex in c("Female","Male"))
       if (any(human.table.index) & any(species.table.index))
       {
         cl.table[cl.table.index, "TK.Ratio.InVivo"] <- 
-        species.data[species.table.index, "ClLphpkgbw"] /
-        human.data[human.table.index, "ClLphpkgbw"] 
+        signif(species.data[species.table.index, "ClLphpkgbw"] /
+        human.data[human.table.index, "ClLphpkgbw"], 4)
         
         cl.table[cl.table.index, "TK.Ratio.HTTK"] <- 
-        species.data[species.table.index, "HTTK.Cltot.Lphpkgbw"] /
-        human.data[human.table.index, "HTTK.Cltot.Lphpkgbw"] 
+        signif(species.data[species.table.index, "HTTK.Cltot.Lphpkgbw"] /
+        human.data[human.table.index, "HTTK.Cltot.Lphpkgbw"], 4) 
         
         cl.table[cl.table.index, "TK.Ratio.ML"] <- 
-        species.data[species.table.index, "MachineLearning.Cltot.Lphpkgbw"] /
-        human.data[human.table.index, "MachineLearning.Cltot.Lphpkgbw"]
+        signif(species.data[species.table.index, "MachineLearning.Cltot.Lphpkgbw"] /
+        human.data[human.table.index, "MachineLearning.Cltot.Lphpkgbw"], 4) 
       }
     }
   }
@@ -442,7 +442,7 @@ for (this.chem in huh.data[,"DTXSID"])
                                species="Rat",
                                parameterize.args=list(default.to.human=TRUE),
                                suppress.messages=TRUE)
-    new.row[1, "TK.Ratio.HTTK"] <-human.css/rat.css
+    new.row[1, "TK.Ratio.HTTK"] <- signif(human.css/rat.css,4)
     cl.table <- rbind(cl.table,new.row)
   }
   }
@@ -520,10 +520,12 @@ firstpass.table <- NULL
 for (this.chem in get_2023pfasinfo(info="dtxsid", suppress.messages=TRUE,
                                    model=PFAS.MODEL.USED))
 {
-      params <- parameterize_steadystate(dtxsid=this.chem,
-                                          suppress.messages=TRUE)
+      params <- parameterize_sumclearances(dtxsid=this.chem,
+                                         suppress.messages=TRUE,
+                                         class.exclude=FALSE)
       params2 <- parameterize_schmitt(dtxsid=this.chem,
-                                          suppress.messages=TRUE)
+                                      suppress.messages=TRUE,
+                                      class.exclude=FALSE)                           
       ion <- calc_ionization(
         pH=7.4,
         pKa_Donor=params2[["pKa_Donor"]],
@@ -568,7 +570,8 @@ for (this.chem in rb2p.table$DTXSID)
                                    model=PFAS.MODEL.USED))
   {
     rb2p.table[rb2p.table$DTXSID==this.chem,"HTTK.Rb2p"] <- 
-      calc_rblood2plasma(dtxsid=this.chem)
+      calc_rblood2plasma(dtxsid=this.chem,
+                         class.exclude=FALSE)
   }
   p <- try(parameterize_pfas1comp(dtxsid=this.chem))
   if(!is(p, "try-error")) 
@@ -626,11 +629,19 @@ half.lives <- NULL
 for (this.chem in new.pfas)
 {
   new.row <- data.frame(DTXSID=this.chem,
-                        Human.HL=calc_half_life(dtxsid=this.chem,species="human",
-                                  suppress.messages=TRUE),
-                        Rat.HL=calc_half_life(dtxsid=this.chem,species="rat",
-                                              default.to.human=TRUE,
-                                  suppress.messages=TRUE))
+                        Human.HL=calc_half_life(
+                          dtxsid=this.chem,
+                          species="human",
+                          model="sumclearances",
+                          class.exclude=FALSE,
+                          suppress.messages=TRUE),
+                        Rat.HL=calc_half_life(
+                          dtxsid=this.chem,
+                          species="rat",
+                          model="sumclearances",
+                          default.to.human=TRUE,
+                          class.exclude=FALSE,
+                          suppress.messages=TRUE))
   new.row$Type <- "HTTK"
   half.lives <- rbind(half.lives, new.row)
   param.human <- try(parameterize_pfas1comp(dtxsid=this.chem,

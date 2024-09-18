@@ -133,11 +133,11 @@ using \code{\link{calc_fgut.oral}}.
 
 \insertRef{kilford2008hepatocellular}{httk}
 
-\insertRef{rotroff2010incorporating}
+\insertRef{rotroff2010incorporating}{httk}
 
-\insertRef{wetmore2012integration}
+\insertRef{wetmore2012integration}{httk}
 
-\insertRef{wetmore2015incorporating}
+\insertRef{wetmore2015incorporating}{httk}
 }
 \seealso{
 \code{\link{calc_analytic_css_3compss}}

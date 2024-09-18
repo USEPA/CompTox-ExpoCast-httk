@@ -2,11 +2,13 @@
 #' 
 #' This function initializes the parameters needed in the functions
 #' \code{\link{calc_mc_css}}, \code{\link{calc_mc_oral_equiv}}, and 
-#' \code{\link{calc_analytic_css}} for the three
-#' compartment steady state model ('3compartmentss') as used in 
-#' Rotroff et al. (2010), Wetmore et al. (2012), Wetmore et al. (2015), and 
-#' elsewhere. By assuming that enough time has passed to reach steady-state, we
-#' eliminate the need for tissue-specific parititon coefficients because we 
+#' \code{\link{calc_analytic_css}} for the sum of clearances model. The sum of
+#' clearances model
+#' approximates the steady-state solution to a three
+#' compartment model with exhalation and inhalation ('sumclearances') as described in
+#' Wambaugh et al. (in preparation). By assuming that enough time has passed to 
+#' reach steady-state, we
+#' eliminate the need for tissue-specific partition coefficients because we 
 #' assume all tissues have come to equilibrium with the unbound concentration
 #' in plasma. However, we still use chemical properties to predict the 
 #' blood:plasma ratio for estimating first-pass hepatic metabolism for oral
@@ -47,6 +49,9 @@
 #' 
 #' @param default.to.human Substitutes missing species-specific values with human values if
 #' TRUE (default is FALSE).
+#' 
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
 #' 
 #' @param force.human.clint.fup Uses human hepatic intrinsic clearance and fraction
 #' of unbound plasma in calculation of partition coefficients for rats if true.
@@ -114,12 +119,7 @@
 #'
 #' @seealso \code{\link{physiology.data}}
 #'
-#' @examples
-#' 
-#'  parameters <- parameterize_steadystate(chem.name='Bisphenol-A',species='Rat')
-#'  parameters <- parameterize_steadystate(chem.cas='80-05-7')
-#'
-#' @keywords 3compss2
+#' @keywords sumclearances
 #' 
 #' @export parameterize_sumclearances
 parameterize_sumclearances <- function(
@@ -129,6 +129,7 @@ parameterize_sumclearances <- function(
                               species="Human",
                               clint.pvalue.threshold=0.05,
                               default.to.human=FALSE,
+                              class.exclude=TRUE,
                               force.human.clint.fup=FALSE,
                               adjusted.Funbound.plasma=TRUE,
                               adjusted.Clint=TRUE,
@@ -164,6 +165,15 @@ parameterize_sumclearances <- function(
   chem.name <- out$chem.name                                
   dtxsid <- out$dtxsid
 
+  # Make sure we have all the parameters we need:
+  check_model(chem.cas=chem.cas, 
+              chem.name=chem.name,
+              dtxsid=dtxsid,
+              model="sumclearancespfas",
+              species=species,
+              class.exclude=class.exclude,
+              default.to.human=default.to.human)
+  
   #Capitalize the first letter of species only:
   species <- tolower(species)
   substring(species,1,1) <- toupper(substring(species,1,1))
@@ -345,7 +355,6 @@ parameterize_sumclearances <- function(
           hepatic.model='unscaled',
           restrictive.clearance = restrictive.clearance,
           suppress.messages=TRUE)#L/h/kg body weight
-
           
 # "hepatic bioavailability" simulates first-pass hepatic metabolism since we 
 # don't explicitly model blood from the gut:

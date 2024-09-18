@@ -9,9 +9,11 @@ calc_half_life(
   chem.name = NULL,
   dtxsid = NULL,
   parameters = NULL,
+  model = "3compartmentss",
   species = "Human",
   suppress.messages = TRUE,
   default.to.human = FALSE,
+  class.exclude = TRUE,
   restrictive.clearance = TRUE,
   adjusted.Funbound.plasma = TRUE,
   regression = TRUE,
@@ -31,6 +33,8 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 \item{parameters}{Chemical parameters from parameterize_steadystate or
 1compartment function, overrides chem.name and chem.cas.}
 
+\item{model}{The model used to calculate elimination rate (defaults to "3compartmentss")}
+
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
@@ -38,6 +42,9 @@ default "Human").}
 
 \item{default.to.human}{Substitutes missing animal values with human values
 if true.}
+
+\item{class.exclude}{Exclude chemical classes identified as outside of 
+domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
 
 \item{restrictive.clearance}{In calculating elimination rate, protein
 binding is not taken into account (set to 1) in liver clearance if FALSE.}
@@ -83,7 +90,7 @@ calc_half_life(chem.cas="80-05-7")
 
 }
 \seealso{
-[calc_elimination_rate()] for the elimination rate calculation
+\code{\link{calc_elimination_rate}}
 }
 \author{
 Sarah E. Davidson
