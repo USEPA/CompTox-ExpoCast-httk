@@ -335,7 +335,7 @@ model.list[[THIS.MODEL]]$routes <- list(
     "dosing.params" = c(
       "initial.dose",
       "dosing.matrix",
-      "forcings")),  
+      "forcings")) 
   )
 
 # ORDERED LIST of state variables (must match Model variables: 

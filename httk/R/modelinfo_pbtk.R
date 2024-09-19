@@ -31,16 +31,16 @@ model.list[[THIS.MODEL]]$solve.func <- "solve_pbtk"
 # otherwise.
 model.list[[THIS.MODEL]]$alltissues=c(
   "adipose",
-  "bone",            
-  "brain",           
-  "gut",            
-  "heart",           
-  "kidney",          
-  "liver",           
-  "lung",           
+  "bone",       
+  "brain",      
+  "gut",       
+  "heart",      
+  "kidney",     
+  "liver",      
+  "lung",      
   "muscle", 
-  "skin",            
-  "spleen",          
+  "skin",       
+  "spleen",     
   "red blood cells",
   "rest")
 
@@ -96,7 +96,7 @@ model.list[[THIS.MODEL]]$param.names <- c(
   "Vlungc",
   "Vrestc",
   "Vvenc")
-                    
+          
 # This subset of R parameters are needed to initially parameterize the compiled
 # code for the solver: (must match ORDER under "parameters" in C code)
 model.list[[THIS.MODEL]]$Rtosolvermap <- list(
@@ -214,10 +214,15 @@ model.list[[THIS.MODEL]]$default.monitor.vars <- c(
 
 # Allowable units assigned to dosing input:
 model.list[[THIS.MODEL]]$allowed.units.input <- list(
-       "oral" = c('umol','mg','mg/kg'),
-       "iv" = c('umol','mg','mg/kg')
-       )
+  "oral" = c('umol','mg','mg/kg'),
+  "iv" = c('umol','mg','mg/kg')
+  )
   
+# Allowable units assigned to entries in the output columns of the ode system
+model.list[[THIS.MODEL]]$allowed.units.output <- list(
+  "oral" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), 
+  "iv" = c('uM','mg/L','umol','mg','uM*days','mg/L*days')
+  )  
 model.list[[THIS.MODEL]]$routes <- list(
   "oral" = list(
 # We need to know which compartment gets the dose 
@@ -244,44 +249,44 @@ model.list[[THIS.MODEL]]$routes <- list(
 # mostly calculated in amounts, though AUC (area under plasma concentration
 # curve) also appears here: 
 model.list[[THIS.MODEL]]$state.vars <- c(
-    "Agutlumen",
-    "Agut",
-    "Aliver",
-    "Aven",
-    "Alung",
-    "Aart",
-    "Arest",
-    "Akidney", 
-    "Atubules",
-    "Ametabolized",
-    "AUC"
-    ) 
+  "Agutlumen",
+  "Agut",
+  "Aliver",
+  "Aven",
+  "Alung",
+  "Aart",
+  "Arest",
+  "Akidney", 
+  "Atubules",
+  "Ametabolized",
+  "AUC"
+  ) 
     
 # Actual (intrinsic) units assigned to each of the time dependent
 # variables of the model system including state variables and any transformed
 # outputs (for example, concentrations calculated from amounts.)
 # AUC values should also be included.
 model.list[[THIS.MODEL]]$compartment.units <- c(
-    "Agutlumen"="umol",
-    "Agut"="umol",
-    "Aliver"="umol",
-    "Aven"="umol",
-    "Alung"="umol",
-    "Aart"="umol",
-    "Arest"="umol",
-    "Akidney"="umol",
-    "Atubules"="umol",
-    "Ametabolized"="umol",
-    "Cgut"="uM",
-    "Cliver"="uM",
-    "Cven"="uM",
-    "Clung"="uM",
-    "Cart"="uM",
-    "Crest"="uM",
-    "Ckidney"="uM",
-    "Cplasma"="uM",
-    "Aplasma"="umol",
-    "AUC"="uM*days"
+  "Agutlumen"="umol",
+  "Agut"="umol",
+  "Aliver"="umol",
+  "Aven"="umol",
+  "Alung"="umol",
+  "Aart"="umol",
+  "Arest"="umol",
+  "Akidney"="umol",
+  "Atubules"="umol",
+  "Ametabolized"="umol",
+  "Cgut"="uM",
+  "Cliver"="uM",
+  "Cven"="uM",
+  "Clung"="uM",
+  "Cart"="uM",
+  "Crest"="uM",
+  "Ckidney"="uM",
+  "Cplasma"="uM",
+  "Aplasma"="umol",
+  "AUC"="uM*days"
   )
 
 # Compartment state of matter, needed for proper unit conversion, if all
@@ -327,7 +332,8 @@ model.list[[THIS.MODEL]]$httkpop.params <- c(
   "Vliverc",
   "Vlungc",
   "Vrestc",
-  "Vvenc")
+  "Vvenc"
+  )
 
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
 model.list[[THIS.MODEL]]$calcpc <- TRUE
