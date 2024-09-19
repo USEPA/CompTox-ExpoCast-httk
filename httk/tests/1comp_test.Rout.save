@@ -72,13 +72,13 @@ The model outputs are provided in the following units:
 	uM: Ccompartment
 	uM*days: AUC
 
-           time Agutlumen Ccompartment Ametabolized       AUC
-[1,] 0.00000000    175.80     0.000000    0.000e+00 0.000e+00
-[2,] 0.00010000    174.90     0.002068    1.931e-05 1.030e-07
-[3,] 0.01041667    101.90     0.166100    1.762e-01 9.442e-04
-[4,] 0.02083333     59.11     0.261700    6.006e-01 3.218e-03
-[5,] 0.03125000     34.27     0.316400    1.168e+00 6.256e-03
-[6,] 0.04166667     19.87     0.347400    1.816e+00 9.729e-03
+       time Agutlumen Ccompartment Ametabolized      AUC
+[1,] 0.0000    175.80     0.000000     0.000000 0.000000
+[2,] 0.0001    174.90     0.002068     0.000019 0.000000
+[3,] 0.0104    102.00     0.165900     0.175700 0.000941
+[4,] 0.0208     59.21     0.261500     0.599000 0.003210
+[5,] 0.0312     34.36     0.316200     1.165000 0.006240
+[6,] 0.0416     19.94     0.347300     1.811000 0.009706
 Warning messages:
 1: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Fraction unbound is provided as a distribution.

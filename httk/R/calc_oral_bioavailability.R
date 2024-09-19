@@ -384,7 +384,7 @@ calc_peff <- function(parameters = NULL,
   # peff has units of 10^-4 cm/s, Caco2.Pab has units of 10^-6 cm/s
   peff <- 10^(0.4926 * log10(Caco2.Pab) - 0.1454) 
   
-  # Wahajudin (2011), see that Figure 3 indicates that rat peff is in units of
+  # Wahajuddin (2011), see that Figure 3 indicates that rat peff is in units of
   # 10^-5 cm/s while human peff is in units of 10^-4 cm/s:
   if (tolower(species) %in% c("rat"))
     peff <- max((peff + 0.1815)/1.039/10, 0)
