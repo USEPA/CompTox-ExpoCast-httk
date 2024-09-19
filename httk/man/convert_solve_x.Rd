@@ -41,7 +41,7 @@ be specified.}
 must be specified.}
 
 \item{dtxsid}{EPA's DSSTox Structure ID .
-(\url{http://comptox.epa.gov/dashboard}) the chemical must be identified by
+(\url{https://comptox.epa.gov/dashboard}) the chemical must be identified by
 either CAS, name, or DTXSIDs.}
 
 \item{parameters}{A set of model parameters, especially a set that
@@ -88,7 +88,7 @@ More details on the unit conversion can be found in the documentation for
 \code{\link{convert_units}}.
 }
 \examples{
-output.mat <- solve_1comp(dtxsid = "DTXSID0020573")
+output.mat <- solve_1comp(dtxsid = "DTXSID0020573",days=1)
 new.output.mat <- convert_solve_x(output.units = "mg",
                                   model.output.mat = output.mat,
                                   model = "1compartment",

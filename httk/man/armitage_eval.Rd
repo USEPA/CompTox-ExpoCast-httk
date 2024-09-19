@@ -5,6 +5,9 @@
 \title{Evaluate the updated Armitage model}
 \usage{
 armitage_eval(
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
   casrn.vector = NA_character_,
   nomconc.vector = 1,
   this.well_number = 384,
@@ -36,7 +39,17 @@ armitage_eval(
 )
 }
 \arguments{
-\item{casrn.vector}{For vector or single value, CAS number}
+\item{chem.cas}{A single or vector of Chemical Abstracts Service Registry 
+Number(s) (CAS-RN) of desired chemical(s).}
+
+\item{chem.name}{A single or vector of name(s)) of desired chemical(s).}
+
+\item{dtxsid}{A single or vector ofEPA's DSSTox Structure ID(s) 
+(\url{https://comptox.epa.gov/dashboard})}
+
+\item{casrn.vector}{A deprecated argument specifying a single or vector of 
+Chemical Abstracts Service Registry 
+Number(s) (CAS-RN) of desired chemical(s).}
 
 \item{nomconc.vector}{For vector or single value, micromolar (uM = mol/L) nominal 
 concentration (e.g. AC50 value)}
@@ -110,20 +123,20 @@ v_total \tab Total volume of well \tab uL \cr
 v_working \tab Filled volume of well \tab uL \cr     
 cell_yield \tab Number of cells \tab cells \cr    
 gkow \tab The log10 octanol to water (PC) (logP)\tab log10 unitless ratio \cr          
-logHenry \tab The log10 Henry's law constant '\tab log10(atmosphers*m^3/mole) \cr      
-gswat \tab The log10 water solubility (logWSol) \tab log10 M=mole/L \cr         
-MP \tab The chemical compound melting point \tab degrees Celsius \cr           
+logHenry \tab The log10 Henry's law constant '\tab log10 unitless ratio \cr      
+gswat \tab The log10 water solubility (logWSol) \tab log10 mg/L \cr         
+MP \tab The chemical compound melting point \tab degrees Kelvin \cr           
 MW \tab The chemical compound molecular weight \tab g/mol \cr            
 gkaw \tab The air to water PC \tab unitless ratio \cr          
 dsm \tab \tab \cr           
 duow \tab \tab \cr          
 duaw \tab \tab \cr          
 dumw \tab \tab \cr          
-gkmw \tab \tab \cr          
+gkmw \tab log10 \tab \cr          
 gkcw \tab The log10 cell/tissue to water PC \tab log10 unitless ratio\cr          
-gkbsa \tab \tab \cr         
-gkpl \tab \tab \cr          
-ksalt \tab \tab \cr        
+gkbsa \tab The log10 bovine serum albumin to water partitiion coefficient \tab unitless \cr         
+gkpl \tab log10\tab \cr          
+ksalt \tab Setschenow constant \tab L/mol \cr        
 Tsys \tab System temperature \tab degrees C \cr          
 Tref \tab Reference temperature\tab degrees K \cr          
 option.kbsa2 \tab Use alternative bovine-serum-albumin partitioning model \tab logical \cr  
@@ -156,10 +169,10 @@ ss.GSE \tab \tab \cr
 kmw \tab \tab \cr           
 kow \tab The octanol to water PC (i.e., 10^gkow) \tab unitless \cr           
 kaw \tab The air to water PC (i.e., 10^gkaw) \tab unitless \cr           
-swat \tab The water solubility (i.e., 10^gswat*1e6) \tab uM=umol/L \cr         
+swat \tab The water solubility (i.e., 10^gswat) \tab mg/L \cr         
 kpl \tab \tab \cr           
 kcw \tab The cell/tissue to water PC (i.e., 10^gkcw) \tab unitless \cr           
-kbsa \tab \tab \cr          
+kbsa \tab The bovine serum albumin to water PC \tab unitless \cr          
 swat_L \tab \tab \cr        
 soct_L \tab \tab \cr        
 scell_L \tab \tab \cr       
@@ -174,7 +187,7 @@ calb \tab Concentration in serum albumin\tab uM=umol/L \cr
 cslip \tab Concentration in serum lipids\tab uM=umol/L \cr         
 cdom \tab Concentration in dissolved organic matter\tab uM=umol/L \cr          
 ccells \tab Concentration in cells\tab uM=umol/L \cr        
-cplastic \tab Concentration in plastic\tab uM=umol/L \cr      
+cplastic \tab Concentration in plastic\tab uM=umol/m^2 \cr      
 mwat_s \tab Mass dissolved in water \tab umols \cr        
 mair \tab Mass in air/head space \tab umols \cr          
 mbsa \tab Mass bound to bovine serum albumin \tab umols \cr          

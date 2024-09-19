@@ -1,6 +1,6 @@
 Package: httk
-Version: 99.4.8
-Date: 2023-11-14
+Version: 99.4.9
+Date: 2024-09-19
 Title: High-Throughput Toxicokinetics
 Description: Pre-made models that can be rapidly tailored to various chemicals
              and species using chemical-specific in vitro data and physiological 
@@ -64,6 +64,10 @@ Authors@R: c(
            person("Jimena", "Davis", role = c("ctb")), 
            person("Elaina", "Kenyon", email="kenyon.elaina@epa.gov",
              role = c("ctb"), comment = c(ORCID = "0000-0001-8781-2391")),
+           person("Katie", "Paul Friedman", email="Paul-Friedman.Katie@epa.gov",
+             role = c("ctb"), comment = c(ORCID = "0000-0002-2710-1691")),
+           person("Meredith", "Scherer", email="Scherer.Meredith@epa.gov",
+             role = c("ctb"), comment = c(ORCID = "0000-0002-9785-7363")),
            person("James", "Sluka", email = "jsluka@indiana.edu", 
              role = c("ctb"), comment = c(ORCID = "0000-0002-5901-1404")),
            person("Noelle", "Sinski", email = "Noelle.Sinski@icf.com",
@@ -83,18 +87,18 @@ Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats,
         graphics, utils, magrittr, purrr, methods, Rdpack, ggplot2
 RdMacros: Rdpack
 Suggests: knitr, rmarkdown, R.rsp, gplots, scales,
-        EnvStats, MASS, RColorBrewer, TeachingDemos, 
+        EnvStats, MASS, RColorBrewer,  
         stringr, reshape, viridis, gmodels,
         colorspace, cowplot, ggrepel, dplyr, forcats, smatr, gridExtra,
-        readxl
+        readxl, ks
 License: GPL-3
 LazyData: true
 LazyDataCompression: xz
 Encoding: UTF-8
 VignetteBuilder: knitr, R.rsp
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 URL: https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research
-BugReports: https://github.com/USEPA/CompTox-ExpoCast-httk
+BugReports: https://github.com/USEPA/CompTox-ExpoCast-httk/issues
 NeedsCompilation: yes
 Packaged: 2022-02-24 15:04:07 UTC; jwambaug
 Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>), 
@@ -111,7 +115,9 @@ Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>),
   Xiaoqing Chang [ctb] (<https://orcid.org/0000-0003-0752-1848>), 
   Todor Antonijevic [ctb] (<https://orcid.org/0000-0002-0248-8412>),
   Jimena Davis [ctb],
-  Elaina Kenyon [ctb] (<https://orcid.org/0000-0001-8781-2391>), 
+  Elaina Kenyon [ctb] (<https://orcid.org/0000-0001-8781-2391>),
+  Katie Paul Friedman [ctb] (<https://orcid.org/0000-0002-2710-1691>),
+  Meredith Scherer [ctb] (<https://orcid.org/0000-0002-9785-7363>), 
   James Sluka [ctb] (<https://orcid.org/0000-0002-5901-1404>),
   Noelle Sinski [ctb], 
   Nisha Sipes [ctb] (<https://orcid.org/0000-0003-4203-6426>), 

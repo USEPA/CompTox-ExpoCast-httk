@@ -1,6 +1,8 @@
 library(httk)
 library(readxl)
 
+rm(list=ls())
+
 #setwd("c:/users/jwambaug/git/httk-status")
 
 ToxCastPh1 <- read.csv("Dashboard-ToxCastPhase1v2.tsv",
@@ -29,20 +31,20 @@ HTTK2.TO1.failed <- HTTK2.TO1.sent[!(HTTK2.TO1.sent %in%
   HTTK2.TO1)]
   
 # HTTK TO2 Pregnancy Model HTTK TO3 Barbara
-HTTK2.TO23 <-read.table("TO23-status.txt",header=TRUE)
+HTTK2.TO23 <-read.csv("HTTK2TO2-Status.txt",header=TRUE)
 HTTK2.TO23.failed <<- subset(HTTK2.TO23,Failed==1)$DTXSID
 HTTK2.TO23 <<- subset(HTTK2.TO23,Failed==0)$DTXSID
 
-
-
-  
+HTTK2.TO4 <-read.csv("HTTK2TO4-Status.txt",header=TRUE)
+HTTK2.TO4.failed <- subset(HTTK2.TO4,Failed==1)$DTXSID
+HTTK2.TO4 <- subset(HTTK2.TO4,Failed==0)$DTXSID
 
 HTTK1.failed <- read.csv("Cyprotex-NoAnalyticChem.txt",stringsAsFactors=F)$x
 HTTK1.forgot <- read_excel("TO12-nomethods.xls")$DTXSID
 HTTK1.failed <- HTTK1.failed[!(HTTK1.failed %in% HTTK1.forgot)]
 HTTK1.Caco2 <- read.csv("caco2_toxcast_chems.csv",stringsAsFactors=F)$dtxsid
       
-Cyprotex.failed <- c(HTTK1.failed,HTTK2.TO1.failed, HTTK2.TO23.failed)                                             
+Cyprotex.failed <- c(HTTK1.failed,HTTK2.TO1.failed, HTTK2.TO23.failed, HTTK2.TO4.failed)                                             
                                                  
 Health.Canada <- read_excel("20191025-Health_Canada_Prospective_Data_HTTK.xlsx")
 Health.Canada.NoFup <- subset(Health.Canada,is.na(Human.Funbound.plasma))$DTXSID
@@ -81,6 +83,8 @@ all.chems <- sort(unique(c(
   HTTK2.TO1.sent,
   HTTK2.TO23,
   HTTK2.TO23.failed,
+  HTTK2.TO4,
+  HTTK2.TO4.failed,
   Cyprotex.failed,
   HTTK1.Caco2,
   HTTK1.failed,
@@ -138,7 +142,7 @@ for (this.id in all.chems)
       if (this.id %in% httk.human) this.row["HTTK.Human.Public"] <- 1
       if (this.id %in% c(httk.NoFup,httk.badFup)) this.row["HTTK.BadFup"] <- 1
       if (this.id %in% httk.rat) this.row["HTTK.Rat"] <- 1
-      if (this.id %in% c(HTTK2.TO1,HTTK2.TO23)) this.row["EPA.Contract.New"] <- 1
+      if (this.id %in% c(HTTK2.TO1,HTTK2.TO23,HTTK2.TO4)) this.row["EPA.Contract.New"] <- 1
       if (this.id %in% Cyprotex.failed) this.row["EPA.Analytical.Failed"] <- 1
       if (this.id %in% c(HTTK1.Caco2,HTTK2.TO1.CACO2)) this.row["EPA.CACO2"] <- 1
       if (this.id %in% HTTK2.TO1.RB2P) this.row["EPA.RB2P"] <- 1

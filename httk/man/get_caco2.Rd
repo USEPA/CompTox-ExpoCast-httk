@@ -19,7 +19,7 @@ chemical must be identified by either CAS, name, or DTXISD}
 \item{chem.name}{Chemical name (spaces and capitalization ignored) --  the 
 chemical must be identified by either CAS, name, or DTXISD}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 -- the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{Caco2.Pab.default}{sets the default value for  Caco2.Pab if Caco2.Pab is 
@@ -32,6 +32,10 @@ This function checks for chemical-specific in vitro measurements of the
 Caco-2 membrane permeability 
 in the \code{\link{chem.physical_and_invitro.data}} table. If no value is 
 available argument \code{Caco2.Pab.default} is returned.
+Anywhere that the values is reported by three numbers separated by a comma 
+(this also happens for plasma protein binding) the three values are: median, 
+lower 95 percent confidence intervals, upper 95 percent confidence interval. Unless you are 
+doing monte carlo work it makes sense to ignore the second and third values.
 }
 \author{
 John Wambaugh
