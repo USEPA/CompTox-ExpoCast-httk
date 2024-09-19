@@ -1,10 +1,10 @@
 ---
-title: "Crizer et al. (2023): Analysis of PFAS Hepatic Clearance Data"
+title: "Crizer et al. (2024): Analysis of PFAS Hepatic Clearance Data"
 author: "David Crizer, Marci G. Smeltz, John F. Wambaugh, and Barbara A. Wetmore"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Crizer (2023): PFAS Clearance}
+  %\VignetteIndexEntry{Crizer (2024): PFAS Clearance}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -32,6 +32,29 @@ knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 options(rmarkdown.html_vignette.check_title = FALSE)
 ```
 
+### Clear the memory
+It is a bad idea to let variables and other information from previous R
+sessions float around, so we first remove everything in the R memory.
+```{r clear_memory, eval = TRUE}
+rm(list=ls()) 
+```
+
+### eval = execute.vignette
+If you are using the RMarkdown version of this vignette (extension, .RMD) you
+will be able to see that several chunks of code in this vignette
+have the statement "eval = execute.vignette". The next chunk of code, by default,
+sets execute.vignette = FALSE.  This means that the code is included (and necessary) but was
+not run when the vignette was built. We do this because some steps require 
+extensive computing time and the checks on CRAN limit how long we can spend
+building the package. If you want this vignette to work, you must run all code,
+either by cutting and pasting it into R. Or, if viewing the .RMD file, you can
+either change execute.vignette to TRUE or press "play" (the green arrow) on
+each chunk in RStudio.
+```{r runchunks, eval = TRUE}
+# Set whether or not the following chunks will be executed (run):
+execute.vignette <- TRUE
+```
+
 ### Load the relevant libraries
 If you get the message "Error in library(X) : there is no package called 'X'"
 then you will need to install that package: 
@@ -43,8 +66,6 @@ then you will need to install that package:
 Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
 
 ```{r load_packages, eval = TRUE}
-# Clear the memory:
-rm(list=ls()) 
 #
 #
 # Setup
@@ -501,7 +522,7 @@ print(fig.ratio.ml)
 ```
 
 
-```{r multipanelrefchemdatafigureforpaper}
+```{r multipanelrefchemdatafigureforpaper2}
 ggarrange(fig.ratio.httk, fig.ratio.ml, 
           labels = c("A", "B"),
           ncol = 2, nrow = 1,
@@ -596,7 +617,7 @@ for (this.chem in logma.table$DTXSID)
 }
 ```
 
-```{r fit_logma eval = TRUE}
+```{r fit_logma, eval = TRUE}
 fit.logma <- lm(logMA~HTTK.logMA,data=logma.table)
 summary(fit.logma)
 
@@ -604,7 +625,7 @@ logma.table$Fit.logMA <- signif(fit.logma$coefficients[1] +
   fit.logma$coefficients[2]*logma.table$HTTK.logMA,3)
 ```
 
-```{r fig_logma eval = TRUE}
+```{r fig_logma, eval = TRUE}
 fig.logma  <- ggplot(data=logma.table) +
   geom_point(aes(
     x=HTTK.logMA,

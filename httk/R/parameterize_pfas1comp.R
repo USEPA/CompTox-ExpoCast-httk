@@ -251,8 +251,10 @@ parameterize_pfas1comp <- function(
   if (estimate.firstpass &
       dtxsid %in% get_cheminfo(info="dtxsid", suppress.messages=TRUE))
   {    
-    ss.params <- suppressWarnings(parameterize_steadystate(dtxsid=dtxsid,
-                                                           species=species))
+    ss.params <- suppressWarnings(parameterize_sumclearances(dtxsid=dtxsid,
+                                                           species=species,
+                                                           suppress.messages=suppress.messages,
+                                                           class.exclude=FALSE))
     params[['hepatic.bioavailability']] <- 
       ss.params[['hepatic.bioavailability']]  
   } else params[['hepatic.bioavailability']] <- 1
