@@ -2159,10 +2159,14 @@ chem.physical_and_invitro.data <- add_chemtable(Kreutz2023ClintManual,
 
 #
 #  
-Crizer2023ClintBayes <- read.csv("Crizer2023/CrizerPFAS-Clint-Level4.tsv",sep="\t")
+Crizer2023ClintBayes <- as.data.frame(
+                          read_excel("Crizer2023/toxics-3180049-supplementary.xlsx",
+                                   sheet="Table_S6_Clint-Level4"))
+
 Crizer2023ClintBayes <- merge(Crizer2023ClintBayes ,
                               PFAS[,c("DTXSID","CASRN")],
-                              all.x=TRUE)
+                              all.x=TRUE,
+                              by="DTXSID")
 
 Crizer2023ClintBayes$Human.Clint <- paste(
   signif(Crizer2023ClintBayes$Clint.1.Med, 3),
