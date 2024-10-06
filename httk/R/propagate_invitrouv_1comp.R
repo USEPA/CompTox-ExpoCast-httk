@@ -34,23 +34,11 @@ propagate_invitrouv_1comp <- function(
       #Funbound.plasma from its table of default values, meaning we can't give
       #that function our vector of individual Funbound.plasma values. So
       #instead, I've re-implemented the Vdist equation here.
-
-      # Fist we need the partition coefficients:
-      PC.table <- predict_partitioning_schmitt(parameters=parameters.dt)
-      PC.names <- names(PC.table)[regexpr("K",names(PC.table))!=-1]
-      if (is.data.table(PC.table))
-      {
-        PCs <- PC.table[,PC.names,with=FALSE]
-      } else {
-        PCs <- subset(PC.table,names(PC.table) %in% PC.names)
-      }
-      lumped_params <- lump_tissues(
-        PCs,
-        parameters=parameters.dt,
-        tissuelist=NULL,
-        species="Human",
-        model="1compartment")
-      parameters.dt[, names(lumped_params):= lumped_params]
+  
+      #Funbound.plasma was already adjusted (if necessary),
+      #and tissues were already lumped,
+      # in create_mc_samples() before it called this function.
+      #so we can just proceed.
       
       #To compute volume of distribution, need to get volume of red blood cells.
       #Can compute that from plasma volume and hematocrit.
