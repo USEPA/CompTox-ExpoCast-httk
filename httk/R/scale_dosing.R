@@ -97,6 +97,7 @@ scale_dosing <- function(
     } else if (typeof(dosing$forcings)=="numeric"){ dosing$forcings[,"forcing_values"] <- 
       as.numeric(dosing$forcings[,"forcing_values"]) * scale.factor }
   }
+
   if (!is.null(dosing$Cinhaled)) dosing$Cinhaled <-
     as.numeric(dosing$Cinhaled) * scale.factor
     

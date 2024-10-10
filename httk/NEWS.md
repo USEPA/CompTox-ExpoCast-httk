@@ -42,7 +42,7 @@ provided by reviewers at ALTEX.
 * Corrected bug in 'solve_model' where tsteps was ignored if times were specified
 
 ## Enhancements
-* A physiology data table from 'httkpop_generate' can now be passed to 'calc_mc_css' and 'calc_mc_tk' (and 'calc_mc_css' via ...) so that a consistent populatin can be used across monte carlo runs. See argument httkpop.dt.
+* A physiology data table from 'httkpop_generate' can now be passed to 'calc_mc_css' and 'calc_mc_tk' (and 'calc_mc_css' via ...) so that a consistent population can be used across monte carlo runs. See argument httkpop.dt.
 * Physico-chemical properties are now retrieved from the CompTox Chemicals Dashboard programmatically using [R package ctxR](https://cran.r-project.org/package=ctxR) (Thank you Paul Kruse)
 * 'calc_fabs.oral' now calculates oral uptake rate kgutabs using Caco-2 permeability, according to method of [Lennernas (1997)](https://doi.org/10.1111/j.2042-7158.1997.tb06084.x) (Thank you ALTEX reviewers)
 * Revised and changed name of 'get_fabsgut' to 'get_fbio' and modified function to use 'calc_fbio.oral' rather than call oral bioavailability subfunctions directly
