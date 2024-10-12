@@ -175,6 +175,8 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
                     route = NULL, #DERMAL
                     Vvehicle = NULL, #DERMAL
                     initial.dose = NULL, #DERMAL - DOSING
+                    daily.dose = NULL, #ORAL - DOSING
+                    doses.per.day = NULL, #ORAL - DOSING
                     input.units=NULL, #DERMAL - DOSING
                     dose.duration = NULL,
                     dose.duration.units = NULL,
@@ -393,6 +395,17 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
          parameterize.arg.list for solve_dermal_pbtk(). To change these options,
          assign them directly in the solve_dermal_pbtk function.")
   }
+  
+# Put everything into dosing at first:
+  dosing <- list(
+      initial.dose=initial.dose,
+      dosing.matrix=dosing.matrix,
+      forcings=forcings,
+      daily.dose = daily.dose,
+      doses.per.day = doses.per.day
+    )
+# But only keep the dosing parameters you need:
+  dosing <- dosing[model.list[[model.type ]]$routes[[route]][["dosing.params"]]]
 
   out <- solve_model(
     chem.name = chem.name,
@@ -402,11 +415,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     parameters=parameters,
     model=model.forsolver,
     route=route,
-    dosing=list(
-      initial.dose=initial.dose,
-      dosing.matrix=dosing.matrix,
-      forcings=forcings 
-    ),
+    dosing=dosing,
     days=days,
     tsteps = tsteps, # tsteps is number of steps per hour
     #initial.values=initial.values,

@@ -477,6 +477,7 @@ parameterize_dermal_pbtk <-
   Kx2air <- calc_kair(chem.name=chem.name,
                       chem.cas=chem.cas,
                       dtxsid=dtxsid,
+                      parameters=outlist,
                       species=species,
                       default.to.human=default.to.human,
                       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
@@ -487,9 +488,9 @@ parameterize_dermal_pbtk <-
   Vdot <- this.phys.data["Pulmonary Ventilation Rate"]
   Qalvc <- Vdot * (0.67) #L/h/kg^0.75
 
-  outlist <- c(outlist,
+  outlist <- c(outlist, list(
                Kblood2air = Kblood2air,
-               Qalvc = unname(Qalvc))
+               Qalvc = unname(Qalvc)))
   
   #Skin parameters
   Fskin_depth_sc = 17/527;
@@ -506,7 +507,10 @@ parameterize_dermal_pbtk <-
         # Table III, Chen 2010
     Ksc2w <- phi_lip * (rho_lip/rho_w) * Pow^0.69 + phi_pro * (rho_pro/rho_w) * 4.23 * Pow^0.31 #Equation 10, Wang, Chen, Lian, Han, 2010
     
-    if (is.numeric(Kvehicle2water)){
+    if (is.na(Kvehicle2water))
+    {
+     Km2w <- NA
+    } else if (is.numeric(Kvehicle2water)){
       Km2w <- Kvehicle2water
     } else if (Kvehicle2water=="water"){
       Km2w <- 1 #vehicle=water
@@ -604,7 +608,7 @@ parameterize_dermal_pbtk <-
     
   # Oral bioavailability parameters:
   outlist <- c(
-    outlist, do.call(get_fabsgut, args=purrr::compact(c(
+    outlist, do.call(get_fbio, args=purrr::compact(c(
     list(
       parameters=outlist,
       dtxsid=dtxsid,
