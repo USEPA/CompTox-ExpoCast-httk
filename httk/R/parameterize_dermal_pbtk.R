@@ -578,7 +578,7 @@ parameterize_dermal_pbtk <-
 
     # Added by AEM, 1/27/2022
     if (model.type=="dermal"){
-      outlist <- c(outlist, 
+      outlist <- c(outlist, list(
                    totalSA = totalSA,
                    skin_depth = skin_depth,
                    #Fdermabs = 1,
@@ -593,9 +593,9 @@ parameterize_dermal_pbtk <-
                    Vskin_scc = outlist$Vskinc*Fskin_depth_sc,
                    Vskin_edc=outlist$Vskinc*(1-Fskin_depth_sc),
                    InfiniteDose=InfiniteDose
-                   )
+                   ))
     } else if (model.type=="dermal_1subcomp") {
-      outlist <- c(outlist,
+      outlist <- c(outlist, list(
                    totalSA = totalSA,
                    skin_depth=skin_depth,
                    #Fdermabs=1,
@@ -603,7 +603,7 @@ parameterize_dermal_pbtk <-
                    P = P,
                    Kskin2vehicle = Ked2m,
                    InfiniteDose = InfiniteDose
-                   ) 
+                   ))
     }
     
   # Oral bioavailability parameters:
