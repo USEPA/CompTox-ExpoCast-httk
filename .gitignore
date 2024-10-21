@@ -19,8 +19,8 @@ MD5
 ###################
 .Rbuildignore
 *.Rhistory
-*.Rproj
-.Rproj.user/
+./*.Rproj
+*.Rproj.user/
 httk/man/frechen2021.Rd
 *.com
 *.class
