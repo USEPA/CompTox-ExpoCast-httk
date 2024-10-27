@@ -29,7 +29,7 @@ sticker(
         l_width=3,
         l_height=3,
         l_alpha=0.4
-        ) %>% print()
+        ) #%>% print()
         
 
         
