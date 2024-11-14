@@ -1,3 +1,13 @@
+# httk 2.5.0 (2024-11-14)
+This release accompanies the submission of the new manuscript
+"A Simple Physiologically-Based Toxicokinetic Model for Multi-Route <i>In Vitro-In Vivo</i> Extrapolation"
+and includes new models incorporating inhalation/exhalation ("sumclearances" and "3compartment2").
+
+## Bug Fixes
+* Separate forcing functions are now declared in init.c for models (such as "gas_pbtk") that use the [deSolve forcing functionality](https://tpetzoldt.github.io/deSolve-forcing/deSolve-forcing.html).
+
+## Enhancements
+
 # httk 2.4.0 (2024-8-14)
 This release accompanies the submission of the new manuscript
 "Enabling Transparent Toxicokinetic Modeling for Public Health Risk Assessment"

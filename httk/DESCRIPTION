@@ -1,6 +1,6 @@
 Package: httk
-Version: 99.25.5
-Date: 2024-08-26
+Version: 2.5.0
+Date: 2024-11-14
 Title: High-Throughput Toxicokinetics
 Description: Pre-made models that can be rapidly tailored to various chemicals
              and species using chemical-specific in vitro data and physiological 
@@ -66,6 +66,8 @@ Authors@R: c(
              role = c("ctb"), comment = c(ORCID = "0000-0001-8781-2391")),
            person("Katie", "Paul Friedman", email="Paul-Friedman.Katie@epa.gov",
              role = c("ctb"), comment = c(ORCID = "0000-0002-2710-1691")),
+           person("Celia", "Schacht", email="Schacht.Celia@epa.gov",
+             role = c("ctb"), comment = c(ORCID = "0000-0002-8131-513X")),
            person("Meredith", "Scherer", email="Scherer.Meredith@epa.gov",
              role = c("ctb"), comment = c(ORCID = "0000-0002-9785-7363")),
            person("James", "Sluka", email = "jsluka@indiana.edu", 
@@ -115,6 +117,7 @@ Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>),
   Jimena Davis [ctb],
   Elaina Kenyon [ctb] (<https://orcid.org/0000-0001-8781-2391>),
   Katie Paul Friedman [ctb] (<https://orcid.org/0000-0002-2710-1691>),
+  Celia Schacht [ctb] (<https://orcid.org/0000-0002-8131-513X>), 
   Meredith Scherer [ctb] (<https://orcid.org/0000-0002-9785-7363>), 
   James Sluka [ctb] (<https://orcid.org/0000-0002-5901-1404>),
   Noelle Sinski [ctb], 
