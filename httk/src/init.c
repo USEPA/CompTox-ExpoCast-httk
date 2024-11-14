@@ -81,6 +81,14 @@ static const R_CMethodDef CEntries[] = {
     {"root_gas_pbtk", (DL_FUNC) &root_gas_pbtk, 7},
     {"initforc_gas_pbtk", (DL_FUNC) &initforc_gas_pbtk, 1},
 
+    {"getParmsfetal_pbtk", (DL_FUNC) &getParmsfetal_pbtk, 3},
+    {"initmodfetal_pbtk", (DL_FUNC) &initmodfetal_pbtk, 1},
+    {"derivsfetal_pbtk", (DL_FUNC) &derivsfetal_pbtk, 6},
+    {"jacfetal_pbtk", (DL_FUNC) &jacfetal_pbtk, 9},
+    {"eventfetal_pbtk", (DL_FUNC) &eventfetal_pbtk, 3},
+    {"rootfetal_pbtk", (DL_FUNC) &rootfetal_pbtk, 7},
+//    {"initforcfetal_pbtk", (DL_FUNC) &initforcfetal_pbtk, 1},
+
     {NULL, NULL, 0}
 };
 
