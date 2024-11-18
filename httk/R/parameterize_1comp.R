@@ -66,6 +66,8 @@
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
 #' See \code{\link{get_fbio}} for further details.
 #' 
+#' @param ... Additional arguments, not currently used.
+#' 
 #' @return \item{Vdist}{Volume of distribution, units of L/kg BW.}
 #' \item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, i.e. the 
 #' fraction of the dose that enters the gutlumen.} \item{kelim}{Elimination rate, units of
@@ -139,7 +141,8 @@ parameterize_1comp <- function(
                         clint.pvalue.threshold=0.05,
                         minimum.Funbound.plasma=0.0001,
                         class.exclude=TRUE,
-                        Caco2.options = list()
+                        Caco2.options = list(),
+                        ...
                         )
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
