@@ -9,6 +9,11 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+```{r}
+data_dir <- 'C:/Users/cring/OneDrive - Environmental Protection Agency (EPA)/httk fup LOD/'
+```
+
+
 # Introduction
 
 This Rmd document contains analysis to check the effect of lowering the default Fup limit of detection and/or minimum value in httk.
@@ -72,9 +77,10 @@ calc_vdist(chem.name = "Amitraz")
 Try calc_css?
 
 ```{r}
-css1 <- calc_css(chem.name = "Amitraz", model = "1compartment")
+suppressWarnings(css1 <- calc_css(chem.name = "Amitraz", model = "1compartment"))
 
-css2 <- calc_css(chem.name = "Amitraz", model = "1compartment", minimum.Funbound.plasma = 1e-12)
+suppressWarnings(css2 <- calc_css(chem.name = "Amitraz", model = "1compartment", minimum.Funbound.plasma = 1e-12)
+)
 
 cssdf <- rbind(as.data.frame(css1), as.data.frame(css2))
 
@@ -84,14 +90,55 @@ cssdf
 OK. now that the minimum is being propagated through `calc_css()`, we see a big difference in Css. Wow, is it really that big? The volume of distribution change wasn't that huge. What baout kelim?
 
 ```{r}
-kelim1 <- calc_elimination_rate(chem.name = "Amitraz")
-kelim2 <- calc_elimination_rate(chem.name = "Amitraz", minimum.Funbound.plasma = 1e-12)
+suppressWarnings(kelim1 <- calc_elimination_rate(chem.name = "Amitraz"))
+
+suppressWarnings(kelim2 <- calc_elimination_rate(chem.name = "Amitraz", minimum.Funbound.plasma = 1e-12))
 
 c(kelim1, kelim2)
 ```
 
 Yes, okay, wow, the elimination rate really does change a lot (get a lot slower) when we allow a very small Fup.
 
+Let's check other models with this chemical.
+
+PBTK
+
+```{r}
+suppressWarnings(css1 <- calc_css(chem.name = "Amitraz", model = "pbtk"))
+
+suppressWarnings(css2 <- calc_css(chem.name = "Amitraz", model = "pbtk", minimum.Funbound.plasma = 1e-12)
+)
+
+suppressWarnings(css3 <- calc_css(chem.name = "Amitraz", model = "pbtk", restrictive.clearance = FALSE))
+
+suppressWarnings(css4 <- calc_css(chem.name = "Amitraz", model = "pbtk", minimum.Funbound.plasma = 1e-12, restrictive.clearance = FALSE)
+)
+
+cssdf <- rbind(as.data.frame(css1), as.data.frame(css2),
+               as.data.frame(css3), as.data.frame(css4))
+
+cssdf
+```
+
+
+I find it very curious that the results are identical with and without restrictive clearance. Seems like the restrictive clearance argument might not be getting passed?
+
+3-compartment
+
+```{r}
+suppressWarnings(css1 <- calc_css(chem.name = "Amitraz", model = "3compartment"))
+
+suppressWarnings(css2 <- calc_css(chem.name = "Amitraz", model = "3compartment", minimum.Funbound.plasma = 1e-12)
+)
+
+cssdf <- rbind(as.data.frame(css1), as.data.frame(css2))
+
+cssdf
+```
+
+Note that we can't do fetal PBTK because for some reason, `calc_css()` call to `solve_model()` crashes beacuse it apparently requests too much precision. This is beyond the scope of this problem so I will just drop fetal PBTK from this analysis.
+
+For the non-population (default individual) simulations, I believe the only chemicals that will show a difference are the ones whose median Funbound.plasma values were less than the default minimum.Funbound.plasma. So I will save the initial Funbound.plasma values. 
 
 
 ```{r}
@@ -99,34 +146,146 @@ fup_small <- 1e-12
 
 model_vect <- c("1compartment",
                 "3compartment",
-                "3compartmentss",
                 "pbtk")
 
-lapply(model_vect,
-       function(this_model){
-         model_chems <- get_cheminfo(info = c("DTXSID",
+restrictive_vect <- c(TRUE,
+                      FALSE)
+
+fup_min_vect <- c(1e-4,
+                  fup_small)
+
+run_opts <- expand.grid(model = model_vect,
+                        restrictive = restrictive_vect,
+                        fup_min = fup_min_vect)
+
+#get chemicals for each model
+
+run_tbl <- run_opts %>% dplyr::rowwise(model, restrictive, fup_min) %>%
+  dplyr::reframe(get_cheminfo(info = c("DTXSID",
                                               "Compound",
-                                              "Funbound.plasma")
+                                              "Funbound.plasma"),
                                      species = "Human",
-                                     fup.lod.default = fup_small,
-                                     model = this_model)
-         
-         param_fun <- httk:::model.list[[this_model]][["parameterize.func"]]
-         
-         
-         params_restrict <- sapply(model_chems$DTXSID,
-                          function(this_dtxsid){
-                             do.call(param_fun,
-                                     args = list(dtxsid = this_dtxsid,
-                                                 minimum.Funbound.plasma = fup_small,
-                                                 restrictive.clearance = TRUE)
-                           )
-                          }
-          
-       })
+                                     model = model,
+                                     median.only = TRUE,
+                                     suppress.messages = TRUE))
+
+#function to apply for each chemical and set of options
+calc_chem_css <- function(this_model,
+                      this_restrictive,
+                      this_fup_min,
+                      this_dtxsid
+                      ){
+               
+               #get css
+               this_chem_css <- as.data.frame(
+                 suppressWarnings(
+                   calc_css(dtxsid = this_dtxsid,
+                                        model = this_model,
+                                     minimum.Funbound.plasma = this_fup_min,
+                                     restrictive.clearance = this_restrictive,
+                                     suppress.messages = TRUE)
+                 )
+               )
+
+               return(this_chem_css)
+}
+
+
+system.time(run_out <- run_tbl %>% 
+              dplyr::slice_head(n = 100) %>%
+  dplyr::rowwise() %>%
+  dplyr::mutate(calc_chem_css(this_model = model,
+                          this_restrictive = restrictive,
+                          this_fup_min = fup_min,
+                          this_dtxsid = DTXSID)))
 ```
 
-We can probably just publish one of the modelsi n the main text and put the rest in supplemental
+This benchmark for the first 100 rows suggests that we are going to need to use multidplyr, since it is running at approximately 2 seconds per row and we have 11,484 rows.
+
+```{r}
+library(multidplyr)
+cluster <- multidplyr::new_cluster(parallel::detectCores()-1)
+
+#load httk on each cluster
+multidplyr::cluster_send(cluster,
+             devtools::load_all("../httk"))
+
+multidplyr::cluster_copy(cluster, "calc_chem_css")
+
+#evaluate calc_css in parallel
+system.time(run_out <- run_tbl %>% 
+              dplyr::slice_head(n = 100) %>%
+  dplyr::rowwise() %>%
+    multidplyr::partition(cluster = cluster) %>%
+  dplyr::mutate(calc_chem_css(this_model = model,
+                          this_restrictive = restrictive,
+                          this_fup_min = fup_min,
+                          this_dtxsid = DTXSID)) %>%
+    dplyr::collect()
+  
+  )
+
+parallel::stopCluster(cluster)
+```
+
+This takes about 70 seconds, rather than more than 200. A decent speed-up.
+
+So then let's run the whole thing.
+
+
+```{r}
+
+#evaluate calc_css in parallel
+system.time(run_out <- run_tbl %>% 
+  dplyr::rowwise() %>%
+    multidplyr::partition(cluster = cluster) %>%
+  dplyr::mutate(calc_chem_css(this_model = model,
+                          this_restrictive = restrictive,
+                          this_fup_min = fup_min,
+                          this_dtxsid = DTXSID)) %>%
+    dplyr::collect()
+  
+  )
+
+#save
+saveRDS(run_out,
+        paste0(data_dir,
+               "fup_lod_css_analysis.Rds"))
+
+
+```
+
+Nice! With the parallel processing, the system time was
+   user  system elapsed 
+   4.75   14.86 5608.76
+   
+   
+
+Try a plot:
+
+```{r}
+plot_tbl <- run_out %>% dplyr::mutate(fup_min_cat = factor(fup_min, levels = c(1e-4, 1e-12), labels = c("old_fup_min", "new_fup_min")))
+
+plot_tbl2 <- plot_tbl %>% tidyr::pivot_wider(id_cols = c(model, restrictive, Compound, DTXSID, Human.Funbound.plasma), names_from = fup_min_cat, values_from = c(avg, frac, max, the.day))
+```
+
+```{r}
+ggplot(plot_tbl2) +
+  geom_point(aes(x = avg_old_fup_min,
+                 y = avg_new_fup_min,
+                 color = Human.Funbound.plasma)) +
+  geom_abline(intercept = 0, slope = 1) +
+  scale_color_viridis_c(trans = "log10") +
+  scale_x_log10() +
+  scale_y_log10() +
+  annotation_logticks(sides = "bl") +
+  facet_grid(rows = vars(model),
+             cols = vars(restrictive),
+             labeller = labeller(.rows = label_value,
+                                 .cols = label_both)) +
+  xlab("Css with Fup min = 1e-4") +
+  ylab("Css with Fup min = 1e-12")
+```
 
 
 
