@@ -121,7 +121,9 @@ cssdf
 ```
 
 
-I find it very curious that the results are identical with and without restrictive clearance. Seems like the restrictive clearance argument might not be getting passed?
+~~I find it very curious that the results are identical with and without restrictive clearance. Seems like the restrictive clearance argument might not be getting passed?~~
+
+Edit: It wasn't getting passed by calc_css() to the model's parameterize function. It is now.
 
 3-compartment
 
@@ -224,8 +226,6 @@ system.time(run_out <- run_tbl %>%
     dplyr::collect()
   
   )
-
-parallel::stopCluster(cluster)
 ```
 
 This takes about 70 seconds, rather than more than 200. A decent speed-up.
@@ -270,21 +270,32 @@ plot_tbl2 <- plot_tbl %>% tidyr::pivot_wider(id_cols = c(model, restrictive, Com
 ```
 
 ```{r}
-ggplot(plot_tbl2) +
+p <- ggplot(plot_tbl2) +
   geom_point(aes(x = avg_old_fup_min,
                  y = avg_new_fup_min,
                  color = Human.Funbound.plasma)) +
   geom_abline(intercept = 0, slope = 1) +
-  scale_color_viridis_c(trans = "log10") +
+  scale_color_viridis_c(trans = "log10",
+                        name = "Fup") +
   scale_x_log10() +
   scale_y_log10() +
   annotation_logticks(sides = "bl") +
-  facet_grid(rows = vars(model),
-             cols = vars(restrictive),
-             labeller = labeller(.rows = label_value,
-                                 .cols = label_both)) +
+  facet_grid(cols = vars(model),
+             rows = vars(restrictive),
+             labeller = labeller(.cols = label_value,
+                                 .rows = label_both)) +
   xlab("Css with Fup min = 1e-4") +
-  ylab("Css with Fup min = 1e-12")
+  ylab("Css with Fup min = 1e-12") +
+  theme(legend.position = "top",
+        legend.text = element_text(angle = 45,
+                                   hjust = 1) )
+
+ggsave(paste0(data_dir,
+              "fup_lod_css_analysis_plot.pdf"),
+       p,
+       width = 7,
+       height = 5,
+       units = "in")
 ```
 
 
