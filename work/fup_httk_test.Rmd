@@ -13,12 +13,6 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This Rmd document contains analysis to check the effect of lowering the default Fup limit of detection and/or minimum value in httk.
 
-We'll load the non-dev version of httk for testing purpose.
-
-```{r}
-library(httk)
-```
-
 
 # Planned analyses
 
@@ -51,7 +45,8 @@ Call `calc_css()`
 Compile the parameters and Css output into a data table
 
 
-A quick test: here's a compound, "Amitraz", whose Fup distribution is "3.02e-08,1.85e-13,0.00627"
+A quick test: here's a compound, "Amitraz", whose Fup distribution is "3.02e-08,1.85e-13,0.00627". Compare parameters for the 1compartment model.
+
 ```{r}
 
 #with a smaller Fup min
@@ -74,7 +69,7 @@ calc_vdist(chem.name = "Amitraz", minimum.Funbound.plasma = 1e-12)
 calc_vdist(chem.name = "Amitraz")
 ```
 
-So it seems like the fup minimum isn't getting respected somewhere in parameterize.
+So it seems like the fup minimum isn't getting respected somewhere in parameterize. Yup, that argument isn't getting passed to calc_vdist() properly. Let me fix that.
 
 
 ```{r}
