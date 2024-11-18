@@ -81,9 +81,17 @@ cssdf <- rbind(as.data.frame(css1), as.data.frame(css2))
 cssdf
 ```
 
-Again, exactly identical, suggesting that the minimum is not being propagated correctly.
+OK. now that the minimum is being propagated through `calc_css()`, we see a big difference in Css. Wow, is it really that big? The volume of distribution change wasn't that huge. What baout kelim?
 
-Checking the code for `calc_css()`, that's true -- it's not being passed to the parameterize function. So I'm adding an explicit `minimum.Funbound.plasma` argument (because that one will get passed to both the parameterize and the model solver), as well as an `parameterize.args` argument (as for `calc_analytic_css()`) to pass any other parameterize arguments.
+```{r}
+kelim1 <- calc_elimination_rate(chem.name = "Amitraz")
+kelim2 <- calc_elimination_rate(chem.name = "Amitraz", minimum.Funbound.plasma = 1e-12)
+
+c(kelim1, kelim2)
+```
+
+Yes, okay, wow, the elimination rate really does change a lot (get a lot slower) when we allow a very small Fup.
+
 
 
 ```{r}

@@ -146,7 +146,7 @@ All arguments after httkpop only apply if httkpop is set to TRUE and species
 to "Human".
 
 When species is specified as rabbit, dog, or mouse, the function uses the
-appropriate physiological data(volumes and flows) but substitues human
+appropriate physiological data(volumes and flows) but substitutes human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 
 Tissue concentrations are calculated for the pbtk model with oral infusion

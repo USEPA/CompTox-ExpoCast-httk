@@ -63,8 +63,8 @@ according to the needed scheme of toxicokinetic model tissue comparments.
 
 \code{\link{predict_partitioning_schmitt}} makes tissue-specific predictions
 drawing from those tissues described in \code{\link{tissue.data}}. Since
-different physiologically-based toxicokinetic (PBTK) models use diffeent 
-schemes for rganizing the
+different physiologically-based toxicokinetic (PBTK) models use different 
+schemes for organizing the
 tissues of the body into differing compartments (for example, "rapidly
 perfused tissues"), this function lumps tissues into
 compartments as specified by the argument 'tissuelist'. Aggregate flows, 
