@@ -86,7 +86,7 @@ placental tissue to unbound concentration in fetal plasma.}
 }
 \description{
 This function initializes the parameters needed in the functions
-solve_fetal_pbtk by calling solve_pbtk and adding additional parameters.
+solve_fetal_pbtk by calling parameterize_pbtk and adding additional parameters.
 }
 \examples{
 

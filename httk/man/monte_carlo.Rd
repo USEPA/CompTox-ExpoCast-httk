@@ -40,7 +40,7 @@ calculating quantiles.}
 }
 \value{
 A data.table with a row for each individual in the sample and a column for
-each parater in the model.
+each parameter in the model.
 }
 \description{
 This function performs basic, uncorrelated Monte Carlo to simulate
@@ -50,7 +50,7 @@ normal distribution that is truncated at zero
 (using argument \code{cv.params}) or from a normal distribution that is 
 censored for values less than the limit of detection 
 (\code{censored.params}). Coefficient of variation (cv) and limit of
-of detectin can be specified separately for each parameter.
+of detection can be specified separately for each parameter.
 }
 \examples{
 
