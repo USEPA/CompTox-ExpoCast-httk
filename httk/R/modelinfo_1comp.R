@@ -217,5 +217,8 @@ model.list[[THIS.MODEL]]$exclude.fup.zero <- TRUE
 model.list[[THIS.MODEL]]$css.dosing.params <- list(
   oral=c("hourly.dose"))
 
+# Filter out volatile compounds with Henry's Law Constant Threshold
+model.list[[THIS.MODEL]]$log.henry.threshold <- c(-4.5)
+
 # Filter out compounds belonging to select chemical classes
 model.list[[THIS.MODEL]]$chem.class.filt <- c("PFAS")
