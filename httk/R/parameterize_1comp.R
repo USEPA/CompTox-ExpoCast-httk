@@ -138,6 +138,7 @@ parameterize_1comp <- function(
                         suppress.messages=FALSE,
                         clint.pvalue.threshold=0.05,
                         minimum.Funbound.plasma=0.0001,
+                        class.exclude=TRUE,
                         Caco2.options = list()
                         )
 {
@@ -163,6 +164,26 @@ parameterize_1comp <- function(
     chem.cas <- out$chem.cas
     chem.name <- out$chem.name                                
     dtxsid <- out$dtxsid
+    
+    # Make sure we have all the parameters we need:
+    check_model(chem.cas=chem.cas, 
+                chem.name=chem.name,
+                dtxsid=dtxsid,
+                model="1compartment",
+                species=species,
+                class.exclude=class.exclude,
+                default.to.human=default.to.human)
+    
+    #Check also to make sure we can use steady-state model,
+    #since we need to be able to call parameterize_steadystate
+    
+    check_model(chem.cas=chem.cas, 
+                chem.name=chem.name,
+                dtxsid=dtxsid,
+                model="3compartmentss",
+                species=species,
+                class.exclude=class.exclude,
+                default.to.human=default.to.human)
      
   params <- list()
   params[['Vdist']] <- calc_vdist(
@@ -189,6 +210,7 @@ parameterize_1comp <- function(
                                   clint.pvalue.threshold=clint.pvalue.threshold,
                                   minimum.Funbound.plasma=
                                     minimum.Funbound.plasma,
+                                  class.exclude = class.exclude,
                                   Caco2.options = Caco2.options))
   ss.params <- c(ss.params, params['Vdist'])
   
