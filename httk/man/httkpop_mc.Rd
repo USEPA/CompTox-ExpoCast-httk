@@ -21,7 +21,7 @@ called to generate this table.}
 }
 \value{
 A data.table with a row for each individual in the sample and a column for
-each parater in the model.
+each parameter in the model.
 }
 \description{
 This is the core function for httk-pop correlated human physiological 
