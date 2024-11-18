@@ -254,7 +254,7 @@ get_cheminfo <- function(info="CAS",
   # For now let's not require these because it's still hard to distringuish
   # between compounds that don't ionize and those for which we don't have
   # good predictions
-  necessary.params <- necessary.params[!(tolower(necessary.params)%in%
+  necessary.params <- necessary.params[!(tolower(necessary.params) %in% 
     tolower(c("pKa_Donor","pKa_Accept","Dow74")))]
   
   # Change to the names in chem.physical_and_invitro.table:
