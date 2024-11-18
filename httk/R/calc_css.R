@@ -210,7 +210,9 @@ calc_css <- function(chem.name=NULL,
       suppress.messages=suppress.messages,
       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
       minimum.Funbound.plasma = minimum.Funbound.plasma,
-      regression=regression),
+      regression=regression,
+      well.stirred.correction=well.stirred.correction,
+      restrictive.clearance=restrictive.clearance),
       parameterize.args)))
   }
 
