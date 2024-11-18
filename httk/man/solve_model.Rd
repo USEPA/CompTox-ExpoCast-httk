@@ -33,6 +33,7 @@ solve_model(
   minimum.Funbound.plasma = 1e-04,
   parameterize.arg.list = list(),
   small.time = 1e-04,
+  forcings = NULL,
   ...
 )
 }
@@ -149,7 +150,7 @@ species (either "Rat", "Rabbit", "Dog", "Mouse", or default "Human").
 \details{
 Dosing values with certain acceptable associated input.units (like mg/kg BW)
 are configured to undergo a unit conversion. All model simulations are 
-intended to run with units as specifed by "compartment.units" in the 
+intended to run with units as specified by "compartment.units" in the 
 model.list (as defined by the modelinfo files).
 
 The 'dosing' argument includes all parameters needed to describe exposure

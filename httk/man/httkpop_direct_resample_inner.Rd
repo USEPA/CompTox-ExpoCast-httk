@@ -13,7 +13,8 @@ httkpop_direct_resample_inner(
   weight_category,
   gfr_resid_var,
   ckd_epi_race_coeff,
-  nhanes_mec_svy
+  nhanes_mec_svy,
+  use_all_data = FALSE
 )
 }
 \arguments{

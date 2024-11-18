@@ -39,7 +39,7 @@ default "Human").}
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
 \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
-TRUE along with parition coefficients calculated with this value.}
+TRUE along with partition coefficients calculated with this value.}
 
 \item{regression}{Whether or not to use the regressions in calculating
 partition coefficients.}
@@ -71,6 +71,12 @@ clearance.
 calc_vdist(chem.cas="80-05-7")
 calc_vdist(chem.name="Bisphenol A")
 calc_vdist(chem.name="Bisphenol A",species="Rat")
+
+# Create a list of parameters (that you can potentially change):
+p <- parameterize_schmitt(chem.name="bisphenola")
+
+# Lump the tissues into a single volume of distribution
+calc_vdist(parameters=p)
 
 }
 \references{
