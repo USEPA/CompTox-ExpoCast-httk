@@ -1,8 +1,8 @@
 #' Solve_1tri_PBTK
 #' 
-#' This function solves for the amounts or concentrations in uM of a chemical
-#' in different tissues of a pregnant woman as functions of time based on
-#' the dose and dosing frequency.
+#' This function solves for the amounts (in umol) or concentrations (in uM) of a chemical
+#' in different tissues of a pregnant woman (and her conceptus, i.e., products of conception)
+#' as functions of time based on the dose and dosing frequency.
 #' 
 #' The model begins by default at non-pregnancy (0th week) and ends at the 13th 
 #' week of pregnancy, thereby simulating the 1st trimester. This is meant to 
@@ -15,7 +15,7 @@
 #' Default NULL value for doses.per.day solves for a single dose.
 #' 
 #' The maternal compartments used in this model are the gut lumen, gut, liver, 
-#' venous blood, arterial blood, lung, adipose tissue, kidney, thyroid, brain, 
+#' venous blood, arterial blood, lung, adipose tissue, kidney, thyroid, 
 #' and rest of body. The "conceptus" compartment models an early developing fetus 
 #' along with the products of conception (i.e. placenta, amniotic fluid) through 
 #' which chemical exchange can occur with the maternal blood. 
@@ -84,7 +84,7 @@
 #' compartment, the area under the curve, and plasma concentration and a row
 #' for each time point.
 #' 
-#' @author John Wambaugh, Mark Sfeir, and Dustin Kapraun
+#' @author Kimberly Truong, John Wambaugh, Mark Sfeir, Dustin Kapraun
 #'
 #' @keywords Solve
 #'
@@ -94,20 +94,8 @@
 #'
 #' @examples
 #' 
-#' Note: These examples should be worked out after testing the functions. 
-#' out = solve_fetal_pbtk(chem.name = 'bisphenol a', daily.dose = 1,
+#' out = solve_1tri_pbtk(chem.name = 'Bisphenol-A', daily.dose = 1, 
 #' doses.per.day = 3)
-#'
-#' # With adjustement to fraction unbound plasma for fetus:
-#' fetal_parms_fup_adjusted <- 
-#'   parameterize_fetal_pbtk(chem.name = 'perfluorooctane sulfonic acid')
-#' head(solve_fetal_pbtk(parameters = fetal_parms_fup_adjusted))
-#' 
-#' # Without adjustement to fraction unbound plasma for fetus:
-#' fetal_parms_fup_unadjusted <-  
-#'   parameterize_fetal_pbtk(chem.name = 'perfluorooctane sulfonic acid',
-#'                                 fetal_fup_adjustment = FALSE)
-#' head(solve_fetal_pbtk(parameters = fetal_parms_fup_unadjusted))
 #' 
 #' 
 #' @export solve_1tri_pbtk
