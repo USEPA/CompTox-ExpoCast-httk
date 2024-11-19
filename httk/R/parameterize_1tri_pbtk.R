@@ -11,10 +11,8 @@
 #' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-#' default "Human"). Currently only a narrow human model is supported. 
-#' @param Kconceptus2pu Ratio of concentration of chemical in the 'conceptus'
-#' compartment of the model to unbound concentration in plasma. 
-#' @param return.kapraun2019 If TRUE (default) empirical parameters from 
+#' default "Human"). Currently only a human model is supported. 
+#' @param return.kapraun2019 If TRUE (default), empirical parameters from 
 #' Kapraun et al. (2019) necessary for defining the model are provided.
 #' This is a subset of the httk::kapraun2019 list object with additional parameters. 
 #' @param suppress.messages Whether or not the output message is suppressed.
@@ -22,16 +20,14 @@
 #'
 #' @return \item{pre_pregnant_BW}{Body Weight before pregnancy, kg.}
 #' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
-#' \item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the dose that enters the
-#' gutlumen.} 
 #' \item{Funbound.plasma}{Fraction of plasma that is not bound.}
 #' \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
 #' assay using the method of Kilford et al. (2008)} 
 #' \item{Kadipose2pu}{Ratio of concentration of chemical in adipose tissue to unbound concentration in plasma.}
-#' \item{Kbrain2pu}{Ratio of concentration of chemical in brain tissue to unbound 
-#' concentration in plasma.} 
-#' \item{Kconceptus2pu}{Ratio of concentration of chemical in "conceptus" 
-#' compartment to unbound concentration in plasma. This parameter is user-defined.} 
+#' \item{Kconceptus2pu_initial}{Ratio of concentration of chemical in "conceptus" 
+#' compartment to unbound concentration in plasma at time 0.} 
+#' \item{Kconceptus2pu_final}{Ratio of concentration of chemical in "conceptus" 
+#' compartment to unbound concentration in plasma at 13 weeks.} 
 #' \item{Kgut2pu}{Ratio of concentration of chemical in gut tissue to unbound 
 #' concentration in plasma.} 
 #' \item{kgutabs}{Rate that chemical enters the gut from 
@@ -48,9 +44,6 @@
 #' \item{million.cells.per.gliver}{Millions cells per gram of liver tissue.} 
 #' \item{MW}{Molecular Weight, g/mol.} 
 #' \item{pH_Plasma_mat}{pH of the maternal plasma.}
-#' \item{Qgfrc}{Glomerular Filtration Rate, L/h/kg BW^3/4, volume of fluid
-#' filtered from kidney and excreted.} 
-#' \item{Vbrainc}{Volume of the brain per kg body weight, L/kg BW.} 
 #' \item{Vgutc}{Volume of the gut per kg body weight, L/kg BW.} 
 #' \item{Vkidneyc}{Volume of the kidneys per kg body weight, L/kg BW.} 
 #' \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
@@ -58,21 +51,21 @@
 #' \item{Vthyroidc}{Volume of the thyroid per kg body weight, L/kg BW.}
 #'
 #'
-#' @author Robert Pearce, Mark Sfeir, John Wambaugh, and Dustin Kapraun
+#' @author Kimberly Truong, Mark Sfeir, Dustin Kapraun, John Wambaugh
 #'
-#' @references Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
+#' @references Add Kimberly's publication here. 
+#' 
+#' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 #' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
 #' hepatocyte incubations using microsomal binding or drug lipophilicity data.
 #' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
 #' 
-#' McNamara PJ, Alcorn J. Protein binding predictions in infants. 
-#' AAPS PharmSci. 2002;4(1):E4. doi: 10.1208/ps040104. PMID: 12049488.
 #'
 #' @keywords Parameter
 #'
 #' @seealso \code{\link{solve_1tri_pbtk}}
 #'
-#' @seealso \code{\link{parameterize_1tri_pbtk}}
+#' @seealso \code{\link{parameterize_pbtk}}
 #'
 #' @seealso \code{\link{predict_partitioning_schmitt}}
 #'
@@ -86,14 +79,11 @@
 #'
 #' @examples
 #' 
-#'  Note: These examples should be worked out after testing the functions. 
 #' 
-#'  parameters <- parameterize_fetal_pbtk(chem.cas='80-05-7')
+#'  parameters <- parameterize_1tri_pbtk(dtxsid = "DTXSID7020182")
 #' 
-#'  parameters <- parameterize_fetal_pbtk(chem.name='Bisphenol-A',species='Rat')
+#'  parameters <- parameterize_1tri_pbtk(chem.name='Bisphenol-A')
 #' 
-#'  
-#' @author Mark Sfeir, Dustin Kapraun, John Wambaugh
 #' 
 #' @export parameterize_1tri_pbtk
 parameterize_1tri_pbtk<- function(
@@ -101,9 +91,8 @@ parameterize_1tri_pbtk<- function(
   chem.name=NULL,
   dtxsid = NULL,
   species="Human",
-  # Kconceptus2pu = 1, # set to 1 for now
   return.kapraun2019=TRUE, # this is mostly a subset of httk::kapraun2019 
-  suppress.messages=FALSE, # adding Qbrain_percent_{initial,terminal}
+  suppress.messages=FALSE, 
   ...)
 {
   #initialize a parms list for 1tri model parameters to output
@@ -201,8 +190,6 @@ parameterize_1tri_pbtk<- function(
   parms <- c(parms, lumped_tissue_values_maternal[substr(names(
     lumped_tissue_values_maternal),1,1) == 'K']) #only add the partition coefficients
   
-  # Kconceptus2pu is time-varying and updated in the C code so remove quantity calculated by Schmitt
-  parms$Kconceptus2pu <- NULL
   parms$pH_Plasma_mat <- maternal.blood.pH
   
   #
@@ -230,8 +217,8 @@ parameterize_1tri_pbtk<- function(
   pbtk_parms_desired <- 
     pbtk_parms[!( substr(names(pbtk_parms),1,1) %in% c('K','V','Q') )]
   pbtk_parms_desired <- 
-    pbtk_parms_desired[!(names(pbtk_parms_desired) %in% c("hematocrit",
-            "liver.density", "Rblood2plasma"))] #we don't use a hematocrit value 
+    pbtk_parms_desired[!( names(pbtk_parms_desired) %in% c("hematocrit",
+            "liver.density", "Rblood2plasma") )] #we don't use a hematocrit value 
   #from parameterize_pbtk, we've already captured our liver density value, and
   #Rblood2plasma is calculated in the dynamics of the 
   #corresponding .c file using other parameters. 
