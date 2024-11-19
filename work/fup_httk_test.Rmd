@@ -1,0 +1,115 @@
+---
+title: "HTTK Fup LOD test"
+author: "Caroline Ring"
+date: "2024-11-18"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Introduction
+
+This Rmd document contains analysis to check the effect of lowering the default Fup limit of detection and/or minimum value in httk.
+
+We'll load the non-dev version of httk for testing purpose.
+
+```{r}
+library(httk)
+```
+
+
+# Planned analyses
+
+Test each of the models in turn: one-compartment, three-compartment, sum-of-clearances, and PBTK.
+
+Can also try gestational PBTK.
+
+Test the "default" (non-Monte Carlo) solutions, and also test the HTTK-Pop solutions.
+
+Test both analytical Css and numerical Css solutions.
+
+Test with restrictive clearance both on and off.
+
+Can do this using `calc_css()` (and `calc_analytic_css()`).
+
+The `...` argument to `calc_css()` is the additonal arguments passed to the model solver, which includes `minimum.Funbound.plasma`.
+
+
+Plan:
+
+Loop over models
+
+For each model:
+Get available chemicals
+Loop over chemicals
+
+Call parametrize function
+Call `calc_analytic_css()`
+Call `calc_css()`
+Compile the parameters and Css output into a data table
+
+
+A quick test: here's a compound, "Amitraz", whose Fup distribution is "3.02e-08,1.85e-13,0.00627"
+```{r}
+
+#with a smaller Fup min
+pars1 <- parameterize_1comp(chem.name = "Amitraz",
+                            minimum.Funbound.plasma = 1e-12)
+
+#with default Fup min
+pars2 <- parameterize_1comp(chem.name = "Amitraz")
+
+parsdf <- rbind(as.data.frame(pars1),
+                as.data.frame(pars2))
+
+parsdf
+```
+
+Hmm -- something funny is going on -- Vdist is exactly the same between the two. But if we call `calc_vdist()` directly we get very different answer:
+
+```{r}
+calc_vdist(chem.name = "Amitraz", minimum.Funbound.plasma = 1e-12)
+calc_vdist(chem.name = "Amitraz")
+```
+
+So it seems like the fup minimum isn't getting respected somewhere in parameterize.
+
+
+```{r}
+fup_small <- 1e-12
+
+model_vect <- c("1compartment",
+                "3compartment",
+                "3compartmentss",
+                "pbtk")
+
+lapply(model_vect,
+       function(this_model){
+         model_chems <- get_cheminfo(info = c("DTXSID",
+                                              "Compound",
+                                              "Funbound.plasma")
+                                     species = "Human",
+                                     fup.lod.default = fup_small,
+                                     model = this_model)
+         
+         param_fun <- httk:::model.list[[this_model]][["parameterize.func"]]
+         
+         
+         params_restrict <- sapply(model_chems$DTXSID,
+                          function(this_dtxsid){
+                             do.call(param_fun,
+                                     args = list(dtxsid = this_dtxsid,
+                                                 minimum.Funbound.plasma = fup_small,
+                                                 restrictive.clearance = TRUE)
+                           )
+                          }
+          
+       })
+```
+
+We can probably just publish one of the modelsi n the main text and put the rest in supplemental
+
+
+
