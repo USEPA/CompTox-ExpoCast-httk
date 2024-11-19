@@ -31,7 +31,7 @@ CAS, name, or DTXISD}
  -- if parameters is not specified then the chemical must be identified by 
 either CAS, name, or DTXSIDs}
 
-\item{parameters}{Chemical and physiological description parameters needed
+\item{parameters}{Chemcial and physiological description parameters needed
 to run the Schmitt et al. (2008) model}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
