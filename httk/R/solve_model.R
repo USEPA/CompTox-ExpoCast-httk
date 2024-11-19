@@ -136,9 +136,11 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset)
 #' 
-#' @param parameterize.arg.list Additional parameterized passed to the model
-#' parameterization function.
-#'
+#' @param parameterize.arg.list Additional parameters passed to the model
+#'   parameterization function (other than chemical identifier, `species`,
+#'   `suppress.messages`, `restrictive.clearance`, `adjusted.Funbound.plasma`,
+#'   and `minimum.Funbound.plasma`)
+#' 
 #' @param small.time A tiny amount of time used to provide predictions on either
 #' side of an instaneous event (like an iv injection). This helps ensure that
 #' abrupt changes plot well. Defaults to 1e-4.
@@ -421,7 +423,8 @@ specification in compartment_units for model ", model)
         species=species,
         suppress.messages=suppress.messages,
         adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-        minimum.Funbound.plasma=minimum.Funbound.plasma
+        minimum.Funbound.plasma=minimum.Funbound.plasma,
+        restrictive.clearance=restrictive.clearance
         ),
       parameterize.arg.list))) 
   } else {
