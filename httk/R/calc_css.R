@@ -78,7 +78,8 @@
 #'  "oral").
 #'
 #'@param parameterize.args Named list of any additional arguments passed to
-#'  model parameterization function. Default `list()` to pass no additional arguments.
+#'  model parameterization function (other than the already-named arguments).
+#'  Default `list()` to pass no additional arguments.
 #'
 #'@param ... Additional arguments passed to model solver (default of
 #'  \code{\link{solve_pbtk}}).
