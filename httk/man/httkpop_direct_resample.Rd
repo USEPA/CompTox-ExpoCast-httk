@@ -15,8 +15,7 @@ httkpop_direct_resample(
     "Non-Hispanic Black", "Other"),
   gfr_resid_var = TRUE,
   ckd_epi_race_coeff = FALSE,
-  nhanes_mec_svy,
-  use_all_data = FALSE
+  nhanes_mec_svy
 )
 }
 \arguments{
