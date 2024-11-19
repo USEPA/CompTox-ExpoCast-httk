@@ -65,11 +65,11 @@ A quick test: here's a compound, "Amitraz", whose Fup distribution is "3.02e-08,
 ```{r}
 
 #with a smaller Fup min
-pars1 <- parameterize_1comp(chem.name = "Amitraz",
-                            minimum.Funbound.plasma = 1e-12)
+suppressWarnings(pars1 <- parameterize_1comp(chem.name = "Amitraz",
+                            minimum.Funbound.plasma = 1e-12))
 
 #with default Fup min
-pars2 <- parameterize_1comp(chem.name = "Amitraz")
+suppressWarnings(pars2 <- parameterize_1comp(chem.name = "Amitraz"))
 
 parsdf <- rbind(as.data.frame(pars1),
                 as.data.frame(pars2))
@@ -80,8 +80,8 @@ parsdf
 Compare results calling `calc_vdist()` directly 
 
 ```{r}
-calc_vdist(chem.name = "Amitraz", minimum.Funbound.plasma = 1e-12)
-calc_vdist(chem.name = "Amitraz")
+suppressWarnings(calc_vdist(chem.name = "Amitraz", minimum.Funbound.plasma = 1e-12))
+suppressWarnings(calc_vdist(chem.name = "Amitraz"))
 ```
 
 Try calc_css?
@@ -215,7 +215,6 @@ system.time(run_out <- run_tbl %>%
 This benchmark for the first 100 rows suggests that we are going to need to use multidplyr, since it is running at approximately 2 seconds per row and we have 11,484 rows.
 
 ```{r}
-library(multidplyr)
 cluster <- multidplyr::new_cluster(parallel::detectCores()-1)
 
 #load httk on each cluster
@@ -277,29 +276,64 @@ Nice! With the parallel processing, the system time was
 Try a plot:
 
 ```{r}
-plot_tbl <- run_out %>% dplyr::mutate(fup_min_cat = factor(fup_min, levels = c(1e-4, 1e-12), labels = c("old_fup_min", "new_fup_min")))
+run_out <- readRDS(paste0(data_dir,
+               "fup_lod_css_analysis.Rds"))
 
-plot_tbl2 <- plot_tbl %>% tidyr::pivot_wider(id_cols = c(model, restrictive, Compound, DTXSID, Human.Funbound.plasma), names_from = fup_min_cat, values_from = c(avg, frac, max, the.day))
+#Create factor variable for old and new Fup min values
+plot_tbl <- run_out %>%
+  dplyr::mutate(
+    fup_min_cat = factor(
+      fup_min,
+      levels = c(1e-4, 1e-12),
+      labels = c("old_fup_min",
+                 "new_fup_min")
+    )
+  )
 
+#Create factor variable for restrictive clearance
+plot_tbl <- plot_tbl %>%
+  dplyr::mutate(restrictive_cat = factor(
+    restrictive,
+    levels = c(TRUE, FALSE),
+    labels = c("restrictive",
+               "non-restrictive")
+  )
+  )
+
+#pivot wider so we can compare Css results from old and new
+plot_tbl2 <- plot_tbl %>%
+  tidyr::pivot_wider(
+    id_cols = c(model,
+                restrictive_cat,
+                Compound,
+                DTXSID,
+                Human.Funbound.plasma),
+    names_from = fup_min_cat,
+    values_from = c(avg,
+                    frac,
+                    max,
+                    the.day)
+  )
+
+#plot, faceting by model & restrictive clearance
 p <- ggplot(plot_tbl2) +
   geom_point(aes(x = avg_old_fup_min,
                  y = avg_new_fup_min,
                  color = Human.Funbound.plasma)) +
   geom_abline(intercept = 0, slope = 1) +
   scale_color_viridis_c(trans = "log10",
-                        name = "Fup") +
+                        name = "Median Fup") +
   scale_x_log10() +
   scale_y_log10() +
   annotation_logticks(sides = "bl") +
   facet_grid(cols = vars(model),
-             rows = vars(restrictive),
-             labeller = labeller(.cols = label_value,
-                                 .rows = label_both)) +
+             rows = vars(restrictive_cat)) +
   xlab("Css with Fup min = 1e-4") +
   ylab("Css with Fup min = 1e-12") +
   theme(legend.position = "top",
-        legend.text = element_text(angle = 45,
-                                   hjust = 1) )
+        legend.text = element_text(angle = 30,
+                                   hjust = 1),
+        legend.title = element_text(vjust = 0.9))
 
 ggsave(paste0(data_dir,
               "fup_lod_css_analysis_plot.pdf"),
