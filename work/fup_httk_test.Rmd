@@ -13,6 +13,16 @@ knitr::opts_chunk$set(echo = TRUE)
 data_dir <- 'C:/Users/cring/OneDrive - Environmental Protection Agency (EPA)/httk fup LOD/'
 ```
 
+```{r}
+library(tidyverse)
+library(multidplyr)
+library(ggplot2)
+```
+
+```{r}
+devtools::load_all("../httk")
+```
+
 
 # Introduction
 
@@ -213,6 +223,9 @@ multidplyr::cluster_send(cluster,
              devtools::load_all("../httk"))
 
 multidplyr::cluster_copy(cluster, "calc_chem_css")
+```
+
+```{r, eval = FALSE}
 
 #evaluate calc_css in parallel
 system.time(run_out <- run_tbl %>% 
@@ -267,9 +280,7 @@ Try a plot:
 plot_tbl <- run_out %>% dplyr::mutate(fup_min_cat = factor(fup_min, levels = c(1e-4, 1e-12), labels = c("old_fup_min", "new_fup_min")))
 
 plot_tbl2 <- plot_tbl %>% tidyr::pivot_wider(id_cols = c(model, restrictive, Compound, DTXSID, Human.Funbound.plasma), names_from = fup_min_cat, values_from = c(avg, frac, max, the.day))
-```
 
-```{r}
 p <- ggplot(plot_tbl2) +
   geom_point(aes(x = avg_old_fup_min,
                  y = avg_new_fup_min,
