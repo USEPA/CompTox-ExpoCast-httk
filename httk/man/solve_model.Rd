@@ -33,7 +33,6 @@ solve_model(
   minimum.Funbound.plasma = 1e-04,
   parameterize.arg.list = list(),
   small.time = 1e-04,
-  forcings = NULL,
   ...
 )
 }
@@ -124,8 +123,10 @@ TRUE along with partition coefficients calculated with this value.}
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset)}
 
-\item{parameterize.arg.list}{Additional parameterized passed to the model
-parameterization function.}
+\item{parameterize.arg.list}{Additional parameters passed to the model
+parameterization function (other than chemical identifier, `species`,
+`suppress.messages`, `restrictive.clearance`, `adjusted.Funbound.plasma`,
+and `minimum.Funbound.plasma`)}
 
 \item{small.time}{A tiny amount of time used to provide predictions on either
 side of an instaneous event (like an iv injection). This helps ensure that
@@ -150,7 +151,7 @@ species (either "Rat", "Rabbit", "Dog", "Mouse", or default "Human").
 \details{
 Dosing values with certain acceptable associated input.units (like mg/kg BW)
 are configured to undergo a unit conversion. All model simulations are 
-intended to run with units as specified by "compartment.units" in the 
+intended to run with units as specifed by "compartment.units" in the 
 model.list (as defined by the modelinfo files).
 
 The 'dosing' argument includes all parameters needed to describe exposure

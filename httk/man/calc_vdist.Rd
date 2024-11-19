@@ -39,7 +39,7 @@ default "Human").}
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
 \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
-TRUE along with partition coefficients calculated with this value.}
+TRUE along with parition coefficients calculated with this value.}
 
 \item{regression}{Whether or not to use the regressions in calculating
 partition coefficients.}
