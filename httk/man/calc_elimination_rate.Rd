@@ -72,14 +72,14 @@ dataset).}
 }
 \description{
 This function calculates an elimination rate from the three compartment
-steady state model where elimination is entirely due to metabolism by the
+steady state model where elimination is entirely due to metablism by the
 liver and glomerular filtration in the kidneys.
 }
 \details{
 Elimination rate calculated by dividing the total clearance (using the
 default -stirred hepatic model) by the volume of distribution. When
 species is specified as rabbit, dog, or mouse, the function uses the
-appropriate physiological data(volumes and flows) but substitutes human
+appropriate physiological data(volumes and flows) but substitues human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{

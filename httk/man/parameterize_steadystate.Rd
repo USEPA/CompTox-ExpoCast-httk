@@ -103,7 +103,7 @@ This function initializes the parameters needed in the functions
 compartment steady state model ('3compartmentss') as used in 
 Rotroff et al. (2010), Wetmore et al. (2012), Wetmore et al. (2015), and 
 elsewhere. By assuming that enough time has passed to reach steady-state, we
-eliminate the need for tissue-specific partition coefficients because we 
+eliminate the need for tissue-specific parititon coefficients because we 
 assume all tissues have come to equilibrium with the unbound concentration
 in plasma. However, we still use chemical properties to predict the 
 blood:plasma ratio for estimating first-pass hepatic metabolism for oral
