@@ -28,8 +28,7 @@ create_mc_samples(
   convert.httkpop.arg.list = NULL,
   propagate.invitrouv.arg.list = NULL,
   parameterize.arg.list = NULL,
-  Caco2.options = NULL,
-  return.intermed.vars = FALSE
+  Caco2.options = NULL
 )
 }
 \arguments{
@@ -126,14 +125,6 @@ parameterize_* function for the model.}
 that are passed to \code{\link{invitro_mc}} and the parameterize_[MODEL] 
 functions.
 See \code{\link{get_fbio}} for further details.}
-
-\item{return.intermed.vars}{`FALSE` (default): Return a `data.table` whose
-variables (columns) include only the parameters needed for the specified
-model. Drop any intermediate variables that were created and used in
-calculating the model-specific parameters. `TRUE`: Return not only
-model-specific parameters, but also all intermediate parameters used in
-calculating the model-specific parameters (useful in debugging or exploring
-correlations).}
 }
 \value{
 A data table where each column corresponds to parameters needed for the 
@@ -142,7 +133,7 @@ parameter values.
 }
 \description{
 This is the HTTK master function for creating a data table for use with 
-Monte Carlo methods to simulate parameter uncertainty and variability.
+Monte Carlo methods to simulate parameter uncertainty and variabilit.
 Each column of the output table corresponds to an HTTK model parameter and 
 each row corresponds
 to a different random draw (for example, different individuals when 
