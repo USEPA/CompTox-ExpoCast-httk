@@ -25,32 +25,27 @@ specified.}
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human"). Currently only a narrow human model is supported.}
+default "Human"). Currently only a human model is supported.}
 
-\item{return.kapraun2019}{If TRUE (default) empirical parameters from 
+\item{return.kapraun2019}{If TRUE (default), empirical parameters from 
 Kapraun et al. (2019) necessary for defining the model are provided.
 This is a subset of the httk::kapraun2019 list object with additional parameters.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
 \item{...}{Arguments passed to parameterize_pbtk.}
-
-\item{Kconceptus2pu}{Ratio of concentration of chemical in the 'conceptus'
-compartment of the model to unbound concentration in plasma.}
 }
 \value{
 \item{pre_pregnant_BW}{Body Weight before pregnancy, kg.}
 \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
-\item{Fgutabs}{Fraction of the oral dose absorbed, i.e. the fraction of the dose that enters the
-gutlumen.} 
 \item{Funbound.plasma}{Fraction of plasma that is not bound.}
 \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
 assay using the method of Kilford et al. (2008)} 
 \item{Kadipose2pu}{Ratio of concentration of chemical in adipose tissue to unbound concentration in plasma.}
-\item{Kbrain2pu}{Ratio of concentration of chemical in brain tissue to unbound 
-concentration in plasma.} 
-\item{Kconceptus2pu}{Ratio of concentration of chemical in "conceptus" 
-compartment to unbound concentration in plasma. This parameter is user-defined.} 
+\item{Kconceptus2pu_initial}{Ratio of concentration of chemical in "conceptus" 
+compartment to unbound concentration in plasma at time 0.} 
+\item{Kconceptus2pu_final}{Ratio of concentration of chemical in "conceptus" 
+compartment to unbound concentration in plasma at 13 weeks.} 
 \item{Kgut2pu}{Ratio of concentration of chemical in gut tissue to unbound 
 concentration in plasma.} 
 \item{kgutabs}{Rate that chemical enters the gut from 
@@ -67,9 +62,6 @@ unbound concentration in plasma.}
 \item{million.cells.per.gliver}{Millions cells per gram of liver tissue.} 
 \item{MW}{Molecular Weight, g/mol.} 
 \item{pH_Plasma_mat}{pH of the maternal plasma.}
-\item{Qgfrc}{Glomerular Filtration Rate, L/h/kg BW^3/4, volume of fluid
-filtered from kidney and excreted.} 
-\item{Vbrainc}{Volume of the brain per kg body weight, L/kg BW.} 
 \item{Vgutc}{Volume of the gut per kg body weight, L/kg BW.} 
 \item{Vkidneyc}{Volume of the kidneys per kg body weight, L/kg BW.} 
 \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
@@ -82,27 +74,25 @@ solve_1tri_pbtk by calling solve_pbtk and adding additional parameters.
 }
 \examples{
 
- Note: These examples should be worked out after testing the functions. 
 
- parameters <- parameterize_fetal_pbtk(chem.cas='80-05-7')
+ parameters <- parameterize_1tri_pbtk(dtxsid = "DTXSID7020182")
 
- parameters <- parameterize_fetal_pbtk(chem.name='Bisphenol-A',species='Rat')
+ parameters <- parameterize_1tri_pbtk(chem.name='Bisphenol-A')
 
- 
+
 }
 \references{
+Add Kimberly's publication here. 
+
 Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 (2008). Hepatocellular binding of drugs: correction for unbound fraction in
 hepatocyte incubations using microsomal binding or drug lipophilicity data.
 Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
-
-McNamara PJ, Alcorn J. Protein binding predictions in infants. 
-AAPS PharmSci. 2002;4(1):E4. doi: 10.1208/ps040104. PMID: 12049488.
 }
 \seealso{
 \code{\link{solve_1tri_pbtk}}
 
-\code{\link{parameterize_1tri_pbtk}}
+\code{\link{parameterize_pbtk}}
 
 \code{\link{predict_partitioning_schmitt}}
 
@@ -115,8 +105,6 @@ AAPS PharmSci. 2002;4(1):E4. doi: 10.1208/ps040104. PMID: 12049488.
 \code{\link{kapraun2019}}
 }
 \author{
-Robert Pearce, Mark Sfeir, John Wambaugh, and Dustin Kapraun
-
-Mark Sfeir, Dustin Kapraun, John Wambaugh
+Kimberly Truong, Mark Sfeir, Dustin Kapraun, John Wambaugh
 }
 \keyword{Parameter}

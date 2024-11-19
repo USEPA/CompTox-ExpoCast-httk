@@ -308,6 +308,14 @@ et al., 2015. Incorporating high-throughput exposure predictions with Dosimetrya
 in vitro bioactivity to inform chemical toxicity testing. Toxicol. Sci. 148,
 121-136.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}
+  \item Report bugs at \url{https://github.com/USEPA/CompTox-ExpoCast-httk}
+}
+
+}
 \author{
 Caroline Ring
 }
