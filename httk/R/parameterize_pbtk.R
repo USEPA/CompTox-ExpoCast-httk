@@ -101,6 +101,8 @@
 #'
 #' @param kgutabs Oral absorption rate from gut (determined from Peff)
 #' 
+#' @param ... Additional arguments, not currently used.
+#' 
 #' @return \item{BW}{Body Weight, kg.} 
 #' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
 #' \item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of
@@ -205,7 +207,8 @@ parameterize_pbtk <- function(
                        million.cells.per.gliver= 110, # 10^6 cells/g-liver Carlile et al. (1997)
                        liver.density= 1.05, # g/mL International Commission on Radiological Protection (1975)
                        kgutabs = NA, # 1/h, Wambaugh et al. (2018)
-                       Caco2.options = NULL
+                       Caco2.options = NULL,
+                       ...
                        )
 {
   #Give a binding to the physiology.data

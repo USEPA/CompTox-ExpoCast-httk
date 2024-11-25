@@ -53,7 +53,6 @@ liver (Rowland, 1973 Equation 29, where k21 is blood flow through the liver
 and k23 is clearance from the liver in Figure 1 in that paper).
 }
 \references{
-Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. 
 \insertRef{rowland1973clearance}{httk}
 }
 \author{

@@ -54,6 +54,8 @@
 #' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
 #' See \code{\link{get_fbio}} for further details.
+#' 
+#' @param ... Additional arguments, not currently used.
 #'
 #' @return 
 #' \item{BW}{Body Weight, kg.} 
@@ -133,7 +135,8 @@ parameterize_3comp <- function(
                        suppress.messages = FALSE,
                        restrictive.clearance = TRUE,
                        minimum.Funbound.plasma = 0.0001,
-                       Caco2.options = NULL)
+                       Caco2.options = NULL,
+                       ...)
 {
   parms <- parameterize_pbtk(
              chem.cas = chem.cas,

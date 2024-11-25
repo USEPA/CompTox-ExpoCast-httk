@@ -23,10 +23,12 @@ calc_css(
   default.to.human = FALSE,
   f.change = 1e-05,
   adjusted.Funbound.plasma = TRUE,
+  minimum.Funbound.plasma = 1e-04,
   regression = TRUE,
   well.stirred.correction = TRUE,
   restrictive.clearance = TRUE,
   dosing = NULL,
+  parameterize.args = list(),
   ...
 )
 }
@@ -37,8 +39,9 @@ specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or parameters must be
 specified.}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
-the chemical must be identified by either CAS, name, or DTXSIDs}
+\item{dtxsid}{EPA's DSSTox Structure ID
+(\url{https://comptox.epa.gov/dashboard}) the chemical must be identified by
+either CAS, name, or DTXSIDs}
 
 \item{parameters}{Chemical parameters from parameterize_pbtk function,
 overrides chem.name and chem.cas.}
@@ -55,33 +58,36 @@ the average concentration must come within to be considered at steady state.}
 
 \item{dose.units}{The units associated with the dose received.}
 
-\item{route}{Route of exposure (either "oral", "iv", or "inhalation"
-default "oral").}
+\item{route}{Route of exposure (either "oral", "iv", or "inhalation" default
+"oral").}
 
 \item{days}{Initial number of days to run simulation that is multiplied on
 each iteration.}
 
-\item{output.units}{Units for returned concentrations, defaults to uM
-(specify units = "uM") but can also be mg/L.}
+\item{output.units}{Units for returned concentrations, defaults to uM (specify
+units = "uM") but can also be mg/L.}
 
 \item{suppress.messages}{Whether or not to suppress messages.}
 
-\item{tissue}{Desired tissue concentration (default value is NULL, will
-depend on model -- see \code{steady.state.compartment} in model.info file for
+\item{tissue}{Desired tissue concentration (default value is NULL, will depend
+on model -- see \code{steady.state.compartment} in model.info file for
 further details.)}
 
 \item{model}{Model used in calculation, 'pbtk' for the multiple compartment
 model,'3compartment' for the three compartment model, and '1compartment' for
 the one compartment model.}
 
-\item{default.to.human}{Substitutes missing animal values with human values
-if true (hepatic intrinsic clearance or fraction of unbound plasma).}
+\item{default.to.human}{Substitutes missing animal values with human values if
+true (hepatic intrinsic clearance or fraction of unbound plasma).}
 
-\item{f.change}{Fractional change of daily steady state concentration
-reached to stop calculating.}
+\item{f.change}{Fractional change of daily steady state concentration reached
+to stop calculating.}
 
-\item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
-TRUE along with partition coefficients calculated with this value.}
+\item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to TRUE
+along with partition coefficients calculated with this value.}
+
+\item{minimum.Funbound.plasma}{If compound Funbound.plasma is lower than this
+value, it will be set to this value. Default 1e-4.}
 
 \item{regression}{Whether or not to use the regressions in calculating
 partition coefficients.}
@@ -91,30 +97,34 @@ clearance for well-stirred model if TRUE for model 1compartment elimination
 rate.  This assumes clearance relative to amount unbound in whole blood
 instead of plasma, but converted to use with plasma concentration.}
 
-\item{restrictive.clearance}{Protein binding not taken into account (set to
-1) in liver clearance if FALSE.}
+\item{restrictive.clearance}{Protein binding not taken into account (set to 1)
+in liver clearance if FALSE.}
 
 \item{dosing}{The dosing object for more complicated scenarios. Defaults to
 repeated \code{daily.dose} spread out over \code{doses.per.day}}
+
+\item{parameterize.args}{Named list of any additional arguments passed to
+model parameterization function (other than the already-named arguments).
+Default `list()` to pass no additional arguments.}
 
 \item{...}{Additional arguments passed to model solver (default of
 \code{\link{solve_pbtk}}).}
 }
 \value{
-\item{frac}{Ratio of the mean concentration on the day steady state
-is reached (baed on doses.per.day) to the analytical Css (based on infusion
-dosing).} \item{max}{The maximum concentration of the simulation.}
-\item{avg}{The average concentration on the final day of the simulation.}
+\item{frac}{Ratio of the mean concentration on the day steady state is
+ reached (baed on doses.per.day) to the analytical Css (based on infusion
+ dosing).} \item{max}{The maximum concentration of the simulation.}
+ \item{avg}{The average concentration on the final day of the simulation.}
 \item{the.day}{The day the average concentration comes within 100 * p
 percent of the true steady state concentration.}
 }
 \description{
-This function finds the day a chemical comes within the specified range of
-the analytical steady state venous blood or plasma concentration(from
-calc_analytic_css) for the multiple compartment, three compartment, and one
-compartment models, the fraction of the true steady state value reached on
-that day, the maximum concentration, and the average concentration at the
-end of the simulation.
+This function finds the day a chemical comes within the specified
+ range of the analytical steady state venous blood or plasma
+ concentration(from calc_analytic_css) for the multiple compartment, three
+ compartment, and one compartment models, the fraction of the true steady
+ state value reached on that day, the maximum concentration, and the average
+ concentration at the end of the simulation.
 }
 \examples{
 
@@ -126,7 +136,7 @@ parms$Funbound.plasma <- .07
 calc_css(chem.name='Bisphenol-A',parameters=parms,model='3compartment')
 
 out <- solve_pbtk(chem.name = "Bisphenol A",
-  days = 50,                                   
+  days = 50,
   daily.dose=1,
   doses.per.day = 3)
 plot.data <- as.data.frame(out)
@@ -140,7 +150,7 @@ element_text(size = 16), plot.title = element_text(size = 17)) +
 ggtitle("Bisphenol A")
 
 print(c.vs.t)
-} 
+}
 
 }
 \seealso{
