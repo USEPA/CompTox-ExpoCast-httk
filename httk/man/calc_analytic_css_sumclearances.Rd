@@ -2,7 +2,7 @@
 % Please edit documentation in R/calc_analytic_css_sumclearances.R
 \name{calc_analytic_css_sumclearances}
 \alias{calc_analytic_css_sumclearances}
-\title{Calculate the steady state concentration for the three compartment
+\title{Calculate the steady state concentration for the sum of clearances
 steady-state model with exhalation}
 \usage{
 calc_analytic_css_sumclearances(
@@ -35,10 +35,7 @@ be specified.}
 \item{dtxsid}{EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
-\item{parameters}{Chemical parameters from parameterize_pbtk (for model = 
-'pbtk'), parameterize_3comp (for model = '3compartment), 
-parameterize_1comp(for model = '1compartment') or parameterize_steadystate 
-(for model = '3compartmentss'), overrides chem.name and chem.cas.}
+\item{parameters}{Chemical parameters from \code{\link{parameterize_sumclearances}} overrides chem.name and chem.cas.}
 
 \item{hourly.dose}{Hourly dose rate mg/kg BW/h.}
 
@@ -78,6 +75,6 @@ concentrations as a result of infusion dosing.
 \code{\link{parameterize_steadystate}}
 }
 \author{
-ohn Wambaugh
+John Wambaugh
 }
-\keyword{3compss2}
+\keyword{sumclearances}
