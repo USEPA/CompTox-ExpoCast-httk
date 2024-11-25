@@ -64,6 +64,14 @@
 #' @param Caco2.Pab.default (Numeric) Caco2 apical to basolateral data.
 #' (Defaults to  1.6.) (Not applicable for `calc_fbio.oral`.)
 #' 
+<<<<<<< HEAD
+=======
+#' @param Caco2.Pab (Numeric) Caco2 apical to basolaterial permeability used by calc_peff
+#'
+#' @param restrictive.clearance Protein binding not taken into account (set to 1) in 
+#' liver clearance if FALSE.
+#' 
+>>>>>>> dev
 # Caco2 derived values if available.
 #'
 #' @return \item{fbio.oral}{Oral bioavailability, the fraction of oral dose 
@@ -94,6 +102,51 @@ calc_fbio.oral <- function(parameters = NULL,
   suppress.messages = FALSE
   )
 {
+<<<<<<< HEAD
+=======
+  ## Setting up binding for Global Variables ##
+  hepatic.bioavailability <- NULL
+  ####
+  
+  # Determine Fhep.oral
+  if (is.null(parameters))
+  {
+    if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid)) 
+      stop('chem.name, chem.cas, or dtxsid must be specified.')
+        
+    # Note that the following call to parameterize_steadystate calls this
+    # function. However, because parameterize_steadystate creates and passes
+    # a list of parameters we will never reach this bit of this function
+    # recursively:
+    parameters <- parameterize_steadystate(
+                   chem.cas=chem.cas,
+                   chem.name=chem.name,
+                   dtxsid=dtxsid,
+                   species=species,
+                   suppress.messages=suppress.messages,
+                   restrictive.clearance=restrictive.clearance)
+  } else {
+    # Work with local copy of parameters in function(scoping):
+    if (is.data.table(parameters)) parameters <- copy(parameters) 
+  }
+  
+  if (!("Caco2.Pab" %in% names(parameters)))
+  {
+    if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid)) 
+      stop('chem.name, chem.cas, or dtxsid must be specified if Caoc2.Pab not specified in argument parameters.')
+      
+    # Retrieve the chemical-specific Caco-2 value:
+    parameters <-  c(parameters, get_caco2(chem.cas=chem.cas,
+                            chem.name=chem.name,
+                            dtxsid=dtxsid,
+                            suppress.messages = suppress.messages))
+  }
+  
+>>>>>>> dev
   # Handle fabs first:    
   fabs.oral <- calc_fabs.oral(parameters = parameters,
                               chem.cas=chem.cas,
@@ -201,6 +254,163 @@ calc_fabs.oral <- function(parameters = NULL,
   return(set_httk_precision(as.numeric(fabs.oral)))
 }
 
+<<<<<<< HEAD
+=======
+#' @describeIn calc_fbio.oral Calculate the effective gut permeability rate (10^-4 cm/s)
+calc_peff <- function(parameters = NULL,
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  species = "Human",
+  default.to.human = FALSE,
+  suppress.messages = FALSE,
+  Caco2.Pab = NULL
+  )
+{
+  if (is.null(Caco2.Pab))
+  {
+    if (!is.null(parameters))
+    {
+      # Required parameters
+      req.param <- c("BW", "Clint", "Funbound.plasma", "Rblood2plasma")
+      
+      if (!all(req.param %in% names(parameters)))
+      {
+        missing <- req.param[!(req.param %in% names(parameters))]
+        stop(paste("Missing parameter",missing,"in function calc_fgut.oral."))
+      }
+    } else {  
+        # Need a list called parameters:
+        if (is.null(parameters)) parameters <- list()
+        
+  # We need to describe the chemical to be simulated one way or another:
+        if (is.null(chem.cas) & 
+            is.null(chem.name) & 
+            is.null(dtxsid)) 
+          stop('chem.name, chem.cas, or dtxsid must be specified.')
+      
+      # Look up the chemical name/CAS, depending on what was provide:
+          out <- get_chem_id(
+                  chem.cas=chem.cas,
+                  chem.name=chem.name,
+                  dtxsid=dtxsid)
+          chem.cas <- out$chem.cas
+          chem.name <- out$chem.name                                
+          dtxsid <- out$dtxsid
+  
+          # If we don't have parameters we can call parameterize_steadystate using the
+          # chemical identifiers. Then that function will build up a list of parameters
+          # so that when it calls this function a second time (recursively) we WILL have
+          # a list of parameters defined. The key is to make sure that the call to this
+          # function in parameterize_steadystate occurs after all parameters needed by
+          # this function are defined (or we get stuck in a recursive loop).
+          parameters <- do.call(parameterize_steadystate,
+                                args=purrr::compact(c(list(
+                                  chem.cas=chem.cas,
+                                  chem.name=chem.name,
+                                  dtxsid=dtxsid,
+                                  suppress.messages=suppress.messages))))
+    }
+    Caco2.Pab <- parameters[["Caco2.Pab"]]
+  }  
+  
+  # Yang 2007 equation 10 for Caco2 pH7.4
+  # peff has units of 10^-4 cm/s, Caco2.Pab has units of 10^-6 cm/s
+  peff <- 10^(0.4926 * log10(Caco2.Pab) - 0.1454) 
+  
+  # Wahajuddin (2011), see that Figure 3 indicates that rat peff is in units of
+  # 10^-5 cm/s while human peff is in units of 10^-4 cm/s:
+  if (tolower(species) %in% c("rat"))
+    peff <- max((peff + 0.1815)/1.039/10, 0)
+         
+  return(set_httk_precision(as.numeric(peff)))
+}
+
+#' @describeIn calc_fbio.oral Calculate the gut absorption rate (1/h)
+calc_kgutabs<- function(parameters = NULL,
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  species = "Human",
+  default.to.human = FALSE,
+  suppress.messages = FALSE
+  )
+{
+  if (!is.null(parameters))
+  {
+    # Required parameters
+    req.param <- c("BW", "Clint", "Funbound.plasma", "Rblood2plasma")
+    
+    if (!all(req.param %in% names(parameters)))
+    {
+      missing <- req.param[!(req.param %in% names(parameters))]
+      stop(paste("Missing parameter",missing,"in function calc_fgut.oral."))
+    }
+  } else {  
+      # Need a list called parameters:
+      if (is.null(parameters)) parameters <- list()
+      
+# We need to describe the chemical to be simulated one way or another:
+      if (is.null(chem.cas) & 
+          is.null(chem.name) & 
+          is.null(dtxsid)) 
+        stop('chem.name, chem.cas, or dtxsid must be specified.')
+    
+    # Look up the chemical name/CAS, depending on what was provide:
+        out <- get_chem_id(
+                chem.cas=chem.cas,
+                chem.name=chem.name,
+                dtxsid=dtxsid)
+        chem.cas <- out$chem.cas
+        chem.name <- out$chem.name                                
+        dtxsid <- out$dtxsid
+
+        # If we don't have parameters we can call parameterize_steadystate using the
+        # chemical identifiers. Then that function will build up a list of parameters
+        # so that when it calls this function a second time (recursively) we WILL have
+        # a list of parameters defined. The key is to make sure that the call to this
+        # function in parameterize_steadystate occurs after all parameters needed by
+        # this function are defined (or we get stuck in a recursive loop).
+        parameters <- do.call(parameterize_steadystate,
+                              args=purrr::compact(c(list(
+                                chem.cas=chem.cas,
+                                chem.name=chem.name,
+                                dtxsid=dtxsid,
+                                suppress.messages=suppress.messages))))
+  }
+  
+  # 10^-4 cm/s
+  Peff <- calc_peff(Caco2.Pab=parameters[["Caco2.Pab"]],
+                    species = species,
+                    suppress.messages = suppress.messages)
+                    
+  # Load the physiological parameters for this species
+  this.phys.data <- physiology.data[, tolower(colnames(physiology.data)) 
+                                              %in% tolower(species)]
+  names(this.phys.data) <- physiology.data[, 1]
+  
+  # Load radius of small intestine:
+  Rsi <- this.phys.data["Small Intestine Radius"] # cm
+  if (is.na(Rsi))
+  {
+    # Default to rat in absence of species specific data:
+    default.phys.data <- physiology.data[, "Rat"]
+    names(default.phys.data) <- physiology.data[, 1]
+    Rsi <- default.phys.data["Small Intestine Radius"]
+    if (!suppress.messages) warning("Rat SI radius time used for oral absorption.")
+  } 
+  
+  # Lennernas (1997):
+  # peff is 10^-4 cm/s
+  # Rsi is cm
+  # 3600 s in 1 h
+  # 1 / 10000 10^-4 cm in cm
+  kgutabs <-  2 * Peff / Rsi * 3600 / 10000 # 1/h
+        
+  return(set_httk_precision(as.numeric(kgutabs)))
+}
+
+>>>>>>> dev
 #' @describeIn calc_fbio.oral Calculate the fraction of chemical surviving first pass metabolism in the gut
 # Is this the Yang et al. (2007) QGut Model?
 calc_fgut.oral <- function(parameters = NULL,
@@ -283,36 +493,49 @@ calc_fgut.oral <- function(parameters = NULL,
     } else {
       if (tolower(species) != "human") 
         if (!suppress.messages)
-          warning("Human intestinal permeability and microvilli blood flow used to calculate fraction absorbed by gut")
+          warning("Human intestinal permeability and microvilli blood flow fraction used to calculate fraction absorbed by gut")
       
       # m2 area intestine -- Yang et al. (2007)
-      Asmallintestine <- 0.66/70*parameters$BW
+      Asmallintestine <- signif(0.66/70*parameters$BW,4)
     }
     
     # Define a rate of intestinal transport to compete with absorption for poorly
     # absorbed chemicals:
+<<<<<<< HEAD
     Qintesttransport <- 0.5
+=======
+    Qintesttransport <- 0.1*parameters$BW^(3/4)/70^(3/4) # L/h
+>>>>>>> dev
     
     # Calculate Qvilli based on Qsmallintestine
     # Tateishi 1997 -- Human Qsmallintestine = 38 ml/min/100 g
     # Weight small intestine -- 1.5875 kg -- 15.875 100 g
-    # Fraction of blood flow to gut going to small intestine:
+    #
+    # Fraction of blood flow to gut (Qgut) going to small intestine:
     # For 70 kg human Qtotal.liver = 86.96 L/h (parameterize_pbtk)
     # and Qgut = 68.99 L/h (parameterize_pbtk)
-    Qsmallintestinehuman <- 38.7 /1000*60*15.8757 # L/h
-    Qsmallintestinef <- Qsmallintestinehuman / 68.99 # Works out to roughly 53%
-    if(!is.null(parameters$Qtotal.liverc)){
-      this.Qsmallintestinehuman <- Qsmallintestinef *
-        68.99/86.96*parameters$Qtotal.liverc*parameters$BW^(3/4)
-      Qvilli <- 18/Qsmallintestinehuman*this.Qsmallintestinehuman
-    } else if(!is.null(parameters$Qgutf)){
-      this.Qsmallintestinehuman <- Qsmallintestinef *
-        parameters$Qgutf*parameters$Qcardiacc*parameters$BW^(3/4)
-      Qvilli <- 18/Qsmallintestinehuman*this.Qsmallintestinehuman
+    Qsmallintestine.averagehuman <- 38.7 /1000*60*15.8757 # Qsmallintestinehuman L/h
+    Qsmallintestinef <- Qsmallintestine.averagehuman / 68.99 # Fraction works out to roughly 53%
+    Qvilli.averagehuman <- 18 # L/h blood flow to microvilli of intestinal lumen, Yang et al. (2007)
+    Qvillif <- Qvilli.averagehuman/Qsmallintestine.averagehuman # Fraction of intestinal blood flow that goes to villi
+    if (!is.null(parameters$Qtotal.liverc))
+    {
+      # Blood flow to small intestine scaled to body weight of individiaul:
+      this.Qsmallintestine <- Qsmallintestinef * # Fraction of blood flow to gut that goes to small intestine
+        68.99/86.96* # Fraction of total liver flow that goes to gut
+        parameters$Qtotal.liverc * # Total blood flow to liver L/h/kg^(3/4)
+        parameters$BW^(3/4) # Body weight to three fourths pawer
+    } else if (!is.null(parameters$Qgutf)) {
+      # Blood flow to small intestine scaled to body weight of individiaul:
+      this.Qsmallintestine <- Qsmallintestinef * # Fraction of blood flow to gut that goes to small intestine
+        parameters$Qgutf * # Fraction of cardiac output that goes to gut
+        parameters$Qcardiacc*parameters$BW^(3/4) # Cardiac output L/h
     } else {
       warning("Because model used does not provide Qtotal.liver or Qgutf, the Yang et al. (2007) value of 18 L/h was used to calculate fraction absorbed by gut")
-      Qvilli <- 18 # L/h blood flow to microvilli of intestinal lumen
-    }    
+      this.Qsmallintestine <- Qsmallintestine.averagehuman # L/h
+    } 
+    # Blood flow to villi L/h 
+    Qvilli <- Qvillif * this.Qsmallintestine   
     # permeability clearance (CLperm) Yang et al. (2007) equation 8:
     CLperm <- peff * Asmallintestine * 1000/10^4/100*3600 # 10^-4 cm / s * m2 * 1000 L / m^3 / 10^4 * 1 m / 100 cm * 3600 s / h = L / h
     # Qgut "in terms of fundamental parameters" -- Yang et al. (2007) equation 6:

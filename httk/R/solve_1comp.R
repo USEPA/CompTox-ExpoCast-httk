@@ -95,6 +95,7 @@
 #' 
 #' solve_1comp(chem.name='Bisphenol-A', days=1)
 #'
+#' \donttest{
 #' # By storing the model parameters in a vector first, you can potentially
 #' # edit them before using the model:
 #' params <- parameterize_1comp(chem.cas="80-05-7")
@@ -112,6 +113,7 @@
 #' 
 #' solve_1comp(chem.name="Besonprodil", daily.dose=1, dose=NULL,
 #'             days=2.5, doses.per.day=4)
+#' }
 #'
 #' @seealso \code{\link{solve_model}}
 #'

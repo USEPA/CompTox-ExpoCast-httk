@@ -191,6 +191,7 @@ head(solve_model(chem.name="Terbufos",model="pbtk",dosing=list(
                  days=1,
                  daily.dose = NULL)))
 
+\donttest{
 # A dose matrix specifies times and magnitudes of doses:
 dm <- matrix(c(0,1,2,5,5,5),nrow=3)
 colnames(dm) <- c("time","dose")
@@ -220,6 +221,7 @@ solve_pbtk(chem.name="Besonprodil",
            dose=NULL,
            doses.per.day=4,
            days=2.5)
+} 
 
 }
 \references{

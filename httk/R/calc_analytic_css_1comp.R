@@ -113,7 +113,23 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
   # one compartment Css is dose.rate / clearance:
   hourly.dose <- hourly.dose * parameters$Fbio.oral
 
+<<<<<<< HEAD
   Css <- hourly.dose / parameters$kelim / parameters$Vdist
+=======
+  # Dose rate:
+  hourly.dose <- dosing[["daily.dose"]] /
+                   parameters[["BW"]] /
+                   24 *
+                   convert_units(MW = parameters[["MW"]],
+                                 dose.units,
+                                 "mg") # mg/kg/h
+                                 
+  Css <- hourly.dose *
+  # Oral bioavailability:
+           parameters[["Fabsgut"]] * parameters[["hepatic.bioavailability"]] /
+  # Clearance:
+           parameters[["kelim"]] / parameters[["Vdist"]]
+>>>>>>> dev
   # Convert to plasma concentration:
   Css <- Css/parameters[['Rblood2plasma']]
   

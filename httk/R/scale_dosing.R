@@ -85,6 +85,11 @@ scale_dosing <- function(
     as.numeric(dosing$daily.dose) * scale.factor
   if (!is.null(dosing$forcings)) dosing$forcings[,"forcing_values"] <- 
     as.numeric(dosing$forcings[,"forcing_values"]) * scale.factor
+<<<<<<< HEAD
+=======
+  if (!is.null(dosing$Cinhaled)) dosing$Cinhaled <-
+    as.numeric(dosing$Cinhaled) * scale.factor
+>>>>>>> dev
     
   return(dosing)
 }

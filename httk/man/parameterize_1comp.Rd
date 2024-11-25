@@ -118,7 +118,7 @@ for tissue i.
                                   restrictive.clearance=FALSE,
                                   species='rabbit',
                                   default.to.human=TRUE)
- out <- solve_1comp(parameters=parameters)
+ out <- solve_1comp(parameters=parameters,days=1)
 
 }
 \references{

@@ -67,6 +67,12 @@
 #' calc_vdist(chem.cas="80-05-7")
 #' calc_vdist(chem.name="Bisphenol A")
 #' calc_vdist(chem.name="Bisphenol A",species="Rat")
+#'
+#' # Create a list of parameters (that you can potentially change):
+#' p <- parameterize_schmitt(chem.name="bisphenola")
+#' 
+#' # Lump the tissues into a single volume of distribution
+#' calc_vdist(parameters=p)
 #' 
 #' @export calc_vdist
 calc_vdist<- function(chem.cas=NULL,

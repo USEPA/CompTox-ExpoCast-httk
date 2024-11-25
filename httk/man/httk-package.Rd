@@ -67,7 +67,16 @@ In Vitro Bioactivity to Inform Chemical Toxicity Testing
 \href{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}{The U.S. EPA ExpoCast (Exposure Forecasting) Project}
 }
 \seealso{
+<<<<<<< HEAD
 \code{\link{httkpop}}
+=======
+Useful links:
+\itemize{
+  \item \url{https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research}
+  \item Report bugs at \url{https://github.com/USEPA/CompTox-ExpoCast-httk/issues}
+}
+
+>>>>>>> dev
 }
 \author{
 \href{https://orcid.org/0000-0002-4024-534X}{John Wambaugh},
