@@ -11,6 +11,8 @@ head(solve_gas_pbtk(
   parameters=parameterize_gas_pbtk(chem.cas="129-00-0"),
   times=c(0,0.1,0.05)))
 
-parameterize_gas_pbtk(chem.name="styrene")
+p <- parameterize_gas_pbtk(chem.name="styrene")[sort(names(parameterize_gas_pbtk(chem.name="styrene")))]
+# Try to standardize order of variable names
+for (this.param in names(p)[order(toupper(names(p)))]) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
 
 quit("no")

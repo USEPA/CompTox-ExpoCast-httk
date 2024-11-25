@@ -173,6 +173,7 @@
 #' @examples
 #' parameters <- parameterize_gas_pbtk(chem.cas='129-00-0')
 #' 
+#'\donttest{
 #' parameters <- parameterize_gas_pbtk(chem.name='pyrene',species='Rat')
 #' 
 #' parameterize_gas_pbtk(chem.cas = '56-23-5')
@@ -184,6 +185,7 @@
 #'                       lung=c("lung"),gut=c("gut"),slow=c("bone"))
 #' parameterize_gas_pbtk(chem.name="Bisphenol a",species="Rat",default.to.human=TRUE,
 #'                    tissuelist=compartments) 
+#'}
 #' 
 #' @export parameterize_gas_pbtk
 parameterize_gas_pbtk <- function(chem.cas=NULL,
