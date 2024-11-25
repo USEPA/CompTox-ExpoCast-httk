@@ -10,6 +10,7 @@ calc_vdist(
   dtxsid = NULL,
   parameters = NULL,
   default.to.human = FALSE,
+  class.exclude = TRUE,
   species = "Human",
   suppress.messages = FALSE,
   adjusted.Funbound.plasma = TRUE,
@@ -32,6 +33,9 @@ predict_partitioning_schmitt.}
 
 \item{default.to.human}{Substitutes missing animal values with human values
 if true.}
+
+\item{class.exclude}{Exclude chemical classes identified as outside of 
+domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
@@ -71,6 +75,12 @@ clearance.
 calc_vdist(chem.cas="80-05-7")
 calc_vdist(chem.name="Bisphenol A")
 calc_vdist(chem.name="Bisphenol A",species="Rat")
+
+# Create a list of parameters (that you can potentially change):
+p <- parameterize_schmitt(chem.name="bisphenola")
+
+# Lump the tissues into a single volume of distribution
+calc_vdist(parameters=p)
 
 }
 \references{
