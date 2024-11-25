@@ -11,6 +11,7 @@ check_model(
   model = NULL,
   species = NULL,
   class.exclude = TRUE,
+  physchem.exclude = TRUE,
   default.to.human = FALSE
 )
 }
@@ -34,6 +35,10 @@ default "Human").}
 
 \item{class.exclude}{Exclude chemical classes identified as outside of 
 domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
+
+\item{physchem.exclude}{Exclude chemicals on the basis of physico-chemical
+properties (currently only Henry's law constant) as specified by 
+the relevant modelinfo_[MODEL] file (default TRUE).}
 
 \item{default.to.human}{Substitutes missing fraction of unbound plasma with
 human values if true.}
