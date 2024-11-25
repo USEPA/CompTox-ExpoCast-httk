@@ -43,6 +43,58 @@ load_pradeep2020()
 # Caco-2 QSPR:
 load_honda2023()
  
+<<<<<<< HEAD
+=======
+# Find all the duplicates:
+# First eliminate NA DTXSIDs (can't do logical tests on them)
+chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
+                                         !is.na(DTXSID))
+# Then eliminate NA Clints (can't do logical tests on them)
+chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
+                                         !is.na(Human.Clint))
+
+# Now check for duplicated DTXSIDs:
+dup.chems <- chem.physical_and_invitro.data$DTXSID[
+  duplicated((chem.physical_and_invitro.data$DTXSID))]
+length(dup.chems)
+# Now check for duplicated CASRN and grab the DTXSIDs of any chemicals with
+# duplicated CAS (but unique DTXSIDs):
+dup.chems <- unique(dup.chems,
+                    subset(chem.physical_and_invitro.data, CAS %in%
+                    chem.physical_and_invitro.data$CAS[
+                      duplicated((chem.physical_and_invitro.data$CAS))])$DTXSID)
+length(dup.chems)
+
+# Among the duplicates, try to keep the predictions from Dawson 2021:
+for (this.chem in dup.chems)
+{
+  these.dup.rows <- which(chem.physical_and_invitro.data$DTXSID==this.chem)
+  keep.row <- NULL
+  for(this.row in these.dup.rows)
+    if (regexpr("Dawson",
+                chem.physical_and_invitro.data[this.row,
+                                               "Human.Clint.Reference"])!=-1
+      ) keep.row <- this.row
+  these.dup.rows <- these.dup.rows[these.dup.rows!=keep.row]
+  chem.physical_and_invitro.data <- chem.physical_and_invitro.data[
+    -these.dup.rows,]
+}
+
+# Check to make sure no duplicates left:
+chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
+                                         !is.na(DTXSID))
+dup.chems <- chem.physical_and_invitro.data$DTXSID[
+  duplicated((chem.physical_and_invitro.data$DTXSID))]
+length(dup.chems)
+dup.chems <- unique(dup.chems,
+                    subset(chem.physical_and_invitro.data, CAS %in%
+                    chem.physical_and_invitro.data$CAS[
+                      duplicated((chem.physical_and_invitro.data$CAS))])$DTXSID)
+# This should be true:
+length(dup.chems) == 0
+
+
+>>>>>>> dev
 # Organize HTTK data by species:
 HTTK.data.list <- list()
 all.ids <- NULL

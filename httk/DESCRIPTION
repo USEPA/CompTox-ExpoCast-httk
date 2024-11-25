@@ -1,6 +1,11 @@
 Package: httk
+<<<<<<< HEAD
 Version: 2.3.0
 Date: 2023-12-05
+=======
+Version: 2.5.0
+Date: 2024-11-14
+>>>>>>> dev
 Title: High-Throughput Toxicokinetics
 Description: Pre-made models that can be rapidly tailored to various chemicals
              and species using chemical-specific in vitro data and physiological 
@@ -91,9 +96,14 @@ LazyDataCompression: xz
 Encoding: UTF-8
 VignetteBuilder: knitr, R.rsp
 RoxygenNote: 7.3.2
+<<<<<<< HEAD
 URL:
         https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research
 BugReports: https://github.com/USEPA/CompTox-ExpoCast-httk
+=======
+URL: https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research
+BugReports: https://github.com/USEPA/CompTox-ExpoCast-httk/issues
+>>>>>>> dev
 NeedsCompilation: yes
 Packaged: 2022-02-24 15:04:07 UTC; jwambaug
 Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>), 

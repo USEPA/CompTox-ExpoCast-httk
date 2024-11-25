@@ -32,6 +32,7 @@ solve_gas_pbtk(
   rtol = 1e-08,
   atol = 1e-12,
   default.to.human = FALSE,
+  class.exclude = TRUE,
   recalc.blood2plasma = FALSE,
   recalc.clearance = FALSE,
   adjusted.Funbound.plasma = TRUE,
@@ -124,6 +125,9 @@ results. Default, NULL, returns model results in units specified in the
 
 \item{default.to.human}{Substitutes missing animal values with human values
 if true (hepatic intrinsic clearance or fraction of unbound plasma).}
+
+\item{class.exclude}{Exclude chemical classes identified as outside of 
+domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
 
 \item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical
 in the blood to plasma using the input parameters, calculated with
