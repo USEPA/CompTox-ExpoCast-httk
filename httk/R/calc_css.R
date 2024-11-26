@@ -215,10 +215,7 @@ calc_css <- function(chem.name=NULL,
     well.stirred.correction=well.stirred.correction,
     restrictive.clearance=restrictive.clearance
   )
-<<<<<<< HEAD
-  css <- do.call("calc_analytic_css", 
-                 args=purrr::compact(analyticcss_params))
-=======
+
   # Check to see if there is analytic Css funtion:
   if (!is.null(model.list[[model]]$analytic.css.func))
   {
@@ -231,7 +228,7 @@ calc_css <- function(chem.name=NULL,
   }
   
   # Use this conentration to cutoff the iterations:
->>>>>>> dev
+
   target.conc <- (1 - f) * css 
 
 # Identify the concentration that we are intending to check for steady-state:
@@ -264,13 +261,11 @@ calc_css <- function(chem.name=NULL,
   total.days <- days
   additional.days <- days
 
-<<<<<<< HEAD
-=======
   # Calculate the fractional change on the last simulated day:
   conc.delta <- (out[match((additional.days - 1), floor(out[,'time'])), target] -
                 out[match((additional.days - 2), floor(out[,'time'])), target]) /
                 out[match((additional.days - 2), floor(out[,'time'])), target] 
->>>>>>> dev
+
 #  # For the 3-compartment model:  
 #  colnames(out)[colnames(out)=="Csyscomp"]<-"Cplasma"
 
@@ -304,14 +299,11 @@ calc_css <- function(chem.name=NULL,
       ...))))
     Final_Conc <- out[dim(out)[1],monitor.vars]
   
-<<<<<<< HEAD
-=======
 # Calculate the fractional change on the last simulated day:
   conc.delta <- (out[match((additional.days - 1), floor(out[,'time'])), target] -
                 out[match((additional.days - 2), floor(out[,'time'])), target]) /
                 out[match((additional.days - 2), floor(out[,'time'])), target] 
         
->>>>>>> dev
     if(total.days > 36500) break 
   }
   

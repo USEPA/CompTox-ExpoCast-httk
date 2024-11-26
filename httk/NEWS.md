@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-=======
 # httk 2.5.0 (2024-11-14)
 This release accompanies the submission of the new manuscript
 "A Simple Physiologically-Based Toxicokinetic Model for Multi-Route <i>In Vitro-In Vivo</i> Extrapolation"
