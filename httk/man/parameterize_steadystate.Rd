@@ -11,7 +11,6 @@ parameterize_steadystate(
   species = "Human",
   clint.pvalue.threshold = 0.05,
   default.to.human = FALSE,
-  class.exclude = TRUE,
   force.human.clint.fup = FALSE,
   adjusted.Funbound.plasma = TRUE,
   adjusted.Clint = TRUE,
@@ -41,9 +40,6 @@ having p-values greater than the threshold are set to zero.}
 
 \item{default.to.human}{Substitutes missing species-specific values with human values if
 TRUE (default is FALSE).}
-
-\item{class.exclude}{Exclude chemical classes identified as outside of 
-domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
 
 \item{force.human.clint.fup}{Uses human hepatic intrinsic clearance and fraction
 of unbound plasma in calculation of partition coefficients for rats if true.}

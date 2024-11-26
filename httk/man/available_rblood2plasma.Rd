@@ -10,7 +10,6 @@ available_rblood2plasma(
   dtxsid = NULL,
   species = "Human",
   adjusted.Funbound.plasma = TRUE,
-  class.exclude = TRUE,
   suppress.messages = FALSE
 )
 }
@@ -29,9 +28,6 @@ default "Human").}
 
 \item{adjusted.Funbound.plasma}{Whether or not to use Funbound.plasma
 adjustment if calculating Rblood2plasma.}
-
-\item{class.exclude}{Exclude chemical classes identified as outside of 
-domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
 
 \item{suppress.messages}{Whether or not to display relevant warning messages
 to user.}
