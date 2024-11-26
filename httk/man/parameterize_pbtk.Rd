@@ -20,7 +20,6 @@ parameterize_pbtk(
   suppress.messages = FALSE,
   restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04,
-  class.exclude = TRUE,
   million.cells.per.gliver = 110,
   liver.density = 1.05,
   kgutabs = 2.18,
@@ -70,9 +69,6 @@ binding is not taken into account (set to 1) in liver clearance if FALSE.}
 
 \item{minimum.Funbound.plasma}{\eqn{f_{up}} is not allowed to drop below
 this value (default is 0.0001).}
-
-\item{class.exclude}{Exclude chemical classes identified as outside of 
-domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
 
 \item{million.cells.per.gliver}{Hepatocellularity (defaults to 110 10^6 cells/g-liver, from Carlile et al. (1997))}
 

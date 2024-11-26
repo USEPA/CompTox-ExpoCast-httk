@@ -5,11 +5,7 @@
 \alias{httk.performance}
 \title{Historical Performance of R Package httk}
 \format{
-<<<<<<< HEAD
 An object of class \code{data.frame} with 22 rows and 18 columns.
-=======
-An object of class \code{data.frame} with 25 rows and 18 columns.
->>>>>>> dev
 }
 \usage{
 httk.performance

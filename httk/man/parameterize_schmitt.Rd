@@ -14,7 +14,6 @@ parameterize_schmitt(
   force.human.fup = FALSE,
   adjusted.Funbound.plasma = TRUE,
   suppress.messages = FALSE,
-  class.exclude = TRUE,
   minimum.Funbound.plasma = 1e-04
 )
 }
@@ -50,9 +49,6 @@ for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Def
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
-\item{class.exclude}{Exclude chemical classes identified as outside of 
-domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
-
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
@@ -77,7 +73,19 @@ et al. (2010).
 }
 \examples{
 
-parameterize_schmitt(chem.name='bisphenola')
+library(httk)
+
+# Create a list of parameters (that you can potentially change):
+p <- parameterize_schmitt(chem.name="bisphenola")
+
+# Predict the partition coefficients using a list of parameters:
+PCs <- predict_partitioning_schmitt(parameters = p)
+
+# Lump the tissues into the compartments for model "pbtk":
+lump_tissues(PCs)
+
+# Lump the tissues into a single volume of distribution
+calc_vdist(parameters=p)
 
 }
 \references{
