@@ -86,6 +86,7 @@ static const R_CMethodDef CEntries[] = {
     {"jac3comp2", (DL_FUNC) &jac3comp2, 9},
     {"event3comp2", (DL_FUNC) &event3comp2, 3},
     {"root3comp2", (DL_FUNC) &root3comp2, 7},
+//    {"initforc3comp2", (DL_FUNC) &initforc3comp2, 1},
 
     {"getParms_gas_pbtk", (DL_FUNC) &getParms_gas_pbtk, 3},
     {"initmod_gas_pbtk", (DL_FUNC) &initmod_gas_pbtk, 1},
