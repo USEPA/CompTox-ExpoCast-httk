@@ -4,9 +4,10 @@ This release accompanies the submission of the new manuscript
 and includes new models incorporating inhalation/exhalation ("sumclearances" and "3compartment2").
 
 ## Bug Fixes
-* Separate forcing functions are now declared in init.c for models (such as "gas_pbtk") that use the [deSolve forcing functionality](https://tpetzoldt.github.io/deSolve-forcing/deSolve-forcing.html).
 
 ## Enhancements
+* New model functions for TK models with inhalation/exhalation: 'parameterize_sumclearances', 'parameterize_3comp2', 'solve_3comp2'
+* Separate forcing functions are now declared in init.c for models (such as "gas_pbtk") that use the [deSolve forcing functionality](https://tpetzoldt.github.io/deSolve-forcing/deSolve-forcing.html).
 
 # httk 2.4.0 (2024-8-14)
 This release accompanies the submission of the new manuscript
