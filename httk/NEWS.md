@@ -5,6 +5,7 @@ and includes new models incorporating inhalation/exhalation ("sumclearances" and
 
 ## Bug Fixes
 * Corrected units in Armitage model documentation (does not impact performance)
+* Corrected calculation in 'calc_analytic_css_1comp.R' to reflect that Vdist is the effective plasma (not blood) volume (thanks Shenghong Wang)
 
 ## Enhancements
 * New model functions for TK models with inhalation/exhalation: 'parameterize_sumclearances', 'parameterize_3comp2', 'solve_3comp2'
