@@ -133,7 +133,8 @@ parameterize_3comp2 <- function(
                        suppress.messages = FALSE,
                        restrictive.clearance = TRUE,
                        minimum.Funbound.plasma = 0.0001,
-                       Caco2.options = NULL)
+                       Caco2.options = NULL,
+                       ...)
 {
   parms <- parameterize_pbtk(
              chem.cas = chem.cas,
@@ -153,7 +154,8 @@ parameterize_3comp2 <- function(
              restrictive.clearance = restrictive.clearance,
              minimum.Funbound.plasma = minimum.Funbound.plasma,
              physchem.exclude=FALSE,
-             Caco2.options = Caco2.options)
+             Caco2.options = Caco2.options,
+             ...)
                               
   parms$Qkidneyf <- parms$Vvenc <- parms$Vartc <- NULL
  
