@@ -24,8 +24,6 @@ solve_fetal_pbtk(
   input.units = "mg/kg",
   output.units = NULL,
   method = "lsoda",
-  rtol = 1e-08,
-  atol = 1e-12,
   default.to.human = FALSE,
   recalc.blood2plasma = FALSE,
   recalc.clearance = FALSE,
@@ -90,10 +88,6 @@ results. Default, NULL, returns model results in units specified in the
 
 \item{method}{Method used by integrator (deSolve).}
 
-\item{rtol}{Argument passed to integrator (deSolve).}
-
-\item{atol}{Argument passed to integrator (deSolve).}
-
 \item{default.to.human}{Substitutes missing animal values with human values
 if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 
@@ -120,6 +114,10 @@ dataset).}
 \item{monitor.vars}{Which variables to track by default}
 
 \item{...}{Additional arguments passed to the integrator.}
+
+\item{rtol}{Argument passed to integrator (deSolve).}
+
+\item{atol}{Argument passed to integrator (deSolve).}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each

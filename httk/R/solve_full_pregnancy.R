@@ -44,7 +44,7 @@
 #'                                
 #' # return solution in chemical amounts for fetal compartments + placenta
 #' maternal_compts <- c('gutlumen', 'gut', 'liver', 'kidney', 'lung', 'ven', 'art', 
-#' adipose','thyroid', 'rest')
+#' 'adipose','thyroid', 'rest')
 #' 
 #' fetal_compts <- c(maternal_compts[! maternal_compts %in% c('adipose', 'gutlumen') ], 
 #' "brain")
