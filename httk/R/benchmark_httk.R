@@ -455,7 +455,6 @@ benchmark_httk <- function(
                                             as.numeric(FitData2$Pred.Cmax) /
                                             as.numeric(FitData2$Cmax)))
                                         )
-<<<<<<< HEAD
                                                                 
 #    write.table(FitData[,c(1,3,5,6,29,31)], 
 #                file=paste("invivovcsscheck-",
@@ -463,9 +462,8 @@ benchmark_httk <- function(
 #                           ".txt",sep=""),
 #                           row.names=FALSE,
 #                           sep="\t")
-=======
+
     print(benchmarks[["in_vivo_stats"]])
->>>>>>> dev
   }
 
   #

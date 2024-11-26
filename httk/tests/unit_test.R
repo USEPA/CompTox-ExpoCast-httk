@@ -16,7 +16,7 @@ convert_units("uM","mg/L",chem.name="diclofenac")
 #
 # Compare with 
 #   https://www.eurofinsus.com/environment-testing/services/air-and-vapor/unit-conversion-calculator/
-# STP assumes 24.45 = (25°C and 1 atm)
+# STP assumes 24.45 = (25?C and 1 atm)
 # 1 ug/L Toluene -> 0.26539 ppmv
 convert_units("ug/L","ppmv",
                 chem.name="toluene",
@@ -34,7 +34,11 @@ convert_units("ug/L","ppmv",
 # Test that convert_solve_x doesn't throw any errors:
 head(solve_gas_pbtk(chem.name="bisphenol a",
                     times=c(0,0.1,0.05),
-                    output.units=setNames("mg/m3","Cendexhppmv")))
+                    output.units=setNames("mg/m3","Cendexhppmv"),
+                    method = "lsode",
+                    mf = 10, 
+                    rtol=1e-7,
+                    atol=1e-7))
 
 # Quit without saving or displaying messages:
 quit("no")

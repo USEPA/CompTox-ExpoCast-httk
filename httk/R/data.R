@@ -1345,18 +1345,6 @@
 #' @docType data
 #' @format A data.frame containing 11 rows and 7 columns.
 #' @author John Wambaugh and Nisha Sipes
-<<<<<<< HEAD
-#' @references Davies, B. and Morris, T. (1993). Physiological Parameters in
-#' Laboratory Animals and Humans. Pharmaceutical Research 10(7), 1093-1095,
-#' 10.1023/a:1018943613122.  %gfr and other flows Anderson and Holford (2009)
-#' %scaling gfr by 3/4 Robertshaw, D., Temperature Regulation and Thermal
-#' Environment, in Dukes' Physiology of Domestic Animals, 12th ed., Reece W.O.,
-#' Ed. Copyright 2004 by Cornell University.  Stammers (1926) The blood count
-#' and body temperature in normal rats Gordon (1993) Temperature Regulation in
-#' Laboratory Rodents
-#' @source Wambaugh, John F., et al. "Toxicokinetic triage for environmental
-#' chemicals." Toxicological Sciences (2015): 228-237.
-=======
 #' 
 #' @references 
 #' \insertRef{davies1993physiological}{httk}
@@ -1405,7 +1393,6 @@
 #'             suppress.messages=TRUE,
 #'             samples = 100)
 #'
->>>>>>> dev
 #' @keywords data
 "physiology.data"
 

@@ -1,13 +1,7 @@
 
-<<<<<<< HEAD
-R Under development (unstable) (2023-04-16 r84269 ucrt) -- "Unsuffered Consequences"
-Copyright (C) 2023 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
-=======
 R Under development (unstable) (2024-08-07 r86984 ucrt) -- "Unsuffered Consequences"
 Copyright (C) 2024 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
->>>>>>> dev
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -30,7 +24,11 @@ Type 'q()' to quit R.
 > 
 > library(httk)
 > 
-> head(solve_gas_pbtk(chem.name="pyrene",times=c(0,0.1,0.05)))
+> # The following arguments were added: method = "lsode",mf = 10.
+> # Rationale: Following is required for the same results on various OS's due to
+> #   precision differences.
+> head(solve_gas_pbtk(chem.name="pyrene",times=c(0,0.1,0.05),
++                     method = "lsode",mf = 10))
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
 AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.754.
@@ -40,16 +38,6 @@ The model outputs are provided in the following units:
 	umol: Atubules, Ametabolized
 	uM*days: AUC
 
-<<<<<<< HEAD
-     time   Cgut Cliver    Cven  Clung    Cart  Crest Ckidney Cplasma Calvppmv
-[1,] 0.00 0.0000 0.0000 0.00000 0.0000 0.00000 0.0000   0.000 0.00000  0.0e+00
-[2,] 0.05 0.8585 0.1894 0.01611 0.3684 0.04362 0.1126   1.387 0.02138  4.5e-08
-[3,] 0.10 1.1860 0.2632 0.02532 0.5802 0.05639 0.2437   1.816 0.03360  5.8e-08
-     Cendexhppmv Cmixexhppmv Cmuc  Atubules Ametabolized       AUC
-[1,]    0.000000     0.01227    0 0.0000000        0.000 0.0000000
-[2,]    0.003962     0.01504 1545 0.0007019        1.992 0.0006714
-[3,]    0.006654     0.01693 2591 0.0017090        5.972 0.0020490
-=======
       time     Cgut   Cliver     Cven    Clung     Cart    Crest  Ckidney
 [1,] 0e+00 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000
 [2,] 1e-04 0.000456 0.000077 0.000001 0.000122 0.005813 0.000022 0.001848
@@ -65,7 +53,6 @@ The model outputs are provided in the following units:
 [2,] 0.000000
 [3,] 0.000871
 [4,] 0.003118
->>>>>>> dev
 Warning messages:
 1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
   Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
@@ -75,7 +62,8 @@ Warning messages:
   Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.
 4: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
-> head(solve_gas_pbtk(chem.cas="129-00-0",times=c(0,0.1,0.05)))
+> head(solve_gas_pbtk(chem.cas="129-00-0",times=c(0,0.1,0.05),
++                     method = "lsode",mf = 10))
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
 AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.754.
@@ -85,16 +73,6 @@ The model outputs are provided in the following units:
 	umol: Atubules, Ametabolized
 	uM*days: AUC
 
-<<<<<<< HEAD
-     time   Cgut Cliver    Cven  Clung    Cart  Crest Ckidney Cplasma Calvppmv
-[1,] 0.00 0.0000 0.0000 0.00000 0.0000 0.00000 0.0000   0.000 0.00000  0.0e+00
-[2,] 0.05 0.8585 0.1894 0.01611 0.3684 0.04362 0.1126   1.387 0.02138  4.5e-08
-[3,] 0.10 1.1860 0.2632 0.02532 0.5802 0.05639 0.2437   1.816 0.03360  5.8e-08
-     Cendexhppmv Cmixexhppmv Cmuc  Atubules Ametabolized       AUC
-[1,]    0.000000     0.01227    0 0.0000000        0.000 0.0000000
-[2,]    0.003962     0.01504 1545 0.0007019        1.992 0.0006714
-[3,]    0.006654     0.01693 2591 0.0017090        5.972 0.0020490
-=======
       time     Cgut   Cliver     Cven    Clung     Cart    Crest  Ckidney
 [1,] 0e+00 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000
 [2,] 1e-04 0.000456 0.000077 0.000001 0.000122 0.005813 0.000022 0.001848
@@ -110,7 +88,6 @@ The model outputs are provided in the following units:
 [2,] 0.000000
 [3,] 0.000871
 [4,] 0.003118
->>>>>>> dev
 Warning messages:
 1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
   Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
@@ -122,7 +99,8 @@ Warning messages:
   Default value of 1.6 used for Caco2 permeability.
 > head(solve_gas_pbtk(
 +   parameters=parameterize_gas_pbtk(chem.cas="129-00-0"),
-+   times=c(0,0.1,0.05)))
++   times=c(0,0.1,0.05),
++   method = "lsode",mf = 10))
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
 AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.754.
@@ -132,16 +110,6 @@ The model outputs are provided in the following units:
 	umol: Atubules, Ametabolized
 	uM*days: AUC
 
-<<<<<<< HEAD
-     time   Cgut Cliver    Cven  Clung    Cart  Crest Ckidney Cplasma Calvppmv
-[1,] 0.00 0.0000 0.0000 0.00000 0.0000 0.00000 0.0000   0.000 0.00000  0.0e+00
-[2,] 0.05 0.8585 0.1894 0.01611 0.3684 0.04362 0.1126   1.387 0.02138  4.5e-08
-[3,] 0.10 1.1860 0.2632 0.02532 0.5802 0.05639 0.2437   1.816 0.03360  5.8e-08
-     Cendexhppmv Cmixexhppmv Cmuc  Atubules Ametabolized       AUC
-[1,]    0.000000     0.01227    0 0.0000000        0.000 0.0000000
-[2,]    0.003962     0.01504 1545 0.0007019        1.992 0.0006714
-[3,]    0.006654     0.01693 2591 0.0017090        5.972 0.0020490
-=======
       time     Cgut   Cliver     Cven    Clung     Cart    Crest  Ckidney
 [1,] 0e+00 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000 0.000000
 [2,] 1e-04 0.000456 0.000077 0.000001 0.000122 0.005813 0.000022 0.001848
@@ -157,7 +125,6 @@ The model outputs are provided in the following units:
 [2,] 0.000000
 [3,] 0.000871
 [4,] 0.003118
->>>>>>> dev
 Warning messages:
 1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
   Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
