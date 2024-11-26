@@ -155,7 +155,8 @@ parameterize_3comp <- function(
              suppress.messages = suppress.messages,
              restrictive.clearance = restrictive.clearance,
              minimum.Funbound.plasma = minimum.Funbound.plasma,
-             Caco2.options = Caco2.options)
+             Caco2.options = Caco2.options,
+             ...)
                               
   parms$Qkidneyf <- parms$Vvenc <- parms$Vartc <- NULL
  
