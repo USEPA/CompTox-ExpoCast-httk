@@ -140,7 +140,6 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
       warning("Argument restrictive.clearance=FALSE ignored by model 1comp when parameters!=NULL.") 
     }
   }
-
   
   # one compartment Css is dose.rate / clearance:
 
@@ -152,13 +151,11 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
                                  dose.units,
                                  "mg") # mg/kg/h
                                  
-  Css <- hourly.dose *
+  Css.plasma <- hourly.dose *
   # Oral bioavailability:
            parameters[["Fabsgut"]] * parameters[["hepatic.bioavailability"]] /
   # Clearance:
            parameters[["kelim"]] / parameters[["Vdist"]]
-  # Convert to plasma concentration:
-  Css <- Css/parameters[["Rblood2plasma"]]
   
 # Check to see if a specific tissue was asked for:
   if (!is.null(tissue))
@@ -168,11 +165,12 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
     #data.table/data.frame or list object, however, depending on the source 
     #of the parameters. In calc_mc_css, for example, parameters is received 
     #as a "data.table" object. Screen for processing appropriately.
-    if (any(class(parameters) == "data.table")){
+    if (any(class(parameters) == "data.table"))
+    {
       pcs <- predict_partitioning_schmitt(parameters =
             parameters[, param.names.schmitt[param.names.schmitt %in% 
                                              names(parameters)], with = F])
-    }else if (is(parameters,"list")) {
+    } else if (is(parameters,"list")) {
       pcs <- predict_partitioning_schmitt(parameters =
          parameters[param.names.schmitt[param.names.schmitt %in% 
                                     names(parameters)]])
@@ -185,17 +183,22 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
       stop(paste("Tissue",tissue,"is not available."))
     }
 
-    Css <- Css * 
+    Css <- Css.plasma * 
       pcs[[names(pcs)[substr(names(pcs),2,nchar(names(pcs))-3)==tissue]]] * 
       parameters$Funbound.plasma   
+  } else {
+    Css <- Css.plasma
   }
   
-  if(tolower(concentration) != 'tissue'){
+  if(tolower(concentration) != 'tissue')
+  {
     if (tolower(concentration)=='blood')
     {
-      Css <- Css * parameters[['Rblood2plasma']]
+      Css <- Css.plasma * parameters[['Rblood2plasma']]
       
-    }else if(bioactive.free.invivo == TRUE & tolower(concentration) == 'plasma'){
+    } else if (bioactive.free.invivo == TRUE & 
+               tolower(concentration) == 'plasma') 
+    {
       
       Css <- Css * parameters[['Funbound.plasma']]
       
