@@ -415,6 +415,27 @@ specification in compartment_units for model ", model)
 # necessarily need all parameters associated with a given model to do this:)
   if (is.null(parameters))
   {
+    # restrictive.clearance can be set two places, so check for issues:
+    parameterize.restrictive.clearance <- restrictive.clearance
+    if ("restrictive.clearance" %in% names(parameterize.arg.list))
+    {
+      if (restrictive.clearance != 
+          parameterize.arg.list[["restrictive.clearance"]])
+      {
+        warning(paste("Value",
+                      parameterize.arg.list[["restrictive.clearance"]],
+                      "for restrictive.clearance in parameterze.arg.list",
+                      "has overwritting value",
+                      restrictive.clearance,
+                      "in arguments to solve.model."))
+        parameterize.restrictive.clearance <- 
+          parameterize.arg.list[["restrictive.clearance"]]
+       }
+       parameterize.arg.list <- parameterize.arg.list[!(
+                                   names(parameterize.arg.list) %in%
+                                   "restrictive.clearance")]
+    } 
+
     parameters <- do.call(parameterize_function, args=purrr::compact(c(
       list(
         chem.cas=chem.cas,
@@ -424,7 +445,7 @@ specification in compartment_units for model ", model)
         suppress.messages=suppress.messages,
         adjusted.Funbound.plasma=adjusted.Funbound.plasma,
         minimum.Funbound.plasma=minimum.Funbound.plasma,
-        restrictive.clearance=restrictive.clearance
+        restrictive.clearance=parameterize.restrictive.clearance
         ),
       parameterize.arg.list))) 
   } else {
@@ -474,13 +495,7 @@ specification in compartment_units for model ", model)
       restrictive.clearance = restrictive.clearance,
       suppress.messages=TRUE)
   }
-  
-  # If the hepatic metabolism is not slowed by plasma protein binding (non-
-  # restrictive clearance)  
-# This should be handled in calc_hep_clearance above
-#  if (!restrictive.clearance) parameters$Clmetabolismc <- 
-#    parameters$Clmetabolismc / parameters$Funbound.plasma
-  
+    
   # If there is not an explicit liver we need to include a factor for first-
   # pass metabolism:
   if (!is.null(model.list[[model]]$do.first.pass))
