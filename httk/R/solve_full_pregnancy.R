@@ -183,6 +183,9 @@ solve_full_pregnancy <- function(dtxsid, track.vars = NULL, plt = FALSE,
   initial.dat["fAUC"] = initial.dat["AUC"]
   
   # modified input to fetal_pbtk
+  # ode solver starts solution at day 90.9999 due to small.time in solve_model 
+  # this is slight imprecise but won't change my results significantly - 
+  # keep row for day 90.9999 in output for now
   mod.fetal.out <- solve_fetal_pbtk(dtxsid = dtxsid, 
                                     times = t2, 
                                     dose = 0, 
@@ -190,9 +193,6 @@ solve_full_pregnancy <- function(dtxsid, track.vars = NULL, plt = FALSE,
                                     initial.values = initial.dat, 
                                     suppress.messages = TRUE,
                                     ...)
-  
-  # trim row prior to day 91 due to dosing 
-  mod.fetal.out <- mod.fetal.out[which(mod.fetal.out[, "time"] == 13*7):nrow(mod.fetal.out), ]
   
   # get full solution by concatenating 2 outputs
   full_sol <- bind_rows(data.frame(firsttri.out), data.frame(mod.fetal.out))
