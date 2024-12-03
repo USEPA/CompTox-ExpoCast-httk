@@ -122,6 +122,7 @@ solve_full_pregnancy <- function(dtxsid, track.vars = NULL, plt = FALSE,
                                   times = t1, 
                                   dose = 0, # initial dose on day 1 
                                   monitor.vars = firsttri.outputs, 
+                                  suppress.messages = TRUE, # suppress messages about running single models
                                   ...)
 
   # initialize vector for "initial.values" input to fetal_pbtk 
@@ -141,8 +142,9 @@ solve_full_pregnancy <- function(dtxsid, track.vars = NULL, plt = FALSE,
   # get volumes from C model implementation
   vols.out <- solve_fetal_pbtk(dtxsid = dtxsid,
                                dose = 0, 
-                               times = c(13*7, 13*7+1), # times needs to contain at least 2 values
-                               monitor.vars = c(missing.vols, "fhematocrit")
+                               times = c(13*7), 
+                               monitor.vars = c(missing.vols, "fhematocrit"), 
+                               suppress.messages = TRUE,
   )
   
   fetal.parms <- parameterize_fetal_pbtk(dtxsid = dtxsid)
@@ -186,6 +188,7 @@ solve_full_pregnancy <- function(dtxsid, track.vars = NULL, plt = FALSE,
                                     dose = 0, 
                                     monitor.vars = mf.outputs, 
                                     initial.values = initial.dat, 
+                                    suppress.messages = TRUE,
                                     ...)
   
   # trim row prior to day 91 due to dosing 
