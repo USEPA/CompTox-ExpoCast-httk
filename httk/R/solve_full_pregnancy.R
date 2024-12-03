@@ -143,7 +143,7 @@ solve_full_pregnancy <- function(dtxsid, track.vars = NULL, plt = FALSE,
   vols.out <- solve_fetal_pbtk(dtxsid = dtxsid,
                                dose = 0, 
                                times = c(13*7), 
-                               monitor.vars = c(missing.vols, "fhematocrit"), 
+                               monitor.vars = c(missing.vols, "fhematocrit", "Rfblood2plasma"), 
                                suppress.messages = TRUE,
   )
   
@@ -171,13 +171,13 @@ solve_full_pregnancy <- function(dtxsid, track.vars = NULL, plt = FALSE,
   initial.dat[names(Af)] = Af 
   
   # compute amounts for Afart, Afven based on avg partition coefficient of RBCs and plasma 
-  initial.dat["Afart"] = firsttri.out[ind, "Aconceptus"]*vols.out[1, "Vfart"]*vols.out[[1, "fhematocrit"]]*fetal.pcs[["Kfrbc2pu"]] 
-  initial.dat["Afart"] = initial.dat["Afart"] + firsttri.out[ind, "Aconceptus"]*vols.out[1, "Vfart"]*(1-vols.out[[1, "fhematocrit"]])/fetal.parms$Fraction_unbound_plasma_fetus 
-  initial.dat["Afart"] = initial.dat["Afart"]/KVtotal
+  initial.dat["Afart"] = firsttri.out[[ind, "Aconceptus"]]*vols.out[[1, "Vfart"]]*vols.out[[1, "fhematocrit"]]*fetal.pcs[["Kfrbc2pu"]] 
+  initial.dat["Afart"] = initial.dat[["Afart"]] + firsttri.out[[ind, "Aconceptus"]]*vols.out[[1, "Vfart"]]*(1-vols.out[[1, "fhematocrit"]])/fetal.parms$Fraction_unbound_plasma_fetus 
+  initial.dat["Afart"] = initial.dat[["Afart"]]/KVtotal
   
-  initial.dat["Afven"] = firsttri.out[ind, "Aconceptus"]*vols.out[1, "Vfven"]*vols.out[[1, "fhematocrit"]]*fetal.pcs[["Kfrbc2pu"]] 
-  initial.dat["Afven"] = initial.dat["Afven"] + firsttri.out[ind, "Aconceptus"]*vols.out[1, "Vfven"]*(1-vols.out[[1, "fhematocrit"]])/fetal.parms$Fraction_unbound_plasma_fetus 
-  initial.dat["Afven"] = initial.dat["Afven"]/KVtotal
+  initial.dat["Afven"] = firsttri.out[[ind, "Aconceptus"]]*vols.out[[1, "Vfven"]]*vols.out[[1, "fhematocrit"]]*fetal.pcs[["Kfrbc2pu"]] 
+  initial.dat["Afven"] = initial.dat[["Afven"]] + firsttri.out[[ind, "Aconceptus"]]*vols.out[[1, "Vfven"]]*(1-vols.out[[1, "fhematocrit"]])/fetal.parms$Fraction_unbound_plasma_fetus 
+  initial.dat["Afven"] = initial.dat[["Afven"]]/KVtotal
   
   # assuming no placental barrier 
   initial.dat["fAUC"] = initial.dat["AUC"]
@@ -198,8 +198,19 @@ solve_full_pregnancy <- function(dtxsid, track.vars = NULL, plt = FALSE,
   full_sol <- bind_rows(data.frame(firsttri.out), data.frame(mod.fetal.out))
 
   # add initial.values computed at day 91 from Aconceptus(13)
-  # always return the solution with derived initial conds and fetal_pbtk solution at day 91
+  # always return fetal_pbtk solution at day 91 as well
   full_sol[ind, c(missing.amts, "fAUC")] = initial.dat[c(missing.amts, "fAUC")]
+  
+  # convert these initial.values to concentrations
+  # add these concentrations to output's first row pertaining to day 91
+  missing.concs <- sub("^A", "C", missing.amts)
+  full_sol[ind, missing.concs] = initial.dat[missing.amts]/vols.out[1, missing.vols]
+  
+  # initial plasma conc values are calculated from Afven solution
+  full_sol[ind, "Cfplasma"] = initial.dat[["Afven"]]/vols.out[[1, "Vfven"]]/vols.out[[1, "Rfblood2plasma"]]
+  full_sol[ind, "Afplasma"] = initial.dat[["Afven"]]/vols.out[[1, "Rfblood2plasma"]]*(1 - vols.out[[1, "fhematocrit"]])
+  full_sol[ind, "Rfblood2plasma"] = vols.out[[1, "Rfblood2plasma"]]
+  
   
   # plot all states (the amts)
   if (plt == TRUE) {
