@@ -188,6 +188,9 @@ solve_full_pregnancy <- function(dtxsid, track.vars = NULL, plt = FALSE,
                                     initial.values = initial.dat, 
                                     ...)
   
+  # trim row prior to day 91 due to dosing 
+  mod.fetal.out <- mod.fetal.out[which(mod.fetal.out[, "time"] == 13*7):nrow(mod.fetal.out), ]
+  
   # get full solution by concatenating 2 outputs
   full_sol <- bind_rows(data.frame(firsttri.out), data.frame(mod.fetal.out))
 
