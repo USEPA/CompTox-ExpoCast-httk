@@ -9,13 +9,16 @@
 #' stitching together the 1tri and fetal PBTK models with appropriate initial 
 #' conditions, as described in Truong et al. (TBD). 
 #'
-#'
-#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' @param chem.name Either the chemical name, CAS number, or DTXSID
+#' must be specified.
+#' @param chem.cas Either the chemical name, CAS number, or DTXSID must be specified.
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard}) 
+#' @param time.course Time sequence in days. Default is from 0th week of pregnancy to 
+#' 40th, incremented by day. 
 #' @param track.vars which variables to return in solution output dataframe
 #' @param plt plots all outputs, if TRUE
-#' @param return.units if plt = TRUE, plots outputs in desired units of interest. 
-#' @param time.course Time sequence in days. Default is from 0th week of pregnancy to 
-#' 40th, incremented by day.
+#' @param return.units if plt = TRUE, plots outputs in desired units of interest
+#' (either 'amt' for chemical amounts or 'conc' for chemical concentration).
 #' @param ... additional arguments passed to solve_fetal_pbtk and solve_1tri_pbtk
 #' (this is where you input daily.dose and doses.per.day)
 #' 
@@ -77,13 +80,14 @@
 #' @import ggplot2
 
 solve_full_pregnancy <- function(
-    chem.name = chem.name,
-    chem.cas = chem.cas,
-    dtxsid = dtxsid,
-    track.vars = NULL, plt = FALSE,
-                           return.units = "amt",
-                           time.course = seq(0,40*7,1), 
-                           ...)
+    chem.name = NULL,
+    chem.cas = NULL,
+    dtxsid = NULL,
+    time.course = seq(0,40*7,1), 
+    track.vars = NULL, 
+    plt = FALSE,
+    return.units = "amt",
+    ...)
 {
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -92,14 +96,14 @@ solve_full_pregnancy <- function(
     stop('chem.name, chem.cas, or dtxsid must be specified.')
 
   # Look up the chemical name/CAS, depending on what was provided:
-  out <- get_chem_id(chem.cas=chem.cas,
+  chid <- get_chem_id(chem.cas=chem.cas,
                      chem.name=chem.name,
                      dtxsid=dtxsid)
-  chem.cas <- out$chem.cas
-  chem.name <- out$chem.name
-  dtxsid <- out$dtxsid
+  chem.cas <- chid$chem.cas
+  chem.name <- chid$chem.name
+  dtxsid <- chid$dtxsid
     
-  cat("Solving for chemical: ", dtxsid, "\n")
+  cat(paste0("Solving for chemical: ", chem.name, " (", dtxsid, ")\n"))
     
   maternal_compts <- c('gutlumen', 'gut', 'liver', 'kidney', 'lung', 'ven', 'art', 
                        'adipose','thyroid', 'rest')

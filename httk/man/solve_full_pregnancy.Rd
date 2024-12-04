@@ -5,25 +5,33 @@
 \title{Solve_full_pregnancy}
 \usage{
 solve_full_pregnancy(
-  dtxsid,
+  chem.name = NULL,
+  chem.cas = NULL,
+  dtxsid = NULL,
+  time.course = seq(0, 40 * 7, 1),
   track.vars = NULL,
   plt = FALSE,
   return.units = "amt",
-  time.course = seq(0, 40 * 7, 1),
   ...
 )
 }
 \arguments{
+\item{chem.name}{Either the chemical name, CAS number, or DTXSID
+must be specified.}
+
+\item{chem.cas}{Either the chemical name, CAS number, or DTXSID must be specified.}
+
 \item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})}
+
+\item{time.course}{Time sequence in days. Default is from 0th week of pregnancy to 
+40th, incremented by day.}
 
 \item{track.vars}{which variables to return in solution output dataframe}
 
 \item{plt}{plots all outputs, if TRUE}
 
-\item{return.units}{if plt = TRUE, plots outputs in desired units of interest.}
-
-\item{time.course}{Time sequence in days. Default is from 0th week of pregnancy to 
-40th, incremented by day.}
+\item{return.units}{if plt = TRUE, plots outputs in desired units of interest
+(either 'amt' for chemical amounts or 'conc' for chemical concentration).}
 
 \item{...}{additional arguments passed to solve_fetal_pbtk and solve_1tri_pbtk
 (this is where you input daily.dose and doses.per.day)}
