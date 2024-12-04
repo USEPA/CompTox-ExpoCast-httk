@@ -175,7 +175,7 @@ parameterize_steadystate <- function(
               model="3compartmentss",
               species=species,
               class.exclude=class.exclude,
-              default.to.human=default.to.human)
+              default.to.human=default.to.human|force.human.clint.fup)
 
   #Capitalize the first letter of species only:
   species <- tolower(species)
