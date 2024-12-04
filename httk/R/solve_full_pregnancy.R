@@ -76,12 +76,31 @@
 #' @import data.table
 #' @import ggplot2
 
-solve_full_pregnancy <- function(dtxsid, track.vars = NULL, plt = FALSE,
+solve_full_pregnancy <- function(
+    chem.name = chem.name,
+    chem.cas = chem.cas,
+    dtxsid = dtxsid,
+    track.vars = NULL, plt = FALSE,
                            return.units = "amt",
                            time.course = seq(0,40*7,1), 
-                           ...) {
+                           ...)
+{
+# We need to describe the chemical to be simulated one way or another:
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid)) 
+    stop('chem.name, chem.cas, or dtxsid must be specified.')
+
+  # Look up the chemical name/CAS, depending on what was provided:
+  out <- get_chem_id(chem.cas=chem.cas,
+                     chem.name=chem.name,
+                     dtxsid=dtxsid)
+  chem.cas <- out$chem.cas
+  chem.name <- out$chem.name
+  dtxsid <- out$dtxsid
+    
   cat("Solving for chemical: ", dtxsid, "\n")
-  
+    
   maternal_compts <- c('gutlumen', 'gut', 'liver', 'kidney', 'lung', 'ven', 'art', 
                        'adipose','thyroid', 'rest')
   maternal_states <- paste0('A', maternal_compts)

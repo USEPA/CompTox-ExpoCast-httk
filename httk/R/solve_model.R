@@ -869,6 +869,9 @@ specification in compartment_units for model ", model)
     dose.times <- c(sapply(eventdata$time-small.time, function(x) max(x,0)),
       eventdata$time,
       eventdata$time+small.time)
+    # Only include dose.times after requested start time:
+    dose.times <- dose.times[dose.times >= start.time]
+        # Ensure times is sorted and unique:
     times <- sort(unique(c(times, dose.times)))
     # Also add the times of the doses to those returned by the function:
     requested.times <- sort(unique(c(requested.times, dose.times)))
