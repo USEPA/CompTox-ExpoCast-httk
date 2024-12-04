@@ -56,10 +56,10 @@ conditions, as described in Truong et al. (TBD).
 
 # dosing schedule of 1 mg/kg BW/day for 40 weeks
 # return solution by hour
-out <- solve_full_pregnancy(dtxsid = "DTXSID4034609", # Fipronil 
-                               daily.dose = 1, 
-                               doses.per.day = 1,
-                               time.course = seq(0, 40*7, 1/24))
+out <- solve_full_pregnancy(chem.name = "fipronil",  
+                           daily.dose = 1, 
+                           doses.per.day = 1,
+                           time.course = seq(0, 40*7, 1/24))
                    
                                
 # return solution in chemical amounts for fetal compartments + placenta
@@ -69,14 +69,14 @@ maternal_compts <- c('gutlumen', 'gut', 'liver', 'kidney', 'lung', 'ven', 'art',
 fetal_compts <- c(maternal_compts[! maternal_compts \%in\% c('adipose', 'gutlumen') ], 
 "brain")
 
-amt.out <- solve_full_pregnancy(dtxsid = "DTXSID4034609", # Fipronil 
+amt.out <- solve_full_pregnancy(chem.name = "fipronil",  
                                daily.dose = 1, 
                                doses.per.day = 1,
                                time.course = seq(0, 40*7, 1), 
                                track.vars = c(paste0("Af", fetal_compts), "Aplacenta"))
 
 # return solution in concentrations for fetal compartments + placenta 
-conc.out <- solve_full_pregnancy(dtxsid = "DTXSID4034609", # Fipronil 
+conc.out <- solve_full_pregnancy(chem.name = "fipronil", 
                                 daily.dose = 1, 
                                 doses.per.day = 1,
                                 time.course = seq(0, 40*7, 1), 
@@ -84,7 +84,7 @@ conc.out <- solve_full_pregnancy(dtxsid = "DTXSID4034609", # Fipronil
 
 # plot solution in units of amounts
 # in this case, time.course affects both deSolve output and plot 
-gplot.out <- solve_full_pregnancy(dtxsid = "DTXSID5022308", # Genistein
+gplot.out <- solve_full_pregnancy(chem.name = "genistein", 
                                  daily.dose = 1, 
                                  doses.per.day = 1,
                                  time.course = seq(89,92, 1/24), 
