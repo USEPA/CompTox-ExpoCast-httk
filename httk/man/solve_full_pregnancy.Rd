@@ -5,25 +5,33 @@
 \title{Solve_full_pregnancy}
 \usage{
 solve_full_pregnancy(
-  dtxsid,
+  chem.name = NULL,
+  chem.cas = NULL,
+  dtxsid = NULL,
+  time.course = seq(0, 40 * 7, 1),
   track.vars = NULL,
   plt = FALSE,
   return.units = "amt",
-  time.course = seq(0, 40 * 7, 1),
   ...
 )
 }
 \arguments{
+\item{chem.name}{Either the chemical name, CAS number, or DTXSID
+must be specified.}
+
+\item{chem.cas}{Either the chemical name, CAS number, or DTXSID must be specified.}
+
 \item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})}
+
+\item{time.course}{Time sequence in days. Default is from 0th week of pregnancy to 
+40th, incremented by day.}
 
 \item{track.vars}{which variables to return in solution output dataframe}
 
 \item{plt}{plots all outputs, if TRUE}
 
-\item{return.units}{if plt = TRUE, plots outputs in desired units of interest.}
-
-\item{time.course}{Time sequence in days. Default is from 0th week of pregnancy to 
-40th, incremented by day.}
+\item{return.units}{if plt = TRUE, plots outputs in desired units of interest
+(either 'amt' for chemical amounts or 'conc' for chemical concentration).}
 
 \item{...}{additional arguments passed to solve_fetal_pbtk and solve_1tri_pbtk
 (this is where you input daily.dose and doses.per.day)}
@@ -43,6 +51,45 @@ The simulation starts at the 0th week and ends at 40 weeks of pregnancy (term),
 covering all trimesters of human pregnancy. This is accomplished by 
 stitching together the 1tri and fetal PBTK models with appropriate initial 
 conditions, as described in Truong et al. (TBD).
+}
+\examples{
+
+# dosing schedule of 1 mg/kg BW/day for 40 weeks
+# return solution by hour
+out <- solve_full_pregnancy(chem.name = "fipronil",  
+                           daily.dose = 1, 
+                           doses.per.day = 1,
+                           time.course = seq(0, 40*7, 1/24))
+                   
+                               
+# return solution in chemical amounts for fetal compartments + placenta
+maternal_compts <- c('gutlumen', 'gut', 'liver', 'kidney', 'lung', 'ven', 'art', 
+'adipose','thyroid', 'rest')
+
+fetal_compts <- c(maternal_compts[! maternal_compts \%in\% c('adipose', 'gutlumen') ], 
+"brain")
+
+amt.out <- solve_full_pregnancy(chem.name = "fipronil",  
+                               daily.dose = 1, 
+                               doses.per.day = 1,
+                               time.course = seq(0, 40*7, 1), 
+                               track.vars = c(paste0("Af", fetal_compts), "Aplacenta"))
+
+# return solution in concentrations for fetal compartments + placenta 
+conc.out <- solve_full_pregnancy(chem.name = "fipronil", 
+                                daily.dose = 1, 
+                                doses.per.day = 1,
+                                time.course = seq(0, 40*7, 1), 
+                                track.vars = c(paste0("Cf", fetal_compts), "Cplacenta"))
+
+# plot solution in units of amounts
+# in this case, time.course affects both deSolve output and plot 
+gplot.out <- solve_full_pregnancy(chem.name = "genistein", 
+                                 daily.dose = 1, 
+                                 doses.per.day = 1,
+                                 time.course = seq(89,92, 1/24), 
+                                 plt = T, return.units = "amt")
+
 }
 \seealso{
 \code{\link{solve_1tri_pbtk}}

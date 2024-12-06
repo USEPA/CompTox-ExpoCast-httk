@@ -1,7 +1,7 @@
 
-R Under development (unstable) (2023-04-16 r84269 ucrt) -- "Unsuffered Consequences"
-Copyright (C) 2023 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R Under development (unstable) (2024-08-07 r86984 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -26,7 +26,7 @@ Type 'q()' to quit R.
 > 
 > calc_analytic_css(chem.name="bisphenol a",model="3compartment")
 Plasma concentration returned in uM units.
-[1] 1.588
+[1] 0.9417
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -42,7 +42,7 @@ Warning messages:
   Default value of 1.6 used for Caco2 permeability.
 > calc_analytic_css(chem.cas="80-05-7",model="3compartment")
 Plasma concentration returned in uM units.
-[1] 1.588
+[1] 0.9417
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -58,7 +58,7 @@ Warning messages:
   Default value of 1.6 used for Caco2 permeability.
 > calc_analytic_css(parameters=parameterize_3comp(chem.cas="80-05-7"),model="3compartment")
 Plasma concentration returned in uM units.
-[1] 1.588
+[1] 0.9417
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -74,7 +74,7 @@ Warning messages:
   Default value of 1.6 used for Caco2 permeability.
 > calc_analytic_css(chem.name="bisphenol a",model="3compartment",tissue="liver")
 Plasma concentration for liver returned in uM units.
-[1] 28.5
+[1] 253.6
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -90,7 +90,7 @@ Warning messages:
   Default value of 1.6 used for Caco2 permeability.
 > calc_analytic_css(chem.name="bisphenol a",model="3compartment",tissue="brain")
 Plasma concentration for brain returned in uM units.
-[1] 9.268
+[1] 5.496
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -105,29 +105,29 @@ Warning messages:
 6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > 
-> head(solve_3comp(chem.name="bisphenol a"))
+> head(solve_3comp(chem.name="bisphenol a",days=1))
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
 AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
 The model outputs are provided in the following units:
 	umol: Aintestine, Atubules, Ametabolized
-	uM: Cliver, Csyscomp
+	uM: Cliver, Csyscomp, Cplasma
 	uM*days: AUC
 
-           time Aintestine Cliver Csyscomp  Atubules Ametabolized       AUC
-[1,] 0.00000000     263.90   0.00  0.00000 0.000e+00      0.00000 0.000e+00
-[2,] 0.00100000     250.40   5.70  0.01154 6.223e-06      0.02726 3.365e-06
-[3,] 0.01041667     153.00  30.38  0.98590 7.379e-03      2.43900 3.990e-03
-[4,] 0.02083333      88.72  26.68  2.21600 3.881e-02      5.84100 2.098e-02
-[5,] 0.03125000      51.45  20.77  3.03100 8.999e-02      8.58800 4.866e-02
-[6,] 0.04166667      29.83  16.70  3.51300 1.534e-01     10.75000 8.297e-02
-     Cplasma
-[1,] 0.00000
-[2,] 0.01154
-[3,] 0.98590
-[4,] 2.21600
-[5,] 3.03100
-[6,] 3.51300
+       time Aintestine   Cliver Csyscomp  Cplasma Atubules Ametabolized
+[1,] 0.0000      197.5 0.000000 0.000000 0.000000 0.000000     0.000000
+[2,] 0.0001      197.3 0.000316 0.000000 0.000000 0.000000     0.000003
+[3,] 0.0104      180.0 0.314600 0.007397 0.009306 0.000141     0.440700
+[4,] 0.0208      164.1 0.477300 0.025240 0.031750 0.001045     1.530000
+[5,] 0.0312      149.6 0.546700 0.047210 0.059390 0.003111     2.916000
+[6,] 0.0416      136.3 0.569200 0.070130 0.088220 0.006474     4.418000
+          AUC
+[1,] 0.000000
+[2,] 0.000000
+[3,] 0.000026
+[4,] 0.000190
+[5,] 0.000564
+[6,] 0.001175
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -141,29 +141,29 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
-> head(solve_3comp(chem.cas="80-05-7"))
+> head(solve_3comp(chem.cas="80-05-7",days=1))
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
 AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
 The model outputs are provided in the following units:
 	umol: Aintestine, Atubules, Ametabolized
-	uM: Cliver, Csyscomp
+	uM: Cliver, Csyscomp, Cplasma
 	uM*days: AUC
 
-           time Aintestine Cliver Csyscomp  Atubules Ametabolized       AUC
-[1,] 0.00000000     263.90   0.00  0.00000 0.000e+00      0.00000 0.000e+00
-[2,] 0.00100000     250.40   5.70  0.01154 6.223e-06      0.02726 3.365e-06
-[3,] 0.01041667     153.00  30.38  0.98590 7.379e-03      2.43900 3.990e-03
-[4,] 0.02083333      88.72  26.68  2.21600 3.881e-02      5.84100 2.098e-02
-[5,] 0.03125000      51.45  20.77  3.03100 8.999e-02      8.58800 4.866e-02
-[6,] 0.04166667      29.83  16.70  3.51300 1.534e-01     10.75000 8.297e-02
-     Cplasma
-[1,] 0.00000
-[2,] 0.01154
-[3,] 0.98590
-[4,] 2.21600
-[5,] 3.03100
-[6,] 3.51300
+       time Aintestine   Cliver Csyscomp  Cplasma Atubules Ametabolized
+[1,] 0.0000      197.5 0.000000 0.000000 0.000000 0.000000     0.000000
+[2,] 0.0001      197.3 0.000316 0.000000 0.000000 0.000000     0.000003
+[3,] 0.0104      180.0 0.314600 0.007397 0.009306 0.000141     0.440700
+[4,] 0.0208      164.1 0.477300 0.025240 0.031750 0.001045     1.530000
+[5,] 0.0312      149.6 0.546700 0.047210 0.059390 0.003111     2.916000
+[6,] 0.0416      136.3 0.569200 0.070130 0.088220 0.006474     4.418000
+          AUC
+[1,] 0.000000
+[2,] 0.000000
+[3,] 0.000026
+[4,] 0.000190
+[5,] 0.000564
+[6,] 0.001175
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -177,29 +177,29 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
-> head(solve_3comp(parameters=parameterize_3comp(chem.cas="80-05-7")))
+> head(solve_3comp(parameters=parameterize_3comp(chem.cas="80-05-7"),days=1))
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
 AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
 The model outputs are provided in the following units:
 	umol: Aintestine, Atubules, Ametabolized
-	uM: Cliver, Csyscomp
+	uM: Cliver, Csyscomp, Cplasma
 	uM*days: AUC
 
-           time Aintestine Cliver Csyscomp  Atubules Ametabolized       AUC
-[1,] 0.00000000     263.90   0.00  0.00000 0.000e+00      0.00000 0.000e+00
-[2,] 0.00100000     250.40   5.70  0.01154 6.223e-06      0.02726 3.365e-06
-[3,] 0.01041667     153.00  30.38  0.98590 7.379e-03      2.43900 3.990e-03
-[4,] 0.02083333      88.72  26.68  2.21600 3.881e-02      5.84100 2.098e-02
-[5,] 0.03125000      51.45  20.77  3.03100 8.999e-02      8.58800 4.866e-02
-[6,] 0.04166667      29.83  16.70  3.51300 1.534e-01     10.75000 8.297e-02
-     Cplasma
-[1,] 0.00000
-[2,] 0.01154
-[3,] 0.98590
-[4,] 2.21600
-[5,] 3.03100
-[6,] 3.51300
+       time Aintestine   Cliver Csyscomp  Cplasma Atubules Ametabolized
+[1,] 0.0000      197.5 0.000000 0.000000 0.000000 0.000000     0.000000
+[2,] 0.0001      197.3 0.000316 0.000000 0.000000 0.000000     0.000003
+[3,] 0.0104      180.0 0.314600 0.007397 0.009306 0.000141     0.440700
+[4,] 0.0208      164.1 0.477300 0.025240 0.031750 0.001045     1.530000
+[5,] 0.0312      149.6 0.546700 0.047210 0.059390 0.003111     2.916000
+[6,] 0.0416      136.3 0.569200 0.070130 0.088220 0.006474     4.418000
+          AUC
+[1,] 0.000000
+[2,] 0.000000
+[3,] 0.000026
+[4,] 0.000190
+[5,] 0.000564
+[6,] 0.001175
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -249,13 +249,13 @@ Warning messages:
 > head(initial_default_dose_target)
 [1] 306.6141
 > 
-> out_default_dosing = solve_3comp(chem.name = "bisphenol a")
+> out_default_dosing = solve_3comp(chem.name = "bisphenol a",days=2)
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
 AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
 The model outputs are provided in the following units:
 	umol: Aintestine, Atubules, Ametabolized
-	uM: Cliver, Csyscomp
+	uM: Cliver, Csyscomp, Cplasma
 	uM*days: AUC
 
 Warning messages:
@@ -275,20 +275,21 @@ Warning messages:
 > #the initial_default_dose_target in turn.
 > initial_default_dose = sum(out_default_dosing[1,])
 > head(initial_default_dose)
-[1] 263.9
+[1] 197.5
 > initial_default_dose_intestine = out_default_dosing[1,"Aintestine"]
 > head(initial_default_dose_intestine)
 Aintestine 
-     263.9 
+     197.5 
 > 
 > out_nondefault_dosing = solve_3comp(chem.name = "bisphenol a", 
-+                                     daily.dose =3,doses.per.day = 5)
++                                     daily.dose =3,doses.per.day = 5,
++                                     days=2)
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
 AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
 The model outputs are provided in the following units:
 	umol: Aintestine, Atubules, Ametabolized
-	uM: Cliver, Csyscomp
+	uM: Cliver, Csyscomp, Cplasma
 	uM*days: AUC
 
 Warning messages:
@@ -313,47 +314,47 @@ Warning messages:
 > initial_nondefault_dose = sum(out_nondefault_dosing[2,]) #Use second row because
 > #it looks like eventdata only gets registered in the output after time zero.
 > head(initial_nondefault_dose)
-[1] 153.7512
+[1] 118.4003
 > initial_nondefault_dose_intestine = out_nondefault_dosing[2,"Aintestine"]
 > head(initial_nondefault_dose_intestine)
 Aintestine 
-     150.3 
+     118.4 
 > 
 > p <- parameterize_3comp(chem.name="Aminopterin")[sort(names(parameterize_3comp(chem.name="Aminopterin")))]
 There were 16 warnings (use warnings() to see them)
-> for (this.param in sort(tolower(names(p)))) cat(paste(this.param,": ",p[[this.param]],"\n"))
-bw :   
-caco2.pab :   
-caco2.pab.dist :   
-clint :   
-clint.dist :   
-clmetabolismc :   
-fabsgut :   
-fhep.assay.correction :   
-funbound.plasma :   
-funbound.plasma.adjustment :   
-funbound.plasma.dist :   
-hematocrit :  0.44 
-kgut2pu :   
-kgutabs :  2.18 
-kliver2pu :   
-krbc2pu :   
-krest2pu :   
-liver.density :  1.05 
-ma :   
-million.cells.per.gliver :  110 
-mw :   
-pka_accept :   
-pka_donor :   
-pow :   
-qcardiacc :   
-qgfrc :   
-qgutf :   
-qliverf :   
-rblood2plasma :   
-vgutc :   
-vliverc :   
-vrestc :   
-> 
+> # Try to standardize order of variable names
+> for (this.param in names(p)[order(toupper(names(p)))]) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
+BW: 70
+Caco2.Pab: 1.6
+Caco2.Pab.dist: NA
+Clint: 0
+Clint.dist: NA
+Clmetabolismc: 0
+Fabsgut: 0.6448
+Fhep.assay.correction: 0.9561
+Funbound.plasma: 0.747
+Funbound.plasma.adjustment: 0.996
+Funbound.plasma.dist: NA
+hematocrit: 0.44
+Kgut2pu: 1.68
+kgutabs: 0.3711
+Kliver2pu: 3.803
+Krbc2pu: 0.8576
+Krest2pu: 0.9856
+liver.density: 1.05
+MA: 19
+million.cells.per.gliver: 110
+MW: 440.4
+pKa_Accept: 8.09
+pKa_Donor: 2.81
+Pow: 0.8903
+Qcardiacc: 13.88
+Qgfrc: 0.3099
+Qgutf: 0.2054
+Qliverf: 0.0535
+Rblood2plasma: 0.8419
+Vgutc: 0.0158
+Vliverc: 0.02448
+Vrestc: 0.7879
 > 
 > quit("no")
