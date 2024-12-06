@@ -236,7 +236,8 @@ parameterize_pbtk <- function(
             species=species,
             class.exclude=class.exclude,
             physchem.exclude=physchem.exclude,
-            default.to.human=default.to.human)
+            default.to.human=default.to.human|force.human.clint.fup
+            )
   
 # Get the intrinsic hepatic clearance:  
   Clint.list <- get_clint(

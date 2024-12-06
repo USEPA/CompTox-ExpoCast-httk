@@ -243,7 +243,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
             model="gas_pbtk",
             species=species,
             class.exclude=class.exclude,
-            default.to.human=default.to.human)
+            default.to.human=default.to.human|force.human.clint.fup)
             
   if (is(tissuelist,'list')==FALSE) stop("tissuelist must be a list of vectors.") 
 
