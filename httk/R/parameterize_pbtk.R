@@ -399,9 +399,6 @@ parameterize_pbtk <- function(
 
   # Only include parameters specified in modelinfo:
   outlist <- outlist[model.list[["pbtk"]]$param.names]
-
-  # alphabetize:
-  outlist <- outlist[order(tolower(names(outlist)))]
   
 # Set precision:
   return(lapply(outlist, set_httk_precision))

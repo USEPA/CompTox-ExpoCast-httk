@@ -1345,16 +1345,54 @@
 #' @docType data
 #' @format A data.frame containing 11 rows and 7 columns.
 #' @author John Wambaugh and Nisha Sipes
-#' @references Davies, B. and Morris, T. (1993). Physiological Parameters in
-#' Laboratory Animals and Humans. Pharmaceutical Research 10(7), 1093-1095,
-#' 10.1023/a:1018943613122.  %gfr and other flows Anderson and Holford (2009)
-#' %scaling gfr by 3/4 Robertshaw, D., Temperature Regulation and Thermal
-#' Environment, in Dukes' Physiology of Domestic Animals, 12th ed., Reece W.O.,
-#' Ed. Copyright 2004 by Cornell University.  Stammers (1926) The blood count
-#' and body temperature in normal rats Gordon (1993) Temperature Regulation in
-#' Laboratory Rodents
-#' @source Wambaugh, John F., et al. "Toxicokinetic triage for environmental
-#' chemicals." Toxicological Sciences (2015): 228-237.
+#' 
+#' @references 
+#' \insertRef{davies1993physiological}{httk}
+#' 
+#' \insertRef{brown1997physiological}{httk}
+#'
+#' \insertRef{birnbaum1994physiological}{httk}
+#'
+#' \insertRef{reece201514}{httk}
+#'
+#' \insertRef{stammers1926blood}{httk}
+#' 
+#' \insertRef{jordan1995temperature}{httk}
+#'
+#' \insertRef{grandoni2019building}{httk}
+#'
+#' \insertRef{griffin2008models}{httk} 
+#'
+#' @examples
+#' # We can add a new species (for example, wolverines) by adding new information
+#' # to the physiology.data and tissue.data tables. It can be convenient to start by
+#' # by replicating the data from another species and adjusting as appropriate:
+#'
+#' # Copy physiology data from rabbit:
+#' new.species <- physiology.data[,"Rabbit"]
+#' names(new.species) <- physiology.data[,"Parameter"]
+#' rabbit.BW <- new.species["Average BW"] 
+#' new.species["Average BW"] <- 31.2 # Rausch and Pearson (1972) https://doi.org/10.2307/3799057
+#' new.species["Average Body Temperature"] <- 38.5 # Thiel et al. (2019) https://doi.org/10.1186/s12983-019-0319-8
+#' 
+#' # Add new physiology data column to physiology.data table"
+#' physiology.data <- cbind(physiology.data, new.species)
+#' colnames(physiology.data)[length(colnames(physiology.data))] <- "Wolverine"
+#' 
+#' # Copy tissue data from rabbit:
+#' new.tissue.data <- subset(tissue.data,Species=="Rabbit")
+#' new.tissue.data$Species <- "Wolverine"
+#' 
+#' # Add new tissue data rows to tissue.data table:
+#' tissue.data <- rbind(tissue.data, new.tissue.data)
+#' 
+#' # Species is now available for calculations:
+#' calc_mc_css(chem.cas="80-05-7",
+#'             species="wolverine",
+#'             parameterize.arg.list=list(default.to.human=TRUE),
+#'             suppress.messages=TRUE,
+#'             samples = 100)
+#'
 #' @keywords data
 "physiology.data"
 
@@ -1419,6 +1457,35 @@
 #' new.tissue[new.tissue$variable %in% c("Vol (L/kg)",
 #' "Flow (mL/min/kg^(3/4))"),"value"]
 #' tissue.data <- rbind(tissue.data, new.tissue)
+#'
+#' # We can add a new species (for example, wolverines) by adding new information
+#' # to the physiology.data and tissue.data tables. It can be convenient to start by
+#' # by replicating the data from another species and adjusting as appropriate:
+#'
+#' # Copy physiology data from rabbit:
+#' new.species <- physiology.data[,"Rabbit"]
+#' names(new.species) <- physiology.data[,"Parameter"]
+#' rabbit.BW <- new.species["Average BW"] 
+#' new.species["Average BW"] <- 31.2 # Rausch and Pearson (1972) https://doi.org/10.2307/3799057
+#' new.species["Average Body Temperature"] <- 38.5 # Thiel et al. (2019) https://doi.org/10.1186/s12983-019-0319-8
+#' 
+#' # Add new physiology data column to physiology.data table"
+#' physiology.data <- cbind(physiology.data, new.species)
+#' colnames(physiology.data)[length(colnames(physiology.data))] <- "Wolverine"
+#' 
+#' # Copy tissue data from rabbit:
+#' new.tissue.data <- subset(tissue.data,Species=="Rabbit")
+#' new.tissue.data$Species <- "Wolverine"
+#' 
+#' # Add new tissue data rows to tissue.data table:
+#' tissue.data <- rbind(tissue.data, new.tissue.data)
+#' 
+#' # Species is now available for calculations:
+#' calc_mc_css(chem.cas="80-05-7",
+#'             species="wolverine",
+#'             parameterize.arg.list=list(default.to.human=TRUE),
+#'             suppress.messages=TRUE,
+#'             samples = 100)
 #'
 #' @keywords data
 "tissue.data"

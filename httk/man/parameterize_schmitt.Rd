@@ -73,7 +73,19 @@ et al. (2010).
 }
 \examples{
 
-parameterize_schmitt(chem.name='bisphenola')
+library(httk)
+
+# Create a list of parameters (that you can potentially change):
+p <- parameterize_schmitt(chem.name="bisphenola")
+
+# Predict the partition coefficients using a list of parameters:
+PCs <- predict_partitioning_schmitt(parameters = p)
+
+# Lump the tissues into the compartments for model "pbtk":
+lump_tissues(PCs)
+
+# Lump the tissues into a single volume of distribution
+calc_vdist(parameters=p)
 
 }
 \references{

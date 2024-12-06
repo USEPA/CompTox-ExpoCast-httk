@@ -89,6 +89,7 @@
 #' 
 #' calc_css(chem.name='Bisphenol-A',doses.per.day=5,f=.001,output.units='mg/L')
 #' 
+#'\donttest{
 #' parms <- parameterize_3comp(chem.name='Bisphenol-A')
 #' parms$Funbound.plasma <- .07
 #' calc_css(chem.name='Bisphenol-A',parameters=parms,model='3compartment')
@@ -108,7 +109,8 @@
 #' ggtitle("Bisphenol A")
 #'
 #' print(c.vs.t)
-#' 
+#'} 
+#'
 #' @importFrom purrr compact 
 #' @export calc_css
 calc_css <- function(chem.name=NULL,
@@ -213,8 +215,20 @@ calc_css <- function(chem.name=NULL,
     well.stirred.correction=well.stirred.correction,
     restrictive.clearance=restrictive.clearance
   )
-  css <- do.call("calc_analytic_css", 
-                 args=purrr::compact(analyticcss_params))
+
+  # Check to see if there is analytic Css funtion:
+  if (!is.null(model.list[[model]]$analytic.css.func))
+  {
+     css <- do.call("calc_analytic_css", 
+                 args=purrr::compact(c(
+                                       analyticcss_params)))
+  } else {
+  # Otherwise set css to infinite:
+    css <- Inf
+  }
+  
+  # Use this conentration to cutoff the iterations:
+
   target.conc <- (1 - f) * css 
 
 # Identify the concentration that we are intending to check for steady-state:
@@ -246,6 +260,11 @@ calc_css <- function(chem.name=NULL,
   Final_Conc <- out[dim(out)[1],monitor.vars]
   total.days <- days
   additional.days <- days
+
+  # Calculate the fractional change on the last simulated day:
+  conc.delta <- (out[match((additional.days - 1), floor(out[,'time'])), target] -
+                out[match((additional.days - 2), floor(out[,'time'])), target]) /
+                out[match((additional.days - 2), floor(out[,'time'])), target] 
 
 #  # For the 3-compartment model:  
 #  colnames(out)[colnames(out)=="Csyscomp"]<-"Cplasma"
@@ -280,6 +299,11 @@ calc_css <- function(chem.name=NULL,
       ...))))
     Final_Conc <- out[dim(out)[1],monitor.vars]
   
+# Calculate the fractional change on the last simulated day:
+  conc.delta <- (out[match((additional.days - 1), floor(out[,'time'])), target] -
+                out[match((additional.days - 2), floor(out[,'time'])), target]) /
+                out[match((additional.days - 2), floor(out[,'time'])), target] 
+        
     if(total.days > 36500) break 
   }
   

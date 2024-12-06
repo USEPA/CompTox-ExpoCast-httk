@@ -108,14 +108,20 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
       warning("Argument restrictive.clearance=FALSE ignored by model 1comp when parameters!=NULL.") 
     }
   }
-
   
-  # one compartment Css is dose.rate / clearance:
-  hourly.dose <- hourly.dose * parameters$Fbio.oral
-
-  Css <- hourly.dose / parameters$kelim / parameters$Vdist
-  # Convert to plasma concentration:
-  Css <- Css/parameters[['Rblood2plasma']]
+  # Dose rate:
+  hourly.dose <- dosing[["daily.dose"]] /
+                   parameters[["BW"]] /
+                   24 *
+                   convert_units(MW = parameters[["MW"]],
+                                 dose.units,
+                                 "mg") # mg/kg/h
+                                 
+  Css <- hourly.dose *
+  # Oral bioavailability:
+           parameters[["Fabsgut"]] * parameters[["hepatic.bioavailability"]] /
+  # Clearance:
+           parameters[["kelim"]] / parameters[["Vdist"]]
   
 # Check to see if a specific tissue was asked for:
   if (!is.null(tissue))

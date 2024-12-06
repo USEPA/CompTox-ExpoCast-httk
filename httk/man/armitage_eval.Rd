@@ -38,7 +38,7 @@ armitage_eval(
 \arguments{
 \item{casrn.vector}{For vector or single value, CAS number}
 
-\item{nomconc.vector}{For vector or single value, micromolar (uM = mol/L) nominal 
+\item{nomconc.vector}{For vector or single value, micromolar (uM = umol/L) nominal 
 concentration (e.g. AC50 value)}
 
 \item{this.well_number}{For single value, plate format default is 384, used
