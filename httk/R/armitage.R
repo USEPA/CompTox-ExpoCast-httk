@@ -113,7 +113,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' Chemical Abstracts Service Registry 
 #' Number(s) (CAS-RN) of desired chemical(s).
 #' 
-#' @param nomconc.vector For vector or single value, micromolar (uM = mol/L) nominal 
+#' @param nomconc.vector For vector or single value, micromolar (uM = umol/L) nominal 
 #' concentration (e.g. AC50 value)
 #' 
 #' @param this.well_number For single value, plate format default is 384, used
@@ -618,7 +618,7 @@ armitage_eval <- function(chem.cas=NULL,
   tcdata[,soct_L:=kow*swat_L] %>%
     .[,scell_L:=kcw*swat_L]
   
-  tcdata[,nomconc := nomconc] %>% # umol/L to mol/L for all concentrations
+  tcdata[,nomconc := nomconc] %>% # umol/L for all concentrations
     .[,cinit:= nomconc] %>%
     .[,mtot:= nomconc*Vbm] %>%
     .[,cwat:=mtot/(kaw*Vair + Vm + kbsa*Valb +
@@ -659,7 +659,7 @@ armitage_eval <- function(chem.cas=NULL,
     .[, cfree.invitro := cwat_s] # free invitro concentration in micromolar
   
   return(tcdata)
-  #output concentrations in mol/L
+  #output concentrations in umol/L
   #output mass (mwat_s etc.) in mols
   #output mol fraction xbsa etc.
 }
