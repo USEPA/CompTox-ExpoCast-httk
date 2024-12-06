@@ -2157,9 +2157,9 @@ opera.preds <- read.csv(paste(
 chem.physical_and_invitro.data <- add_chemtable(
   opera.preds,
   current.table = chem.physical_and_invitro.data,
-  data.list=list(CAS='MoleculeID',
-    pKa_Donor="pKa_a_pred",
-    pKa_Accept="pKa_b_pred"
+  data.list=list(CAS='MoleculeID'#,
+#    pKa_Donor="pKa_a_pred",
+#    pKa_Accept="pKa_b_pred"
     ),
   reference=paste("OPERAv",OPERA.VERSION,sep=""),
   overwrite=T)
