@@ -108,10 +108,10 @@ packageVersion("httk")
 
 ### Control run speed
 To speed up how fast these examples run, we only simulate every $N^{th}$ chemical
-(currently 15) -- to get all chemicals with data set SKIP.CHEMS to 1:
+(currently 50) -- to get all chemicals with data set SKIP.CHEMS to 1:
 ```{r chemical_thining, eval = execute.vignette}
 NUM.CHEMS <- length(get_cheminfo(model="pbtk", suppress.messages = TRUE))
-SKIP.CHEMS <- 25
+SKIP.CHEMS <- 50
 ```
 
 Similarly, portions of this vignette use Monte Carlo sampling to simulate variability and
@@ -122,7 +122,7 @@ to run. So, to speed up how fast these examples run, we specify here that we
 only want to use 25 samples, even though the actual **httk** default is 1000.
 Increase this number to get more stable (and accurate) results:
 ```{r MC_samples, eval = execute.vignette}
-NSAMP <- 25
+NSAMP <- 10
 ```
 
 # Examples
@@ -663,6 +663,7 @@ chem.list <- get_cheminfo(model='pbtk', suppress.messages = TRUE)[seq(
 for (this.cas in chem.list) {
     css.info <- calc_css(chem.cas = this.cas,
                          doses.per.day = 1,
+                         model="pbtk",
                          suppress.messages = TRUE)
     css.data[this.cas,"days"] <- css.info[["the.day"]]
     css.data[this.cas,"avg"] <- css.info[["avg"]]

@@ -24,8 +24,8 @@ solve_fetal_pbtk(
   input.units = "mg/kg",
   output.units = NULL,
   method = "lsoda",
-  rtol = 1e-08,
-  atol = 1e-12,
+  rtol = 1e-06,
+  atol = 1e-06,
   default.to.human = FALSE,
   recalc.blood2plasma = FALSE,
   recalc.clearance = FALSE,
@@ -163,15 +163,14 @@ doses.per.day = 3)
 
 # With adjustement to fraction unbound plasma for fetus:
 fetal_parms_fup_adjusted <- 
-  parameterize_fetal_pbtk(chem.name = 'perfluorooctane sulfonic acid')
+  parameterize_fetal_pbtk(chem.name = "triclosan")
 head(solve_fetal_pbtk(parameters = fetal_parms_fup_adjusted))
-
+ 
 # Without adjustement to fraction unbound plasma for fetus:
 fetal_parms_fup_unadjusted <-  
-  parameterize_fetal_pbtk(chem.name = 'perfluorooctane sulfonic acid',
-                                fetal_fup_adjustment = FALSE)
+  parameterize_fetal_pbtk(chem.name = "triclosan",
+                          fetal_fup_adjustment = FALSE)
 head(solve_fetal_pbtk(parameters = fetal_parms_fup_unadjusted))
-
 
 }
 \seealso{

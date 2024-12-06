@@ -3,6 +3,8 @@
 \name{calc_fbio.oral}
 \alias{calc_fbio.oral}
 \alias{calc_fabs.oral}
+\alias{calc_peff}
+\alias{calc_kgutabs}
 \alias{calc_fgut.oral}
 \title{Functions for calculating the bioavaialble fractions from oral doses}
 \usage{
@@ -13,7 +15,8 @@ calc_fbio.oral(
   dtxsid = NULL,
   species = "Human",
   default.to.human = FALSE,
-  suppress.messages = FALSE
+  suppress.messages = FALSE,
+  restrictive.clearance = FALSE
 )
 
 calc_fabs.oral(
@@ -24,6 +27,27 @@ calc_fabs.oral(
   species = "Human",
   suppress.messages = FALSE,
   Caco2.Pab.default = 1.6
+)
+
+calc_peff(
+  parameters = NULL,
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  species = "Human",
+  default.to.human = FALSE,
+  suppress.messages = FALSE,
+  Caco2.Pab = NULL
+)
+
+calc_kgutabs(
+  parameters = NULL,
+  chem.cas = NULL,
+  chem.name = NULL,
+  dtxsid = NULL,
+  species = "Human",
+  default.to.human = FALSE,
+  suppress.messages = FALSE
 )
 
 calc_fgut.oral(
@@ -65,16 +89,24 @@ human values if TRUE. (Not applicable for `calc_fabs.oral`.)
 \item{suppress.messages}{(Logical) Whether or not the output message is
 suppressed. (Defaults to `FALSE`.)}
 
+\item{restrictive.clearance}{Protein binding not taken into account (set to 1) in 
+liver clearance if FALSE.}
+
 \item{Caco2.Pab.default}{(Numeric) Caco2 apical to basolateral data.
 (Defaults to  1.6.) (Not applicable for `calc_fbio.oral`.)}
+
+\item{Caco2.Pab}{(Numeric) Caco2 apical to basolaterial permeability used by calc_peff}
 }
 \value{
 \item{fbio.oral}{Oral bioavailability, the fraction of oral dose 
 reaching systemic distribution in the body.}
 \item{fabs.oral}{Fraction of dose absorbed, i.e. the fraction of the dose
-that enters the gutlumen.} \item{fgut.oral}{Fraction of chemical surviving
-first pass metabolism in the gut.} \item{fhep.oral}{Fraction of chemical
+that enters the gutlumen.} 
+\item{fgut.oral}{Fraction of chemical surviving
+first pass metabolism in the gut.} 
+\item{fhep.oral}{Fraction of chemical
 surviving first pass hepatic clearance.}
+\item{kgutabs}{Rate of absorption from gut (1/h).}
 }
 \description{
 These functions calculate the fraction of chemical absorbed from the gut
@@ -82,11 +114,17 @@ based upon in vitro measured Caco-2 membrane permeability data.
 Caco-2 permeabilities (\eqn{10^{-6}} cm/s) are related to 
 effective permeability based on \insertCite{yang2007prediction;textual}{httk}.
 These functions calculate the fraction absorbed (calc_fabs.oral -- 
-\insertCite{darwich2010interplay;textual}{httk}), the fraction
+\insertCite{darwich2010interplay;textual}{httk} and
+\insertCite{yu1999compartmental;textual}{httk}), the fraction
 surviving first pass gut metabolism (calc_fgut.oral), and the overall systemic
 oral bioavailability
 (calc_fbio.oral). Note that the first pass hepatic clearance is calculated within the
 parameterization and other functions. using \code{\link{calc_hep_bioavailability}} 
+Absorption rate is calculated according to Fick's law 
+(\insertCite{lennernas1997human;textual}{httk}) assuming low blood 
+concentrations.
+}
+\details{
 We assume that systemic oral bioavailability (\eqn{F_{bio}})
 consists of three components: 
 (1) the fraction of chemical absorbed from intestinal lumen into enterocytes 
@@ -95,8 +133,7 @@ consists of three components:
 (\eqn{F_{gut}}), and 
 (3) the fraction surviving first-pass hepatic metabolism 
 (\eqn{F_{hep}}). This function returns (\eqn{F_{abs}*F_{gut}}).
-}
-\details{
+
 We model systemic oral bioavailability as 
 \eqn{F_{bio}=F_{abs}*F_{gut}*F_{hep}}.
 \eqn{F_{hep}} is estimated from in vitro TK data using 
@@ -115,6 +152,10 @@ If argument keepit100 is used then there is complete absorption from the gut
 \itemize{
 \item \code{calc_fabs.oral()}: Calculate the fraction absorbed in the gut (Darwich et al., 2010)
 
+\item \code{calc_peff()}: Calculate the effective gut permeability rate (10^-4 cm/s)
+
+\item \code{calc_kgutabs()}: Calculate the gut absorption rate (1/h)
+
 \item \code{calc_fgut.oral()}: Calculate the fraction of chemical surviving first pass metabolism in the gut
 
 }}
@@ -122,8 +163,10 @@ If argument keepit100 is used then there is complete absorption from the gut
 \insertRef{darwich2010interplay}{httk}
 \insertRef{yang2007prediction}{httk}
 \insertRef{HondaUnpublishedCaco2}{httk}
+\insertRef{yu1999compartmental}{httk}
+\insertRef{lennernas1997human}{httk}
 }
 \author{
-Gregory Honda
+Gregory Honda and John Wambaugh
 }
 \keyword{Parameter}

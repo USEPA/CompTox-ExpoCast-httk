@@ -9,13 +9,16 @@
 #' stitching together the 1tri and fetal PBTK models with appropriate initial 
 #' conditions, as described in Truong et al. (TBD). 
 #'
-#'
-#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' @param chem.name Either the chemical name, CAS number, or DTXSID
+#' must be specified.
+#' @param chem.cas Either the chemical name, CAS number, or DTXSID must be specified.
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard}) 
+#' @param time.course Time sequence in days. Default is from 0th week of pregnancy to 
+#' 40th, incremented by day. 
 #' @param track.vars which variables to return in solution output dataframe
 #' @param plt plots all outputs, if TRUE
-#' @param return.units if plt = TRUE, plots outputs in desired units of interest. 
-#' @param time.course Time sequence in days. Default is from 0th week of pregnancy to 
-#' 40th, incremented by day.
+#' @param return.units if plt = TRUE, plots outputs in desired units of interest
+#' (either 'amt' for chemical amounts or 'conc' for chemical concentration).
 #' @param ... additional arguments passed to solve_fetal_pbtk and solve_1tri_pbtk
 #' (this is where you input daily.dose and doses.per.day)
 #' 
@@ -36,27 +39,27 @@
 #' 
 #' # dosing schedule of 1 mg/kg BW/day for 40 weeks
 #' # return solution by hour
-#' out <- solve_full_pregnancy(dtxsid = "DTXSID4034609", # Fipronil 
-#'                                daily.dose = 1, 
-#'                                doses.per.day = 1,
-#'                                time.course = seq(0, 40*7, 1/24))
+#' out <- solve_full_pregnancy(chem.name = "fipronil",  
+#'                            daily.dose = 1, 
+#'                            doses.per.day = 1,
+#'                            time.course = seq(0, 40*7, 1/24))
 #'                    
 #'                                
 #' # return solution in chemical amounts for fetal compartments + placenta
 #' maternal_compts <- c('gutlumen', 'gut', 'liver', 'kidney', 'lung', 'ven', 'art', 
-#' adipose','thyroid', 'rest')
+#' 'adipose','thyroid', 'rest')
 #' 
 #' fetal_compts <- c(maternal_compts[! maternal_compts %in% c('adipose', 'gutlumen') ], 
 #' "brain")
 #' 
-#' amt.out <- solve_full_pregnancy(dtxsid = "DTXSID4034609", # Fipronil 
+#' amt.out <- solve_full_pregnancy(chem.name = "fipronil",  
 #'                                daily.dose = 1, 
 #'                                doses.per.day = 1,
 #'                                time.course = seq(0, 40*7, 1), 
 #'                                track.vars = c(paste0("Af", fetal_compts), "Aplacenta"))
 #'
 #' # return solution in concentrations for fetal compartments + placenta 
-#' conc.out <- solve_full_pregnancy(dtxsid = "DTXSID4034609", # Fipronil 
+#' conc.out <- solve_full_pregnancy(chem.name = "fipronil", 
 #'                                 daily.dose = 1, 
 #'                                 doses.per.day = 1,
 #'                                 time.course = seq(0, 40*7, 1), 
@@ -64,7 +67,7 @@
 #' 
 #' # plot solution in units of amounts
 #' # in this case, time.course affects both deSolve output and plot 
-#' gplot.out <- solve_full_pregnancy(dtxsid = "DTXSID5022308", # Genistein
+#' gplot.out <- solve_full_pregnancy(chem.name = "genistein", 
 #'                                  daily.dose = 1, 
 #'                                  doses.per.day = 1,
 #'                                  time.course = seq(89,92, 1/24), 
@@ -76,12 +79,32 @@
 #' @import data.table
 #' @import ggplot2
 
-solve_full_pregnancy <- function(dtxsid, track.vars = NULL, plt = FALSE,
-                           return.units = "amt",
-                           time.course = seq(0,40*7,1), 
-                           ...) {
-  cat("Solving for chemical: ", dtxsid, "\n")
-  
+solve_full_pregnancy <- function(
+    chem.name = NULL,
+    chem.cas = NULL,
+    dtxsid = NULL,
+    time.course = seq(0,40*7,1), 
+    track.vars = NULL, 
+    plt = FALSE,
+    return.units = "amt",
+    ...)
+{
+# We need to describe the chemical to be simulated one way or another:
+  if (is.null(chem.cas) & 
+      is.null(chem.name) & 
+      is.null(dtxsid)) 
+    stop('chem.name, chem.cas, or dtxsid must be specified.')
+
+  # Look up the chemical name/CAS, depending on what was provided:
+  chid <- get_chem_id(chem.cas=chem.cas,
+                     chem.name=chem.name,
+                     dtxsid=dtxsid)
+  chem.cas <- chid$chem.cas
+  chem.name <- chid$chem.name
+  dtxsid <- chid$dtxsid
+    
+  cat(paste0("Solving for chemical: ", chem.name, " (", dtxsid, ")\n"))
+    
   maternal_compts <- c('gutlumen', 'gut', 'liver', 'kidney', 'lung', 'ven', 'art', 
                        'adipose','thyroid', 'rest')
   maternal_states <- paste0('A', maternal_compts)
@@ -122,6 +145,7 @@ solve_full_pregnancy <- function(dtxsid, track.vars = NULL, plt = FALSE,
                                   times = t1, 
                                   dose = 0, # initial dose on day 1 
                                   monitor.vars = firsttri.outputs, 
+                                  suppress.messages = TRUE, # suppress messages about running single models
                                   ...)
 
   # initialize vector for "initial.values" input to fetal_pbtk 
@@ -141,8 +165,9 @@ solve_full_pregnancy <- function(dtxsid, track.vars = NULL, plt = FALSE,
   # get volumes from C model implementation
   vols.out <- solve_fetal_pbtk(dtxsid = dtxsid,
                                dose = 0, 
-                               times = c(13*7, 13*7+1), # times needs to contain at least 2 values
-                               monitor.vars = c(missing.vols, "fhematocrit")
+                               times = c(13*7), 
+                               monitor.vars = c(missing.vols, "fhematocrit", "Rfblood2plasma"), 
+                               suppress.messages = TRUE,
   )
   
   fetal.parms <- parameterize_fetal_pbtk(dtxsid = dtxsid)
@@ -169,31 +194,46 @@ solve_full_pregnancy <- function(dtxsid, track.vars = NULL, plt = FALSE,
   initial.dat[names(Af)] = Af 
   
   # compute amounts for Afart, Afven based on avg partition coefficient of RBCs and plasma 
-  initial.dat["Afart"] = firsttri.out[ind, "Aconceptus"]*vols.out[1, "Vfart"]*vols.out[[1, "fhematocrit"]]*fetal.pcs[["Kfrbc2pu"]] 
-  initial.dat["Afart"] = initial.dat["Afart"] + firsttri.out[ind, "Aconceptus"]*vols.out[1, "Vfart"]*(1-vols.out[[1, "fhematocrit"]])/fetal.parms$Fraction_unbound_plasma_fetus 
-  initial.dat["Afart"] = initial.dat["Afart"]/KVtotal
+  initial.dat["Afart"] = firsttri.out[[ind, "Aconceptus"]]*vols.out[[1, "Vfart"]]*vols.out[[1, "fhematocrit"]]*fetal.pcs[["Kfrbc2pu"]] 
+  initial.dat["Afart"] = initial.dat[["Afart"]] + firsttri.out[[ind, "Aconceptus"]]*vols.out[[1, "Vfart"]]*(1-vols.out[[1, "fhematocrit"]])/fetal.parms$Fraction_unbound_plasma_fetus 
+  initial.dat["Afart"] = initial.dat[["Afart"]]/KVtotal
   
-  initial.dat["Afven"] = firsttri.out[ind, "Aconceptus"]*vols.out[1, "Vfven"]*vols.out[[1, "fhematocrit"]]*fetal.pcs[["Kfrbc2pu"]] 
-  initial.dat["Afven"] = initial.dat["Afven"] + firsttri.out[ind, "Aconceptus"]*vols.out[1, "Vfven"]*(1-vols.out[[1, "fhematocrit"]])/fetal.parms$Fraction_unbound_plasma_fetus 
-  initial.dat["Afven"] = initial.dat["Afven"]/KVtotal
+  initial.dat["Afven"] = firsttri.out[[ind, "Aconceptus"]]*vols.out[[1, "Vfven"]]*vols.out[[1, "fhematocrit"]]*fetal.pcs[["Kfrbc2pu"]] 
+  initial.dat["Afven"] = initial.dat[["Afven"]] + firsttri.out[[ind, "Aconceptus"]]*vols.out[[1, "Vfven"]]*(1-vols.out[[1, "fhematocrit"]])/fetal.parms$Fraction_unbound_plasma_fetus 
+  initial.dat["Afven"] = initial.dat[["Afven"]]/KVtotal
   
   # assuming no placental barrier 
   initial.dat["fAUC"] = initial.dat["AUC"]
   
   # modified input to fetal_pbtk
+  # ode solver starts solution at day 90.9999 due to small.time in solve_model 
+  # this is slight imprecise but won't change my results significantly - 
+  # keep row for day 90.9999 in output for now
   mod.fetal.out <- solve_fetal_pbtk(dtxsid = dtxsid, 
                                     times = t2, 
                                     dose = 0, 
                                     monitor.vars = mf.outputs, 
                                     initial.values = initial.dat, 
+                                    suppress.messages = TRUE,
                                     ...)
   
   # get full solution by concatenating 2 outputs
   full_sol <- bind_rows(data.frame(firsttri.out), data.frame(mod.fetal.out))
 
   # add initial.values computed at day 91 from Aconceptus(13)
-  # always return the solution with derived initial conds and fetal_pbtk solution at day 91
+  # always return fetal_pbtk solution at day 91 as well
   full_sol[ind, c(missing.amts, "fAUC")] = initial.dat[c(missing.amts, "fAUC")]
+  
+  # convert these initial.values to concentrations
+  # add these concentrations to output's first row pertaining to day 91
+  missing.concs <- sub("^A", "C", missing.amts)
+  full_sol[ind, missing.concs] = initial.dat[missing.amts]/vols.out[1, missing.vols]
+  
+  # initial plasma conc values are calculated from Afven solution
+  full_sol[ind, "Cfplasma"] = initial.dat[["Afven"]]/vols.out[[1, "Vfven"]]/vols.out[[1, "Rfblood2plasma"]]
+  full_sol[ind, "Afplasma"] = initial.dat[["Afven"]]/vols.out[[1, "Rfblood2plasma"]]*(1 - vols.out[[1, "fhematocrit"]])
+  full_sol[ind, "Rfblood2plasma"] = vols.out[[1, "Rfblood2plasma"]]
+  
   
   # plot all states (the amts)
   if (plt == TRUE) {
