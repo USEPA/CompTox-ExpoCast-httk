@@ -74,6 +74,9 @@ output.units.  Defaults are zero.}
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
+\item{route}{Route of exposure ("inhalation", "intravenous" or [DEFAULT]
+"oral") passed to \code{\link{solve_model}}.}
+
 \item{iv.dose}{Simulates a single i.v. dose if true.}
 
 \item{input.units}{Input units of interest assigned to dosing,

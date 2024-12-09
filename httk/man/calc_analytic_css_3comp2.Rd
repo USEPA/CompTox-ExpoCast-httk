@@ -39,7 +39,14 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 parameterize_1comp(for model = '1compartment') or parameterize_steadystate 
 (for model = '3compartmentss'), overrides chem.name and chem.cas.}
 
+\item{dosing}{List of dosing metrics used in simulation, which includes
+the namesake entries of a model's associated dosing.params. For steady-state
+calculations this is likely to be either "daily.dose" for oral exposures or
+"Cinhaled" for inhalation.}
+
 \item{hourly.dose}{Hourly dose rate mg/kg BW/h.}
+
+\item{dose.units}{The units associated with the dose received.}
 
 \item{concentration}{Desired concentration type, 'blood' or default 'plasma'.}
 
@@ -51,6 +58,8 @@ altered hematocrit, Funbound.plasma, or Krbc2pu.}
 
 \item{tissue}{Desired tissue conentration (defaults to whole body 
 concentration.)}
+
+\item{route}{Route of exposure ("inhalation" or [DEFAULT] "oral").}
 
 \item{restrictive.clearance}{If TRUE (default), then only the fraction of
 chemical not bound to protein is available for metabolism in the liver. If 
@@ -69,6 +78,9 @@ fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab t
 fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
 See \code{\link{get_fbio}} for further details.}
+
+\item{exhalation}{A Boolean (TRUE/FALSE) indicating whether exhalation is 
+included as a route of potential clearance (Defaults to TRUE).}
 
 \item{...}{Additional parameters passed to parameterize function if 
 parameters is NULL.}
