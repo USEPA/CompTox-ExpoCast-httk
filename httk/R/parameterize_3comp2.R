@@ -55,6 +55,8 @@
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
 #' See \code{\link{get_fabsgut}} for further details.
 #'
+#' @param ... Additional arguments are passed to \code{\link{parameterize_pbtk}}
+#'
 #' @return 
 #' \item{BW}{Body Weight, kg.} 
 #' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
