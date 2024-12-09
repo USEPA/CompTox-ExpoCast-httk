@@ -53,6 +53,17 @@
 #'
 #' @param pH pH where ionization is evaluated.
 #'
+#' @param fup.lod.default Default value used for fraction of unbound plasma for
+#' chemicals where measured value was below the limit of detection. Default
+#' value is 0.0005.
+#' 
+#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
+#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+#' dataset).
+#' 
+#' @param force.human.clint.fup Uses human hepatic intrinsic clearance and fraction
+#' of unbound plasma in calculation of partition coefficients for rats if true.
+#'
 #' @return A named list containing the blood:air, water:air, and mucus:air 
 #' partition coefficients
 #'

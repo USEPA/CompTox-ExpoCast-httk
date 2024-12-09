@@ -53,6 +53,18 @@
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
 #' See \code{\link{get_fbio}} for further details.
 #' 
+#' @param route Route of exposure ("inhalation" or [DEFAULT] "oral").
+#' 
+#' @param dosing List of dosing metrics used in simulation, which includes
+#' the namesake entries of a model's associated dosing.params. For steady-state
+#' calculations this is likely to be either "daily.dose" for oral exposures or
+#' "Cinhaled" for inhalation.
+#'
+#' @param dose.units The units associated with the dose received.
+#'
+#' @param exhalation A Boolean (TRUE/FALSE) indicating whether exhalation is 
+#' included as a route of potential clearance (Defaults to TRUE).
+#'
 #'@param ... Additional parameters passed to parameterize function if 
 #' parameters is NULL.
 #'  
