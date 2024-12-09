@@ -136,7 +136,7 @@ parameterize_3comp2 <- function(
                        restrictive.clearance = TRUE,
                        minimum.Funbound.plasma = 0.0001,
                        Caco2.options = NULL,
-                       ...)
+                        ...)
 {
   parms <- parameterize_pbtk(
              chem.cas = chem.cas,
