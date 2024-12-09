@@ -241,15 +241,16 @@ calc_analytic_css_3comp2 <- function(chem.name=NULL,
     #data.table/data.frame or list object, however, depending on the source 
     #of the parameters. In calc_mc_css, for example, parameters is received 
     #as a "data.table" object. Screen for processing appropriately.
-    if (any(class(parameters) == "data.table")){
+    if (any(class(parameters) == "data.table"))
+    {
       pcs <- predict_partitioning_schmitt(parameters =
           parameters[, param.names.schmitt[param.names.schmitt %in% 
           names(parameters)], with = F])
-    }else if (is(parameters,"list")) {
+    } else if (is(parameters,"list")) {
       pcs <- predict_partitioning_schmitt(parameters =
           parameters[param.names.schmitt[param.names.schmitt %in% 
           names(parameters)]])
-    }else stop('httk is only configured to process parameters as objects of 
+    } else stop('httk is only configured to process parameters as objects of 
                class list or class compound data.table/data.frame.')
     
     if (!paste0('K',tolower(tissue)) %in% 
@@ -260,10 +261,21 @@ calc_analytic_css_3comp2 <- function(chem.name=NULL,
 # Tissues with sources (gut) or sinks (liver,kidney) need to be calculated
 # taking the change of mass into account:
     if (tissue == 'gut')
-    {
+    {    
+      # Check if there is an oral dose:
+      if (is.null(dosing[["daily.dose"]]))
+      {
+        hourly.dose <- 0
+      } else {
+        hourly.dose <- dosing[["daily.dose"]] /
+                     24 *
+                     convert_units(MW = parameters[["MW"]],
+                                   dose.units,
+                                   "mg")
+      }
       Qgut <- parameters$Qgutf * parameters$Qcardiacc / parameters$BW^0.25
       Css <- parameters[['Kgut2pu']] * fup * 
-        (Css + dose / (Qgut * Rblood2plasma))
+        (Css + hourly.dose / (Qgut * Rblood2plasma))
     } else if (tissue == 'liver') {
       Qliver <- (parameters$Qgutf + parameters$Qliverf) * parameters$Qcardiacc / 
         parameters$BW^0.25
