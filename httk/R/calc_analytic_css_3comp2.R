@@ -51,7 +51,7 @@
 #' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 #' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-#' See \code{\link{get_fabsgut}} for further details.
+#' See \code{\link{get_fbio}} for further details.
 #' 
 #'@param ... Additional parameters passed to parameterize function if 
 #' parameters is NULL.
