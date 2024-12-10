@@ -17,6 +17,21 @@
 * Can now use 'get_physchem_param' to retrieve "Chemical.Class" (only defined for PFAS to date)
 * Revised documentation for 1compartment model
 
+# httk 2.5.0 (2024-11-14)
+This release accompanies the submission of the new manuscript
+"A Simple Physiologically-Based Toxicokinetic Model for Multi-Route <i>In Vitro-In Vivo</i> Extrapolation"
+and includes new models incorporating inhalation/exhalation ("sumclearances" and "3compartment2").
+
+## Bug Fixes
+* Corrected units in Armitage model documentation (does not impact performance)
+* Corrected calculation in 'calc_analytic_css_1comp.R' to reflect that Vdist is the effective plasma (not blood) volume (thanks Shenghong Wang)
+
+## Enhancements
+* New model functions for TK models with inhalation/exhalation: 'parameterize_sumclearances', 'parameterize_3comp2', 'solve_3comp2'
+* Separate forcing functions are now declared in init.c for models (such as "gas_pbtk") that use the [deSolve forcing functionality](https://tpetzoldt.github.io/deSolve-forcing/deSolve-forcing.html).
+* Revised init.c file to try to make it clearer that forcing function handler needs to be defined if forcings are used.
+* Revised examples with respect to adding species
+
 # httk 2.4.0 (2024-8-14)
 This release accompanies the submission of the new manuscript
 "Enabling Transparent Toxicokinetic Modeling for Public Health Risk Assessment"

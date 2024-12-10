@@ -107,7 +107,7 @@ to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
 \insertRef{kilford2008hepatocellular}{httk}
 }
 \seealso{
-\code{\link{calc_totale clearance}} for calculation of total clearance
+\code{\link{calc_total_clearance}} for calculation of total clearance
 
 \code{\link{calc_vdist}} for calculation of volume of distribution
 }

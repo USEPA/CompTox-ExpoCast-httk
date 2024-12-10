@@ -16,8 +16,8 @@ httk/data-raw/ckd_epi_resid_var_files/
 MD5
 .Rbuildignore
 *.Rhistory
-*.Rproj
-.Rproj.user/
+./*.Rproj
+*.Rproj.user/
 httk/man/frechen2021.Rd
 *.com
 *.class

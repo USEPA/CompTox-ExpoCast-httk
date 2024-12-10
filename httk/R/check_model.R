@@ -105,7 +105,15 @@ check_model <- function(chem.name=NULL,
   
   if (!(chem.present)) 
   {
+    #need to get DTXSID if we don't alerady have it
+    if(is.null(dtxsid)){
+      if(!is.null(chem.cas)) dtxsid <- get_chem_id(chem.cas = chem.cas)$dtxsid
+      if(!is.null(chem.name)) dtxsid <- get_chem_id(chem.name = chem.name)$dtxsid
+    }
+    
     this.index <- which(dtxsid == chem.physical_and_invitro.data[,"DTXSID"])
+    
+    
     if (any(this.index))
     {
       chem.class.filt <- model.list[[model]]$chem.class.filt
@@ -115,7 +123,7 @@ check_model <- function(chem.name=NULL,
           chem.physical_and_invitro.data[this.index,"Chemical.Class"],
           split = ",")
         # check if the chemical class is in the filter-out object
-        in.domain <- !(any(chem.class%in%chem.class.filt))
+        in.domain <- !(any(chem.class %in% chem.class.filt))
         if (!in.domain) stop(paste0("Chemical CAS: ",
           chem.cas,
           ", DTXSID: ",
@@ -126,7 +134,9 @@ check_model <- function(chem.name=NULL,
           model,
           ". See help(get_cheminfo)."
           ))
-      } else if (chem.present.nophyschem)
+      } 
+      
+      if (chem.present.nophyschem)
       {
         stop(paste0("Chemical CAS: ",
           chem.cas,

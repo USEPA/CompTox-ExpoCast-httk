@@ -37,6 +37,27 @@
 #' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 #' bioactive in vivo. Only works with tissue = NULL in current implementation.
 #'
+#' @param route Route of exposure ("inhalation" or [DEFAULT] "oral").
+#' 
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' See \code{\link{get_fbio}} for further details.
+#' 
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#' default "Human").
+#' 
+#' @param dosing List of dosing metrics used in simulation, which includes
+#' the namesake entries of a model's associated dosing.params. For steady-state
+#' calculations this is likely to be either "daily.dose" for oral exposures or
+#' "Cinhaled" for inhalation.
+#'
+#' @param dose.units The units associated with the dose received.
+#' 
 #' @param ... Additional parameters passed to parameterize function if 
 #' parameters is NULL.
 #'  

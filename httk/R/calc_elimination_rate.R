@@ -62,7 +62,7 @@
 #' 
 #' @return \item{Elimination rate}{Units of 1/h.}
 #' 
-#' @seealso \code{\link{calc_totale clearance}} for calculation of total clearance
+#' @seealso \code{\link{calc_total_clearance}} for calculation of total clearance
 #' 
 #' @seealso \code{\link{calc_vdist}} for calculation of volume of distribution
 #' 

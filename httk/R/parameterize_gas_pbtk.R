@@ -243,7 +243,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
             model="gas_pbtk",
             species=species,
             class.exclude=class.exclude,
-            default.to.human=default.to.human)
+            default.to.human=default.to.human|force.human.clint.fup)
             
   if (is(tissuelist,'list')==FALSE) stop("tissuelist must be a list of vectors.") 
 
@@ -427,6 +427,12 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
       class.exclude=class.exclude,
       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
       suppress.messages=TRUE)))
+
+# Henry's law (water:air partitioning) coefficient:
+  outlist[["logHenry"]] <- get_physchem_param(param = 'logHenry', 
+                                  chem.cas=chem.cas,
+                                  chem.name=chem.name,
+                                  dtxsid=dtxsid) #for log base 10 compiled Henry's law values
     
 # Get the blood:air and mucus:air partition coefficients:
   Kx2air <- calc_kair(chem.name=chem.name,

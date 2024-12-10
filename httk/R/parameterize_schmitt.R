@@ -147,7 +147,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
                 model="schmitt",
                 species=species,
                 class.exclude=class.exclude,
-                default.to.human=default.to.human
+                default.to.human=default.to.human|force.human.fup
                 )
   } else {
     # Work with local copy of parameters in function(scoping):
