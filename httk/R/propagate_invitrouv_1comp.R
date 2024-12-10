@@ -54,26 +54,13 @@ propagate_invitrouv_1comp <- function(
                     Krest2pu*
                     Vrestc*
                     Funbound.plasma]
-      #Compute kelim: Elimination rate, units of 1/h. First make a list of the
-      #parameters that HTTK uses to calculate kelim. Each list element will be a
-      #vector of the values for each individual.
-      calc_elim_params <- c(as.list(parameters.dt[,
-                                                list(Vdist,
-                                                  Clint,
-                                                  Funbound.plasma,
-                                                  Qtotal.liverc,
-                                                  Qgfrc,
-                                                  BW,
-                                                  million.cells.per.gliver,
-                                                  Rblood2plasma,
-                                                  Vliverc,
-                                                  Fhep.assay.correction,
-                                                  liver.density)]))
+      #Compute kelim: Elimination rate, units of 1/h. 
       #Call HTTK function to calculate total elimination rate. This one is OK
       #because it uses the vector of Funbound.plasma that we give it.
-      ke <- httk::calc_elimination_rate(parameters=calc_elim_params,
+      ke <- httk::calc_elimination_rate(parameters=parameters.dt,
                                         suppress.messages=TRUE,
                                         ...)
+
       #Add kelim to the population data.table.
       parameters.dt[, kelim:=ke]
 
