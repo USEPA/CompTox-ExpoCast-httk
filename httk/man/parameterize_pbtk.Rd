@@ -24,7 +24,8 @@ parameterize_pbtk(
   million.cells.per.gliver = 110,
   liver.density = 1.05,
   kgutabs = NA,
-  Caco2.options = NULL
+  Caco2.options = NULL,
+  ...
 )
 }
 \arguments{
@@ -88,6 +89,8 @@ fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab t
 fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
 See \code{\link{get_fbio}} for further details.}
+
+\item{...}{Additional arguments, not currently used.}
 }
 \value{
 \item{BW}{Body Weight, kg.} 
