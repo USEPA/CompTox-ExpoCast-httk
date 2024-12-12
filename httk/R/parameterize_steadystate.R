@@ -259,7 +259,8 @@ parameterize_steadystate <- function(
       species=species,
       default.to.human=default.to.human,
       force.human.fup=force.human.clint.fup,
-      suppress.messages=suppress.messages) 
+      suppress.messages=suppress.messages,
+      minimum.Funbound.plasma = minimum.Funbound.plasma) 
   fup.point <- fup.list$Funbound.plasma.point
   fup.dist <- fup.list$Funbound.plasma.dist 
 
