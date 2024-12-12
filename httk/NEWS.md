@@ -31,6 +31,7 @@ and includes new models incorporating inhalation/exhalation ("sumclearances" and
 * Separate forcing functions are now declared in init.c for models (such as "gas_pbtk") that use the [deSolve forcing functionality](https://tpetzoldt.github.io/deSolve-forcing/deSolve-forcing.html).
 * Revised init.c file to try to make it clearer that forcing function handler needs to be defined if forcings are used.
 * Revised examples with respect to adding species
+* Now using pKa's from ChemAxon (supplemental material from Strope et al. (2018)) (thanks Meredith Scherer)
 
 # httk 2.4.0 (2024-8-14)
 This release accompanies the submission of the new manuscript
