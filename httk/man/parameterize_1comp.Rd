@@ -18,7 +18,9 @@ parameterize_1comp(
   suppress.messages = FALSE,
   clint.pvalue.threshold = 0.05,
   minimum.Funbound.plasma = 1e-04,
-  Caco2.options = list()
+  class.exclude = TRUE,
+  Caco2.options = list(),
+  ...
 )
 }
 \arguments{
@@ -73,6 +75,8 @@ fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab t
 fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
 See \code{\link{get_fbio}} for further details.}
+
+\item{...}{Additional arguments, not currently used.}
 }
 \value{
 \item{Vdist}{Volume of distribution, units of L/kg BW.}
