@@ -2197,10 +2197,10 @@ for (this.id in unique(dup.cas))
 
 write.table(chem.physical_and_invitro.data[,c("SMILES.desalt","CAS")],
   file="HTTK-AllChems.smi",
-  row.names=F,
+  row.names=FALSE,
   sep="\t",
-  col.names=F,
-  quote=F)
+  col.names=FALSE,
+  quote=FALSE)
 cat("Chemical QSAR-ready SMILES written to HTTK-AllChems.smi")
 cat(" use that file to in OPERA to generate phys-chem properties including pKa.\n")
 cat("Enter \"c\" to continue when ready.\n")
@@ -2208,16 +2208,18 @@ cat("Enter \"c\" to continue when ready.\n")
 
 #
 #
-#Add Strope 2018 new pKa where we don't have them from OPERA
+#Add Strope 2018 (chemAxon) pKa:
 #
 #
 load('Strope2018.RData')
-cas.donor.overwrite <- subset(chem.physical_and_invitro.data,pKa_Donor.Reference %in% c('Strope 2018','Strope 2018'))[,'CAS']
-cas.accept.overwrite <- subset(chem.physical_and_invitro.data,pKa_Accept.Reference %in% c('Strope 2018','Strope 2018'))[,'CAS']
-cory.donor.overwrite <- subset(CorypKaTable,CASRN.DSStox %in% cas.donor.overwrite)
-cory.accept.overwrite <- subset(CorypKaTable,CASRN.DSStox %in% cas.accept.overwrite)
-chem.physical_and_invitro.data <- add_chemtable(cory.accept.overwrite,current.table=chem.physical_and_invitro.data,data.list=list(CAS='CASRN.DSStox',pKa_Accept='Accept'),reference='Strope 2018',overwrite=T)
-chem.physical_and_invitro.data <- add_chemtable(cory.donor.overwrite,current.table=chem.physical_and_invitro.data,data.list=list(CAS='CASRN.DSStox',pKa_Donor='Donor'),reference='Strope 2018',overwrite=T)
+chem.physical_and_invitro.data <- add_chemtable(CorypKaTable,
+                                                current.table = 
+                                                  chem.physical_and_invitro.data,
+                                                data.list = list(CAS='CASRN.DSStox',
+                                                                 pKa_Accept='Accept',
+                                                                 pKa_Donor='Donor'),
+                                                reference='Strope 2018', 
+                                                overwrite=TRUE)
    
 #Annotate important chemicals classes as concatonated list:
 chem.physical_and_invitro.data[,"Chemical.Class"] <- ""
