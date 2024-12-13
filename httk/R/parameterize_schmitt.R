@@ -48,6 +48,9 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' 
+#' @param pfas.calibration Whether MA for chemicals in class PFAS should be
+#' increased using the regression to the Droge (2019) dataset.
+#' 
 #' @return
 #' \item{Funbound.plasma}{Unbound fraction in plasma, adjusted for lipid binding according to Pearce et al. (2017)}
 #' \item{unadjusted.Funbound.plasma}{measured unbound fraction in plasma (0.005
@@ -109,7 +112,9 @@ parameterize_schmitt <- function(chem.cas=NULL,
                           adjusted.Funbound.plasma=TRUE,
                           suppress.messages=FALSE,
                           class.exclude=TRUE,
-                          minimum.Funbound.plasma=0.0001)
+                          minimum.Funbound.plasma=0.0001,
+                          pfas.calibration=TRUE
+                          )
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
 #each time a data.table column name is used without quotes. To appease R CMD
@@ -285,7 +290,8 @@ parameterize_schmitt <- function(chem.cas=NULL,
       MA <- calc_ma( chem.cas=chem.cas,
             chem.name=chem.name,
             dtxsid=dtxsid,
-            suppress.messages=suppress.messages)
+            suppress.messages=suppress.messages,
+            pfas.calibration=pfas.calibration)
     }
     names(MA) <- NULL
   }
