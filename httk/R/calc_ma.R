@@ -65,6 +65,24 @@ calc_ma <- function(
       is.null(parameters)) 
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
 
+# Look up the chemical name/CAS, depending on what was provided:
+  if (is.null(parameters))
+  {
+    if (any(is.null(chem.cas),is.null(chem.name),is.null(dtxsid)))
+    {
+    out <- get_chem_id(
+            chem.cas=chem.cas,
+            chem.name=chem.name,
+            dtxsid=dtxsid)
+    chem.cas <- out$chem.cas
+    chem.name <- out$chem.name                                
+    dtxsid <- out$dtxsid
+    }
+  } else {
+    # Work with local copy of parameters in function(scoping):
+    if (is.data.table(parameters)) parameters <- copy(parameters) 
+  }
+
   if (is.null(parameters))
   {
     Pow <- 10^get_physchem_param("logP",

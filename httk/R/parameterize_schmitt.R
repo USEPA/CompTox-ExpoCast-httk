@@ -287,6 +287,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
             dtxsid=dtxsid,
             suppress.messages=suppress.messages)
     }
+    names(MA) <- NULL
   }
   
   if (is.na(Fprotein))
