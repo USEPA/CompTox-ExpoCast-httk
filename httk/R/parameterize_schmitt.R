@@ -250,6 +250,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
   if (is.na(Pow))
   {
     Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas)
+    names(Pow) <- NULL
   }   
 
   if (!is.na(pKa_Donor)) if (pKa_Donor == -999)
