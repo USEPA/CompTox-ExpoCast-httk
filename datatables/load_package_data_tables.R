@@ -823,84 +823,11 @@ chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 chem.prop[chem.prop$Compound=="Abamectin",]
 
-cat("Loading physchem data from Strope 2018\n")
-
-load("CASback.RData")
-Cory.newpKa <- ret.df
-Cory.newpKa[Cory.newpKa$CAS=="3764-87-2","Compound"] <- "Trestolone"
-# Dashboard prefers a different cas:
-Cory.newpKa[Cory.newpKa$CAS=="85650-52-8","CAS"] <- "61337-67-5"
- 
-# Old mistake gave wrong CAS for Metoprolol in list given to Cory::
-Cory.newpKa <- Cory.newpKa[Cory.newpKa$CAS!="37350-58-6",]
-Cory.newpKa$Donor <- str_replace(Cory.newpKa$pKaTools_APKA,";",",")
-Cory.newpKa$Accept <- str_replace(Cory.newpKa$pKaTools_BPKA,";",",")
-chem.prop <- add_chemtable(Cory.newpKa,
-               current.table=chem.prop,
-               reference="Strope 2018",
-               data.list=list(
-                 CAS="CAS",
-                 Compound="Compound",
-                 pKa_Donor="Donor",
-                 pKa_Accept="Accept"))
-
 chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 
-
-CorypKaTable <- as.data.frame(read_excel("HTPBPK-chems-pKa_CLS.xlsx"))
-# Old mistake caused abamectin to be double listed in list given to Cory:
-CorypKaTable <- CorypKaTable[CorypKaTable$CAS!="65195-55-3",]
-# Old mistake caused pyrthiobac-sodium to be double listed in list given to Cory:
-CorypKaTable <- CorypKaTable[CorypKaTable$CAS!="123342-93-8",]
-# Old mistake caused Diazepam to be double listed in list given to Cory::
-CorypKaTable <- CorypKaTable[CorypKaTable$CAS!="53320-84-6",]
-# Old mistake gave wrong CAS for Metoprolol in list given to Cory::
-CorypKaTable <- CorypKaTable[CorypKaTable$CAS!="37350-58-6",]
-# Picloram CAS messed up:
-CorypKaTable[CorypKaTable$CAS=="1918-02-01","CAS"] <- "1918-02-1"
-CorypKaTable[regexpr(",",CorypKaTable$pKa)==-1&!is.na(CorypKaTable$pKa),"pKa"] <- as.character(signif(as.numeric( CorypKaTable[regexpr(",",CorypKaTable$pKa)==-1&!is.na(CorypKaTable$pKa),"pKa"]),3))
-CorypKaTable[regexpr(",",CorypKaTable$pKb)==-1&!is.na(CorypKaTable$pKb),"pKb"] <- as.character(signif(as.numeric( CorypKaTable[regexpr(",",CorypKaTable$pKb)==-1&!is.na(CorypKaTable$pKb),"pKb"]),3))
-CorypKaTable <- CorypKaTable[CorypKaTable$CAS %in% chem.prop$CAS,]
-CorypKaTable$pKa.Reference[!is.na(CorypKaTable$pKa.Reference) & CorypKaTable$pKa.Reference=="SPARC"] <- "Strope 2018"
-CorypKaTable$pKb.Reference[!is.na(CorypKaTable$pKb.Reference) & CorypKaTable$pKb.Reference=="SPARC"] <- "Strope 2018"
-
-
-chem.prop <- add_chemtable(CorypKaTable,
-               current.table=chem.prop,
-               data.list=list(
-                 CAS="CAS",
-                 Compound="Compound",
-                 Reference="pKa.Reference",
-                 pKa_Donor="pKa"))
-
-chem.prop <- add_chemtable(CorypKaTable,
-               current.table=chem.prop,
-               data.list=list(
-                 CAS="CAS",
-                 Compound="Compound",
-                 Reference="pKb.Reference",
-                 pKa_Accept="pKb"))
-
-chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.prop[chem.prop$CAS=="33286-22-5","Compound"] <- "Diltiazem hydrochloride"
 chem.prop[chem.prop$CAS=="64118-84-9","Compound"] <- "4'-Hydroxydiclofenac"
 chem.prop[chem.prop$Compound=="Abamectin",]
-
-load("to_john.RData")
-
-chem.prop <- add_chemtable(to.john,
-               current.table=chem.prop,
-               data.list=list(
-                 CAS="CASRN",
-                 Compound="ChemName",
-                 pKa_Donor="pKaTools_APKA"),reference="Strope 2018")
-
-chem.prop <- add_chemtable(to.john,
-               current.table=chem.prop,
-               data.list=list(
-                 CAS="CASRN",
-                 Compound="ChemName",
-                 pKa_Accept="pKaTools_BPKA"),reference="Strope 2018")
 
 chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 cat("Loading physchem data from Endo 2011\n")
@@ -2151,8 +2078,14 @@ EPA.ref <- paste('CompTox Dashboard', Sys.Date())
 
 #
 #
-# PKA's aren't quite right on the CCD API yet, use old values for now:
+# PKA's aren't quite right on the CCD API yet, use values manually generated
+# from OPERA for now.
 #
+# Important to recall that in the case of pKa, "NA" is a prediction that there
+# is no ionization and does not necessarily mean that that there is no 
+# prediction. So we need to check if there is a "NA" and a reference (which means
+# that the given reference predicted no ionization) vs. "NA" and no reference
+# (which means no prediction has been attempted for that chemical. #
 #
 #
 OPERA.VERSION <- "2.9"
@@ -2160,15 +2093,26 @@ cat(paste("Reading HTTK-AllChems-smi_OPERA",OPERA.VERSION,"Pred.csv\n",sep=""))
 opera.preds <- read.csv(paste(
   "HTTK-AllChems-smi_OPERA",OPERA.VERSION,"Pred.csv",sep=""))
 
+# Check for domain of applicability:
+opera.preds <- subset(opera.preds, AD_pKa==1)
+
 chem.physical_and_invitro.data <- add_chemtable(
   opera.preds,
   current.table = chem.physical_and_invitro.data,
   data.list=list(CAS='MoleculeID'#,
-#    pKa_Donor="pKa_a_pred",
-#    pKa_Accept="pKa_b_pred"
+    pKa_Donor="pKa_a_pred",
+    pKa_Accept="pKa_b_pred"
     ),
   reference=paste("OPERAv",OPERA.VERSION,sep=""),
-  overwrite=T)
+  overwrite=TRUE)
+# Set references:
+chem.physical_and_invitro.data[
+  chem.physical_and_invitro.data$CAS %in% opera.preds$MoleculeID, 
+  "pKa_Accept.Reference"] <- paste("OPERAv",OPERA.VERSION,sep="")
+chem.physical_and_invitro.data[
+  chem.physical_and_invitro.data$CAS %in% opera.preds$MoleculeID, 
+  "pKa_Donor.Reference"] <- paste("OPERAv",OPERA.VERSION,sep="")
+
 
 # Make sure there are no duplicate rows after reading CAS and DTXSID from dashboard:
 chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
@@ -2214,10 +2158,15 @@ cat("Enter \"c\" to continue when ready.\n")
 
 #
 #
-#Add Strope 2018 (chemAxon) pKa:
-#
+# Add Strope 2018 (ChemAxon) pKa values where we don't have them from OPERA
+# 
 #
 load('Strope2018.RData')
+
+# Only add chemicals not covered by OPERA:
+CorypKaTable <- subset(CorypKaTable,
+                       !(CASRN  %in% opera.preds$MoleculeID))
+
 chem.physical_and_invitro.data <- add_chemtable(CorypKaTable,
                                                 current.table = 
                                                   chem.physical_and_invitro.data,
@@ -2226,8 +2175,19 @@ chem.physical_and_invitro.data <- add_chemtable(CorypKaTable,
                                                                  pKa_Donor='Donor'),
                                                 reference='Strope 2018', 
                                                 overwrite=TRUE)
-   
-#Annotate important chemicals classes as concatonated list:
+# Set references:
+chem.physical_and_invitro.data[
+  chem.physical_and_invitro.data$CAS %in% CorypKaTable$CASRN, 
+  "pKa_Accept.Reference"] <- 'Strope 2018'
+chem.physical_and_invitro.data[
+  chem.physical_and_invitro.data$CAS %in% CorypKaTable$CASRN, 
+  "pKa_Donor.Reference"] <- 'Strope 2018'
+     
+#
+#
+# Annotate important chemicals classes as concatonated list:
+#
+#
 chem.physical_and_invitro.data[,"Chemical.Class"] <- ""
 
 #PFAS:
