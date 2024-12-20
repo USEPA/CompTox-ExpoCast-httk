@@ -19,6 +19,7 @@ and includes new models incorporating inhalation/exhalation ("sumclearances" and
 * Revised examples with respect to adding species 
 * modelinfo_1comp: Adding a Henry's Law Constant threshold to 1-comp model 
 * 'parameterize_1comp': Add calls to 'check_model' for 1compartment and 3compartmentss, since we use 'parameterize_steadystate' to 'parameterize 1-compartment'.
+* Added argument class.exclude to multiple functions to allow class-based exclusion (for example, no PFAS) to be turned off (class.exculde = FALSE) -- defaults to TRUE
 
 # httk 2.4.0 (2024-8-14)
 This release accompanies the submission of the new manuscript
