@@ -124,7 +124,7 @@ Warning messages:
 > calc_mc_css(chem.cas="116-06-3",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-1.494 
+1.477 
 Warning messages:
 1: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
@@ -162,7 +162,7 @@ Warning messages:
 > calc_mc_css(dtxsid="DTXSID5041726",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
  95% 
-1660 
+1679 
 Warning messages:
 1: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Fraction unbound is provided as a distribution.
@@ -221,7 +221,7 @@ Warning messages:
 > # Should be the same as the mean result:
 > calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
 Plasma concentration returned in mg/L units.
-[1] 8.353
+[1] 8.339
 Warning messages:
 1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
   Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
@@ -245,8 +245,8 @@ Warning messages:
 +   invitrouv=FALSE,
 +   vary.params=list(Pow=0.3))
 Human plasma concentration returned in mg/L units for 0.95 quantile.
-  95% 
-6.774 
+ 95% 
+6.77 
 Warning messages:
 1: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
@@ -272,7 +272,7 @@ Warning messages:
 Human plasma concentration returned in uM units for 0.95 quantile.
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
   95% 
-4.562 
+4.568 
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -287,7 +287,7 @@ Warning messages:
 > signif(10/calc_mc_css(chem.name="bisphenol a",samples=NSAMP,output.units="uM"),4)
 Human plasma concentration returned in uM units for 0.95 quantile.
   95% 
-4.562 
+4.568 
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -434,6 +434,6 @@ Warning messages:
 > # Because we can't recalculate Rblood2plasma for 3compartmentss this is not
 > # quite the same but should be close:
 > unique(css4)/css2
-[1] 0.9292148
+[1] 0.9301338
 >                    
 > quit("no")
