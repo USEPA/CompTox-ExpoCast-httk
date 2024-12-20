@@ -182,7 +182,7 @@ appropriate physiological data(volumes and flows) but substitues human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{
-
+\donttest{ 
 solve_3comp(chem.name='Bisphenol-A', 
             doses.per.day=2, 
             daily.dose=.5,
@@ -208,6 +208,7 @@ solve_3comp(chem.name="Methenamine", dosing.matrix=dm,
 solve_3comp(chem.name="Besonprodil",
             daily.dose=1, dose=NULL,
             days=2.5, doses.per.day=4)
+}
 
 }
 \references{
