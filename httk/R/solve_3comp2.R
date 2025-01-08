@@ -1,4 +1,4 @@
-#' Solve_3comp
+#' Solve_3comp2
 #' 
 #' This function solves for the amounts or concentrations of a chemical in
 #' the blood of three different compartments representing the body.
