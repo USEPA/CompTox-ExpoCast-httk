@@ -2,7 +2,7 @@
 % Please edit documentation in R/solve_3comp2.R
 \name{solve_3comp2}
 \alias{solve_3comp2}
-\title{Solve_3comp}
+\title{Solve_3comp2}
 \usage{
 solve_3comp2(
   chem.name = NULL,

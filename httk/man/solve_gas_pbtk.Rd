@@ -34,7 +34,7 @@ solve_gas_pbtk(
   recalc.clearance = FALSE,
   adjusted.Funbound.plasma = TRUE,
   regression = TRUE,
-  restrictive.clearance = TRUE,
+  restrictive.clearance = FALSE,
   minimum.Funbound.plasma = 1e-04,
   monitor.vars = NULL,
   vmax = 0,
@@ -134,7 +134,7 @@ TRUE along with partition coefficients calculated with this value.}
 partition coefficients.}
 
 \item{restrictive.clearance}{Protein binding not taken into account (set to
-1) in liver clearance if FALSE.}
+1) in liver clearance if FALSE. (Default is FALSE.)}
 
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
