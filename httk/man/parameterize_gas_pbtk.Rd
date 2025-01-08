@@ -104,6 +104,9 @@ See \code{\link{get_fbio}} for further details.}
 \item{class.exclude}{Exclude chemical classes identified as outside of 
 domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
 
+\item{restrictive.clearance}{Protein binding not taken into account (set to
+1) in liver clearance if FALSE. (Default is FALSE.)}
+
 \item{...}{Other parameters}
 }
 \value{
