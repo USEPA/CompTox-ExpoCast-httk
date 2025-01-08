@@ -27,6 +27,7 @@ parameterize_gas_pbtk(
   minimum.Funbound.plasma = 1e-04,
   Caco2.options = NULL,
   class.exclude = TRUE,
+  restrictive.clearance = FALSE,
   ...
 )
 }
