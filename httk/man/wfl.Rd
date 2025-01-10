@@ -13,9 +13,7 @@ a data.table with 262 rows and 4 variables:
  the corresponding sex and recumbent length}}
 }
 \source{
-\url{https://www.cdc.gov/growthcharts/who/boys_weight_head_circumference.htm}
-and
-\url{https://www.cdc.gov/growthcharts/who/girls_weight_head_circumference.htm}
+\url{https://www.who.int/tools/child-growth-standards/standards/weight-for-length-height}
 }
 \usage{
 wfl
