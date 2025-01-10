@@ -242,15 +242,15 @@ For model 1compartment each chemical must have non-NA values for:Rat.Clint, Rat.
 +   "117-81-7")),
 +   row.names=FALSE)
                       Compound       CAS        DTXSID  logP    MW pKa_Accept
-                      Atrazine 1912-24-9 DTXSID9020112 2.611 215.7       3.20
+                      Atrazine 1912-24-9 DTXSID9020112 2.611 215.7       3.79
                    Bisphenol-a   80-05-7 DTXSID7020182 3.320 228.3       <NA>
  Diethylhexyl phthalate (dehp)  117-81-7 DTXSID5020607 7.525 390.6       <NA>
-                  Chlorpyrifos 2921-88-2 DTXSID4020458 4.959 350.6       <NA>
-  pKa_Donor      Human.Clint Human.Clint.pValue Human.Funbound.plasma
-       <NA>                0            0.05366                0.1237
- 9.78,10.39 19.9,10.2,29.8,0            0.00000  0.0385,0.0334,0.0456
-       <NA>                0            0.19370                 0.005
-       <NA>              2.6                 NA              0.007932
+                  Chlorpyrifos 2921-88-2 DTXSID4020458 4.959 350.6       2.03
+ pKa_Donor      Human.Clint Human.Clint.pValue Human.Funbound.plasma
+      <NA>                0            0.05366                0.1237
+      9.46 19.9,10.2,29.8,0            0.00000  0.0385,0.0334,0.0456
+      <NA>                0            0.19370                 0.005
+      <NA>              2.6                 NA              0.007932
  Human.Rblood2plasma
                   NA
               0.7949

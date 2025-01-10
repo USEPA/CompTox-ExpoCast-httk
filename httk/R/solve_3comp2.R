@@ -149,7 +149,7 @@
 #' @keywords Solve 3compartment
 #'
 #' @examples
-#' 
+#' \donttest{ 
 #' solve_3comp(chem.name='Bisphenol-A', 
 #'             doses.per.day=2, 
 #'             daily.dose=.5,
@@ -175,6 +175,7 @@
 #' solve_3comp(chem.name="Besonprodil",
 #'             daily.dose=1, dose=NULL,
 #'             days=2.5, doses.per.day=4)
+#'}
 #'
 #' @seealso \code{\link{solve_model}}
 #'

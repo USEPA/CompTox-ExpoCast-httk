@@ -28,8 +28,10 @@ O'Driscoll (2008).
 new.species <- physiology.data[,"Rabbit"]
 names(new.species) <- physiology.data[,"Parameter"]
 rabbit.BW <- new.species["Average BW"] 
-new.species["Average BW"] <- 31.2 # Rausch and Pearson (1972) https://doi.org/10.2307/3799057
-new.species["Average Body Temperature"] <- 38.5 # Thiel et al. (2019) https://doi.org/10.1186/s12983-019-0319-8
+# Rausch and Pearson (1972) https://doi.org/10.2307/3799057 :
+new.species["Average BW"] <- 31.2 
+# Thiel et al. (2019) https://doi.org/10.1186/s12983-019-0319-8 :
+new.species["Average Body Temperature"] <- 38.5 
 
 # Add new physiology data column to physiology.data table"
 physiology.data <- cbind(physiology.data, new.species)
