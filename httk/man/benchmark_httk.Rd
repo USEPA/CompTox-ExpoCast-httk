@@ -68,7 +68,14 @@ Output is generated for mg/L and uM, and then the ratio mg/L/uM*1000/MW is
 calculated. If the units are correct the ratio should be 1 (within the 
 precision of the functions -- usually four significant figures). \cr
 
-  rmsle.plot \tab A ggplot2 figure showing RMSLE tests of various functions. 
+  invivo.rmsle.plot \tab A ggplot2 figure comparing
+model predictions to in vivo measured values. 
+Output generated is the root mean square log10 error for parameters estimated
+by the package. \cr
+
+  model.rmsle.plot \tab A ggplot2 figure comparing various functions values
+against values predicted by other models (chiefly SimCyp predictions from
+Wetmore et al. 2012 and 2015. 
 Output generated is the root mean square log10 error for parameters estimated
 by the package. \cr
 

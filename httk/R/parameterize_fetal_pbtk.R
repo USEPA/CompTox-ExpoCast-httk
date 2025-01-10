@@ -359,9 +359,8 @@ parameterize_fetal_pbtk<- function(
   
 
           
-# Set appropriate precision:
-  parms <- lapply(parms[sort(names(parms))],set_httk_precision)
-           
+# Set appropriate precision and standard order:
+  parms <- lapply(parms[model.list[["fetal_pbtk"]]$param.names],set_httk_precision)
 
 #Now for the many parameters associated with the dynamic physiologic equations
 #for pregnancy from Kapraun et al. (2019):

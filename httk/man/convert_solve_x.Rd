@@ -88,7 +88,7 @@ More details on the unit conversion can be found in the documentation for
 \code{\link{convert_units}}.
 }
 \examples{
-output.mat <- solve_1comp(dtxsid = "DTXSID0020573")
+output.mat <- solve_1comp(dtxsid = "DTXSID0020573",days=1)
 new.output.mat <- convert_solve_x(output.units = "mg",
                                   model.output.mat = output.mat,
                                   model = "1compartment",

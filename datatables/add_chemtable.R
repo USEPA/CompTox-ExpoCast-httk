@@ -224,6 +224,7 @@ augment.table <- function(
       ref.name <- paste(this.property,"Reference",sep=".")
       this.table[,ref.name] <- NA
     }
+    if (length(this.table[index,this.property])>1) browser()
     if (is.na(this.table[index,this.property]) | 
       overwrite | 
       (this.property == paste(species,'Funbound.plasma',sep=".") & 

@@ -19,8 +19,8 @@ MD5
 ###################
 .Rbuildignore
 *.Rhistory
-*.Rproj
-.Rproj.user/
+./*.Rproj
+*.Rproj.user/
 httk/man/frechen2021.Rd
 *.com
 *.class
@@ -71,3 +71,12 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 
+## R package Sub-directory Files to Ignore ##
+# history files
+httk/.Rhistory
+# R Studio files
+httk/.Rproj.user
+# session data files
+httk/.RData
+# user-specific files
+httk/.Ruserdata

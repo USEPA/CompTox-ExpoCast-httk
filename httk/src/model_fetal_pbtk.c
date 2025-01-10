@@ -698,9 +698,9 @@ void derivsfetal_pbtk (int *neq, double *pdTime, double *y, double *ydot, double
 
   yout[ID_Cfgut] = y[ID_Afgut] / Vfgut ;
 
-  yout[ID_Cfplasma] = y[ID_Afven] / Vfven / yout[ID_Rblood2plasma] ;
+  yout[ID_Cfplasma] = y[ID_Afven] / Vfven / yout[ID_Rfblood2plasma] ;
 
-  yout[ID_Afplasma] = y[ID_Afven] / yout[ID_Rblood2plasma] * ( 1 - fhematocrit ) ;
+  yout[ID_Afplasma] = y[ID_Afven] / yout[ID_Rfblood2plasma] * ( 1 - fhematocrit ) ;
 
   ydot[ID_Agutlumen] = - kgutabs * y[ID_Agutlumen] ;
 
