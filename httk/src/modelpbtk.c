@@ -228,7 +228,7 @@ void derivspbtk (int *neq, double *pdTime, double *y, double *ydot, double *yout
 
   ydot[ID_Atubules] = Qgfr * y[ID_Aart] / Vart / Rblood2plasma * Fraction_unbound_plasma ;
 
-  ydot[ID_Ametabolized] = Clmetabolism * y[ID_Aliver] / Vliver / Kliver2pu ;
+  ydot[ID_Ametabolized] = Clmetabolism * y[ID_Aliver] / Vliver / Kliver2pu / Fraction_unbound_plasma;
 
   ydot[ID_AUC] = y[ID_Aven] / Vven / Rblood2plasma ;
 
