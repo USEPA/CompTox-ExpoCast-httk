@@ -11,11 +11,14 @@ and includes new models incorporating inhalation/exhalation ("sumclearances" and
 * 'solve_model': Pass restrictive clearance argument to model parameterization function
 * 'parameterize_steadystate': pass minimum.Funbound.plasma to 'get_fup'
 * 'parameterize_1comp': pass "minimum.Funbound.plasma"" argument to 'calc_vdist'
+* 'calc_total_clearance': arguments "well.stirred.correction"" and "adjusted.Funbound.plasma" are no longer explicit arguments for the function but are still able to be utilized as part of the '...' arguments
+* 'solve_gas_pbtk': the "restrictive.clearance" argument default was changed from TRUE to FALSE
+* Documentation updates to clarify and/or correct descriptions to better explicate 'httk' functionality and methods.
 
 ## Enhancements
 * New model functions for TK models with inhalation/exhalation: 'parameterize_sumclearances', 'parameterize_3comp2', 'solve_3comp2'
 * Separate forcing functions are now declared in init.c for models (such as "gas_pbtk") that use the [deSolve forcing functionality](https://tpetzoldt.github.io/deSolve-forcing/deSolve-forcing.html).
-* Revised init.c file to try to make it clearer that forcing function handler needs to be defined if forcings are used.
+* Revised init.c file to try to make it more clear that the forcing function handler needs to be defined if forcings are used.
 * Revised examples with respect to adding species 
 * modelinfo_1comp: Adding a Henry's Law Constant threshold to 1-comp model 
 * 'parameterize_1comp': Add calls to 'check_model' for 1compartment and 3compartmentss, since we use 'parameterize_steadystate' to 'parameterize 1-compartment'.
