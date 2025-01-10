@@ -237,7 +237,8 @@ chem.prop <- add_chemtable(rat.bpa, current.table=chem.prop,
                Clint.pvalue="pValue.10"),
                overwrite=T)                  
 
-
+if ("pKa_Accept" %in% colnames(chem.prop)) 
+  chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
@@ -332,6 +333,8 @@ chem.prop <- add_chemtable(Obach.table,
                  Rblood2plasma="Blood-to-Plasma Ratio",
                  Funbound.plasma="Fraction Unbound in Plasma"))
 
+if ("pKa_Accept" %in% colnames(chem.prop)) 
+  chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
@@ -347,6 +350,8 @@ chem.prop <- add_chemtable(Jones.table,
                  Compound="Compouund",
                  pKa_Donor="pKa"))
 
+if ("pKa_Accept" %in% colnames(chem.prop)) 
+  chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
@@ -367,6 +372,8 @@ chem.prop <- add_chemtable(Shibata2002.table,
                  Rblood2plasma="RB"))
 
 
+if ("pKa_Accept" %in% colnames(chem.prop)) 
+  chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
@@ -382,6 +389,8 @@ chem.prop <- add_chemtable(Lau2002.table,
                  Compound="Compound",
                  Clint="In Vitro Clearance"))
 
+if ("pKa_Accept" %in% colnames(chem.prop)) 
+  chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
@@ -402,6 +411,8 @@ chem.prop <- add_chemtable(Naritomi.table,
                  Rblood2plasma="Rb",
                  Foral="Fa"))
 
+if ("pKa_Accept" %in% colnames(chem.prop)) 
+  chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
@@ -418,6 +429,8 @@ chem.prop <- add_chemtable(McGinnity.table,
                  Compound="Compound",
                  Clint="Human Hepatic Clint"))
 
+if ("pKa_Accept" %in% colnames(chem.prop)) 
+  chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
@@ -436,6 +449,8 @@ chem.prop <- add_chemtable(Ito.table,
                  Clint="Clint (hepatocyte)",
                  Funbound.plasma="fub"))
 
+if ("pKa_Accept" %in% colnames(chem.prop)) 
+  chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
@@ -467,10 +482,10 @@ for (this.row in 1:dim(Schmitt.table)[1])
   chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"logMA",Schmitt.table[this.row,"logMA"],reference=this.reference)
 }
 
-chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
-
 cat("Loading HTTK data from Lombardo 2018\n")
 
+if ("pKa_Accept" %in% colnames(chem.prop)) 
+  chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
@@ -502,10 +517,10 @@ chem.prop <- add_chemtable(Obach2018.table,
                  Compound="Name",
                  Funbound.plasma="fu"))
 
-
+if ("pKa_Accept" %in% colnames(chem.prop)) 
+  chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
-
 
 cat("Loading HTTK data from TNO\n")
 
@@ -686,7 +701,8 @@ for (this.row in 1:dim(TNO.table)[1])
   }
 }
 
-chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
+if ("pKa_Accept" %in% colnames(chem.prop)) 
+  chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.prop[chem.prop$Compound=="Diazepam",]
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
@@ -762,12 +778,10 @@ for (this.row in 1:dim(Tonnelier.table)[1])
   }
 }
 
-chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
+if ("pKa_Accept" %in% colnames(chem.prop)) 
+  chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
-
-
-chem.prop[chem.prop$Compound=="Bensulide",]
 
 cat("Loading HTTK data from Paixao 2012\n")
 
@@ -813,23 +827,28 @@ chem.prop <- add_chemtable(Paixao2012.table4,
                  Compound="Drug",
                  Clint="In.Vitro.Clint..uL.min.106hep"))
                  
+if ("pKa_Accept" %in% colnames(chem.prop)) 
+  chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 chem.prop[chem.prop$Compound=="Abamectin",]
 
 chem.prop <- chem.prop[chem.prop$CAS.Checksum,]
 
+if ("pKa_Accept" %in% colnames(chem.prop)) 
+  chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 chem.prop[chem.prop$Compound=="Abamectin",]
 
-chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
+chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 
 chem.prop[chem.prop$CAS=="33286-22-5","Compound"] <- "Diltiazem hydrochloride"
 chem.prop[chem.prop$CAS=="64118-84-9","Compound"] <- "4'-Hydroxydiclofenac"
 chem.prop[chem.prop$Compound=="Abamectin",]
 
-chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
+if ("pKa_Accept" %in% colnames(chem.prop)) 
+  chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 cat("Loading physchem data from Endo 2011\n")
 
 MA.data <- set.precision(read_excel("Endo-2011.xlsx"))
@@ -847,6 +866,8 @@ for (this.row in 1:dim(MA.data)[1])
   }
 }
 
+if ("pKa_Accept" %in% colnames(chem.prop)) 
+  chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 chem.prop[regexpr("Pyrithiobac",chem.prop$Compound)!=-1,]
@@ -2099,7 +2120,7 @@ opera.preds <- subset(opera.preds, AD_pKa==1)
 chem.physical_and_invitro.data <- add_chemtable(
   opera.preds,
   current.table = chem.physical_and_invitro.data,
-  data.list=list(CAS='MoleculeID'#,
+  data.list=list(CAS='MoleculeID',
     pKa_Donor="pKa_a_pred",
     pKa_Accept="pKa_b_pred"
     ),
