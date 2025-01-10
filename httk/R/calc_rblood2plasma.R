@@ -44,6 +44,9 @@
 #' 
 #' @param suppress.messages Determine whether to display certain usage
 #' feedback.
+#' 
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
 #'
 #' @return
 #' The blood to plasma chemical concentration ratio
@@ -81,6 +84,7 @@ calc_rblood2plasma <- function(
                         default.to.human=FALSE,
                         species="Human",
                         adjusted.Funbound.plasma=TRUE,
+                        class.exclude=TRUE,
                         suppress.messages=TRUE)
 {
   physiology.data <- physiology.data
@@ -114,6 +118,7 @@ calc_rblood2plasma <- function(
                     dtxsid=dtxsid,
                     default.to.human=default.to.human,
                     species=species,
+                    class.exclude=class.exclude,
                     suppress.messages=suppress.messages)
   } else if (is.null(parameters))
   {                                                                                 
@@ -121,6 +126,9 @@ calc_rblood2plasma <- function(
                     hematocrit=hematocrit,
                     Krbc2pu=Krbc2pu,
                     Funbound.plasma=Funbound.plasma)
+  } else {
+    # Work with local copy of parameters in function(scoping):
+    if (is.data.table(parameters)) parameters <- copy(parameters) 
   }
   
   if (!(species %in% colnames(physiology.data)))

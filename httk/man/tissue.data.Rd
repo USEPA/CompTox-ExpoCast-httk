@@ -5,7 +5,15 @@
 \alias{tissue.data}
 \title{Tissue composition and species-specific physiology parameters}
 \format{
-A data.frame containing 13 rows and 20 columns.
+A data.frame containing 406 rows and 5 columns.
+\tabular{ll}{
+\strong{Column} \tab \strong{Description} \cr
+Tissue \tab The tissue being described \cr                      
+Species \tab The species being described \cr                      
+Reference \tab The reference for the value reported \cr                      
+variable \tab The aspect of the tissue being characterized \cr                      
+value \tab The value for the variable for the given tissue and species \cr                      
+}
 }
 \usage{
 tissue.data
@@ -17,17 +25,29 @@ describing the composition of specific tissues and from Birnbaum et al.
 parameterization of toxicokinetic models for human, mouse, rat, dog, or
 rabbit. Tissue volumes were calculated by converting the fractional mass of
 each tissue with its density (both from ICRP), lumping the remaining tissues
-into the rest-of-body, excluding the mass of the gastrointestinal contents
+into the rest-of-body, excluding the mass of the gastrointestinal contents.
 }
 \details{
+Many of the parameters were compiled initially in Table 2 of Schmitt (2009).
+The full list of tissue variables described is:
+\tabular{lll}{
+\strong{Variable} \tab \strong{Description} \tab \strong{Units} \cr
+Fcell \tab Cellular fraction of total tissue volume \tab fraction \cr
+Fint \tab Interstitial fraction of total tissue volume \tab fraction \cr
+FWc \tab Fraction of cell volume that is water \tab fraction \cr
+FLc \tab Fraction of cell volume that is lipid \tab fraction \cr
+FPc \tab Fraction of cell volume that is protein \tab fraction \cr
+Fn_Lc \tab Fraction of cellular lipid tht is neutral lipid \tab fraction \cr
+Fn_PLc \tab Fraction of cellular lipid tht is neutral phospholipid \tab fraction \cr
+Fa_PLc \tab Fraction of cellular lipid tht is acidic phospholipid \tab fraction \cr
+pH \tab Negative logarithm of H+ ion concentration \tab unitless\cr
+Density \tab Tissue density \tab g/cm^3 \cr
+Vol \tab Tissue volume \tab L/kg \cr
+Flow \tab Blood flow to tissue \tab mL/min/kg^(3/4) \cr
+}
+
 New tissues can be added to this table to generate
 their partition coefficients.
-
-The tissue data needed for calculating partition coefficients include: 
-cellular and water fractions of 
-total volume, lipid and protein  fractions of cellular volume, lipid 
-fractions of the total lipid volume, the pH of each tissue,
-and the fractional volume of protein in plasma.
 }
 \examples{
 # We can add thyroid to the tissue data by making a row containing
@@ -46,26 +66,48 @@ new.tissue[new.tissue$variable \%in\% c("Vol (L/kg)",
 "Flow (mL/min/kg^(3/4))"),"value"]
 tissue.data <- rbind(tissue.data, new.tissue)
 
+# We can add a new species (for example, wolverines) by adding new information
+# to the physiology.data and tissue.data tables. It can be convenient to start by
+# by replicating the data from another species and adjusting as appropriate:
+
+# Copy physiology data from rabbit:
+new.species <- physiology.data[,"Rabbit"]
+names(new.species) <- physiology.data[,"Parameter"]
+rabbit.BW <- new.species["Average BW"] 
+# Rausch and Pearson (1972) https://doi.org/10.2307/3799057 :
+new.species["Average BW"] <- 31.2 
+# Thiel et al. (2019) https://doi.org/10.1186/s12983-019-0319-8 :
+new.species["Average Body Temperature"] <- 38.5 
+
+# Add new physiology data column to physiology.data table"
+physiology.data <- cbind(physiology.data, new.species)
+colnames(physiology.data)[length(colnames(physiology.data))] <- "Wolverine"
+
+# Copy tissue data from rabbit:
+new.tissue.data <- subset(tissue.data,Species=="Rabbit")
+new.tissue.data$Species <- "Wolverine"
+
+# Add new tissue data rows to tissue.data table:
+tissue.data <- rbind(tissue.data, new.tissue.data)
+
+# Species is now available for calculations:
+calc_mc_css(chem.cas="80-05-7",
+            species="wolverine",
+            parameterize.arg.list=list(default.to.human=TRUE),
+            suppress.messages=TRUE,
+            samples = 100)
+
 }
 \references{
-Birnbaum, L and Brown, R and Bischoff, K and Foran, J and
-Blancato, J and Clewell, H and Dedrick, R (1994). Physiological parameter
-values for PBPK model. International Life Sciences Institute, Risk Science
-Institute, Washington, DC
+\insertRef{birnbaum1994physiological}{httk}
 
-Ruark, Christopher D., et al. "Predicting passive and active tissue: plasma
-partition coefficients: Interindividual and interspecies variability."
-Journal of pharmaceutical sciences 103.7 (2014): 2189-2198.
+\insertRef{ruark2014predicting}{httk}
 
-Schmitt, W. (2008). General approach for the calculation of tissue to plasma
-partition coefficients. Toxicology in vitro : an international journal
-published in association with BIBRA 22(2), 457-67,
-10.1016/j.tiv.2007.09.010.
+\insertRef{schmitt2008general}{httk}
 
-ICRP. Report of the Task Group on Reference Man. ICRP Publication 23 1975
+\insertRef{snyder1974report}{httk}
 
-Wambaugh, John F., et al. "Toxicokinetic triage for environmental
-chemicals." Toxicological Sciences (2015): 228-237.
+\insertRef{wambaugh2015toxicokinetic}{httk}
 }
 \seealso{
 \code{\link{predict_partitioning_schmitt}}

@@ -146,21 +146,41 @@
 #'  #using the direct-resampling method
 #'  set.seed(42)
 #' httkpop_generate(method='direct resampling', nsamp=100)
+#' 
 #' #Generate a population using the virtual-individuals method,
 #' #including 80 females and 20 males,
 #' #including only ages 20-65,
 #' #including only Mexican American and
-#'  #Non-Hispanic Black individuals,
-#'  #including only non-obese individuals
-#' httkpop_generate(method = 'virtual individuals',
-#' gendernum=list(Female=80,
-#' Male=20),
-#' agelim_years=c(20,65),
-#' reths=c('Mexican American',
-#' 'Non-Hispanic Black'),
-#' weight_category=c('Underweight',
-#' 'Normal',
-#' 'Overweight'))
+#' #Non-Hispanic Black individuals,
+#' #including only non-obese individuals
+#' set.seed(42)
+#' mypop <- httkpop_generate(method = 'virtual individuals',
+#'                           gendernum=list(Female=80,
+#'                           Male=20),
+#'                           agelim_years=c(20,65),
+#'                           reths=c('Mexican American',
+#'                           'Non-Hispanic Black'),
+#'                           weight_category=c('Underweight',
+#'                           'Normal',
+#'                           'Overweight'))
+#' # Including a httkpop.dt argument will overwrite the number of sample and
+#' # the httkpop on/off logical switch:
+#' samps1 <- create_mc_samples(chem.name="bisphenola",
+#'                            httkpop=FALSE,
+#'                            httkpop.dt=mypop)
+#' samps2 <- create_mc_samples(chem.name="bisphenola",
+#'                            httkpop.dt=mypop)
+#' samps3 <- create_mc_samples(chem.name="bisphenola",
+#'                            httkpop=FALSE)
+#' # Now run calc_mc_oral equiv on the same pop for two different chemcials:
+#' calc_mc_oral_equiv(conc=10,
+#'                    chem.name="bisphenola",
+#'                    httkpop.dt=mypop,
+#'                    return.samples=TRUE)
+#' calc_mc_oral_equiv(conc=2,
+#'                    chem.name="triclosan",
+#'                    httkpop.dt=mypop,
+#'                    return.samples=TRUE)
 #' }
 #'
 #'

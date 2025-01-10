@@ -7,7 +7,7 @@ library(httk)
 
 # Reduce the number of samples used by Monte Carlo to decrease runtime for
 # CRAN checks (never use predictions with only ten draws):
-NSAMP <- 10
+NSAMP <- 5
 
 # From Honda et al. (2019) (currently only use mean conc's because steady-state 
 # calculation does not give max):

@@ -1,4 +1,4 @@
-<img src="man/figures/httk-logo.png" align="right" width="50%"/>
+<img src="../httk.png" align="right" width="33%"/>
 
 # R Package "httk"
 
@@ -7,7 +7,7 @@
 [![Monthly Downloads](https://cranlogs.r-pkg.org/badges/last-month/httk)](https://cranlogs.r-pkg.org/badges/last-month/httk)
 <!-- badges: end -->
 
-This R package provides data and models for prediction toxicokinetics (chemical 
+This R package provides data and models for predicting toxicokinetics (chemical 
 absorption, distribution, metabolism, and excretion by the body). 
 The models are design to be parameterized with chemical-specific in vitro 
 (animal free) measurements. The predictions can be used for traditional
@@ -171,7 +171,7 @@ vignette("IntroToHTTK")
 John Wambaugh [wambaugh.john@epa.gov]
 
 ### Lead Software Engineer 
-Sarah Davidson [Davidson.Sarah.E@epa.gov]
+Sarah Davidson Fritz [DavidsonFritz.Sarah@epa.gov]
 
 ### Model Authors and Function Developers
 Robert Pearce,
@@ -182,7 +182,7 @@ Matt Linakis [MLINAKIS@ramboll.com], and
 Dustin Kapraun [kapraun.dustin@epa.gov]
 
 ### Bug-Fixes Vignette edits, and Parameter Values
-Miyuki Breen [breen.miyuki@epa.gov], 
+Miyuki Breen, 
 Shannon Bell [Shannon.bell@inotivco.com], 
 Xiaoqing Chang [Xiaoqing.chang@inotivco.com], 
 Todor Antonijevic [tantonijevic@toxstrategies.com], 

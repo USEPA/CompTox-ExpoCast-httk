@@ -5,11 +5,7 @@
 \alias{physiology.data}
 \title{Species-specific physiology parameters}
 \format{
-A data.frame containing 11 rows and 7 columns.
-}
-\source{
-Wambaugh, John F., et al. "Toxicokinetic triage for environmental
-chemicals." Toxicological Sciences (2015): 228-237.
+A data.frame containing 18 rows and 7 columns.
 }
 \usage{
 physiology.data
@@ -17,18 +13,61 @@ physiology.data
 \description{
 This data set contains values from Davies and Morris (1993) necessary to
 paramaterize a toxicokinetic model for human, mouse, rat, dog, or rabbit.
-The temperature for each species are taken from Robertshaw et al. (2004),
-Gordon (1993), and Stammers(1926).
+The temperature for each species are taken from Reece (2015),
+Jordon (1995), and Stammers (1926). Mean residence time for the small 
+intestine is from Grandoni et al. (2019). Human small intestine radius is
+from Yu et al. (1999). Rat small intestine radius is from Griffin and
+O'Driscoll (2008).
+}
+\examples{
+# We can add a new species (for example, wolverines) by adding new information
+# to the physiology.data and tissue.data tables. It can be convenient to start by
+# by replicating the data from another species and adjusting as appropriate:
+
+# Copy physiology data from rabbit:
+new.species <- physiology.data[,"Rabbit"]
+names(new.species) <- physiology.data[,"Parameter"]
+rabbit.BW <- new.species["Average BW"] 
+# Rausch and Pearson (1972) https://doi.org/10.2307/3799057 :
+new.species["Average BW"] <- 31.2 
+# Thiel et al. (2019) https://doi.org/10.1186/s12983-019-0319-8 :
+new.species["Average Body Temperature"] <- 38.5 
+
+# Add new physiology data column to physiology.data table"
+physiology.data <- cbind(physiology.data, new.species)
+colnames(physiology.data)[length(colnames(physiology.data))] <- "Wolverine"
+
+# Copy tissue data from rabbit:
+new.tissue.data <- subset(tissue.data,Species=="Rabbit")
+new.tissue.data$Species <- "Wolverine"
+
+# Add new tissue data rows to tissue.data table:
+tissue.data <- rbind(tissue.data, new.tissue.data)
+
+# Species is now available for calculations:
+calc_mc_css(chem.cas="80-05-7",
+            species="wolverine",
+            parameterize.arg.list=list(default.to.human=TRUE),
+            suppress.messages=TRUE,
+            samples = 100)
+
 }
 \references{
-Davies, B. and Morris, T. (1993). Physiological Parameters in
-Laboratory Animals and Humans. Pharmaceutical Research 10(7), 1093-1095,
-10.1023/a:1018943613122.  %gfr and other flows Anderson and Holford (2009)
-%scaling gfr by 3/4 Robertshaw, D., Temperature Regulation and Thermal
-Environment, in Dukes' Physiology of Domestic Animals, 12th ed., Reece W.O.,
-Ed. Copyright 2004 by Cornell University.  Stammers (1926) The blood count
-and body temperature in normal rats Gordon (1993) Temperature Regulation in
-Laboratory Rodents
+\insertRef{davies1993physiological}{httk}
+
+\insertRef{brown1997physiological}{httk}
+
+\insertRef{birnbaum1994physiological}{httk}
+
+\insertRef{reece201514}{httk}
+
+\insertRef{stammers1926blood}{httk}
+
+\insertRef{jordan1995temperature}{httk}
+
+\insertRef{grandoni2019building}{httk}
+
+\insertRef{griffin2008models}{httk}
 }
 \author{
 John Wambaugh and Nisha Sipes

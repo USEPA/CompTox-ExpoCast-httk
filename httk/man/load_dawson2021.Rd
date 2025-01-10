@@ -42,7 +42,7 @@ parameters).
 }
 \examples{
 
-\dontrun{
+\donttest{
 # Count how many chemicals for which HTTK is available without the QSPR:
 num.chems <- length(get_cheminfo())
 print(num.chems)

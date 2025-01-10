@@ -23,9 +23,6 @@ solve_fetal_pbtk(
   iv.dose = FALSE,
   input.units = "mg/kg",
   output.units = NULL,
-  method = "lsoda",
-  rtol = 1e-08,
-  atol = 1e-12,
   default.to.human = FALSE,
   recalc.blood2plasma = FALSE,
   recalc.clearance = FALSE,
@@ -34,6 +31,8 @@ solve_fetal_pbtk(
   restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04,
   monitor.vars = NULL,
+  atol = 1e-08,
+  rtol = 1e-08,
   ...
 )
 }
@@ -88,12 +87,6 @@ mg/kg BW}
 results. Default, NULL, returns model results in units specified in the
 'modelinfo' file. See table below for details.}
 
-\item{method}{Method used by integrator (deSolve).}
-
-\item{rtol}{Argument passed to integrator (deSolve).}
-
-\item{atol}{Argument passed to integrator (deSolve).}
-
 \item{default.to.human}{Substitutes missing animal values with human values
 if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 
@@ -119,6 +112,12 @@ dataset).}
 
 \item{monitor.vars}{Which variables to track by default}
 
+\item{atol}{Absolute tolerance used by integrator (deSolve) to determine
+numerical precision-- defaults to 1e-8.}
+
+\item{rtol}{Relative tolerance used by integrator (deSolve) to determine 
+numerical precision -- defaults to 1e-8.}
+
 \item{...}{Additional arguments passed to the integrator.}
 }
 \value{
@@ -130,6 +129,34 @@ for each time point.
 This function solves for the amounts or concentrations in uM of a chemical
 in different tissues of a maternofetal system as functions of time based on
 the dose and dosing frequency.
+In this PBTK formulation. \eqn{C_{tissue}} is the concentration in tissue at 
+time t. Since the perfusion limited partition coefficients describe 
+instantaneous equilibrium between the tissue and the free fraction in 
+plasma, the whole plasma concentration is 
+\eqn{C_{tissue,plasma} = \frac{1}{f_{up}*K_{tissue2fup}}*C_{tissue}}. 
+Note that we use a single, 
+constant value of \eqn{f_{up}} across all tissues. Corespondingly the free 
+plasma 
+concentration is modeled as 
+\eqn{C_{tissue,free plasma} = \frac{1}{K_{tissue2fup}}*C_tissue}. 
+The amount of blood flowing from tissue x is \eqn{Q_{tissue}} (L/h) at a 
+concentration 
+\eqn{C_{x,blood} = \frac{R_{b2p}}{f_{up}*K_{tissue2fup}}*C_{tissue}}, where 
+we use a 
+single \eqn{R_{b2p}} value throughout the body.
+Metabolic clearance is modelled as being from the total plasma 
+concentration here, though it is restricted to the free fraction in 
+\code{\link{calc_hep_clearance}} by default. Renal clearance via 
+glomerulsr filtration is from the free plasma concentration.
+The maternal compartments used in this model are the gut lumen, gut, liver, 
+venous blood, arterial blood, lung, adipose tissue, kidney, thyroid, 
+and rest of body. A placenta is modeled as a joint organ shared by mother
+and fetus, through which chemical exchange can occur with the fetus. Fetal
+compartments include arterial blood, venous blood, kidney, thyroid, liver,
+lung, gut, brain, and rest of body. 
+The extra compartments include the amounts or concentrations metabolized by
+the liver and excreted by the kidneys through the tubules.
+AUC is the area under the curve of the plasma concentration.
 }
 \details{
 The stage of pregnancy simulated here begins by default at the 13th week due
@@ -142,18 +169,6 @@ in days. Dose is in mg, not scaled for body weight.
 
 Default NULL value for doses.per.day solves for a single dose.
 
-The maternal compartments used in this model are the gut lumen, gut, liver, 
-venous blood, arterial blood, lung, adipose tissue, kidney, thyroid, 
-and rest of body. A placenta is modeled as a joint organ shared by mother
-and fetus, through which chemical exchange can occur with the fetus. Fetal
-compartments include arterial blood, venous blood, kidney, thyroid, liver,
-lung, gut, brain, and rest of body. 
-
-The extra compartments include the amounts or concentrations metabolized by
-the liver and excreted by the kidneys through the tubules.
-
-AUC is the area under the curve of the plasma concentration.
-
 This gestational model is only parameterized for humans.
 }
 \examples{
@@ -163,15 +178,14 @@ doses.per.day = 3)
 
 # With adjustement to fraction unbound plasma for fetus:
 fetal_parms_fup_adjusted <- 
-  parameterize_fetal_pbtk(chem.name = 'perfluorooctane sulfonic acid')
+  parameterize_fetal_pbtk(chem.name = "triclosan")
 head(solve_fetal_pbtk(parameters = fetal_parms_fup_adjusted))
-
+ 
 # Without adjustement to fraction unbound plasma for fetus:
 fetal_parms_fup_unadjusted <-  
-  parameterize_fetal_pbtk(chem.name = 'perfluorooctane sulfonic acid',
-                                fetal_fup_adjustment = FALSE)
+  parameterize_fetal_pbtk(chem.name = "triclosan",
+                          fetal_fup_adjustment = FALSE)
 head(solve_fetal_pbtk(parameters = fetal_parms_fup_unadjusted))
-
 
 }
 \seealso{

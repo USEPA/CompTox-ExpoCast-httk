@@ -68,7 +68,7 @@ get_chem_id <- function(chem.cas=NULL,
       found.chem.name <- as.character(na.omit(chem.physical_and_invitro.data[
         chem.physical_and_invitro.data[,"CAS"]==cas.key,"Compound"]))
       found.dtxsid <- as.character(na.omit(chem.physical_and_invitro.data[
-        chem.physical_and_invitro.data[,"CAS"]==cas.key,"DTXSID"])) 
+        chem.physical_and_invitro.data[,"CAS"]==cas.key,"DTXSID"]))
     }
   
   #If called by name, need to do a search to find the CAS number and this.dtxsid:
@@ -107,6 +107,11 @@ get_chem_id <- function(chem.cas=NULL,
         tolower(chem.physical_and_invitro.data[,"DTXSID"])==tolower(this.dtxsid.key),
         "CAS"])) 
     }
+
+    # Map "character(0)" back to NULL:
+    if (identical(found.chem.name, character(0))) found.chem.name <- NULL
+    if (identical(found.dtxsid, character(0))) found.dtxsid <- NULL
+    if (identical(found.chem.cas, character(0))) found.chem.cas <- NULL
   
     if (!is.null(found.chem.cas) & 
       !is.null(found.chem.name) & 

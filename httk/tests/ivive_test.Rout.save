@@ -1,7 +1,7 @@
 
-R Under development (unstable) (2023-04-16 r84269 ucrt) -- "Unsuffered Consequences"
-Copyright (C) 2023 The R Foundation for Statistical Computing
-Platform: x86_64-w64-mingw32/x64 (64-bit)
+R Under development (unstable) (2024-08-07 r86984 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
 You are welcome to redistribute it under certain conditions.
@@ -26,7 +26,7 @@ Type 'q()' to quit R.
 > 
 > # Reduce the number of samples used by Monte Carlo to decrease runtime for
 > # CRAN checks (never use predictions with only ten draws):
-> NSAMP <- 10
+> NSAMP <- 5
 > 
 > # From Honda et al. (2019) (currently only use mean conc's because steady-state 
 > # calculation does not give max):
@@ -61,6 +61,8 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
+4: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+  calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
 > set.seed(12345)
 > # This should be the same as calc_mc_oral_equiv:
 > signif(3/Css0,4) ==
@@ -77,6 +79,8 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
+4: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+  calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
 > 
 > # Honda1:
 > set.seed(12345)
@@ -94,6 +98,8 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
+4: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+  calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
 > temp <- armitage_eval(
 +   casrn.vector = c("80-05-7"), 
 +   this.FBSf = 0.1,
@@ -117,7 +123,9 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
-4: In honda.ivive(method = IVIVE, tissue = tissue) :
+4: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+  calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
+5: In honda.ivive(method = IVIVE, tissue = tissue) :
   Argument method ="Honda1" uses plasma concentration, restrictive clearance, and treats the unbound invivo concentration as bioactive.
             For IVIVE, any input nominal concentration in vitro should be converted to cfree.invitro using armitage_eval(),
             otherwise performance will be the same as "Honda2". Use show_honda.ivive() to print summary of Honda et al. 2019 results.
@@ -141,6 +149,8 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
+4: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+  calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
 > set.seed(12345)
 > # This should be the same as calc_mc_oral_equiv with IVIVE=="Honda2":
 > signif(3/Css2,4) ==
@@ -158,7 +168,9 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
-4: In honda.ivive(method = IVIVE, tissue = tissue) :
+4: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+  calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
+5: In honda.ivive(method = IVIVE, tissue = tissue) :
   Argument method ="Honda2" uses plasma concentration, restrictive clearance, and treats the unbound concentration as bioactive.
 > # Should be different from previous:
 > !(Css2 %in% c(Css0))
@@ -180,6 +192,8 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
+4: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+  calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
 > set.seed(12345)
 > # This should be the same as calc_mc_oral_equiv with IVIVE=="Honda3":
 > signif(3/Css3,4) ==
@@ -197,7 +211,9 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
-4: In honda.ivive(method = IVIVE, tissue = tissue) :
+4: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+  calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
+5: In honda.ivive(method = IVIVE, tissue = tissue) :
   Argument method ="Honda3" uses plasma concentration, restrictive clearance, and treats the total concentration as bioactive.
             This is equivalent to the default httk assumptions.
 > # Should be same as default:
@@ -228,6 +244,8 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 4: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
+5: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+  calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
 > set.seed(12345)
 > # This should be the same as calc_mc_oral_equiv with IVIVE=="Honda4":
 > signif(3/Css4,4) ==
@@ -248,7 +266,9 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 4: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
-5: In honda.ivive(method = IVIVE, tissue = tissue) :
+5: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+  calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
+6: In honda.ivive(method = IVIVE, tissue = tissue) :
   Argument method ="Honda4" uses target tissue (liver) concentration, non-restrictive clearance, and treats the total concentration as bioactive.
 > # Should be different from previous:
 > !(Css4 %in% c(Css0, Css1, Css2, Css3))
