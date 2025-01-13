@@ -33,6 +33,7 @@ solve_model(
   minimum.Funbound.plasma = 1e-04,
   parameterize.arg.list = list(),
   small.time = 1e-04,
+  forcings = NULL,
   ...
 )
 }
