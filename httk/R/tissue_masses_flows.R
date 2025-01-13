@@ -285,7 +285,7 @@ tissue_masses_flows <- function(tmf_dt,
            ))]
   } else {
     tmf_dt[(weight-org_mass_sum)>1, 
-           Adipose_mass:=weight-org_mass_sum)]
+           Adipose_mass:=(weight-org_mass_sum)]
   }
   
   
