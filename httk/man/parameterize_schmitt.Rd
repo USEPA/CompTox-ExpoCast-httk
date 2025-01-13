@@ -91,7 +91,7 @@ PCs <- predict_partitioning_schmitt(parameters = p)
 lump_tissues(PCs)
 
 # Lump the tissues into a single volume of distribution
-calc_vdist(parameters=p)
+calc_vdist(parameters=c(p, PCs))
 
 }
 \references{
