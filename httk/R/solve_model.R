@@ -239,6 +239,7 @@ solve_model <- function(chem.name = NULL,
                     minimum.Funbound.plasma=0.0001,
                     parameterize.arg.list=list(),
                     small.time = 1e-4, 
+                    forcings = NULL,
                     ...)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -799,7 +800,7 @@ specification in compartment_units for model ", model)
   dosing.matrix <- dosing$dosing.matrix
   daily.dose <- dosing$daily.dose
   doses.per.day <- dosing$doses.per.day
-  forcings <- dosing$forcings
+  forcings <- c(forcings, dosing$forcings)
 
 # Add the first dose:
   if (!is.null(initial.dose))
