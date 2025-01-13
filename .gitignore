@@ -73,6 +73,7 @@ vignettes/*.pdf
 
 # Data files generated for lifestage models
 httk/data/nhanes*params*.Rds
+httk/data/nhanes_physiology.Rds
 
 ## R package Sub-directory Files to Ignore ##
 # history files
