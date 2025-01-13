@@ -14,6 +14,7 @@ and includes new models incorporating inhalation/exhalation ("sumclearances" and
 * 'calc_total_clearance': arguments "well.stirred.correction" and "adjusted.Funbound.plasma" are no longer explicit arguments for the function but are still able to be utilized as part of the '...' arguments
 * 'solve_gas_pbtk': the "restrictive.clearance" argument default was changed from TRUE to FALSE
 * Documentation updates to clarify and/or correct descriptions to better explicate 'httk' functionality and methods.
+* Clarified examples for 'calc_vdist', 'parameterize_schmitt', and 'predict_partitioning_schmitt' to correctly show how to predict volume of distribution from a list of parameters
 
 ## Enhancements
 * New model functions for TK models with inhalation/exhalation: 'parameterize_sumclearances', 'parameterize_3comp2', 'solve_3comp2'
