@@ -1,12 +1,29 @@
-# httk 2.5.0 (2024-11-14)
+# httk 2.5.0 (2024-12-20)
 This release accompanies the submission of the new manuscript
 "A Simple Physiologically-Based Toxicokinetic Model for Multi-Route <i>In Vitro-In Vivo</i> Extrapolation"
 and includes new models incorporating inhalation/exhalation ("sumclearances" and "3compartment2").
 
 ## Bug Fixes
-* Separate forcing functions are now declared in init.c for models (such as "gas_pbtk") that use the [deSolve forcing functionality](https://tpetzoldt.github.io/deSolve-forcing/deSolve-forcing.html).
+* Corrected units in Armitage model documentation (does not impact performance)
+* Corrected calculation in 'calc_analytic_css_1comp.R' to reflect that Vdist is the effective plasma (not blood) volume (thanks Shenghong Wang)
+* Updated 'check_model' argument logic to include "force.human.clint.fup"
+* 'calc_css' Now passing arguments "well.stirred.correction" and "restrictive.clearance" to the model parameterization function, so 'calc_css' should now respect user specifications for those options, rather than previous behavior of always calculating with defaults well-stirred and restrictive = TRUE
+* 'solve_model': Pass restrictive clearance argument to model parameterization function
+* 'parameterize_steadystate': pass minimum.Funbound.plasma to 'get_fup'
+* 'parameterize_1comp': pass "minimum.Funbound.plasma" argument to 'calc_vdist'
+* 'calc_total_clearance': arguments "well.stirred.correction" and "adjusted.Funbound.plasma" are no longer explicit arguments for the function but are still able to be utilized as part of the '...' arguments
+* 'solve_gas_pbtk': the "restrictive.clearance" argument default was changed from TRUE to FALSE
+* Documentation updates to clarify and/or correct descriptions to better explicate 'httk' functionality and methods.
 
 ## Enhancements
+* New model functions for TK models with inhalation/exhalation: 'parameterize_sumclearances', 'parameterize_3comp2', 'solve_3comp2'
+* Separate forcing functions are now declared in init.c for models (such as "gas_pbtk") that use the [deSolve forcing functionality](https://tpetzoldt.github.io/deSolve-forcing/deSolve-forcing.html).
+* Revised init.c file to try to make it more clear that the forcing function handler needs to be defined if forcings are used.
+* Revised examples with respect to adding species 
+* modelinfo_1comp: Adding a Henry's Law Constant threshold to 1-comp model 
+* 'parameterize_1comp': Add calls to 'check_model' for 1compartment and 3compartmentss, since we use 'parameterize_steadystate' to 'parameterize 1-compartment'.
+* Added argument class.exclude to multiple functions to allow class-based exclusion (for example, no PFAS) to be turned off (class.exculde = FALSE) -- defaults to TRUE
+* To be consistent with [Linakis et al. (2020)](https://doi.org/10.1038/s41370-020-0238-y) the hepatic metabolism for 'solve_gas_pbtk' is now non-restrictive by default, but argument restrictive.clearance=TRUE makes the model behave similarly to the default pbtk model.
 
 # httk 2.4.0 (2024-8-14)
 This release accompanies the submission of the new manuscript

@@ -128,9 +128,7 @@
 #'  the corresponding sex and recumbent length}}
 #'
 #'@source
-#'\url{https://www.cdc.gov/growthcharts/who/boys_weight_head_circumference.htm}
-#'and
-#'\url{https://www.cdc.gov/growthcharts/who/girls_weight_head_circumference.htm}
+#'\url{https://www.who.int/tools/child-growth-standards/standards/weight-for-length-height}
 "wfl"
 #'@keywords data
 #'
@@ -1376,8 +1374,10 @@
 #' new.species <- physiology.data[,"Rabbit"]
 #' names(new.species) <- physiology.data[,"Parameter"]
 #' rabbit.BW <- new.species["Average BW"] 
-#' new.species["Average BW"] <- 31.2 # Rausch and Pearson (1972) https://doi.org/10.2307/3799057
-#' new.species["Average Body Temperature"] <- 38.5 # Thiel et al. (2019) https://doi.org/10.1186/s12983-019-0319-8
+#' # Rausch and Pearson (1972) https://doi.org/10.2307/3799057 :
+#' new.species["Average BW"] <- 31.2 
+#' # Thiel et al. (2019) https://doi.org/10.1186/s12983-019-0319-8 :
+#' new.species["Average Body Temperature"] <- 38.5 
 #' 
 #' # Add new physiology data column to physiology.data table"
 #' physiology.data <- cbind(physiology.data, new.species)
@@ -1485,8 +1485,10 @@
 #' new.species <- physiology.data[,"Rabbit"]
 #' names(new.species) <- physiology.data[,"Parameter"]
 #' rabbit.BW <- new.species["Average BW"] 
-#' new.species["Average BW"] <- 31.2 # Rausch and Pearson (1972) https://doi.org/10.2307/3799057
-#' new.species["Average Body Temperature"] <- 38.5 # Thiel et al. (2019) https://doi.org/10.1186/s12983-019-0319-8
+#' # Rausch and Pearson (1972) https://doi.org/10.2307/3799057 :
+#' new.species["Average BW"] <- 31.2 
+#' # Thiel et al. (2019) https://doi.org/10.1186/s12983-019-0319-8 :
+#' new.species["Average Body Temperature"] <- 38.5 
 #' 
 #' # Add new physiology data column to physiology.data table"
 #' physiology.data <- cbind(physiology.data, new.species)

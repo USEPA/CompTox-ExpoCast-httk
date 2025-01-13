@@ -201,7 +201,7 @@ For model schmitt each chemical must have non-NA values for:Rat.Funbound.plasma,
 3: In get_cheminfo(model = "schmitt", species = "rat") :
   Excluding compounds that are categorized in one or more of the following chemical classes: PFAS.
 > length(get_cheminfo(model="1compartment"))
-[1] 1029
+[1] 957
 Warning messages:
 1: In get_cheminfo(model = "1compartment") :
   Excluding compounds that have one or more needed parameters missing in chem.physical_and_invitro.table.
@@ -214,9 +214,11 @@ For model 1compartment each chemical must have non-NA values for:Human.Clint, Hu
 4: In get_cheminfo(model = "1compartment") :
   Excluding compounds that do not have a clint value or distribution of clint values.
 5: In get_cheminfo(model = "1compartment") :
+  Excluding volatile compounds defined as log.Henry >= -4.5.
+6: In get_cheminfo(model = "1compartment") :
   Excluding compounds that are categorized in one or more of the following chemical classes: PFAS.
 > length(get_cheminfo(model="1compartment",species="rat"))
-[1] 195
+[1] 160
 Warning messages:
 1: In get_cheminfo(model = "1compartment", species = "rat") :
   Excluding compounds that have one or more needed parameters missing in chem.physical_and_invitro.table.
@@ -227,6 +229,8 @@ For model 1compartment each chemical must have non-NA values for:Rat.Clint, Rat.
 3: In get_cheminfo(model = "1compartment", species = "rat") :
   Excluding compounds that do not have a clint value or distribution of clint values.
 4: In get_cheminfo(model = "1compartment", species = "rat") :
+  Excluding volatile compounds defined as log.Henry >= -4.5.
+5: In get_cheminfo(model = "1compartment", species = "rat") :
   Excluding compounds that are categorized in one or more of the following chemical classes: PFAS.
 >   
 > # Check to see if the paramerer values have changed:
