@@ -6,12 +6,12 @@ and includes new models incorporating inhalation/exhalation ("sumclearances" and
 ## Bug Fixes
 * Corrected units in Armitage model documentation (does not impact performance)
 * Corrected calculation in 'calc_analytic_css_1comp.R' to reflect that Vdist is the effective plasma (not blood) volume (thanks Shenghong Wang)
-* Updated 'check_model' argument logic to include "force.human.clint.fup""
+* Updated 'check_model' argument logic to include "force.human.clint.fup"
 * 'calc_css' Now passing arguments "well.stirred.correction" and "restrictive.clearance" to the model parameterization function, so 'calc_css' should now respect user specifications for those options, rather than previous behavior of always calculating with defaults well-stirred and restrictive = TRUE
 * 'solve_model': Pass restrictive clearance argument to model parameterization function
 * 'parameterize_steadystate': pass minimum.Funbound.plasma to 'get_fup'
-* 'parameterize_1comp': pass "minimum.Funbound.plasma"" argument to 'calc_vdist'
-* 'calc_total_clearance': arguments "well.stirred.correction"" and "adjusted.Funbound.plasma" are no longer explicit arguments for the function but are still able to be utilized as part of the '...' arguments
+* 'parameterize_1comp': pass "minimum.Funbound.plasma" argument to 'calc_vdist'
+* 'calc_total_clearance': arguments "well.stirred.correction" and "adjusted.Funbound.plasma" are no longer explicit arguments for the function but are still able to be utilized as part of the '...' arguments
 * 'solve_gas_pbtk': the "restrictive.clearance" argument default was changed from TRUE to FALSE
 * Documentation updates to clarify and/or correct descriptions to better explicate 'httk' functionality and methods.
 
