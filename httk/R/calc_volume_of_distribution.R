@@ -72,11 +72,15 @@
 #' calc_vdist(chem.name="Bisphenol A",species="Rat")
 #'
 #' # Create a list of parameters (that you can potentially change):
-#' p <- parameterize_schmitt(chem.name="bisphenola")
+#' p <- parameterize_schmitt(chem.name="propranolol")
+#' # Need to use those parameters to predict partition coefficients:
+#' PCs <- predict_partitioning_schmitt(parameters = p)
 #' 
 #' # Lump the tissues into a single volume of distribution
-#' calc_vdist(parameters=p)
-#' 
+#' calc_vdist(parameters=c(p,PCs))
+#' # Should be the same as chemical by name:
+#' calc_vdist(chem.name="propranolol")
+#'
 #' @export calc_vdist
 calc_vdist<- function(chem.cas=NULL,
                       chem.name=NULL,
