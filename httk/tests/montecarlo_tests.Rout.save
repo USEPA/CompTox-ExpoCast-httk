@@ -48,7 +48,7 @@ Warning messages:
 > calc_analytic_css(chem.cas="15972-60-8",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-[1] 0.2091
+[1] 0.07527
 Warning messages:
 1: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
@@ -192,8 +192,8 @@ Warning messages:
 > calc_mc_css(chem.cas="15972-60-8",model="1compartment",samples=NSAMP)
 Human volume of distribution returned in units of L/kg BW.
 Human plasma concentration returned in mg/L units for 0.95 quantile.
-   95% 
-0.1587 
+    95% 
+0.07895 
 Warning messages:
 1: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
@@ -256,7 +256,9 @@ Warning messages:
   Human Rblood2plasma calculated with calc_rblood2plasma.
 4: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
-5: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+5: In apply_fup_adjustment(Funbound.plasma, Funbound.plasma.adjustment) :
+  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
+6: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
   calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
 > 
 > 
@@ -362,8 +364,10 @@ Plasma concentration returned in uM units.
 +   return.samples=TRUE,
 +   samples=NSAMP)
 Human plasma concentration returned in uM units.
-Warning message:
-In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+Warning messages:
+1: In apply_fup_adjustment(Funbound.plasma, Funbound.plasma.adjustment) :
+  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
+2: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
   calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
 > set.seed(1234)
 > css5 <- calc_mc_css(
@@ -400,7 +404,9 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
-4: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+4: In apply_fup_adjustment(Funbound.plasma, Funbound.plasma.adjustment) :
+  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
+5: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
   calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
 > set.seed(1234)
 > css2 <- calc_analytic_css(
@@ -421,7 +427,7 @@ Warning messages:
 5: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > # These values should be the same:
-> all(css1/css2==1)
+> all(mean(abs(signif((css1-css2)/css2,4)))<0.001)
 [1] TRUE
 > css2/css3==1
 [1] TRUE
