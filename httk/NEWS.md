@@ -28,13 +28,13 @@ and includes new models incorporating inhalation/exhalation ("sumclearances" and
 
 # httk 2.4.0 (2024-8-14)
 This release accompanies the submission of the new manuscript
-"Enabling Transparent Toxicokinetic Modeling for Public Health Risk Assessment"
+["Enabling Transparent Toxicokinetic Modeling for Public Health Risk Assessment"](https://doi.org/10.1101/2024.08.19.608571)
 and includes changes intended to better facilitate development of new HTTK
 models through improved model clarity.
 
 In addition we have incorporated comments received
-on manuscript "Impact of Gut Permeability on Estimation of 
-Oral Bioavailability for Chemicals in Commerce and the Environment" 
+on manuscript ["Impact of Gut Permeability on Estimation of 
+Oral Bioavailability for Chemicals in Commerce and the Environment"](https://doi.org/10.14573/altex.2403271) 
 provided by reviewers at ALTEX.
 
 ## Bug Fixes
@@ -105,8 +105,8 @@ specified by the modelinfo_[MODEL].R file)
 
 # httk 2.3.0 (2023-12-05)
 This version accompanies the submission of manuscript Honda et al. 
-"Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals 
-in Commerce and the Environment". Find the analysis scripts on 
+["Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals 
+in Commerce and the Environment"](https://doi.org/10.14573/altex.2403271). Find the analysis scripts on 
 [GitHub](https://github.com/USEPA/comptox-expocast-caco2)
 
 ## Bug Fixes
