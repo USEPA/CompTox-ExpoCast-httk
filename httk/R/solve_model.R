@@ -142,7 +142,7 @@
 #'   and `minimum.Funbound.plasma`)
 #' 
 #' @param small.time A tiny amount of time used to provide predictions on either
-#' side of an instaneous event (like an iv injection). This helps ensure that
+#' side of an instantaneous event (like an iv injection). This helps ensure that
 #' abrupt changes plot well. Defaults to 1e-4.
 #' 
 #' @return A matrix of class deSolve with a column for time(in days), each
