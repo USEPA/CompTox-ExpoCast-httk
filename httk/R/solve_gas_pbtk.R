@@ -157,7 +157,7 @@
 #' partition coefficients.
 #' 
 #' @param restrictive.clearance Protein binding not taken into account (set to
-#' 1) in liver clearance if FALSE.
+#' 1) in liver clearance if FALSE. (Default is FALSE.)
 #' 
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
@@ -276,7 +276,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            recalc.clearance=FALSE,
                            adjusted.Funbound.plasma=TRUE,
                            regression=TRUE,
-                           restrictive.clearance = TRUE,
+                           restrictive.clearance = FALSE,
                            minimum.Funbound.plasma=0.0001,
                            monitor.vars=NULL,
                            vmax = 0,

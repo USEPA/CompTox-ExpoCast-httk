@@ -128,9 +128,7 @@
 #'  the corresponding sex and recumbent length}}
 #'
 #'@source
-#'\url{https://www.cdc.gov/growthcharts/who/boys_weight_head_circumference.htm}
-#'and
-#'\url{https://www.cdc.gov/growthcharts/who/girls_weight_head_circumference.htm}
+#'\url{https://www.who.int/tools/child-growth-standards/standards/weight-for-length-height}
 "wfl"
 #'@keywords data
 #'
