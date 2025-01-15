@@ -270,8 +270,10 @@ calc_css <- function(chem.name=NULL,
   # in case we need to restart the simulation):
   monitor.vars <- unique(c(state.vars, target))
   
+# set an initial precision (larger is faster):
+  atol <- 1e-6
 # Initial call to solver, maybe we'll get lucky and achieve rapid steady-state
-  out <- do.call(solve_model,
+  out <- try(do.call(solve_model,
 # we use purrr::compact to drop NULL values from arguments list:
       args=purrr::compact(c(list(    
       parameters=parameters,
@@ -285,8 +287,34 @@ calc_css <- function(chem.name=NULL,
     minimum.Funbound.plasma = minimum.Funbound.plasma,
     restrictive.clearance=restrictive.clearance,
     monitor.vars=monitor.vars,
-    parameterize.arg.list = parameterize.args),
-    ...)))
+    parameterize.arg.list = parameterize.args,
+    atol = atol),
+    ...))))
+# If the initial run crashes, try decreasing the tolerance (more precise,
+# slower calculations):
+    while ((inherits(out, "try-error") | 
+           !(days %in% out[,"time"])) &
+           atol > 1e-13) 
+    {
+      atol <- atol/10
+      out <- try(do.call(solve_model,
+  # we use purrr::compact to drop NULL values from arguments list:
+        args=purrr::compact(c(list(    
+        parameters=parameters,
+      model=model, 
+      dosing=dosing,
+      route=route,
+      input.units=dose.units,
+      suppress.messages=TRUE,
+      days=days,
+      output.units = output.units,
+      minimum.Funbound.plasma = minimum.Funbound.plasma,
+      restrictive.clearance=restrictive.clearance,
+      monitor.vars=monitor.vars,
+      parameterize.arg.list = parameterize.args,
+      atol = atol),
+      ...))))
+  }            
     
 # Make sure we have the compartment we need: 
   if (!(target %in% colnames(out))) stop(paste(
@@ -305,8 +333,6 @@ calc_css <- function(chem.name=NULL,
 
 # Until we reach steady-state, keep running the solver for longer times, 
 # restarting each time from where we left off:
-  try(test <- all(out[,target] < target.conc) & (conc.delta > f.change))
-  if (inherits(test, "try-error")) browser()
   while(all(out[,target] < target.conc) & 
        (conc.delta > f.change))
   {
@@ -334,6 +360,7 @@ calc_css <- function(chem.name=NULL,
       monitor.vars=monitor.vars,
       parameterize.arg.list = parameterize.args,   
       suppress.messages=TRUE,
+      atol=atol,
       ...))))
     Final_Conc <- out[dim(out)[1],monitor.vars]
   
@@ -343,9 +370,6 @@ calc_css <- function(chem.name=NULL,
                 out[match((additional.days - 2), floor(out[,'time'])), target] 
         
     if(total.days > 36500) break 
-
-    try(test <- all(out[,target] < target.conc) & (conc.delta > f.change))
-    if (inherits(test, "try-error")) browser()
   }
   
 # Calculate the day Css is reached:
