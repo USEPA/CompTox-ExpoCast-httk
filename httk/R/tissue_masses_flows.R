@@ -178,7 +178,7 @@ tissue_masses_flows <- function(tmf_dt,
            mass:=exp(rnorm(n=length(mass_dist),
                            mean=log(mass_mean),
                            sd=sqrt(log(mass_cv^2+1))))]
-  } else if (use_mean) {
+  } else {
     tmp_dt[mass_dist=='Log-normal',
            mass:=mass_mean]
   }
