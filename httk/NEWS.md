@@ -1,5 +1,6 @@
 ## Bug fixes
 * Defining function prototype for forcings for model "3comp2" in init.c increased stability.
+* Added flexible tolerance to `calc_css` to increase stability
 
 # httk 2.5.0 (2024-12-20)
 This release accompanies the submission of the new manuscript

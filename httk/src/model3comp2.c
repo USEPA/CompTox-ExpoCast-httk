@@ -206,3 +206,9 @@ void root3comp2 (int *neq, double *t, double *y, int *ng, double *gout, double *
 {
 
 } /* root */
+
+/*----- Forcing functions (NOT USED WITH THIS MODEL) */
+void initforc3comp2 (void (* odeforcs)(int *, double *))
+{
+
+}
