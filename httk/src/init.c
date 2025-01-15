@@ -38,6 +38,7 @@ extern void derivs3comp2(int *, double *, double *, double *, double *, int *);
 extern void jac3comp2(int *, double *, double *, int *, int *, double *, int *, double *, int *);
 extern void event3comp2(int *, double *, double *);
 extern void root3comp2(int *, double *, double *, int *, double *, double *, int *);
+extern void initforc3comp2(void *);
 
 extern void getParms_gas_pbtk(double *, double *, int *);
 extern void initmod_gas_pbtk(void *);
@@ -54,6 +55,7 @@ extern void jacfetal_pbtk(int *, double *, double *, int *, int *, double *, int
 extern void eventfetal_pbtk(int *, double *, double *);
 extern void rootfetal_pbtk(int *, double *, double *, int *, double *, double *, int *);
 extern void initfetal_pbtk(void *);
+extern void initforcfetal_pbtk(void *);
 
 static const R_CMethodDef CEntries[] = {
     {"getParmspbtk",       (DL_FUNC) &getParmspbtk,       3},
