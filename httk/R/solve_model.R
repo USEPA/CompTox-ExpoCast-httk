@@ -424,8 +424,8 @@ specification in compartment_units for model ", model)
         species=species,
         suppress.messages=suppress.messages,
         adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-        minimum.Funbound.plasma=minimum.Funbound.plasma,
-        restrictive.clearance=restrictive.clearance
+        minimum.Funbound.plasma=minimum.Funbound.plasma#,
+        #restrictive.clearance=restrictive.clearance
         ),
       parameterize.arg.list))) 
   } else {
