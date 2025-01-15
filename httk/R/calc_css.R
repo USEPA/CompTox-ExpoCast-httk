@@ -305,6 +305,8 @@ calc_css <- function(chem.name=NULL,
 
 # Until we reach steady-state, keep running the solver for longer times, 
 # restarting each time from where we left off:
+  try(test <- all(out[,target] < target.conc) & (conc.delta > f.change))
+  if (inherits(test, "try-error")) browser()
   while(all(out[,target] < target.conc) & 
        (conc.delta > f.change))
   {
@@ -341,6 +343,9 @@ calc_css <- function(chem.name=NULL,
                 out[match((additional.days - 2), floor(out[,'time'])), target] 
         
     if(total.days > 36500) break 
+
+    try(test <- all(out[,target] < target.conc) & (conc.delta > f.change))
+    if (inherits(test, "try-error")) browser()
   }
   
 # Calculate the day Css is reached:

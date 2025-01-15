@@ -1,3 +1,6 @@
+## Bug fixes
+* Defining function prototype for forcings for model "3comp2" in init.c increased stability.
+
 # httk 2.5.0 (2024-12-20)
 This release accompanies the submission of the new manuscript
 "A Simple Physiologically-Based Toxicokinetic Model for Multi-Route <i>In Vitro-In Vivo</i> Extrapolation"
