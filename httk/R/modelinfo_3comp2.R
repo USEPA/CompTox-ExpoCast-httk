@@ -319,4 +319,4 @@ model.list[[THIS.MODEL]]$css.dosing.params <- list(
 model.list[[THIS.MODEL]]$chem.class.filt <- c("PFAS")
 
 # Different systems of equations are better suited to different ODE solvers:
-model.list[[THIS.MODEL]]$default.solver.method <- "lsode"
+model.list[[THIS.MODEL]]$default.solver.method <- "lsoda"

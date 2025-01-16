@@ -272,6 +272,8 @@ calc_css <- function(chem.name=NULL,
   
 # set an initial precision (larger is faster):
   atol <- 1e-6
+# set an inintial of time steps per hour (smaller is faster):
+  tsteps <- 4
 # Initial call to solver, maybe we'll get lucky and achieve rapid steady-state
   out <- try(do.call(solve_model,
 # we use purrr::compact to drop NULL values from arguments list:
@@ -288,15 +290,20 @@ calc_css <- function(chem.name=NULL,
     restrictive.clearance=restrictive.clearance,
     monitor.vars=monitor.vars,
     parameterize.arg.list = parameterize.args,
-    atol = atol),
+    atol = atol,
+    tsteps = tsteps),
     ...))))
+    # Check for an error:
+    RETRY <- inherits(out, "try-error")
+    # Can only check if it ran long enough if not an error:
+    if ("time" %in% colnames(out)) RETRY <- RETRY | !(days %in% out[,"time"])
 # If the initial run crashes, try decreasing the tolerance (more precise,
 # slower calculations):
-    while ((inherits(out, "try-error") | 
-           !(days %in% out[,"time"])) &
+    while (RETRY &
            atol > 1e-13) 
     {
       atol <- atol/10
+      tsteps <- round(tsteps*1.5)
       out <- try(do.call(solve_model,
   # we use purrr::compact to drop NULL values from arguments list:
         args=purrr::compact(c(list(    
@@ -312,8 +319,13 @@ calc_css <- function(chem.name=NULL,
       restrictive.clearance=restrictive.clearance,
       monitor.vars=monitor.vars,
       parameterize.arg.list = parameterize.args,
-      atol = atol),
+      atol = atol,
+      tsteps = tsteps),
       ...))))
+    # Check for an error:
+    RETRY <- inherits(out, "try-error")
+    # Can only check if it ran long enough if not an error:
+    if ("time" %in% colnames(out)) RETRY <- RETRY | !(days %in% out[,"time"])
   }            
     
 # Make sure we have the compartment we need: 
@@ -324,13 +336,38 @@ calc_css <- function(chem.name=NULL,
   total.days <- days
   additional.days <- days
 
+  # Check for problems:
+  if (is.na(out[match((additional.days - 1), floor(out[,'time'])), target]) |
+      is.na(out[match((additional.days - 2), floor(out[,'time'])), target])) 
+    stop(paste(
+      "Could not solve model",
+      model,
+      "for",
+      days,
+      "days and route",
+      route,
+      "with tolerance",
+      atol))
+      
   # Calculate the fractional change on the last simulated day:
-  conc.delta <- (out[match((additional.days - 1), floor(out[,'time'])), target] -
-                out[match((additional.days - 2), floor(out[,'time'])), target]) /
-                out[match((additional.days - 2), floor(out[,'time'])), target] 
-#  # For the 3-compartment model:  
-#  colnames(out)[colnames(out)=="Csyscomp"]<-"Cplasma"
-
+  if (out[match((additional.days - 2), floor(out[,'time'])), target] > 0)
+  {
+    conc.delta <- (out[match((additional.days - 1), floor(out[,'time'])), target] -
+                  out[match((additional.days - 2), floor(out[,'time'])), target]) /
+                  out[match((additional.days - 2), floor(out[,'time'])), target] 
+  } else conc.delta <- 0
+  
+  # sometimes we have problems with conc.delta
+  if (is.na(conc.delta)) stop(paste(
+      "Could not solve model",
+      model,
+      "for",
+      days,
+      "days and route",
+      route,
+      "with tolerance",
+      atol))
+      
 # Until we reach steady-state, keep running the solver for longer times, 
 # restarting each time from where we left off:
   while(all(out[,target] < target.conc) & 
@@ -361,14 +398,29 @@ calc_css <- function(chem.name=NULL,
       parameterize.arg.list = parameterize.args,   
       suppress.messages=TRUE,
       atol=atol,
+      tsteps=tsteps,
       ...))))
     Final_Conc <- out[dim(out)[1],monitor.vars]
   
-# Calculate the fractional change on the last simulated day:
-  conc.delta <- (out[match((additional.days - 1), floor(out[,'time'])), target] -
+  # Calculate the fractional change on the last simulated day:
+  if (out[match((additional.days - 2), floor(out[,'time'])), target] > 0)
+  {
+     conc.delta <- (out[match((additional.days - 1), floor(out[,'time'])), target] -
                 out[match((additional.days - 2), floor(out[,'time'])), target]) /
                 out[match((additional.days - 2), floor(out[,'time'])), target] 
-        
+  } else conc.delta <- 0
+  
+  # sometimes we have problems with conc.delta
+  if (is.na(conc.delta)) stop(paste(
+      "Could not solve model",
+      model,
+      "for",
+      days,
+      "days and route",
+      route,
+      "with tolerance",
+      atol))
+              
     if(total.days > 36500) break 
   }
   
