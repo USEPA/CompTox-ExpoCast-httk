@@ -81,8 +81,8 @@
 #'  model parameterization function (other than the already-named arguments).
 #'  Default `list()` to pass no additional arguments.
 #'
-#'@param ... Additional arguments passed to model solver (default of
-#'  \code{\link{solve_pbtk}}).
+#'@param ... Additional arguments passed to \code{\link{solve_model}} (defaults
+#' to "pbtk").
 #'
 #'@return \item{frac}{Ratio of the mean concentration on the day steady state is
 #'  reached (baed on doses.per.day) to the analytical Css (based on infusion
