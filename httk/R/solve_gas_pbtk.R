@@ -374,11 +374,14 @@ solve_gas_pbtk <- function(chem.name = NULL,
       #Provide for case in which forcing functionality is effectively turned off
       if (exp.conc == 0) {
         conc.matrix = NULL
+      } else if (period == 0) {
+        conc.matrix = matrix(c(exp.start.time,exp.conc), nrow=1)
+        colnames(conc.matrix <- c("times","forcing_values"))
       } else {
-      Nrep <- ceiling((days - exp.start.time)/period) 
-      times <- rep(c(exp.start.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
-      forcing_values  <- rep(c(exp.conc,0), Nrep)
-      conc.matrix = cbind(times,forcing_values)
+        Nrep <- ceiling((days - exp.start.time)/period) 
+        times <- rep(c(exp.start.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
+        forcing_values  <- rep(c(exp.conc,0), Nrep)
+        conc.matrix = cbind(times,forcing_values)
       }
       return(conc.matrix)
     }
