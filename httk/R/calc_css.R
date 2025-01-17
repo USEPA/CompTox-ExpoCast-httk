@@ -271,7 +271,7 @@ calc_css <- function(chem.name=NULL,
   monitor.vars <- unique(c(state.vars, target))
   
 # set an initial precision (larger is faster):
-  atol <- 1e-6
+  atol <- rtol <- 1e-6
 # set an inintial of time steps per hour (smaller is faster):
   tsteps <- 4
 # Initial call to solver, maybe we'll get lucky and achieve rapid steady-state
@@ -291,6 +291,7 @@ calc_css <- function(chem.name=NULL,
     monitor.vars=monitor.vars,
     parameterize.arg.list = parameterize.args,
     atol = atol,
+    rtol = rtol,
     tsteps = tsteps),
     ...))))
     # Check for an error:
@@ -302,7 +303,9 @@ calc_css <- function(chem.name=NULL,
     while (RETRY &
            atol > 1e-13) 
     {
+      cat("Optimizing solver parameters...\n")
       atol <- atol/10
+      rtol <- atol
       tsteps <- round(tsteps*1.5)
       out <- try(do.call(solve_model,
   # we use purrr::compact to drop NULL values from arguments list:
@@ -320,6 +323,7 @@ calc_css <- function(chem.name=NULL,
       monitor.vars=monitor.vars,
       parameterize.arg.list = parameterize.args,
       atol = atol,
+      rtol = rtol,
       tsteps = tsteps),
       ...))))
     # Check for an error:
@@ -332,13 +336,21 @@ calc_css <- function(chem.name=NULL,
   if (!(target %in% colnames(out))) stop(paste(
     "Requested tissue",ss.compartment,"is not an output of model",model))
     
-  Final_Conc <- out[dim(out)[1],monitor.vars]
+  Final_State <- out[dim(out)[1],monitor.vars]
   total.days <- days
   additional.days <- days
+  NMinusOne_Conc <- try(out[match((additional.days - 2), 
+                       floor(out[,'time'])), target])
+  NMinusTwo_Conc <- try(out[match((additional.days - 1), 
+                 floor(out[,'time'])), target])
+                 
+  # Check for problems:
+  if (inherits(NMinusOne_Conc, "try-error") |
+      inherits(NMinusTwo_Conc, "try-error")) browser()
 
   # Check for problems:
-  if (is.na(out[match((additional.days - 1), floor(out[,'time'])), target]) |
-      is.na(out[match((additional.days - 2), floor(out[,'time'])), target])) 
+  if (is.na(NMinusOne_Conc) |
+      is.na(NMinusTwo_Conc)) 
     stop(paste(
       "Could not solve model",
       model,
@@ -350,35 +362,23 @@ calc_css <- function(chem.name=NULL,
       atol))
       
   # Calculate the fractional change on the last simulated day:
-  if (out[match((additional.days - 2), floor(out[,'time'])), target] > 0)
+  if (NMinusTwo_Conc > 0)
   {
-    conc.delta <- (out[match((additional.days - 1), floor(out[,'time'])), target] -
-                  out[match((additional.days - 2), floor(out[,'time'])), target]) /
-                  out[match((additional.days - 2), floor(out[,'time'])), target] 
+    conc.delta <- (NMinusOne_Conc -
+                  NMinusTwo_Conc) /
+                  NMinusTwo_Conc 
   } else conc.delta <- 0
   
-  # sometimes we have problems with conc.delta
-  if (is.na(conc.delta)) stop(paste(
-      "Could not solve model",
-      model,
-      "for",
-      days,
-      "days and route",
-      route,
-      "with tolerance",
-      atol))
-      
 # Until we reach steady-state, keep running the solver for longer times, 
 # restarting each time from where we left off:
   while(all(out[,target] < target.conc) & 
        (conc.delta > f.change))
   {
+    cat("Extending simulation...\n")
     if(additional.days < 1000)
     {
       additional.days <- additional.days * 5
-    }#else{
-    #  additional.days <- additional.days * 3
-    #}
+    }
     total.days <- total.days + additional.days
 
     out <- do.call(solve_model,
@@ -386,7 +386,7 @@ calc_css <- function(chem.name=NULL,
       args=purrr::compact(c(list(    
       parameters=parameters,
       model=model,
-      initial.values = Final_Conc[state.vars],  
+      initial.values = Final_State[state.vars],  
       dosing=dosing,
       route=route,
       input.units=dose.units,
@@ -397,29 +397,41 @@ calc_css <- function(chem.name=NULL,
       monitor.vars=monitor.vars,
       parameterize.arg.list = parameterize.args,   
       suppress.messages=TRUE,
-      atol=atol,
+      atol = atol,
+      rtol = rtol,
       tsteps=tsteps,
       ...))))
-    Final_Conc <- out[dim(out)[1],monitor.vars]
+
+    Final_State <- out[dim(out)[1],monitor.vars]
+    NMinusOne_Conc <- try(out[match((additional.days - 2), 
+                         floor(out[,'time'])), target])
+    NMinusTwo_Conc <- try(out[match((additional.days - 1), 
+                   floor(out[,'time'])), target])
+                   
+    # Check for problems:
+    if (inherits(NMinusOne_Conc, "try-error") |
+        inherits(NMinusTwo_Conc, "try-error")) browser()
   
-  # Calculate the fractional change on the last simulated day:
-  if (out[match((additional.days - 2), floor(out[,'time'])), target] > 0)
-  {
-     conc.delta <- (out[match((additional.days - 1), floor(out[,'time'])), target] -
-                out[match((additional.days - 2), floor(out[,'time'])), target]) /
-                out[match((additional.days - 2), floor(out[,'time'])), target] 
-  } else conc.delta <- 0
-  
-  # sometimes we have problems with conc.delta
-  if (is.na(conc.delta)) stop(paste(
-      "Could not solve model",
-      model,
-      "for",
-      days,
-      "days and route",
-      route,
-      "with tolerance",
-      atol))
+    # Check for problems:
+    if (is.na(NMinusOne_Conc) |
+        is.na(NMinusTwo_Conc)) 
+      stop(paste(
+        "Could not solve model",
+        model,
+        "for",
+        days,
+        "days and route",
+        route,
+        "with tolerance",
+        atol))
+
+    # Calculate the fractional change on the last simulated day:
+    if (NMinusTwo_Conc > 0)
+    {
+      conc.delta <- (NMinusOne_Conc -
+                    NMinusTwo_Conc) /
+                    NMinusTwo_Conc 
+    } else conc.delta <- 0
               
     if(total.days > 36500) break 
   }
