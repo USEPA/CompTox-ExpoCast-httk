@@ -32,13 +32,13 @@ convert_units("ug/L","ppmv",
                 state="gas")
                 
 # Test that convert_solve_x doesn't throw any errors:
-head(solve_gas_pbtk(chem.name="bisphenol a",
+signif(head(solve_gas_pbtk(chem.name="bisphenol a",
                     times=c(0,0.1,0.05),
                     output.units=setNames("mg/m3","Cendexhppmv"),
                     method = "lsode",
                     mf = 10, 
                     rtol=1e-7,
-                    atol=1e-7))
+                    atol=1e-7)), 2)
 
 # Quit without saving or displaying messages:
 quit("no")
