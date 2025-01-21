@@ -136,7 +136,7 @@ PCs3 <- predict_partitioning_schmitt(chem.name='ibuprofen',regression=FALSE)
 lump_tissues(PCs1)
 
 # Lump the tissues into a single volume of distribution
-calc_vdist(parameters=p)
+calc_vdist(parameters=c(p,PCs1))
 
 }
 \references{
