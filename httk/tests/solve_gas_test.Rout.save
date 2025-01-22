@@ -46,8 +46,8 @@ The model outputs are provided in the following units:
      Calvppmv Cendexhppmv Cmixexhppmv   Cmuc Atubules Ametabolized     AUC
 [1,]    0e+00     0.00000        0.30    0.0  0.00000      0.0e+00 0.00000
 [2,]    0e+00     0.00025        0.30    3.7  0.00000      1.0e-06 0.00000
-[3,]    1e-06     0.09600        0.37 1500.0  0.00069      1.6e+00 0.00066
-[4,]    1e-06     0.16000        0.41 2600.0  0.00170      4.7e+00 0.00200
+[3,]    1e-06     0.09600        0.37 1500.0  0.00069      2.1e+00 0.00066
+[4,]    1e-06     0.16000        0.41 2600.0  0.00170      6.3e+00 0.00200
 Warning messages:
 1: In solve_model(chem.name = chem.name, chem.cas = chem.cas, dtxsid = dtxsid,  :
   Value FALSE for restrictive.clearance in parameterze.arg.list has overwritting value TRUE in arguments to solve.model.
@@ -78,8 +78,8 @@ The model outputs are provided in the following units:
      Calvppmv Cendexhppmv Cmixexhppmv   Cmuc Atubules Ametabolized     AUC
 [1,]    0e+00     0.00000        0.30    0.0  0.00000      0.0e+00 0.00000
 [2,]    0e+00     0.00025        0.30    3.7  0.00000      1.0e-06 0.00000
-[3,]    1e-06     0.09600        0.37 1500.0  0.00069      1.6e+00 0.00066
-[4,]    1e-06     0.16000        0.41 2600.0  0.00170      4.7e+00 0.00200
+[3,]    1e-06     0.09600        0.37 1500.0  0.00069      2.1e+00 0.00066
+[4,]    1e-06     0.16000        0.41 2600.0  0.00170      6.3e+00 0.00200
 Warning messages:
 1: In solve_model(chem.name = chem.name, chem.cas = chem.cas, dtxsid = dtxsid,  :
   Value FALSE for restrictive.clearance in parameterze.arg.list has overwritting value TRUE in arguments to solve.model.
@@ -112,8 +112,8 @@ The model outputs are provided in the following units:
      Calvppmv Cendexhppmv Cmixexhppmv   Cmuc Atubules Ametabolized     AUC
 [1,]    0e+00     0.00000        0.30    0.0  0.00000      0.0e+00 0.00000
 [2,]    0e+00     0.00025        0.30    3.7  0.00000      1.0e-06 0.00000
-[3,]    1e-06     0.09600        0.37 1500.0  0.00069      1.6e+00 0.00066
-[4,]    1e-06     0.16000        0.41 2600.0  0.00170      4.7e+00 0.00200
+[3,]    1e-06     0.09600        0.37 1500.0  0.00069      2.1e+00 0.00066
+[4,]    1e-06     0.16000        0.41 2600.0  0.00170      6.3e+00 0.00200
 Warning messages:
 1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
   Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
