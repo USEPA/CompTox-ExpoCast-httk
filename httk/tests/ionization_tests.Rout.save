@@ -1,0 +1,188 @@
+
+R Under development (unstable) (2024-08-07 r86984 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2024 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # R CMD BATCH --no-timing --no-restore --no-save ionization_tests.R ionization_tests.Rout
+> 
+> # Get rid of anything in the workspace:
+> rm(list=ls()) 
+> 
+> library(httk)
+> 
+> calc_ionization(pH=7,pKa_Donor=5)
+$fraction_neutral
+[1] 0.009901
+
+$fraction_charged
+[1] 0.9901
+
+$fraction_negative
+[1] 0.9901
+
+$fraction_positive
+[1] 0
+
+$fraction_zwitter
+[1] 0
+
+> calc_ionization(pH=7,pKa_Accept=5)
+$fraction_neutral
+[1] 0.9901
+
+$fraction_charged
+[1] 0.009901
+
+$fraction_negative
+[1] 0
+
+$fraction_positive
+[1] 0.009901
+
+$fraction_zwitter
+[1] 0
+
+> calc_ionization(pH=7,pKa_Donor=10)
+$fraction_neutral
+[1] 0.999
+
+$fraction_charged
+[1] 0.000999
+
+$fraction_negative
+[1] 0.000999
+
+$fraction_positive
+[1] 0
+
+$fraction_zwitter
+[1] 0
+
+> calc_ionization(pH=7,pKa_Accept=10)
+$fraction_neutral
+[1] 0.000999
+
+$fraction_charged
+[1] 0.999
+
+$fraction_negative
+[1] 0
+
+$fraction_positive
+[1] 0.999
+
+$fraction_zwitter
+[1] 0
+
+> calc_ionization(pH=7,pKa_Donor="5,10")
+$fraction_neutral
+[1] 0.009891
+
+$fraction_charged
+[1] 0.9901
+
+$fraction_negative
+[1] 0.9901
+
+$fraction_positive
+[1] 0
+
+$fraction_zwitter
+[1] 0
+
+> calc_ionization(pH=7,pKa_Accept="5,10")
+$fraction_neutral
+[1] 0.0009891
+
+$fraction_charged
+[1] 0.999
+
+$fraction_negative
+[1] 0
+
+$fraction_positive
+[1] 0.999
+
+$fraction_zwitter
+[1] 0
+
+> calc_ionization(pH=7,pKa_Donor=10,pKa_Accept=5)
+$fraction_neutral
+[1] 0.9891
+
+$fraction_charged
+[1] 0.01088
+
+$fraction_negative
+[1] 0.0009891
+
+$fraction_positive
+[1] 0.009891
+
+$fraction_zwitter
+[1] 0
+
+> calc_ionization(pH=7,pKa_Accept=10,pKa_Donor=5)
+$fraction_neutral
+[1] 0
+
+$fraction_charged
+[1] 0.01088
+
+$fraction_negative
+[1] 0.0009891
+
+$fraction_positive
+[1] 0.009891
+
+$fraction_zwitter
+[1] 0.9891
+
+> 
+> calc_ionization(pH=7,pKa_Donor="5,10",pKa_Accept=4)
+$fraction_neutral
+[1] 0.009891
+
+$fraction_charged
+[1] 0.9901
+
+$fraction_negative
+[1] 0.9901
+
+$fraction_positive
+[1] 9.891e-06
+
+$fraction_zwitter
+[1] 0
+
+> calc_ionization(pH=7,pKa_Accept="5,10",pKa_Donor=4)
+$fraction_neutral
+[1] 0
+
+$fraction_charged
+[1] 0.01089
+
+$fraction_negative
+[1] 0.0009891
+
+$fraction_positive
+[1] 0.009901
+
+$fraction_zwitter
+[1] 0.9891
+
+> 
