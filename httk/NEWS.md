@@ -1,3 +1,6 @@
+## Enhancements
+* Refactored Henderson-Hasselbach calculations within calc_ionization to be clearer. Expanded documentation for 'calc_ionization'. No known change to previously calculated values by that function. Introduced new argument return_charge_matrix which gives a table listing each ionization state to explain how the values in 'calc_ionization' are derived.
+
 # httk 2.5.0 (2024-12-20)
 This release accompanies the submission of the new manuscript
 "A Simple Physiologically-Based Toxicokinetic Model for Multi-Route <i>In Vitro-In Vivo</i> Extrapolation"
