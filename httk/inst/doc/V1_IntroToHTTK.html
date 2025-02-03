@@ -1,0 +1,714 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Miyuki Breen, Anna Kreutz, and John Wambaugh" />
+
+<meta name="date" content="2021-06-15" />
+
+<title>1) Introduction to HTTK</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">1) Introduction to HTTK</h1>
+<h4 class="author">Miyuki Breen, Anna Kreutz, and John Wambaugh</h4>
+<h4 class="date">June 15, 2021</h4>
+
+
+
+<p><em>Please send questions to <a href="mailto:breen.miyuki@epa.gov" class="email">breen.miyuki@epa.gov</a></em></p>
+<div id="set-vignette-options" class="section level3">
+<h3>Set vignette options</h3>
+<p>R package <strong>knitr</strong> generates html and PDF documents
+from this RMarkdown file, Each bit of code that follows is known as a
+“chunk”. We start by telling <strong>knitr</strong> how we want our
+chunks to look.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">TRUE</span>, <span class="at">fig.width=</span><span class="dv">5</span>, <span class="at">fig.height=</span><span class="dv">4</span>)</span></code></pre></div>
+</div>
+<div id="description" class="section level2">
+<h2>Description</h2>
+<p>R package <strong>httk</strong> provides pre-made, chemical
+independent (“generic”) models and chemical-specific data for chemical
+toxicokinetics (“TK”) and <em>in vitro-in vivo</em> extrapolation
+(“IVIVE”) in bioinformatics, as described by <a href="https://doi.org/10.18637/jss.v079.i04">Pearce et al. (2017)</a>.
+Chemical-specific <em>in vitro</em> data have been obtained from
+relatively high-throughput experiments. Both physiologically-based
+(“PBTK”) and empirical (for example, one compartment) “TK” models can be
+parameterized with the data provided for thousands of chemicals,
+multiple exposure routes, and various species. The models consist of
+systems of ordinary differential equations which are solved using
+compiled (C-based) code for speed. A Monte Carlo sampler is included,
+which allows for simulating human biological variability (<a href="https://doi.org/10.1016/j.envint.2017.06.004">Ring et al.,
+2017</a>) and propagating parameter uncertainty (<a href="https://doi.org/10.1093/toxsci/kfz205">Wambaugh et al., 2019</a>).
+Calibrated methods are included for predicting tissue:plasma partition
+coefficients and volume of distribution (<a href="https://doi.org/10.1007/s10928-017-9548-7">Pearce et al.,
+2017</a>). These functions and data provide a set of tools for IVIVE of
+high-throughput screening data (for example, <a href="https://tox21.gov/">Tox21</a>, <a href="https://www.epa.gov/comptox-tools/exploring-toxcast-data">ToxCast</a>)
+to real-world exposures via reverse dosimetry (also known as “RTK”) (<a href="https://doi.org/10.1093/toxsci/kfv171">Wetmore et al.,
+2015</a>).</p>
+</div>
+<div id="introduction" class="section level2">
+<h2>Introduction</h2>
+<p>Chemicals can be identified using name, CAS, or DTXSID (that is, a
+substance identifier for the <a href="https://doi.org/10.1016/j.comtox.2019.100096">Distributed
+Structure- Searchable Toxicity (DSSTox) database</a>. Available
+chemical- specific information includes logP, MW, pKa, intrinsic
+clearance, partitioning. Calculations can be performed to derive
+chemical properties, TK parameters, or IVIVE values. Functions are also
+available to perform forward dosimetry using the various models. As
+functions are typed at the RStudio command line, available arguments are
+displayed, with additional help available through the “?” operator.
+Vignettes for the various available packages in httk are provided to
+give an overview of their respective capabilities. The aim of
+<strong>httk</strong> is to provide a readily accessible platform for
+working with HTTK models.</p>
+<p>This material is from <a href="https://doi.org/10.1080/17425255.2021.1935867">Breen et al. (2021)
+“High-throughput PBTK models for in vitro to in vivo
+extrapolation”</a></p>
+</div>
+<div id="getting-started" class="section level2">
+<h2>Getting Started</h2>
+<p>For an introduction to R, see Irizarry (2022) “Introduction to Data
+Science”: <a href="http://rafalab.dfci.harvard.edu/dsbook/getting-started.html" class="uri">http://rafalab.dfci.harvard.edu/dsbook/getting-started.html</a></p>
+<p>For an introduction to toxicokinetics, with examples in “httk”, see
+Ring (2021) in the “TAME Toolkit”: <a href="https://uncsrp.github.io/Data-Analysis-Training-Modules/toxicokinetic-modeling.html" class="uri">https://uncsrp.github.io/Data-Analysis-Training-Modules/toxicokinetic-modeling.html</a></p>
+<div id="dependencies" class="section level3">
+<h3>Dependencies</h3>
+<ul>
+<li>Users will need the freely available R statistical computing
+language: <a href="https://www.r-project.org/" class="uri">https://www.r-project.org/</a></li>
+<li>Users will likely want a development environment like RStudio: <a href="https://posit.co/download/rstudio-desktop/" class="uri">https://posit.co/download/rstudio-desktop/</a></li>
+<li>If you get the message “Error in library(X) : there is no package
+called ‘X’” then you will need to install that package: From the R
+command prompt: install.packages(“X”) Or, if using RStudio, look for
+‘Install Packages’ under the ‘Tools’ tab.</li>
+<li>Note that R does not recognize fancy versions of quotation marks
+that curve toward each other. If you are cutting and pasting from
+software like Word or Outlook you may need to replace the quotation
+marks that curve toward each other with ones typed by the keyboard.</li>
+</ul>
+</div>
+<div id="installing-r-package-httk" class="section level3">
+<h3>Installing R package “httk”</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">&quot;httk&quot;</span>)</span></code></pre></div>
+</div>
+<div id="write-privileges-on-your-personal-computer." class="section level3">
+<h3>“Write Privileges” On Your Personal Computer.</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a> Depending on the account you are using and where you want to install the package on that computer, you may need “permission” from your local file system to install the package. See this help here<span class="sc">:</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="er">&lt;</span>https<span class="sc">:</span><span class="er">//</span>stackoverflow.com<span class="sc">/</span>questions<span class="sc">/</span><span class="dv">42807247</span><span class="sc">/</span>installing<span class="sc">-</span>package<span class="sc">-</span>cannot<span class="sc">-</span>open<span class="sc">-</span>file<span class="sc">-</span>permission<span class="sc">-</span>denied<span class="sc">&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>and here<span class="sc">:</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="er">&lt;</span>https<span class="sc">:</span><span class="er">//</span>support.microsoft.com<span class="sc">/</span>en<span class="sc">-</span>us<span class="sc">/</span>topic<span class="sc">/</span>general<span class="sc">-</span>problem<span class="sc">-</span>installing<span class="sc">-</span>any<span class="sc">-</span>r<span class="sc">-</span>package<span class="sc">-</span>0bf1f9ba<span class="sc">-</span>ead2<span class="dv">-6335</span><span class="sc">-</span>46ec<span class="sc">-</span>190f6af75e44<span class="sc">&gt;</span></span></code></pre></div>
+</div>
+<div id="delete-all-objects-from-memory" class="section level3">
+<h3>Delete all objects from memory:</h3>
+<p>It is a bad idea to let variables and other information from previous
+R sessions float around, so we first remove everything in the R
+memory.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list=</span><span class="fu">ls</span>())</span></code></pre></div>
+</div>
+<div id="load-the-httk-data-models-and-functions" class="section level3">
+<h3>Load the HTTK data, models, and functions</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httk)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Check what version you are using </span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">packageVersion</span>(<span class="st">&quot;httk&quot;</span>)</span></code></pre></div>
+<pre><code>## [1] &#39;2.5.0&#39;</code></pre>
+</div>
+<div id="control-run-speed" class="section level3">
+<h3>Control run speed</h3>
+<p>Portions of this vignette use Monte Carlo sampling to simulate
+variability and propagate uncertainty. The more samples that are used,
+the more stable the results are (that is, the less likely they are to
+change if a different random sequence is used). However, the more
+samples that are used, the longer it takes to run. So, to speed up how
+fast these examples run, we specify here that we only want to use 25
+samples, even though the actual <strong>httk</strong> default is 1000.
+Increase this number to get more stable (and accurate) results:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>NSAMP <span class="ot">&lt;-</span> <span class="dv">25</span></span></code></pre></div>
+</div>
+<div id="suppressing-messages" class="section level3">
+<h3>Suppressing Messages</h3>
+<p>Note that since <em>in vitro-in vivo</em> extrapolation (IVIVE) is
+built upon many, many assumptions, *httk** attempts to give many warning
+messages by default. These messages do not usually mean something is
+wrong, but are rather intended to make the user aware of the assumptions
+involved. However, they quickly grow annoying and can be turned off with
+the “suppress.messages=TRUE” argument. Proceed with caution…</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>css <span class="ot">&lt;-</span> <span class="fu">calc_analytic_css</span>(<span class="at">chem.name =</span> <span class="st">&quot;Bisphenol A&quot;</span>,</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">suppress.messages =</span> <span class="cn">FALSE</span>)</span></code></pre></div>
+<pre><code>## Warning in get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas =
+## chem.cas, : Clint is provided as a distribution.</code></pre>
+<pre><code>## Warning in apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep,
+## suppress.messages = suppress.messages): Clint adjusted for in vitro
+## partitioning (Kilford, 2008), see calc_hep_fu.</code></pre>
+<pre><code>## Warning in get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,
+## : Fraction unbound is provided as a distribution.</code></pre>
+<pre><code>## Warning in apply_fup_adjustment(fup.point, fup.correction = fup.adjustment, :
+## Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see
+## calc_fup_correction.</code></pre>
+<pre><code>## Warning in available_rblood2plasma(chem.cas = chem.cas, species = species, :
+## Human in vivo measured Rblood2plasma used.</code></pre>
+<pre><code>## Warning in get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid =
+## dtxsid, : Default value of 1.6 used for Caco2 permeability.</code></pre>
+<pre><code>## Plasma concentration returned in uM units.</code></pre>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>css <span class="ot">&lt;-</span> <span class="fu">calc_analytic_css</span>(<span class="at">chem.name =</span> <span class="st">&quot;Bisphenol A&quot;</span>,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                  <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+</div>
+</div>
+<div id="examples" class="section level2">
+<h2>Examples</h2>
+<ul>
+<li>List all CAS numbers for all chemicals with sufficient data to run
+httk Note that we use the R built-in function head() to show only the
+first five rows</li>
+</ul>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">get_cheminfo</span>(<span class="at">suppress.messages =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<pre><code>## [1] &quot;2971-36-0&quot;  &quot;94-75-7&quot;    &quot;94-82-6&quot;    &quot;90-43-7&quot;    &quot;1007-28-9&quot; 
+## [6] &quot;71751-41-2&quot;</code></pre>
+<p>Remove the head() function to get the full table</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">get_cheminfo</span>(<span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<ul>
+<li>List all information (If median.only=FALSE you will get medians,
+lower 95th, and upper 95th for Fup, plus p-value for Clint, separated by
+commans, when those statistics are available. Older data only have means
+for Clint and Fup.):</li>
+</ul>
+<p>Note that we use the R built-in function head() to show only the
+first five rows</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">get_cheminfo</span>(<span class="at">info =</span> <span class="st">&quot;all&quot;</span>, <span class="at">median.only=</span><span class="cn">TRUE</span>,<span class="at">suppress.messages =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<pre><code>##                                                Compound        CAS
+## 1 2,2-bis(4-hydroxyphenyl)-1,1,1-trichloroethane (hpte)  2971-36-0
+## 2                                                 2,4-d    94-75-7
+## 3                                                2,4-db    94-82-6
+## 4                                        2-phenylphenol    90-43-7
+## 5                                6-desisopropylatrazine  1007-28-9
+## 6                                             Abamectin 71751-41-2
+##          DTXSID  logP    MW pKa_Accept         pKa_Donor Human.Clint
+## 1 DTXSID8022325 4.622 317.6       &lt;NA&gt;              8.33      136.50
+## 2 DTXSID0020442 2.809 221.0       &lt;NA&gt;              2.42        0.00
+## 3 DTXSID7024035 3.528 249.1       &lt;NA&gt;              3.11        0.00
+## 4 DTXSID2021151 3.091 170.2       &lt;NA&gt;              9.35        0.00
+## 5 DTXSID0037495 1.150 173.6       3.43              &lt;NA&gt;        0.00
+## 6 DTXSID8023892 4.480 819.0       &lt;NA&gt; 12.47,13.17,13.80        5.24
+##   Human.Clint.pValue Human.Funbound.plasma Human.Rblood2plasma
+## 1          0.0000357              0.005000                  NA
+## 2          0.1488000              0.040010                2.11
+## 3          0.1038000              0.006623                  NA
+## 4          0.1635000              0.041050                  NA
+## 5          0.5387000              0.458800                  NA
+## 6          0.0009170              0.066870                  NA</code></pre>
+<ul>
+<li>Is a chemical with a specified CAS number available?</li>
+</ul>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;80-05-7&quot;</span> <span class="sc">%in%</span> <span class="fu">get_cheminfo</span>(<span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## [1] TRUE</code></pre>
+<ul>
+<li>All data on chemicals A, B, C (You need to specify the names instead
+of “A”,“B”,“C”…)</li>
+</ul>
+<div class="sourceCode" id="cb24"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">subset</span>(<span class="fu">get_cheminfo</span>(<span class="at">info =</span> <span class="st">&quot;all&quot;</span>,<span class="at">suppress.messages =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>       Compound <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>,<span class="st">&quot;B&quot;</span>,<span class="st">&quot;C&quot;</span>))</span></code></pre></div>
+<pre><code>##  [1] Compound              CAS                   DTXSID               
+##  [4] logP                  MW                    pKa_Accept           
+##  [7] pKa_Donor             Human.Clint           Human.Clint.pValue   
+## [10] Human.Funbound.plasma Human.Rblood2plasma  
+## &lt;0 rows&gt; (or 0-length row.names)</code></pre>
+<ul>
+<li>Administrated equivalent dose (mg/kg BW/day) to produce 0.1 uM
+plasma concentration, 0.95 quantile, for a specified CAS number and
+species</li>
+</ul>
+<div class="sourceCode" id="cb26"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="fu">calc_mc_oral_equiv</span>(<span class="fl">0.1</span>,</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">chem.cas =</span> <span class="st">&quot;34256-82-1&quot;</span>,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">species =</span> <span class="st">&quot;human&quot;</span>,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">samples =</span> NSAMP,</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## Warning in get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid =
+## dtxsid, : Clint is provided as a distribution.</code></pre>
+<pre><code>## Warning in (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL, :
+## calc_analytic_css deprecated argument daily.dose replaced with new argument
+## dose, value given assigned to dose</code></pre>
+<pre><code>## Human plasma concentration returned in uM units for 0.95 quantile.</code></pre>
+<pre><code>##    95% 
+## 0.1954</code></pre>
+<div class="sourceCode" id="cb31"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="fu">calc_mc_oral_equiv</span>(<span class="fl">0.1</span>,</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>                   <span class="at">chem.cas =</span> <span class="st">&quot;99-71-8&quot;</span>, </span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>                   <span class="at">species =</span> <span class="st">&quot;human&quot;</span>,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>                   <span class="at">samples =</span> NSAMP,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>                   <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## Warning in get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid =
+## dtxsid, : Default value of 1.6 used for Caco2 permeability.</code></pre>
+<pre><code>## Warning in (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL, :
+## calc_analytic_css deprecated argument daily.dose replaced with new argument
+## dose, value given assigned to dose</code></pre>
+<pre><code>## Human plasma concentration returned in uM units for 0.95 quantile.</code></pre>
+<pre><code>##      95% 
+## 0.008084</code></pre>
+<ul>
+<li>Calculate the mean, AUC, and peak concentrations for a simulated
+study (28-day daily dose, by default) for a specified CAS number and
+species</li>
+</ul>
+<div class="sourceCode" id="cb36"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="fu">calc_tkstats</span>(<span class="at">chem.cas =</span> <span class="st">&quot;34256-82-1&quot;</span>,</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">species =</span> <span class="st">&quot;rat&quot;</span>,</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## $AUC
+## [1] 2.158
+## 
+## $peak
+## [1] 0.5815
+## 
+## $mean
+## [1] 0.07707</code></pre>
+<div class="sourceCode" id="cb38"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="fu">calc_tkstats</span>(<span class="at">chem.cas =</span> <span class="st">&quot;962-58-3&quot;</span>, </span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>             <span class="at">species =</span> <span class="st">&quot;rat&quot;</span>,</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>             <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## $AUC
+## [1] 0.9342
+## 
+## $peak
+## [1] 0.1998
+## 
+## $mean
+## [1] 0.03336</code></pre>
+<ul>
+<li>Using the PBTK solver for a specified chem name</li>
+</ul>
+<p>Note that we use the R built-in function head() to show only the
+first five rows</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(<span class="fu">solve_pbtk</span>(<span class="at">chem.name =</span> <span class="st">&quot;bisphenol a&quot;</span>, </span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>                <span class="at">plots =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>                <span class="at">days =</span> <span class="dv">1</span>,</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>                <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>))</span></code></pre></div>
+<p><img src="data:image/png;base64,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Pc8vkSoucTtmACenz7DBPNXIcUGcYoK1SCvebB8GD/fH0BUXX6xUF230x8T1GThNWotBQizwVBgkzO62wZp9txatTrx/YGxxGnQQM3V9vU10yGF+Rv5KnEFPQyqYir7+ZrIu+wkvd63FsBMJVUxEH6YqiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiQODiWPY4Jc7xu6fzdZpjFjceTcf8C5JjTEcQrMGu+wLj9+s9NXlVpCIs9tgdQj/+ty2PqMGB+uevjfbBKk4qw1Wh9B3WgfWqMFe/K3lUQh9ZxW+PTL24cRV3zyx2YC3B6wTF6kL1ouT/Bkr8x3248YC41OVob9h7GbPY/fubsazdlttRg12E3VCpjvb8zA+v/FQBuvo+bi3F3PVBktl4r/XOogGSVXyQ/kUxLGz5gjOqzvvRMhWYWz0afTEWGGw/CmUjq5QkKoMw79/v2NSoTUGZ/nlMP+DZ2iXRWytMLgiRcufIq6jKxSkKoPN7PM/a8sMzkYIHvsXzyzRERy9b4HBF4Msa4/gVKVwOuk8rDE4G+OLbyIQg6vFcz6MRvfVWpxQIv77zqXRLzb0walKcfdRN0nRHU5PTE90OPFZuuxL3sRI8NmOIzgVFynxHPZhk2t68euRFQqSEH7loXtKBqdf2bzl3AemKlMsaII9AIMjRLp+s3mapjUwWPInT4xLggcwDKYODCYODCYODCYODCYODCYODCYODCYODCYODCYODCYODCYODCYODCYODCYODCZOG4OZecz+TdCX21koFiPJ37q+JKlYnalI1G+mr69Ym236RohfVOQypr5wyIt2WrzULalOJadR69IRWKuvYu/W6LMgfknRQdUAz7tIt79Mriq62KVua1NoLqq+XpVSX9UObdFnQ/xyRV5JYfDzMfejrcCrqjWrKuurqtUWfTbELy4S3Uh1C3x/VGxjcuBxtS61vtoUaIE+G+IX98EVF+X7zmUA8y1wwABW6atNgRbosyF+zUbRueqMnjm0HKWWUmCuNhv01dU2lL76/RRTYK4FDhjASkop0DJ9NsRPFgVrZQsspcBsG8On/lfKK/TVpEAr9NkQv/woelUs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" /><!-- --></p>
+<pre><code>##        time Agutlumen    Cgut    Cliver     Cven  Clung    Cart    Crest
+## [1,] 0.0000     197.5  0.0000  0.000000 0.000000 0.0000 0.00000 0.000000
+## [2,] 0.0001     197.3  0.1582  0.000479 0.000001 0.0000 0.00000 0.000000
+## [3,] 0.0104     180.0 10.1300  3.063000 0.036390 0.2967 0.03130 0.007976
+## [4,] 0.0208     164.1 13.6200  7.596000 0.102500 0.8846 0.09679 0.056220
+## [5,] 0.0312     149.6 14.7600 11.110000 0.162000 1.4230 0.15740 0.149600
+## [6,] 0.0416     136.3 14.9800 13.380000 0.206900 1.8320 0.20360 0.275500
+##      Ckidney  Cplasma Atubules Ametabolized      AUC
+## [1,]  0.0000 0.000000 0.000000       0.0000 0.000000
+## [2,]  0.0000 0.000001 0.000000       0.0000 0.000000
+## [3,]  0.3831 0.045780 0.000583       0.1356 0.000170
+## [4,]  1.7530 0.128900 0.004221       0.7597 0.001074
+## [5,]  3.2900 0.203700 0.011570       1.8590 0.002818
+## [6,]  4.5510 0.260300 0.021980       3.2940 0.005247</code></pre>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<ul>
+<li>Create data set, my_data, for all data on chemicals A, B, C, in
+R</li>
+</ul>
+<div class="sourceCode" id="cb42"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a>my_data <span class="ot">&lt;-</span> <span class="fu">subset</span>(<span class="fu">get_cheminfo</span>(<span class="at">info =</span> <span class="st">&quot;all&quot;</span>,<span class="at">suppress.messages =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>                  Compound <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">&quot;A&quot;</span>,<span class="st">&quot;B&quot;</span>,<span class="st">&quot;C&quot;</span>))</span></code></pre></div>
+<ul>
+<li>Export data set, my_data, from R to csv file called my_data.csv in
+the current working directory</li>
+</ul>
+<div class="sourceCode" id="cb43"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(my_data, <span class="at">file =</span> <span class="st">&quot;my_data.csv&quot;</span>)</span></code></pre></div>
+<div id="mean-and-median-fraction-unbound-in-plasma" class="section level4">
+<h4>Mean and Median Fraction Unbound in Plasma</h4>
+<p>Create a data.frame with all the Fup values, we ask for
+model=“schmitt” since that model only needs fup, we ask for
+“median.only” because we don’t care about uncertainty intervals
+here:</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httk)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>fup.tab <span class="ot">&lt;-</span> <span class="fu">get_cheminfo</span>(<span class="at">info=</span><span class="st">&quot;all&quot;</span>,</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>                        <span class="at">median.only=</span><span class="cn">TRUE</span>,</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>                        <span class="at">model=</span><span class="st">&quot;schmitt&quot;</span>,</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>                        <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## Warning in get_cheminfo(info = &quot;all&quot;, median.only = TRUE, model = &quot;schmitt&quot;, :
+## NAs introduced by coercion</code></pre>
+<p>Calculate the median, making sure to convert to numeric values:</p>
+<div class="sourceCode" id="cb46"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="fu">median</span>(<span class="fu">as.numeric</span>(fup.tab<span class="sc">$</span>Human.Funbound.plasma),<span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## [1] 0.13</code></pre>
+<p>Calculate the mean:</p>
+<div class="sourceCode" id="cb48"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(<span class="fu">as.numeric</span>(fup.tab<span class="sc">$</span>Human.Funbound.plasma),<span class="at">na.rm=</span><span class="cn">TRUE</span>)</span></code></pre></div>
+<pre><code>## [1] 0.2922278</code></pre>
+<p>Count how many non-NA values we have (should be the same as the
+number of rows in the table but just in case we ask for non NA
+values:</p>
+<div class="sourceCode" id="cb50"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(fup.tab<span class="sc">$</span>Human.Funbound.plasma))</span></code></pre></div>
+<pre><code>## [1] 1706</code></pre>
+</div>
+<div id="user-notes" class="section level4">
+<h4>User Notes</h4>
+<ul>
+<li>When using the CAS number as a unique chemical identifier with
+‘httk’ functions it is best to type these numbers directly (i.e. by
+hand) into the console, script, Rmarkdown, etc. to avoid unnecessary
+error messages. Webpages, word documents, and other sources of these CAS
+numbers may use a different character encoding that does not match those
+used in the ‘httk’ data sources.</li>
+</ul>
+</div>
+</div>
+<div id="help" class="section level2">
+<h2>Help</h2>
+<ul>
+<li>Getting help with R Package httk</li>
+</ul>
+<div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="fu">help</span>(httk)</span></code></pre></div>
+<ul>
+<li>You can go straight to the index:</li>
+</ul>
+<div class="sourceCode" id="cb53"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="fu">help</span>(<span class="at">package =</span> httk)</span></code></pre></div>
+<ul>
+<li>List all vignettes for httk</li>
+</ul>
+<div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vignette</span>(<span class="at">package =</span> <span class="st">&quot;httk&quot;</span>)</span></code></pre></div>
+<ul>
+<li>Displays the vignette for a specified vignette</li>
+</ul>
+<div class="sourceCode" id="cb55"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="fu">vignette</span>(<span class="st">&quot;1_IntroToHTTK&quot;</span>)</span></code></pre></div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
