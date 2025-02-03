@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Gregory S. Honda" />
+
+<meta name="date" content="2018-07-13" />
+
+<title>Honda et al. (2019): Updated Armitage et al. (2014) Model</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Honda et al. (2019): Updated Armitage et
+al. (2014) Model</h1>
+<h4 class="author">Gregory S. Honda</h4>
+<h4 class="date">July 13, 2018</h4>
+
+
+
+<p><em>Please send questions to <a href="mailto:wambaugh.john@epa.gov" class="email">wambaugh.john@epa.gov</a></em></p>
+<p>from “Using the concordance of <em>in vitro</em> and <em>in vivo</em>
+data to evaluate extrapolation assumptionst”</p>
+<p>Gregory S. Honda, Robert G. Pearce, Ly L. Pham, R. W. Setzer, Barbara
+A. Wetmore, Nisha S. Sipes, Jon Gilbert, Briana Franz, Russell S.
+Thomas, John F. Wambaugh</p>
+<p>PLoS ONE 14(5): e0217564.</p>
+<p><a href="https://doi.org/10.1371/journal.pone.0217564" class="uri">https://doi.org/10.1371/journal.pone.0217564</a></p>
+<p>The authors thank James Armitage for providing a revised version of
+his model ( <a href="https://doi.org/10.1021/es501955g" class="uri">https://doi.org/10.1021/es501955g</a>).</p>
+<div id="abstract" class="section level2">
+<h2>Abstract</h2>
+<p>Linking <em>in vitro</em> bioactivity and <em>in vivo</em> toxicity
+on a dose basis enables the use of high-throughput in vitro assays as an
+alternative to traditional animal studies. In this study, we evaluated
+assumptions in the use of a high-throughput, physiologically based
+toxicokinetic (PBTK) model to relate <em>in vitro</em> bioactivity and
+rat <em>in vivo</em> toxicity data. The fraction unbound in plasma
+(<span class="math inline">\(f_{up}\)</span>) and intrinsic hepatic
+clearance (<span class="math inline">\(Cl_{int}\)</span>) were measured
+for rats (for 67 and 77 chemicals, respectively), combined with fup and
+<span class="math inline">\(Cl_{int}\)</span> literature data for 97
+chemicals, and incorporated in the PBTK model. Of these chemicals, 84
+had corresponding <em>in vitro</em> ToxCast bioactivity data and <em>in
+vivo</em> toxicity data. For each possible comparison of <em>in
+vitro</em> and <em>in vivo</em> endpoint, the concordance between the
+<em>in vivo</em> and <em>in vitro</em> data was evaluated by a
+regression analysis. For a base set of assumptions, the PBTK results
+were more frequently better associated than either the results from a
+“random” model parameterization or direct comparison of the
+“untransformed” values of <span class="math inline">\(AC_{50}\)</span>
+and dose (performed best in 51%, 28%, and 21% of cases, respectively).
+We also investigated several assumptions in the application of PBTK for
+<em>in vitro-in vivo</em> extrapolation (IVIVE), including clearance and
+internal dose selection. One of the better assumptions sets-restrictive
+clearance and comparing free <em>in vivo</em> venous plasma
+concentration with free <em>in vitro</em> concentration-outperformed the
+random and untransformed results in 71% of the <em>in vitro-in vivo</em>
+endpoint comparisons. These results demonstrate that applying PBTK
+improves our ability to observe the association between <em>in
+vitro</em> bioactivity and <em>in vivo</em> toxicity data in general.
+This suggests that potency values from <em>in vitro</em> screening
+should be transformed using IVIVE to build potentially better machine
+learning and other statistical models for predicting in vivo toxicity in
+humans.</p>
+</div>
+<div id="httk-version" class="section level2">
+<h2>HTTK Version</h2>
+<p>This vignette was created with <strong>httk</strong> v1.9. Although
+we attempt to maintain backward compatibility, if you encounter issues
+with the latest release of <strong>httk</strong> and cannot easily
+address the changes, historical versions of httk are available from: <a href="https://cran.r-project.org/src/contrib/Archive/httk/" class="uri">https://cran.r-project.org/src/contrib/Archive/httk/</a></p>
+</div>
+<div id="prepare-for-session" class="section level2">
+<h2>Prepare for session</h2>
+<p>R package <strong>knitr</strong> generates html and PDF documents
+from this RMarkdown file, Each bit of code that follows is known as a
+“chunk”. We start by telling <strong>knitr</strong> how we want our
+chunks to look.</p>
+<div id="clear-the-memory" class="section level3">
+<h3>Clear the memory</h3>
+<p>It is a bad idea to let variables and other information from previous
+R sessions float around, so we first remove everything in the R
+memory.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list=</span><span class="fu">ls</span>()) </span></code></pre></div>
+</div>
+<div id="eval-execute.vignette" class="section level3">
+<h3>eval = execute.vignette</h3>
+<p>If you are using the RMarkdown version of this vignette (extension,
+.RMD) you will be able to see that several chunks of code in this
+vignette have the statement “eval = execute.vignette”. The next chunk of
+code, by default, sets execute.vignette = FALSE. This means that the
+code is included (and necessary) but was not run when the vignette was
+built. We do this because some steps require extensive computing time
+and the checks on CRAN limit how long we can spend building the package.
+If you want this vignette to work, you must run all code, either by
+cutting and pasting it into R. Or, if viewing the .RMD file, you can
+either change execute.vignette to TRUE or press “play” (the green arrow)
+on each chunk in RStudio.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Set whether or not the following chunks will be executed (run):</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>execute.vignette <span class="ot">&lt;-</span> <span class="cn">FALSE</span></span></code></pre></div>
+</div>
+<div id="load-the-relevant-libraries" class="section level3">
+<h3>Load the relevant libraries</h3>
+<p>If you get the message “Error in library(X) : there is no package
+called ‘X’” then you will need to install that package:</p>
+<p>From the R command prompt:</p>
+<p>install.packages(“X”)</p>
+<p>Or, if using RStudio, look for ‘Install Packages’ under ‘Tools’
+tab.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(magrittr)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httk)</span></code></pre></div>
+</div>
+</div>
+<div id="updated-armitage-2014-top-panel-figure-3" class="section level2">
+<h2>Updated Armitage 2014 Top Panel Figure 3</h2>
+<p>This produces an updated version of the top panel of Figure 3 from
+the paper <a href="https://doi.org/10.1021/es501955g">Armitage,
+2014</a></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>armitage.dt <span class="ot">&lt;-</span> <span class="fu">copy</span>(armitage_input)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>armitage.dt[,well_number<span class="sc">:</span><span class="er">=</span><span class="dv">384</span>] <span class="sc">%&gt;%</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  .[,option.bottom<span class="sc">:</span><span class="er">=</span><span class="cn">TRUE</span>] <span class="sc">%&gt;%</span> </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  .[,option.plastic<span class="sc">:</span><span class="er">=</span><span class="cn">TRUE</span>] <span class="sc">%&gt;%</span> </span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  .[,Tsys<span class="sc">:</span><span class="er">=</span><span class="dv">37</span>] <span class="sc">%&gt;%</span> </span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  .[,Tref<span class="sc">:</span><span class="er">=</span><span class="fl">298.15</span>] <span class="sc">%&gt;%</span> </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  .[,FBSf<span class="sc">:</span><span class="er">=</span><span class="fl">0.1</span>] <span class="sc">%&gt;%</span> </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  .[,nomconc<span class="sc">:</span><span class="er">=</span><span class="dv">50</span>]</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Make sure we have data for the chemical:</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>armitage.dt <span class="ot">&lt;-</span> <span class="fu">subset</span>(armitage.dt,casrn<span class="sc">%in%</span><span class="fu">get_cheminfo</span>())</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="co"># These chemicals are missing water solubilities:</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>armitage.dt <span class="ot">&lt;-</span> <span class="fu">subset</span>(armitage.dt,<span class="sc">!</span>(casrn<span class="sc">%in%</span><span class="fu">c</span>(<span class="st">&quot;71751-41-2&quot;</span>,<span class="st">&quot;34590-94-8&quot;</span>,<span class="st">&quot;141517-21-7&quot;</span>)))</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>armitage.dt2 <span class="ot">&lt;-</span> <span class="fu">armitage_estimate_sarea</span>(<span class="at">tcdata =</span> armitage.dt)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>armitage_output1 <span class="ot">&lt;-</span> <span class="fu">armitage_eval</span>(<span class="at">tcdata =</span> armitage.dt2[,<span class="at">ac50:=</span><span class="dv">50</span>])</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>armitage_output2 <span class="ot">&lt;-</span> <span class="fu">armitage_eval</span>(<span class="at">tcdata =</span> armitage.dt2[,<span class="at">ac50:=</span><span class="dv">1</span>])</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>armitage_output3 <span class="ot">&lt;-</span> <span class="fu">armitage_eval</span>(<span class="at">tcdata =</span> armitage.dt2[,<span class="at">ac50:=</span><span class="fl">0.001</span>])</span></code></pre></div>
+</div>
+<div id="plot-results" class="section level2">
+<h2>Plot results</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>armitage_output <span class="ot">&lt;-</span> <span class="fu">rbind</span>(armitage_output1[,<span class="at">xfill:=</span><span class="st">&quot;50 \U00B5M&quot;</span>],</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                         armitage_output2[,<span class="at">xfill:=</span><span class="st">&quot;1 \U00B5M&quot;</span>],</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                         armitage_output3[,<span class="at">xfill:=</span><span class="st">&quot;1 nM&quot;</span>])</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>armitage_output[,xfill<span class="sc">:</span><span class="er">=</span><span class="fu">factor</span>(xfill,<span class="at">levels=</span><span class="fu">c</span>(<span class="st">&quot;50 \U00B5M&quot;</span>,<span class="st">&quot;1 \U00B5M&quot;</span>,<span class="st">&quot;1 nM&quot;</span>))]</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(armitage_output) <span class="sc">+</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">x=</span>gkow,<span class="at">y=</span><span class="fu">log10</span>(ccells<span class="sc">/</span>MW<span class="sc">*</span><span class="fl">1e9</span>),<span class="at">color=</span>xfill),<span class="at">shape=</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">color=</span><span class="fu">expression</span>(<span class="st">&quot;AC&quot;</span>[<span class="st">&quot;50&quot;</span>]),<span class="at">x=</span><span class="st">&quot;log P&quot;</span>, <span class="at">y =</span> <span class="st">&quot;log(ng chemical/g cells)&quot;</span>) <span class="sc">+</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_bw</span>()</span></code></pre></div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
