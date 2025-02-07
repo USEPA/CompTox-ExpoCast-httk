@@ -1,4 +1,4 @@
-<img src="../httk.png" align="right" width="33%"/>
+<img src="man/figures/httk.png" align="right" width="33%"/>
 
 # R Package "httk"
 
