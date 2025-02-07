@@ -1,4 +1,4 @@
-<img src="httk.png" align="right" width="33%"/>
+<img src="httk/man/figures/httk.png" align="right" width="33%"/>
 
 # Git Repository for R Package "httk"
 
