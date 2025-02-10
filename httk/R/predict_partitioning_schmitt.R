@@ -138,7 +138,7 @@
 #' lump_tissues(PCs1)
 #' 
 #' # Lump the tissues into a single volume of distribution
-#' calc_vdist(parameters=p)
+#' calc_vdist(parameters=c(p,PCs1))
 #'
 #' @import magrittr
 #'
@@ -201,12 +201,12 @@ predict_partitioning_schmitt <- function(
       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
       minimum.Funbound.plasma=minimum.Funbound.plasma,
       suppress.messages=suppress.messages)
-    user.params <- F
+    user.params <- FALSE
   } else {
   # Work with local copy of parameters in function(scoping):
     if (is.data.table(parameters)) parameters <- copy(parameters)
     
-    user.params <- T
+    user.params <- TRUE
     if (!"plasma.pH"%in%names(parameters)) parameters$plasma.pH <- 7.4
     if (!"Fprotein.plasma"%in%names(parameters)) 
       parameters$Fprotein.plasma <-  physiology.data[

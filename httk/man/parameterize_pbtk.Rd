@@ -21,10 +21,12 @@ parameterize_pbtk(
   restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04,
   class.exclude = TRUE,
+  physchem.exclude = TRUE,
   million.cells.per.gliver = 110,
   liver.density = 1.05,
   kgutabs = NA,
-  Caco2.options = NULL
+  Caco2.options = NULL,
+  ...
 )
 }
 \arguments{
@@ -74,6 +76,10 @@ this value (default is 0.0001).}
 \item{class.exclude}{Exclude chemical classes identified as outside of 
 domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
 
+\item{physchem.exclude}{Exclude chemicals on the basis of physico-chemical
+properties (currently only Henry's law constant) as specified by 
+the relevant modelinfo_[MODEL] file (default TRUE).}
+
 \item{million.cells.per.gliver}{Hepatocellularity (defaults to 110 10^6 cells/g-liver, from Carlile et al. (1997))}
 
 \item{liver.density}{Liver density (defaults to 1.05 g/mL from International Commission on Radiological Protection (1975))}
@@ -88,6 +94,8 @@ fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab t
 fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
 See \code{\link{get_fbio}} for further details.}
+
+\item{...}{Additional arguments, not currently used.}
 }
 \value{
 \item{BW}{Body Weight, kg.} 

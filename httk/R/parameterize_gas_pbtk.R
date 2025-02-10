@@ -64,6 +64,9 @@
 #' @param class.exclude Exclude chemical classes identified as outside of 
 #' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
 #' 
+#' @param restrictive.clearance Protein binding not taken into account (set to
+#' 1) in liver clearance if FALSE. (Default is FALSE.)
+#' 
 #' @param VT Tidal volume (L), to be modulated especially as part of simulating
 #' the state of exercise
 #' 
@@ -217,6 +220,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                               minimum.Funbound.plasma=0.0001,
                               Caco2.options=NULL,
                               class.exclude=TRUE,
+                              restrictive.clearance = FALSE,
                               ...)
 {
   physiology.data <- physiology.data
@@ -243,7 +247,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
             model="gas_pbtk",
             species=species,
             class.exclude=class.exclude,
-            default.to.human=default.to.human)
+            default.to.human=default.to.human|force.human.clint.fup)
             
   if (is(tissuelist,'list')==FALSE) stop("tissuelist must be a list of vectors.") 
 
@@ -407,7 +411,8 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
           Vliverc=lumped_params$Vliverc, #L/kg
           Qtotal.liverc=
                (lumped_params$Qtotal.liverf*as.numeric(Qcardiacc))/1000*60),
-        suppress.messages=TRUE)), #L/h/kg BW
+          suppress.messages=TRUE,
+          restrictive.clearance=restrictive.clearance)), #L/h/kg BW
       million.cells.per.gliver=110, # 10^6 cells/g-liver
       liver.density=1.05)) # g/mL
   } else {
@@ -427,6 +432,12 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
       class.exclude=class.exclude,
       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
       suppress.messages=TRUE))
+
+# Henry's law (water:air partitioning) coefficient:
+  outlist[["logHenry"]] <- get_physchem_param(param = 'logHenry', 
+                                  chem.cas=chem.cas,
+                                  chem.name=chem.name,
+                                  dtxsid=dtxsid) #for log base 10 compiled Henry's law values
     
 # Get the blood:air and mucus:air partition coefficients:
   Kx2air <- calc_kair(chem.name=chem.name,

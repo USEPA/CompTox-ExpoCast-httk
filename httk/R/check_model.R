@@ -34,6 +34,10 @@
 #' @param class.exclude Exclude chemical classes identified as outside of 
 #' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
 #' 
+#' @param physchem.exclude Exclude chemicals on the basis of physico-chemical
+#' properties (currently only Henry's law constant) as specified by 
+#' the relevant modelinfo_[MODEL] file (default TRUE).
+#' 
 #' @return Stops code from running if all parameters needed for model
 #' are not available, otherwise does nothing.
 #'
@@ -48,6 +52,7 @@ check_model <- function(chem.name=NULL,
                         model=NULL,
                         species=NULL,
                         class.exclude=TRUE,
+                        physchem.exclude=TRUE,
                         default.to.human=FALSE)
 {
   good.chems <- get_cheminfo(info=c("Compound",
@@ -56,6 +61,7 @@ check_model <- function(chem.name=NULL,
                              model=model,
                              species=species,
                              class.exclude=class.exclude,
+                             physchem.exclude=physchem.exclude,
                              suppress.messages=TRUE)
   good.chems.nophyschem <- get_cheminfo(info=c("Compound",
                                     "CAS",
@@ -74,6 +80,7 @@ check_model <- function(chem.name=NULL,
                                      model=model,
                                      species="Human",
                                      class.exclude=class.exclude,
+                                     physchem.exclude=physchem.exclude,
                                      suppress.messages=TRUE)
                         )       
   }
@@ -98,7 +105,15 @@ check_model <- function(chem.name=NULL,
   
   if (!(chem.present)) 
   {
+    #need to get DTXSID if we don't alerady have it
+    if(is.null(dtxsid)){
+      if(!is.null(chem.cas)) dtxsid <- get_chem_id(chem.cas = chem.cas)$dtxsid
+      if(!is.null(chem.name)) dtxsid <- get_chem_id(chem.name = chem.name)$dtxsid
+    }
+    
     this.index <- which(dtxsid == chem.physical_and_invitro.data[,"DTXSID"])
+    
+    
     if (any(this.index))
     {
       chem.class.filt <- model.list[[model]]$chem.class.filt
@@ -108,7 +123,7 @@ check_model <- function(chem.name=NULL,
           chem.physical_and_invitro.data[this.index,"Chemical.Class"],
           split = ",")
         # check if the chemical class is in the filter-out object
-        in.domain <- !(any(chem.class%in%chem.class.filt))
+        in.domain <- !(any(chem.class %in% chem.class.filt))
         if (!in.domain) stop(paste0("Chemical CAS: ",
           chem.cas,
           ", DTXSID: ",
@@ -119,7 +134,9 @@ check_model <- function(chem.name=NULL,
           model,
           ". See help(get_cheminfo)."
           ))
-      } else if (chem.present.nophyschem)
+      } 
+      
+      if (chem.present.nophyschem)
       {
         stop(paste0("Chemical CAS: ",
           chem.cas,
