@@ -115,7 +115,28 @@ Human tissue volumes are used for species other than Rat.
 }
 \examples{
 
-predict_partitioning_schmitt(chem.name='ibuprofen',regression=FALSE)
+library(httk)
+
+# Predict the partition coefficients by chemical id:
+PCs1 <- predict_partitioning_schmitt(chem.name='ibuprofen')
+
+# Create a list of parameters (that you can potentially change):
+p <- parameterize_schmitt(chem.name="ibuprofen")
+
+# Predict the partition coefficients using a list of parameters:
+PCs2 <- predict_partitioning_schmitt(parameters = p)
+
+# Check that all the parameter values are the same:
+all(unlist(PCs1)==unlist(PCs2))
+
+# Predict partition coefficients without using Pearce et al. (2017) calibrations:
+PCs3 <- predict_partitioning_schmitt(chem.name='ibuprofen',regression=FALSE)
+
+# Lump the tissues into the compartments for model "pbtk":
+lump_tissues(PCs1)
+
+# Lump the tissues into a single volume of distribution
+calc_vdist(parameters=c(p,PCs1))
 
 }
 \references{

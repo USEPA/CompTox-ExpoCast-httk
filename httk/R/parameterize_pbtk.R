@@ -51,6 +51,10 @@
 #' @param class.exclude Exclude chemical classes identified as outside of 
 #' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
 #' 
+#' @param physchem.exclude Exclude chemicals on the basis of physico-chemical
+#' properties (currently only Henry's law constant) as specified by 
+#' the relevant modelinfo_[MODEL] file (default TRUE).
+#' 
 #' @param tissuelist Specifies compartment names and tissues groupings.
 #' Remaining tissues in tissue.data are lumped in the rest of the body.
 #' However, \code{\link{solve_pbtk}} only works with the default parameters.
@@ -96,6 +100,8 @@
 #' @param liver.density Liver density (defaults to 1.05 g/mL from International Commission on Radiological Protection (1975))
 #'
 #' @param kgutabs Oral absorption rate from gut (determined from Peff)
+#' 
+#' @param ... Additional arguments, not currently used.
 #' 
 #' @return \item{BW}{Body Weight, kg.} 
 #' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
@@ -197,10 +203,12 @@ parameterize_pbtk <- function(
                        restrictive.clearance=TRUE,
                        minimum.Funbound.plasma=0.0001,
                        class.exclude=TRUE,
+                       physchem.exclude=TRUE,
                        million.cells.per.gliver= 110, # 10^6 cells/g-liver Carlile et al. (1997)
                        liver.density= 1.05, # g/mL International Commission on Radiological Protection (1975)
                        kgutabs = NA, # 1/h, Wambaugh et al. (2018)
-                       Caco2.options = NULL
+                       Caco2.options = NULL,
+                       ...
                        )
 {
   #Give a binding to the physiology.data
@@ -227,7 +235,9 @@ parameterize_pbtk <- function(
             model="pbtk",
             species=species,
             class.exclude=class.exclude,
-            default.to.human=default.to.human)
+            physchem.exclude=physchem.exclude,
+            default.to.human=default.to.human|force.human.clint.fup
+            )
   
 # Get the intrinsic hepatic clearance:  
   Clint.list <- get_clint(
