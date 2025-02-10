@@ -123,11 +123,13 @@ TRUE along with partition coefficients calculated with this value.}
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset)}
 
-\item{parameterize.arg.list}{Additional parameterized passed to the model
-parameterization function.}
+\item{parameterize.arg.list}{Additional parameters passed to the model
+parameterization function (other than chemical identifier, `species`,
+`suppress.messages`, `restrictive.clearance`, `adjusted.Funbound.plasma`,
+and `minimum.Funbound.plasma`)}
 
 \item{small.time}{A tiny amount of time used to provide predictions on either
-side of an instaneous event (like an iv injection). This helps ensure that
+side of an instantaneous event (like an iv injection). This helps ensure that
 abrupt changes plot well. Defaults to 1e-4.}
 
 \item{...}{Additional arguments passed to the integrator.}

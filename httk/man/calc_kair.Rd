@@ -11,6 +11,9 @@ calc_kair(
   parameters = NULL,
   species = "Human",
   adjusted.Funbound.plasma = TRUE,
+  fup.lod.default = 0.005,
+  force.human.clint.fup = FALSE,
+  minimum.Funbound.plasma = 1e-04,
   default.to.human = FALSE,
   suppress.messages = FALSE,
   pH = 7.4,
@@ -38,6 +41,17 @@ and "body_temp", but if not included standard values are looked up from httk tab
 
 \item{adjusted.Funbound.plasma}{Uses Pearce et al. (2017) lipid binding adjustment
 for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).}
+
+\item{fup.lod.default}{Default value used for fraction of unbound plasma for
+chemicals where measured value was below the limit of detection. Default
+value is 0.0005.}
+
+\item{force.human.clint.fup}{Uses human hepatic intrinsic clearance and fraction
+of unbound plasma in calculation of partition coefficients for rats if true.}
+
+\item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
+equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+dataset).}
 
 \item{default.to.human}{Substitutes missing species-specific values with human values if
 TRUE (default is FALSE).}
