@@ -40,6 +40,7 @@ Other contributors:
   \item Jimena Davis [contributor]
   \item Elaina Kenyon \email{kenyon.elaina@epa.gov} (\href{https://orcid.org/0000-0001-8781-2391}{ORCID}) [contributor]
   \item Katie Paul Friedman \email{Paul-Friedman.Katie@epa.gov} (\href{https://orcid.org/0000-0002-2710-1691}{ORCID}) [contributor]
+  \item Celia Schacht \email{Schacht.Celia@epa.gov} (\href{https://orcid.org/0000-0002-8131-513X}{ORCID}) [contributor]
   \item Meredith Scherer \email{Scherer.Meredith@epa.gov} (\href{https://orcid.org/0000-0002-9785-7363}{ORCID}) [contributor]
   \item James Sluka \email{jsluka@indiana.edu} (\href{https://orcid.org/0000-0002-5901-1404}{ORCID}) [contributor]
   \item Noelle Sinski \email{Noelle.Sinski@icf.com} [contributor]
