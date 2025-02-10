@@ -18,7 +18,9 @@ parameterize_1comp(
   suppress.messages = FALSE,
   clint.pvalue.threshold = 0.05,
   minimum.Funbound.plasma = 1e-04,
-  Caco2.options = list()
+  class.exclude = TRUE,
+  Caco2.options = list(),
+  ...
 )
 }
 \arguments{
@@ -65,6 +67,9 @@ set to zero.}
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 
+\item{class.exclude}{Exclude chemical classes identified as outside of 
+domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
+
 \item{Caco2.options}{A list of options to use when working with Caco2 apical to
 basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
 Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
@@ -73,6 +78,8 @@ fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab t
 fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
 See \code{\link{get_fbio}} for further details.}
+
+\item{...}{Additional arguments, not currently used.}
 }
 \value{
 \item{Vdist}{Volume of distribution, units of L/kg BW.}

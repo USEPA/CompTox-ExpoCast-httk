@@ -34,23 +34,11 @@ propagate_invitrouv_1comp <- function(
       #Funbound.plasma from its table of default values, meaning we can't give
       #that function our vector of individual Funbound.plasma values. So
       #instead, I've re-implemented the Vdist equation here.
-
-      # Fist we need the partition coefficients:
-      PC.table <- predict_partitioning_schmitt(parameters=parameters.dt)
-      PC.names <- names(PC.table)[regexpr("K",names(PC.table))!=-1]
-      if (is.data.table(PC.table))
-      {
-        PCs <- PC.table[,PC.names,with=FALSE]
-      } else {
-        PCs <- subset(PC.table,names(PC.table) %in% PC.names)
-      }
-      lumped_params <- lump_tissues(
-        PCs,
-        parameters=parameters.dt,
-        tissuelist=NULL,
-        species="Human",
-        model="1compartment")
-      parameters.dt[, names(lumped_params):= lumped_params]
+  
+      #Funbound.plasma was already adjusted (if necessary),
+      #and tissues were already lumped,
+      # in create_mc_samples() before it called this function.
+      #so we can just proceed.
       
       #To compute volume of distribution, need to get volume of red blood cells.
       #Can compute that from plasma volume and hematocrit.
@@ -66,26 +54,13 @@ propagate_invitrouv_1comp <- function(
                     Krest2pu*
                     Vrestc*
                     Funbound.plasma]
-      #Compute kelim: Elimination rate, units of 1/h. First make a list of the
-      #parameters that HTTK uses to calculate kelim. Each list element will be a
-      #vector of the values for each individual.
-      calc_elim_params <- c(as.list(parameters.dt[,
-                                                list(Vdist,
-                                                  Clint,
-                                                  Funbound.plasma,
-                                                  Qtotal.liverc,
-                                                  Qgfrc,
-                                                  BW,
-                                                  million.cells.per.gliver,
-                                                  Rblood2plasma,
-                                                  Vliverc,
-                                                  Fhep.assay.correction,
-                                                  liver.density)]))
+      #Compute kelim: Elimination rate, units of 1/h. 
       #Call HTTK function to calculate total elimination rate. This one is OK
       #because it uses the vector of Funbound.plasma that we give it.
-      ke <- httk::calc_elimination_rate(parameters=calc_elim_params,
+      ke <- httk::calc_elimination_rate(parameters=parameters.dt,
                                         suppress.messages=TRUE,
                                         ...)
+
       #Add kelim to the population data.table.
       parameters.dt[, kelim:=ke]
 

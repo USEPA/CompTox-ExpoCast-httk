@@ -19,6 +19,39 @@ intestine is from Grandoni et al. (2019). Human small intestine radius is
 from Yu et al. (1999). Rat small intestine radius is from Griffin and
 O'Driscoll (2008).
 }
+\examples{
+# We can add a new species (for example, wolverines) by adding new information
+# to the physiology.data and tissue.data tables. It can be convenient to start by
+# by replicating the data from another species and adjusting as appropriate:
+
+# Copy physiology data from rabbit:
+new.species <- physiology.data[,"Rabbit"]
+names(new.species) <- physiology.data[,"Parameter"]
+rabbit.BW <- new.species["Average BW"] 
+# Rausch and Pearson (1972) https://doi.org/10.2307/3799057 :
+new.species["Average BW"] <- 31.2 
+# Thiel et al. (2019) https://doi.org/10.1186/s12983-019-0319-8 :
+new.species["Average Body Temperature"] <- 38.5 
+
+# Add new physiology data column to physiology.data table"
+physiology.data <- cbind(physiology.data, new.species)
+colnames(physiology.data)[length(colnames(physiology.data))] <- "Wolverine"
+
+# Copy tissue data from rabbit:
+new.tissue.data <- subset(tissue.data,Species=="Rabbit")
+new.tissue.data$Species <- "Wolverine"
+
+# Add new tissue data rows to tissue.data table:
+tissue.data <- rbind(tissue.data, new.tissue.data)
+
+# Species is now available for calculations:
+calc_mc_css(chem.cas="80-05-7",
+            species="wolverine",
+            parameterize.arg.list=list(default.to.human=TRUE),
+            suppress.messages=TRUE,
+            samples = 100)
+
+}
 \references{
 \insertRef{davies1993physiological}{httk}
 
