@@ -467,7 +467,6 @@ for (this.row in 1:dim(Schmitt.table)[1])
   chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"logMA",Schmitt.table[this.row,"logMA"],reference=this.reference)
 }
 
-chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 
 cat("Loading HTTK data from Lombardo 2018\n")
 
@@ -686,7 +685,6 @@ for (this.row in 1:dim(TNO.table)[1])
   }
 }
 
-chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.prop[chem.prop$Compound=="Diazepam",]
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
@@ -762,7 +760,7 @@ for (this.row in 1:dim(Tonnelier.table)[1])
   }
 }
 
-chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
+
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
@@ -844,7 +842,7 @@ chem.prop <- add_chemtable(Cory.newpKa,
                  pKa_Donor="Donor",
                  pKa_Accept="Accept"))
 
-chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
+
 
 
 CorypKaTable <- as.data.frame(read_excel("HTPBPK-chems-pKa_CLS.xlsx"))
@@ -881,7 +879,7 @@ chem.prop <- add_chemtable(CorypKaTable,
                  Reference="pKb.Reference",
                  pKa_Accept="pKb"))
 
-chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
+
 chem.prop[chem.prop$CAS=="33286-22-5","Compound"] <- "Diltiazem hydrochloride"
 chem.prop[chem.prop$CAS=="64118-84-9","Compound"] <- "4'-Hydroxydiclofenac"
 chem.prop[chem.prop$Compound=="Abamectin",]
@@ -902,7 +900,6 @@ chem.prop <- add_chemtable(to.john,
                  Compound="ChemName",
                  pKa_Accept="pKaTools_BPKA"),reference="Strope 2018")
 
-chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 cat("Loading physchem data from Endo 2011\n")
 
 MA.data <- set.precision(read_excel("Endo-2011.xlsx"))
@@ -1080,7 +1077,6 @@ chem.physical_and_invitro.data <- add_chemtable(
   reference='Pearce 2017',
   overwrite=T)
 
-chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 pc.data <- pc.data.raw[,c('CAS','Drug','Tissue','Species','fu','A/B/N','LogP','Exp_PC')]
 colnames(pc.data)[colnames(pc.data)=="A/B/N"] <- "A.B.N"
 write.csv(pc.data,"Pearce2017-PC-data.txt",row.names=FALSE)
@@ -1181,7 +1177,6 @@ chem.physical_and_invitro.data <- add_chemtable(
    species="Rat",
    overwrite=T)
 
-chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 
 # only use the clints that greg identified as good:
 chem.physical_and_invitro.data <- add_chemtable(
@@ -1249,7 +1244,6 @@ chem.physical_and_invitro.data <- add_chemtable(new.httk.data,
   species="Human",
   overwrite=T)
 
-chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.physical_and_invitro.data <- check_duplicates(
   chem.physical_and_invitro.data, check.cols="Compound")
 #
@@ -2163,9 +2157,9 @@ opera.preds <- read.csv(paste(
 chem.physical_and_invitro.data <- add_chemtable(
   opera.preds,
   current.table = chem.physical_and_invitro.data,
-  data.list=list(CAS='MoleculeID'#,
-#    pKa_Donor="pKa_a_pred",
-#    pKa_Accept="pKa_b_pred"
+  data.list=list(CAS='MoleculeID',
+    pKa_Donor="pKa_a_pred",
+    pKa_Accept="pKa_b_pred"
     ),
   reference=paste("OPERAv",OPERA.VERSION,sep=""),
   overwrite=T)
@@ -2203,10 +2197,10 @@ for (this.id in unique(dup.cas))
 
 write.table(chem.physical_and_invitro.data[,c("SMILES.desalt","CAS")],
   file="HTTK-AllChems.smi",
-  row.names=FALSE,
+  row.names=F,
   sep="\t",
-  col.names=FALSE,
-  quote=FALSE)
+  col.names=F,
+  quote=F)
 cat("Chemical QSAR-ready SMILES written to HTTK-AllChems.smi")
 cat(" use that file to in OPERA to generate phys-chem properties including pKa.\n")
 cat("Enter \"c\" to continue when ready.\n")
@@ -2214,18 +2208,16 @@ cat("Enter \"c\" to continue when ready.\n")
 
 #
 #
-#Add Strope 2018 (chemAxon) pKa:
+#Add Strope 2018 new pKa where we don't have them from OPERA
 #
 #
 load('Strope2018.RData')
-chem.physical_and_invitro.data <- add_chemtable(CorypKaTable,
-                                                current.table = 
-                                                  chem.physical_and_invitro.data,
-                                                data.list = list(CAS='CASRN.DSStox',
-                                                                 pKa_Accept='Accept',
-                                                                 pKa_Donor='Donor'),
-                                                reference='Strope 2018', 
-                                                overwrite=TRUE)
+cas.donor.overwrite <- subset(chem.physical_and_invitro.data,pKa_Donor.Reference %in% c('Strope 2018','Strope 2018'))[,'CAS']
+cas.accept.overwrite <- subset(chem.physical_and_invitro.data,pKa_Accept.Reference %in% c('Strope 2018','Strope 2018'))[,'CAS']
+cory.donor.overwrite <- subset(CorypKaTable,CASRN.DSStox %in% cas.donor.overwrite)
+cory.accept.overwrite <- subset(CorypKaTable,CASRN.DSStox %in% cas.accept.overwrite)
+chem.physical_and_invitro.data <- add_chemtable(cory.accept.overwrite,current.table=chem.physical_and_invitro.data,data.list=list(CAS='CASRN.DSStox',pKa_Accept='Accept'),reference='Strope 2018',overwrite=T)
+chem.physical_and_invitro.data <- add_chemtable(cory.donor.overwrite,current.table=chem.physical_and_invitro.data,data.list=list(CAS='CASRN.DSStox',pKa_Donor='Donor'),reference='Strope 2018',overwrite=T)
    
 #Annotate important chemicals classes as concatonated list:
 chem.physical_and_invitro.data[,"Chemical.Class"] <- ""
