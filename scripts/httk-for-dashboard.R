@@ -7,6 +7,25 @@ library(data.table)
 # Clear the memory:
 rm(list=ls())
 
+# Load the version of httk
+httk.version <- sessionInfo()$otherPkgs$httk$Version
+
+# Create list of chemicals with in vitro measured data:
+write.table(get_cheminfo(info="DTXSID"),
+            file="HTTKHUMAN.txt",
+            row.names=FALSE,
+            col.names=FALSE,
+            quote=FALSE)
+desctext <- read.delim("HTTKHUMANlistdescstart.txt",header=FALSE)[1,1]
+write(paste(desctext,
+            " v",
+            httk.version,
+            ".",
+            sep=""),
+            file="HTTKHUMAN-desc.txt")
+
+# Load previous predictions:
+
 prev.table <- read.csv("Dashboard-HTTK-CssunitsmgpL.txt",sep="\t")
 write.table(
   prev.table,
@@ -355,7 +374,6 @@ for (this.id in all.ids)
 dashboard.table <- rbindlist(dashboard.list)
 
 Css.units <- "mgL"
-httk.version <- sessionInfo()$otherPkgs$httk$Version
 output.date <- Sys.Date()
 
 save(Css.units,httk.version,output.date,file="Dashboard-HTTK-stamp.RData")
