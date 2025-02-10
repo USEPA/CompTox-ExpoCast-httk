@@ -451,11 +451,12 @@ Set species=\"Human\" to run httkpop model.')
       {
         # put the unadjusted fup where calc_fup_correction will look for it:
         parameters.dt[, Funbound.plasma := unadjusted.Funbound.plasma]
-        parameters.dt[, Funbound.plasma.adjustment:=
+        parameters.dt[, Funbound.plasma.adjustment :=
           calc_fup_correction(
             parameters = parameters.dt)]
-        parameters.dt[, Funbound.plasma := Funbound.plasma *
-                      Funbound.plasma.adjustment]
+        parameters.dt[, Funbound.plasma := 
+          apply_fup_adjustment(Funbound.plasma,
+                      Funbound.plasma.adjustment)]
       } else stop("Missing phys-chem parameters in invitro_mc for calc_fup_correction.") 
     } else {
       parameters.dt[, Funbound.plasma.adjustment:=1]

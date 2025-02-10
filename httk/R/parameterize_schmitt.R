@@ -3,10 +3,12 @@
 #' @description
 #' This function provides the necessary parameters to run
 #' \code{\link{predict_partitioning_schmitt}}, excluding the data in table
-#' \code{\link{tissue.data}}. The model is based on the Schmitt (2008) method
-#' for predicting tissue:plasma partition coefficients as modified by Pearce 
-#' et al. (2017). The modifications include approaches adapted from Peyret 
-#' et al. (2010).
+#' \code{\link{tissue.data}}. The model is based on the  
+#' Schmitt (2008) (\doi{10.1016/j.tiv.2007.09.010})
+#' method for predicting tissue:plasma partition coefficients as modified by 
+#' Pearce et al. (2017) (\doi{10.1007/s10928-017-9548-7}). 
+#' The modifications include approaches adapted from 
+#' Peyret et al. (2010) (\doi{10.1016/j.taap.2010.09.010}).
 #'
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- if
 #'  parameters is not specified then the chemical must be identified by either
@@ -94,7 +96,7 @@
 #' lump_tissues(PCs)
 #' 
 #' # Lump the tissues into a single volume of distribution
-#' calc_vdist(parameters=p)
+#' calc_vdist(parameters=c(p, PCs))
 #' 
 #' @export parameterize_schmitt
 parameterize_schmitt <- function(chem.cas=NULL,
@@ -145,7 +147,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
                 model="schmitt",
                 species=species,
                 class.exclude=class.exclude,
-                default.to.human=default.to.human
+                default.to.human=default.to.human|force.human.fup
                 )
   } else {
     # Work with local copy of parameters in function(scoping):
