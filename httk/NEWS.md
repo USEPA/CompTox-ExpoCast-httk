@@ -16,6 +16,7 @@
 * Revised 'calc_ma' to increase membrane affinities for PFAS chemicals ~400x based on regression to data from [Droge et al. (2019)](https://doi.org/10.1021/acs.est.8b05052) (if new argument 'pfas.calibration==TRUE')
 * Can now use 'get_physchem_param' to retrieve "Chemical.Class" (only defined for PFAS to date)
 * Revised documentation for 1compartment model
+* Added 'onUnload' internal function call, appears to improve stability when using multiple models with [deSolve](https://CRAN.R-project.org/package=deSolve)
 
 # httk 2.5.0 (2024-12-20)
 This release accompanies the submission of the new manuscript
