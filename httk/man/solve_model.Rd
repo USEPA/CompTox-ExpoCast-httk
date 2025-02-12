@@ -130,7 +130,7 @@ parameterization function (other than chemical identifier, `species`,
 and `minimum.Funbound.plasma`)}
 
 \item{small.time}{A tiny amount of time used to provide predictions on either
-side of an instaneous event (like an iv injection). This helps ensure that
+side of an instantaneous event (like an iv injection). This helps ensure that
 abrupt changes plot well. Defaults to 1e-4.}
 
 \item{...}{Additional arguments passed to the integrator.}
