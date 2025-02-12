@@ -177,6 +177,8 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' @param this.pH 7.0, pH of cell culture
 #' 
 #' @param restrict.ion.partitioning FALSE, Should we restrict the chemical available to partition to only the neutral fraction?
+#' 
+#' @param surface.area.switch TRUE, automatically calculates surface area, switch to FALSE if user provided
 #'
 #' @return
 #' \tabular{lll}{
@@ -367,7 +369,8 @@ armitage_eval <- function(chem.cas=NULL,
                           this.conc_ser_lip = 1.9, # g/L mass concentration of lipids in serum
                           this.Vdom = 0, # L the volume of dissolved organic matter (DOM)
                           this.pH = 7.0, # pH of cell culture
-                          restrict.ion.partitioning = FALSE # Should we restrict the partitioning concentration to neutral only?
+                          restrict.ion.partitioning = FALSE, # Should we restrict the partitioning concentration to neutral only?
+                          surface.area.switch = TRUE #calculate surface area (assumes yes)
 )
 {
   # this.Tsys <- 37
@@ -444,39 +447,49 @@ armitage_eval <- function(chem.cas=NULL,
     stop("this.FBSf must be defined or FBSf must be a column in tcdata")
   }
   
-  if(!all(names(tcdata) %in% c("sarea", "v_total", "v_working", "cell_yield")) |
-     any(is.na(tcdata[,.(sarea, v_total, v_working, cell_yield)]))){
-    
-    if(all(names(tcdata) %in% c("sarea", "v_total", "v_working", "cell_yield")) &
+  #check surface area on/off
+  if(surface.area.switch){
+    if(!all(names(tcdata) %in% c("sarea", "v_total", "v_working", "cell_yield")) |
        any(is.na(tcdata[,.(sarea, v_total, v_working, cell_yield)]))){
-      missing.rows <- which(is.na(tcdata[,sarea]))
-    }else{
-      missing.rows <- 1:length(tcdata[,casrn])
-    }
-    
-    if(any(is.na(tcdata[missing.rows, well_number]))){
-      print(paste0("Either well_number or geometry must be defined for rows: ", 
-                   paste(which(tcdata[, is.na(sarea) & is.na(well_number)]),
-                         collapse = ",")))
-      stop()
-    }else{
-      temp <- armitage_estimate_sarea(tcdata[missing.rows,])
-      tcdata[missing.rows,"sarea"] <- temp[,"sarea"]
-      if(any(is.na(tcdata[missing.rows,"v_total"]))){
-        tcdata[missing.rows,"v_total"] <- temp[,"v_total"]
+      
+      if(all(names(tcdata) %in% c("sarea", "v_total", "v_working", "cell_yield")) &
+         any(is.na(tcdata[,.(sarea, v_total, v_working, cell_yield)]))){
+        missing.rows <- which(is.na(tcdata[,sarea]))
+      }else{
+        missing.rows <- 1:length(tcdata[,casrn])
       }
-      tcdata[missing.rows,"v_working"] <- temp[,"v_working"]
-      tcdata[missing.rows,"cell_yield"] <- temp[,"cell_yield"]
+      
+      if(any(is.na(tcdata[missing.rows, well_number]))){
+        print(paste0("Either well_number or geometry must be defined for rows: ", 
+                     paste(which(tcdata[, is.na(sarea) & is.na(well_number)]),
+                           collapse = ",")))
+        stop()
+      }else{
+        temp <- armitage_estimate_sarea(tcdata[missing.rows,])
+        tcdata[missing.rows,"sarea"] <- temp[,"sarea"]
+        if(any(is.na(tcdata[missing.rows,"v_total"]))){
+          tcdata[missing.rows,"v_total"] <- temp[,"v_total"]
+        }
+        tcdata[missing.rows,"v_working"] <- temp[,"v_working"]
+        tcdata[missing.rows,"cell_yield"] <- temp[,"cell_yield"]
+      }
+      
     }
   }
   
   # Check if required phys-chem parameters are provided:
-  if(!all(c("gkow","logHenry","gswat","MP","MW") %in% names(tcdata)))
+    #split out gkow from this chunk so it will stop overwriting the IVMBM data I am comparing to 
+  if (!all(c("gkow") %in% names(tcdata)))
+  {
+    tcdata[, "gkow" := as.data.frame(get_physchem_param(
+      param = "logP", chem.cas = casrn),row.names = casrn)]
+  }
+  
+  if(!all(c("logHenry","gswat","MP","MW") %in% names(tcdata)))
   {
     # If not, pull them:
-    tcdata[, c("gkow","logHenry","logWSol","MP","MW") := 
-             as.data.frame(get_physchem_param(param = c("logP",
-                                                        "logHenry",
+    tcdata[, c("logHenry","logWSol","MP","MW") := 
+             as.data.frame(get_physchem_param(param = c("logHenry",
                                                         "logWSol",
                                                         "MP",
                                                         "MW"), 
@@ -624,10 +637,10 @@ armitage_eval <- function(chem.cas=NULL,
     .[,s1.GSE:=s1.GSE*10^(-1*ksalt*csalt)] %>%
     .[MP>298.15,ss.GSE:=ss.GSE*10^(-1*ksalt*csalt)] %>%
     .[,swat_L:=swat/F_ratio] %>%
-    .[,kow:=(Fneutral*kow+(Fcharged*10^(gkow-3.1)))*(10^(-1*ksalt*csalt))] %>% #Fcharged * unlogged kow_i, converted w /3.1 scaling factor
+    .[,kow:=(Fneutral*kow+(Fcharged*10^(gkow-3.5)))*(10^(-1*ksalt*csalt))] %>% #Fcharged * unlogged kow_i, converted w /3.1 scaling factor
     .[,kaw:=(Fneutral*kaw)*(10^(-1*ksalt*csalt))] %>% # no dependence on ionization: charged form assumed to have negligable vapor pressure
-    .[,kcw:=(Fneutral*kcw+(Fcharged*10^(gkcw-3.1)))*(10^(-1*ksalt*csalt))] %>% #same as kow, using the same scaling factor
-    .[,kbsa:=(Fneutral*kbsa+(Fpositive*10^(gkbsa-1.3))+(Fnegative*10^(gkbsa-0)))*(10^(-1*ksalt*csalt))] %>%  #dependent on amount acid/base
+    .[,kcw:=(Fneutral*kcw+(Fcharged*10^(gkcw-1)))*(10^(-1*ksalt*csalt))] %>% #using the same scaling factor as kmw
+    .[,kbsa:=(Fneutral*kbsa+(Fpositive*10^(gkbsa-1))+(Fnegative*10^(gkbsa-0)))*(10^(-1*ksalt*csalt))] %>%  #dependent on amount acid/base
     .[,kmw:=(Fneutral*kmw+(Fcharged*10^(gkmw-1)))*(10^(-1*ksalt*csalt))] #added, previous version of armitage_eval did not have
   
   tcdata[option.swat2==TRUE & MP>298.15,swat:=ss.GSE] %>%
@@ -678,7 +691,7 @@ armitage_eval <- function(chem.cas=NULL,
     .[, eta_free := cwat_s/nomconc] %>%  # effective availability ratio
     .[, cfree.invitro := cwat_s] # free invitro concentration in micromolar
   
-  print("newly updated code 11/19/24")
+  print("scaling factors updated 2/6/25, kcw scaling factor updated to kmw scaling factor 2/11/25")
   
   return(tcdata)
   #output concentrations in mol/L
