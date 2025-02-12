@@ -28,9 +28,9 @@ Given vectors of age, BMI, recumbent length, weight, and gender, categorizes
 weight classes using CDC and WHO categories.
 }
 \details{
-According to the CDC
-(\url{https://www.cdc.gov/ncbddd/disabilityandhealth/obesity.html}), adult weight
-classes are defined using BMI as follows: \describe{ \item{Underweight}{BMI
+According to the U.S. Centers for Disease Control and Prevention (CDC)
+(\url{https://www.cdc.gov/disability-and-health/conditions/obesity.html}), adult weight
+classes are defined using body mass index (BMI) as follows: \describe{ \item{Underweight}{BMI
 less than 18.5} \item{Normal}{BMI between 18.5 and 25} \item{Overweight}{BMI
 between 25 and 30} \item{Obese}{BMI greater than 30} }
 

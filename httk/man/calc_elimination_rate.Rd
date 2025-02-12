@@ -9,9 +9,11 @@ calc_elimination_rate(
   chem.name = NULL,
   dtxsid = NULL,
   parameters = NULL,
+  model = "3compartmentss",
   species = "Human",
   suppress.messages = TRUE,
   default.to.human = FALSE,
+  class.exclude = TRUE,
   restrictive.clearance = TRUE,
   adjusted.Funbound.plasma = TRUE,
   adjusted.Clint = TRUE,
@@ -34,6 +36,8 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 \item{parameters}{Chemical parameters from parameterize_steadystate or
 1compartment function, overrides chem.name and chem.cas.}
 
+\item{model}{The model used to calculate total clearance (defaults to "3compartmentss")}
+
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
@@ -41,6 +45,9 @@ default "Human").}
 
 \item{default.to.human}{Substitutes missing animal values with human values
 if true.}
+
+\item{class.exclude}{Exclude chemical classes identified as outside of 
+domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
 
 \item{restrictive.clearance}{In calculating elimination rate, protein
 binding is not taken into account (set to 1) in liver clearance if FALSE.}
@@ -98,6 +105,11 @@ to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
 \insertRef{dawson2021qsar}{httk} 
 
 \insertRef{kilford2008hepatocellular}{httk}
+}
+\seealso{
+\code{\link{calc_total_clearance}} for calculation of total clearance
+
+\code{\link{calc_vdist}} for calculation of volume of distribution
 }
 \author{
 John Wambaugh
