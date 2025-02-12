@@ -138,7 +138,7 @@
 #' lump_tissues(PCs1)
 #' 
 #' # Lump the tissues into a single volume of distribution
-#' calc_vdist(parameters=p)
+#' calc_vdist(parameters=c(p,PCs1))
 #'
 #' @import magrittr
 #'

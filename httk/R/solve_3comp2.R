@@ -1,4 +1,4 @@
-#' Solve_3comp
+#' Solve_3comp2
 #' 
 #' This function solves for the amounts or concentrations of a chemical in
 #' the blood of three different compartments representing the body.
@@ -149,7 +149,7 @@
 #' @keywords Solve 3compartment
 #'
 #' @examples
-#' 
+#' \donttest{ 
 #' solve_3comp(chem.name='Bisphenol-A', 
 #'             doses.per.day=2, 
 #'             daily.dose=.5,
@@ -175,6 +175,7 @@
 #' solve_3comp(chem.name="Besonprodil",
 #'             daily.dose=1, dose=NULL,
 #'             days=2.5, doses.per.day=4)
+#'}
 #'
 #' @seealso \code{\link{solve_model}}
 #'

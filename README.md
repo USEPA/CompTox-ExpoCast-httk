@@ -1,13 +1,13 @@
-# Git Repository for R Package "httk"
+<img src="httk/man/figures/httk.png" align="right" width="33%"/>
 
-<img src="httk/man/figures/httk-logo.png" align="right" width="50%"/>
+# Git Repository for R Package "httk"
 
 <!-- badges: start -->
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/httk)](https://cran.r-project.org/package=httk)
 [![Monthly Downloads](https://cranlogs.r-pkg.org/badges/last-month/httk)](https://cranlogs.r-pkg.org/badges/last-month/httk)
 <!-- badges: end -->
 
-This R package provides data and models for prediction toxicokinetics (chemical 
+This R package provides data and models for predicting toxicokinetics (chemical 
 absorption, distribution, metabolism, and excretion by the body). 
 The models are design to be parameterized with chemical-specific in vitro 
 (animal free) measurements. The predictions can be used for traditional

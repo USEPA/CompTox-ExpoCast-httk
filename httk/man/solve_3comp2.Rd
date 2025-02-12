@@ -2,7 +2,7 @@
 % Please edit documentation in R/solve_3comp2.R
 \name{solve_3comp2}
 \alias{solve_3comp2}
-\title{Solve_3comp}
+\title{Solve_3comp2}
 \usage{
 solve_3comp2(
   chem.name = NULL,
@@ -182,7 +182,7 @@ appropriate physiological data(volumes and flows) but substitues human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{
-
+\donttest{ 
 solve_3comp(chem.name='Bisphenol-A', 
             doses.per.day=2, 
             daily.dose=.5,
@@ -208,6 +208,7 @@ solve_3comp(chem.name="Methenamine", dosing.matrix=dm,
 solve_3comp(chem.name="Besonprodil",
             daily.dose=1, dose=NULL,
             days=2.5, doses.per.day=4)
+}
 
 }
 \references{

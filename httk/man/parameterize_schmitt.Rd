@@ -71,11 +71,11 @@ affinity} \item{Fprotein.plasma}{protein fraction in plasma}
 This function provides the necessary parameters to run
 \code{\link{predict_partitioning_schmitt}}, excluding the data in table
 \code{\link{tissue.data}}. The model is based on the  
-\href{https://doi.org/10.1016/j.tiv.2007.09.010}{Schmitt (2008)}
+Schmitt (2008) (\doi{10.1016/j.tiv.2007.09.010})
 method for predicting tissue:plasma partition coefficients as modified by 
-\href{https://doi.org/10.1007/s10928-017-9548-7}{Pearce et al. (2017)}. 
+Pearce et al. (2017) (\doi{10.1007/s10928-017-9548-7}). 
 The modifications include approaches adapted from 
-\href{https://doi.org/10.1016/j.taap.2010.09.010}{Peyret et al. (2010)}.
+Peyret et al. (2010) (\doi{10.1016/j.taap.2010.09.010}).
 }
 \examples{
 
@@ -91,7 +91,7 @@ PCs <- predict_partitioning_schmitt(parameters = p)
 lump_tissues(PCs)
 
 # Lump the tissues into a single volume of distribution
-calc_vdist(parameters=p)
+calc_vdist(parameters=c(p, PCs))
 
 }
 \references{

@@ -33,92 +33,56 @@ Type 'q()' to quit R.
 > # Test that the underlying PK models give the same answers:
 > calc_analytic_css(chem.cas="15972-60-8")
 Plasma concentration returned in uM units.
-<<<<<<< HEAD
-[1] 0.2428
-=======
 [1] 0.1784
->>>>>>> main
 Warning messages:
 1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
   Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
 2: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Membrane affinity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
-
-3: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Membrane affinity for PFAS increased according to regression on Droge (2019) data.
-
-4: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
+  Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
+3: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
-6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+5: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > calc_analytic_css(chem.cas="15972-60-8",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-<<<<<<< HEAD
-<<<<<<< HEAD
-[1] 0.496
-=======
-[1] 0.2091
->>>>>>> main
-=======
 [1] 0.07527
->>>>>>> feature/3comp
 Warning messages:
 1: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Membrane affinity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
-
-2: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Membrane affinity for PFAS increased according to regression on Droge (2019) data.
-
-3: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
+  Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
+2: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-4: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
+3: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
   Human in vivo measured Rblood2plasma used.
 > calc_analytic_css(chem.cas="15972-60-8",model="pbtk")
 Plasma concentration returned in uM units.
-<<<<<<< HEAD
-[1] 0.2428
-=======
 [1] 0.1784
->>>>>>> main
 Warning messages:
 1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
   Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
 2: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Membrane affinity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
-
-3: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Membrane affinity for PFAS increased according to regression on Droge (2019) data.
-
-4: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
+  Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
+3: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
-6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+5: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > calc_analytic_css(chem.cas="15972-60-8",model="3compartment")
 Plasma concentration returned in uM units.
-<<<<<<< HEAD
-[1] 0.2428
-=======
 [1] 0.1784
->>>>>>> main
 Warning messages:
 1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
   Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
 2: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Membrane affinity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
-
-3: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Membrane affinity for PFAS increased according to regression on Droge (2019) data.
-
-4: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
+  Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
+3: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+4: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
-6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+5: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > 
 > 
@@ -159,17 +123,8 @@ Warning messages:
 > set.seed(1234)
 > calc_mc_css(chem.cas="116-06-3",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
-<<<<<<< HEAD
- 95% 
-3.76 
-=======
   95% 
-<<<<<<< HEAD
 1.477 
->>>>>>> main
-=======
-1.494 
->>>>>>> feature/3comp
 Warning messages:
 1: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
@@ -181,11 +136,7 @@ Warning messages:
 > calc_mc_css(chem.cas="101-05-3",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
   95% 
-<<<<<<< HEAD
-13.35 
-=======
 2.369 
->>>>>>> main
 Warning messages:
 1: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Fraction unbound below limit of detection.
@@ -200,11 +151,7 @@ Warning messages:
 > calc_mc_css(chem.cas="15972-60-8",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
    95% 
-<<<<<<< HEAD
-0.2552 
-=======
 0.1355 
->>>>>>> main
 Warning messages:
 1: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
@@ -215,15 +162,7 @@ Warning messages:
 > calc_mc_css(dtxsid="DTXSID5041726",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
  95% 
-<<<<<<< HEAD
-<<<<<<< HEAD
-2111 
-=======
 1679 
->>>>>>> main
-=======
-1660 
->>>>>>> feature/3comp
 Warning messages:
 1: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Fraction unbound is provided as a distribution.
@@ -239,91 +178,50 @@ Warning messages:
 > calc_mc_css(chem.cas="15972-60-8",model="3compartment",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
    95% 
-<<<<<<< HEAD
-0.2125 
-=======
 0.1354 
->>>>>>> main
 Warning messages:
 1: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Membrane affinity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
-
-2: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Membrane affinity for PFAS increased according to regression on Droge (2019) data.
-
-3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
+2: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
-4: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
-<<<<<<< HEAD
-5: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
-=======
 4: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
->>>>>>> main
   calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",model="1compartment",samples=NSAMP)
 Human volume of distribution returned in units of L/kg BW.
 Human plasma concentration returned in mg/L units for 0.95 quantile.
-<<<<<<< HEAD
-   95% 
-<<<<<<< HEAD
-0.3525 
-=======
-0.1587 
->>>>>>> main
-=======
     95% 
 0.07895 
->>>>>>> feature/3comp
 Warning messages:
 1: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Membrane affinity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
-
-2: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Membrane affinity for PFAS increased according to regression on Droge (2019) data.
-
-3: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
+  Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
+2: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-4: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
+3: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
   Human in vivo measured Rblood2plasma used.
-<<<<<<< HEAD
-5: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
-=======
 4: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
->>>>>>> main
   calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
    95% 
-<<<<<<< HEAD
-0.2125 
-=======
 0.1354 
->>>>>>> main
 Warning messages:
 1: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Membrane affinity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
-
-2: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Membrane affinity for PFAS increased according to regression on Droge (2019) data.
-
-3: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
+2: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
   Human in vivo measured Rblood2plasma used.
-4: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+3: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
-<<<<<<< HEAD
-5: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
-=======
 4: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
->>>>>>> main
   calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
 > 
 > # Should be the same as the mean result:
 > calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
 Plasma concentration returned in mg/L units.
-[1] 8.353
+[1] 8.339
 Warning messages:
 1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
   Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
@@ -347,8 +245,8 @@ Warning messages:
 +   invitrouv=FALSE,
 +   vary.params=list(Pow=0.3))
 Human plasma concentration returned in mg/L units for 0.95 quantile.
-  95% 
-6.774 
+ 95% 
+6.77 
 Warning messages:
 1: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
@@ -374,15 +272,7 @@ Warning messages:
 Human plasma concentration returned in uM units for 0.95 quantile.
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
   95% 
-<<<<<<< HEAD
-<<<<<<< HEAD
-2.608 
-=======
 4.568 
->>>>>>> main
-=======
-4.562 
->>>>>>> feature/3comp
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -397,15 +287,7 @@ Warning messages:
 > signif(10/calc_mc_css(chem.name="bisphenol a",samples=NSAMP,output.units="uM"),4)
 Human plasma concentration returned in uM units for 0.95 quantile.
   95% 
-<<<<<<< HEAD
-<<<<<<< HEAD
-2.608 
-=======
 4.568 
->>>>>>> main
-=======
-4.562 
->>>>>>> feature/3comp
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -421,7 +303,25 @@ Warning messages:
 > parameter.dt <- create_mc_samples(chem.cas="335104-84-2",
 +                                     model="pbtk",
 +                                     samples=NSAMP)
-There were 11 warnings (use warnings() to see them)
+Warning messages:
+1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Clint is provided as a distribution.
+2: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+  Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
+3: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Fraction unbound is provided as a distribution.
+4: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+  Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
+5: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
+  Fraction unbound is provided as a distribution.
+6: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
+  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
+7: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+  Rblood2plasma has been recalculated.
+8: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human Rblood2plasma calculated with calc_rblood2plasma.
+9: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+  Default value of 1.6 used for Caco2 permeability.
 > calc_mc_oral_equiv(conc=100,
 +                    parameters=parameter.dt,
 +                    model="pbtk",
@@ -429,11 +329,7 @@ There were 11 warnings (use warnings() to see them)
 Human plasma concentration returned in uM units for 0.95 quantile.
 uM concentration converted to mgpkgpday dose for 0.95 quantile.
   95% 
-<<<<<<< HEAD
-1.396 
-=======
 8.673 
->>>>>>> main
 Warning message:
 In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
   calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
@@ -538,14 +434,6 @@ Warning messages:
 > # Because we can't recalculate Rblood2plasma for 3compartmentss this is not
 > # quite the same but should be close:
 > unique(css4)/css2
-<<<<<<< HEAD
-<<<<<<< HEAD
-[1] 0.9488437
-=======
 [1] 0.9301338
->>>>>>> main
-=======
-[1] 0.9292148
->>>>>>> feature/3comp
 >                    
 > quit("no")
