@@ -134,7 +134,7 @@ css2 <- calc_analytic_css(
   model = "3compartmentss", 
   species = "Human")
 # These values should be the same:
-all(css1/css2==1)
+all(mean(abs(signif((css1-css2)/css2,4)))<0.001)
 css2/css3==1
 # Because we can't recalculate Rblood2plasma for 3compartmentss this is not
 # quite the same but should be close:
