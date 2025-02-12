@@ -12,6 +12,9 @@ tissue_masses_flows(tmf_dt, add_variability = TRUE)
 \code{gen_age_height_weight()}, containing variables \code{gender},
 \code{reth}, \code{age_months}, \code{age_years}, \code{weight}, and
 \code{height}.}
+
+\item{add_variability}{An option to add variability to calculated masses and
+flows. Default is TRUE; use FALSE for repeatable calculations.}
 }
 \value{
 The same data.table, with aditional variables describing tissue masses
