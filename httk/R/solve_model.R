@@ -145,6 +145,11 @@
 #' side of an instantaneous event (like an iv injection). This helps ensure that
 #' abrupt changes plot well. Defaults to 1e-4.
 #' 
+#' @param forcings A way of passing time-dependent quantities to the ODE solver.
+#' Should take the form of a list of two-column matrices with the first column
+#' containing time values and the second column the value of quantity at those
+#' times. Default NULL.
+#' 
 #' @return A matrix of class deSolve with a column for time(in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
 #' for each time point.
