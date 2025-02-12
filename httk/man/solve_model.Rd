@@ -133,6 +133,11 @@ and `minimum.Funbound.plasma`)}
 side of an instantaneous event (like an iv injection). This helps ensure that
 abrupt changes plot well. Defaults to 1e-4.}
 
+\item{forcings}{A way of passing time-dependent quantities to the ODE solver.
+Should take the form of a list of two-column matrices with the first column
+containing time values and the second column the value of quantity at those
+times. Default NULL.}
+
 \item{...}{Additional arguments passed to the integrator.}
 }
 \value{
