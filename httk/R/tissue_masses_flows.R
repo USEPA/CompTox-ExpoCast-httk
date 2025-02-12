@@ -6,6 +6,9 @@
 #'  \code{reth}, \code{age_months}, \code{age_years}, \code{weight}, and
 #'  \code{height}.
 #'  
+#'@param add_variability An option to add variability to calculated masses and
+#'  flows. Default is TRUE; use FALSE for repeatable calculations.
+#'  
 #'@return The same data.table, with aditional variables describing tissue masses
 #'  and flows.
 #'  
