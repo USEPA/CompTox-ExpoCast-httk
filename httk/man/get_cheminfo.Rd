@@ -42,8 +42,9 @@ true.}
 
 \item{median.only}{Use median values only for fup and clint.  Default is FALSE.}
 
-\item{fup.ci.cutoff}{Cutoff for the level of uncertainty in fup estimates.
-This value should be between (0,1). Default is `NULL` specifying no filtering.}
+\item{fup.ci.cutoff}{Boolean eliminating uncertain fup estimates.
+If TRUE, fup values whose 95% credible interval
+spans 0.1 to 0.9 (or more) are eliminated. (Default value is TRUE.)}
 
 \item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
 vitro clearance assay result has a p-values greater than the threshold are
@@ -136,8 +137,9 @@ provided. Typically 4000 samples were used for the Bayesian analysis, such
 that a p-value of "0" is equivalent to "<0.00025". See Wambaugh et al. (2019)
 for more details. If argument median.only == TRUE then only the median is
 reported for parameters with Bayesian analysis distributions. If the 95% 
-credible interval is larger than fup.ci.cutoff (defaults
-to NULL) then the Fup is treated as too uncertain and the value NA is given.
+credible interval spans the range of 0.1 to 0.9 and fup.ci.cutoff is set to TRUE,
+i.e., the default setting, then the Fup is treated as too uncertain and
+the value NA is given.
 }
 \examples{
 
