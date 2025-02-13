@@ -48,6 +48,22 @@
 #'
 #' @param suppress.messages Whether or not the output messages are suppressed.
 #'
+#' @param alpha Ratio of Distribution coefficient D of totally charged species
+#' and that of the neutral form
+#'
+#' @param pH pH where ionization is evaluated.
+#'
+#' @param fup.lod.default Default value used for fraction of unbound plasma for
+#' chemicals where measured value was below the limit of detection. Default
+#' value is 0.0005.
+#' 
+#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
+#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+#' dataset).
+#' 
+#' @param force.human.clint.fup Uses human hepatic intrinsic clearance and fraction
+#' of unbound plasma in calculation of partition coefficients for rats if true.
+#'
 #' @return A named list containing the blood:air, water:air, and mucus:air 
 #' partition coefficients
 #'
@@ -65,6 +81,8 @@
 #' olfactory epithelial responses." Journal of Neuroscience 34.6 (2014): 
 #' 2025-2036.
 #' 
+#' @seealso \code{\link{calc_dow}}
+#' 
 #' @keywords parameter
 #'
 #' @export calc_kair
@@ -76,8 +94,13 @@ calc_kair <- function(
                  parameters = NULL,
                  species="Human",
                  adjusted.Funbound.plasma = TRUE,
+                 fup.lod.default = 0.005,
+                 force.human.clint.fup=FALSE,
+                 minimum.Funbound.plasma=0.0001,
                  default.to.human = FALSE,
-                 suppress.messages = FALSE) 
+                 suppress.messages = FALSE,
+                 pH = 7.4,
+                 alpha = 0.001) 
 {
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -86,18 +109,21 @@ calc_kair <- function(
       is.null(parameters)) 
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
 
-  # Look up the chemical name/CAS, depending on what was provided:
-  if (any(is.null(chem.cas),is.null(chem.name),is.null(dtxsid)))
+  if (is.null(parameters))
   {
-    out <- get_chem_id(
-            chem.cas=chem.cas,
-            chem.name=chem.name,
-            dtxsid=dtxsid)
-    chem.cas <- out$chem.cas
-    chem.name <- out$chem.name                                
-    dtxsid <- out$dtxsid
+    # Look up the chemical name/CAS, depending on what was provided:
+    if (any(is.null(chem.cas),is.null(chem.name),is.null(dtxsid)))
+    {
+      out <- get_chem_id(
+              chem.cas=chem.cas,
+              chem.name=chem.name,
+              dtxsid=dtxsid)
+      chem.cas <- out$chem.cas
+      chem.name <- out$chem.name                                
+      dtxsid <- out$dtxsid
+    }
   }
-
+  
   if (is.null(parameters) |  (!("logHenry" %in% names(parameters)))) 
   { 
     #henry's law in atm * m^3 / mol, converted atm to Pa
@@ -108,7 +134,27 @@ calc_kair <- function(
   } else {
     logHenry <- parameters$logHenry 
   }
+  
+  if (is.null(parameters) |  (!("pKa_Donor" %in% names(parameters)))) 
+  { 
+    pKa_Donor = get_physchem_param(param = 'pKa_Donor', 
+                                  chem.cas=chem.cas,
+                                  chem.name=chem.name,
+                                  dtxsid=dtxsid) 
+  } else {
+    pKa_Donor <- parameters$pKa_Donor 
+  }
     
+  if (is.null(parameters) |  (!("pKa_Accept" %in% names(parameters)))) 
+  { 
+    pKa_Accept = get_physchem_param(param = 'pKa_Accept', 
+                                  chem.cas=chem.cas,
+                                  chem.name=chem.name,
+                                  dtxsid=dtxsid) 
+  } else {
+    pKa_Accept <- parameters$pKa_Accept 
+  }
+  
   if (is.null(parameters) |  (!("body_temp" %in% names(parameters)))) 
   { 
    # Check the species argument for capitilization problems and whether or not it is in the table:  
@@ -141,25 +187,85 @@ calc_kair <- function(
     Funbound.plasma <- parameters$Funbound.plasma
     Pow <- parameters$Pow
   } else {
-    params <- parameterize_steadystate(
-                                       chem.cas=chem.cas,
-                                       chem.name=chem.name,
-                                       dtxsid=dtxsid,
-                                       default.to.human=default.to.human,
-                                       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                       suppress.messages=TRUE)
-      Rblood2plasma <- params$Rblood2plasma
-      Funbound.plasma <- params$Funbound.plasma
-      Pow <- 10^get_physchem_param(param = 'logP', 
-                                  chem.cas=chem.cas,
-                                  chem.name=chem.name,
-                                  dtxsid=dtxsid)  # Octanol:water partition coeffiecient
+    Pow <- 10^get_physchem_param(param = 'logP', 
+                                chem.cas=chem.cas,
+                                chem.name=chem.name,
+                                dtxsid=dtxsid)  # Octanol:water partition coeffiecient
+
+    # Get the central tendency (point estimate) and potentially the distribution
+    # quantiles for the fraction unbound in plasma (fup):
+    fup.list <- get_fup(
+        dtxsid=dtxsid,
+        chem.name=chem.name,
+        chem.cas=chem.cas,
+        species=species,
+        default.to.human=default.to.human,
+        force.human.fup=force.human.clint.fup,
+        suppress.messages=suppress.messages) 
+    fup.point <- fup.list$Funbound.plasma.point
+    fup.dist <- fup.list$Funbound.plasma.dist 
+  
+    if (fup.point == 0)
+    {
+      fup.point <- fup.lod.default
+      if (!suppress.messages) warning(paste0(
+          "Fraction unbound = 0, changed to ",
+          fup.lod.default,
+          "."))
+    }
+    
+    # Distribution coefficient:
+    dow<- calc_dow(Pow = Pow, pH=7.4, pKa_Donor=pKa_Donor, pKa_Accept=pKa_Accept)
+  
+    # Get the Pearce et al. (2017) lipid binding correction:       
+    fup.adjustment <- calc_fup_correction(fup.point,
+                                          dtxsid=dtxsid,
+                                          chem.name=chem.name,
+                                          chem.cas=chem.cas,
+                                          species=species,
+                                          default.to.human=default.to.human,
+                                          force.human.fup=force.human.clint.fup,
+                                          suppress.messages=suppress.messages)
+  
+    # Apply the correction if requested:
+    if (adjusted.Funbound.plasma)
+    { 
+      fup.corrected <- apply_fup_adjustment(
+                         fup.point,
+                         fup.correction=fup.adjustment,
+                         suppress.messages=suppress.messages,
+                         minimum.Funbound.plasma=minimum.Funbound.plasma
+                         )
+    } else {
+      fup.corrected <- fup.point
+      fup.adjustment <- NA
+    } 
+    
+    Funbound.plasma <- fup.corrected
+
+# Blood to plasma ratio:
+    Rblood2plasma <- available_rblood2plasma(
+            chem.name=chem.name,
+            chem.cas=chem.cas,
+            dtxsid=dtxsid,
+            species=species,
+            adjusted.Funbound.plasma=fup.corrected,
+            suppress.messages=TRUE)
   }  
 
   hl <- 10^logHenry #Henry's constant in atm*m^3 / mol 
+
+# For the most part only neutral compound partitions into the air:
+  ionization <- calc_ionization(pH=pH,
+                                pKa_Donor=pKa_Donor,
+                                pKa_Accept=pKa_Accept)
+  fraction_neutral  <- ionization[["fraction_neutral"]]
+  fraction_charged <- ionization[["fraction_charged"]]
+  
 # Linakis et al. (2020) Equation 3:
 # Gas constant 8.314 in units of J/(mol*K), body temperature 
-  Kwater2air <- 8.314 * body_temp / (hl * 101325)   #101325 atm to Pa 
+  Kwater2air <- 1/(fraction_neutral + alpha*fraction_charged)*
+                8.314 * body_temp / (hl * 101325)   #101325 atm to Pa 
 # Linakis et al. (2020) Equation 2:
   Kblood2air <- Kwater2air * Rblood2plasma / Funbound.plasma
 # Linakis et al. (2020) Equation 4:

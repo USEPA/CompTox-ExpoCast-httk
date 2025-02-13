@@ -136,7 +136,7 @@ PCs3 <- predict_partitioning_schmitt(chem.name='ibuprofen',regression=FALSE)
 lump_tissues(PCs1)
 
 # Lump the tissues into a single volume of distribution
-calc_vdist(parameters=p)
+calc_vdist(parameters=c(p,PCs1))
 
 }
 \references{
@@ -159,6 +159,8 @@ parameters." Xenobiotica 43.10 (2013): 839-852.
 \code{\link{parameterize_schmitt}}
 
 \code{\link{tissue.data}}
+
+\code{\link{calc_ma}}
 }
 \author{
 Robert Pearce

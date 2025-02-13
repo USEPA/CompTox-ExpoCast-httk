@@ -67,6 +67,7 @@ model.list[["gas_pbtk"]]$param.names <- c(
   "Krest2pu",
   "kUrtc",
   "liver.density",
+  "logHenry",
   "MA",
   "million.cells.per.gliver",
   "MW",
