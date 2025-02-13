@@ -47,12 +47,15 @@
 #' dataset).
 #' 
 #' @param Caco2.options A list of options to use when working with Caco2 apical to
-#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
-#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
 #' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
 #' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
 #' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' See \code{\link{get_fbio}} for further details.
+#' 
+#' @param ... Additional arguments, not currently used.
 #'
 #' @return 
 #' \item{BW}{Body Weight, kg.} 
@@ -96,7 +99,7 @@
 #'
 #' \insertRef{kilford2008hepatocellular}{httk}
 #'
-#' @keywords Parameter 3compartment
+#' @keywords Parameter 3compartment2
 #'
 #' @seealso \code{\link{solve_3comp}}
 #'
@@ -118,7 +121,7 @@
 #'  out <- solve_3comp(parameters=parameters,plots=TRUE)
 #' 
 #' @export parameterize_3comp
-parameterize_3comp<- function(
+parameterize_3comp <- function(
                        chem.cas = NULL,
                        chem.name = NULL,
                        dtxsid = NULL,
@@ -132,7 +135,8 @@ parameterize_3comp<- function(
                        suppress.messages = FALSE,
                        restrictive.clearance = TRUE,
                        minimum.Funbound.plasma = 0.0001,
-                       Caco2.options = NULL)
+                       Caco2.options = NULL,
+                       ...)
 {
   parms <- parameterize_pbtk(
              chem.cas = chem.cas,
@@ -151,7 +155,8 @@ parameterize_3comp<- function(
              suppress.messages = suppress.messages,
              restrictive.clearance = restrictive.clearance,
              minimum.Funbound.plasma = minimum.Funbound.plasma,
-             Caco2.options = Caco2.options)
+             Caco2.options = Caco2.options,
+             ...)
                               
   parms$Qkidneyf <- parms$Vvenc <- parms$Vartc <- NULL
  
