@@ -21,6 +21,10 @@
 #' and property are ignored. Funbound.plasma values of 0 (below limit of
 #' detection) are overwritten either way.
 #' 
+#' @param chem_include A vector of CAS numbers indicating only the chemicals to
+#' be included in the loading process. If set to `NULL` all applicable chemicals are
+#' loaded. (Default is `NULL`.)
+#' 
 #' @param target.env The environment where the new
 #' \code{\link{chem.physical_and_invitro.data}} is loaded. Defaults to global environment.
 #' 
@@ -66,6 +70,7 @@
 #' @export load_sipes2017
 load_sipes2017 <- function(
     overwrite=FALSE,
+    chem_include = NULL,
     target.env=.GlobalEnv)
 {
   cat(paste("Loading CLint and Fup predictions from Sipes et al. (2017) for",

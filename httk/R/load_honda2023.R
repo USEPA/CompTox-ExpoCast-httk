@@ -23,6 +23,10 @@
 #' If exclude_oad=TRUE (DEFAULT) chemicals outside the applicability domain do not
 #' have their predicted values loaded.
 #' 
+#' @param chem_include A vector of CAS numbers indicating only the chemicals to
+#' be included in the loading process. If set to `NULL` all applicable chemicals are
+#' loaded. (Default is `NULL`.)
+#' 
 #' @param target.env The environment where the new
 #' \code{\link{chem.physical_and_invitro.data}} is loaded. Defaults to global environment.
 #' 
@@ -54,6 +58,7 @@
 load_honda2023 <- function(
     overwrite=FALSE,
     exclude_oad=TRUE,
+    chem_include = NULL,
     target.env=.GlobalEnv)
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
