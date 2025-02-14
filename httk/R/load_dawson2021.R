@@ -24,6 +24,10 @@
 #' If exclude_oad=TRUE (DEFAULT) chemicals outside the applicability domain do not
 #' have their predicted values loaded.
 #' 
+#' @param chem_include A vector of CAS numbers indicating only the chemicals to
+#' be included in the loading process. If set to `NULL` all applicable chemicals are
+#' loaded. (Default is `NULL`.)
+#' 
 #' @param target.env The environment where the new
 #' \code{\link{chem.physical_and_invitro.data}} is loaded. Defaults to global environment.
 #' 
@@ -70,6 +74,7 @@
 load_dawson2021 <- function(
     overwrite=FALSE,
     exclude_oad=TRUE,
+    chem_include = NULL,
     target.env=.GlobalEnv)
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -95,6 +100,32 @@ load_dawson2021 <- function(
       dplyr::select(`CASRN`,`QSAR_Clint`,`QSAR_Fup`) %>% 
       as.data.frame()
   }
+  # check whether there is any information on specific chemicals to include
+  if(!is.null(chem_include)){
+    # check that they are CAS number format
+    chem_include_check <- all(cas_id_check(chem_include)==TRUE)
+    if(chem_include_check == FALSE){
+      stop("At least one chemical ID in `chem_include` does not follow the standard CAS/CASRN format.")
+    }
+    ## CHECKS ##
+    # obtain any chemicals that are not in the CASRN list
+    out_CAS_list <- which(!(chem_include%in%tmp_dawson2021[,"CASRN"]))
+    if(length(out_CAS_list)==length(chem_include)){
+      # provide an error message if none of the chemical identifiers to include are
+      # available in the dataset
+      stop("None of the CAS/CASRN chemical identifiers provided are in `dawson2021`.")
+    }
+    if(length(out_CAS_list)>0){
+      # provide a message listing the chemical identifiers that are not available
+      # in the dataset
+      cat("The following CAS/CASRN chemical identifiers are not in `dawson2021`:\n\t",
+          paste0(chem_include[out_CAS_list],collapse = ", "))
+    }
+    # subset to the chemicals that are included in the dataset
+    tmp_dawson2021 <- tmp_dawson2021 %>% 
+      dplyr::filter(CASRN %in% chem_include)
+  }
+  
   cat(paste("Loading CLint and Fup predictions from Dawson et al. (2021) for",
             dim(tmp_dawson2021)[1],"chemicals.\n"))
   cat(paste("Existing data are",

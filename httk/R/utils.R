@@ -98,3 +98,18 @@ is_in_inclusive <- function(x, lims) {
   }
   return((x - a)  *  (b - x) >= 0)
 }
+
+#' CAS number format check function
+#' 
+#' This function checks whether the CAS/CARN chemical identifier follows the anticipated
+#' format of XXXXXXX-YY-Z (i.e. 2-7 digits, 2 digits, and 1 digit, respectively).
+#' 
+#' @param cas A character string, or vector of character strings, indicating
+#' CAS/CASRN number.
+#' 
+#' @return Logical output (TRUE or FALSE) indicating whether the character string(s)
+#' provided match the anticipated format for a CAS/CASRN chemical identifier.
+cas_id_check <- function(cas){
+  out <- grepl(cas,pattern = "^\\d{2,7}[-]\\d+{2}[-]\\d$")
+  return(out)
+}
