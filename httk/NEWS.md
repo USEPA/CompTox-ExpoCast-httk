@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # version feature/PFAS (September, 2024)
 ## Bug Fixes
 ## New Features
@@ -17,6 +18,10 @@
 * Can now use 'get_physchem_param' to retrieve "Chemical.Class" (only defined for PFAS to date)
 * Revised documentation for 1compartment model
 * Added 'onUnload' internal function call, appears to improve stability when using multiple models with [deSolve](https://CRAN.R-project.org/package=deSolve)
+=======
+## Enhancements
+* When models (either OPERA or ChemAxon) predict that a chemical does not ionize, that prediction is now stored as a blank space (that is, " ") rather than an "NA". "NA" is intended to indicate that no prediction was available. This change should not impact the function of the code or any predictions, but hopefully clarifies the chemical descriptors.
+>>>>>>> feature/pKaCleanup
 
 # httk 2.5.0 (2024-12-20)
 This release accompanies the submission of the new manuscript
