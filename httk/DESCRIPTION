@@ -1,6 +1,6 @@
 Package: httk
 Version: 2.5.1
-Date: 2024-01-14
+Date: 2025-2-14
 Title: High-Throughput Toxicokinetics
 Description: Pre-made models that can be rapidly tailored to various chemicals
              and species using chemical-specific in vitro data and physiological 
@@ -86,42 +86,42 @@ Depends: R (>= 2.10)
 Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats,
         graphics, utils, magrittr, purrr, methods, Rdpack, ggplot2
 RdMacros: Rdpack
-Suggests: knitr, rmarkdown, gplots, scales,
-        EnvStats, MASS, RColorBrewer,  
-        stringr, reshape, viridis, gmodels,
-        colorspace, cowplot, ggrepel, dplyr, forcats, smatr, gridExtra,
-        readxl, ks, testthat
+Suggests: knitr, rmarkdown, gplots, scales, EnvStats, MASS,
+        RColorBrewer, stringr, reshape, viridis, gmodels, colorspace,
+        cowplot, ggrepel, dplyr, forcats, smatr, gridExtra, readxl, ks,
+        testthat
 License: GPL-3
 LazyData: true
 LazyDataCompression: xz
 Encoding: UTF-8
 VignetteBuilder: knitr
 RoxygenNote: 7.3.2
-URL: https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research
+URL:
+        https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research
 BugReports: https://github.com/USEPA/CompTox-ExpoCast-httk/issues
 NeedsCompilation: yes
-Packaged: 2022-02-24 15:04:07 UTC; jwambaug
-Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>), 
-  Sarah Davidson-Fritz [aut] (<https://orcid.org/0000-0002-2891-9380>),  
-  Robert Pearce [aut] (<https://orcid.org/0000-0003-3168-4049>), 
+Packaged: 2025-01-13 22:14:40 UTC; jwambaug
+Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>),
+  Sarah Davidson-Fritz [aut] (<https://orcid.org/0000-0002-2891-9380>),
+  Robert Pearce [aut] (<https://orcid.org/0000-0003-3168-4049>),
   Caroline Ring [aut] (<https://orcid.org/0000-0002-0463-1251>),
   Greg Honda [aut] (<https://orcid.org/0000-0001-7713-9850>),
-  Mark Sfeir [aut], 
-  Matt Linakis [aut] (<https://orcid.org/0000-0003-0526-2395>), 
-  Dustin Kapraun [aut] (<https://orcid.org/0000-0001-5570-6383>), 
+  Mark Sfeir [aut],
+  Matt Linakis [aut] (<https://orcid.org/0000-0003-0526-2395>),
+  Dustin Kapraun [aut] (<https://orcid.org/0000-0001-5570-6383>),
   Nathan Pollesch [ctb] (<https://orcid.org/0000-0001-8992-9294>),
-  Miyuki Breen [ctb] (<https://orcid.org/0000-0001-8511-4653>), 
+  Miyuki Breen [ctb] (<https://orcid.org/0000-0001-8511-4653>),
   Shannon Bell [ctb] (<https://orcid.org/0000-0002-5754-6085>),
-  Xiaoqing Chang [ctb] (<https://orcid.org/0000-0003-0752-1848>), 
+  Xiaoqing Chang [ctb] (<https://orcid.org/0000-0003-0752-1848>),
   Todor Antonijevic [ctb] (<https://orcid.org/0000-0002-0248-8412>),
   Jimena Davis [ctb],
   Elaina Kenyon [ctb] (<https://orcid.org/0000-0001-8781-2391>),
   Katie Paul Friedman [ctb] (<https://orcid.org/0000-0002-2710-1691>),
-  Celia Schacht [ctb] (<https://orcid.org/0000-0002-8131-513X>), 
-  Meredith Scherer [ctb] (<https://orcid.org/0000-0002-9785-7363>), 
+  Celia Schacht [ctb] (<https://orcid.org/0000-0002-8131-513X>),
+  Meredith Scherer [ctb] (<https://orcid.org/0000-0002-9785-7363>),
   James Sluka [ctb] (<https://orcid.org/0000-0002-5901-1404>),
-  Noelle Sinski [ctb], 
-  Nisha Sipes [ctb] (<https://orcid.org/0000-0003-4203-6426>), 
+  Noelle Sinski [ctb],
+  Nisha Sipes [ctb] (<https://orcid.org/0000-0003-4203-6426>),
   Barbara Wetmore [ctb] (<https://orcid.org/0000-0002-6878-5348>),
   Lily Whipple [ctb],
   Woodrow Setzer [ctb] (<https://orcid.org/0000-0002-6709-9186>)
@@ -129,3 +129,5 @@ Maintainer: John Wambaugh <wambaugh.john@epa.gov>
 Copyright: This package is primarily developed by employees of the U.S.
         Federal government as part of their official duties and is
         therefore public domain.
+Repository: CRAN
+Date/Publication: 2025-01-14 07:00:02 UTC
