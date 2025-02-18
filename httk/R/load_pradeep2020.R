@@ -73,14 +73,41 @@ load_pradeep2020 <- function(
     chem_include = NULL,
     target.env=.GlobalEnv)
 {
+  tmp_pradeep2020 <- httk::pradeep2020
+  # check whether there is any information on specific chemicals to include
+  if(!is.null(chem_include)){
+    # check that they are CAS number format
+    chem_include_check <- all(cas_id_check(chem_include)==TRUE)
+    if(chem_include_check == FALSE){
+      stop("At least one chemical ID in `chem_include` does not follow the standard CAS/CASRN format.")
+    }
+    ## CHECKS ##
+    # obtain any chemicals that are not in the CASRN list
+    out_CAS_list <- which(!(chem_include%in%tmp_pradeep2020[,"CASRN"]))
+    if(length(out_CAS_list)==length(chem_include)){
+      # provide an error message if none of the chemical identifiers to include are
+      # available in the dataset
+      stop("None of the CAS/CASRN chemical identifiers provided are in `pradeep2020`.")
+    }
+    if(length(out_CAS_list)>0){
+      # provide a message listing the chemical identifiers that are not available
+      # in the dataset
+      cat("The following CAS/CASRN chemical identifiers are not in `pradeep2020`:\n\t",
+          paste0(chem_include[out_CAS_list],collapse = ", "))
+    }
+    # subset to the chemicals that are included in the dataset
+    tmp_pradeep2020 <- tmp_pradeep2020 %>% 
+      dplyr::filter(CASRN %in% chem_include)
+  }
+  
   cat(paste("Loading CLint and Fup predictions from Pradeep et al. (2020) for",
-            dim(httk::pradeep2020)[1],"chemicals.\n"))
+            dim(tmp_pradeep2020)[1],"chemicals.\n"))
   cat(paste("Existing data are",
             ifelse(overwrite,""," not"),
             " being overwritten.\n",sep=""))
   cat("Please wait...\n")
   assign("chem.physical_and_invitro.data", 
-         add_chemtable(httk::pradeep2020,
+         add_chemtable(tmp_pradeep2020,
                        current.table=chem.physical_and_invitro.data,
                        data.list=list(
                          CAS = 'CASRN',
