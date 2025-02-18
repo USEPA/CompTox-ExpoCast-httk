@@ -35,6 +35,9 @@
 #' @param suppress.messages Whether or not to display relevant warning messages
 #' to user.
 #' 
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' 
 #' @return
 #' The blood to plasma chemical concentration ratio -- measured if available,
 #' calculated if not.
@@ -58,6 +61,7 @@ available_rblood2plasma <- function(chem.cas=NULL,
                                     dtxsid=NULL,
                                     species='Human',
                                     adjusted.Funbound.plasma=TRUE,
+                                    class.exclude = TRUE,
                                     suppress.messages=FALSE)
 
 {
@@ -105,11 +109,13 @@ available_rblood2plasma <- function(chem.cas=NULL,
           chem.cas <- out$chem.cas
         }
         if (chem.cas %in% get_cheminfo(species=species,model='schmitt',
+                                       class.exclude = class.exclude,
                                        suppress.messages=TRUE))
         {
           Rblood2plasma <- calc_rblood2plasma(chem.cas=chem.cas,
             species=species,
             adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+            class.exclude = class.exclude,
             suppress.messages=suppress.messages)
           if (!suppress.messages) 
             warning(paste(toupper(substr(species, 1, 1)), 
@@ -118,11 +124,13 @@ available_rblood2plasma <- function(chem.cas=NULL,
         } else if (chem.cas %in% get_cheminfo(
                                               species='Human',
                                               model='schmitt',
+                                              class.exclude = class.exclude,
                                               suppress.messages=TRUE)) 
         {
           Rblood2plasma <- calc_rblood2plasma(chem.cas=chem.cas,
             species="Human",
             default.to.human=TRUE,
+            class.exclude = class.exclude,
             adjusted.Funbound.plasma=adjusted.Funbound.plasma,
             suppress.messages=suppress.messages)
           if (!suppress.messages) 
