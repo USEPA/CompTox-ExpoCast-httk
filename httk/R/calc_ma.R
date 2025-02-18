@@ -28,7 +28,7 @@
 #' @param pfas.calibration Whether MA for chemicals in class PFAS should be
 #' increased using the regression to the Droge (2019) dataset.
 #'
-#' @return A numeric fraction unpbound in plasma between zero and one
+#' @return A membrane:unbound fraction in plasma partition coefficient
 #'
 #' @author John Wambaugh 
 #'

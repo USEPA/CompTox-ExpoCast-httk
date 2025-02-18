@@ -48,7 +48,7 @@
 #' calc_total_clearance(chem.name="Ibuprofen") 
 #' 
 #' @export calc_total_clearance
-calc_total_clearance<- function(chem.cas=NULL,
+calc_total_clearance <- function(chem.cas=NULL,
                                 chem.name=NULL,
                                 dtxsid=NULL,
                                 parameters=NULL,
@@ -61,8 +61,9 @@ calc_total_clearance<- function(chem.cas=NULL,
                                 ...)
 
 {
-# Total clearance is equal to 1/Css, so calculate mg/L Css for 1 mg/kg/day dose:
-  clearance <- 1/do.call(calc_analytic_css, args=purrr::compact(c(
+# For oral route of exposure total clearance is equal to f_bio/Css, 
+# so calculate mg/L Css for 1 mg/kg/day dose:
+  Css <- do.call(calc_analytic_css, args=purrr::compact(c(
                          list(chem.cas=chem.cas, 
                               chem.name=chem.name, 
                               dtxsid=dtxsid,
@@ -75,8 +76,19 @@ calc_total_clearance<- function(chem.cas=NULL,
                                 class.exclude=class.exclude),
                               restrictive.clearance=restrictive.clearance,
                               suppress.messages=suppress.messages),
-                         ...))) # mg/kg/day / mg/L -> clearance: L/kg/day
-
+                         ...))) # mg/L / mg/kg/day 
+  fbio <- do.call(calc_fbio.oral,
+                  args = list(chem.cas=chem.cas, 
+                              chem.name=chem.name, 
+                              dtxsid=dtxsid,
+                              parameters=parameters,
+                              species=species,
+                              default.to.human=default.to.human,
+                              restrictive.clearance=restrictive.clearance,
+                              suppress.messages=suppress.messages)
+                              ) 
+  clearance <- fbio/Css # L / kg / day
+  
 # Convert from 1/day to 1/h:
   clearance <- clearance/24
 
