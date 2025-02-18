@@ -78,6 +78,32 @@ load_honda2023 <- function(
   } else {
     tmp_honda2023 <- httk::honda2023.qspr
   }
+  # check whether there is any information on specific chemicals to include
+  if(!is.null(chem_include)){
+    # check that they are CAS number format
+    chem_include_check <- all(cas_id_check(chem_include)==TRUE)
+    if(chem_include_check == FALSE){
+      stop("At least one chemical ID in `chem_include` does not follow the standard CAS/CASRN format.")
+    }
+    ## CHECKS ##
+    # obtain any chemicals that are not in the CASRN list
+    out_CAS_list <- which(!(chem_include%in%tmp_honda2023[,"CAS"]))
+    if(length(out_CAS_list)==length(chem_include)){
+      # provide an error message if none of the chemical identifiers to include are
+      # available in the dataset
+      stop("None of the CAS/CASRN chemical identifiers provided are in `honda2023`.")
+    }
+    if(length(out_CAS_list)>0){
+      # provide a message listing the chemical identifiers that are not available
+      # in the dataset
+      cat("The following CAS/CASRN chemical identifiers are not in `honda2023`:\n\t",
+          paste0(chem_include[out_CAS_list],collapse = ", "))
+    }
+    # subset to the chemicals that are included in the dataset
+    tmp_honda2023 <- tmp_honda2023 %>% 
+      dplyr::filter(CAS %in% chem_include)
+  }
+  
   cat(paste("Loading Caco2 PAb predictions from Honda et al. (2023) for",
             dim(tmp_honda2023)[1],"chemicals.\n"))
   cat(paste("Existing data are",
