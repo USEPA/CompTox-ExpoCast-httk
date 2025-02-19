@@ -247,6 +247,13 @@ c.vs.t <- ggplot(plot.data, aes(time, Cplasma)) +
     plot.title = element_text(size = 17)) +
   ggtitle("Bisphenol A")
 print(c.vs.t)
+
+# The following will not work because Diquat dibromide monohydrate's 
+# Henry's Law Constant (-3.912) is higher than that of Acetone (~-4.5):
+try(head(solve_pbtk(chem.cas = "6385-62-2")))
+# However, we can turn off checking for phys-chem properties, since we know
+# that  Diquat dibromide monohydrate is not too volatile:
+head(solve_pbtk(chem.cas = "6385-62-2", physchem.exclude = FALSE))
 }
 
 }

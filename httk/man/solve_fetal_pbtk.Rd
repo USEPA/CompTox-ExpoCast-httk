@@ -33,8 +33,8 @@ solve_fetal_pbtk(
   minimum.Funbound.plasma = 1e-04,
   monitor.vars = NULL,
   Caco2.options = list(),
-  atol = 1e-08,
-  rtol = 1e-08,
+  atol = 1e-07,
+  rtol = 1e-07,
   ...
 )
 }
@@ -207,6 +207,7 @@ model. However, PFAS chemicals can be included with the argument
 out = solve_fetal_pbtk(chem.name = 'bisphenol a', daily.dose = 1,
 doses.per.day = 3)
 
+\donttest{
 # With adjustement to fraction unbound plasma for fetus:
 fetal_parms_fup_adjusted <- 
   parameterize_fetal_pbtk(chem.name = "triclosan")
@@ -217,6 +218,14 @@ fetal_parms_fup_unadjusted <-
   parameterize_fetal_pbtk(chem.name = "triclosan",
                           fetal_fup_adjustment = FALSE)
 head(solve_fetal_pbtk(parameters = fetal_parms_fup_unadjusted))
+
+# The following will not work because Diquat dibromide monohydrate's 
+# Henry's Law Constant (-3.912) is higher than that of Acetone (~-4.5):
+try(head(solve_fetal_pbtk(chem.cas = "6385-62-2")))
+# However, we can turn off checking for phys-chem properties, since we know
+# that  Diquat dibromide monohydrate is not too volatile:
+head(solve_fetal_pbtk(chem.cas = "6385-62-2", physchem.exclude = FALSE))
+}
 
 }
 \seealso{
