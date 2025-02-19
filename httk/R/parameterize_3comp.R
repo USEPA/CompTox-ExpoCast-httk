@@ -6,9 +6,6 @@
 #' as modified by Pearce et al. (2017) to predict partition coefficients based
 #' on descriptions in \code{\link{tissue.data}}. Organ volumes and flows are
 #' retrieved from table \code{\link{physiology.data}}.
-#' The rate of oral absorption used
-#' is 2.2 L/h, the median rate observed across 44 chemicals by 
-#' \href{https://doi.org/10.1093/toxsci/kfy020}{Wambaugh et al. (2018)}.
 #' 
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- the 
 #' chemical must be identified by either CAS, name, or DTXISD
@@ -89,10 +86,6 @@
 #' \item{Vgutc}{Volume of the gut per kg body weight, L/kg BW.}
 #' \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
 #' \item{Vrestc}{ Volume of the rest of the body per kg body weight, L/kg BW.}
-#' \item{pKa_Donor}{Ionization equilibria (if any) for hydrogen donation (acids).} 
-#' \item{pKa_Accept}{Ionization equilibria (if any) for hydrogen acceptance (bases).} 
-#' \item{Pow}{Octanol:Water equilibrium partition coefficient (hydrophobicity)}
-#' \item{MA}{Membrane affinity -- physopholipid bi-layer partition coefficient}
 #'
 #' @author Robert Pearce and John Wambaugh
 #'
