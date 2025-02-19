@@ -56,7 +56,7 @@
 #' @export calc_clearance_frac
 #'
 calc_clearance_frac <- function(
-                                fraction.params=c("Qtotal.livc","Qgfr"),
+                                fraction.params=c("Qtotal.liverc","Qgfrc"),
                                 chem.cas=NULL,
                                 chem.name=NULL,
                                 dtxsid = NULL,
@@ -110,7 +110,6 @@ calc_clearance_frac <- function(
         chem.name=chem.name,
         dtxsid=dtxsid,
         species=species,
-        Caco2.options=Caco2.options,
         suppress.messages=suppress.messages),
       parameterize.args)))
  
@@ -144,11 +143,11 @@ calc_clearance_frac <- function(
                                                 suppress.messages =
                                                   suppress.messages,
                                                 restrictive.clearance =
-                                                  restrictive.clearance,
+                                                  restrictive.clearance
                                                 ),
                                             analytic_css.args)))
   
-  clerance.fractions <- list()
+  clearance.fractions <- list()
   # Now loop over fraction params:
   for (this.param in fraction.params)
   {
@@ -156,8 +155,8 @@ calc_clearance_frac <- function(
 # Set other parameters to zero:
     for (other.param in fraction.params)
       if (other.param != this.param)
-        these.params[other.param <- 0
-
+        these.params[[other.param]] <- 0
+    
     this.clearance <- do.call(calc_total_clearance,
                      args=purrr::compact(c(list(
                                                 parameters =
@@ -165,11 +164,11 @@ calc_clearance_frac <- function(
                                                 suppress.messages =
                                                   suppress.messages,
                                                 restrictive.clearance =
-                                                  restrictive.clearance,
+                                                  restrictive.clearance
                                                 ),
                                             analytic_css.args)))
                                             
-    clearance.fractions[this.param] <- this.clearance / Clearance/total
+    clearance.fractions[this.param] <- this.clearance / Clearance.total
   }
   
 # Cannot guarantee arbitrary precision:

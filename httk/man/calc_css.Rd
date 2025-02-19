@@ -75,7 +75,7 @@ further details.)}
 
 \item{model}{Model used in calculation, 'pbtk' for the multiple compartment
 model,'3compartment' for the three compartment model, and '1compartment' for
-the one compartment model.}
+the one compartment model. Defaults to 'pbtk'.}
 
 \item{default.to.human}{Substitutes missing animal values with human values if
 true (hepatic intrinsic clearance or fraction of unbound plasma).}

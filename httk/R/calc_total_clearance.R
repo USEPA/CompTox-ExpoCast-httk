@@ -87,7 +87,7 @@ calc_total_clearance <- function(chem.cas=NULL,
                               restrictive.clearance=restrictive.clearance,
                               suppress.messages=suppress.messages)
                               ) 
-  clearance <- fbio/Css # L / kg / day
+  clearance <- fbio$fbio.oral/Css # L / kg / day
   
 # Convert from 1/day to 1/h:
   clearance <- clearance/24

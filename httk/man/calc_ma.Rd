@@ -35,7 +35,7 @@ for the model indicated by argument model}
 increased using the regression to the Droge (2019) dataset.}
 }
 \value{
-A numeric fraction unpbound in plasma between zero and one
+A membrane:unbound fraction in plasma partition coefficient
 }
 \description{
 Membrane affinity (MA) is the membrane:water partition coefficient. MA
