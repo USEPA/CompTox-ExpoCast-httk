@@ -19,6 +19,7 @@ parameterize_1comp(
   clint.pvalue.threshold = 0.05,
   minimum.Funbound.plasma = 1e-04,
   class.exclude = TRUE,
+  physchem.exclude = TRUE,
   Caco2.options = list(),
   ...
 )
@@ -70,13 +71,21 @@ dataset).}
 \item{class.exclude}{Exclude chemical classes identified as outside of 
 domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
 
-\item{Caco2.options}{A list of options to use when working with Caco2 apical to
-basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
-Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
-Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+\item{physchem.exclude}{Exclude chemicals on the basis of physico-chemical
+properties (currently only Henry's law constant) as specified by 
+the relevant modelinfo_[MODEL] file (default TRUE).}
+
+\item{Caco2.options}{A list of options to use when working with Caco2 apical 
+to basolateral data \code{Caco2.Pab}, default is Caco2.options = 
+list(Caco2.Pab.default = 1.6, Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, 
+overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the 
+default value for Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE 
+uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE 
+overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
+with 1 (i.e. 100 percent) regardless of other settings.
 See \code{\link{get_fbio}} for further details.}
 
 \item{...}{Additional arguments, not currently used.}
@@ -118,6 +127,18 @@ V_d,steady-state = Sum over all tissues (K_i * V_i) + V_plasma
 
 where K_i is the tissue:unbound plasma concentration partition coefficient
 for tissue i.
+
+Because this model does not simulate exhalation, inhalation, and other 
+processes relevant to volatile chemicals, this model is by default 
+restricted to chemicals with a logHenry's Law Constant less than that of 
+Acetone, a known volatile chemical. That is, chemicals with logHLC > -4.5 
+(Log10 atm-m3/mole) are excluded. Volatility is not purely determined by the 
+Henry's Law Constant, therefore this chemical exclusion may be turned off 
+with the argument "physchem.exclude = FALSE". Similarly, per- and 
+polyfluoroalkyl substances (PFAS) are excluded by default because the 
+transporters that often drive PFAS toxicokinetics are not included in this 
+model. However, PFAS chemicals can be included with the argument 
+"class.exclude = FALSE".
 }
 \examples{
 
