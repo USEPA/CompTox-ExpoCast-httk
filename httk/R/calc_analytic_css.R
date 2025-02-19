@@ -209,6 +209,14 @@ calc_analytic_css <- function(chem.name=NULL,
     stop(paste("Model",model,"not available. Please select from:",
       paste(names(model.list),collapse=", ")))
   } 
+  
+  # Check that the analytic Css function is defined:
+  analytic.css.func <- model.list[[model]]$analytic.css.func
+  if (is.null(analytic.css.func))
+  {
+    stop(paste("Model",model,"does not have an analytic function for steady-state concentration."))
+  }
+
   parameterize_function <- model.list[[model]]$parameterize.func
   compartment_state <- model.list[[model]]$compartment.state
   dose.var <- model.list[[model]]$routes[[route]][["entry.compartment"]]
@@ -349,7 +357,7 @@ calc_analytic_css <- function(chem.name=NULL,
     
   if (model %in% names(model.list))            
   {
-      Css <- do.call(model.list[[model]]$analytic.css.func,
+      Css <- do.call(analytic.css.func,
         args=purrr::compact(c(list(
           chem.cas = chem.cas,
           chem.name = chem.name,

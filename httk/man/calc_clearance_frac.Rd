@@ -5,7 +5,7 @@
 \title{Calculate the fractional contributions to total clearance}
 \usage{
 calc_clearance_frac(
-  fraction.params = c("Qtotal.livc", "Qgfr"),
+  fraction.params = c("Clint", "Qgfrc"),
   chem.cas = NULL,
   chem.name = NULL,
   dtxsid = NULL,
@@ -72,4 +72,3 @@ calculation of the fration of total clearance driven by that parameter.
 \author{
 John Wambaugh
 }
-\keyword{parameters}

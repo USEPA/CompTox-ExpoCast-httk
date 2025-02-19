@@ -49,14 +49,24 @@
 #'
 #' @author John Wambaugh 
 #'
-#' @references 
+#' @examples
+#'
+#' # 3compartmentss model:
+#' calc_clearance_frac(chem.name="bisphenola")
+#' # pbtk model:
+#' calc_clearance_frac(chem.name="bisphenola",model="pbtk",fraction.params=c("Qgfrc","Clmetabolismc"))
 #' 
-#' @keywords parameters
+#' # A model with exhalation:
+#' # sumclearances model:
+#' calc_clearance_frac(chem.name="bisphenola",model="sumclearances",fraction.params=c("Clint","Qgfrc","Qalvc"))
+#' calc_clearance_frac(chem.name="toluene",model="sumclearances",fraction.params=c("Clint","Qgfrc","Qalvc"))
+#' # 3comp2 model:
+#' calc_clearance_frac(chem.name="toluene",model="3compartment2",fraction.params=c("Clmetabolismc","Qgfrc","Qalvc"))
 #'
 #' @export calc_clearance_frac
 #'
 calc_clearance_frac <- function(
-                                fraction.params=c("Qtotal.liverc","Qgfrc"),
+                                fraction.params=c("Clint","Qgfrc"),
                                 chem.cas=NULL,
                                 chem.name=NULL,
                                 dtxsid = NULL,
@@ -140,6 +150,7 @@ calc_clearance_frac <- function(
                      args=purrr::compact(c(list(
                                                 parameters =
                                                   parameters,
+                                                model=model,
                                                 suppress.messages =
                                                   suppress.messages,
                                                 restrictive.clearance =
@@ -147,6 +158,10 @@ calc_clearance_frac <- function(
                                                 ),
                                             analytic_css.args)))
   
+  # Do we need to calculate hepatic bioavailabiility?
+  firstpass <- model.list[[model]]$firstpass
+  
+  firstpass
   clearance.fractions <- list()
   # Now loop over fraction params:
   for (this.param in fraction.params)
@@ -157,10 +172,30 @@ calc_clearance_frac <- function(
       if (other.param != this.param)
         these.params[[other.param]] <- 0
     
+    # calculate hepatic bioavailability if needed:
+    if (firstpass)
+    {
+      cl <- calc_hep_clearance(parameters=these.params,
+        hepatic.model='unscaled',
+        suppress.messages=TRUE) #L/h/kg body weight
+
+      these.params["hepatic.bioavailability"] <- 
+        do.call(calc_hep_bioavailability,
+          args=purrr::compact(list(
+            parameters=list(
+              Qtotal.liverc=these.params$Qtotal.liverc, # L/h/kg^3/4
+              Funbound.plasma=these.params$Funbound.plasma,
+              Clmetabolismc=cl, # L/h/kg
+              Rblood2plasma=these.params$Rblood2plasma,
+              BW=these.params$BW),
+            restrictive.clearance=restrictive.clearance)))
+    }
+    
     this.clearance <- do.call(calc_total_clearance,
                      args=purrr::compact(c(list(
                                                 parameters =
                                                   these.params,
+                                                model=model,
                                                 suppress.messages =
                                                   suppress.messages,
                                                 restrictive.clearance =
@@ -172,7 +207,7 @@ calc_clearance_frac <- function(
   }
   
 # Cannot guarantee arbitrary precision:
-  Css <- set_httk_precision(clearance.fractions)
+  clearance.fractions <- set_httk_precision(clearance.fractions)
   
   return(clearance.fractions)
 }

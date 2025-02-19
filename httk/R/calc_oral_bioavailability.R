@@ -143,7 +143,7 @@ calc_fbio.oral <- function(parameters = NULL,
     if (is.null(chem.cas) & 
       is.null(chem.name) & 
       is.null(dtxsid)) 
-      stop('chem.name, chem.cas, or dtxsid must be specified if Caoc2.Pab not specified in argument parameters.')
+      stop('chem.name, chem.cas, or dtxsid must be specified if Caco2.Pab not specified in argument parameters.')
       
     # Retrieve the chemical-specific Caco-2 value:
     parameters <-  c(parameters, get_caco2(chem.cas=chem.cas,

@@ -16,6 +16,8 @@ model.list[[THIS.MODEL]]$parameterize.func <- "parameterize_sumclearances"
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
 model.list[[THIS.MODEL]]$param.names <- c("BW",
+                       "Caco2.Pab",
+                       "Caco2.Pab.dist",
                        "Clint",
                        "Clint.dist",
                        "Dow74",

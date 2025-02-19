@@ -8,7 +8,8 @@
 #' @export list_models
 list_models <- function()
 {
-  cat(paste("Available models for httk are: \"",
-            paste(names(model.list), sep = "\", \""),
-            "\".\n",sep="") 
+  models.text <- strwrap(paste("Available models for httk are: \"",
+            paste(names(model.list), collapse = "\", \""),
+            "\".\n",sep=""))
+  writeLines(models.text)
 }

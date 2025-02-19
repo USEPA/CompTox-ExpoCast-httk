@@ -1,6 +1,7 @@
-<<<<<<< HEAD
 # version feature/PFAS (September, 2024)
 ## Bug Fixes
+* Added Caco-2 permeability to model "sumclearances"
+
 ## New Features
 * Added new chemical-specific *in vitro* data for Fup and Clint for PFAS measured in [Smeltz et al. (2023)](https://doi.org/10.1021/acs.chemrestox.3c00003)
 * Added new chemical-specific *in vitro* data for Fup and Clint for PFAS measured in [Kreutz et al. (2023)](https://doi.org/10.3390/toxics11050463)
@@ -9,19 +10,19 @@
 * Added new chemical-specific measurements of membrane afinity (logMA) for 10 PFAS measured in [Droge et al. (2019)](https://doi.org/10.1021/acs.est.8b05052)
 * Added new chemical-specific *in silico* predictions for 4136 PFAS half-life and clearance from [Dawson et al. (2023)](https://doi.org/10.3390/toxics11020098)
 * Added new function 'get_2023pfasinfo' to allow easy identification of newly measured PFAS chemicals
-* Added new model '3compartmentss2' that solves for steady-state plasma/blood concentration resulting from elimination by metabolism, renal excretion, and also exhalation since many PFAS have some volatility
+* Added new model 'sumclearancespfas' that solves for steady-state plasma/blood concentration resulting from elimination by metabolism, renal excretion, and also exhalation since many PFAS have some volatility
 * Added new model 'pfas1compartment' that uses the [Dawson et al. (2023)](https://doi.org/10.3390/toxics11020098) to parameterize an empirical one compartment model for PFAS chemicals -- see 'parameterize_pfas1comp'
 * Added new vignette Kreutz describing analysis for [Kreutz et al. (2023)](https://doi.org/10.3390/toxics11050463) Figure 3 
 * Added new vignette Crizer describing analysis for Crizer et al. (submitted) Figures X, Y, and Z
+* Added new function 'calc_clearance_frac' to determine the fractional contributions of different clearance mechanims
+* Added new function 'list_models' to identify all available HTTK models.
+
 ## Enhancements
 * Revised 'calc_ma' to increase membrane affinities for PFAS chemicals ~400x based on regression to data from [Droge et al. (2019)](https://doi.org/10.1021/acs.est.8b05052) (if new argument 'pfas.calibration==TRUE')
 * Can now use 'get_physchem_param' to retrieve "Chemical.Class" (only defined for PFAS to date)
 * Revised documentation for 1compartment model
 * Added 'onUnload' internal function call, appears to improve stability when using multiple models with [deSolve](https://CRAN.R-project.org/package=deSolve)
-=======
-## Enhancements
 * When models (either OPERA or ChemAxon) predict that a chemical does not ionize, that prediction is now stored as a blank space (that is, " ") rather than an "NA". "NA" is intended to indicate that no prediction was available. This change should not impact the function of the code or any predictions, but hopefully clarifies the chemical descriptors.
->>>>>>> feature/pKaCleanup
 
 # httk 2.5.0 (2024-12-20)
 This release accompanies the submission of the new manuscript
@@ -411,8 +412,9 @@ if credible interval spans from < 0.1 to > 0.9 (turn off with
 confidence intervals to be removed for chemical intrinsic hepatic clearance 
 (***Clint***) values and fraction unbound in plasma (***fup***) values where 
 they exist (turn on with median.only=TRUE).
-*  Revised `get_cheminfo` to filter volatile compounds using Henry`s law 
+* Revised `get_cheminfo` to filter volatile compounds using Henry`s law 
 constant for all models, excluding the ***gas_pbtk*** model.
+* Added
 
 ## Bug Fixes 
 * Fixed problems with ***Clint*** values reported from 
