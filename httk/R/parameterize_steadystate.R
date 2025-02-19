@@ -6,7 +6,7 @@
 #' compartment steady state model ('3compartmentss') as used in 
 #' Rotroff et al. (2010), Wetmore et al. (2012), Wetmore et al. (2015), and 
 #' elsewhere. By assuming that enough time has passed to reach steady-state, we
-#' eliminate the need for tissue-specific partition coefficients because we 
+#' eliminate the need for tissue-specific parititon coefficients because we 
 #' assume all tissues have come to equilibrium with the unbound concentration
 #' in plasma. However, we still use chemical properties to predict the 
 #' blood:plasma ratio for estimating first-pass hepatic metabolism for oral
@@ -108,12 +108,6 @@
 #' \insertRef{pearce2017httk}{httk}
 #'
 #' \insertRef{kilford2008hepatocellular}{httk}
-#' 
-#' \insertRef{rotroff2010incorporating}{httk}
-#' 
-#' \insertRef{wetmore2012integration}{httk}
-#' 
-#' \insertRef{wetmore2015incorporating}{httk}
 #'
 #' @seealso \code{\link{calc_analytic_css_3compss}}
 #'
@@ -123,7 +117,12 @@
 #'
 #' @seealso \code{\link{physiology.data}}
 #'
-#' @keywords pfassteadystate
+#' @examples
+#' 
+#'  parameters <- parameterize_steadystate(chem.name='Bisphenol-A',species='Rat')
+#'  parameters <- parameterize_steadystate(chem.cas='80-05-7')
+#' 
+#' @keywords 3compss
 #' 
 #' @export parameterize_steadystate
 parameterize_steadystate <- function(
