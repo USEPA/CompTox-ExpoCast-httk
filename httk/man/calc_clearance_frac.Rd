@@ -69,6 +69,21 @@ takes a list of parameters potentially impacting total clearance and
 iteratively sets all but one of the paramters to zero. This allows
 calculation of the fration of total clearance driven by that parameter.
 }
+\examples{
+
+# 3compartmentss model:
+calc_clearance_frac(chem.name="bisphenola")
+# pbtk model:
+calc_clearance_frac(chem.name="bisphenola",model="pbtk",fraction.params=c("Qgfrc","Clmetabolismc"))
+
+# A model with exhalation:
+# sumclearances model:
+calc_clearance_frac(chem.name="bisphenola",model="sumclearances",fraction.params=c("Clint","Qgfrc","Qalvc"))
+calc_clearance_frac(chem.name="toluene",model="sumclearances",fraction.params=c("Clint","Qgfrc","Qalvc"))
+# 3comp2 model:
+calc_clearance_frac(chem.name="toluene",model="3compartment2",fraction.params=c("Clmetabolismc","Qgfrc","Qalvc"))
+
+}
 \author{
 John Wambaugh
 }
