@@ -44,6 +44,18 @@
 #' 
 #' This gestational model is only parameterized for humans.
 #' 
+#' Because this model does not simulate exhalation, inhalation, and other 
+#' processes relevant to volatile chemicals, this model is by default 
+#' restricted to chemicals with a logHenry's Law Constant less than that of 
+#' Acetone, a known volatile chemical. That is, chemicals with logHLC > -4.5 
+#' (Log10 atm-m3/mole) are excluded. Volatility is not purely determined by the 
+#' Henry's Law Constant, therefore this chemical exclusion may be turned off 
+#' with the argument "physchem.exclude = FALSE". Similarly, per- and 
+#' polyfluoroalkyl substances (PFAS) are excluded by default because the 
+#' transporters that often drive PFAS toxicokinetics are not included in this 
+#' model. However, PFAS chemicals can be included with the argument 
+#' "class.exclude = FALSE".
+#' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
 #' 
@@ -90,8 +102,12 @@
 #' results. Default, NULL, returns model results in units specified in the
 #' 'modelinfo' file. See table below for details.
 #' 
-#' @param default.to.human Substitutes missing animal values with human values
-#' if true (hepatic intrinsic clearance or fraction of unbound plasma).
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' 
+#' @param physchem.exclude Exclude chemicals on the basis of physico-chemical
+#' properties (currently only Henry's law constant) as specified by 
+#' the relevant modelinfo_[MODEL] file (default TRUE).
 #' 
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
@@ -125,6 +141,19 @@
 #' @param atol Absolute tolerance used by integrator (deSolve) to determine
 #' numerical precision-- defaults to 1e-8.
 #' 
+#' @param Caco2.options A list of options to use when working with Caco2 apical 
+#' to basolateral data \code{Caco2.Pab}, default is Caco2.options = 
+#' list(Caco2.Pab.default = 1.6, Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, 
+#' overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the 
+#' default value for Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE 
+#' uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+#' Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE 
+#' overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
+#' with 1 (i.e. 100 percent) regardless of other settings.
+#' See \code{\link{get_fbio}} for further details.
+#'
 #' @param ... Additional arguments passed to the integrator.
 #' 
 #' @return A matrix of class deSolve with a column for time(in days), each
@@ -176,7 +205,8 @@ solve_fetal_pbtk <- function(chem.name = NULL,
                              iv.dose=FALSE,
                              input.units='mg/kg',
                              output.units=NULL,
-                             default.to.human=FALSE,
+                             physchem.exclude = TRUE,
+                             class.exclude = TRUE,
                              recalc.blood2plasma=FALSE,
                              recalc.clearance=FALSE,
                              adjusted.Funbound.plasma=TRUE,
@@ -184,6 +214,7 @@ solve_fetal_pbtk <- function(chem.name = NULL,
                              restrictive.clearance = TRUE,
                              minimum.Funbound.plasma = 0.0001,
                              monitor.vars = NULL,
+                             Caco2.options = list(),
                              atol=1e-8,
                              rtol=1e-8,
                              ...)
@@ -219,13 +250,17 @@ describe human gestation.")
     species='Human', #other species not (yet) supported by solve_fetal_pbtk
     input.units=input.units,
     output.units=output.units,
-    default.to.human=default.to.human,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-    regression=regression,
-    restrictive.clearance = restrictive.clearance,
     minimum.Funbound.plasma=minimum.Funbound.plasma,
+    parameterize.arg.list=list(
+                  clint.pvalue.threshold=clint.pvalue.threshold,
+                  restrictive.clearance = restrictive.clearance,
+                  regression=regression,
+                  Caco2.options=Caco2.options,
+                  physchem.exclude = physchem.exclude,
+                  class.exclude = class.exclude),
     atol=atol,
     rotl=rtol,
     ...)
