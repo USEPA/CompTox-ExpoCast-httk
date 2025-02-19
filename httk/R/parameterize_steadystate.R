@@ -139,8 +139,18 @@
 #'
 #' @examples
 #' 
-#'  parameters <- parameterize_steadystate(chem.name='Bisphenol-A',species='Rat')
-#'  parameters <- parameterize_steadystate(chem.cas='80-05-7')
+#'  parameters1 <- parameterize_steadystate(chem.name='Bisphenol-A',species='Rat')
+#' 
+#'  parameters2 <- parameterize_steadystate(chem.cas='80-05-7')
+#' 
+#' # The following will not work because Diquat dibromide monohydrate's 
+#' # Henry's Law Constant (-3.912) is higher than that of Acetone (~-4.5):
+#' try(parameters3 <- parameterize_steadystate(chem.cas = "6385-62-2"))
+#' 
+#' # However, we can turn off checking for phys-chem properties, since we know
+#' # that  Diquat dibromide monohydrate is not too volatile:
+#' parameters3 <- parameterize_steadystate(chem.cas = "6385-62-2",
+#'                                  physchem.exclude = FALSE)) 
 #' 
 #' @keywords 3compss
 #' 

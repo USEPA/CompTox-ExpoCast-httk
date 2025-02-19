@@ -190,15 +190,24 @@ model. However, PFAS chemicals can be included with the argument
 }
 \examples{
 
- parameters <- parameterize_pbtk(chem.cas='80-05-7')
+ parameters1 <- parameterize_pbtk(chem.cas='80-05-7')
 
- parameters <- parameterize_pbtk(chem.name='Bisphenol-A',species='Rat')
+ parameters2 <- parameterize_pbtk(chem.name='Bisphenol-A',species='Rat')
 
  # Change the tissue lumping (note, these model parameters will not work with our current solver):
  compartments <- list(liver=c("liver"),fast=c("heart","brain","muscle","kidney"),
                       lung=c("lung"),gut=c("gut"),slow=c("bone"))
  parameterize_pbtk(chem.name="Bisphenol a",species="Rat",default.to.human=TRUE,
-                   tissuelist=compartments) 
+                   tissuelist=compartments)
+
+# The following will not work because Diquat dibromide monohydrate's 
+# Henry's Law Constant (-3.912) is higher than that of Acetone (~-4.5):
+try(parameters3 <- parameterize_pbtk(chem.cas = "6385-62-2"))
+# However, we can turn off checking for phys-chem properties, since we know
+# that  Diquat dibromide monohydrate is not too volatile:
+parameters3 <- parameterize_pbtk(chem.cas = "6385-62-2",
+                                 physchem.exclude = FALSE)) 
+
 }
 \references{
 \insertRef{pearce2017httk}{httk}

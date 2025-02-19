@@ -139,10 +139,19 @@ model. However, PFAS chemicals can be included with the argument
 }
 \examples{
 
- parameters <- parameterize_3comp(chem.name='Bisphenol-A',species='Rat')
- parameters <- parameterize_3comp(chem.cas='80-05-7',
+parameters1 <- parameterize_3comp(chem.name='Bisphenol-A',species='Rat')
+parameters2 <- parameterize_3comp(chem.cas='80-05-7',
                                   species='rabbit',default.to.human=TRUE)
- out <- solve_3comp(parameters=parameters,plots=TRUE)
+# The following will not work because Diquat dibromide monohydrate's 
+# Henry's Law Constant (-3.912) is higher than that of Acetone (~-4.5):
+try(parameters3 <- parameterize_3comp(chem.cas = "6385-62-2"))
+# However, we can turn off checking for phys-chem properties, since we know
+# that  Diquat dibromide monohydrate is not too volatile:
+parameters3 <- parameterize_3comp(chem.cas = "6385-62-2",
+                                  physchem.exclude = FALSE))
+\donttest{
+out <- solve_3comp(parameters=parameters1, plots=TRUE)
+}
 
 }
 \references{
