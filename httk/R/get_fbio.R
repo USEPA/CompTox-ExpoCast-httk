@@ -43,7 +43,7 @@ get_fbio <- function(
     chem.name=NULL,
     dtxsid = NULL,
     species = "Human",
-    default.to.human = FALSE,
+    parameterize.args = list(),
     Caco2.Pab.default = 1.6,
     Caco2.Fgut = TRUE,
     Caco2.Fabs = TRUE,
@@ -71,9 +71,15 @@ get_fbio <- function(
     # By using parameterize_steadystate to define the parameters vector we avoid
     # a recursive loop (that is, the next time this function is called parameters
     # will already be defined).
-    parameters <- parameterize_steadystate(chem.cas = chem.cas,
-                                           chem.name = chem.name,
-                                           dtxsid = dtxsid)  
+    parameters <- do.call(parameterize_steadystate, 
+      args=purrr::compact(c(list(
+          chem.cas=chem.cas,
+          chem.name=chem.name,
+          dtxsid=dtxsid,
+          species=species,
+          suppress.messages=suppress.messages
+          ),
+        parameterize.args)))  
   }
   
   out <- list()
@@ -96,16 +102,15 @@ get_fbio <- function(
   # Only bother with the remaining code if keepit100=FALSE
   if (!keepit100)
   {
-    caco2.vals <- calc_fbio.oral(parameters = parameters,
-                                 chem.cas=chem.cas,
-                                 chem.name=chem.name,
-                                 dtxsid=dtxsid,
-                                 species = species,
-                                 parameterize.args = list(
-                                   default.to.human = default.to.human
-                                   ),
-                                 suppress.messages = suppress.messages)
-
+    caco2.vals <- do.call(calc_fbio.oral, 
+      args=purrr::compact(c(list(
+          chem.cas=chem.cas,
+          chem.name=chem.name,
+          dtxsid=dtxsid,
+          species=species,
+          suppress.messages=suppress.messages
+          ),
+        parameterize.args)))
 
     # Attempt to use the in vivo measured hepatic bioavailability (first-pass
     # hepatic metbaolism):

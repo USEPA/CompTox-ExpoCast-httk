@@ -396,6 +396,7 @@ parameterize_sumclearances <- function(
       chem.cas=chem.cas,
       chem.name=chem.name,
       species=species,
+      default.to.human=default.to.human,
       suppress.messages=suppress.messages
       ),
     Caco2.options))
