@@ -69,7 +69,7 @@
 #' @param restrictive.clearance Protein binding not taken into account (set to 1) in 
 #' liver clearance if FALSE.
 #' 
-#' @param parameterize.args List of arguments passed to \code\link{parameterize_steadystate}}
+#' @param parameterize.args List of arguments passed to \code{\link{parameterize_steadystate}}
 #'
 #' @return 
 #' \item{fbio.oral}{Oral bioavailability, the fraction of oral dose 

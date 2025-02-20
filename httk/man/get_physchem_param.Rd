@@ -20,23 +20,66 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 The parameters, either a single value, a named list for a single chemical, or a list of lists
 }
 \description{
-This function retrieves physico-chemical properties ("param") for the chemical specified 
-by chem.name or chem.cas from the vLiver tables.
+This function retrieves physico-chemical properties ("param") for the 
+chemical specified by chem.name or chem.cas from the table
+\code{\link{chem.physical_and_invitro.data}}. This 
+function is distinguished from \code{\link{get_invitroPK_param}} in that
+there are no species-specific values. Physically meaningful values for 
+ionization equilibria are NA/none (that is, no ionization), a single value, 
+or a series of values separated by commas. If logMA (log10 membrane affinity) 
+is NA, we use calc_ma() to predict it later on in the model parameterization 
+functions.
 }
 \details{
 Note that this function works with a local version of the 
-get.physical_and_invitro.data table to allow users to add/modify chemical
-data (for example, via \code{\link{add_chemtable}} or 
-\code{\link{load_sipes2017}}).
+\code{\link{chem.physical_and_invitro.data}} table to allow users to 
+add/modify chemical
+data (for example, adding new data via \code{\link{add_chemtable}} or 
+loading in silico predictions distributed with httk via
+\code{\link{load_sipes2017}}, \code{\link{load_pradeep2020}},
+\code{\link{load_dawson2021}}, or \code{\link{load_honda2023}}).
+
+User can request the following via argument param (case-insensitive):
+\tabular{lll}{
+\strong{Parameter} \tab \strong{Description} \tab \strong{Units} \cr
+MW  \tab Molecular weight \tab g/mole \cr 
+pKa_Donor \tab Hydrogen donor ionization equilibria (acidic pKa) \tab pH \cr
+pKa_Accept \tab Hyrdogen acceptor ionization equilibria (basic pKa \tab pH \cr 
+logMA \tab log10 Membrane Affinity \tab unitless \cr
+logP \tab log10 Octanol:Water Partition Coefficient (hydrophobicity) \tab unitless \cr
+logPwa \tab log10 Water:Air Partition Coefficient \tab unitless \cr
+logHenry \tab log10 Henry's Law Constant \tab atm-m3/mole \cr
+logWSol \tab log10 Water Solubility \tab moles/L: Water solubility at 25C \cr
+MP \tab Melting point \tab  deg C \cr
+}
 }
 \examples{
 
 get_physchem_param(param = 'logP', chem.cas = '80-05-7')
 get_physchem_param(param = c('logP','MW'), chem.cas = c('80-05-7','81-81-2'))
+# This function should be case-insensitive:
+try(get_physchem_param(chem.cas="80-05-7","LogP"))
+# Asking for a parameter we "don't" have produces an error:
+try(get_physchem_param(chem.cas="80-05-7","MA"))
+get_physchem_param(chem.cas="80-05-7","logMA")
+# Ionization equilibria can be NA/none, a single value, or a series of values
+# separated by commas:
+get_physchem_param(chem.cas="80-05-7","pKa_Donor")
+get_physchem_param(chem.cas="80-05-7","pKa_Accept")
+get_physchem_param(chem.cas="71751-41-2","pKa_Donor")
+get_physchem_param(chem.cas="71751-41-2","pKa_Accept")
+# If logMA (log10 membrane affinity) is NA, we use calc_ma() to predict it
+# in the parameterization functions:
+get_physchem_param(chem.cas="71751-41-2","logMA")
+parameterize_steadystate(chem.cas="71751-41-2")
 
 }
 \seealso{
+\code{\link{chem.physical_and_invitro.data}}
+
 \code{\link{get_invitroPK_param}}
+
+\code{\link{add_chemtable}}
 }
 \author{
 John Wambaugh and Robert Pearce

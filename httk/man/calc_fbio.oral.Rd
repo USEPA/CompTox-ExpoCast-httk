@@ -14,8 +14,8 @@ calc_fbio.oral(
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = FALSE,
   suppress.messages = FALSE,
+  parameterize.args = list(),
   restrictive.clearance = FALSE
 )
 
@@ -35,9 +35,9 @@ calc_peff(
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = FALSE,
   suppress.messages = FALSE,
-  Caco2.Pab = NULL
+  Caco2.Pab = NULL,
+  parameterize.args = list()
 )
 
 calc_kgutabs(
@@ -46,8 +46,8 @@ calc_kgutabs(
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = FALSE,
-  suppress.messages = FALSE
+  suppress.messages = FALSE,
+  parameterize.args = list()
 )
 
 calc_fgut.oral(
@@ -56,9 +56,9 @@ calc_fgut.oral(
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = FALSE,
   suppress.messages = FALSE,
-  Caco2.Pab.default = 1.6
+  Caco2.Pab.default = 1.6,
+  parameterize.args = list()
 )
 }
 \arguments{
@@ -82,12 +82,10 @@ must be specified).}
 \item{species}{(Character) Species desired (either "Rat", "Rabbit", "Dog",
 "Mouse", or default "Human").}
 
-\item{default.to.human}{(Logical) Substitutes missing rat values with
-human values if TRUE. (Not applicable for `calc_fabs.oral`.)
-(Defaults to `FALSE`.)}
-
 \item{suppress.messages}{(Logical) Whether or not the output message is
 suppressed. (Defaults to `FALSE`.)}
+
+\item{parameterize.args}{List of arguments passed to \code{\link{parameterize_steadystate}}}
 
 \item{restrictive.clearance}{Protein binding not taken into account (set to 1) in 
 liver clearance if FALSE.}

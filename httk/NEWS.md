@@ -23,6 +23,9 @@
 * Revised documentation for 1compartment model
 * Added 'onUnload' internal function call, appears to improve stability when using multiple models with [deSolve](https://CRAN.R-project.org/package=deSolve)
 * When models (either OPERA or ChemAxon) predict that a chemical does not ionize, that prediction is now stored as a blank space (that is, " ") rather than an "NA". "NA" is intended to indicate that no prediction was available. This change should not impact the function of the code or any predictions, but hopefully clarifies the chemical descriptors.
+* Added class.exclude and physchem.exclude arguments to solve_[MODEL] and parameterize_[MODEL] functions
+* Expanded model documentation of solve_[MODEL] and parameterize_[MODEL] functions to explain physchem filter (models without inhalation/exhalation exclude chemicals more volatile than Acetone by default) and class filter (models not suited to per- and polyfluoroalkyl substances excluded by default. These filters can be turned of using arguments exclude.physchem = FALSE and exclude.class = FALSE, respectively.
+* Added use of Caco-2 data for estimating oral permeability to the models fetal_pbtk and gas_pbtk.
 
 # httk 2.5.0 (2024-12-20)
 This release accompanies the submission of the new manuscript
