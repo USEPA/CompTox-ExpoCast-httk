@@ -4,7 +4,7 @@
 THIS.MODEL <- "sumclearancespfas" 
 
 #Analytic expression for steady-state plasma concentration.
-model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_3compss2"
+model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_sumclearancespfas"
 
 # What units does the analytic function return:
 model.list[[THIS.MODEL]]$steady.state.units <- "mg/L"
@@ -16,6 +16,8 @@ model.list[[THIS.MODEL]]$parameterize.func <- "parameterize_sumclearancespfas"
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
 model.list[[THIS.MODEL]]$param.names <- c("BW",
+                       "Caco2.Pab",
+                       "Caco2.Pab.dist",
                        "Clint",
                        "Clint.dist",
                        "Dow74",
@@ -26,8 +28,12 @@ model.list[[THIS.MODEL]]$param.names <- c("BW",
                        "Funbound.plasma.adjustment",
                        "hepatic.bioavailability",
                        "liver.density",
+                       "logHenry",
                        "million.cells.per.gliver",
                        "MW",
+                       "pKa_Accept",
+                       "pKa_Donor",
+                       "Pow",
                        "Qtotal.liverc",
                        "Qgfrc",
                        "resorption.factor",
@@ -88,6 +94,9 @@ model.list[[THIS.MODEL]]$invitro.params <- c("BW",
 
 # Do we ignore the Fups where the alue was below the limit of detection?
 model.list[[THIS.MODEL]]$exclude.fup.zero <- FALSE
+
+
+
 
 # These are the parameter names needed to describe steady-state dosing:
 model.list[[THIS.MODEL]]$css.dosing.params <- c("hourly.dose")
