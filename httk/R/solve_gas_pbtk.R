@@ -3,6 +3,25 @@
 #' This function solves for the amounts or concentrations of a chemical
 #' in different tissues as functions of time as a result of inhalation 
 #' exposure to an ideal gas.
+#' In this PBTK formulation. \eqn{C_{tissue}} is the concentration in tissue at 
+#' time t. Since the perfusion limited partition coefficients describe 
+#' instantaneous equilibrium between the tissue and the free fraction in 
+#' plasma, the whole plasma concentration is 
+#' \eqn{C_{tissue,plasma} = \frac{1}{f_{up}*K_{tissue2fup}}*C_{tissue}}. 
+#' Note that we use a single, 
+#' constant value of \eqn{f_{up}} across all tissues. Corespondingly the free 
+#' plasma 
+#' concentration is modeled as 
+#' \eqn{C_{tissue,free plasma} = \frac{1}{K_{tissue2fup}}*C_tissue}. 
+#' The amount of blood flowing from tissue x is \eqn{Q_{tissue}} (L/h) at a 
+#' concentration 
+#' \eqn{C_{x,blood} = \frac{R_{b2p}}{f_{up}*K_{tissue2fup}}*C_{tissue}}, where 
+#' we use a 
+#' single \eqn{R_{b2p}} value throughout the body.
+#' Metabolic clearance is modelled as being from the total plasma 
+#' concentration here, though it is restricted to the free fraction in 
+#' \code{\link{calc_hep_clearance}} by default. Renal clearance via 
+#' glomerulsr filtration is from the free plasma concentration.
 #' 
 #' The default dosing scheme involves a specification of the start time
 #' of exposure (exp.start.time), the concentration of gas inhaled (exp.conc),
@@ -50,6 +69,11 @@
 #' flows) but default.to.human = TRUE must be used to substitute human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #'  
+#' Per- and 
+#' polyfluoroalkyl substances (PFAS) are excluded by default because the 
+#' transporters that often drive PFAS toxicokinetics are not included in this 
+#' model. However, PFAS chemicals can be included with the argument 
+#' "class.exclude = FALSE".
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
@@ -118,14 +142,15 @@
 #' results. Default, NULL, returns model results in units specified in the
 #' 'modelinfo' file. See table below for details.
 #' 
-#' @param method Method used by integrator (deSolve).
-#' 
-#' @param rtol Argument passed to integrator (deSolve).
-#' 
-#' @param atol Argument passed to integrator (deSolve).
-#' 
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
+#' 
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' 
+#' @param physchem.exclude Exclude chemicals on the basis of physico-chemical
+#' properties (currently only Henry's law constant) as specified by 
+#' the relevant modelinfo_[MODEL] file (default TRUE).
 #' 
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
@@ -171,7 +196,25 @@
 #' @param VD Anatomical dead space (L), to be modulated especially as part of
 #' simulating the state of exercise
 #' 
-#' @param ... Additional arguments passed to the integrator.
+#' @param ... Additional arguments passed to the integrator (deSolve).
+#' (Note: There are precision differences between M1 Mac and other OS systems
+#' for this function due to how long doubles are handled. To replicate results
+#' between various OS systems we suggest changing the default method of "lsoda"
+#' to "lsode" and also adding the argument mf = 10.
+#' See [deSolve::ode()] for further details.)
+#' 
+#' @param Caco2.options A list of options to use when working with Caco2 apical 
+#' to basolateral data \code{Caco2.Pab}, default is Caco2.options = 
+#' list(Caco2.Pab.default = 1.6, Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, 
+#' overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the 
+#' default value for Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE 
+#' uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+#' Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE 
+#' overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
+#' with 1 (i.e. 100 percent) regardless of other settings.
+#' See \code{\link{get_fbio}} for further details.
 #'
 #' @return A matrix of class deSolve with a column for time(in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
@@ -249,8 +292,9 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            input.units = "ppmv", # assume input units are ppmv with updated inhalation model
                            # input.units = "uM",
                            output.units=NULL,
-                           method="lsoda",rtol=1e-8,atol=1e-12,
                            default.to.human=FALSE,
+                           class.exclude=TRUE,
+                           physchem.exclude = TRUE,
                            recalc.blood2plasma=FALSE,
                            recalc.clearance=FALSE,
                            adjusted.Funbound.plasma=TRUE,
@@ -264,6 +308,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            fR = 12,
                            VT = 0.75,
                            VD = 0.15,
+                           Caco2.options = list(),
                            ...)
 {
   
@@ -332,7 +377,6 @@ solve_gas_pbtk <- function(chem.name = NULL,
     }
   }
   
-  
   #Only generate the forcings if other dosing metrics are null; they're not
   #designed to work together in a very meaningful way
   if (is.null(dosing.matrix) & is.null(doses.per.day) & is.null(forcings))
@@ -365,15 +409,17 @@ solve_gas_pbtk <- function(chem.name = NULL,
     forcings = forcings_gen(exp.conc, period, exp.start.time = 0, exp.duration, days) 
   }
       
-      #Comment out tentative alternate scheme to forcings for now
-      ###
-    #Nrep <- ceiling((days - exp.start.time)/period)
-# We want the start and stop timeS:
-    #time <- sort(c(period * (0:(Nrep - 1)), # Start times
-      #period * (0:(Nrep - 1))+exp.duration)) # End times
-    #dose  <- rep(c(exp.conc,0), Nrep)
-    #dosing.matrix = cbind(dose,time)
-      ###
+  # Describe the dose regimen:
+  dosing <- list(
+    initial.dose=dose,
+    dosing.matrix=dosing.matrix,
+    daily.dose=daily.dose,
+    doses.per.day=doses.per.day,
+    forcings=forcings
+    )
+  # Limit to only the needed dosing parameters:
+  dosing <- dosing[names(dosing) %in%
+                     model.list[["gas_pbtk"]]$routes[[route]]$dosing.params]
   
   #Now make call to solve_model with gas model specific arguments configured 
   out <- solve_model(
@@ -384,13 +430,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
     parameters=parameters,
     model="gas_pbtk",
     route=route,
-    # route='inhalation',
-    dosing=list(
-      initial.dose=dose,
-      dosing.matrix=dosing.matrix,
-      daily.dose=daily.dose,
-      doses.per.day=doses.per.day,
-      forcings=forcings),
+    dosing=dosing,
     days=days,
     tsteps = tsteps, # tsteps is number of steps per hour
     initial.values=initial.values,
@@ -400,20 +440,22 @@ solve_gas_pbtk <- function(chem.name = NULL,
     species=species,
     input.units=input.units,
     output.units=output.units,
-    method=method,rtol=rtol,atol=atol,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
     parameterize.arg.list = list(
       regression=regression,
       default.to.human=default.to.human,
+      class.exclude=class.exclude,
+      physchem.exclude = physchem.exclude,
       restrictive.clearance = restrictive.clearance,
       exercise = exercise,
       vmax = vmax,
       km = km,
       fR = fR,
       VT = VT,
-      VD = VD),
+      VD = VD,
+      Caco2.options = Caco2.options),
     minimum.Funbound.plasma=minimum.Funbound.plasma,
     ...)
   
