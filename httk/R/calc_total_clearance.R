@@ -31,7 +31,7 @@
 #' @param restrictive.clearance Protein binding is not taken into account (set
 #' to 1) in liver clearance if FALSE.
 #' 
-#' @param ... Additional parameters passed to parameterize_steadystate if
+#' @param parameterize.args Additional parameters passed to parameterization function if
 #' parameters is NULL.
 #' 
 #' @param class.exclude Exclude chemical classes identified as outside of 
@@ -53,42 +53,36 @@ calc_total_clearance <- function(chem.cas=NULL,
                                 dtxsid=NULL,
                                 parameters=NULL,
                                 model="3compartmentss",
-                                species="Human",
                                 suppress.messages=FALSE,
-                                default.to.human=FALSE,
-                                class.exclude=TRUE,
-                                restrictive.clearance=TRUE,
-                                ...)
+                                ...
+                                )
 
 {
 # For oral route of exposure total clearance is equal to f_bio/Css, 
 # so calculate mg/L Css for 1 mg/kg/day dose:
-  Css <- do.call(calc_analytic_css, args=purrr::compact(c(
+  Css <- do.call(calc_analytic_css, 
+                 args=purrr::compact(c(
                          list(chem.cas=chem.cas, 
                               chem.name=chem.name, 
                               dtxsid=dtxsid,
                               parameters=parameters,
                               model=model,
                               output.units="mg/L",
-                              species=species,
-                              parameterize.args=list(
-                                default.to.human=default.to.human,
-                                class.exclude=class.exclude),
-                              restrictive.clearance=restrictive.clearance,
                               suppress.messages=suppress.messages),
-                         ...))) # mg/L / mg/kg/day 
+                          list(...)
+                          )
+                          )
+                 ) # mg/L / mg/kg/day 
   fbio <- do.call(calc_fbio.oral,
-                  args = list(chem.cas=chem.cas, 
-                              chem.name=chem.name, 
-                              dtxsid=dtxsid,
-                              parameters=parameters,
-                              species=species,
-                              parameterize.args=list(
-                                default.to.human=default.to.human,
-                                class.exclude=class.exclude),
-                              restrictive.clearance=restrictive.clearance,
-                              suppress.messages=suppress.messages)
-                              ) 
+                  args = c(list(chem.cas=chem.cas, 
+                               chem.name=chem.name, 
+                               dtxsid=dtxsid,
+                               parameters=parameters,
+                               suppress.messages=suppress.messages
+                               ),
+                           list(...)
+                           )
+                   ) 
   clearance <- fbio$fbio.oral/Css # L / kg / day
   
 # Convert from 1/day to 1/h:

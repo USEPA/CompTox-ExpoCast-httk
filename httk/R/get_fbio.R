@@ -103,14 +103,16 @@ get_fbio <- function(
   if (!keepit100)
   {
     caco2.vals <- do.call(calc_fbio.oral, 
-      args=purrr::compact(c(list(
+      args=list(
+          parameters = parameters,
           chem.cas=chem.cas,
           chem.name=chem.name,
           dtxsid=dtxsid,
           species=species,
-          suppress.messages=suppress.messages
+          suppress.messages=suppress.messages,
+          parameterize.args = parameterize.args
           ),
-        parameterize.args)))
+        )
 
     # Attempt to use the in vivo measured hepatic bioavailability (first-pass
     # hepatic metbaolism):

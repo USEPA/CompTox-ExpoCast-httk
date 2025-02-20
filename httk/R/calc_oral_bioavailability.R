@@ -102,8 +102,7 @@ calc_fbio.oral <- function(parameters = NULL,
   dtxsid = NULL,
   species = "Human",
   suppress.messages = FALSE,
-  parameterize.args = list(),
-  restrictive.clearance = FALSE
+  ...
   )
 {
   ## Setting up binding for Global Variables ##
@@ -123,15 +122,16 @@ calc_fbio.oral <- function(parameters = NULL,
     # a list of parameters we will never reach this bit of this function
     # recursively:
     parameters <- do.call(parameterize_steadystate, 
-      args=purrr::compact(c(list(
-          chem.cas=chem.cas,
-          chem.name=chem.name,
-          dtxsid=dtxsid,
-          species=species,
-          restrictive.clearance=restrictive.clearance,
-          suppress.messages=suppress.messages
-          ),
-        parameterize.args)))
+                          args=purrr::compact(c(list(chem.cas=chem.cas,
+                                                     chem.name=chem.name,
+                                                     dtxsid=dtxsid,
+                                                     suppress.messages =
+                                                       suppress.messages
+                                                     ),
+                                                list(...)
+                                                )
+                                              )
+                          )
   } else {
     # Work with local copy of parameters in function(scoping):
     if (is.data.table(parameters)) parameters <- copy(parameters) 
@@ -152,29 +152,37 @@ calc_fbio.oral <- function(parameters = NULL,
   }
   
   # Handle fabs first:    
-  fabs.oral <- calc_fabs.oral(parameters = parameters,
-                              chem.cas=chem.cas,
-                              chem.name=chem.name,
-                              dtxsid=dtxsid,
-                              species=species,
-                              suppress.messages=suppress.messages) 
-
-  # Now handle Fgut:
-  fgut.oral <- calc_fgut.oral(parameters = parameters,
+  fabs.oral <- do.call(calc_fabs.oral,
+                       args = purrr::compact(c(
+                         list(parameters = parameters,
                               chem.cas=chem.cas,
                               chem.name=chem.name,
                               dtxsid=dtxsid,
                               species=species,
                               suppress.messages=suppress.messages)
-                            
+                          ))) 
+
+  # Now handle Fgut:
+  fgut.oral <- do.call(calc_fgut.oral,
+                       args = purrr::compact(c(
+                         list(parameters = parameters,
+                              chem.cas=chem.cas,
+                              chem.name=chem.name,
+                              dtxsid=dtxsid,
+                              species=species,
+                              suppress.messages=suppress.messages)
+                          )))                            
   # Absorption rate:
-  kgutabs <- calc_kgutabs(parameters = parameters,
-                          chem.cas=chem.cas,
-                          chem.name=chem.name,
-                          dtxsid=dtxsid,
-                          species=species,
-                          suppress.messages=suppress.messages)
-                    
+  kgutabs <- do.call(calc_kgutabs,
+                     args = purrr::compact(c(
+                       list(parameters = parameters,
+                           chem.cas=chem.cas,
+                           chem.name=chem.name,
+                           dtxsid=dtxsid,
+                           species=species,
+                           suppress.messages=suppress.messages)
+                        )))
+                                             
   # Do we already have Fhep?
   # Is parameters a table (Monte Carlo)?
   if (is.data.table(parameters))
@@ -184,10 +192,14 @@ calc_fbio.oral <- function(parameters = NULL,
       fhep.oral <- parameters[,"hepatic.bioavailability"]
     # If not, calculate it:
     } else {
-      cl <- calc_hep_clearance(parameters=parameters,
-          hepatic.model='unscaled',
-          restrictive.clearance=restrictive.clearance,
-          suppress.messages=TRUE) #L/h/kg body weight
+      cl <- do.call(calc_hep_clearance,
+                    args = purrr::compact(c(
+                      list(parameters = parameters,
+                           hepatic.model='unscaled',
+                           suppress.messages=TRUE),
+                      list(...)["restrictive.clearance"]
+                      )))#L/h/kg body weight
+
       parameters[,hepatic.bioavailability := do.call(calc_hep_bioavailability,
         args=purrr::compact(list(
           parameters=list(
@@ -206,13 +218,16 @@ calc_fbio.oral <- function(parameters = NULL,
       fhep.oral <- parameters[['hepatic.bioavailability']]
     # If not, calculate it:
     } else {
-      fhep.oral <- calc_hep_bioavailability(parameters = parameters, 
-                                            chem.cas = chem.cas,
-                                            chem.name = chem.name,
-                                            dtxsid = dtxsid,
-                                            species = species,
-                                            restrictive.clearance=restrictive.clearance, 
-                                            suppress.messages = suppress.messages)
+      fhep.oral <- do.call(calc_hep_bioavailability,
+                           args = purrr::compact(c(
+                             list(parameters = parameters,
+                                  chem.cas = chem.cas,
+                                  chem.name = chem.name,
+                                  dtxsid = dtxsid,
+                                  suppress.messages = suppress.messages),
+                             list(...)[c("species",
+                                                 "restrictive.clearance")]
+                             )))
     }
   }
   # Determine Fbio.oral

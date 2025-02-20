@@ -86,13 +86,11 @@ calc_vdist<- function(chem.cas=NULL,
                       chem.name=NULL,
                       dtxsid=NULL,
                       parameters=NULL,
-                      default.to.human=FALSE,
-                      class.exclude=TRUE,
-                      species="Human",
                       suppress.messages=FALSE,
-                      adjusted.Funbound.plasma=TRUE,
-                      regression=TRUE,
-                      minimum.Funbound.plasma=0.0001)
+                      adjusted.Funbound.plasma = TRUE,
+                      species="Human",
+                      ...
+                      )
 {
   physiology.data <- physiology.data
   Parameter <- NULL
@@ -115,25 +113,31 @@ calc_vdist<- function(chem.cas=NULL,
     chem.name <- out$chem.name                                
     dtxsid <- out$dtxsid
   
-    schmitt.parameters <- parameterize_schmitt(chem.cas=chem.cas,
-                            chem.name=chem.name,
-                            dtxsid=dtxsid,
-                            default.to.human=default.to.human,
-                            class.exclude=class.exclude,
-                            species=species,
-                            suppress.messages=suppress.messages,
-                            minimum.Funbound.plasma=minimum.Funbound.plasma)
-    parameters <- suppressWarnings(predict_partitioning_schmitt(
-                    parameters=schmitt.parameters,
-                    species=species,
-                    regression=regression,
-                    suppress.messages=suppress.messages,
-                    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                    minimum.Funbound.plasma=minimum.Funbound.plasma))
+    schmitt.parameters <- do.call(parameterize_schmitt,  
+                                  args=purrr::compact(c(
+                                    list(chem.cas=chem.cas,
+                                         chem.name=chem.name,
+                                         dtxsid=dtxsid,
+                                         suppress.messages=suppress.messages,
+                                         adjusted.Funbound.plasma = adjusted.Funbound.plasma,
+                                         species=species 
+                                         ),
+   # Send only the arguments in ... wanted by the function:
+                                    list(...)[names(formals(parameterize_schmitt))]
+                                    )))
+    parameters <- suppressWarnings(do.call(predict_partitioning_schmitt,
+                                   args=purrr::compact(c(
+                                     list(parameters=schmitt.parameters,
+                                          suppress.messages=suppress.messages),
+   # Send only the arguments in ... wanted by the function:
+                                    list(...)[names(formals(predict_partitioning_schmitt))]
+                                       ))))
+                                       
+    # Should we use the adjusted Funbound plasma?
     if (adjusted.Funbound.plasma) parameters <- 
-      c(parameters,schmitt.parameters['Funbound.plasma'])
-    else parameters <- 
-      c(parameters,Funbound.plasma=schmitt.parameters[['unadjusted.Funbound.plasma']])
+          c(parameters,schmitt.parameters['Funbound.plasma'])
+      else parameters <- 
+        c(parameters,Funbound.plasma=schmitt.parameters[['unadjusted.Funbound.plasma']])
   }
 
   if(any(names(parameters) %in% schmitt.specific.names) &

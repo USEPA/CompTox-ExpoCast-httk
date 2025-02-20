@@ -92,51 +92,38 @@ calc_elimination_rate <- function(chem.cas=NULL,
                                   dtxsid=NULL,
                                   parameters=NULL,
                                   model="3compartmentss",
-                                  species="Human",
                                   suppress.messages=TRUE,
-                                  default.to.human=FALSE,
-                                  class.exclude=TRUE,
-                                  restrictive.clearance=TRUE,
-                                  adjusted.Funbound.plasma=TRUE,
-                                  adjusted.Clint=TRUE,
-                                  regression=TRUE,
-                                  well.stirred.correction=TRUE,
-                                  clint.pvalue.threshold=0.05,
-                                  minimum.Funbound.plasma=0.0001)
+                                  ...
+                                  )
 {
   if ('Vdist' %in% names(parameters))
   {
     Vd <- parameters[['Vdist']]
   } else {
-      Vd <- calc_vdist(chem.cas=chem.cas,
-                       chem.name=chem.name,
-                       dtxsid=dtxsid,
-                       parameters=parameters,
-                       species=species,
-                       suppress.messages=suppress.messages,
-                       default.to.human=default.to.human,
-                       class.exclude=class.exclude,
-                       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                       regression=regression,
-                       minimum.Funbound.plasma=minimum.Funbound.plasma) 
+      Vd <- do.call(calc_vdist, 
+                    args=c(list(chem.cas=chem.cas,
+                                chem.name=chem.name,
+                                dtxsid=dtxsid,
+                                parameters=parameters,
+                                suppress.messages=suppress.messages
+                                ),
+                           list(...)
+                           )
+                    ) 
   } # L/kgBW 
 
-  clearance <- calc_total_clearance(chem.name=chem.name,
+  clearance <- do.call(calc_total_clearance, 
+                       args = c(list(chem.name=chem.name,
                                     chem.cas=chem.cas,
                                     dtxsid=dtxsid,
-                                    species=species,
                                     parameters=parameters,
                                     model=model,
-                                    suppress.messages=suppress.messages,
-                                    default.to.human=default.to.human,
-                                    class.exclude=class.exclude,
-                                    restrictive.clearance=restrictive.clearance,
-                                    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                    clint.pvalue.threshold=clint.pvalue.threshold,
-                                    well.stirred.correction=well.stirred.correction,
-                                    minimum.Funbound.plasma=minimum.Funbound.plasma) #L/h/kgBW
-
-
+                                    suppress.messages=suppress.messages
+                                    ),
+                               list(...)
+                               ) 
+                       ) #L/h/kgBW
+                       
   if (!suppress.messages) cat(paste(
       toupper(substr(species,1,1)),
       substr(species,2,nchar(species)),sep=''),

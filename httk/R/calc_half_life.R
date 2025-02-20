@@ -63,43 +63,57 @@
 #' @examples
 #' 
 #' calc_half_life(chem.name="Bisphenol A")
+#' 
 #'\donttest{
 #' calc_half_life(chem.name="Bisphenol A",species="Rat")
+#' 
 #' calc_half_life(chem.cas="80-05-7")
+#' 
+#' # Outside the domain:
+#' try(calc_half_life(
+#'      dtxsid="DTXSID90880156"))
+#' 
+#' # Outside the domain:
+#' try(calc_half_life(
+#'      dtxsid="DTXSID90880156",
+#'      model="sumclearances"))
+#' 
+#' calc_half_life(
+#'   dtxsid="DTXSID90880156",
+#'   model="sumclearances",
+#'   class.exclude=FALSE,
+#'   physchem.exclude=FALSE,
+#'   suppress.messages=TRUE)
+#' 
+#' calc_half_life(
+#'   dtxsid="DTXSID90880156",
+#'   species="rat",
+#'   model="sumclearances",
+#'   default.to.human=TRUE,
+#'   class.exclude=FALSE,
+#'   physchem.exclude=FALSE,
+#'   suppress.messages=TRUE)
 #'}
 #'
 #' @export calc_half_life
-calc_half_life <- function (chem.cas = NULL, 
+calc_half_life <- function(chem.cas = NULL, 
                             chem.name = NULL, 
                             dtxsid = NULL,
                             parameters = NULL,
                             model = "3compartmentss", 
-                            species = "Human",
                             suppress.messages = TRUE,
-                            default.to.human = FALSE,
-                            class.exclude = TRUE, 
-                            restrictive.clearance = TRUE,
-                            adjusted.Funbound.plasma = TRUE,
-                            regression = TRUE, 
-                            well.stirred.correction = TRUE,
-                            clint.pvalue.threshold = 0.05,
-                            minimum.Funbound.plasma = 1e-04)
+                            ...
+                            )
 {
-  elim_rate <- calc_elimination_rate(chem.cas = chem.cas,
-                                     chem.name = chem.name,
-                                     dtxsid = dtxsid,
-                                     parameters = parameters,
-                                     model = model,
-                                     species = species,
-                                     suppress.messages = suppress.messages,
-                                     default.to.human = default.to.human,
-                                     class.exclude = class.exclude,
-                                     restrictive.clearance = restrictive.clearance,
-                                     adjusted.Funbound.plasma = adjusted.Funbound.plasma,
-                                     regression = regression,
-                                     well.stirred.correction = well.stirred.correction,
-                                     clint.pvalue.threshold = clint.pvalue.threshold,
-                                     minimum.Funbound.plasma = minimum.Funbound.plasma)
+  elim_rate <- do.call(calc_elimination_rate, 
+                       args=c(list(chem.cas = chem.cas,
+                                 chem.name = chem.name,
+                                 dtxsid = dtxsid,
+                                 parameters = parameters,
+                                 model = model,
+                                 suppress.messages = suppress.messages),
+                                 list(...))
+                       )
   
   half_life <- log(2)/elim_rate # calculate the elimination rate
   

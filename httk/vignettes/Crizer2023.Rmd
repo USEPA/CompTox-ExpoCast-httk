@@ -655,6 +655,7 @@ for (this.chem in new.pfas)
                           species="human",
                           model="sumclearances",
                           class.exclude=FALSE,
+                          physchem.exclude=FALSE,
                           suppress.messages=TRUE)),
                         Rat.HL=try(calc_half_life(
                           dtxsid=this.chem,
@@ -662,6 +663,7 @@ for (this.chem in new.pfas)
                           model="sumclearances",
                           default.to.human=TRUE,
                           class.exclude=FALSE,
+                          physchem.exclude=FALSE,
                           suppress.messages=TRUE)))
   new.row$Type <- "HTTK"
   half.lives <- rbind(half.lives, new.row)
