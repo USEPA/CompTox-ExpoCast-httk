@@ -82,7 +82,7 @@ specific tissue.}
 \item{IVIVE}{Honda et al. (2019) identified six plausible sets of
 assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 Argument may be set to "Honda1" through "Honda6". If used, this function
-overwrites the tissue, restrictive.clearance, and plasma.binding arguments.
+overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments.
 See Details below for more information.}
 
 \item{model}{Model used in calculation,'gas_pbtk' for the gas pbtk model, 
