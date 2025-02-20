@@ -22,10 +22,9 @@ solve_1comp(
   iv.dose = FALSE,
   input.units = "mg/kg",
   output.units = NULL,
-  method = "lsoda",
-  rtol = 1e-08,
-  atol = 1e-12,
   default.to.human = FALSE,
+  class.exclude = TRUE,
+  physchem.exclude = TRUE,
   recalc.blood2plasma = FALSE,
   recalc.clearance = FALSE,
   dosing.matrix = NULL,
@@ -83,14 +82,15 @@ output.units.  Defaults are zero.}
 results. Default, NULL, returns model results in units specified in the
 'modelinfo' file. See table below for details.}
 
-\item{method}{Method used by integrator (deSolve).}
-
-\item{rtol}{Argument passed to integrator (deSolve).}
-
-\item{atol}{Argument passed to integrator (deSolve).}
-
 \item{default.to.human}{Substitutes missing rat values with human values if
 true.}
+
+\item{class.exclude}{Exclude chemical classes identified as outside of 
+domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
+
+\item{physchem.exclude}{Exclude chemicals on the basis of physico-chemical
+properties (currently only Henry's law constant) as specified by 
+the relevant modelinfo_[MODEL] file (default TRUE).}
 
 \item{recalc.blood2plasma}{Whether or not to recalculate the blood:plasma
 chemical concentrationr ratio}
@@ -119,15 +119,20 @@ dataset).}
 Defaults value of NULL provides "Agutlumen", "Ccompartment", "Ametabolized",
 "AUC"}
 
-\item{Caco2.options}{A list of options to use when working with Caco2 apical to
-basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
-Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
-Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
+\item{Caco2.options}{A list of options to use when working with Caco2 apical 
+to basolateral data \code{Caco2.Pab}, default is Caco2.options = 
+list(Caco2.Pab.default = 1.6, Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, 
+overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the 
+default value for Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE 
+uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE 
+overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
+with 1 (i.e. 100 percent) regardless of other settings.
+See \code{\link{get_fbio}} for further details.}
 
-\item{...}{Additional arguments passed to the integrator.}
+\item{...}{Additional arguments passed to the integrator (deSolve).}
 }
 \value{
 A matrix with a column for time(in days) and a column for the
@@ -136,9 +141,21 @@ compartment and the area under the curve (concentration only).
 \description{
 This function solves for the amount or concentration of a chemical in plasma
 for a one compartment model as a function of time based on the dose and
-dosing frequency.
+dosing frequency. 
+The model describes blood concentrations in a single compartment. 
+The volume of distribution
+depends on the physical volume of each tissue and the predicted chemical 
+partitioning into those volumes. 
+Plasma concentration in compartment x is given by 
+\eqn{C_{plasma} = \frac{C_{blood}}{R_{b2p}}} for a tissue independent value of 
+\eqn{R_{b2p}}.
 }
 \details{
+Model Figure 
+\if{html}{\figure{1comp.png}{options: width="60\%" alt="Figure: One
+Compartment Model Schematic"}}
+\if{latex}{\figure{1comp.pdf}{options: width=12cm alt="Figure: One
+Compartment Model Schematic"}}
 Note that the timescales for the model parameters have units of hours while 
 the model output is in days.
 
@@ -148,13 +165,17 @@ When species is specified as rabbit, dog, or mouse, the function uses the
 appropriate physiological data(volumes and flows) but substitutes human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 
-AUC is area under plasma concentration curve.
-
-Model Figure 
-\if{html}{\figure{1comp.png}{options: width="60\%" alt="Figure: One
-Compartment Model Schematic"}}
-\if{latex}{\figure{1comp.pdf}{options: width=12cm alt="Figure: One
-Compartment Model Schematic"}}
+Because this model does not simulate exhalation, inhalation, and other 
+processes relevant to volatile chemicals, this model is by default 
+restricted to chemicals with a logHenry's Law Constant less than that of 
+Acetone, a known volatile chemical. That is, chemicals with logHLC > -4.5 
+(Log10 atm-m3/mole) are excluded. Volatility is not purely determined by the 
+Henry's Law Constant, therefore this chemical exclusion may be turned off 
+with the argument "physchem.exclude = FALSE". Similarly, per- and 
+polyfluoroalkyl substances (PFAS) are excluded by default because the 
+transporters that often drive PFAS toxicokinetics are not included in this 
+model. However, PFAS chemicals can be included with the argument 
+"class.exclude = FALSE".
 }
 \examples{
 
@@ -178,6 +199,13 @@ solve_1comp(chem.name="Methenamine", dosing.matrix=dm,
 
 solve_1comp(chem.name="Besonprodil", daily.dose=1, dose=NULL,
             days=2.5, doses.per.day=4)
+
+# The following will not work because Diquat dibromide monohydrate's 
+# Henry's Law Constant (-3.912) is higher than that of Acetone (~-4.5):
+try(head(solve_1comp(chem.cas = "6385-62-2")))
+# However, we can turn off checking for phys-chem properties, since we know
+# that  Diquat dibromide monohydrate is not too volatile:
+head(solve_1comp(chem.cas = "6385-62-2", physchem.exclude = FALSE))
 }
 
 }
