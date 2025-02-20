@@ -50,7 +50,7 @@ scale_dosing <- function(
              
 {
   if (!all(c("BW","MW","Fabsgut")%in%names(parameters))) 
-    stop("Argument \"parameters\" must specify, and MW, and Fabsgut.")
+    stop("Argument \"parameters\" must specify BW, MW, and Fabsgut.")
 
   BW <- as.numeric(parameters[["BW"]]) # kg
   MW <- as.numeric(parameters[["MW"]]) # mol/g
