@@ -58,10 +58,6 @@
 #' @param species (Character) Species desired (either "Rat", "Rabbit", "Dog",
 #' "Mouse", or default "Human").
 #' 
-#' @param default.to.human (Logical) Substitutes missing rat values with
-#' human values if TRUE. (Not applicable for `calc_fabs.oral`.)
-#' (Defaults to `FALSE`.)
-#' 
 #' @param suppress.messages (Logical) Whether or not the output message is
 #' suppressed. (Defaults to `FALSE`.)
 #'  
@@ -73,7 +69,7 @@
 #' @param restrictive.clearance Protein binding not taken into account (set to 1) in 
 #' liver clearance if FALSE.
 #' 
-# Caco2 derived values if available.
+#' @param parameterize.args List of arguments passed to \code\link{parameterize_steadystate}}
 #'
 #' @return 
 #' \item{fbio.oral}{Oral bioavailability, the fraction of oral dose 
@@ -105,8 +101,8 @@ calc_fbio.oral <- function(parameters = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = FALSE,
   suppress.messages = FALSE,
+  parameterize.args = list(),
   restrictive.clearance = FALSE
   )
 {
@@ -126,13 +122,16 @@ calc_fbio.oral <- function(parameters = NULL,
     # function. However, because parameterize_steadystate creates and passes
     # a list of parameters we will never reach this bit of this function
     # recursively:
-    parameters <- parameterize_steadystate(
-                   chem.cas=chem.cas,
-                   chem.name=chem.name,
-                   dtxsid=dtxsid,
-                   species=species,
-                   suppress.messages=suppress.messages,
-                   restrictive.clearance=restrictive.clearance)
+    parameters <- do.call(parameterize_steadystate, 
+      args=purrr::compact(c(list(
+          chem.cas=chem.cas,
+          chem.name=chem.name,
+          dtxsid=dtxsid,
+          species=species,
+          restrictive.clearance=restrictive.clearance,
+          suppress.messages=suppress.messages
+          ),
+        parameterize.args)))
   } else {
     # Work with local copy of parameters in function(scoping):
     if (is.data.table(parameters)) parameters <- copy(parameters) 
@@ -328,9 +327,9 @@ calc_peff <- function(parameters = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = FALSE,
   suppress.messages = FALSE,
-  Caco2.Pab = NULL
+  Caco2.Pab = NULL,
+  parameterize.args = list()
   )
 {
   if (is.null(Caco2.Pab))
@@ -375,7 +374,8 @@ calc_peff <- function(parameters = NULL,
                                   chem.cas=chem.cas,
                                   chem.name=chem.name,
                                   dtxsid=dtxsid,
-                                  suppress.messages=suppress.messages))))
+                                  suppress.messages=suppress.messages),
+                                  parameterize.args)))
     }
     Caco2.Pab <- parameters[["Caco2.Pab"]]
   }  
@@ -398,8 +398,8 @@ calc_kgutabs<- function(parameters = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = FALSE,
-  suppress.messages = FALSE
+  suppress.messages = FALSE,
+  parameterize.args = list()
   )
 {
   if (!is.null(parameters))
@@ -442,7 +442,8 @@ calc_kgutabs<- function(parameters = NULL,
                                 chem.cas=chem.cas,
                                 chem.name=chem.name,
                                 dtxsid=dtxsid,
-                                suppress.messages=suppress.messages))))
+                                suppress.messages=suppress.messages),
+                                parameterize.args)))
   }
   
   # 10^-4 cm/s
@@ -483,9 +484,9 @@ calc_fgut.oral <- function(parameters = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = FALSE,
   suppress.messages = FALSE,
-  Caco2.Pab.default = 1.6
+  Caco2.Pab.default = 1.6,
+  parameterize.args = list()
   )
 {
   if (!is.null(parameters))
@@ -528,7 +529,8 @@ calc_fgut.oral <- function(parameters = NULL,
                                 chem.cas=chem.cas,
                                 chem.name=chem.name,
                                 dtxsid=dtxsid,
-                                suppress.messages=suppress.messages))))
+                                suppress.messages=suppress.messages),
+                                parameterize.args)))
   }
   
   # Retrieve the chemical-specific Caco-2 value:

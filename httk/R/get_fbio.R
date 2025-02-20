@@ -101,7 +101,9 @@ get_fbio <- function(
                                  chem.name=chem.name,
                                  dtxsid=dtxsid,
                                  species = species,
-                                 default.to.human = default.to.human,
+                                 parameterize.args = list(
+                                   default.to.human = default.to.human
+                                   ),
                                  suppress.messages = suppress.messages)
 
 

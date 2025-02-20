@@ -85,7 +85,6 @@ calc_half_life <- function (chem.cas = NULL,
                             clint.pvalue.threshold = 0.05,
                             minimum.Funbound.plasma = 1e-04)
 {
-  
   elim_rate <- calc_elimination_rate(chem.cas = chem.cas,
                                      chem.name = chem.name,
                                      dtxsid = dtxsid,

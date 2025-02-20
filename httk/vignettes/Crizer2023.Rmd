@@ -650,19 +650,19 @@ half.lives <- NULL
 for (this.chem in new.pfas)
 {
   new.row <- data.frame(DTXSID=this.chem,
-                        Human.HL=calc_half_life(
+                        Human.HL=try(calc_half_life(
                           dtxsid=this.chem,
                           species="human",
                           model="sumclearances",
                           class.exclude=FALSE,
-                          suppress.messages=TRUE),
-                        Rat.HL=calc_half_life(
+                          suppress.messages=TRUE)),
+                        Rat.HL=try(calc_half_life(
                           dtxsid=this.chem,
                           species="rat",
                           model="sumclearances",
                           default.to.human=TRUE,
                           class.exclude=FALSE,
-                          suppress.messages=TRUE))
+                          suppress.messages=TRUE)))
   new.row$Type <- "HTTK"
   half.lives <- rbind(half.lives, new.row)
   param.human <- try(parameterize_pfas1comp(dtxsid=this.chem,

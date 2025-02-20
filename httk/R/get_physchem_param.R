@@ -85,7 +85,10 @@ get_physchem_param <- function(
                    "MP",
                    "logPwa",
                    "Chemical.Class")
-
+  NON.NUMERIC.PARAMS <- c(
+                   "pKa_Donor",
+                   "pKa_Accept",
+                   "Chemical.Class") 
 
   chem.physical_and_invitro.data <- chem.physical_and_invitro.data
   
@@ -180,15 +183,16 @@ get_physchem_param <- function(
     if (any(!param %in% tolower(c("pKa_Accept", "pKa_Donor"))))
     {
       values.out <- lapply(as.list(values[!param %in% 
-                                   tolower(c("pKa_Accept", "pKa_Donor"))]), 
+                                   tolower(NON.NUMERIC.PARAMS)]), 
                                    as.numeric)
     } else {
       values.out <- list()
     }
 
 # Chemical class is text and should be added to values.out if requested:
-    if (any(param %in% c("Chemical.Class"))) values.out[["Chemical.Class"]] <-
-        values[param %in% c("Chemical.Class")]
+    if (any(param %in% tolower(c("Chemical.Class")))) 
+      values.out[["Chemical.Class"]] <-
+      values[param %in% tolower(c("Chemical.Class"))]
 
 # Sometimes pKa's are stored as a semi-colon separated list, we replace the
 # semi-colons with commas:

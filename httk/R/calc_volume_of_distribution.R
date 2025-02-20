@@ -121,11 +121,13 @@ calc_vdist<- function(chem.cas=NULL,
                             default.to.human=default.to.human,
                             class.exclude=class.exclude,
                             species=species,
+                            suppress.messages=suppress.messages,
                             minimum.Funbound.plasma=minimum.Funbound.plasma)
     parameters <- suppressWarnings(predict_partitioning_schmitt(
                     parameters=schmitt.parameters,
                     species=species,
                     regression=regression,
+                    suppress.messages=suppress.messages,
                     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                     minimum.Funbound.plasma=minimum.Funbound.plasma))
     if (adjusted.Funbound.plasma) parameters <- 

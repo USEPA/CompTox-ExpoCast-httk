@@ -4,7 +4,7 @@
 THIS.MODEL <- "sumclearancespfas" 
 
 #Analytic expression for steady-state plasma concentration.
-model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_sumclearancespfas"
+model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_sumclearances"
 
 # What units does the analytic function return:
 model.list[[THIS.MODEL]]$steady.state.units <- "mg/L"

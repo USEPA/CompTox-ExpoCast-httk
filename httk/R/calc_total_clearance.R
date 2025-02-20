@@ -83,7 +83,9 @@ calc_total_clearance <- function(chem.cas=NULL,
                               dtxsid=dtxsid,
                               parameters=parameters,
                               species=species,
-                              default.to.human=default.to.human,
+                              parameterize.args=list(
+                                default.to.human=default.to.human,
+                                class.exclude=class.exclude),
                               restrictive.clearance=restrictive.clearance,
                               suppress.messages=suppress.messages)
                               ) 
