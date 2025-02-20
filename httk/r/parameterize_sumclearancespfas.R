@@ -137,6 +137,7 @@ parameterize_sumclearancespfas <- function(
                               clint.pvalue.threshold=0.05,
                               default.to.human=FALSE,
                               class.exclude=TRUE,
+                              physchem.exclude=TRUE,
                               force.human.clint.fup=FALSE,
                               adjusted.Funbound.plasma=TRUE,
                               adjusted.Clint=TRUE,
@@ -179,7 +180,8 @@ parameterize_sumclearancespfas <- function(
               model="sumclearancespfas",
               species=species,
               class.exclude=class.exclude,
-              default.to.human=default.to.human)
+              physchem.exclude=physchem.exclude,
+              default.to.human=default.to.human|force.human.clint.fup)
   
   #Capitalize the first letter of species only:
   species <- tolower(species)

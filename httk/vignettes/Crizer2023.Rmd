@@ -219,8 +219,9 @@ for (this.chem in unique(cl.table$DTXSID))
                                species=this.species,
                                model=PFAS.MODEL.USED,
                                output.units="mg/L",
-                               parameterize.args=list(default.to.human=TRUE,
-                                                      class.exclude=FALSE),
+                               default.to.human=TRUE,
+                               class.exclude=FALSE,
+                               physchem.exclude=FALSE,
                                suppress.messages=TRUE)
       if (any(cl.table$DTXSID==this.chem &
                cl.table$Species==this.species))
@@ -461,7 +462,7 @@ for (this.chem in huh.data[,"DTXSID"])
                                             NONPFAS.MODEL.USED),
                                output.units="mg/L",
                                species="Rat",
-                               parameterize.args=list(default.to.human=TRUE),
+                               default.to.human=TRUE,
                                suppress.messages=TRUE)
     new.row[1, "TK.Ratio.HTTK"] <- signif(human.css/rat.css,4)
     cl.table <- rbind(cl.table,new.row)
@@ -703,67 +704,108 @@ print(fig.species.scaling)
 
 ```{r wallis_2023_halflives}
 LOC.WD <- "c:/users/jwambaug/"
+Dawson.known.human.HLs <- c(
+"DTXSID1037303",
+"DTXSID1037303",
+"DTXSID3031860",
+"DTXSID3031860",
+"DTXSID3031862",
+"DTXSID3031862",
+"DTXSID3031864",
+"DTXSID3031864",
+"DTXSID4059916",
+"DTXSID4059916",
+"DTXSID5030030",
+"DTXSID5030030",
+"DTXSID7040150",
+"DTXSID7040150",
+"DTXSID70880215",
+"DTXSID70880215",
+"DTXSID8031863",
+"DTXSID8031863",
+"DTXSID8031865",
+"DTXSID8031865",
+"DTXSID80892506",
+"DTXSID80892506"
+)
+
 wallis <- as.data.frame(read_excel(paste0(LOC.WD,"Wallis-2023-PFASHL.xlsx")))
 wallis$HL.Low <- sapply(wallis[,4],function(x) as.numeric(strsplit(x,", ")[[1]][1]))
 wallis$HL.High <- sapply(wallis[,4],function(x) as.numeric(strsplit(x,", ")[[1]][2]))
-for (this.chem in wallis$DTXSID)
+
+abraham <- as.data.frame(read_excel(paste0(LOC.WD,"Abraham-2024-PFASHL.xlsx")))
+abraham$HL.Low <- sapply(abraham[,"Halflife.95.d"],function(x) as.numeric(strsplit(x,"–")[[1]][1]))
+abraham$HL.High <- sapply(abraham[,"Halflife.95.d"],function(x) as.numeric(strsplit(x,"–")[[1]][2]))
+abraham$HL.High[is.na(abraham$HL.High)] <- abraham$HL.Low*100
+
+wallis$Reference <- "Wallis 2023"
+abraham$Reference <- "Abraham 2024"
+
+human.invivo.hl <- wallis[,c("PREFERRED_NAME","DTXSID","CASRN","Reference","HL.Low","HL.High")]
+human.invivo.hl <- rbind(human.invivo.hl,
+                         abraham[,c("PREFERRED_NAME","DTXSID","CASRN","Reference","HL.Low","HL.High")])
+human.invivo.hl$Status <- "Novel"
+human.invivo.hl[human.invivo.hl$DTXSID %in% Dawson.known.human.HLs, "Status"] <- "Known"
+                    
+for (this.chem in human.invivo.hl$DTXSID)
 {
   param.human <- try(parameterize_pfas1comp(dtxsid=this.chem,
                                   species="human",
                                   suppress.messages=TRUE,
                                   restrict.doa="none"))
   if ("kelim" %in% names(param.human))
-    wallis[wallis$DTXSID == this.chem, "HL.ML"] <- log(2)/param.human$kelim/24
+    human.invivo.hl[human.invivo.hl$DTXSID == this.chem, "HL.ML"] <- log(2)/param.human$kelim/24
 }
 ```
 
 ```{r results_from_new_model_run}
-wallis[wallis$DTXSID=="DTXSID90723993","HL.ML"] <- 29000/24
-wallis[wallis$DTXSID=="DTXSID50723994","HL.ML"] <- 29000/24
-wallis[wallis$DTXSID=="DTXSID20892348","HL.ML"] <- 53/24
+human.invivo.hl[human.invivo.hl$DTXSID=="DTXSID90723993","HL.ML"] <- 29000/24
+human.invivo.hl[human.invivo.hl$DTXSID=="DTXSID50723994","HL.ML"] <- 29000/24
+human.invivo.hl[human.invivo.hl$DTXSID=="DTXSID20892348","HL.ML"] <- 53/24
 for (this.col in c("HL.Low","HL.High"))
 {
   new.col <- paste0(this.col,".Class") 
-    wallis[, new.col] <- 4
-  wallis[wallis[, this.col] < 60,
+    human.invivo.hl[, new.col] <- 4
+ human.invivo.hl[human.invivo.hl[, this.col] < 60,
        new.col] <- 3
-  wallis[wallis[, this.col] < 7,
+  human.invivo.hl[human.invivo.hl[, this.col] < 7,
        new.col] <- 2
-  wallis[wallis[, this.col] < 0.5,
+  human.invivo.hl[human.invivo.hl[, this.col] < 0.5,
        new.col] <- 1
 }
 ```
 
-```{r wallis_2023_fig}
-wallis$HL.ML.jitter <- wallis$HL.ML*(1.0+runif(dim(wallis)[1],-0.5,0.5))
+```{r human_hl_eval_fig}
+human.invivo.hl$HL.ML.jitter <- human.invivo.hl$HL.ML*(1.0+runif(dim(human.invivo.hl)[1],-0.5,0.5))
 
-wallis.fig <- ggplot(data=wallis) +
+human.invivo.hl.fig <- ggplot(data=human.invivo.hl) +
   geom_segment(aes(
     x=HL.ML.jitter,
     xend=HL.ML.jitter,
     y=HL.Low,
     yend=HL.High,
-    colour=Status),
+    colour=Status,
+    shape=Reference),
     position = "jitter",
     linewidth=2) +
     geom_abline(slope=1,intercept=0,linetype="dashed")+
   xlab("Machine Learning Half-Life Prediction") +
-  ylab("Wallis et al. (2023) Estimate") +
+  ylab("In Vivo Measurment") +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE))+
         scale_color_viridis(discrete=2)
 
-print(wallis.fig)
+print(human.invivo.hl.fig)
 
-tiff(file = paste0(LOC.WD,"WallisComparison.tiff"),
+tiff(file = paste0(LOC.WD,"InVivoComparison.tiff"),
      width=12,
      height=11,
      units="in",
      res=300)
-print(wallis.fig)
+print(human.invivo.hl.fig )
 dev.off()
 
-subset(wallis, is.na(HL.ML))
+subset(human.invivo.hl, is.na(HL.ML))
 ```
