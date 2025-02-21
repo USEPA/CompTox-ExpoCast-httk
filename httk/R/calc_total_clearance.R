@@ -54,6 +54,7 @@ calc_total_clearance <- function(chem.cas=NULL,
                                 parameters=NULL,
                                 model="3compartmentss",
                                 suppress.messages=FALSE,
+                                species="Human",
                                 ...
                                 )
 
@@ -67,6 +68,7 @@ calc_total_clearance <- function(chem.cas=NULL,
                               dtxsid=dtxsid,
                               parameters=parameters,
                               model=model,
+                              species=species,
                               output.units="mg/L",
                               suppress.messages=suppress.messages),
                           list(...)
@@ -78,6 +80,7 @@ calc_total_clearance <- function(chem.cas=NULL,
                                chem.name=chem.name, 
                                dtxsid=dtxsid,
                                parameters=parameters,
+                               species=species,
                                suppress.messages=suppress.messages
                                ),
                            list(...)

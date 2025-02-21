@@ -207,7 +207,7 @@ calc_clearance_frac <- function(
   }
   
 # Cannot guarantee arbitrary precision:
-  clearance.fractions <- set_httk_precision(clearance.fractions)
+  clearance.fractions <- lapply(clearance.fractions, set_httk_precision)
   
   return(clearance.fractions)
 }

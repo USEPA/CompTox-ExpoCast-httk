@@ -54,10 +54,6 @@
 #' @param class.exclude Exclude chemical classes identified as outside of 
 #' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
 #' 
-#' @param physchem.exclude Exclude chemicals on the basis of physico-chemical
-#' properties (currently only Henry's law constant) as specified by 
-#' the relevant modelinfo_[MODEL] file (default TRUE).
-#' 
 #' @param force.human.clint.fup Uses human hepatic intrinsic clearance and fraction
 #' of unbound plasma in calculation of partition coefficients for rats if true.
 #' 
@@ -80,19 +76,15 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' 
-#' @param Caco2.options A list of options to use when working with Caco2 apical 
-#' to basolateral data \code{Caco2.Pab}, default is Caco2.options = 
-#' list(Caco2.Pab.default = 1.6, Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, 
-#' overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the 
-#' default value for Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE 
-#' uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}. 
-#' Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE 
-#' overwrites Fabs and Fgut in vivo values from literature with 
-#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
-#' with 1 (i.e. 100 percent) regardless of other settings.
-#' See \code{\link{get_fbio}} for further details.
-##' 
+#' @param Caco2.options A list of options to use when working with Caco2 apical to
+#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
+#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
+#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
+#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' See \code{\link{get_fabsgut}} for further details.
+#' 
 #' @param ... Other parameters
 #'
 #' @return 
@@ -318,67 +310,69 @@ parameterize_sumclearancespfas <- function(
 #
 #
 #
-if (regexpr("PFAS", get_physchem_param("Chemical.Class",dtxsid=dtxsid) != -1))
-{
-# Check for valid argument values:
-  if (!(tolower(dosingadj) %in% c("iv","oral","other")))
-    stop("Argument dosingadj values are limited to \"IV\", \"Oral\", and \"Other\".")
-  if (!(tolower(sex) %in% c("female","male")))
-    stop("Argument sex values are limited to \"female\" and \"male\".")
-  avail.species <- unique(dawson2023$Species)
-  if (!(tolower(species) %in% tolower(avail.species)))
-    stop(paste("Available species are limited to ",
-               paste(avail.species,collapse=", ")))
-
-# Check to see if we have a prediction from Dawson et al. (2023):
-  this.subset <- subset(dawson2023,
-                        tolower(DTXSID)==tolower(dtxsid))
-  if (dim(this.subset)[1]==0)
-      stop(paste("No predictions for chemical",
-                 dtxsid,
-                 "available in table httk::dawson2023"))
+  if (regexpr("PFAS", get_physchem_param("Chemical.Class",dtxsid=dtxsid)) != -1)
+  {
+    PFAS <- TRUE
+    # Check for valid argument values:
+    if (!(tolower(dosingadj) %in% c("iv","oral","other")))
+      stop("Argument dosingadj values are limited to \"IV\", \"Oral\", and \"Other\".")
+    if (!(tolower(sex) %in% c("female","male")))
+      stop("Argument sex values are limited to \"female\" and \"male\".")
+    avail.species <- unique(dawson2023$Species)
+    if (!(tolower(species) %in% tolower(avail.species)))
+      stop(paste("Available species are limited to ",
+                 paste(avail.species,collapse=", ")))
   
-  if (!(tolower(species) %in% tolower(this.subset$Species)))
+  # Check to see if we have a prediction from Dawson et al. (2023):
+    this.subset <- subset(dawson2023,
+                          tolower(DTXSID)==tolower(dtxsid))
+    if (dim(this.subset)[1]==0)
+      stop(paste("PFAS with no predictions for chemical",
+                 dtxsid,
+                 "available in table httk::dawson2023"))
+
+    if (!(tolower(species) %in% tolower(this.subset$Species)))
+          stop(paste("No chemical",
+                   dtxsid,
+                   "predictions for species",
+                   species,
+                   "available in table httk::dawson2023"))
+    if (!(tolower(sex) %in% tolower(this.subset$Sex)))
         stop(paste("No chemical",
-                 dtxsid,
-                 "predictions for species",
-                 species,
-                 "available in table httk::dawson2023"))
-  if (!(tolower(sex) %in% tolower(this.subset$Sex)))
-      stop(paste("No chemical",
-                 dtxsid,
-                 "predictions for sex",
-                 sex,
-                 "available in table httk::dawson2023"))
-  if (!(tolower(dosingadj) %in% tolower(this.subset$DosingAdj)))
-      stop(paste("No chemical",
-                 dtxsid,
-                 "predictions for dose route",
-                 dosingadj,
-                 "available in table httk::dawson2023"))
-
-  this.subset <- subset(this.subset, 
-                        tolower(Species) == tolower(species) &
-                        tolower(DosingAdj) == tolower(dosingadj) &
-                        tolower(Sex) == tolower(sex))
-           
-  if (tolower(restrict.doa)==tolower("ClassModDomain") &
-      this.subset$ClassModDomain==0) 
-      stop("Chemical outside domain of applicability estimated from training set.")
-      
-  if (tolower(restrict.doa)==tolower("AMAD") &
-      this.subset$AMAD==0) 
-      stop("Chemical outside domain of applicability of one of the models used to estimate half-life.")
+                   dtxsid,
+                   "predictions for sex",
+                   sex,
+                   "available in table httk::dawson2023"))
+    if (!(tolower(dosingadj) %in% tolower(this.subset$DosingAdj)))
+        stop(paste("No chemical",
+                   dtxsid,
+                   "predictions for dose route",
+                   dosingadj,
+                   "available in table httk::dawson2023"))
+    
+    this.subset <- subset(this.subset, 
+                          tolower(Species) == tolower(species) &
+                          tolower(DosingAdj) == tolower(dosingadj) &
+                          tolower(Sex) == tolower(sex))
+             
+    if (tolower(restrict.doa)==tolower("ClassModDomain") &
+        this.subset$ClassModDomain==0) 
+        stop("Chemical outside domain of applicability estimated from training set.")
+        
+    if (tolower(restrict.doa)==tolower("AMAD") &
+        this.subset$AMAD==0) 
+        stop("Chemical outside domain of applicability of one of the models used to estimate half-life.")
  
-# Median of the Dawson et al. training set bins in h:             
-  if (this.subset$ClassPredFull==1) resorption.factor <- -1 # No resorption
-  else if (this.subset$ClassPredFull==2) resorption.factor <- 0
-  else if (this.subset$ClassPredFull==3) resorption.factor <- 0.9
-  else resorption.factor <- 0.99
-} else resorption.factor <- 0 # No resorption
-
-
-
+  # Median of the Dawson et al. training set bins in h:             
+    if (this.subset$ClassPredFull==1) resorption.factor <- -1 # No resorption
+    else if (this.subset$ClassPredFull==2) resorption.factor <- 0
+    else if (this.subset$ClassPredFull==3) resorption.factor <- 0.9
+    else resorption.factor <- 0.99
+  } else {
+      PFAS <- FALSE
+      resorption.factor <- 0 # No resorption
+  }
+  
   Params <- list()
   Params[["Clint"]] <- Clint.point # uL/min/10^6
   Params[["Clint.dist"]] <- Clint.dist
@@ -396,30 +390,29 @@ if (regexpr("PFAS", get_physchem_param("Chemical.Class",dtxsid=dtxsid) != -1))
   Params[["million.cells.per.gliver"]] <- 110 # 10^6 cells/g-liver
   Params[["Vliverc"]] <- Vliverc # L/kg BW
   Params[["liver.density"]] <- 1.05 # g/mL
- 
 
-# Alter Rb:p for PFAS:
-if (regexpr("PFAS", get_physchem_param("Chemical.Class",dtxsid=dtxsid) != -1))
-{
-  # Now let's use calc_ionization to estimate the chemical's charge profile:
-  ion <- calc_ionization(
-    pH=7.4,
-    pKa_Donor=pKa_Donor,,
-    pKa_Accept=pKa_Accept)
-    
-  # Poothong (2017)
-  if (ion$fraction_negative > 0.9) Params[['Rblood2plasma']] <- 0.5
-  else Params[['Rblood2plasma']] <- 10
-} else {
-  Rb2p <- available_rblood2plasma(
-            chem.name=chem.name,
-            chem.cas=chem.cas,
-            dtxsid=dtxsid,
-            species=species,
-            adjusted.Funbound.plasma=fup.corrected,
-            suppress.messages=TRUE)
-  Params[["Rblood2plasma"]] <- Rb2p
-}  
+  # Alter Rb:p for PFAS:
+  if (PFAS)
+  {
+    # Now let's use calc_ionization to estimate the chemical's charge profile:
+    ion <- calc_ionization(
+      pH=7.4,
+      pKa_Donor=pKa_Donor,,
+      pKa_Accept=pKa_Accept)
+      
+    # Poothong (2017)
+    if (ion$fraction_negative > 0.9) Params[['Rblood2plasma']] <- 0.5
+    else Params[['Rblood2plasma']] <- 10
+  } else {
+    Rb2p <- available_rblood2plasma(
+              chem.name=chem.name,
+              chem.cas=chem.cas,
+              dtxsid=dtxsid,
+              species=species,
+              adjusted.Funbound.plasma=fup.corrected,
+              suppress.messages=TRUE)
+    Params[["Rblood2plasma"]] <- Rb2p
+  }  
   
 # Exhalation parameters:
 # Phys-chem needed to calculate blood:air partition coefficient:

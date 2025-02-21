@@ -869,20 +869,28 @@ for (this.chem in pfas.httk.table$DTXSID)
                                                 dtxsid=this.chem,
                                                 class.exclude=FALSE,
                                                 physchem.exclude=FALSE,
+                                                suppress.messages=TRUE,
                                                 model="3compartmentss"))
   pfas.httk.table[this.row, "Css.Exhale"] <- try(calc_analytic_css(
                                                 dtxsid=this.chem,
                                                 class.exclude=FALSE,
+                                                suppress.messages=TRUE,
                                                 model="sumclearances"))
   pfas.httk.table[this.row, "Css.PFAS"] <- try(calc_analytic_css(
                                                 dtxsid=this.chem,
+                                                suppress.messages=TRUE,
                                                 model="sumclearancespfas"))
-  fractions <- try(calc_clearance_frac(dtxsid=this.chem, model="sumclearancespfas"))
+  fractions <- try(calc_clearance_frac(dtxsid=this.chem, 
+                                       model="sumclearancespfas",
+                                       suppress.messages=TRUE,
+                                      fraction.params = c("Clint",
+                                                          "Qgfrc",
+                                                          "Qalvc")))
   if (!is(fractions, "try-error"))
   {
     pfas.httk.table[this.row, "Frac.Metabolism"] <- fractions[["Clint"]]
     pfas.httk.table[this.row, "Frac.Glomerular"] <- fractions[["Qgfrc"]]
-    pfas.httk.table[this.row, "Frac.Exhalationr"] <- fractions[["Qalvc"]]
+    pfas.httk.table[this.row, "Frac.Exhalation"] <- fractions[["Qalvc"]]
   }
 }
 pfas.httk.table$Css.Classic <- as.numeric(pfas.httk.table$Css.Classic)
@@ -900,9 +908,9 @@ write.csv(pfas.httk.table,
 
 ```{r two_panel_Css_histogram}
 Fig.Cssa <- ggplot(data=pfas.httk.table)+
-  geom_histogram(aes(Css.Exhale.Foldchange))
+  geom_histogram(aes(Css.Exhale.FoldChange))
 Fig.Cssb <- ggplot(data=pfas.httk.table)+
-  geom_histogram(aes(Css.PFAS.Foldchange))
+  geom_histogram(aes(Css.PFAS.FoldChange))
 ggarrange(Fig.Cssa, Fig.Cssb, 
           labels = c("A", "B"),
           ncol = 2, nrow = 1,
