@@ -48,7 +48,7 @@ Half life is calculated by dividing the natural-log of 2 by the elimination
 rate from the one compartment model.
 }
 \examples{
-#' calc_half_life(chem.name="Bisphenol A")
+calc_half_life(chem.name="Bisphenol A")
 \donttest{
 calc_half_life(chem.name="Bisphenol A",species="Rat")
 
