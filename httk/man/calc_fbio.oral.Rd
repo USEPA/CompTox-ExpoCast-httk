@@ -15,8 +15,7 @@ calc_fbio.oral(
   dtxsid = NULL,
   species = "Human",
   suppress.messages = FALSE,
-  parameterize.args = list(),
-  restrictive.clearance = FALSE
+  ...
 )
 
 calc_fabs.oral(
@@ -85,15 +84,15 @@ must be specified).}
 \item{suppress.messages}{(Logical) Whether or not the output message is
 suppressed. (Defaults to `FALSE`.)}
 
-\item{parameterize.args}{List of arguments passed to \code{\link{parameterize_steadystate}}}
-
-\item{restrictive.clearance}{Protein binding not taken into account (set to 1) in 
-liver clearance if FALSE.}
+\item{...}{Additional parameters passed to parameterize function if 
+parameters is NULL.}
 
 \item{Caco2.Pab.default}{(Numeric) Caco2 apical to basolateral data.
 (Defaults to  1.6.) (Not applicable for `calc_fbio.oral`.)}
 
 \item{Caco2.Pab}{(Numeric) Caco2 apical to basolaterial permeability used by calc_peff}
+
+\item{parameterize.args}{List of arguments passed to \code{\link{parameterize_steadystate}}}
 }
 \value{
 \item{fbio.oral}{Oral bioavailability, the fraction of oral dose 

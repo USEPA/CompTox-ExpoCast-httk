@@ -34,18 +34,8 @@
 #' 
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' 
-#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
-#' TRUE along with parition coefficients calculated with this value.
-#' 
-#' @param regression Whether or not to use the regressions in calculating
-#' partition coefficients.
-#' 
-#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
-#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
-#' dataset).
-#' 
-#' @param class.exclude Exclude chemical classes identified as outside of 
-#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' @param ... Additional parameters passed to parameterize function if 
+#' parameters is NULL.
 #' 
 #' @return \item{Volume of distribution}{Units of L/ kg BW.}
 #' 

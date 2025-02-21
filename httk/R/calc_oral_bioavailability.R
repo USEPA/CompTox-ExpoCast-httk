@@ -65,11 +65,11 @@
 #' (Defaults to  1.6.) (Not applicable for `calc_fbio.oral`.)
 #' 
 #' @param Caco2.Pab (Numeric) Caco2 apical to basolaterial permeability used by calc_peff
-#'
-#' @param restrictive.clearance Protein binding not taken into account (set to 1) in 
-#' liver clearance if FALSE.
 #' 
 #' @param parameterize.args List of arguments passed to \code{\link{parameterize_steadystate}}
+#' 
+#' @param ... Additional parameters passed to parameterize function if 
+#' parameters is NULL.
 #'
 #' @return 
 #' \item{fbio.oral}{Oral bioavailability, the fraction of oral dose 
@@ -121,8 +121,7 @@ calc_fbio.oral <- function(parameters = NULL,
     # function. However, because parameterize_steadystate creates and passes
     # a list of parameters we will never reach this bit of this function
     # recursively:
-    parameters <- do.call(parameterize_steadystate, 
-                          args=purrr::compact(c(list(chem.cas=chem.cas,
+    param.args<-purrr::compact(c(list(chem.cas=chem.cas,
                                                      chem.name=chem.name,
                                                      dtxsid=dtxsid,
                                                      suppress.messages =
@@ -131,6 +130,9 @@ calc_fbio.oral <- function(parameters = NULL,
                                                 list(...)
                                                 )
                                               )
+    param.args <- param.args[unique(names(param.args))]
+    parameters <- do.call(parameterize_steadystate, 
+                          args = param.args
                           )
   } else {
     # Work with local copy of parameters in function(scoping):

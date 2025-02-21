@@ -10,31 +10,44 @@
 #' @param parameters A list of the parameters (Caco2.Pab, Funbound.Plasma, Rblood2plasma,
 #' Clint, BW, Qsmallintestine, Fabs, Fgut) used in the calculation, either supplied by user
 #' or calculated in parameterize_steady_state.                                                                               
+#' 
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- the 
 #' chemical must be identified by either CAS, name, or DTXISD
+#' 
 #' @param chem.name Chemical name (spaces and capitalization ignored) --  the 
 #' chemical must be identified by either CAS, name, or DTXISD
+#' 
 #' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' -- the chemical must be identified by either CAS, name, or DTXSIDs
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
-#' @param default.to.human Substitutes missing rat values with human values if
-#' true.
+#' 
 #' @param Caco2.Pab.default sets the default value for  Caco2.Pab if Caco2.Pab is 
 #' unavailable. 
+#' 
 #' @param Caco2.Fabs = TRUE uses Caco2.Pab to calculate
 #' fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+#' 
 #' @param Caco2.Fgut = TRUE uses Caco2.Pab to calculate  fgut.oral, otherwise 
 #' fgut.oral = \code{Fgut}. 
+#' 
 #' @param overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from 
 #' literature with Caco2 derived values if available. 
+#' 
 #' @param keepit100 TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) 
 #' regardless of other settings.
+#' 
 #' @param suppress.messages Whether or not the output message is suppressed.
+#' 
+#' @param ... Additional parameters passed to parameterize function if 
+#' parameters is NULL.
 #' 
 #' @author Greg Honda and John Wambaugh
 #'
 #' @keywords Parameter oral_bioavailability 
+#'
+#' @seealso \code{\link{calc_fbio.oral}}
 #'
 #' @export get_fbio
 get_fbio <- function(
@@ -43,13 +56,13 @@ get_fbio <- function(
     chem.name=NULL,
     dtxsid = NULL,
     species = "Human",
-    parameterize.args = list(),
     Caco2.Pab.default = 1.6,
     Caco2.Fgut = TRUE,
     Caco2.Fabs = TRUE,
     overwrite.invivo = FALSE,
     keepit100 = FALSE,
-    suppress.messages=FALSE)
+    suppress.messages=FALSE,
+    ...)
 {
   # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -79,7 +92,8 @@ get_fbio <- function(
           species=species,
           suppress.messages=suppress.messages
           ),
-        parameterize.args)))  
+        list(...)))
+      ) 
   }
   
   out <- list()
@@ -103,15 +117,15 @@ get_fbio <- function(
   if (!keepit100)
   {
     caco2.vals <- do.call(calc_fbio.oral, 
-      args=list(
+      args=purrr::compact(c(list(
           parameters = parameters,
           chem.cas=chem.cas,
           chem.name=chem.name,
           dtxsid=dtxsid,
           species=species,
-          suppress.messages=suppress.messages,
-          parameterize.args = parameterize.args
+          suppress.messages=suppress.messages
           ),
+          list(...)))
         )
 
     # Attempt to use the in vivo measured hepatic bioavailability (first-pass
@@ -127,12 +141,16 @@ get_fbio <- function(
         Fhep <- parameters[['hepatic.bioavailability']]
       # If not, calculate it:
       } else {
-        Fhep <- calc_hep_bioavailability(parameters = parameters, 
+        Fhep <- do.call(calc_hep_bioavailability,
+                        args=purrr::compact(c(list(
+                                        parameters = parameters, 
                                         chem.cas = chem.cas,
                                         chem.name = chem.name,
                                         dtxsid = dtxsid,
                                         species = species, 
-                                        suppress.messages = suppress.messages)
+                                        suppress.messages = suppress.messages),
+                                        list(...)))
+                        )
       }
     }
 

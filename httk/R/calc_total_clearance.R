@@ -25,17 +25,8 @@
 #' 
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' 
-#' @param default.to.human Substitutes missing animal values with human values
-#' if true.
-#' 
-#' @param restrictive.clearance Protein binding is not taken into account (set
-#' to 1) in liver clearance if FALSE.
-#' 
-#' @param parameterize.args Additional parameters passed to parameterization function if
+#' @param ... Additional parameters passed to parameterize function if 
 #' parameters is NULL.
-#' 
-#' @param class.exclude Exclude chemical classes identified as outside of 
-#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
 #' 
 #' @return \item{Total Clearance}{Units of L/h/kg BW.}
 #' 
@@ -81,7 +72,9 @@ calc_total_clearance <- function(chem.cas=NULL,
                                dtxsid=dtxsid,
                                parameters=parameters,
                                species=species,
-                               suppress.messages=suppress.messages
+                               suppress.messages=suppress.messages,
+                               class.exclude=FALSE,
+                               physchem.exclude=FALSE
                                ),
                            list(...)
                            )

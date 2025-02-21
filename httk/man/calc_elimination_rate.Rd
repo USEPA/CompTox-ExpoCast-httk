@@ -10,17 +10,8 @@ calc_elimination_rate(
   dtxsid = NULL,
   parameters = NULL,
   model = "3compartmentss",
-  species = "Human",
   suppress.messages = TRUE,
-  default.to.human = FALSE,
-  class.exclude = TRUE,
-  restrictive.clearance = TRUE,
-  adjusted.Funbound.plasma = TRUE,
-  adjusted.Clint = TRUE,
-  regression = TRUE,
-  well.stirred.correction = TRUE,
-  clint.pvalue.threshold = 0.05,
-  minimum.Funbound.plasma = 1e-04
+  ...
 )
 }
 \arguments{
@@ -38,41 +29,13 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{model}{The model used to calculate total clearance (defaults to "3compartmentss")}
 
-\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human").}
-
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
-\item{default.to.human}{Substitutes missing animal values with human values
-if true.}
+\item{...}{Additional parameters passed to parameterize function if 
+parameters is NULL.}
 
-\item{class.exclude}{Exclude chemical classes identified as outside of 
-domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
-
-\item{restrictive.clearance}{In calculating elimination rate, protein
-binding is not taken into account (set to 1) in liver clearance if FALSE.}
-
-\item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
-TRUE along with partition coefficients calculated with this value.}
-
-\item{adjusted.Clint}{Uses Kilford et al. (2008) hepatocyte incubation
-binding adjustment for Clint when set to TRUE (Default).}
-
-\item{regression}{Whether or not to use the regressions in calculating
-partition coefficients.}
-
-\item{well.stirred.correction}{Uses correction in calculation of hepatic
-clearance for -stirred model if TRUE.  This assumes clearance relative
-to amount unbound in whole blood instead of plasma, but converted to use
-with plasma concentration.}
-
-\item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
-vitro clearance assay result has a p-values greater than the threshold are
-set to zero.}
-
-\item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
-equal to this value (default is 0.0001 -- half the lowest measured Fup in our
-dataset).}
+\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+default "Human").}
 }
 \value{
 \item{Elimination rate}{Units of 1/h.}

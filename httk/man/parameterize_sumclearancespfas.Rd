@@ -15,6 +15,7 @@ parameterize_sumclearancespfas(
   clint.pvalue.threshold = 0.05,
   default.to.human = FALSE,
   class.exclude = TRUE,
+  physchem.exclude = TRUE,
   force.human.clint.fup = FALSE,
   adjusted.Funbound.plasma = TRUE,
   adjusted.Clint = TRUE,

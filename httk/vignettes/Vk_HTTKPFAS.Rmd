@@ -830,7 +830,7 @@ human.invivo.hl.fig <- ggplot(data=human.invivo.hl) +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
   theme_bw()  +
-  annotate("text", x = 5, y = 10^4, hjust=0,
+  annotate("text", x = 5, y = 10^4, size=6, hjust=0,
            label = paste("RMSLE for ",
                          num.novel.pfas.hl, 
                          " novel PFAS: ",
@@ -847,8 +847,8 @@ human.invivo.hl.fig <- ggplot(data=human.invivo.hl) +
 print(human.invivo.hl.fig)
 
 tiff(file = paste0(LOC.WD,"InVivoComparison.tiff"),
-     width=12,
-     height=11,
+     width=9,
+     height=7,
      units="in",
      res=300)
 print(human.invivo.hl.fig)
@@ -908,15 +908,17 @@ write.csv(pfas.httk.table,
 
 ```{r two_panel_Css_histogram}
 Fig.Cssa <- ggplot(data=pfas.httk.table)+
-  geom_histogram(aes(Css.Exhale.FoldChange))
+  geom_histogram(binwidth = 0.01,aes(Css.Exhale.FoldChange))+
+  xlab("Css Fold Change Due to Exhalation")
 Fig.Cssb <- ggplot(data=pfas.httk.table)+
-  geom_histogram(aes(Css.PFAS.FoldChange))
+  geom_histogram(binwidth = 10,aes(Css.PFAS.FoldChange))+
+  xlab("Css Fold Change Due to PFAS Resorption")
 ggarrange(Fig.Cssa, Fig.Cssb, 
           labels = c("A", "B"),
           ncol = 2, nrow = 1,
           common.legend = TRUE, legend = "bottom")
 tiff(file = paste0(LOC.WD,"Fig_CssFoldChange.tiff"),
-         height = 3*200, width = 5*200, compression = "lzw")
+         height = 3*100, width = 5*100, compression = "lzw")
 ggarrange(Fig.Cssa, Fig.Cssb, 
           labels = c("A", "B"),
           ncol = 2, nrow = 1,
@@ -925,10 +927,34 @@ dev.off()
 ```
 
 ```{r clearance_fraction}
-Depends on abov
-Fig1c <- ggplot(Fig1.table)+
-   geom_histogram(binwidth = 0.1,alpha=0.2,fill="Red",aes(Error1))+ 
-   geom_histogram(binwidth = 0.1,alpha=0.2,fill="Blue",aes(Error2))+ 
-  xlab("Width of Credible Interval") +
-  ylab("Number of chemicals")
+FigClearanceFrac1<- ggplot(data=pfas.httk.table)+
+   geom_histogram(binwidth = 0.1,alpha=1,fill="Red",aes(Frac.Metabolism))+ 
+  xlab(" ") +
+  ylab(" ")+
+  ggtitle("Hepatic Metabolism")+
+  scale_x_continuous(limits=c(-.05,1.05))+
+  scale_y_continuous(limits=c(0,100))
+FigClearanceFrac2<- ggplot(data=pfas.httk.table)+
+   geom_histogram(binwidth = 0.1,alpha=1,fill="Blue",aes(Frac.Glomerular))+
+  xlab(" ") +
+  ylab("Number of chemicals")+
+  ggtitle("Glomerular Filtration")+
+  scale_x_continuous(limits=c(-.05,1.05))+
+  scale_y_continuous(limits=c(0,100))
+FigClearanceFrac3<- ggplot(data=pfas.httk.table)+
+   geom_histogram(binwidth = 0.1,alpha=1,fill="Green",aes(Frac.Exhalation))+
+  xlab("Fraction of Total Clearance") +
+  ylab(" ")+
+  ggtitle("Exhalation")+
+  scale_x_continuous(limits=c(-.05,1.05))+
+  scale_y_continuous(limits=c(0,100))
+ggarrange(FigClearanceFrac1, FigClearanceFrac2, FigClearanceFrac3,
+          ncol = 1, nrow = 3,
+          common.legend = TRUE, legend = "right")
+tiff(file = paste0(LOC.WD,"Fig_FracClearance.tiff"),
+         height = 3*100, width = 5*100, compression = "lzw")
+ggarrange(FigClearanceFrac1, FigClearanceFrac2, FigClearanceFrac3,
+          ncol = 1, nrow = 3,
+          common.legend = TRUE, legend = "right")
+dev.off()
 ```
