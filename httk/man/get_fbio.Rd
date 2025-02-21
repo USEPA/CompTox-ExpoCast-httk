@@ -10,13 +10,13 @@ get_fbio(
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = FALSE,
   Caco2.Pab.default = 1.6,
   Caco2.Fgut = TRUE,
   Caco2.Fabs = TRUE,
   overwrite.invivo = FALSE,
   keepit100 = FALSE,
-  suppress.messages = FALSE
+  suppress.messages = FALSE,
+  ...
 )
 }
 \arguments{
@@ -36,9 +36,6 @@ chemical must be identified by either CAS, name, or DTXISD}
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
-\item{default.to.human}{Substitutes missing rat values with human values if
-true.}
-
 \item{Caco2.Pab.default}{sets the default value for  Caco2.Pab if Caco2.Pab is 
 unavailable.}
 
@@ -55,6 +52,9 @@ literature with Caco2 derived values if available.}
 regardless of other settings.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
+
+\item{...}{Additional parameters passed to parameterize function if 
+parameters is NULL.}
 }
 \description{
 This function checks for chemical-specific in vivo measurements of the 
@@ -63,6 +63,9 @@ gut in the \code{\link{chem.physical_and_invitro.data}} table. If in vivo
 data are unavailable (or \code{keepit100 == TRUE}) we attempt to use 
 in vitro Caco-2 membrane permeability to predict the fractions according to
 \code{\link{calc_fbio.oral}}.
+}
+\seealso{
+\code{\link{calc_fbio.oral}}
 }
 \author{
 Greg Honda and John Wambaugh

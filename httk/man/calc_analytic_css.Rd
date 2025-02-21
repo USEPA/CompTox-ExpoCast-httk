@@ -19,11 +19,8 @@ calc_analytic_css(
   concentration = "plasma",
   suppress.messages = FALSE,
   tissue = NULL,
-  restrictive.clearance = TRUE,
   bioactive.free.invivo = FALSE,
   IVIVE = NULL,
-  Caco2.options = list(),
-  parameterize.args = list(),
   ...
 )
 }
@@ -77,11 +74,6 @@ specific tissue.}
 \item{tissue}{Desired steady state tissue concentration. Default is of NULL
 typically gives whole body plasma concentration.}
 
-\item{restrictive.clearance}{If TRUE (default), then only the fraction of
-chemical not bound to protein is available for metabolism in the liver. If 
-FALSE, then all chemical in the liver is metabolized (faster metabolism due
-to rapid off-binding).}
-
 \item{bioactive.free.invivo}{If FALSE (default), then the total concentration is treated
 as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 bioactive in vivo. Only works with tissue = NULL in current implementation.}
@@ -91,26 +83,6 @@ assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 Argument may be set to "Honda1" through "Honda4". If used, this function 
 overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments. 
 See Details below for more information.}
-
-\item{Caco2.options}{A list of options to use when working with Caco2 apical to
-basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
-Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
-Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-See \code{\link{get_fbio}} for further details.}
-
-\item{parameterize.args}{List of arguments passed to model's associated
-parameterization function, including default.to.human, 
-adjusted.Funbound.plasma, regression, and minimum.Funbound.plasma. The 
-default.to.human argument substitutes missing animal values with human values
-if true, adjusted.Funbound.plasma returns adjusted Funbound.plasma when set 
-to TRUE along with parition coefficients calculated with this value, 
-regression indicates whether or not to use the regressions in calculating
-partition coefficients, and minimum.Funbound.plasma is the value to which
-Monte Carlo draws less than this value are set (default is 0.0001 -- half
-the lowest measured Fup in our dataset).}
 
 \item{...}{Additional parameters passed to parameterize function if 
 parameters is NULL.}

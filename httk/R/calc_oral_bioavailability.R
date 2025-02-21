@@ -58,10 +58,6 @@
 #' @param species (Character) Species desired (either "Rat", "Rabbit", "Dog",
 #' "Mouse", or default "Human").
 #' 
-#' @param default.to.human (Logical) Substitutes missing rat values with
-#' human values if TRUE. (Not applicable for `calc_fabs.oral`.)
-#' (Defaults to `FALSE`.)
-#' 
 #' @param suppress.messages (Logical) Whether or not the output message is
 #' suppressed. (Defaults to `FALSE`.)
 #'  
@@ -69,11 +65,11 @@
 #' (Defaults to  1.6.) (Not applicable for `calc_fbio.oral`.)
 #' 
 #' @param Caco2.Pab (Numeric) Caco2 apical to basolaterial permeability used by calc_peff
-#'
-#' @param restrictive.clearance Protein binding not taken into account (set to 1) in 
-#' liver clearance if FALSE.
 #' 
-# Caco2 derived values if available.
+#' @param parameterize.args List of arguments passed to \code{\link{parameterize_steadystate}}
+#' 
+#' @param ... Additional parameters passed to parameterize function if 
+#' parameters is NULL.
 #'
 #' @return 
 #' \item{fbio.oral}{Oral bioavailability, the fraction of oral dose 
@@ -105,9 +101,8 @@ calc_fbio.oral <- function(parameters = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = FALSE,
   suppress.messages = FALSE,
-  restrictive.clearance = FALSE
+  ...
   )
 {
   ## Setting up binding for Global Variables ##
@@ -126,13 +121,19 @@ calc_fbio.oral <- function(parameters = NULL,
     # function. However, because parameterize_steadystate creates and passes
     # a list of parameters we will never reach this bit of this function
     # recursively:
-    parameters <- parameterize_steadystate(
-                   chem.cas=chem.cas,
-                   chem.name=chem.name,
-                   dtxsid=dtxsid,
-                   species=species,
-                   suppress.messages=suppress.messages,
-                   restrictive.clearance=restrictive.clearance)
+    param.args<-purrr::compact(c(list(chem.cas=chem.cas,
+                                                     chem.name=chem.name,
+                                                     dtxsid=dtxsid,
+                                                     suppress.messages =
+                                                       suppress.messages
+                                                     ),
+                                                list(...)
+                                                )
+                                              )
+    param.args <- param.args[unique(names(param.args))]
+    parameters <- do.call(parameterize_steadystate, 
+                          args = param.args
+                          )
   } else {
     # Work with local copy of parameters in function(scoping):
     if (is.data.table(parameters)) parameters <- copy(parameters) 
@@ -143,7 +144,7 @@ calc_fbio.oral <- function(parameters = NULL,
     if (is.null(chem.cas) & 
       is.null(chem.name) & 
       is.null(dtxsid)) 
-      stop('chem.name, chem.cas, or dtxsid must be specified if Caoc2.Pab not specified in argument parameters.')
+      stop('chem.name, chem.cas, or dtxsid must be specified if Caco2.Pab not specified in argument parameters.')
       
     # Retrieve the chemical-specific Caco-2 value:
     parameters <-  c(parameters, get_caco2(chem.cas=chem.cas,
@@ -153,29 +154,37 @@ calc_fbio.oral <- function(parameters = NULL,
   }
   
   # Handle fabs first:    
-  fabs.oral <- calc_fabs.oral(parameters = parameters,
-                              chem.cas=chem.cas,
-                              chem.name=chem.name,
-                              dtxsid=dtxsid,
-                              species=species,
-                              suppress.messages=suppress.messages) 
-
-  # Now handle Fgut:
-  fgut.oral <- calc_fgut.oral(parameters = parameters,
+  fabs.oral <- do.call(calc_fabs.oral,
+                       args = purrr::compact(c(
+                         list(parameters = parameters,
                               chem.cas=chem.cas,
                               chem.name=chem.name,
                               dtxsid=dtxsid,
                               species=species,
                               suppress.messages=suppress.messages)
-                            
+                          ))) 
+
+  # Now handle Fgut:
+  fgut.oral <- do.call(calc_fgut.oral,
+                       args = purrr::compact(c(
+                         list(parameters = parameters,
+                              chem.cas=chem.cas,
+                              chem.name=chem.name,
+                              dtxsid=dtxsid,
+                              species=species,
+                              suppress.messages=suppress.messages)
+                          )))                            
   # Absorption rate:
-  kgutabs <- calc_kgutabs(parameters = parameters,
-                          chem.cas=chem.cas,
-                          chem.name=chem.name,
-                          dtxsid=dtxsid,
-                          species=species,
-                          suppress.messages=suppress.messages)
-                    
+  kgutabs <- do.call(calc_kgutabs,
+                     args = purrr::compact(c(
+                       list(parameters = parameters,
+                           chem.cas=chem.cas,
+                           chem.name=chem.name,
+                           dtxsid=dtxsid,
+                           species=species,
+                           suppress.messages=suppress.messages)
+                        )))
+                                             
   # Do we already have Fhep?
   # Is parameters a table (Monte Carlo)?
   if (is.data.table(parameters))
@@ -185,10 +194,14 @@ calc_fbio.oral <- function(parameters = NULL,
       fhep.oral <- parameters[,"hepatic.bioavailability"]
     # If not, calculate it:
     } else {
-      cl <- calc_hep_clearance(parameters=parameters,
-          hepatic.model='unscaled',
-          restrictive.clearance=restrictive.clearance,
-          suppress.messages=TRUE) #L/h/kg body weight
+      cl <- do.call(calc_hep_clearance,
+                    args = purrr::compact(c(
+                      list(parameters = parameters,
+                           hepatic.model='unscaled',
+                           suppress.messages=TRUE),
+                      list(...)["restrictive.clearance"]
+                      )))#L/h/kg body weight
+
       parameters[,hepatic.bioavailability := do.call(calc_hep_bioavailability,
         args=purrr::compact(list(
           parameters=list(
@@ -207,13 +220,16 @@ calc_fbio.oral <- function(parameters = NULL,
       fhep.oral <- parameters[['hepatic.bioavailability']]
     # If not, calculate it:
     } else {
-      fhep.oral <- calc_hep_bioavailability(parameters = parameters, 
-                                            chem.cas = chem.cas,
-                                            chem.name = chem.name,
-                                            dtxsid = dtxsid,
-                                            species = species,
-                                            restrictive.clearance=restrictive.clearance, 
-                                            suppress.messages = suppress.messages)
+      fhep.oral <- do.call(calc_hep_bioavailability,
+                           args = purrr::compact(c(
+                             list(parameters = parameters,
+                                  chem.cas = chem.cas,
+                                  chem.name = chem.name,
+                                  dtxsid = dtxsid,
+                                  suppress.messages = suppress.messages),
+                             list(...)[c("species",
+                                                 "restrictive.clearance")]
+                             )))
     }
   }
   # Determine Fbio.oral
@@ -328,9 +344,9 @@ calc_peff <- function(parameters = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = FALSE,
   suppress.messages = FALSE,
-  Caco2.Pab = NULL
+  Caco2.Pab = NULL,
+  parameterize.args = list()
   )
 {
   if (is.null(Caco2.Pab))
@@ -375,7 +391,8 @@ calc_peff <- function(parameters = NULL,
                                   chem.cas=chem.cas,
                                   chem.name=chem.name,
                                   dtxsid=dtxsid,
-                                  suppress.messages=suppress.messages))))
+                                  suppress.messages=suppress.messages),
+                                  parameterize.args)))
     }
     Caco2.Pab <- parameters[["Caco2.Pab"]]
   }  
@@ -398,8 +415,8 @@ calc_kgutabs<- function(parameters = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = FALSE,
-  suppress.messages = FALSE
+  suppress.messages = FALSE,
+  parameterize.args = list()
   )
 {
   if (!is.null(parameters))
@@ -442,7 +459,8 @@ calc_kgutabs<- function(parameters = NULL,
                                 chem.cas=chem.cas,
                                 chem.name=chem.name,
                                 dtxsid=dtxsid,
-                                suppress.messages=suppress.messages))))
+                                suppress.messages=suppress.messages),
+                                parameterize.args)))
   }
   
   # 10^-4 cm/s
@@ -483,9 +501,9 @@ calc_fgut.oral <- function(parameters = NULL,
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = FALSE,
   suppress.messages = FALSE,
-  Caco2.Pab.default = 1.6
+  Caco2.Pab.default = 1.6,
+  parameterize.args = list()
   )
 {
   if (!is.null(parameters))
@@ -528,7 +546,8 @@ calc_fgut.oral <- function(parameters = NULL,
                                 chem.cas=chem.cas,
                                 chem.name=chem.name,
                                 dtxsid=dtxsid,
-                                suppress.messages=suppress.messages))))
+                                suppress.messages=suppress.messages),
+                                parameterize.args)))
   }
   
   # Retrieve the chemical-specific Caco-2 value:

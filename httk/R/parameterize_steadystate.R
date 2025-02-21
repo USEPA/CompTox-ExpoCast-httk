@@ -389,6 +389,9 @@ parameterize_steadystate <- function(
       chem.cas=chem.cas,
       chem.name=chem.name,
       species=species,
+      parameterize.args = list(default.to.human=default.to.human,
+                               class.exclude=class.exclude,
+                               physchem.exclude=physchem.exclude),
       suppress.messages=suppress.messages
       ),
     Caco2.options))
