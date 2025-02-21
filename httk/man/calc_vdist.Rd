@@ -9,13 +9,10 @@ calc_vdist(
   chem.name = NULL,
   dtxsid = NULL,
   parameters = NULL,
-  default.to.human = FALSE,
-  class.exclude = TRUE,
-  species = "Human",
   suppress.messages = FALSE,
   adjusted.Funbound.plasma = TRUE,
-  regression = TRUE,
-  minimum.Funbound.plasma = 1e-04
+  species = "Human",
+  ...
 )
 }
 \arguments{
@@ -31,26 +28,16 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 \item{parameters}{Parameters from parameterize_3comp, parameterize_pbtk or
 predict_partitioning_schmitt.}
 
-\item{default.to.human}{Substitutes missing animal values with human values
-if true.}
-
-\item{class.exclude}{Exclude chemical classes identified as outside of 
-domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
+\item{suppress.messages}{Whether or not the output message is suppressed.}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
-\item{suppress.messages}{Whether or not the output message is suppressed.}
+\item{...}{Additional parameters passed to parameterize function if 
+parameters is NULL.}
 
-\item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
-TRUE along with parition coefficients calculated with this value.}
-
-\item{regression}{Whether or not to use the regressions in calculating
-partition coefficients.}
-
-\item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
-equal to this value (default is 0.0001 -- half the lowest measured Fup in our
-dataset).}
+\item{default.to.human}{Substitutes missing animal values with human values
+if true.}
 }
 \value{
 \item{Volume of distribution}{Units of L/ kg BW.}
