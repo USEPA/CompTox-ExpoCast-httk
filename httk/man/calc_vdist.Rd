@@ -12,6 +12,7 @@ calc_vdist(
   suppress.messages = FALSE,
   adjusted.Funbound.plasma = TRUE,
   species = "Human",
+  default.to.human = FALSE,
   ...
 )
 }
@@ -30,14 +31,17 @@ predict_partitioning_schmitt.}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
+\item{adjusted.Funbound.plasma}{Uses Pearce et al. (2017) lipid binding adjustment
+for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).}
+
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
-\item{...}{Additional parameters passed to parameterize function if 
-parameters is NULL.}
-
 \item{default.to.human}{Substitutes missing animal values with human values
 if true.}
+
+\item{...}{Additional parameters passed to parameterize function if 
+parameters is NULL.}
 }
 \value{
 \item{Volume of distribution}{Units of L/ kg BW.}

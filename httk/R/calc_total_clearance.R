@@ -91,5 +91,5 @@ calc_total_clearance <- function(chem.cas=NULL,
       "total clearance returned in units of L/h/kg BW.\n")
   }
   
-  return(set_httk_precision(as.numeric(clearance)))
+  return(set_httk_precision(sapply(clearance, as.numeric)))
 }

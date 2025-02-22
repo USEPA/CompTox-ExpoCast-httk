@@ -84,6 +84,7 @@ calc_half_life <- function(chem.cas = NULL,
                             chem.name = NULL, 
                             dtxsid = NULL,
                             parameters = NULL,
+                            species="Human",
                             model = "3compartmentss", 
                             suppress.messages = TRUE,
                             ...
@@ -95,6 +96,7 @@ calc_half_life <- function(chem.cas = NULL,
                                  dtxsid = dtxsid,
                                  parameters = parameters,
                                  model = model,
+                                 species = species,
                                  suppress.messages = suppress.messages),
                                  list(...))
                        )
