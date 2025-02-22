@@ -34,6 +34,9 @@
 #' 
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' 
+#' @param adjusted.Funbound.plasma Uses Pearce et al. (2017) lipid binding adjustment
+#' for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).
+#' 
 #' @param ... Additional parameters passed to parameterize function if 
 #' parameters is NULL.
 #' 
@@ -79,6 +82,7 @@ calc_vdist<- function(chem.cas=NULL,
                       suppress.messages=FALSE,
                       adjusted.Funbound.plasma = TRUE,
                       species="Human",
+                      default.to.human = FALSE,
                       ...
                       )
 {
@@ -110,7 +114,8 @@ calc_vdist<- function(chem.cas=NULL,
                                          dtxsid=dtxsid,
                                          suppress.messages=suppress.messages,
                                          adjusted.Funbound.plasma = adjusted.Funbound.plasma,
-                                         species=species 
+                                         species=species,
+                                         default.to.human=default.to.human
                                          ),
    # Send only the arguments in ... wanted by the function:
                                     list(...)[names(formals(parameterize_schmitt))]
