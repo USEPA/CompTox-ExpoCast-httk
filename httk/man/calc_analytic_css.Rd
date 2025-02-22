@@ -21,6 +21,7 @@ calc_analytic_css(
   tissue = NULL,
   bioactive.free.invivo = FALSE,
   IVIVE = NULL,
+  parameterize.args = list(),
   ...
 )
 }
@@ -83,6 +84,9 @@ assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions.
 Argument may be set to "Honda1" through "Honda4". If used, this function 
 overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments. 
 See Details below for more information.}
+
+\item{parameterize.args}{Additional parameters passed to parameterize function if 
+parameters is NULL.}
 
 \item{...}{Additional parameters passed to parameterize function if 
 parameters is NULL.}

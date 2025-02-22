@@ -68,6 +68,9 @@ model.list <- list()
 #'
 #' @param dose.units The units associated with the dose received.
 #'
+#'@param parameterize.args Additional parameters passed to parameterize function if 
+#'parameters is NULL.
+#'  
 #'@param ... Additional parameters passed to parameterize function if 
 #'parameters is NULL.
 #'  
@@ -153,7 +156,9 @@ calc_analytic_css <- function(chem.name=NULL,
                               tissue=NULL,
                               bioactive.free.invivo = FALSE,
                               IVIVE=NULL,
-                              ...)
+                              parameterize.args=list(),
+                              ...
+                              )
 {  
   if (!is.null(daily.dose))
   {
@@ -275,7 +280,8 @@ calc_analytic_css <- function(chem.name=NULL,
         dtxsid=dtxsid,
         species=species,
         suppress.messages=suppress.messages),
-      list(...))))
+      list(...),
+      parameterize.args)))
  
   } else {
     model_param_names <- model.list[[model]]$param.names 
@@ -341,7 +347,8 @@ calc_analytic_css <- function(chem.name=NULL,
           suppress.messages=suppress.messages,
           tissue=tissue,
           bioactive.free.invivo = bioactive.free.invivo),
-          list(...))))
+          list(...),
+          parameterize.args)))
   } else {
     stop(paste("Model",model,"not available. Please select from:",
                paste(names(model.list),collapse=", ")))
