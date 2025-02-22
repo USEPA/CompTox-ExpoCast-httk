@@ -9,6 +9,7 @@ calc_half_life(
   chem.name = NULL,
   dtxsid = NULL,
   parameters = NULL,
+  species = "Human",
   model = "3compartmentss",
   suppress.messages = TRUE,
   ...
@@ -25,15 +26,15 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 \item{parameters}{Chemical parameters from parameterize_steadystate or
 1compartment function, overrides chem.name and chem.cas.}
 
+\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+default "Human").}
+
 \item{model}{The model used to calculate elimination rate (defaults to "3compartmentss")}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
 \item{...}{Additional parameters passed to parameterize function if 
 parameters is NULL.}
-
-\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human").}
 }
 \value{
 \item{Half life}{Units of h.}
