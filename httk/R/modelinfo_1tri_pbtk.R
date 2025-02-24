@@ -9,7 +9,7 @@
 model.list[["1tri_pbtk"]]$steady.state.compartment <- "plasma"
                                               
 # What units does the analytic function return:
-# model.list[["1tri_pbtk"]]$steady.state.units <- "mg/L"
+model.list[["1tri_pbtk"]]$steady.state.units <- "mg/L"
 
 # Function used for generating model parameters:
 model.list[["1tri_pbtk"]]$parameterize.func <- "parameterize_1tri_pbtk"
@@ -539,7 +539,6 @@ model.list[["1tri_pbtk"]]$required.params <- c(
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
 model.list[["1tri_pbtk"]]$calcpc <- TRUE
   
-
 # Do we need to recalculate first pass metabolism when doing Monte Carlo?
 model.list[["1tri_pbtk"]]$firstpass <- FALSE
 
