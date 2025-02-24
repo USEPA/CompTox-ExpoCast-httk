@@ -72,6 +72,19 @@ unbound concentration in plasma.}
 This function initializes the parameters needed in the functions
 solve_1tri_pbtk by calling solve_pbtk and adding additional parameters.
 }
+\details{
+Because this model does not simulate exhalation, inhalation, and other 
+processes relevant to volatile chemicals, this model is by default 
+restricted to chemicals with a logHenry's Law Constant less than that of 
+Acetone, a known volatile chemical. That is, chemicals with logHLC > -4.5 
+(Log10 atm-m3/mole) are excluded. Volatility is not purely determined by the 
+Henry's Law Constant, therefore this chemical exclusion may be turned off 
+with the argument "physchem.exclude = FALSE". Similarly, per- and 
+polyfluoroalkyl substances (PFAS) are excluded by default because the 
+transporters that often drive PFAS toxicokinetics are not included in this 
+model. However, PFAS chemicals can be included with the argument 
+"class.exclude = FALSE".
+}
 \examples{
 
 

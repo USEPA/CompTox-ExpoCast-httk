@@ -23,10 +23,9 @@ solve_1tri_pbtk(
   iv.dose = FALSE,
   input.units = "mg/kg",
   output.units = NULL,
-  method = "lsoda",
-  rtol = 1e-06,
-  atol = 1e-06,
   default.to.human = FALSE,
+  physchem.exclude = TRUE,
+  class.exclude = TRUE,
   recalc.blood2plasma = FALSE,
   recalc.clearance = FALSE,
   adjusted.Funbound.plasma = TRUE,
@@ -34,6 +33,8 @@ solve_1tri_pbtk(
   restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04,
   monitor.vars = NULL,
+  atol = 1e-08,
+  rtol = 1e-08,
   ...
 )
 }
@@ -88,14 +89,15 @@ mg/kg BW}
 results. Default, NULL, returns model results in units specified in the
 'modelinfo' file. See table below for details.}
 
-\item{method}{Method used by integrator (deSolve).}
-
-\item{rtol}{Argument passed to integrator (deSolve).}
-
-\item{atol}{Argument passed to integrator (deSolve).}
-
 \item{default.to.human}{Substitutes missing animal values with human values
 if true (hepatic intrinsic clearance or fraction of unbound plasma).}
+
+\item{physchem.exclude}{Exclude chemicals on the basis of physico-chemical
+properties (currently only Henry's law constant) as specified by 
+the relevant modelinfo_[MODEL] file (default TRUE).}
+
+\item{class.exclude}{Exclude chemical classes identified as outside of 
+domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
 
 \item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical
 in the blood to plasma using the input parameters, calculated with
@@ -119,7 +121,13 @@ dataset).}
 
 \item{monitor.vars}{Which variables to track by default}
 
+\item{atol}{Argument passed to integrator (deSolve).}
+
+\item{rtol}{Argument passed to integrator (deSolve).}
+
 \item{...}{Additional arguments passed to the integrator.}
+
+\item{method}{Method used by integrator (deSolve).}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each
@@ -154,6 +162,18 @@ the liver and excreted by the kidneys through the tubules.
 AUC is the area under the curve of the plasma concentration.
 
 This gestational model is only parameterized for humans.
+
+Because this model does not simulate exhalation, inhalation, and other 
+processes relevant to volatile chemicals, this model is by default 
+restricted to chemicals with a logHenry's Law Constant less than that of 
+Acetone, a known volatile chemical. That is, chemicals with logHLC > -4.5 
+(Log10 atm-m3/mole) are excluded. Volatility is not purely determined by the 
+Henry's Law Constant, therefore this chemical exclusion may be turned off 
+with the argument "physchem.exclude = FALSE". Similarly, per- and 
+polyfluoroalkyl substances (PFAS) are excluded by default because the 
+transporters that often drive PFAS toxicokinetics are not included in this 
+model. However, PFAS chemicals can be included with the argument 
+"class.exclude = FALSE".
 }
 \examples{
 
