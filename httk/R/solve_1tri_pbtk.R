@@ -27,6 +27,18 @@
 #' 
 #' This gestational model is only parameterized for humans.
 #' 
+#' Because this model does not simulate exhalation, inhalation, and other 
+#' processes relevant to volatile chemicals, this model is by default 
+#' restricted to chemicals with a logHenry's Law Constant less than that of 
+#' Acetone, a known volatile chemical. That is, chemicals with logHLC > -4.5 
+#' (Log10 atm-m3/mole) are excluded. Volatility is not purely determined by the 
+#' Henry's Law Constant, therefore this chemical exclusion may be turned off 
+#' with the argument "physchem.exclude = FALSE". Similarly, per- and 
+#' polyfluoroalkyl substances (PFAS) are excluded by default because the 
+#' transporters that often drive PFAS toxicokinetics are not included in this 
+#' model. However, PFAS chemicals can be included with the argument 
+#' "class.exclude = FALSE".
+#' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
@@ -61,6 +73,12 @@
 #' @param atol Argument passed to integrator (deSolve).
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' 
+#' @param physchem.exclude Exclude chemicals on the basis of physico-chemical
+#' properties (currently only Henry's law constant) as specified by 
+#' the relevant modelinfo_[MODEL] file (default TRUE).
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
 #' hematocrit, Funbound.plasma, and Krbc2pu.
@@ -104,7 +122,7 @@
 solve_1tri_pbtk <- function(chem.name = NULL,
                              chem.cas = NULL,
                              dtxsid = NULL,
-                             times= seq(0, 13*7,1), #from 0th week to end of 13th week
+                             times= seq(0,13*7,1), #from 0th week to end of 13th week
                              parameters=NULL,
                              days=NULL,
                              species="human",
@@ -119,8 +137,8 @@ solve_1tri_pbtk <- function(chem.name = NULL,
                              iv.dose=FALSE,
                              input.units='mg/kg',
                              output.units=NULL,
-                             method="lsoda",rtol=1e-6,atol=1e-6,
-                             default.to.human=FALSE,
+                             physchem.exclude=TRUE, 
+                             class.exclude=TRUE,
                              recalc.blood2plasma=FALSE,
                              recalc.clearance=FALSE,
                              adjusted.Funbound.plasma=TRUE,
@@ -128,6 +146,8 @@ solve_1tri_pbtk <- function(chem.name = NULL,
                              restrictive.clearance = TRUE,
                              minimum.Funbound.plasma = 0.0001,
                              monitor.vars = NULL,
+                             atol = 1e-8,
+                             rtol = 1e-8,
                              ...)
 {
   #Screen any 'times' input
@@ -158,17 +178,20 @@ describe human gestation.")
     plots=plots,
     monitor.vars=monitor.vars,
     suppress.messages=suppress.messages,
-    species='Human', #other species not (yet) supported by solve_fetal_pbtk
+    species='Human', #other species not (yet) supported by solve_1tri_pbtk
     input.units=input.units,
     output.units=output.units,
-    method=method,rtol=rtol,atol=atol,
-    default.to.human=default.to.human,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-    regression=regression,
-    restrictive.clearance = restrictive.clearance,
     minimum.Funbound.plasma=minimum.Funbound.plasma,
+    parameterize.arg.list=list(
+                  restrictive.clearance = restrictive.clearance,
+                  regression = regression,
+                  physchem.exclude = physchem.exclude,
+                  class.exclude = class.exclude), 
+    atol=atol, 
+    rtol=rtol,
     ...)
   
   return(out) 
