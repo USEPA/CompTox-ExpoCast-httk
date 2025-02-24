@@ -113,3 +113,81 @@ cas_id_check <- function(cas){
   out <- grepl(cas,pattern = "^\\d{2,7}[-]\\d+{2}[-]\\d$")
   return(out)
 }
+
+#' DTXSID number format check function
+#' 
+#' This function checks whether the DTXSID chemical identifier follows the anticipated
+#' format of "DTXSID<uniqueID>".
+#' 
+#' @param dtxsid A character string, or vector of character strings, indicating
+#' DTXSID number.
+#' 
+#' @return Logical output (TRUE or FALSE) indicating whether the character string(s)
+#' provided match the anticipated format for a DTXSID chemical identifier.
+dtxsid_id_check <- function(dtxsid){
+  # generic dtxsid format check
+  check1 <- grepl(dtxsid,pattern = "DTXSID\\d+")
+  # checksum check for DTXSID's
+  check2 <- strsplit(dtxsid,split = "") %>%
+    lapply(.,function(x){as.numeric(c(x[7:length(x)]))}) %>% 
+    lapply(.,function(x){x[1]==(x[3:length(x)]%*%1:length(3:length(x)))%%10}) %>% 
+    unlist()
+  # both checks should pass
+  out <- check1 & check2
+  
+  return(out)
+}
+
+httk_chem_subset <- function(data,chem_include){
+  # obtain the chemical ID type
+  chemid_type <- name(chem_include)
+  # check if the chemical ID type is NOT in the data
+  if(all(!(c('cas','casrn','dtxsid')%in%tolower(colnames(data))))){
+    stop("The data does not contain CAS/CASRN or DTXSID chemical identifiers.")
+  }
+  # checks for CAS/CASRN chemical identifiers
+  if(tolower(chemid_type)%in%c("cas","casrn")){
+    # check that the data has CAS/CASRN chemical identifiers
+    if(grepl(colnames(data),pattern = "^cas$|^casrn$",ignore.case = TRUE)){
+      stop("The data does not contain CAS/CASRN chemical identifiers.")
+    }
+    # check that they are CAS number format
+    chem_include_check <- all(cas_id_check(chem_include)==TRUE)
+    if(chem_include_check == FALSE){
+      stop("At least one chemical ID in `chem_include` does not follow the standard CAS/CASRN format.")
+    }
+    chemid_col <- grep(colnames(data),pattern = "^cas$|^casrn$",ignore.case = TRUE)
+  }
+  # checks for DTXSID chemical identifiers
+  if(tolower(chemid_type)%in%c("dtxsid")){
+    # check that the data has CAS/CASRN chemical identifiers
+    if(grepl(colnames(data),pattern = "^dtxsid$",ignore.case = TRUE)){
+      stop("The data does not contain DTXSID chemical identifiers.")
+    }
+    # check that they are DTXSID number format
+    chem_include_check <- all(dtxsid_id_check(chem_include)==TRUE)
+    if(chem_include_check == FALSE){
+      stop("At least one chemical ID in `chem_include` is not a valid DSSTox Chemical Identifier (DTXSID).")
+    }
+    chemid_col <- grep(colnames(data),pattern = "^dtxsid$",ignore.case = TRUE)
+  }
+  
+  ## CHECKS ##
+  # obtain any chemicals that are not in the chemical ID list
+  out_chem_list <- which(!(chem_include%in%data[,chemid_col]))
+  if(length(out_chem_list)==length(chem_include)){
+    # provide an error message if none of the chemical identifiers to include are
+    # available in the dataset
+    stop("None of the chemical identifiers provided are in the dataset.")
+  }
+  if(length(out_chem_list)>0){
+    # provide a message listing the chemical identifiers that are not available
+    # in the dataset
+    cat("The following chemical identifiers are not in the dataset:\n\t",
+        paste0(chem_include[out_chem_list],collapse = ", "))
+  }
+  # subset to the chemicals that are included in the dataset
+  out_data <- data[which(data[,chemid_col]%in%chem_include),]
+  
+  return(out_data)
+}
