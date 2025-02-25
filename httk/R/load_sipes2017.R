@@ -76,28 +76,7 @@ load_sipes2017 <- function(
   tmp_sipes2017 <- httk::sipes2017
   # check whether there is any information on specific chemicals to include
   if(!is.null(chem_include)){
-    # check that they are CAS number format
-    chem_include_check <- all(cas_id_check(chem_include)==TRUE)
-    if(chem_include_check == FALSE){
-      stop("At least one chemical ID in `chem_include` does not follow the standard CAS/CASRN format.")
-    }
-    ## CHECKS ##
-    # obtain any chemicals that are not in the CASRN list
-    out_CAS_list <- which(!(chem_include%in%tmp_sipes2017[,"CAS"]))
-    if(length(out_CAS_list)==length(chem_include)){
-      # provide an error message if none of the chemical identifiers to include are
-      # available in the dataset
-      stop("None of the CAS/CASRN chemical identifiers provided are in `sipes2017`.")
-    }
-    if(length(out_CAS_list)>0){
-      # provide a message listing the chemical identifiers that are not available
-      # in the dataset
-      cat("The following CAS/CASRN chemical identifiers are not in `sipes2017`:\n\t",
-          paste0(chem_include[out_CAS_list],collapse = ", "))
-    }
-    # subset to the chemicals that are included in the dataset
-    tmp_sipes2017 <- tmp_sipes2017 %>% 
-      dplyr::filter(CAS %in% chem_include)
+    tmp_sipes2017 <- httk_chem_subset(tmp_sipes2017,chem_include = chem_include)
   }
   
   cat(paste("Loading CLint and Fup predictions from Sipes et al. (2017) for",
