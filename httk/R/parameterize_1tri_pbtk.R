@@ -209,13 +209,18 @@ parameterize_1tri_pbtk<- function(
 
   #Call parameterize_pbtk function to obtain useful parameters that these
   #models exactly share. 
-  pbtk_parms <- parameterize_pbtk(
-    chem.cas=chem.cas,
-    chem.name=chem.name,
-    dtxsid=dtxsid,
-    species=species,
-    suppress.messages=TRUE,
-    ...)
+  pbtk_parms <- do.call(parameterize_pbtk, 
+                        args = purrr::compact(c(list(
+                                   chem.cas=chem.cas,
+                                   chem.name=chem.name,
+                                   dtxsid=dtxsid,
+                                   species=species,
+                                   suppress.messages=TRUE
+                                   ),
+                                 list(...)
+                                 ))
+                        )
+    
   pbtk_parms$BW <- parms$pre_pregnant_BW #Override parameterize_pbtk's
     #body weight listing with average prepregnant case, as scale dosing 
     #requires an entry named 'BW'
@@ -241,9 +246,16 @@ parameterize_1tri_pbtk<- function(
   # maternal partition coefficients at t = 0 
   const.tissues <- names(tissue.vols.list)[names(tissue.vols.list) != "brain"]
   
-  fetal.parms <- parameterize_fetal_pbtk(chem.cas=chem.cas,
-                                         chem.name=chem.name,
-                                         dtxsid=dtxsid)
+  fetal.parms <- do.call(parameterize_fetal_pbtk,
+                         args = purrr::compact(c(list(
+                                                      chem.cas=chem.cas,
+                                                      chem.name=chem.name,
+                                                      dtxsid=dtxsid,
+                                                      suppress.messages=TRUE
+                                                      ),
+                                                 list(...)
+                                                 ))
+                        )
   
   # get maternal tissue partition coefficients 
   mat.pcs <- fetal.parms[grep("^K(?!.*f)", names(fetal.parms), perl = T)]
