@@ -9,10 +9,14 @@ solve_full_pregnancy(
   chem.cas = NULL,
   dtxsid = NULL,
   time.course = seq(0, 40 * 7, 1),
+  dose = NULL,
+  daily.dose = NULL,
+  doses.per.day = NULL,
+  class.exclude = TRUE,
+  physchem.exclude = TRUE,
   track.vars = NULL,
   plt = FALSE,
-  return.units = "amt",
-  ...
+  return.units = "amt"
 )
 }
 \arguments{
@@ -26,15 +30,25 @@ must be specified.}
 \item{time.course}{Time sequence in days. Default is from 0th week of pregnancy to 
 40th, incremented by day.}
 
+\item{dose}{Amount of a single, initial dose (on day 0) in mg/kg BW.}
+
+\item{daily.dose}{Total daily dose, mg/kg BW for 40 weeks.}
+
+\item{doses.per.day}{Number of doses per day for 40 weeks.}
+
+\item{class.exclude}{Exclude chemical classes identified as outside of 
+domain of applicability for fetal_pbtk and 1tri_pbtk models (i.e. PFAS chemicals).}
+
+\item{physchem.exclude}{Exclude chemicals on the basis of physico-chemical
+properties (currently only Henry's law constant) as specified by the modelinfo
+files for fetal_pbtk and 1tri_pbtk.}
+
 \item{track.vars}{which variables to return in solution output dataframe}
 
 \item{plt}{plots all outputs, if TRUE}
 
 \item{return.units}{if plt = TRUE, plots outputs in desired units of interest
 (either 'amt' for chemical amounts or 'conc' for chemical concentration).}
-
-\item{...}{additional arguments passed to solve_fetal_pbtk and solve_1tri_pbtk
-(this is where you input daily.dose and doses.per.day)}
 }
 \value{
 A dataframe with columns for time (in days), each compartment, the 
