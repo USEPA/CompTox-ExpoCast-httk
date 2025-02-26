@@ -23,7 +23,6 @@ solve_fetal_pbtk(
   iv.dose = FALSE,
   input.units = "mg/kg",
   output.units = NULL,
-  default.to.human = FALSE,
   physchem.exclude = TRUE,
   class.exclude = TRUE,
   recalc.blood2plasma = FALSE,
@@ -90,9 +89,6 @@ mg/kg BW}
 results. Default, NULL, returns model results in units specified in the
 'modelinfo' file. See table below for details.}
 
-\item{default.to.human}{Substitutes missing animal values with human values
-if true (hepatic intrinsic clearance or fraction of unbound plasma).}
-
 \item{physchem.exclude}{Exclude chemicals on the basis of physico-chemical
 properties (currently only Henry's law constant) as specified by 
 the relevant modelinfo_[MODEL] file (default TRUE).}
@@ -142,6 +138,9 @@ numerical precision-- defaults to 1e-8.}
 numerical precision -- defaults to 1e-8.}
 
 \item{...}{Additional arguments passed to the integrator.}
+
+\item{default.to.human}{Substitutes missing animal values with human values
+if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each

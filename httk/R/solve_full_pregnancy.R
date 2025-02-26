@@ -11,16 +11,33 @@
 #'
 #' @param chem.name Either the chemical name, CAS number, or DTXSID
 #' must be specified.
+#' 
 #' @param chem.cas Either the chemical name, CAS number, or DTXSID must be specified.
+#' 
 #' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard}) 
+#' 
 #' @param time.course Time sequence in days. Default is from 0th week of pregnancy to 
 #' 40th, incremented by day. 
+#' 
+#' @param dose Amount of a single, initial dose (on day 0) in mg/kg BW. 
+#' 
+#' @param daily.dose Total daily dose, mg/kg BW for 40 weeks. 
+#' 
+#' @param doses.per.day Number of doses per day for 40 weeks.
+#' 
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability for fetal_pbtk and 1tri_pbtk models (i.e. PFAS chemicals).
+#' 
+#' @param physchem.exclude Exclude chemicals on the basis of physico-chemical
+#' properties (currently only Henry's law constant) as specified by the modelinfo
+#' files for fetal_pbtk and 1tri_pbtk. 
+#' 
 #' @param track.vars which variables to return in solution output dataframe
+#' 
 #' @param plt plots all outputs, if TRUE
+#' 
 #' @param return.units if plt = TRUE, plots outputs in desired units of interest
 #' (either 'amt' for chemical amounts or 'conc' for chemical concentration).
-#' @param ... additional arguments passed to solve_fetal_pbtk and solve_1tri_pbtk
-#' (this is where you input daily.dose and doses.per.day)
 #' 
 #' @return A dataframe with columns for time (in days), each compartment, the 
 #' area under the curve (for plasma vs time), and plasma, and a row for each time 
@@ -84,10 +101,14 @@ solve_full_pregnancy <- function(
     chem.cas = NULL,
     dtxsid = NULL,
     time.course = seq(0,40*7,1), 
+    dose = NULL,
+    daily.dose = NULL, 
+    doses.per.day = NULL, 
+    class.exclude = TRUE, 
+    physchem.exclude = TRUE,
     track.vars = NULL, 
     plt = FALSE,
-    return.units = "amt",
-    ...)
+    return.units = "amt")
 {
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -140,15 +161,22 @@ solve_full_pregnancy <- function(
   t1 = sort(unique(c(0,t1, 13*7))) # ode solver needs the first value of "times" to be the initial time (T0=0)
   t2 = c(13*7,t2) # initial time T0 = 91
   
+  # set default dose to be 1 mg/kg BW if dosing parameters are not specified
+  if(is.null(dose) & is.null(daily.dose) & is.null(doses.per.day)) 
+    dose = 1
+    
   # track chemical amounts (i.e. state vars of each model) 
   firsttri.out <- solve_1tri_pbtk(chem.name = chem.name,
                                   chem.cas = chem.cas,
                                   dtxsid = dtxsid,
                                   times = t1, 
-                                  dose = 0, # initial dose on day 1 
+                                  dose = dose,
+                                  daily.dose = daily.dose, 
+                                  doses.per.day = doses.per.day, 
+                                  class.exclude = class.exclude, 
+                                  physchem.exclude = physchem.exclude,
                                   monitor.vars = firsttri.outputs, 
-                                  suppress.messages = TRUE, # suppress messages about running single models
-                                  ...)
+                                  suppress.messages = TRUE)
 
   # initialize vector for "initial.values" input to fetal_pbtk 
   initial.dat <- setNames(rep(0, length(mf.states)), mf.states)
@@ -168,17 +196,19 @@ solve_full_pregnancy <- function(
   vols.out <- solve_fetal_pbtk(chem.name = chem.name,
                                chem.cas = chem.cas,
                                dtxsid = dtxsid,
-                               dose = 0, 
                                times = c(13*7), 
+                               dose = 0, # solution will be trivial; we just want the volumes at end of 13 weeks
+                               class.exclude = class.exclude, 
+                               physchem.exclude = physchem.exclude,
                                monitor.vars = c(missing.vols, "fhematocrit", "Rfblood2plasma"), 
-                               suppress.messages = TRUE,
-                               ...
+                               suppress.messages = TRUE
   )
   
   fetal.parms <- parameterize_fetal_pbtk(chem.name = chem.name,
                                          chem.cas = chem.cas,
                                          dtxsid = dtxsid,
-                                         ...)
+                                         class.exclude = class.exclude, 
+                                         physchem.exclude = physchem.exclude)
   
   # get fetal tissue partition coefficients 
   fetal.pcs <- c(fetal.parms[substr(names(fetal.parms),1,2) == 'Kf'], 
@@ -214,18 +244,18 @@ solve_full_pregnancy <- function(
   initial.dat["fAUC"] = initial.dat["AUC"]
   
   # modified input to fetal_pbtk
-  # ode solver starts solution at day 90.9999 due to small.time in solve_model 
-  # this is slight imprecise but won't change my results significantly - 
-  # keep row for day 90.9999 in output for now
   mod.fetal.out <- solve_fetal_pbtk(chem.name = chem.name,
                                     chem.cas = chem.cas,
                                     dtxsid = dtxsid,
                                     times = t2, 
-                                    dose = 0, 
+                                    dose = 0,
+                                    daily.dose = daily.dose, 
+                                    doses.per.day = doses.per.day, 
+                                    class.exclude = class.exclude, 
+                                    physchem.exclude = physchem.exclude,
                                     monitor.vars = mf.outputs, 
                                     initial.values = initial.dat, 
-                                    suppress.messages = TRUE,
-                                    ...)
+                                    suppress.messages = TRUE)
   
   # get full solution by concatenating 2 outputs
   full_sol <- bind_rows(data.frame(firsttri.out), data.frame(mod.fetal.out))
