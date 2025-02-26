@@ -168,9 +168,10 @@ solve_full_pregnancy <- function(
                                times = c(13*7), 
                                monitor.vars = c(missing.vols, "fhematocrit", "Rfblood2plasma"), 
                                suppress.messages = TRUE,
+                               ...
   )
   
-  fetal.parms <- parameterize_fetal_pbtk(dtxsid = dtxsid)
+  fetal.parms <- parameterize_fetal_pbtk(dtxsid = dtxsid, ...)
   
   # get fetal tissue partition coefficients 
   fetal.pcs <- c(fetal.parms[substr(names(fetal.parms),1,2) == 'Kf'], 
