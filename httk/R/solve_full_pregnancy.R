@@ -141,7 +141,9 @@ solve_full_pregnancy <- function(
   t2 = c(13*7,t2) # initial time T0 = 91
   
   # track chemical amounts (i.e. state vars of each model) 
-  firsttri.out <- solve_1tri_pbtk(dtxsid = dtxsid, 
+  firsttri.out <- solve_1tri_pbtk(chem.name = chem.name,
+                                  chem.cas = chem.cas,
+                                  dtxsid = dtxsid,
                                   times = t1, 
                                   dose = 0, # initial dose on day 1 
                                   monitor.vars = firsttri.outputs, 
@@ -163,7 +165,9 @@ solve_full_pregnancy <- function(
   missing.vols <- sub("^A", "V", missing.amts)
   
   # get volumes from C model implementation
-  vols.out <- solve_fetal_pbtk(dtxsid = dtxsid,
+  vols.out <- solve_fetal_pbtk(chem.name = chem.name,
+                               chem.cas = chem.cas,
+                               dtxsid = dtxsid,
                                dose = 0, 
                                times = c(13*7), 
                                monitor.vars = c(missing.vols, "fhematocrit", "Rfblood2plasma"), 
@@ -171,7 +175,10 @@ solve_full_pregnancy <- function(
                                ...
   )
   
-  fetal.parms <- parameterize_fetal_pbtk(dtxsid = dtxsid, ...)
+  fetal.parms <- parameterize_fetal_pbtk(chem.name = chem.name,
+                                         chem.cas = chem.cas,
+                                         dtxsid = dtxsid,
+                                         ...)
   
   # get fetal tissue partition coefficients 
   fetal.pcs <- c(fetal.parms[substr(names(fetal.parms),1,2) == 'Kf'], 
@@ -210,7 +217,9 @@ solve_full_pregnancy <- function(
   # ode solver starts solution at day 90.9999 due to small.time in solve_model 
   # this is slight imprecise but won't change my results significantly - 
   # keep row for day 90.9999 in output for now
-  mod.fetal.out <- solve_fetal_pbtk(dtxsid = dtxsid, 
+  mod.fetal.out <- solve_fetal_pbtk(chem.name = chem.name,
+                                    chem.cas = chem.cas,
+                                    dtxsid = dtxsid,
                                     times = t2, 
                                     dose = 0, 
                                     monitor.vars = mf.outputs, 
