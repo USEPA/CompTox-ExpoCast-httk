@@ -233,13 +233,18 @@ parameterize_fetal_pbtk<- function(
 
   #Call parameterize_pbtk function to obtain useful parameters that these
   #models exactly share. 
-  pbtk_parms <- parameterize_pbtk(
-    chem.cas=chem.cas,
-    chem.name=chem.name,
-    dtxsid=dtxsid,
-    species=species,
-    suppress.messages=TRUE,
-    ...)
+  pbtk_parms <- do.call(parameterize_pbtk, 
+                        args = purrr::compact(c(list(
+                          chem.cas=chem.cas,
+                          chem.name=chem.name,
+                          dtxsid=dtxsid,
+                          species=species,
+                          suppress.messages=TRUE
+                        ),
+                        list(...)
+                        ))
+  )
+  
   pbtk_parms$BW <- parms$pre_pregnant_BW #Override parameterize_pbtk's
     #body weight listing with average prepregnant case, as scale dosing 
     #requires an entry named 'BW'
