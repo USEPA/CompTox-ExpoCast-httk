@@ -339,14 +339,22 @@ calc_css <- function(chem.name=NULL,
   Final_State <- out[dim(out)[1],monitor.vars]
   total.days <- days
   additional.days <- days
-  NMinusOne_Conc <- try(out[match((additional.days - 2), 
+  NMinusOne_Conc <- try(out[match((additional.days - 1), 
                        floor(out[,'time'])), target])
-  NMinusTwo_Conc <- try(out[match((additional.days - 1), 
+  NMinusTwo_Conc <- try(out[match((additional.days - 2), 
                  floor(out[,'time'])), target])
                  
   # Check for problems:
   if (inherits(NMinusOne_Conc, "try-error") |
-      inherits(NMinusTwo_Conc, "try-error")) browser()
+      inherits(NMinusTwo_Conc, "try-error")) stop(paste(
+      "Could not solve model",
+      model,
+      "for",
+      days,
+      "days and route",
+      route,
+      "with tolerance",
+      atol))
 
   # Check for problems:
   if (is.na(NMinusOne_Conc) |
@@ -364,7 +372,7 @@ calc_css <- function(chem.name=NULL,
   # Calculate the fractional change on the last simulated day:
   if (NMinusTwo_Conc > 0)
   {
-    conc.delta <- (NMinusOne_Conc -
+    conc.delta <- abs(NMinusOne_Conc -
                   NMinusTwo_Conc) /
                   NMinusTwo_Conc 
   } else conc.delta <- 0
@@ -403,9 +411,9 @@ calc_css <- function(chem.name=NULL,
       ...))))
 
     Final_State <- out[dim(out)[1],monitor.vars]
-    NMinusOne_Conc <- try(out[match((additional.days - 2), 
+    NMinusOne_Conc <- try(out[match((additional.days - 1), 
                          floor(out[,'time'])), target])
-    NMinusTwo_Conc <- try(out[match((additional.days - 1), 
+    NMinusTwo_Conc <- try(out[match((additional.days - 2), 
                    floor(out[,'time'])), target])
                    
     # Check for problems:
@@ -428,7 +436,7 @@ calc_css <- function(chem.name=NULL,
     # Calculate the fractional change on the last simulated day:
     if (NMinusTwo_Conc > 0)
     {
-      conc.delta <- (NMinusOne_Conc -
+      conc.delta <- abs(NMinusOne_Conc -
                     NMinusTwo_Conc) /
                     NMinusTwo_Conc 
     } else conc.delta <- 0
