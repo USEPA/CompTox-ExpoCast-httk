@@ -112,7 +112,13 @@ is_in_inclusive <- function(x, lims) {
 #' 
 #' @export
 cas_id_check <- function(cas){
-  out <- grepl(cas,pattern = "^\\d{2,7}[-]\\d+{2}[-]\\d$")
+  # generic CAS format check
+  check1 <- grepl(cas,pattern = "^\\d{2,7}[-]\\d+{2}[-]\\d$")
+  # checksum for CAS ID's
+  check2 <- sapply(cas,httk::CAS.checksum)
+  # both checks should pass
+  out <- check1 & check2
+  
   return(out)
 }
 
