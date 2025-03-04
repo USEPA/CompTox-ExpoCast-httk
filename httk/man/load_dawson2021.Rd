@@ -4,7 +4,12 @@
 \alias{load_dawson2021}
 \title{Load CLint and Fup QSPR predictions from Dawson et al. 2021.}
 \usage{
-load_dawson2021(overwrite = FALSE, exclude_oad = TRUE, target.env = .GlobalEnv)
+load_dawson2021(
+  overwrite = FALSE,
+  exclude_oad = TRUE,
+  chem_include = NULL,
+  target.env = .GlobalEnv
+)
 }
 \arguments{
 \item{overwrite}{Only matters if load.image=FALSE. If overwrite=TRUE then
@@ -17,6 +22,10 @@ detection) are overwritten either way.}
 \item{exclude_oad}{Include the chemicals only within the applicability domain.
 If exclude_oad=TRUE (DEFAULT) chemicals outside the applicability domain do not
 have their predicted values loaded.}
+
+\item{chem_include}{A vector of CAS numbers indicating only the chemicals to
+be included in the loading process. If set to `NULL` all applicable chemicals are
+loaded. (Default is `NULL`.)}
 
 \item{target.env}{The environment where the new
 \code{\link{chem.physical_and_invitro.data}} is loaded. Defaults to global environment.}
