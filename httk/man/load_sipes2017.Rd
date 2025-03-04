@@ -4,7 +4,7 @@
 \alias{load_sipes2017}
 \title{Load CLint and Fup QSPR predictions from Sipes et al 2017.}
 \usage{
-load_sipes2017(overwrite = FALSE, target.env = .GlobalEnv)
+load_sipes2017(overwrite = FALSE, chem_include = NULL, target.env = .GlobalEnv)
 }
 \arguments{
 \item{overwrite}{Only matters if load.image=FALSE. If overwrite=TRUE then
@@ -13,6 +13,10 @@ predictions in Sipes et al. (2017) that is for the same chemical and
 property. If overwrite=FALSE (DEFAULT) then new data for the same chemical
 and property are ignored. Funbound.plasma values of 0 (below limit of
 detection) are overwritten either way.}
+
+\item{chem_include}{A vector of CAS numbers indicating only the chemicals to
+be included in the loading process. If set to `NULL` all applicable chemicals are
+loaded. (Default is `NULL`.)}
 
 \item{target.env}{The environment where the new
 \code{\link{chem.physical_and_invitro.data}} is loaded. Defaults to global environment.}
