@@ -442,23 +442,43 @@ calc_mc_css <- function(chem.cas = NULL,
 # Calculate CSS for each row in the parameter matrix (each row corresponds to
 # a different individual):
 #
-
-  parameter.dt[,Css:= do.call(calc_analytic_css,
-# we use purrr::compact to drop NULL values from arguments list:
-                              args=purrr::compact(c(list(
-                              parameters=.SD,
-                              model=model,
-                              suppress.messages=TRUE,
-                              chem.cas=chem.cas,
-                              chem.name=chem.name,
-                              dtxsid=dtxsid,
-                              tissue=tissue,
-                              concentration=concentration,
-                              output.units=output.units,
-                              daily.dose=daily.dose,
-                              clint.pvalue.threshold=
-                                parameterize.arg.list$clint.pvalue.threshold),
-                              calc.analytic.css.arg.list)))]
+  if (!is.null(model.list[[model]]$analytic.css.func))
+  {
+    parameter.dt[,Css:= do.call(calc_analytic_css,
+  # we use purrr::compact to drop NULL values from arguments list:
+                                args=purrr::compact(c(list(
+                                parameters=.SD,
+                                model=model,
+                                suppress.messages=TRUE,
+                                chem.cas=chem.cas,
+                                chem.name=chem.name,
+                                dtxsid=dtxsid,
+                                tissue=tissue,
+                                concentration=concentration,
+                                output.units=output.units,
+                                daily.dose=daily.dose,
+                                clint.pvalue.threshold=
+                                  parameterize.arg.list$clint.pvalue.threshold),
+                                calc.analytic.css.arg.list)))]
+  } else {
+    parameter.dt[,Css:= do.call(calc_css,
+  # we use purrr::compact to drop NULL values from arguments list:
+                                args=purrr::compact(c(list(
+                                parameters=as.list(.SD),
+                                model=model,
+                                suppress.messages=TRUE,
+                                chem.cas=chem.cas,
+                                chem.name=chem.name,
+                                dtxsid=dtxsid,
+                                tissue=tissue,
+                                concentration=concentration,
+                                output.units=output.units,
+                                daily.dose=daily.dose,
+                                clint.pvalue.threshold=
+                                  parameterize.arg.list$clint.pvalue.threshold),
+                                calc.analytic.css.arg.list))),
+                                by=1:nrow(parameter.dt)] # Do this one row at a time
+  }
 
   css.list <- parameter.dt$Css 
   
