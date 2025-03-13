@@ -131,9 +131,16 @@ calc_tkstats <-function(
                 doses.per.day=doses.per.day,
                 concentration=concentration,
                 output.units=output.units,
+                route=route,
+                forcings = forcings,
+                concentration=concentration,
+                tissue=tissue,
                 model=model,
                 default.to.human=default.to.human,
-                suppress.messages=TRUE,
+                adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                regression=regression,
+                restrictive.clearance = restrictive.clearance,
+                suppress.messages=suppress.messages,
                 ...)
 
       if (length(stat)==1)
@@ -188,8 +195,8 @@ calc_tkstats <-function(
                       parameterize.arg.list = list(
                         default.to.human=default.to.human,
                         clint.pvalue.threshold=0.05,
-                        restrictive.clearance = TRUE,
-                        regression=TRUE
+                        restrictive.clearance = restrictive.clearance,
+                        regression=regression
                       ),
                       ...)
     
