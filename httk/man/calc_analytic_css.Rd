@@ -77,11 +77,6 @@ specific tissue.}
 \item{tissue}{Desired steady state tissue concentration. Default is of NULL
 typically gives whole body plasma concentration.}
 
-\item{restrictive.clearance}{If TRUE (default), then only the fraction of
-chemical not bound to protein is available for metabolism in the liver. If 
-FALSE, then all chemical in the liver is metabolized (faster metabolism due
-to rapid off-binding).}
-
 \item{bioactive.free.invivo}{If FALSE (default), then the total concentration is treated
 as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 bioactive in vivo. Only works with tissue = NULL in current implementation.}
