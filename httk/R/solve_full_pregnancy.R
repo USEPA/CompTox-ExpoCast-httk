@@ -36,9 +36,6 @@
 #' 
 #' @param plt plots all outputs, if TRUE
 #' 
-#' @param return.units if plt = TRUE, plots outputs in desired units of interest
-#' (either 'amt' for chemical amounts or 'conc' for chemical concentration).
-#' 
 #' @return A dataframe with columns for time (in days), each compartment, the 
 #' area under the curve (for plasma vs time), and plasma, and a row for each time 
 #' point.
@@ -82,17 +79,12 @@
 #'                                 time.course = seq(0, 40*7, 1), 
 #'                                 track.vars = c(paste0("Cf", fetal_compts), "Cplacenta"))
 #' 
-#' # plot solution in units of amounts
-#' # in this case, time.course affects both deSolve output and plot 
-#' gplot.out <- solve_full_pregnancy(chem.name = "genistein", 
-#'                                  daily.dose = 1, 
-#'                                  doses.per.day = 1,
-#'                                  time.course = seq(89,92, 1/24), 
-#'                                  plt = T, return.units = "amt")
+#' # plot solution based on output 
+#' plt.out <- solve_full_pregnancy(chem.name = "genistein", 
+#'                                 dose = 1, plt = T)
 #'
 #' @export solve_full_pregnancy
 #' @importFrom dplyr bind_rows
-#' @importFrom RColorBrewer brewer.pal
 #' @import data.table
 #' @import ggplot2
 
@@ -107,8 +99,7 @@ solve_full_pregnancy <- function(
     class.exclude = TRUE, 
     physchem.exclude = TRUE,
     track.vars = NULL, 
-    plt = FALSE,
-    return.units = "amt")
+    plt = FALSE)
 {
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -274,107 +265,58 @@ solve_full_pregnancy <- function(
   full_sol[ind, "Afplasma"] = initial.dat[["Afven"]]/vols.out[[1, "Rfblood2plasma"]]*(1 - vols.out[[1, "fhematocrit"]])
   full_sol[ind, "Rfblood2plasma"] = vols.out[[1, "Rfblood2plasma"]]
   
-  
-  # plot all states (the amts)
-  if (plt == TRUE) {
-    
-    if (return.units == "amt") {
-      
-      cols <- c(maternal_states, fetal_states, 
-                "Aconceptus", "Aplacenta")
-      
-      out <- full_sol[, c("time", cols)]
-      
-      # subset down to requested times 
-      out <- out[which(out$time %in% time.course), ]
-      
-      setDT(out)
-      out[, Mtotal := Agutlumen + Agut + Aliver + Akidney + Alung + Aven + Aart + Aadipose + Athyroid + Arest]
-      out[, ftotal := Afgut + Afliver + Afkidney + Aflung + Afven + Afart + Afthyroid + Afrest + Afbrain]
-      
-      # melt the data to ggplot 
-      out.m <- melt.data.table(out, id.vars = c("time"), 
-                              variable.name = 'tissue', 
-                              value.name = return.units)
-      setDT(out.m)
-      out.m[, model := '1st trimester']
-      out.m[time > 91, model := '2nd-3rd trimester']
-      
-      p <- ggplot(out.m[!is.na(get(return.units))], 
-                  aes(x = time, y = log10(get(return.units)))) + 
-        geom_point(aes(color = model)) +
-        scale_color_manual(values = c('1st trimester' = 'red', 
-                                      '2nd-3rd trimester' = 'black')) +
-        facet_wrap(~tissue) + 
-        theme_bw() + 
-        labs(x = 'time (days)', y = 'Amount (log10 umol)', 
-             title = 'Chemical Amounts in Compartments of full gestational model') +
-        guides(colour = guide_legend(override.aes = list(size = 5)))
-      
-      print(p)
-      
-    } else if (return.units == "conc") {
-      cols <- c(maternal_concs, fetal_concs, "Cconceptus", "Cplacenta")
-      
-      out <- full_sol[, c("time", cols)]
-      
-      # subset down to requested times 
-      out <- out[which(out$time %in% time.course), ]
-      
-      setDT(out)
-      
-      # melt the data to ggplot 
-      out.m <- melt.data.table(out, id.vars = c("time"), 
-                              variable.name = 'tissue', 
-                              value.name = return.units)
-      setDT(out.m)
-      out.m[, body := "maternal"]
-      out.m[tissue %in% colnames(out)[grep("^Cf", colnames(out))], body := "fetal"]
-      out.m[tissue %in% c("Cconceptus", "Cplacenta"), body := "conceptus"]
-      out.m[, tissue := sub("^C[f]*", "", tissue)]
-      
-      # plot all compartments on a graph faceted by mother/fetus
-      all.tissues <- c(union(maternal_compts, fetal_compts), "conceptus", "placenta")
-      set3.colors <- brewer.pal(12, 'Set3') # max num of colors for Set 3 is 12
-      tissue.colors <- setNames(set3.colors, all.tissues[all.tissues != "gutlumen"])
-      tissue.colors <- c(tissue.colors, "#7FC97F")
-      names(tissue.colors)[13] = c("gutlumen")
-      
-      p <- ggplot(out.m[!is.na(get(return.units))], 
-                  aes(x = time, y = log10(get(return.units)))) + 
-        geom_point(aes(color = tissue)) +
-        scale_color_manual(values = tissue.colors) +
-        facet_wrap(~body) + 
-        theme_bw() + 
-        labs(x = 'time (days)', y = 'Concentration (log10 uM)', 
-             title = 'Chemical Concentration in Compartments of full gestational model') +
-        guides(colour = guide_legend(override.aes = list(size = 5)))
-      
-      print(p)
-      
-    } else{
-      stop("Acceptable values for return.units to plot is 'conc' or 'amt.'")
-    }
-  }  
-  
+
   # The monitored variables can be altered by the user 
   if (is.null(track.vars)) {
     
     # have the default output columns be selected concs 
     default.track.vars <- c("Agutlumen", maternal_concs,
-                              "Aconceptus", "Cconceptus",
-                              "Cplasma",
-                              "Atubules","Ametabolized","Rblood2plasma",
-                              "AUC","fAUC", 
-                              "Aplacenta", "Cplacenta",
-                              fetal_concs, 
-                              "Cfplasma","Rfblood2plasma")
-    return(full_sol[, c("time", default.track.vars)])
+                            "Aconceptus", "Cconceptus",
+                            "Cplasma",
+                            "Atubules","Ametabolized","Rblood2plasma",
+                            "AUC","fAUC", 
+                            "Aplacenta", "Cplacenta",
+                            fetal_concs, 
+                            "Cfplasma","Rfblood2plasma")
+    track.vars <- default.track.vars 
+    
+    full_sol <- full_sol[, c("time", track.vars)]
   }
   else {
     
     # however, always include the compartment that receives the dose 
-    return(full_sol[, unique(c("time", "Agutlumen", track.vars))])
+    full_sol <- full_sol[, unique(c("time", "Agutlumen", track.vars))]
   }
+  
+  # convert full_sol to deSolve object for plotting to work
+  full_sol <- structure(as.matrix(full_sol), class = "deSolve")
+  
+  # PLOTTING from deSolve
+  if (plt == TRUE) {
+    
+    #assemble a y-axis units vector to correspond to each entry in track.vars
+    n_track_vars = length(track.vars)
+    plot_units_vector = rep(NA, n_track_vars) 
+    
+    for (var in 1:n_track_vars) {
+      if (substr(track.vars[var],1,1) == 'A') {
+        #other variables that start with 'A' should all be amounts
+        plot_units_vector[var] = "umol"
+      } else if (substr(track.vars[var],1,1) == 'C') {
+        plot_units_vector[var] = "uM"
+      } else if (track.vars[var] %in% c("Rblood2plasma", "Rfblood2plasma")) {
+        plot_units_vector[var] = "unitless"
+      } else if (track.vars[var] %in% c("AUC", "fAUC")) {
+        plot_units_vector[var] = "uM*days"
+      }
+    }
+    
+    # again always include the compartment that receives the dose for visual check 
+    # of dosing
+    graphics::plot(full_sol, select=unique(c("Agutlumen",track.vars)),
+                   ylab = plot_units_vector, xlab = 'time (days)')
+  }  
+  
+  return(full_sol)
   
 }
