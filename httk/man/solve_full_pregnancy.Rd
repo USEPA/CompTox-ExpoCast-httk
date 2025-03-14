@@ -15,8 +15,7 @@ solve_full_pregnancy(
   class.exclude = TRUE,
   physchem.exclude = TRUE,
   track.vars = NULL,
-  plt = FALSE,
-  return.units = "amt"
+  plt = FALSE
 )
 }
 \arguments{
@@ -46,9 +45,6 @@ files for fetal_pbtk and 1tri_pbtk.}
 \item{track.vars}{which variables to return in solution output dataframe}
 
 \item{plt}{plots all outputs, if TRUE}
-
-\item{return.units}{if plt = TRUE, plots outputs in desired units of interest
-(either 'amt' for chemical amounts or 'conc' for chemical concentration).}
 }
 \value{
 A dataframe with columns for time (in days), each compartment, the 
@@ -96,13 +92,9 @@ conc.out <- solve_full_pregnancy(chem.name = "fipronil",
                                 time.course = seq(0, 40*7, 1), 
                                 track.vars = c(paste0("Cf", fetal_compts), "Cplacenta"))
 
-# plot solution in units of amounts
-# in this case, time.course affects both deSolve output and plot 
-gplot.out <- solve_full_pregnancy(chem.name = "genistein", 
-                                 daily.dose = 1, 
-                                 doses.per.day = 1,
-                                 time.course = seq(89,92, 1/24), 
-                                 plt = T, return.units = "amt")
+# plot solution based on output 
+plt.out <- solve_full_pregnancy(chem.name = "genistein", 
+                                dose = 1, plt = T)
 
 }
 \seealso{
