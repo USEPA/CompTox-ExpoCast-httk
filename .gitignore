@@ -71,3 +71,16 @@ vignettes/*.pdf
 # R Environment Variables
 .Renviron
 
+# Data files generated for lifestage models
+httk/data/nhanes*params*.Rds
+httk/data/nhanes_physiology.Rds
+
+## R package Sub-directory Files to Ignore ##
+# history files
+httk/.Rhistory
+# R Studio files
+httk/.Rproj.user
+# session data files
+httk/.RData
+# user-specific files
+httk/.Ruserdata
