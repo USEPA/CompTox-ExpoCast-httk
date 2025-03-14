@@ -6,6 +6,9 @@
 * Added 'onUnload' internal function call, appears to improve stability when using multiple models with [deSolve](https://CRAN.R-project.org/package=deSolve)
 * Added argument chem_include to 'load_sipes2017', 'load_pradeep2020', 'load_dawson2021', 'load_honda2023' to speed up loading of in silico predicted values by only loading chemicals specified by argument
 
+## Bug fixes
+* 'calc_tkstats' now passes all arguments to sub-functions (for example, restrictive.clearance was being ignored)
+
 # httk 2.5.0 (2024-12-20)
 This release accompanies the submission of the new manuscript
 "A Simple Physiologically-Based Toxicokinetic Model for Multi-Route <i>In Vitro-In Vivo</i> Extrapolation"

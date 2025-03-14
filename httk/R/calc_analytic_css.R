@@ -54,11 +54,6 @@ model.list <- list()
 #' specific tissue then the value returned is for the plasma or blood in that
 #' specific tissue.
 #'
-#'@param restrictive.clearance If TRUE (default), then only the fraction of
-#' chemical not bound to protein is available for metabolism in the liver. If 
-#' FALSE, then all chemical in the liver is metabolized (faster metabolism due
-#' to rapid off-binding). 
-#'
 #'@param bioactive.free.invivo If FALSE (default), then the total concentration is treated
 #' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 #' bioactive in vivo. Only works with tissue = NULL in current implementation.
@@ -256,7 +251,7 @@ calc_analytic_css <- function(chem.name=NULL,
   if (!is.null(IVIVE)) 
   {
     out <- honda.ivive(method=IVIVE, tissue=tissue)
-    restrictive.clearance <- out[["restrictive.clearance"]]
+    parameterize.args[["restrictive.clearance"]] <- out[["restrictive.clearance"]]
     tissue <- out[["tissue"]]
     bioactive.free.invivo <- out[["bioactive.free.invivo"]]
     concentration <- out[["concentration"]]
@@ -361,7 +356,6 @@ calc_analytic_css <- function(chem.name=NULL,
           concentration=concentration,
           suppress.messages=suppress.messages,
           tissue=tissue,
-          restrictive.clearance=restrictive.clearance,
           bioactive.free.invivo = bioactive.free.invivo,
           Caco2.options = Caco2.options),
           list(...))))
