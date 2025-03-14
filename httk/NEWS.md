@@ -1,3 +1,7 @@
+## Bug fixes
+* Defined function prototypes for forcings for several models in init.c to increase stability
+* Added flexible tolerance to `calc_css` to increase stability
+
 ## Enhancements
 * Added 'onUnload' internal function call, appears to improve stability when using multiple models with [deSolve](https://CRAN.R-project.org/package=deSolve)
 * Added argument chem_include to 'load_sipes2017', 'load_pradeep2020', 'load_dawson2021', 'load_honda2023' to speed up loading of in silico predicted values by only loading chemicals specified by argument
