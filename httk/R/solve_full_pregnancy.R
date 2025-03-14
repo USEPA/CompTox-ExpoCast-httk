@@ -85,8 +85,6 @@
 #'
 #' @export solve_full_pregnancy
 #' @importFrom dplyr bind_rows
-#' @import data.table
-#' @import ggplot2
 
 solve_full_pregnancy <- function(
     chem.name = NULL,
