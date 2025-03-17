@@ -64,13 +64,21 @@ model.list <- list()
 #'overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments. 
 #'See Details below for more information.
 #'
+#'@param parameterize.args.list List of arguments passed to model's associated
+#' parameterization function, including default.to.human, 
+#' adjusted.Funbound.plasma, regression, and minimum.Funbound.plasma. The 
+#' default.to.human argument substitutes missing animal values with human values
+#' if true, adjusted.Funbound.plasma returns adjusted Funbound.plasma when set 
+#' to TRUE along with parition coefficients calculated with this value, 
+#' regression indicates whether or not to use the regressions in calculating
+#' partition coefficients, and minimum.Funbound.plasma is the value to which
+#' Monte Carlo draws less than this value are set (default is 0.0001 -- half
+#' the lowest measured Fup in our dataset).
+#'
 #' @param dose The amount of chemial to which the individual is exposed.
 #'
 #' @param dose.units The units associated with the dose received.
 #'
-#'@param parameterize.args Additional parameters passed to parameterize function if 
-#'parameters is NULL.
-#'  
 #'@param ... Additional parameters passed to parameterize function if 
 #'parameters is NULL.
 #'  
@@ -107,7 +115,7 @@ model.list <- list()
 #' 
 #' \donttest{
 #'calc_analytic_css(chem.name='Bisphenol-A',tissue='liver',species='rabbit',
-#'                  parameterize.args = list(
+#'                  parameterize.args.list = list(
 #'                                 default.to.human=TRUE,
 #'                                 adjusted.Funbound.plasma=TRUE,
 #'                                 regression=TRUE,
@@ -156,7 +164,7 @@ calc_analytic_css <- function(chem.name=NULL,
                               tissue=NULL,
                               bioactive.free.invivo = FALSE,
                               IVIVE=NULL,
-                              parameterize.args=list(),
+                              parameterize.args.list=list(),
                               ...
                               )
 {  
@@ -245,6 +253,11 @@ calc_analytic_css <- function(chem.name=NULL,
     tissue <- out[["tissue"]]
     bioactive.free.invivo <- out[["bioactive.free.invivo"]]
     concentration <- out[["concentration"]]
+
+    if ("restrictive.clearance" %in% names(parameterize.args))
+      if (restrictive.clearance != parameterize.args[["restrictive.clearance"]])
+          warning("Argument restrictive.clerance in paramaterize.args changed in calc_analytic_css")
+    parameterize.args[["restrictive.clearance"]] <- restrictive.clearance
   }
   
   if ((bioactive.free.invivo == TRUE & !is.null(tissue)) | 

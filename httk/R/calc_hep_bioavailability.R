@@ -90,6 +90,7 @@ calc_hep_bioavailability <- function(
                             chem.cas=chem.cas,
                             chem.name=chem.name,
                             dtxsid=dtxsid,
+                            species=species,
                             suppress.messages=suppress.messages))))
   }
   
