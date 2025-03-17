@@ -145,6 +145,11 @@
 #' side of an instantaneous event (like an iv injection). This helps ensure that
 #' abrupt changes plot well. Defaults to 1e-4.
 #' 
+#' @param forcings A way of passing time-dependent quantities to the ODE solver.
+#' Should take the form of a list of two-column matrices with the first column
+#' containing time values and the second column the value of quantity at those
+#' times. Default NULL.
+#' 
 #' @return A matrix of class deSolve with a column for time(in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
 #' for each time point.
@@ -239,6 +244,7 @@ solve_model <- function(chem.name = NULL,
                     minimum.Funbound.plasma=0.0001,
                     parameterize.arg.list=list(),
                     small.time = 1e-4, 
+                    forcings = NULL,
                     ...)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -491,6 +497,7 @@ specification in compartment_units for model ", model)
     ss.params[[names(ss.params) %in% names(parameters)]] <- 
       parameters[[names(ss.params) %in% names(parameters)]]
     parameters[['Clmetabolismc']] <- calc_hep_clearance(parameters=ss.params,
+      species = species,
       hepatic.model='unscaled',
       restrictive.clearance = restrictive.clearance,
       suppress.messages=TRUE)
@@ -814,7 +821,7 @@ specification in compartment_units for model ", model)
   dosing.matrix <- dosing$dosing.matrix
   daily.dose <- dosing$daily.dose
   doses.per.day <- dosing$doses.per.day
-  forcings <- dosing$forcings
+  forcings <- c(forcings, dosing$forcings)
 
 # Add the first dose:
   if (!is.null(initial.dose))
