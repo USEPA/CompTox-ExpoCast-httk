@@ -497,6 +497,7 @@ specification in compartment_units for model ", model)
     ss.params[[names(ss.params) %in% names(parameters)]] <- 
       parameters[[names(ss.params) %in% names(parameters)]]
     parameters[['Clmetabolismc']] <- calc_hep_clearance(parameters=ss.params,
+      species = species,
       hepatic.model='unscaled',
       restrictive.clearance = restrictive.clearance,
       suppress.messages=TRUE)
