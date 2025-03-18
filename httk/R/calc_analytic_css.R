@@ -295,7 +295,6 @@ calc_analytic_css <- function(chem.name=NULL,
         suppress.messages=suppress.messages),
       list(...),
       parameterize.args.list)))
- 
   } else {
     model_param_names <- model.list[[model]]$param.names 
     if (!all(model_param_names %in% names(parameters)))
