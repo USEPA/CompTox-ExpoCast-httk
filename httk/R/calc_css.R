@@ -77,7 +77,7 @@
 #'@param route Route of exposure (either "oral", "iv", or "inhalation" default
 #'  "oral").
 #'
-#'@param parameterize.args Named list of any additional arguments passed to
+#'@param parameterize.args.list Named list of any additional arguments passed to
 #'  model parameterization function (other than the already-named arguments).
 #'  Default `list()` to pass no additional arguments.
 #'
@@ -148,7 +148,7 @@ calc_css <- function(chem.name=NULL,
                     well.stirred.correction=TRUE,
                     restrictive.clearance=TRUE,
                     dosing=NULL,
-                    parameterize.args = list(),
+                    parameterize.args.list = list(),
                     ...)
 {
   # We need to describe the chemical to be simulated one way or another:
@@ -214,7 +214,7 @@ calc_css <- function(chem.name=NULL,
       regression=regression,
       well.stirred.correction=well.stirred.correction,
       restrictive.clearance=restrictive.clearance),
-      parameterize.args)))
+      parameterize.args.list)))
   }
 
   if (is.null(dosing))
@@ -246,7 +246,7 @@ calc_css <- function(chem.name=NULL,
     well.stirred.correction=well.stirred.correction,
     restrictive.clearance=restrictive.clearance,
     minimum.Funbound.plasma = minimum.Funbound.plasma,
-    parameterize.args = parameterize.args
+    parameterize.args.list = parameterize.args.list
   )
   # Check to see if there is analytic Css funtion:
   if (!is.null(model.list[[model]]$analytic.css.func))
@@ -285,7 +285,7 @@ calc_css <- function(chem.name=NULL,
     minimum.Funbound.plasma = minimum.Funbound.plasma,
     restrictive.clearance=restrictive.clearance,
     monitor.vars=monitor.vars,
-    parameterize.arg.list = parameterize.args),
+    parameterize.arg.list = parameterize.args.list),
     ...)))
     
 # Make sure we have the compartment we need: 
@@ -330,7 +330,7 @@ calc_css <- function(chem.name=NULL,
       minimum.Funbound.plasma = minimum.Funbound.plasma,
       restrictive.clearance=restrictive.clearance,
       monitor.vars=monitor.vars,
-      parameterize.arg.list = parameterize.args,   
+      parameterize.arg.list = parameterize.args.list,   
       suppress.messages=TRUE,
       ...))))
     Final_Conc <- out[dim(out)[1],monitor.vars]

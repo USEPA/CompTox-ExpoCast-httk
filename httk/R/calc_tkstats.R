@@ -238,7 +238,7 @@ calc_tkstats <-function(
     {
       # Retrieve this argument from ... if it is present:
       if ("parameterize.args.list" %in% names(list(...)))
-        adjusted.Funbound.plasma <- parameterize.args.list[["adjusted.Funbound.plasma"]]
+        adjusted.Funbound.plasma <- list(...)[[parameterize.args.list[["adjusted.Funbound.plasma"]]]]
       else adjusted.Funbound.plasma <- NULL
         
       parameters[['Rblood2plasma']] <- 

@@ -66,7 +66,7 @@
 #' 
 #' @param Caco2.Pab (Numeric) Caco2 apical to basolaterial permeability used by calc_peff
 #' 
-#' @param parameterize.args List of arguments passed to \code{\link{parameterize_steadystate}}
+#' @param parameterize.args.list List of arguments passed to \code{\link{parameterize_steadystate}}
 #' 
 #' @param ... Additional parameters passed to parameterize function if 
 #' parameters is NULL.
@@ -346,7 +346,7 @@ calc_peff <- function(parameters = NULL,
   species = "Human",
   suppress.messages = FALSE,
   Caco2.Pab = NULL,
-  parameterize.args = list()
+  parameterize.args.list = list()
   )
 {
   if (is.null(Caco2.Pab))
@@ -392,7 +392,7 @@ calc_peff <- function(parameters = NULL,
                                   chem.name=chem.name,
                                   dtxsid=dtxsid,
                                   suppress.messages=suppress.messages),
-                                  parameterize.args)))
+                                  parameterize.args.list)))
     }
     Caco2.Pab <- parameters[["Caco2.Pab"]]
   }  
@@ -416,7 +416,7 @@ calc_kgutabs<- function(parameters = NULL,
   dtxsid = NULL,
   species = "Human",
   suppress.messages = FALSE,
-  parameterize.args = list()
+  parameterize.args.list = list()
   )
 {
   if (!is.null(parameters))
@@ -460,7 +460,7 @@ calc_kgutabs<- function(parameters = NULL,
                                 chem.name=chem.name,
                                 dtxsid=dtxsid,
                                 suppress.messages=suppress.messages),
-                                parameterize.args)))
+                                parameterize.args.list)))
   }
   
   # 10^-4 cm/s
@@ -503,7 +503,7 @@ calc_fgut.oral <- function(parameters = NULL,
   species = "Human",
   suppress.messages = FALSE,
   Caco2.Pab.default = 1.6,
-  parameterize.args = list()
+  parameterize.args.list = list()
   )
 {
   if (!is.null(parameters))
@@ -547,7 +547,7 @@ calc_fgut.oral <- function(parameters = NULL,
                                 chem.name=chem.name,
                                 dtxsid=dtxsid,
                                 suppress.messages=suppress.messages),
-                                parameterize.args)))
+                                parameterize.args.list)))
   }
   
   # Retrieve the chemical-specific Caco-2 value:
