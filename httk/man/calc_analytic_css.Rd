@@ -21,7 +21,7 @@ calc_analytic_css(
   tissue = NULL,
   bioactive.free.invivo = FALSE,
   IVIVE = NULL,
-  parameterize.args = list(),
+  parameterize.args.list = list(),
   ...
 )
 }
@@ -85,8 +85,16 @@ Argument may be set to "Honda1" through "Honda4". If used, this function
 overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments. 
 See Details below for more information.}
 
-\item{parameterize.args}{Additional parameters passed to parameterize function if 
-parameters is NULL.}
+\item{parameterize.args.list}{List of arguments passed to model's associated
+parameterization function, including default.to.human, 
+adjusted.Funbound.plasma, regression, and minimum.Funbound.plasma. The 
+default.to.human argument substitutes missing animal values with human values
+if true, adjusted.Funbound.plasma returns adjusted Funbound.plasma when set 
+to TRUE along with parition coefficients calculated with this value, 
+regression indicates whether or not to use the regressions in calculating
+partition coefficients, and minimum.Funbound.plasma is the value to which
+Monte Carlo draws less than this value are set (default is 0.0001 -- half
+the lowest measured Fup in our dataset).}
 
 \item{...}{Additional parameters passed to parameterize function if 
 parameters is NULL.}
@@ -131,7 +139,7 @@ calc_analytic_css(chem.name='Bisphenol-A',output.units='mg/L',
 
 \donttest{
 calc_analytic_css(chem.name='Bisphenol-A',tissue='liver',species='rabbit',
-                 parameterize.args = list(
+                 parameterize.args.list = list(
                                 default.to.human=TRUE,
                                 adjusted.Funbound.plasma=TRUE,
                                 regression=TRUE,

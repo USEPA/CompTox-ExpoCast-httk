@@ -36,7 +36,7 @@ calc_peff(
   species = "Human",
   suppress.messages = FALSE,
   Caco2.Pab = NULL,
-  parameterize.args = list()
+  parameterize.args.list = list()
 )
 
 calc_kgutabs(
@@ -46,7 +46,7 @@ calc_kgutabs(
   dtxsid = NULL,
   species = "Human",
   suppress.messages = FALSE,
-  parameterize.args = list()
+  parameterize.args.list = list()
 )
 
 calc_fgut.oral(
@@ -57,7 +57,7 @@ calc_fgut.oral(
   species = "Human",
   suppress.messages = FALSE,
   Caco2.Pab.default = 1.6,
-  parameterize.args = list()
+  parameterize.args.list = list()
 )
 }
 \arguments{
@@ -92,7 +92,7 @@ parameters is NULL.}
 
 \item{Caco2.Pab}{(Numeric) Caco2 apical to basolaterial permeability used by calc_peff}
 
-\item{parameterize.args}{List of arguments passed to \code{\link{parameterize_steadystate}}}
+\item{parameterize.args.list}{List of arguments passed to \code{\link{parameterize_steadystate}}}
 }
 \value{
 \item{fbio.oral}{Oral bioavailability, the fraction of oral dose 

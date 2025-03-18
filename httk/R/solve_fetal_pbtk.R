@@ -263,7 +263,7 @@ describe human gestation.")
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
     minimum.Funbound.plasma=minimum.Funbound.plasma,
-    parameterize.arg.list=list(
+    parameterize.args.list=list(
                   restrictive.clearance = restrictive.clearance,
                   regression=regression,
                   Caco2.options=Caco2.options,

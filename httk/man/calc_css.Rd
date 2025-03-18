@@ -28,7 +28,7 @@ calc_css(
   well.stirred.correction = TRUE,
   restrictive.clearance = TRUE,
   dosing = NULL,
-  parameterize.args = list(),
+  parameterize.args.list = list(),
   ...
 )
 }
@@ -103,7 +103,7 @@ in liver clearance if FALSE.}
 \item{dosing}{The dosing object for more complicated scenarios. Defaults to
 repeated \code{daily.dose} spread out over \code{doses.per.day}}
 
-\item{parameterize.args}{Named list of any additional arguments passed to
+\item{parameterize.args.list}{Named list of any additional arguments passed to
 model parameterization function (other than the already-named arguments).
 Default `list()` to pass no additional arguments.}
 

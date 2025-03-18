@@ -285,7 +285,7 @@ calc_css <- function(chem.name=NULL,
     minimum.Funbound.plasma = minimum.Funbound.plasma,
     restrictive.clearance=restrictive.clearance,
     monitor.vars=monitor.vars,
-    parameterize.arg.list = parameterize.args.list),
+    parameterize.args.list = parameterize.args.list),
     ...)))
     
 # Make sure we have the compartment we need: 
@@ -330,7 +330,7 @@ calc_css <- function(chem.name=NULL,
       minimum.Funbound.plasma = minimum.Funbound.plasma,
       restrictive.clearance=restrictive.clearance,
       monitor.vars=monitor.vars,
-      parameterize.arg.list = parameterize.args.list,   
+      parameterize.args.list = parameterize.args.list,   
       suppress.messages=TRUE,
       ...))))
     Final_Conc <- out[dim(out)[1],monitor.vars]

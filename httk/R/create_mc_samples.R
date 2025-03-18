@@ -117,7 +117,7 @@
 #' @param propagate.invitrouv.arg.list Additional parameters passed to model's
 #' associated in vitro uncertainty and variability propagation function
 #' 
-#' @param parameterize.arg.list Additional parameters passed to the 
+#' @param parameterize.args.list Additional parameters passed to the 
 #' parameterize_* function for the model.
 #' 
 #' @param Caco2.options Arguments describing how to handle Caco2 absorption data
@@ -221,7 +221,7 @@ create_mc_samples <- function(chem.cas=NULL,
                           list(method = "direct resampling"),
                         convert.httkpop.arg.list=NULL,
                         propagate.invitrouv.arg.list=NULL,
-                        parameterize.arg.list=NULL,
+                        parameterize.args.list=NULL,
                         Caco2.options=NULL)
 {
 
@@ -290,7 +290,7 @@ create_mc_samples <- function(chem.cas=NULL,
                                         adjusted.Funbound.plasma=FALSE, # We want the unadjusted in vitro measured value
                                         adjusted.Clint=FALSE, # We want the unadjusted in vitro measured value
                                         suppress.messages=suppress.messages),
-                                        parameterize.arg.list))
+                                        parameterize.args.list))
   if (!is.null(Caco2.options)) parameterize.args[["Caco2.options"]] <- Caco2.options
   
   # Check to see if we need to call the parameterize_MODEL function:
@@ -624,7 +624,7 @@ Set species=\"Human\" to run httkpop model.')
         Clmetabolismc=cl, # L/h/kg
         Rblood2plasma=parameters.dt$Rblood2plasma,
         BW=parameters.dt$BW),
-      restrictive.clearance=parameterize.arg.list[["restrictive.clearance"]])))]
+      restrictive.clearance=parameterize.args.list[["restrictive.clearance"]])))]
   }
   
   # If Caco2.options given use those, otherwise use defaults:
