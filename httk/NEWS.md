@@ -1,6 +1,7 @@
 ## Bug Fixes
 * Added Caco-2 permeability to model "sumclearances"
-* Corrected calcualtion of total clearance in 'calc_total_clearance' to take into account systemic oral bioavailability: Cl_tot = f_bio / Css -- was using f_bio = 1 previously
+* Corrected calculation of total clearance in 'calc_total_clearance' to take into account systemic oral bioavailability: Cl_tot = f_bio / Css -- was using f_bio = 1 previously
+* At least three diffrent vesions of hte argument parameterize.args.list were in use -- parameterize.args and parameterize.arg.list have been renamed in all functions to parameteirze.args.list
 
 ## Enhancements
 * Added 'onUnload' internal function call, appears to improve stability when using multiple models with [deSolve](https://CRAN.R-project.org/package=deSolve)
