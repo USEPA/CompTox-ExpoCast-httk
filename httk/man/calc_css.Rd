@@ -107,8 +107,8 @@ repeated \code{daily.dose} spread out over \code{doses.per.day}}
 model parameterization function (other than the already-named arguments).
 Default `list()` to pass no additional arguments.}
 
-\item{...}{Additional arguments passed to model solver (default of
-\code{\link{solve_pbtk}}).}
+\item{...}{Additional arguments passed to \code{\link{solve_model}} (defaults
+to "pbtk").}
 }
 \value{
 \item{frac}{Ratio of the mean concentration on the day steady state is
