@@ -1,3 +1,6 @@
+## Bug Fixes
+* Blank values for human Clint in [Woods et al. 2017](https://doi.org/10.1124/dmd.117.077040) were incorrectly being recorded as 0 -- these have been fixed
+
 ## Enhancements
 * Added 'onUnload' internal function call, appears to improve stability when using multiple models with [deSolve](https://CRAN.R-project.org/package=deSolve)
 * Added class.exclude and physchem.exclude arguments to solve_[MODEL] and parameterize_[MODEL] functions
