@@ -2039,12 +2039,12 @@ CAS.table <- subset(chem.physical_and_invitro.data,is.na(DTXSID))
 cat("Looking up missing DTXSID by CAS with CCD API...\n")
 cheminfo.by.cas <- chemical_equal_batch(word_list=CAS.table$CAS)
 NOCAS.table <- subset(CAS.table,
-                      DTXSID %in% subset(cheminfo.by.cas, is.na(dtxsid))$dtxsid)
+                      DTXSID %in% subset(cheminfo.by.cas$valid, is.na(dtxsid))$dtxsid)
 cat("Looking up missing DTXSID and CAS by Compound Name with CCD API...\n")
 cheminfo.by.name <- chemical_equal_batch(word_list=NOCAS.table$Compound)
 
-cheminfo.by.cas <- subset(cheminfo.by.cas, !is.na(dtxsid))
-cheminfo.by.name <- subset(cheminfo.by.name, !is.na(dtxsid))
+cheminfo.by.cas <- subset(cheminfo.by.cas$valid, !is.na(dtxsid))
+cheminfo.by.name <- subset(cheminfo.by.name$valid, !is.na(dtxsid))
 
 # Clean up cas numbers:
 for (this.cas in cheminfo.by.cas$searchValue)

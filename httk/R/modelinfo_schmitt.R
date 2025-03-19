@@ -1,13 +1,18 @@
 # Add this model to the list of models:
 
-# The is the R function for generating model parameters:
-model.list[["schmitt"]]$parameterize.func <- "parameterize_schmitt"
+# Model identifier for the model.list:
+THIS.MODEL <- "schmitt" 
 
+# Dose this model work with Monte Carlo parameter sampling?
+model.list[[THIS.MODEL]]$monte.carlo <- TRUE
+
+# The is the R function for generating model parameters:
+model.list[[THIS.MODEL]]$parameterize.func <- "parameterize_schmitt"
 
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
-model.list[["schmitt"]]$param.names <- c(
+model.list[[THIS.MODEL]]$param.names <- c(
  # "Kadipose2pu",
  # "Kbone2pu",
  # "Kbrain2pu",
@@ -34,7 +39,7 @@ model.list[["schmitt"]]$param.names <- c(
   "alpha")
 
 #Parameters needed to make a prediction (this is used by get_cheminfo):
-model.list[["schmitt"]]$required.params <- c(
+model.list[[THIS.MODEL]]$required.params <- c(
   "Funbound.plasma",
   "Pow",
   "pKa_Donor",
@@ -42,7 +47,7 @@ model.list[["schmitt"]]$required.params <- c(
   "MW")
 
 #Parameters needed to run parameterize function without a chemical id:
-model.list[["schmitt"]]$parameterize_params <- c(
+model.list[[THIS.MODEL]]$parameterize_params <- c(
   "Funbound.plasma",
   "Pow",
   "pKa_Donor",
@@ -53,7 +58,7 @@ model.list[["schmitt"]]$parameterize_params <- c(
   "Fprotein.plasma")
 
 #choose which parameters are not to be Monte Carlo sampled
-model.list[["schmitt"]]$noMC.params <- c(
+model.list[[THIS.MODEL]]$noMC.params <- c(
   'kgutabs',
   'MW',
   'Pow',
@@ -90,7 +95,7 @@ schmitt.specific.names <- c("Kadipose2pu",
                             "Kspleen2pu") 
                               
 # Do we ignore the Fups where the value was below the limit of detection?
-model.list[["schmitt"]]$exclude.fup.zero <- TRUE  
+model.list[[THIS.MODEL]]$exclude.fup.zero <- TRUE  
 
 # Filter out compounds belonging to select chemical classes
-model.list[["schmitt"]]$chem.class.filt <- c("PFAS")
+model.list[[THIS.MODEL]]$chem.class.filt <- c("PFAS")
