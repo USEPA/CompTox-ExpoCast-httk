@@ -33,7 +33,10 @@ solve_model(
   minimum.Funbound.plasma = 1e-04,
   parameterize.arg.list = list(),
   small.time = 1e-04,
+<<<<<<< HEAD
   forcings = NULL,
+=======
+>>>>>>> e7422fa30455e6d3bd8162e7e8d6790d0566e4e3
   ...
 )
 }
@@ -132,11 +135,14 @@ and `minimum.Funbound.plasma`)}
 \item{small.time}{A tiny amount of time used to provide predictions on either
 side of an instantaneous event (like an iv injection). This helps ensure that
 abrupt changes plot well. Defaults to 1e-4.}
+<<<<<<< HEAD
 
 \item{forcings}{A way of passing time-dependent quantities to the ODE solver.
 Should take the form of a list of two-column matrices with the first column
 containing time values and the second column the value of quantity at those
 times. Default NULL.}
+=======
+>>>>>>> e7422fa30455e6d3bd8162e7e8d6790d0566e4e3
 
 \item{...}{Additional arguments passed to the integrator.}
 }
