@@ -183,31 +183,7 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{
 \donttest{ 
-solve_3comp(chem.name='Bisphenol-A', 
-            doses.per.day=2, 
-            daily.dose=.5,
-            days=1,
-            tsteps=2)
-
-# By storing the model parameters in a vector first, you can potentially
-# edit them before using the model:
-params <-parameterize_3comp(chem.cas="80-05-7")
-solve_3comp(parameters=params, days=1)
-
-head(solve_3comp(chem.name="Terbufos", daily.dose=NULL, dose=1, days=1))
-head(solve_3comp(chem.name="Terbufos", daily.dose=NULL, dose=1, 
-                 days=1, iv.dose=TRUE))
-
-# A dose matrix specifies times and magnitudes of doses:
-dm <- matrix(c(0,1,2,5,5,5),nrow=3)
-colnames(dm) <- c("time","dose")
-solve_3comp(chem.name="Methenamine", dosing.matrix=dm,
-            dose=NULL, daily.dose=NULL,
-            days=2.5)
-
-solve_3comp(chem.name="Besonprodil",
-            daily.dose=1, dose=NULL,
-            days=2.5, doses.per.day=4)
+solve_3comp2(dtxsid="DTXSID0020573",route="inhalation",dose=1,input.units="ppmv")
 }
 
 }
