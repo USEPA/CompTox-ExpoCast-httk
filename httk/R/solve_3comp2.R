@@ -44,6 +44,12 @@
 #' appropriate physiological data(volumes and flows) but substitues human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #' 
+#' Per- and 
+#' polyfluoroalkyl substances (PFAS) are excluded by default because the 
+#' transporters that often drive PFAS toxicokinetics are not included in this 
+#' model. However, PFAS chemicals can be included with the argument 
+#' "class.exclude = FALSE".
+#' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
 #' 
@@ -92,6 +98,13 @@
 #' @param default.to.human Substitutes missing animal values with human values
 #' if true (hepatic intrinsic clearance or fraction of unbound plasma).
 #' 
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' 
+#' @param physchem.exclude Exclude chemicals on the basis of physico-chemical
+#' properties (currently only Henry's law constant) as specified by 
+#' the relevant modelinfo_[MODEL] file (default TRUE).
+#' 
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
 #' hematocrit, Funbound.plasma, and Krbc2pu.
@@ -119,13 +132,17 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' 
-#' @param Caco2.options A list of options to use when working with Caco2 apical to
-#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
-#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
-#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' @param Caco2.options A list of options to use when working with Caco2 apical 
+#' to basolateral data \code{Caco2.Pab}, default is Caco2.options = 
+#' list(Caco2.Pab.default = 1.6, Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, 
+#' overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the 
+#' default value for Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE 
+#' uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+#' Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE 
+#' overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
+#' with 1 (i.e. 100 percent) regardless of other settings.
 #' See \code{\link{get_fbio}} for further details.
 #' 
 #' @param monitor.vars Which variables are returned as a function of time. 
@@ -182,6 +199,8 @@ solve_3comp2 <- function(chem.name = NULL,
                     # output.units='uM',
                     output.units=NULL,
                     default.to.human=FALSE,
+                    physchem.exclude = TRUE,
+                    class.exclude = TRUE,
                     recalc.blood2plasma=FALSE,
                     recalc.clearance=FALSE,
                     clint.pvalue.threshold=0.05,
@@ -236,7 +255,9 @@ solve_3comp2 <- function(chem.name = NULL,
                       clint.pvalue.threshold=clint.pvalue.threshold,
                       restrictive.clearance = restrictive.clearance,
                       regression=regression,
-                      Caco2.options=Caco2.options),
+                      Caco2.options=Caco2.options,
+                      physchem.exclude = physchem.exclude,
+                      class.exclude = class.exclude),
     ...)
   
   return(out) 
