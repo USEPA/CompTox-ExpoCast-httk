@@ -23,6 +23,10 @@
 #' If exclude_oad=TRUE (DEFAULT) chemicals outside the applicability domain do not
 #' have their predicted values loaded.
 #' 
+#' @param chem_include A vector of CAS numbers indicating only the chemicals to
+#' be included in the loading process. If set to `NULL` all applicable chemicals are
+#' loaded. (Default is `NULL`.)
+#' 
 #' @param target.env The environment where the new
 #' \code{\link{chem.physical_and_invitro.data}} is loaded. Defaults to global environment.
 #' 
@@ -54,6 +58,7 @@
 load_honda2023 <- function(
     overwrite=FALSE,
     exclude_oad=TRUE,
+    chem_include = NULL,
     target.env=.GlobalEnv)
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -73,6 +78,11 @@ load_honda2023 <- function(
   } else {
     tmp_honda2023 <- httk::honda2023.qspr
   }
+  # check whether there is any information on specific chemicals to include
+  if(!is.null(chem_include)){
+    tmp_honda2023 <- httk_chem_subset(tmp_honda2023,chem_include = chem_include)
+  }
+  
   cat(paste("Loading Caco2 PAb predictions from Honda et al. (2023) for",
             dim(tmp_honda2023)[1],"chemicals.\n"))
   cat(paste("Existing data are",
