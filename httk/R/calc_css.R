@@ -46,28 +46,8 @@
 #'  model,'3compartment' for the three compartment model, and '1compartment' for
 #'  the one compartment model.
 #'
-#'@param default.to.human Substitutes missing animal values with human values if
-#'  true (hepatic intrinsic clearance or fraction of unbound plasma).
-#'
 #'@param f.change Fractional change of daily steady state concentration reached
 #'  to stop calculating.
-#'
-#'@param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to TRUE
-#'  along with partition coefficients calculated with this value.
-#'
-#'@param minimum.Funbound.plasma If compound Funbound.plasma is lower than this
-#'  value, it will be set to this value. Default 1e-4.
-#'
-#'@param regression Whether or not to use the regressions in calculating
-#'  partition coefficients.
-#'
-#'@param well.stirred.correction Uses correction in calculation of hepatic
-#'  clearance for well-stirred model if TRUE for model 1compartment elimination
-#'  rate.  This assumes clearance relative to amount unbound in whole blood
-#'  instead of plasma, but converted to use with plasma concentration.
-#'
-#'@param restrictive.clearance Protein binding not taken into account (set to 1)
-#'  in liver clearance if FALSE.
 #'
 #'@param dosing The dosing object for more complicated scenarios. Defaults to
 #'  repeated \code{daily.dose} spread out over \code{doses.per.day}
@@ -81,8 +61,9 @@
 #'  model parameterization function (other than the already-named arguments).
 #'  Default `list()` to pass no additional arguments.
 #'
-#'@param ... Additional arguments passed to model solver (default of
-#'  \code{\link{solve_pbtk}}).
+#'@param ... Additional arguments passed to model solver 
+#' \code{\link{solve_model}} (default model is "pbtk")
+#'  .
 #'
 #'@return \item{frac}{Ratio of the mean concentration on the day steady state is
 #'  reached (baed on doses.per.day) to the analytical Css (based on infusion
@@ -140,13 +121,7 @@ calc_css <- function(chem.name=NULL,
                     suppress.messages=FALSE,
                     tissue=NULL,
                     model='pbtk',
-                    default.to.human=FALSE,
                     f.change = 0.00001,
-                    adjusted.Funbound.plasma=TRUE,
-                    minimum.Funbound.plasma = 1e-4,
-                    regression=TRUE,
-                    well.stirred.correction=TRUE,
-                    restrictive.clearance=TRUE,
                     dosing=NULL,
                     parameterize.args.list = list(),
                     ...)
@@ -207,13 +182,7 @@ calc_css <- function(chem.name=NULL,
       chem.name=chem.name,
       dtxsid=dtxsid,
       species=species,
-      default.to.human=default.to.human,
-      suppress.messages=suppress.messages,
-      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-      minimum.Funbound.plasma = minimum.Funbound.plasma,
-      regression=regression,
-      well.stirred.correction=well.stirred.correction,
-      restrictive.clearance=restrictive.clearance),
+      suppress.messages=suppress.messages),
       parameterize.args.list)))
   }
 
@@ -241,11 +210,6 @@ calc_css <- function(chem.name=NULL,
     model=model,
     output.units = output.units,
     suppress.messages=TRUE,
-    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-    regression=regression,
-    well.stirred.correction=well.stirred.correction,
-    restrictive.clearance=restrictive.clearance,
-    minimum.Funbound.plasma = minimum.Funbound.plasma,
     parameterize.args.list = parameterize.args.list
   )
   # Check to see if there is analytic Css funtion:
