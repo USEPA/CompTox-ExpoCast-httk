@@ -1,5 +1,8 @@
 ## Enhancements
 * Added 'onUnload' internal function call, appears to improve stability when using multiple models with [deSolve](https://CRAN.R-project.org/package=deSolve)
+* Added class.exclude and physchem.exclude arguments to solve_[MODEL] and parameterize_[MODEL] functions
+* Expanded model documentation of solve_[MODEL] and parameterize_[MODEL] functions to explain physchem filter (models without inhalation/exhalation exclude chemicals more volatile than Acetone by default) and class filter (models not suited to per- and polyfluoroalkyl substances excluded by default. These filters can be turned of using arguments exclude.physchem = FALSE and exclude.class = FALSE, respectively.
+* Added use of Caco-2 data for estimating oral permeability to the models fetal_pbtk and gas_pbtk.
 * Added argument chem_include to 'load_sipes2017', 'load_pradeep2020', 'load_dawson2021', 'load_honda2023' to speed up loading of in silico predicted values by only loading chemicals specified by argument
 
 # httk 2.5.0 (2024-12-20)
