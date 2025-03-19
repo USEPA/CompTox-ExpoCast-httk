@@ -25,8 +25,8 @@ specified.}
 \item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
-\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human"). Currently only a narrow human model is supported.}
+\item{species}{Included for compatibility with other functions, but the model
+will not run for non-human species (default "Human").}
 
 \item{fetal_fup_adjustment}{Logical indicator of whether to use an adjusted
 estimate for fetal fup based on the fetal:maternal plasma protein binding
@@ -88,13 +88,32 @@ placental tissue to unbound concentration in fetal plasma.}
 This function initializes the parameters needed in the functions
 solve_fetal_pbtk by calling solve_pbtk and adding additional parameters.
 }
+\details{
+Because this model does not simulate exhalation, inhalation, and other 
+processes relevant to volatile chemicals, this model is by default 
+restricted to chemicals with a logHenry's Law Constant less than that of 
+Acetone, a known volatile chemical. That is, chemicals with logHLC > -4.5 
+(Log10 atm-m3/mole) are excluded. Volatility is not purely determined by the 
+Henry's Law Constant, therefore this chemical exclusion may be turned off 
+with the argument "physchem.exclude = FALSE". Similarly, per- and 
+polyfluoroalkyl substances (PFAS) are excluded by default because the 
+transporters that often drive PFAS toxicokinetics are not included in this 
+model. However, PFAS chemicals can be included with the argument 
+"class.exclude = FALSE".
+}
 \examples{
 
+ parameters1 <- parameterize_fetal_pbtk(chem.cas='80-05-7')
 
- parameters <- parameterize_fetal_pbtk(chem.cas='80-05-7')
+ parameters2 <- parameterize_fetal_pbtk(chem.name='Bisphenol-A',species='Rat')
 
- parameters <- parameterize_fetal_pbtk(chem.name='Bisphenol-A',species='Rat')
-
+# The following will not work because Diquat dibromide monohydrate's 
+# Henry's Law Constant (-3.912) is higher than that of Acetone (~-4.5):
+try(parameters3 <- parameterize_fetal_pbtk(chem.cas = "6385-62-2"))
+# However, we can turn off checking for phys-chem properties, since we know
+# that  Diquat dibromide monohydrate is not too volatile:
+parameters3 <- parameterize_fetal_pbtk(chem.cas = "6385-62-2",
+                                       physchem.exclude = FALSE))
  
 }
 \references{
