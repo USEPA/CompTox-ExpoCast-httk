@@ -1,3 +1,7 @@
+## Bug fixes
+* Defined function prototypes for forcings for several models in init.c to increase stability
+* Added flexible tolerance to `calc_css` to increase stability
+
 ## Enhancements
 * Added 'onUnload' internal function call, appears to improve stability when using multiple models with [deSolve](https://CRAN.R-project.org/package=deSolve)
 * Added class.exclude and physchem.exclude arguments to solve_[MODEL] and parameterize_[MODEL] functions
