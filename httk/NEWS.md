@@ -1,3 +1,6 @@
+## Bug Fixes
+* Blank values for human Clint in [Woods et al. 2017](https://doi.org/10.1124/dmd.117.077040) were incorrectly being recorded as 0 -- these have been fixed
+
 ## Enhancements
 * Added 'onUnload' internal function call, appears to improve stability when using multiple models with [deSolve](https://CRAN.R-project.org/package=deSolve)
 * Added argument chem_include to 'load_sipes2017', 'load_pradeep2020', 'load_dawson2021', 'load_honda2023' to speed up loading of in silico predicted values by only loading chemicals specified by argument
