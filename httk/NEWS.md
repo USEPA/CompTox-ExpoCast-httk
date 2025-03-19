@@ -13,6 +13,7 @@
 ## New Features
 * Added new function 'list_models' to identify all available HTTK models.
 * Arguments restrictive.clearance and/or species were being ignored by several functions -- 'calc_tkstats', 'solve_model', 'calc_total_clearance', 'calc_analytic_css', 'calc_hep_bioavailability', 'calc_hep_clearance;' -- this has been corrected
+* Added argument chem_include to 'load_sipes2017', 'load_pradeep2020', 'load_dawson2021', 'load_honda2023' to speed up loading of in silico predicted values by only loading chemicals specified by argument
 
 # httk 2.5.0 (2024-12-20)
 This release accompanies the submission of the new manuscript
