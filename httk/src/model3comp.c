@@ -21,7 +21,6 @@
      Ametabolized = 0.0,
      Atubules = 0.0,
      AUC = 0.0,
-
    3 Outputs:
     "Cportven",
     "Cliver",
@@ -30,28 +29,30 @@
    0 Inputs:
 
    22 Parameters:
-     BW = 0,
-     CLmetabolismc = 0,
-     kgutabs = 0,
-     Qcardiacc = 0,
-     Qgfrc = 0,
-     Qgutf = 0,
-     Qliverf = 0,
-     Vportvenc = 0,
-     Vliverc = 0,
-     Vsyscompc = 0,
-     Vportven = 0,
-     Vliver = 0,
-     Vsyscomp = 0,
-     Fraction_unbound_plasma = 0,
+     BW = 0.0,
+     CLmetabolismc = 0.0,
+     kgutabs = 0.0,
+     Qcardiacc = 0.0,
+     Qgfrc = 0.0,
+     Qgutf = 0.0,
+     Qliverf = 0.0,
+     Vportvenc = 0.0,
+     Vliverc = 0.0,
+     Vsyscompc = 0.0,
+     Vportven = 0.0,
+     Vliver = 0.0,
+     Vsyscomp = 0.0,
+     Fraction_unbound_plasma = 0.0,
      CLmetabolism = 0.0,
-     Qcardiac = 0,
+     Qcardiac = 0.0,
      Qgfr = 0.0,
      Qgut = 0.0,
      Qliver = 0.0,
-     Kliver2plasma = 0,
-     Krest2plasma = 0,
-     Ratioblood2plasma = 0,
+     Kliver2plasma = 0.0,
+     Krest2plasma = 0.0,
+     Ratioblood2plasma = 0.0,
+
+
 */
 
 #include <R.h>
@@ -100,7 +101,17 @@ static double parms[22];
 #define Krest2plasma parms[20]
 #define Ratioblood2plasma parms[21]
 
-static double yini3comp[7] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; /*Array of initial state variables*/
+/*Array of initial state variables*/
+/* NOT NEEDED FOR HTTK:
+static double yini3comp[7] = {0.0, 
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0
+  }; 
+*/
 
 /*----- Initializers */
 void initmod3comp (void (* odeparms)(int *, double *))
@@ -111,6 +122,7 @@ void initmod3comp (void (* odeparms)(int *, double *))
 
 /* Calling R code will ensure that input y has same
    dimension as yini */
+/* NOT NEEDED FOR HTTK
 void initState3comp (double *y)
 {
   int i;
@@ -120,6 +132,7 @@ void initState3comp (double *y)
     yini3comp[i] = y[i];
   }
 }
+*/
 
 void getParms3comp (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
@@ -192,3 +205,9 @@ void root3comp (int *neq, double *t, double *y, int *ng, double *gout, double *o
 {
 
 } /* root */
+
+/*----- Forcing functions (NOT USED WITH THIS MODEL) */
+void initforc3comp (void (* odeforcs)(int *, double *))
+{
+
+}
