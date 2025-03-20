@@ -27,7 +27,7 @@ create_mc_samples(
   httkpop.generate.arg.list = list(method = "direct resampling"),
   convert.httkpop.arg.list = NULL,
   propagate.invitrouv.arg.list = NULL,
-  parameterizes.args.list = NULL,
+  parameterize.args.list = NULL,
   Caco2.options = NULL
 )
 }
