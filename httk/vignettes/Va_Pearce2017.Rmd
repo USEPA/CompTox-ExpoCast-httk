@@ -616,7 +616,7 @@ colnames(physiology.data)[length(colnames(physiology.data))] <- "Wolverine"
 Now we can make predictions for wolverines!
 ```{r add_a_species3, eval = execute.vignette}
 calc_mc_css(chem.cas="80-05-7",species="wolverine",
-            parameterize.args.list=list(default.to.human=TRUE),
+            parameterizes.args.list =list(default.to.human=TRUE),
             suppress.messages=TRUE,
             samples = NSAMP)
 ```
