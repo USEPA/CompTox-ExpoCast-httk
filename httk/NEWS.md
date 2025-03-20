@@ -1,7 +1,7 @@
 ## Bug Fixes
 * Added Caco-2 permeability to model "sumclearances"
 * Corrected calculation of total clearance in 'calc_total_clearance' to take into account systemic oral bioavailability: Cl_tot = f_bio / Css -- was using f_bio = 1 previously
-* At least three diffrent vesions of hte argument parameterize.args.list were in use -- parameterize.args and parameterize.arg.list have been renamed in all functions to parameterize.args.list
+* At least three diffrent vesions of hte argument parameterize.args.list were in use -- parameterizes.args.listand parameterize.arg.list have been renamed in all functions to parameterize.args.list
 * Defined function prototypes for forcings for several models in init.c to increase stability
 * Added flexible tolerance to `calc_css` to increase stability
 

@@ -284,7 +284,7 @@ create_mc_samples <- function(chem.cas=NULL,
   #Depending on model, choose the function in HTTK that will return the default
   #HTTK parameters for this chemical
   paramfun <- model.list[[model]]$parameterize.func
-  parameterize.args <- purrr::compact(c(list(chem.cas=chem.cas,
+  parameterizes.args.list<- purrr::compact(c(list(chem.cas=chem.cas,
                                              chem.name=chem.name,
                                              dtxsid=dtxsid,
                                              species=species,
@@ -299,7 +299,7 @@ create_mc_samples <- function(chem.cas=NULL,
   if (is.null(parameters))
   {
     # Make sure all the arguments are used by the parameterization function:
-#    parameterize.args <- parameterize.args[names(parameterize.args) %in% 
+#    parameterizes.args.list<- parameterize.args[names(parameterize.args) %in% 
 #                                             methods::formalArgs(paramfun)]
     parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
                          args=purrr::compact(parameterize.args))
