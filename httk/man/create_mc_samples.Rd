@@ -27,7 +27,7 @@ create_mc_samples(
   httkpop.generate.arg.list = list(method = "direct resampling"),
   convert.httkpop.arg.list = NULL,
   propagate.invitrouv.arg.list = NULL,
-  parameterize.args.list = NULL,
+  parameterizes.args.list = NULL,
   Caco2.options = NULL
 )
 }
@@ -118,13 +118,13 @@ convert_httkpop_* function for the model.}
 \item{propagate.invitrouv.arg.list}{Additional parameters passed to model's
 associated in vitro uncertainty and variability propagation function}
 
-\item{parameterize.args.list}{Additional parameters passed to the 
-parameterize_* function for the model.}
-
 \item{Caco2.options}{Arguments describing how to handle Caco2 absorption data
 that are passed to \code{\link{invitro_mc}} and the parameterize_[MODEL] 
 functions.
 See \code{\link{get_fbio}} for further details.}
+
+\item{parameterize.args.list}{Additional parameters passed to the 
+parameterize_* function for the model.}
 }
 \value{
 A data table where each column corresponds to parameters needed for the 
