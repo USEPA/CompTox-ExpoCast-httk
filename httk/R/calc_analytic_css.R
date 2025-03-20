@@ -164,7 +164,7 @@ calc_analytic_css <- function(chem.name=NULL,
                               tissue=NULL,
                               bioactive.free.invivo = FALSE,
                               IVIVE=NULL,
-                              parameterize.args.list=list(),
+                              parameterizes.args.list =list(),
                               ...
                               )
 {  

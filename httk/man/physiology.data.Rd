@@ -47,7 +47,7 @@ tissue.data <- rbind(tissue.data, new.tissue.data)
 # Species is now available for calculations:
 calc_mc_css(chem.cas="80-05-7",
             species="wolverine",
-            parameterize.args.list=list(default.to.human=TRUE),
+            parameterizes.args.list =list(default.to.human=TRUE),
             suppress.messages=TRUE,
             samples = 100)
 
