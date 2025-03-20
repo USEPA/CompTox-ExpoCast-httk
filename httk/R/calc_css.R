@@ -435,4 +435,3 @@ calc_css <- function(chem.name=NULL,
     max=set_httk_precision(max.conc),
     the.day =set_httk_precision(as.numeric(css.day))))
 }
->>>>>>> dev
