@@ -221,7 +221,7 @@ create_mc_samples <- function(chem.cas=NULL,
                           list(method = "direct resampling"),
                         convert.httkpop.arg.list=NULL,
                         propagate.invitrouv.arg.list=NULL,
-                        parameterizes.args.list =NULL,
+                        parameterize.args.list =NULL,
                         Caco2.options=NULL)
 {
 
@@ -284,7 +284,7 @@ create_mc_samples <- function(chem.cas=NULL,
   #Depending on model, choose the function in HTTK that will return the default
   #HTTK parameters for this chemical
   paramfun <- model.list[[model]]$parameterize.func
-  parameterizes.args.list<- purrr::compact(c(list(chem.cas=chem.cas,
+  parameterize.args.list<- purrr::compact(c(list(chem.cas=chem.cas,
                                              chem.name=chem.name,
                                              dtxsid=dtxsid,
                                              species=species,
@@ -299,7 +299,7 @@ create_mc_samples <- function(chem.cas=NULL,
   if (is.null(parameters))
   {
     # Make sure all the arguments are used by the parameterization function:
-#    parameterizes.args.list<- parameterize.args[names(parameterize.args) %in% 
+#    parameterize.args.list<- parameterize.args[names(parameterize.args) %in% 
 #                                             methods::formalArgs(paramfun)]
     parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
                          args=purrr::compact(parameterize.args))

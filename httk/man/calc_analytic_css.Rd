@@ -21,7 +21,7 @@ calc_analytic_css(
   tissue = NULL,
   bioactive.free.invivo = FALSE,
   IVIVE = NULL,
-  parameterizes.args.list = list(),
+  parameterize.args.list = list(),
   ...
 )
 }

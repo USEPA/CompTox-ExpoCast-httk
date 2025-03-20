@@ -27,7 +27,7 @@ calc_mc_tk(
   invitro.mc.arg.list = NULL,
   httkpop.generate.arg.list = list(method = "direct resampling"),
   convert.httkpop.arg.list = NULL,
-  parameterizes.args.list = NULL,
+  parameterize.args.list = NULL,
   return.all.sims = FALSE
 )
 }
