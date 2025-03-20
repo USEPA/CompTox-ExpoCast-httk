@@ -315,7 +315,7 @@
 #' 
 #' # However, we can turn off checking for phys-chem properties, since we know
 #' # that  Diquat dibromide monohydrate is not too volatile:
-#' calc_mc_css(chem.cas="6385-62-2", parameterizes.args.list =list(physchem.exclude=FALSE))
+#' calc_mc_css(chem.cas="6385-62-2", parameterize.args.list =list(physchem.exclude=FALSE))
 #'
 #' # We can also use the Monte Carlo functions by passing a table
 #' # where each row represents a different Monte Carlo draw of parameters:
@@ -433,7 +433,7 @@ calc_mc_css <- function(chem.cas = NULL,
                               invitro.mc.arg.list=invitro.mc.arg.list,
                               httkpop.generate.arg.list=httkpop.generate.arg.list,
                               convert.httkpop.arg.list=convert.httkpop.arg.list,
-                              parameterizes.args.list =parameterize.args.list,
+                              parameterize.args.list =parameterize.args.list,
                               Caco2.options=Caco2.options))))
   else parameter.dt <- parameters
 #

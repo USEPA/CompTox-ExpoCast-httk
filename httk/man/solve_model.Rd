@@ -31,7 +31,7 @@ solve_model(
   restrictive.clearance = TRUE,
   adjusted.Funbound.plasma = TRUE,
   minimum.Funbound.plasma = 1e-04,
-  parameterizes.args.list = list(),
+  parameterize.args.list = list(),
   small.time = 1e-04,
   forcings = NULL,
   ...
