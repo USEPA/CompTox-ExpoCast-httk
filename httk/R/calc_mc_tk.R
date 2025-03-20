@@ -194,7 +194,7 @@ calc_mc_tk<- function(chem.cas=NULL,
                         httkpop.generate.arg.list = list(
                           method='direct resampling'),
                         convert.httkpop.arg.list=NULL,
-                        parameterize.args.list=NULL,
+                        parameterizes.args.list =NULL,
                         return.all.sims=FALSE)
 {
 # We need to describe the chemical to be simulated one way or another:
@@ -244,7 +244,7 @@ calc_mc_tk<- function(chem.cas=NULL,
                             invitro.mc.arg.list=invitro.mc.arg.list,
                             httkpop.generate.arg.list=httkpop.generate.arg.list,
                             convert.httkpop.arg.list=convert.httkpop.arg.list,
-                            parameterize.args.list=parameterize.args.list))))
+                            parameterizes.args.list =parameterize.args.list))))
 
 #
 # HERE LIES THE ACTUAL MONTE CARLO STEP:
