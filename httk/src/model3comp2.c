@@ -22,7 +22,7 @@
      Atubules = 0.0,
      AUC = 0.0,
      Cinhppmv = 0.0,
-     
+
    3 Outputs:
     "Cportven",
     "Cliver",
@@ -56,6 +56,8 @@
      Krest2plasma = 0.0,
      Kblood2air = 0.0,
      Ratioblood2plasma = 0.0,
+
+
 */
 
 #include <R.h>
@@ -109,7 +111,17 @@ static double parms[25];
 #define Ratioblood2plasma parms[24]
 
 /*Array of initial state variables*/
-static double yini3comp2[8] = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; 
+/* NOT NEEDED FOR HTTK:
+static double yini3comp2[8] = {0.0, 
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0,
+  0.0
+  }; 
+*/
 
 /*----- Initializers */
 void initmod3comp2 (void (* odeparms)(int *, double *))
@@ -120,6 +132,7 @@ void initmod3comp2 (void (* odeparms)(int *, double *))
 
 /* Calling R code will ensure that input y has same
    dimension as yini */
+/* NOT NEEDED FOR HTTK
 void initState3comp2 (double *y)
 {
   int i;
@@ -129,6 +142,7 @@ void initState3comp2 (double *y)
     yini3comp2[i] = y[i];
   }
 }
+*/
 
 void getParms3comp2 (double *inParms, double *out, int *nout) {
 /*----- Model scaling */
@@ -163,6 +177,7 @@ void derivs3comp2 (int *neq, double *pdTime, double *y, double *ydot, double *yo
 
   Cinh = y[ID_Cinhppmv] / 24.45 ; // ppmv -> umol/L 
   
+
   yout[ID_Cportven] = y[ID_Aportven] / Vportven / 1;
 
   yout[ID_Cliver] = y[ID_Aliver] / Vliver * Ratioblood2plasma / Fraction_unbound_plasma / Kliver2plasma;
@@ -206,3 +221,9 @@ void root3comp2 (int *neq, double *t, double *y, int *ng, double *gout, double *
 {
 
 } /* root */
+
+/*----- Forcing functions (NOT USED WITH THIS MODEL) */
+void initforc3comp2 (void (* odeforcs)(int *, double *))
+{
+
+}

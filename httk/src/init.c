@@ -38,6 +38,7 @@ extern void derivs3comp2(int *, double *, double *, double *, double *, int *);
 extern void jac3comp2(int *, double *, double *, int *, int *, double *, int *, double *, int *);
 extern void event3comp2(int *, double *, double *);
 extern void root3comp2(int *, double *, double *, int *, double *, double *, int *);
+extern void initforc3comp2(void *);
 
 extern void getParms_gas_pbtk(double *, double *, int *);
 extern void initmod_gas_pbtk(void *);
@@ -54,6 +55,7 @@ extern void jacfetal_pbtk(int *, double *, double *, int *, int *, double *, int
 extern void eventfetal_pbtk(int *, double *, double *);
 extern void rootfetal_pbtk(int *, double *, double *, int *, double *, double *, int *);
 extern void initfetal_pbtk(void *);
+extern void initforcfetal_pbtk(void *);
 
 static const R_CMethodDef CEntries[] = {
     {"getParmspbtk",       (DL_FUNC) &getParmspbtk,       3},
@@ -62,7 +64,7 @@ static const R_CMethodDef CEntries[] = {
     {"jacpbtk", (DL_FUNC) &jacpbtk, 9},
     {"eventpbtk",       (DL_FUNC) &eventpbtk,       3},
     {"rootpbtk",       (DL_FUNC) &rootpbtk,       7},
-//    {"initforcpbtk", (DL_FUNC) &initforcpbtk, 1},
+    {"initforcpbtk", (DL_FUNC) &initforcpbtk, 1},
 
     {"getParms1comp", (DL_FUNC) &getParms1comp, 3},
     {"initmod1comp", (DL_FUNC) &initmod1comp, 1},
@@ -70,7 +72,7 @@ static const R_CMethodDef CEntries[] = {
     {"jac1comp", (DL_FUNC) &jac1comp, 9},
     {"event1comp", (DL_FUNC) &event1comp, 3},
     {"root1comp", (DL_FUNC) &root1comp, 7},
-//    {"initforc1comp", (DL_FUNC) &initforc1comp, 1},
+    {"initforc1comp", (DL_FUNC) &initforc1comp, 1},
 
     {"getParms3comp", (DL_FUNC) &getParms3comp, 3},
     {"initmod3comp", (DL_FUNC) &initmod3comp, 1},
@@ -78,7 +80,7 @@ static const R_CMethodDef CEntries[] = {
     {"jac3comp", (DL_FUNC) &jac3comp, 9},
     {"event3comp", (DL_FUNC) &event3comp, 3},
     {"root3comp", (DL_FUNC) &root3comp, 7},
-//    {"initforc3comp", (DL_FUNC) &initforc3comp, 1},
+    {"initforc3comp", (DL_FUNC) &initforc3comp, 1},
 
     {"getParms3comp2", (DL_FUNC) &getParms3comp2, 3},
     {"initmod3comp2", (DL_FUNC) &initmod3comp2, 1},
@@ -86,7 +88,7 @@ static const R_CMethodDef CEntries[] = {
     {"jac3comp2", (DL_FUNC) &jac3comp2, 9},
     {"event3comp2", (DL_FUNC) &event3comp2, 3},
     {"root3comp2", (DL_FUNC) &root3comp2, 7},
-//    {"initforc3comp2", (DL_FUNC) &initforc3comp2, 1},
+    {"initforc3comp2", (DL_FUNC) &initforc3comp2, 1},
 
     {"getParms_gas_pbtk", (DL_FUNC) &getParms_gas_pbtk, 3},
     {"initmod_gas_pbtk", (DL_FUNC) &initmod_gas_pbtk, 1},
@@ -102,7 +104,7 @@ static const R_CMethodDef CEntries[] = {
     {"jacfetal_pbtk", (DL_FUNC) &jacfetal_pbtk, 9},
     {"eventfetal_pbtk", (DL_FUNC) &eventfetal_pbtk, 3},
     {"rootfetal_pbtk", (DL_FUNC) &rootfetal_pbtk, 7},
-//    {"initforcfetal_pbtk", (DL_FUNC) &initforcfetal_pbtk, 1},
+    {"initforcfetal_pbtk", (DL_FUNC) &initforcfetal_pbtk, 1},
 
     {NULL, NULL, 0}
 };

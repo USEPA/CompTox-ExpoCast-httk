@@ -271,7 +271,9 @@ create_mc_samples <- function(chem.cas=NULL,
     stop(paste("Model",model,"not available. Please select from:",
       paste(names(model.list),collapse=", ")))
   }
-
+  if (!model.list[[model]]$monte.carlo)
+    stop(paste("Model", model, "does not yet work with Monte Carlo sampling"))
+    
   # Column names for data.tables
   # Appease R CMD check --as-cran variable binding:
   variable <- Name  <- Parameter <- hematocrit <- this.chem <- Krbc2pu <- NULL
@@ -297,8 +299,8 @@ create_mc_samples <- function(chem.cas=NULL,
   if (is.null(parameters))
   {
     # Make sure all the arguments are used by the parameterization function:
-    parameterize.args <- parameterize.args[names(parameterize.args) %in% 
-                                             methods::formalArgs(paramfun)]
+#    parameterize.args <- parameterize.args[names(parameterize.args) %in% 
+#                                             methods::formalArgs(paramfun)]
     parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
                          args=purrr::compact(parameterize.args))
   } else {

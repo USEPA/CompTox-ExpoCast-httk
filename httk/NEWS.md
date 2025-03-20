@@ -1,14 +1,16 @@
 ## Bug Fixes
 * Added Caco-2 permeability to model "sumclearances"
 * Corrected calculation of total clearance in 'calc_total_clearance' to take into account systemic oral bioavailability: Cl_tot = f_bio / Css -- was using f_bio = 1 previously
-* At least three diffrent vesions of hte argument parameterize.args.list were in use -- parameterize.args and parameterize.arg.list have been renamed in all functions to parameteirze.args.list
+* At least three diffrent vesions of hte argument parameterize.args.list were in use -- parameterize.args and parameterize.arg.list have been renamed in all functions to parameterize.args.list
+* Defined function prototypes for forcings for several models in init.c to increase stability
+* Added flexible tolerance to `calc_css` to increase stability
 
 ## Enhancements
 * Added 'onUnload' internal function call, appears to improve stability when using multiple models with [deSolve](https://CRAN.R-project.org/package=deSolve)
 * Added class.exclude and physchem.exclude arguments to solve_[MODEL] and parameterize_[MODEL] functions
 * Expanded model documentation of solve_[MODEL] and parameterize_[MODEL] functions to explain physchem filter (models without inhalation/exhalation exclude chemicals more volatile than Acetone by default) and class filter (models not suited to per- and polyfluoroalkyl substances excluded by default. These filters can be turned of using arguments exclude.physchem = FALSE and exclude.class = FALSE, respectively.
 * Added use of Caco-2 data for estimating oral permeability to the models fetal_pbtk and gas_pbtk.
-* Refactored tree of functions starting at calc_half_life to pass arguments using ellipsis (three dots/...) so that as new arguments are added to parameterize functions these other functions do not need to be modified.
+* Refactored multiple functions to pass arguments using ellipsis (three dots/...) and/or parameterizes.args.list so that as new arguments are added to parameterize functions these other functions do not need to be modified.
 
 ## New Features
 * Added new function 'list_models' to identify all available HTTK models.
