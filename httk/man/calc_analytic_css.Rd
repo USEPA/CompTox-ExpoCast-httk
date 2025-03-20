@@ -85,9 +85,6 @@ Argument may be set to "Honda1" through "Honda4". If used, this function
 overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments. 
 See Details below for more information.}
 
-\item{...}{Additional parameters passed to parameterize function if 
-parameters is NULL.}
-
 \item{parameterize.args.list}{List of arguments passed to model's associated
 parameterization function, including default.to.human, 
 adjusted.Funbound.plasma, regression, and minimum.Funbound.plasma. The 
@@ -98,6 +95,9 @@ regression indicates whether or not to use the regressions in calculating
 partition coefficients, and minimum.Funbound.plasma is the value to which
 Monte Carlo draws less than this value are set (default is 0.0001 -- half
 the lowest measured Fup in our dataset).}
+
+\item{...}{Additional parameters passed to parameterize function if 
+parameters is NULL.}
 }
 \value{
 Steady state plasma concentration in specified units

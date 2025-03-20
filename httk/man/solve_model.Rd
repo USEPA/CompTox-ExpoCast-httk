@@ -124,6 +124,11 @@ TRUE along with partition coefficients calculated with this value.}
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset)}
 
+\item{parameterize.args.list}{Additional parameters passed to the model
+parameterization function (other than chemical identifier, `species`,
+`suppress.messages`, `restrictive.clearance`, `adjusted.Funbound.plasma`,
+and `minimum.Funbound.plasma`)}
+
 \item{small.time}{A tiny amount of time used to provide predictions on either
 side of an instantaneous event (like an iv injection). This helps ensure that
 abrupt changes plot well. Defaults to 1e-4.}
@@ -134,11 +139,6 @@ containing time values and the second column the value of quantity at those
 times. Default NULL.}
 
 \item{...}{Additional arguments passed to the integrator.}
-
-\item{parameterize.args.list}{Additional parameters passed to the model
-parameterization function (other than chemical identifier, `species`,
-`suppress.messages`, `restrictive.clearance`, `adjusted.Funbound.plasma`,
-and `minimum.Funbound.plasma`)}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each
