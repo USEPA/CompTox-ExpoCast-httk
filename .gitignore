@@ -36,6 +36,10 @@ httk/man/frechen2021.Rd
 
 # Session Data files
 .RData
+!datatables/Tables.RData
+!httk/data/Tables.RData
+!datatables/sysdata.rda
+!httk/R/sysdata.rda
 
 # User-specific files
 .Ruserdata
