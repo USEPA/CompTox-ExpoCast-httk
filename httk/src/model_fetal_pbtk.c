@@ -772,3 +772,8 @@ void rootfetal_pbtk (int *neq, double *t, double *y, int *ng, double *gout, doub
 
 } /* root */
 
+/*----- Forcing functions (NOT USED WITH THIS MODEL) */
+void initforcfetal_pbtk (void (* odeforcs)(int *, double *))
+{
+
+}
