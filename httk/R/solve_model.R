@@ -242,7 +242,7 @@ solve_model <- function(chem.name = NULL,
                     restrictive.clearance=TRUE,
                     adjusted.Funbound.plasma=TRUE,
                     minimum.Funbound.plasma=0.0001,
-                    parameterize.args.list=list(),
+                    parameterizes.args.list =list(),
                     small.time = 1e-4, 
                     forcings = NULL,
                     ...)

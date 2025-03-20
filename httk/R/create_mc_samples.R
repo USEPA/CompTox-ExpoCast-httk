@@ -221,7 +221,7 @@ create_mc_samples <- function(chem.cas=NULL,
                           list(method = "direct resampling"),
                         convert.httkpop.arg.list=NULL,
                         propagate.invitrouv.arg.list=NULL,
-                        parameterize.args.list=NULL,
+                        parameterizes.args.list =NULL,
                         Caco2.options=NULL)
 {
 
