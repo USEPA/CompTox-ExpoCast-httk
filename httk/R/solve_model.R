@@ -431,7 +431,7 @@ specification in compartment_units for model ", model)
         warning(paste("Value",
                       parameterize.args.list[["restrictive.clearance"]],
                       "for restrictive.clearance in parameterze.arg.list",
-                      "has overwritting value",
+                      "has overwritten value",
                       restrictive.clearance,
                       "in arguments to solve.model."))
         parameterize.restrictive.clearance <- 
@@ -821,7 +821,7 @@ specification in compartment_units for model ", model)
   dosing.matrix <- dosing$dosing.matrix
   daily.dose <- dosing$daily.dose
   doses.per.day <- dosing$doses.per.day
-  forcings <- c(forcings, dosing$forcings)
+  forcings <- rbind(forcings, dosing$forcings)
 
 # Add the first dose:
   if (!is.null(initial.dose))
