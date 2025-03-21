@@ -111,7 +111,7 @@ static const R_CMethodDef CEntries[] = {
     {"jacfetal_pbtk", (DL_FUNC) &jacfetal_pbtk, 9},
     {"eventfetal_pbtk", (DL_FUNC) &eventfetal_pbtk, 3},
     {"rootfetal_pbtk", (DL_FUNC) &rootfetal_pbtk, 7},
-    {"initforcfetal_pbtk", (DL_FUNC) &initforcfetal_pbtk, 1},
+//    {"initforcfetal_pbtk", (DL_FUNC) &initforcfetal_pbtk, 1},
 
     {"getParms_firsttrimester", (DL_FUNC) &getParms_firsttrimester, 3},
     {"initmod_firsttrimester", (DL_FUNC) &initmod_firsttrimester, 1}, 	
