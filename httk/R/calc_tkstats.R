@@ -141,6 +141,10 @@ calc_tkstats <-function(
                 doses.per.day=doses.per.day,
                 concentration=concentration,
                 output.units=output.units,
+                route=route,
+                forcings = forcings,
+                concentration=concentration,
+                tissue=tissue,
                 model=model,
                 suppress.messages=TRUE,
                 ...)
@@ -397,10 +401,12 @@ calc_stats <-function(
                concentration=concentration,
                tissue=tissue,
                model=model,
-               default.to.human=default.to.human,
-               adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-               regression=regression,
-               restrictive.clearance = restrictive.clearance,
+               parameterize.args.list = list(
+                 default.to.human=default.to.human,
+                 adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                 regression=regression,
+                 restrictive.clearance = restrictive.clearance,
+               ),
                suppress.messages=suppress.messages,
                ...))
 }
