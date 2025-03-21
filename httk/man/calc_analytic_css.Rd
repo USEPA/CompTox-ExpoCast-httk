@@ -10,11 +10,10 @@ calc_analytic_css(
   dtxsid = NULL,
   parameters = NULL,
   species = "human",
-  daily.dose = 1,
+  daily.dose = NULL,
+  dose = 1,
+  dose.units = "mg/kg/day",
   route = "oral",
-  exp.conc = 1,
-  period = 24,
-  exp.duration = 24,
   output.units = "uM",
   model = "pbtk",
   concentration = "plasma",
@@ -46,17 +45,12 @@ default "Human").}
 
 \item{daily.dose}{Total daily dose, mg/kg BW.}
 
+\item{dose}{The amount of chemial to which the individual is exposed.}
+
+\item{dose.units}{The units associated with the dose received.}
+
 \item{route}{Route of exposure (either "oral", "iv", or "inhalation"
 default "oral").}
-
-\item{exp.conc}{Specified inhalation exposure concentration for use in assembling
-'forcings' data series argument for integrator. Defaults to uM/L}
-
-\item{period}{For use in assembling forcing function data series 'forcings'
-argument, specified in hours}
-
-\item{exp.duration}{For use in assembling forcing function data 
-series 'forcings' argument, specified in hours}
 
 \item{output.units}{Units for returned concentrations, defaults to uM 
 (specify units = "uM") but can also be mg/L.}
@@ -91,19 +85,7 @@ Argument may be set to "Honda1" through "Honda4". If used, this function
 overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments. 
 See Details below for more information.}
 
-<<<<<<< HEAD
-\item{Caco2.options}{A list of options to use when working with Caco2 apical to
-basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
-Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
-Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
-
-\item{parameterize.args}{List of arguments passed to model's associated
-=======
 \item{parameterize.args.list}{List of arguments passed to model's associated
->>>>>>> dev
 parameterization function, including default.to.human, 
 adjusted.Funbound.plasma, regression, and minimum.Funbound.plasma. The 
 default.to.human argument substitutes missing animal values with human values
