@@ -150,7 +150,7 @@
 #' # However, we can turn off checking for phys-chem properties, since we know
 #' # that  Diquat dibromide monohydrate is not too volatile:
 #' parameters3 <- parameterize_steadystate(chem.cas = "6385-62-2",
-#'                                  physchem.exclude = FALSE)) 
+#'                                  physchem.exclude = FALSE) 
 #' 
 #' @keywords 3compss
 #' 
@@ -389,6 +389,9 @@ parameterize_steadystate <- function(
       chem.cas=chem.cas,
       chem.name=chem.name,
       species=species,
+      parameterize.args.list = list(default.to.human=default.to.human,
+                               class.exclude=class.exclude,
+                               physchem.exclude=physchem.exclude),
       suppress.messages=suppress.messages
       ),
     Caco2.options))
