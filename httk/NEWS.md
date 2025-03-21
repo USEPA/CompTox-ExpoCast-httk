@@ -17,6 +17,7 @@
 * Added new function 'list_models' to identify all available HTTK models.
 * Arguments restrictive.clearance and/or species were being ignored by several functions -- 'calc_tkstats', 'solve_model', 'calc_total_clearance', 'calc_analytic_css', 'calc_hep_bioavailability', 'calc_hep_clearance;' -- this has been corrected
 * Added argument chem_include to 'load_sipes2017', 'load_pradeep2020', 'load_dawson2021', 'load_honda2023' to speed up loading of in silico predicted values by only loading chemicals specified by argument
+* Added rat and human fup data from [Lynn et al. 2025](https://doi.org/10.1016/j.tiv.2025.106036) 
 
 ## Bug fixes
 * 'calc_tkstats' now passes all arguments to sub-functions (for example, restrictive.clearance was being ignored)
