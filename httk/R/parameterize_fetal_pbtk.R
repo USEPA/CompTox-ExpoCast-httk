@@ -118,7 +118,7 @@
 #' # However, we can turn off checking for phys-chem properties, since we know
 #' # that  Diquat dibromide monohydrate is not too volatile:
 #' parameters3 <- parameterize_fetal_pbtk(chem.cas = "6385-62-2",
-#'                                        physchem.exclude = FALSE))
+#'                                        physchem.exclude = FALSE)
 #'  
 #' @author Mark Sfeir, Dustin Kapraun, John Wambaugh
 #' 
@@ -176,12 +176,17 @@ parameterize_fetal_pbtk<- function(
 
   
   #Capture Schmitt parameters for maternal case
-  maternal_schmitt_parms <- parameterize_schmitt(
-    chem.cas=chem.cas,
-    chem.name=chem.name,
-    dtxsid=dtxsid,
-    species=species,
-    suppress.messages=TRUE)
+  schmitt.args <- c(list(chem.cas=chem.cas,
+                         chem.name=chem.name,
+                         dtxsid=dtxsid,
+                         species=species,
+                         suppress.messages=TRUE),
+                    list(...)
+                    )
+  schmitt.args <- schmitt.args[names(schmitt.args) %in% 
+                               methods::formalArgs(parameterize_schmitt)]
+  maternal_schmitt_parms <- do.call(parameterize_schmitt,
+                                    args = schmitt.args)
   
   maternal.blood.pH <- 7.38 #average maternal blood pH value measured by and 
   #reported in K.H. Lee 1972 for over 80 mothers.

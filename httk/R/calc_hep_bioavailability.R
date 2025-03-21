@@ -28,6 +28,9 @@
 #'
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#' 
+#' @param default.to.human Substitutes missing animal values with human values
+#' if true (hepatic intrinsic clearance or fraction of unbound plasma).
 #'
 #' @param suppress.messages Whether or not to suppress the output message.
 #'
@@ -51,6 +54,7 @@ calc_hep_bioavailability <- function(
                          dtxsid = NULL,
                          parameters=NULL,
                          restrictive.clearance=TRUE,
+                         default.to.human=FALSE,
                          flow.34=TRUE,
                          suppress.messages=FALSE,
                          species="Human")
@@ -90,6 +94,8 @@ calc_hep_bioavailability <- function(
                             chem.cas=chem.cas,
                             chem.name=chem.name,
                             dtxsid=dtxsid,
+                            species=species,
+                            default.to.human=default.to.human,
                             suppress.messages=suppress.messages))))
   }
   

@@ -34,18 +34,11 @@
 #' 
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' 
-#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
-#' TRUE along with parition coefficients calculated with this value.
+#' @param adjusted.Funbound.plasma Uses Pearce et al. (2017) lipid binding adjustment
+#' for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).
 #' 
-#' @param regression Whether or not to use the regressions in calculating
-#' partition coefficients.
-#' 
-#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
-#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
-#' dataset).
-#' 
-#' @param class.exclude Exclude chemical classes identified as outside of 
-#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' @param ... Additional parameters passed to parameterize function if 
+#' parameters is NULL.
 #' 
 #' @return \item{Volume of distribution}{Units of L/ kg BW.}
 #' 
@@ -86,13 +79,12 @@ calc_vdist<- function(chem.cas=NULL,
                       chem.name=NULL,
                       dtxsid=NULL,
                       parameters=NULL,
-                      default.to.human=FALSE,
-                      class.exclude=TRUE,
-                      species="Human",
                       suppress.messages=FALSE,
-                      adjusted.Funbound.plasma=TRUE,
-                      regression=TRUE,
-                      minimum.Funbound.plasma=0.0001)
+                      adjusted.Funbound.plasma = TRUE,
+                      species="Human",
+                      default.to.human = FALSE,
+                      ...
+                      )
 {
   physiology.data <- physiology.data
   Parameter <- NULL
@@ -115,23 +107,32 @@ calc_vdist<- function(chem.cas=NULL,
     chem.name <- out$chem.name                                
     dtxsid <- out$dtxsid
   
-    schmitt.parameters <- parameterize_schmitt(chem.cas=chem.cas,
-                            chem.name=chem.name,
-                            dtxsid=dtxsid,
-                            default.to.human=default.to.human,
-                            class.exclude=class.exclude,
-                            species=species,
-                            minimum.Funbound.plasma=minimum.Funbound.plasma)
-    parameters <- suppressWarnings(predict_partitioning_schmitt(
-                    parameters=schmitt.parameters,
-                    species=species,
-                    regression=regression,
-                    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                    minimum.Funbound.plasma=minimum.Funbound.plasma))
+    schmitt.parameters <- do.call(parameterize_schmitt,  
+                                  args=purrr::compact(c(
+                                    list(chem.cas=chem.cas,
+                                         chem.name=chem.name,
+                                         dtxsid=dtxsid,
+                                         suppress.messages=suppress.messages,
+                                         adjusted.Funbound.plasma = adjusted.Funbound.plasma,
+                                         species=species,
+                                         default.to.human=default.to.human
+                                         ),
+   # Send only the arguments in ... wanted by the function:
+                                    list(...)[names(formals(parameterize_schmitt))]
+                                    )))
+    parameters <- suppressWarnings(do.call(predict_partitioning_schmitt,
+                                   args=purrr::compact(c(
+                                     list(parameters=schmitt.parameters,
+                                          suppress.messages=suppress.messages),
+   # Send only the arguments in ... wanted by the function:
+                                    list(...)[names(formals(predict_partitioning_schmitt))]
+                                       ))))
+                                       
+    # Should we use the adjusted Funbound plasma?
     if (adjusted.Funbound.plasma) parameters <- 
-      c(parameters,schmitt.parameters['Funbound.plasma'])
-    else parameters <- 
-      c(parameters,Funbound.plasma=schmitt.parameters[['unadjusted.Funbound.plasma']])
+          c(parameters,schmitt.parameters['Funbound.plasma'])
+      else parameters <- 
+        c(parameters,Funbound.plasma=schmitt.parameters[['unadjusted.Funbound.plasma']])
   }
 
   if(any(names(parameters) %in% schmitt.specific.names) &

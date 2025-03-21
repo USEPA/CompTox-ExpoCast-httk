@@ -3,6 +3,9 @@
 # Model identifier for the model.list:
 THIS.MODEL <- "3compartment2" 
 
+# Dose this model work with Monte Carlo parameter sampling?
+model.list[[THIS.MODEL]]$monte.carlo <- TRUE
+
 # Analytic expression for steady-state plasma concentration to be used by
 # calc_analytic_css:
 model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_3comp2"
@@ -319,4 +322,4 @@ model.list[[THIS.MODEL]]$css.dosing.params <- list(
 model.list[[THIS.MODEL]]$chem.class.filt <- c("PFAS")
 
 # Different systems of equations are better suited to different ODE solvers:
-model.list[[THIS.MODEL]]$default.solver.method <- "lsode"
+model.list[[THIS.MODEL]]$default.solver.method <- "lsoda"

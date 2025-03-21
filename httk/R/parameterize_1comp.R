@@ -231,6 +231,7 @@ parameterize_1comp <- function(
                          dtxsid=dtxsid,
                          species=species,
                          default.to.human=default.to.human,
+                         class.exclude=class.exclude,
                          adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                          regression=regression,
                          suppress.messages=suppress.messages,
