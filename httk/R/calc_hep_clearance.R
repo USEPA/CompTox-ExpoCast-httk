@@ -132,6 +132,7 @@ calc_hep_clearance <- function(chem.name=NULL,
                     chem.cas=chem.cas,
                     chem.name=chem.name,
                     dtxsid=dtxsid,
+                    species=species,
                     suppress.messages=suppress.messages),
                     ...)))
     Qtotal.liverc <- get_param(
@@ -167,6 +168,7 @@ calc_hep_clearance <- function(chem.name=NULL,
                     chem.cas=chem.cas,
                     chem.name=chem.name,
                     dtxsid=dtxsid,
+                    species=species,
                     suppress.messages=suppress.messages),
                     ...)))
     parameters <- c(parameters, parameters[

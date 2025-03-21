@@ -937,7 +937,7 @@ FitData$Css.1comp.pred <- sapply(FitData$CAS,
   species="Rat",
   model="3compartmentss",
   suppress.messages=TRUE,
-  parameterize.args = list(
+  parameterize.args.list = list(
     default.to.human=TRUE,
     adjusted.Funbound.plasma=TRUE,
     regression=TRUE,

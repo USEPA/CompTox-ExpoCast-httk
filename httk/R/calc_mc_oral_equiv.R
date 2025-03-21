@@ -222,7 +222,7 @@
 #' 
 #' # However, we can turn off checking for phys-chem properties, since we know
 #' # that  Diquat dibromide monohydrate is not too volatile:
-#' calc_mc_oral_equiv(3, chem.cas="6385-62-2", parameterize.arg.list=list(physchem.exclude=FALSE))
+#' calc_mc_oral_equiv(3, chem.cas="6385-62-2", parameterize.args.list =list(physchem.exclude=FALSE))
 #'  
 #' # We can also use the Monte Carlo functions by passing a table
 #' # where each row represents a different Monte Carlo draw of parameters:
