@@ -5,6 +5,9 @@
 # Reproductive Toxicology 113 (2022): 172-188.
 
 
+# Dose this model work with Monte Carlo parameter sampling?
+model.list[[THIS.MODEL]]$monte.carlo <- FALSE
+
 #Analytic expression for steady-state plasma concentration.
 #model.list[["fetal_pbtk"]]$analytic.css.func <- "calc_analytic_css_fetal_pbtk" <function not yet developed
 

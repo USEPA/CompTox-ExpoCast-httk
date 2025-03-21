@@ -31,7 +31,7 @@ solve_model(
   restrictive.clearance = TRUE,
   adjusted.Funbound.plasma = TRUE,
   minimum.Funbound.plasma = 1e-04,
-  parameterize.arg.list = list(),
+  parameterize.args.list = list(),
   small.time = 1e-04,
   forcings = NULL,
   ...
@@ -124,7 +124,7 @@ TRUE along with partition coefficients calculated with this value.}
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset)}
 
-\item{parameterize.arg.list}{Additional parameters passed to the model
+\item{parameterize.args.list}{Additional parameters passed to the model
 parameterization function (other than chemical identifier, `species`,
 `suppress.messages`, `restrictive.clearance`, `adjusted.Funbound.plasma`,
 and `minimum.Funbound.plasma`)}
@@ -186,7 +186,7 @@ available, the function uses the appropriate physiological data (volumes and
 flows) but default.to.human = TRUE must be used to substitute human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 (NOTE: The 'default.to.human' specification should be included as part of the
-arguments listed in 'parameterize.arg.list'.)
+arguments listed in 'parameterize.args.list'.)
  
 For both plotting purposes and helping the numerical equation solver, it is
 helpful to specify that time points shortly before and after dosing are 

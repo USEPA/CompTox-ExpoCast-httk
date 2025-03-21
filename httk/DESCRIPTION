@@ -1,6 +1,6 @@
 Package: httk
-Version: 99.14.2
-Date: 2025-02-24
+Version: 2.6.0
+Date: 2025-03-21
 Title: High-Throughput Toxicokinetics
 Description: Pre-made models that can be rapidly tailored to various chemicals
              and species using chemical-specific in vitro data and physiological 
@@ -51,6 +51,8 @@ Authors@R: c(
              role = c("aut"), comment = c(ORCID = "0000-0003-0526-2395")), 
            person("Dustin", "Kapraun", email = "kapraun.dustin@epa.gov",
              role = c("aut"), comment = c(ORCID= "0000-0001-5570-6383")),
+           person("Kimberly", "Truong", email = "truong.kimberly@epa.gov", 
+             role = c("aut"), comment = c(ORCID = "0000-0003-1716-1006")), 
            person("Nathan","Pollesch",email = "pollesch.nathan@epa.gov",
              role = c("ctb"),comment = c(ORCID = "0000-0001-8992-9294")),
            person("Miyuki", "Breen", email = "breen.miyuki@epa.gov",
@@ -76,8 +78,6 @@ Authors@R: c(
              role = c("ctb")), 
            person("Nisha", "Sipes", email = "sipes.nisha@epa.gov", 
              role = c("ctb"), comment = c(ORCID = "0000-0003-4203-6426")), 
-           person("Kimberly", "Truong", email = "truong.kimberly@epa.gov", 
-             role = c("ctb"), comment = c(ORCID = "0000-0003-1716-1006")), 
            person("Barbara", "Wetmore", email = "wetmore.barbara@epa.gov", 
              role = c("ctb"), comment = c(ORCID = "0000-0002-6878-5348")),
            person("Lily", "Whipple",role = c("ctb")),
@@ -111,6 +111,7 @@ Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>),
   Mark Sfeir [aut],
   Matt Linakis [aut] (<https://orcid.org/0000-0003-0526-2395>),
   Dustin Kapraun [aut] (<https://orcid.org/0000-0001-5570-6383>),
+  Kimberly Truong [aut] (<https://orcid.org/0000-0003-1716-1006>),
   Nathan Pollesch [ctb] (<https://orcid.org/0000-0001-8992-9294>),
   Miyuki Breen [ctb] (<https://orcid.org/0000-0001-8511-4653>),
   Shannon Bell [ctb] (<https://orcid.org/0000-0002-5754-6085>),
@@ -124,7 +125,6 @@ Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>),
   James Sluka [ctb] (<https://orcid.org/0000-0002-5901-1404>),
   Noelle Sinski [ctb],
   Nisha Sipes [ctb] (<https://orcid.org/0000-0003-4203-6426>),
-  Kimberly Truong [ctb] (<https://orcid.org/0000-0003-1716-1006>),
   Barbara Wetmore [ctb] (<https://orcid.org/0000-0002-6878-5348>),
   Lily Whipple [ctb],
   Woodrow Setzer [ctb] (<https://orcid.org/0000-0002-6709-9186>)
