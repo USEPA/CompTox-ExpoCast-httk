@@ -1,7 +1,5 @@
 # httk 2.6.0 (2025-03-24)
-This release accompanies the submission of the new manuscript
-"Interpretation of thyroid-relevant bioactivity data for comparison to in vivo exposures: A prioritization approach for putative chemical inhibitors of in vitro deiodinase activity"
-and includes a new model describing human gestation from conception to full term ("1tri_pbtk").
+This release accompanies the submission of the new manuscript "Interpretation of thyroid-relevant bioactivity data for comparison to in vivo exposures: A prioritization approach for putative chemical inhibitors of in vitro deiodinase activity" and includes a new model describing human gestation in the first trimester (model "1tri_pbtk") which links to model "fetal_pbtk" and is accessed through new function 'solve_full_pregnancy'.
 
 ## Bug Fixes
 * Added Caco-2 permeability to model "sumclearances"
