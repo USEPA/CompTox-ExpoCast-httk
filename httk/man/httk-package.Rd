@@ -28,6 +28,7 @@ Authors:
   \item Mark Sfeir
   \item Matt Linakis \email{MLINAKIS@ramboll.com} (\href{https://orcid.org/0000-0003-0526-2395}{ORCID})
   \item Dustin Kapraun \email{kapraun.dustin@epa.gov} (\href{https://orcid.org/0000-0001-5570-6383}{ORCID})
+  \item Kimberly Truong \email{truong.kimberly@epa.gov} (\href{https://orcid.org/0000-0003-1716-1006}{ORCID})
 }
 
 Other contributors:
@@ -45,7 +46,6 @@ Other contributors:
   \item James Sluka \email{jsluka@indiana.edu} (\href{https://orcid.org/0000-0002-5901-1404}{ORCID}) [contributor]
   \item Noelle Sinski \email{Noelle.Sinski@icf.com} [contributor]
   \item Nisha Sipes \email{sipes.nisha@epa.gov} (\href{https://orcid.org/0000-0003-4203-6426}{ORCID}) [contributor]
-  \item Kimberly Truong \email{truong.kimberly@epa.gov} (\href{https://orcid.org/0000-0003-1716-1006}{ORCID}) [contributor]
   \item Barbara Wetmore \email{wetmore.barbara@epa.gov} (\href{https://orcid.org/0000-0002-6878-5348}{ORCID}) [contributor]
   \item Lily Whipple [contributor]
   \item Woodrow Setzer (\href{https://orcid.org/0000-0002-6709-9186}{ORCID}) [contributor]

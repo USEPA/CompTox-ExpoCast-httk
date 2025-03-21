@@ -10,6 +10,7 @@ calc_hep_bioavailability(
   dtxsid = NULL,
   parameters = NULL,
   restrictive.clearance = TRUE,
+  default.to.human = FALSE,
   flow.34 = TRUE,
   suppress.messages = FALSE,
   species = "Human"
@@ -33,6 +34,9 @@ for the model indicated by argument model}
 
 \item{restrictive.clearance}{Protein binding not taken into account (set to 1) in 
 liver clearance if FALSE.}
+
+\item{default.to.human}{Substitutes missing animal values with human values
+if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 
 \item{flow.34}{A logical constraint}
 
