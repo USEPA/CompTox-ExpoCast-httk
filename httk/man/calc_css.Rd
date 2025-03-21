@@ -20,15 +20,9 @@ calc_css(
   suppress.messages = FALSE,
   tissue = NULL,
   model = "pbtk",
-  default.to.human = FALSE,
   f.change = 1e-05,
-  adjusted.Funbound.plasma = TRUE,
-  minimum.Funbound.plasma = 1e-04,
-  regression = TRUE,
-  well.stirred.correction = TRUE,
-  restrictive.clearance = TRUE,
   dosing = NULL,
-  parameterize.args = list(),
+  parameterize.args.list = list(),
   ...
 )
 }
@@ -77,38 +71,18 @@ further details.)}
 model,'3compartment' for the three compartment model, and '1compartment' for
 the one compartment model.}
 
-\item{default.to.human}{Substitutes missing animal values with human values if
-true (hepatic intrinsic clearance or fraction of unbound plasma).}
-
 \item{f.change}{Fractional change of daily steady state concentration reached
 to stop calculating.}
-
-\item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to TRUE
-along with partition coefficients calculated with this value.}
-
-\item{minimum.Funbound.plasma}{If compound Funbound.plasma is lower than this
-value, it will be set to this value. Default 1e-4.}
-
-\item{regression}{Whether or not to use the regressions in calculating
-partition coefficients.}
-
-\item{well.stirred.correction}{Uses correction in calculation of hepatic
-clearance for well-stirred model if TRUE for model 1compartment elimination
-rate.  This assumes clearance relative to amount unbound in whole blood
-instead of plasma, but converted to use with plasma concentration.}
-
-\item{restrictive.clearance}{Protein binding not taken into account (set to 1)
-in liver clearance if FALSE.}
 
 \item{dosing}{The dosing object for more complicated scenarios. Defaults to
 repeated \code{daily.dose} spread out over \code{doses.per.day}}
 
-\item{parameterize.args}{Named list of any additional arguments passed to
+\item{parameterize.args.list}{Named list of any additional arguments passed to
 model parameterization function (other than the already-named arguments).
 Default `list()` to pass no additional arguments.}
 
-\item{...}{Additional arguments passed to model solver (default of
-\code{\link{solve_pbtk}}).}
+\item{...}{Additional arguments passed to \code{\link{solve_model}} (defaults
+model is "pbtk").}
 }
 \value{
 \item{frac}{Ratio of the mean concentration on the day steady state is

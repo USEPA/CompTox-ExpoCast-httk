@@ -20,11 +20,9 @@ calc_analytic_css(
   concentration = "plasma",
   suppress.messages = FALSE,
   tissue = NULL,
-  restrictive.clearance = TRUE,
   bioactive.free.invivo = FALSE,
   IVIVE = NULL,
-  Caco2.options = list(),
-  parameterize.args = list(),
+  parameterize.args.list = list(),
   ...
 )
 }
@@ -83,11 +81,6 @@ specific tissue.}
 \item{tissue}{Desired steady state tissue concentration. Default is of NULL
 typically gives whole body plasma concentration.}
 
-\item{restrictive.clearance}{If TRUE (default), then only the fraction of
-chemical not bound to protein is available for metabolism in the liver. If 
-FALSE, then all chemical in the liver is metabolized (faster metabolism due
-to rapid off-binding).}
-
 \item{bioactive.free.invivo}{If FALSE (default), then the total concentration is treated
 as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 bioactive in vivo. Only works with tissue = NULL in current implementation.}
@@ -98,6 +91,7 @@ Argument may be set to "Honda1" through "Honda4". If used, this function
 overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments. 
 See Details below for more information.}
 
+<<<<<<< HEAD
 \item{Caco2.options}{A list of options to use when working with Caco2 apical to
 basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
 Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
@@ -107,6 +101,9 @@ fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.}
 
 \item{parameterize.args}{List of arguments passed to model's associated
+=======
+\item{parameterize.args.list}{List of arguments passed to model's associated
+>>>>>>> dev
 parameterization function, including default.to.human, 
 adjusted.Funbound.plasma, regression, and minimum.Funbound.plasma. The 
 default.to.human argument substitutes missing animal values with human values
@@ -160,7 +157,7 @@ calc_analytic_css(chem.name='Bisphenol-A',output.units='mg/L',
 
 \donttest{
 calc_analytic_css(chem.name='Bisphenol-A',tissue='liver',species='rabbit',
-                 parameterize.args = list(
+                 parameterize.args.list = list(
                                 default.to.human=TRUE,
                                 adjusted.Funbound.plasma=TRUE,
                                 regression=TRUE,
