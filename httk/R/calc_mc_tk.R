@@ -120,7 +120,7 @@
 #' @param convert.httkpop.arg.list Additional parameters passed to the 
 #' convert_httkpop_* function for the model.
 #'
-#' @param parameterize.arg.list Additional parameters passed to the 
+#' @param parameterize.args.list Additional parameters passed to the 
 #' parameterize_* function for the model.
 #'
 #' @param return.all.sims Logical indicating whether to return the results
@@ -194,7 +194,7 @@ calc_mc_tk<- function(chem.cas=NULL,
                         httkpop.generate.arg.list = list(
                           method='direct resampling'),
                         convert.httkpop.arg.list=NULL,
-                        parameterize.arg.list=NULL,
+                        parameterize.args.list =NULL,
                         return.all.sims=FALSE)
 {
 # We need to describe the chemical to be simulated one way or another:
@@ -244,7 +244,7 @@ calc_mc_tk<- function(chem.cas=NULL,
                             invitro.mc.arg.list=invitro.mc.arg.list,
                             httkpop.generate.arg.list=httkpop.generate.arg.list,
                             convert.httkpop.arg.list=convert.httkpop.arg.list,
-                            parameterize.arg.list=parameterize.arg.list))))
+                            parameterize.args.list =parameterize.args.list))))
 
 #
 # HERE LIES THE ACTUAL MONTE CARLO STEP:
