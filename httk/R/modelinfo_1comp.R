@@ -6,6 +6,9 @@
 # Model identifier for the model.list:
 THIS.MODEL <- "1compartment" 
 
+# Dose this model work with Monte Carlo parameter sampling?
+model.list[[THIS.MODEL]]$monte.carlo <- TRUE
+
 # Analytic expression for steady-state plasma concentration.
 model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_1comp"
 

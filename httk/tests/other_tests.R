@@ -25,7 +25,7 @@ calc_analytic_css(
   chem.name='Bisphenol-A',
   tissue='liver',
   species='rabbit',
-  parameterize.args = list(
+  parameterize.args.list = list(
     default.to.human=TRUE,
     adjusted.Funbound.plasma=TRUE,
     regression=TRUE,
