@@ -487,6 +487,8 @@ Obach2018.table[Obach2018.table[,"CAS #"]=="4731-52-6", "CAS #"] <-
   "444731-52-6"
 Obach2018.table[Obach2018.table[,"CAS #"]=="66981-73-5", "CAS #"] <- 
   "72797-41-2"
+Obach2018.table[Obach2018.table[,"CAS #"]=="51931-66-9", "CAS #"] <- 
+  "32447-90-8"
 
 # Get rid of non-numeric fu values:
 Obach2018.table$fu <- signif(as.numeric(Obach2018.table[,
@@ -2005,6 +2007,20 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dawson.clint.2,CASRN!="")
                                  ), species="Human",
                                  overwrite=FALSE,
                                  reference="Dawson 2023")                                   
+
+#
+# Clean up CASRN
+#
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$CAS=="61337-67-5",
+                               "CAS"] <- "85650-52-8"
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$CAS=="130636-43-0",
+                               "CAS"] <- "130656-51-8"
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$CAS=="78473-71-9",
+                               "CAS"] <- "77756-20-8"
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$CAS=="15302-18-8",
+                               "CAS"] <- "22148-75-0"
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$CAS=="NOCAS_47129",
+                               "CAS"] <- "2349-14-6"
 #
 #
 #

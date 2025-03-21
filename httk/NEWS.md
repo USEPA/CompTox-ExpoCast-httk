@@ -4,6 +4,7 @@
 * At least three diffrent vesions of hte argument parameterize.args.list were in use -- parameterize.args.listand parameterize.arg.list have been renamed in all functions to parameterize.args.list
 * Defined function prototypes for forcings for several models in init.c to increase stability
 * Added flexible tolerance to `calc_css` to increase stability
+* Blank values for human Clint in [Woods et al. 2017](https://doi.org/10.1124/dmd.117.077040) were incorrectly being recorded as 0 -- these have been fixed
 
 ## Enhancements
 * Added 'onUnload' internal function call, appears to improve stability when using multiple models with [deSolve](https://CRAN.R-project.org/package=deSolve)
