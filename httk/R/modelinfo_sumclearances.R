@@ -3,6 +3,9 @@
 # Model identifier for the model.list:
 THIS.MODEL <- "sumclearances" 
 
+# Dose this model work with Monte Carlo parameter sampling?
+model.list[[THIS.MODEL]]$monte.carlo <- TRUE
+
 #Analytic expression for steady-state plasma concentration.
 model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_sumclearances"
 
@@ -16,6 +19,8 @@ model.list[[THIS.MODEL]]$parameterize.func <- "parameterize_sumclearances"
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
 model.list[[THIS.MODEL]]$param.names <- c("BW",
+                       "Caco2.Pab",
+                       "Caco2.Pab.dist",
                        "Clint",
                        "Clint.dist",
                        "Dow74",
@@ -103,4 +108,4 @@ model.list[[THIS.MODEL]]$routes <- list(
     "dosing.params" = c("daily.dose")),
   "inhalation" = list(
     "dosing.params" = c("Cinhppmv"))
-  )    
+  )
