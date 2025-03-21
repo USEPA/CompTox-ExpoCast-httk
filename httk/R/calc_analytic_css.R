@@ -54,23 +54,9 @@ model.list <- list()
 #' specific tissue then the value returned is for the plasma or blood in that
 #' specific tissue.
 #'
-#'@param restrictive.clearance If TRUE (default), then only the fraction of
-#' chemical not bound to protein is available for metabolism in the liver. If 
-#' FALSE, then all chemical in the liver is metabolized (faster metabolism due
-#' to rapid off-binding). 
-#'
 #'@param bioactive.free.invivo If FALSE (default), then the total concentration is treated
 #' as bioactive in vivo. If TRUE, the the unbound (free) plasma concentration is treated as 
 #' bioactive in vivo. Only works with tissue = NULL in current implementation.
-#'
-#' @param Caco2.options A list of options to use when working with Caco2 apical to
-#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
-#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
-#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-#' See \code{\link{get_fbio}} for further details.
 #'
 #'@param IVIVE Honda et al. (2019) identified four plausible sets of 
 #'assumptions for \emph{in vitro-in vivo} extrapolation (IVIVE) assumptions. 
@@ -78,7 +64,7 @@ model.list <- list()
 #'overwrites the tissue, restrictive.clearance, and bioactive.free.invivo arguments. 
 #'See Details below for more information.
 #'
-#'@param parameterize.args List of arguments passed to model's associated
+#'@param parameterize.args.list List of arguments passed to model's associated
 #' parameterization function, including default.to.human, 
 #' adjusted.Funbound.plasma, regression, and minimum.Funbound.plasma. The 
 #' default.to.human argument substitutes missing animal values with human values
@@ -129,7 +115,7 @@ model.list <- list()
 #' 
 #' \donttest{
 #'calc_analytic_css(chem.name='Bisphenol-A',tissue='liver',species='rabbit',
-#'                  parameterize.args = list(
+#'                  parameterize.args.list = list(
 #'                                 default.to.human=TRUE,
 #'                                 adjusted.Funbound.plasma=TRUE,
 #'                                 regression=TRUE,
@@ -176,12 +162,11 @@ calc_analytic_css <- function(chem.name=NULL,
                               concentration='plasma',
                               suppress.messages=FALSE,
                               tissue=NULL,
-                              restrictive.clearance = TRUE,
                               bioactive.free.invivo = FALSE,
                               IVIVE=NULL,
-                              Caco2.options = list(),
-                              parameterize.args = list(),
-                              ...)
+                              parameterize.args.list =list(),
+                              ...
+                              )
 {  
   if (!is.null(daily.dose))
   {
@@ -209,6 +194,14 @@ calc_analytic_css <- function(chem.name=NULL,
     stop(paste("Model",model,"not available. Please select from:",
       paste(names(model.list),collapse=", ")))
   } 
+  
+  # Check that the analytic Css function is defined:
+  analytic.css.func <- model.list[[model]]$analytic.css.func
+  if (is.null(analytic.css.func))
+  {
+    stop(paste("Model",model,"does not have an analytic function for steady-state concentration."))
+  }
+
   parameterize_function <- model.list[[model]]$parameterize.func
   compartment_state <- model.list[[model]]$compartment.state
   dose.var <- model.list[[model]]$routes[[route]][["entry.compartment"]]
@@ -260,6 +253,11 @@ calc_analytic_css <- function(chem.name=NULL,
     tissue <- out[["tissue"]]
     bioactive.free.invivo <- out[["bioactive.free.invivo"]]
     concentration <- out[["concentration"]]
+
+    if ("restrictive.clearance" %in% names(parameterize.args.list))
+      if (restrictive.clearance != parameterize.args.list[["restrictive.clearance"]])
+          warning("Argument restrictive.clerance in paramaterize.args changed in calc_analytic_css")
+    parameterize.args.list[["restrictive.clearance"]] <- restrictive.clearance
   }
   
   if ((bioactive.free.invivo == TRUE & !is.null(tissue)) | 
@@ -286,7 +284,7 @@ calc_analytic_css <- function(chem.name=NULL,
     chem.name <- out$chem.name                                
     dtxsid <- out$dtxsid  
 
-  # pass chemical information plus formal argument parameterize.args to the
+  # pass chemical information plus formal argument parameterize.args.list to the
   # parameterization function specified by the appropriate modelinfo file:
     parameters <- do.call(what=parameterize_function, 
       args=purrr::compact(c(list(
@@ -294,10 +292,9 @@ calc_analytic_css <- function(chem.name=NULL,
         chem.name=chem.name,
         dtxsid=dtxsid,
         species=species,
-        Caco2.options=Caco2.options,
         suppress.messages=suppress.messages),
-      parameterize.args)))
- 
+      list(...),
+      parameterize.args.list)))
   } else {
     model_param_names <- model.list[[model]]$param.names 
     if (!all(model_param_names %in% names(parameters)))
@@ -349,7 +346,7 @@ calc_analytic_css <- function(chem.name=NULL,
     
   if (model %in% names(model.list))            
   {
-      Css <- do.call(model.list[[model]]$analytic.css.func,
+      Css <- do.call(analytic.css.func,
         args=purrr::compact(c(list(
           chem.cas = chem.cas,
           chem.name = chem.name,
@@ -361,10 +358,9 @@ calc_analytic_css <- function(chem.name=NULL,
           concentration=concentration,
           suppress.messages=suppress.messages,
           tissue=tissue,
-          restrictive.clearance=restrictive.clearance,
-          bioactive.free.invivo = bioactive.free.invivo,
-          Caco2.options = Caco2.options),
-          list(...))))
+          bioactive.free.invivo = bioactive.free.invivo),
+          list(...),
+          parameterize.args.list)))
   } else {
     stop(paste("Model",model,"not available. Please select from:",
                paste(names(model.list),collapse=", ")))
