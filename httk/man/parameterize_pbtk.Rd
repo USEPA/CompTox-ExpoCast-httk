@@ -206,7 +206,7 @@ try(parameters3 <- parameterize_pbtk(chem.cas = "6385-62-2"))
 # However, we can turn off checking for phys-chem properties, since we know
 # that  Diquat dibromide monohydrate is not too volatile:
 parameters3 <- parameterize_pbtk(chem.cas = "6385-62-2",
-                                 physchem.exclude = FALSE)) 
+                                 physchem.exclude = FALSE) 
 
 }
 \references{
