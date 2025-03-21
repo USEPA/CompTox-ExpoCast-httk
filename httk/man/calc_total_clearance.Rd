@@ -10,11 +10,8 @@ calc_total_clearance(
   dtxsid = NULL,
   parameters = NULL,
   model = "3compartmentss",
-  species = "Human",
   suppress.messages = FALSE,
-  default.to.human = FALSE,
-  class.exclude = TRUE,
-  restrictive.clearance = TRUE,
+  species = "Human",
   ...
 )
 }
@@ -33,21 +30,12 @@ function, overrides chem.name and chem.cas.}
 
 \item{model}{The model used to calculate total clearance (defaults to "3compartmentss")}
 
+\item{suppress.messages}{Whether or not the output message is suppressed.}
+
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
-\item{suppress.messages}{Whether or not the output message is suppressed.}
-
-\item{default.to.human}{Substitutes missing animal values with human values
-if true.}
-
-\item{class.exclude}{Exclude chemical classes identified as outside of 
-domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
-
-\item{restrictive.clearance}{Protein binding is not taken into account (set
-to 1) in liver clearance if FALSE.}
-
-\item{...}{Additional parameters passed to parameterize_steadystate if
+\item{...}{Additional parameters passed to parameterize function if 
 parameters is NULL.}
 }
 \value{
