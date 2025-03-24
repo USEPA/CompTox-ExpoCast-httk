@@ -26,6 +26,6 @@ function checks if the chemical is available and, if so, returns all three
 pieces of information.
 }
 \author{
-John Wambaugh, Robert Pearce, and Annabel Meade
+John Wambaugh and Robert Pearce
 }
 \keyword{cheminformatics}

@@ -5,7 +5,7 @@
 \alias{pharma}
 \title{DRUGS|NORMAN: Pharmaceutical List with EU, Swiss, US Consumption Data}
 \format{
-An object of class \code{data.frame} with 954 rows and 14 columns.
+An object of class \code{matrix} (inherits from \code{array}) with 14 rows and 954 columns.
 }
 \source{
 \url{https://comptox.epa.gov/dashboard/chemical_lists/swisspharma}

@@ -8,10 +8,11 @@ calc_dermal_equiv(
   conc,
   chem.name = NULL,
   chem.cas = NULL,
+  dtxsid = NULL,
   parameters = NULL,
   days = 20,
   doses.per.day = 3,
-  depth = 0.3,
+  skin_depth = 0.3,
   skin.pH = 7,
   Vmedia = 0.001,
   Fskinexposed = 0.1,
@@ -33,7 +34,7 @@ specified.}
 
 \item{doses.per.day}{Number of doses per day.}
 
-\item{depth}{Skin depth, cm.}
+\item{skin_depth}{Skin depth, cm.}
 
 \item{skin.pH}{pH of skin/dermis.}
 
@@ -54,4 +55,7 @@ for a single dose.
 }
 \details{
 Returned dose is dependent on doses.per.day.
+}
+\author{
+Annabel Meade
 }

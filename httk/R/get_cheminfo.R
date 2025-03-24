@@ -44,8 +44,9 @@
 #' that a p-value of "0" is equivalent to "<0.00025". See Wambaugh et al. (2019)
 #' for more details. If argument median.only == TRUE then only the median is
 #' reported for parameters with Bayesian analysis distributions. If the 95% 
-#' credible interval is larger than fup.ci.cutoff (defaults
-#' to NULL) then the Fup is treated as too uncertain and the value NA is given.
+#' credible interval spans the range of 0.1 to 0.9 and fup.ci.cutoff is set to TRUE,
+#' i.e., the default setting, then the Fup is treated as too uncertain and
+#' the value NA is given.
 #' 
 #' @param info A single character vector (or collection of character vectors)
 #' from "Compound", "CAS", "DTXSID, "logP", "pKa_Donor"," pKa_Accept", "MW", "Clint",
@@ -70,8 +71,9 @@
 #' 
 #' @param median.only Use median values only for fup and clint.  Default is FALSE.
 #' 
-#' @param fup.ci.cutoff Cutoff for the level of uncertainty in fup estimates.
-#' This value should be between (0,1). Default is `NULL` specifying no filtering.
+#' @param fup.ci.cutoff Boolean eliminating uncertain fup estimates.
+#' If TRUE, fup values whose 95% credible interval
+#' spans 0.1 to 0.9 (or more) are eliminated. (Default value is TRUE.)
 #' 
 #' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
 #' vitro clearance assay result has a p-values greater than the threshold are
@@ -254,7 +256,7 @@ get_cheminfo <- function(info="CAS",
   # For now let's not require these because it's still hard to distringuish
   # between compounds that don't ionize and those for which we don't have
   # good predictions
-  necessary.params <- necessary.params[!(tolower(necessary.params)%in%
+  necessary.params <- necessary.params[!(tolower(necessary.params) %in% 
     tolower(c("pKa_Donor","pKa_Accept","Dow74")))]
   
   # Change to the names in chem.physical_and_invitro.table:

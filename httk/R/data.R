@@ -128,9 +128,7 @@
 #'  the corresponding sex and recumbent length}}
 #'
 #'@source
-#'\url{https://www.cdc.gov/growthcharts/who/boys_weight_head_circumference.htm}
-#'and
-#'\url{https://www.cdc.gov/growthcharts/who/girls_weight_head_circumference.htm}
+#'\url{https://www.who.int/tools/child-growth-standards/standards/weight-for-length-height}
 "wfl"
 #'@keywords data
 #'
@@ -769,37 +767,6 @@
 #' @keywords data
 "chem.invivo.PK.aggregate.data"
 
-# COMMENTED BY AMEADE 12/7/2022
-# #' Chemical membership in different research projects
-# #'
-# #' A static list of lists identifying chemical membership in different research
-# #' projects. While it is our intent to keep these lists up-to-date, the
-# #' information here is only for convenience and should not be considered to be
-# #' definitive.
-# #'
-# #'
-# #' @docType data
-# #' @format A list containing ten lists.
-# #' @author John Wambaugh
-# #' @references Bucher, J. R. (2008). Guest Editorial: NTP: New Initiatives, New
-# #' Alignment. Environ Health Perspect 116(1).
-# #'
-# #' Judson, R. S., Houck, K. A., Kavlock, R. J., Knudsen, T. B., Martin, M. T.,
-# #' Mortensen, H. M., Reif, D. M., Rotroff, D. M., Shah, I., Richard, A. M. and
-# #' Dix, D. J. (2010). In Vitro Screening of Environmental Chemicals for
-# #' Targeted Testing Prioritization: The ToxCast Project. Environmental Health
-# #' Perspectives 118(4), 485-492.
-# #'
-# #' Wambaugh, J. F., Wang, A., Dionisio, K. L., Frame, A., Egeghy, P., Judson,
-# #' R. and Setzer, R. W. (2014). High Throughput Heuristics for Prioritizing
-# #' Human Exposure to Environmental Chemicals. Environmental Science &
-# #' Technology, 10.1021/es503583j.
-# #'
-# #' CDC (2014). National Health and Nutrition Examination Survey. Available at:
-# #' https://www.cdc.gov/nchs/nhanes.htm.
-# #' @keywords data
-# "chem.lists"
-
 
 #' Raw Bayesian in vitro Toxicokinetic Data Analysis from Wambaugh et al. (2019)
 #'
@@ -1195,29 +1162,6 @@
 "chem.physical_and_invitro.data"
 
 
-# COMMENTED BY AMEADE 12/7/2022
-# #' Sipes et al. 2017 data
-# #'
-# #' This table includes in silico predicted chemical-specifc plasma protein 
-# #' unbound fraction (fup) and intrinsic hepatic clearance values for the entire
-# #' Tox21 library 
-# #' (see \url{https://www.epa.gov/chemical-research/toxicology-testing-21st-century-tox21}). 
-# #' Predictions were made with Simulations Plus ADMET predictor,
-# #' as reported in Sipes et al. (2017). 
-# #'
-# #' @name sipes2017
-# #' @aliases Sipes2017
-# #' @docType data
-# #' @format data.frame
-# #' @author Nisha Sipes
-# #' @references Sipes, Nisha S., et al. "An Intuitive Approach for Predicting
-# #' Potential Human Health Risk with the Tox21 10k Library." Environmental
-# #' Science & Technology 51.18 (2017): 10786-10796.
-# #' @source ADMET, Simulations Plus
-# #' @keywords data
-# "sipes2017"
-
-
 #' Tox21 2015 Active Hit Calls (EPA)
 #'
 #' The ToxCast and Tox21 research programs employ batteries of high-throughput
@@ -1421,6 +1365,38 @@
 #'
 #' \insertRef{griffin2008models}{httk} 
 #'
+#' @examples
+#' # We can add a new species (for example, wolverines) by adding new information
+#' # to the physiology.data and tissue.data tables. It can be convenient to start by
+#' # by replicating the data from another species and adjusting as appropriate:
+#'
+#' # Copy physiology data from rabbit:
+#' new.species <- physiology.data[,"Rabbit"]
+#' names(new.species) <- physiology.data[,"Parameter"]
+#' rabbit.BW <- new.species["Average BW"] 
+#' # Rausch and Pearson (1972) https://doi.org/10.2307/3799057 :
+#' new.species["Average BW"] <- 31.2 
+#' # Thiel et al. (2019) https://doi.org/10.1186/s12983-019-0319-8 :
+#' new.species["Average Body Temperature"] <- 38.5 
+#' 
+#' # Add new physiology data column to physiology.data table"
+#' physiology.data <- cbind(physiology.data, new.species)
+#' colnames(physiology.data)[length(colnames(physiology.data))] <- "Wolverine"
+#' 
+#' # Copy tissue data from rabbit:
+#' new.tissue.data <- subset(tissue.data,Species=="Rabbit")
+#' new.tissue.data$Species <- "Wolverine"
+#' 
+#' # Add new tissue data rows to tissue.data table:
+#' tissue.data <- rbind(tissue.data, new.tissue.data)
+#' 
+#' # Species is now available for calculations:
+#' calc_mc_css(chem.cas="80-05-7",
+#'             species="wolverine",
+#'             parameterize.args.list =list(default.to.human=TRUE),
+#'             suppress.messages=TRUE,
+#'             samples = 100)
+#'
 #' @keywords data
 "physiology.data"
 
@@ -1501,48 +1477,39 @@
 #' "Flow (mL/min/kg^(3/4))"),"value"]
 #' tissue.data <- rbind(tissue.data, new.tissue)
 #'
+#' # We can add a new species (for example, wolverines) by adding new information
+#' # to the physiology.data and tissue.data tables. It can be convenient to start by
+#' # by replicating the data from another species and adjusting as appropriate:
+#'
+#' # Copy physiology data from rabbit:
+#' new.species <- physiology.data[,"Rabbit"]
+#' names(new.species) <- physiology.data[,"Parameter"]
+#' rabbit.BW <- new.species["Average BW"] 
+#' # Rausch and Pearson (1972) https://doi.org/10.2307/3799057 :
+#' new.species["Average BW"] <- 31.2 
+#' # Thiel et al. (2019) https://doi.org/10.1186/s12983-019-0319-8 :
+#' new.species["Average Body Temperature"] <- 38.5 
+#' 
+#' # Add new physiology data column to physiology.data table"
+#' physiology.data <- cbind(physiology.data, new.species)
+#' colnames(physiology.data)[length(colnames(physiology.data))] <- "Wolverine"
+#' 
+#' # Copy tissue data from rabbit:
+#' new.tissue.data <- subset(tissue.data,Species=="Rabbit")
+#' new.tissue.data$Species <- "Wolverine"
+#' 
+#' # Add new tissue data rows to tissue.data table:
+#' tissue.data <- rbind(tissue.data, new.tissue.data)
+#' 
+#' # Species is now available for calculations:
+#' calc_mc_css(chem.cas="80-05-7",
+#'             species="wolverine",
+#'             parameterize.args.list =list(default.to.human=TRUE),
+#'             suppress.messages=TRUE,
+#'             samples = 100)
+#'
 #' @keywords data
 "tissue.data"
-
-
-# COMMENTED BY AMEADE 12/7/2022
-# #' Published toxicokinetic predictions based on in vitro data
-# #'
-# #' This data set gives the chemical specific predictions for serum
-# #' concentration at steady state resulting from constant infusion exposure, as
-# #' published in a series of papers from Barbara Wetmore's group at the Hamner
-# #' Institutes for Life Sciences. Predictions include the median and 90\%
-# #' interval in uM and mg/L. Calculations were made using the 1 and 10 uM in
-# #' vitro measured clearances.
-# #'
-# #'
-# #' @docType data
-# #' @format A data.frame containing 577 rows and 20 columns.
-# #' @references Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Sochaski, M.A.,
-# #' Rotroff, D.M., Freeman, K., Clewell, H.J., Dix, D.H., Andersen, M.E., Houck,
-# #' K.A., Allen, B., Judson, R.S., Sing, R., Kavlock, R.J., Richard, A.M., and
-# #' Thomas, R.S., "Integration of Dosimetry, Exposure and High-Throughput
-# #' Screening Data in Chemical Toxicity Assessment," Toxicological Sciences 125
-# #' 157-174 (2012)
-# #'
-# #' Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Li, L., Clewell, H.J. III,
-# #' Judson, R.S., Freeman, K., Bao, W, Sochaski, M.A., Chu T.-M., Black, M.B.,
-# #' Healy, E, Allen, B., Andersen M.E., Wolfinger, R.D., and Thomas R.S., "The
-# #' Relative Impact of Incorporating Pharmacokinetics on Predicting in vivo
-# #' Hazard and Mode-of-Action from High-Throughput in vitro Toxicity Assays"
-# #' Toxicological Sciences, 132:327-346 (2013).
-# #'
-# #' Wetmore, B. A., Wambaugh, J. F., Allen, B., Ferguson, S. S., Sochaski, M.
-# #' A., Setzer, R. W., Houck, K. A., Strope, C. L., Cantwell, K., Judson, R. S.,
-# #' LeCluyse, E., Clewell, H.J. III, Thomas, R.S., and Andersen, M. E. (2015).
-# #' "Incorporating High-Throughput Exposure Predictions with Dosimetry-Adjusted
-# #' In Vitro Bioactivity to Inform Chemical Toxicity Testing" Toxicological
-# #' Sciences, kfv171.
-# #' @source Wambaugh, John F., et al. "Toxicokinetic triage for environmental
-# #' chemicals." Toxicological Sciences (2015): 228-237.
-# #' @keywords data
-# "Wetmore.data"
-
 
 #' Published toxicokinetic predictions based on in vitro data from Wetmore et
 #' al. 2012.

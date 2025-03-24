@@ -5,6 +5,9 @@
 # Model identifier for the model.list:
 THIS.MODEL <- "gas_pbtk"
 
+# Dose this model work with Monte Carlo parameter sampling?
+model.list[[THIS.MODEL]]$monte.carlo <- TRUE
+
 #Analytic expression for steady-state plasma concentration.
 #model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_gas" # added by MB 4/8/2020
 
@@ -53,6 +56,8 @@ model.list[[THIS.MODEL]]$tissuelist=list(
 # how other parameters were calculated:
 model.list[[THIS.MODEL]]$param.names <- c(
   "BW",
+  "Caco2.Pab",
+  "Caco2.Pab.dist",
   "Clint",
   "Clint.dist",
   "Clmetabolismc",
@@ -74,6 +79,7 @@ model.list[[THIS.MODEL]]$param.names <- c(
   "Krest2pu",
   "kUrtc",
   "liver.density",
+  "logHenry",
   "MA",
   "million.cells.per.gliver",
   "MW",
@@ -287,7 +293,7 @@ model.list[[THIS.MODEL]]$compartment.units <- c(
                                           "Alung"="umol",
                                           "Ametabolized"="umol",
                                           "Amuc"="umol",
-                                          "Aplasma"="umol", #one of "Outputs" not in "States"
+                                          "Aplasma"="umol",
                                           "Arest"="umol",
                                           "Atubules"="umol",
                                           "AUC"="uM*days",
@@ -298,7 +304,7 @@ model.list[[THIS.MODEL]]$compartment.units <- c(
                                           "Cendexh"="uM",
                                           "Cendexhppmv"="ppmv",
                                           "Cgut"="uM",
-                                          "Cinhppmv"="ppmv", #forcing function in "Inputs"
+                                          "Cinhppmv"="ppmv",
                                           "Ckidney"="uM",
                                           "Cliver"="uM",
                                           "Clung"="uM",

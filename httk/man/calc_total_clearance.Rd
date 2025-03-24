@@ -9,12 +9,9 @@ calc_total_clearance(
   chem.name = NULL,
   dtxsid = NULL,
   parameters = NULL,
-  species = "Human",
+  model = "3compartmentss",
   suppress.messages = FALSE,
-  default.to.human = FALSE,
-  well.stirred.correction = TRUE,
-  restrictive.clearance = TRUE,
-  adjusted.Funbound.plasma = TRUE,
+  species = "Human",
   ...
 )
 }
@@ -31,26 +28,14 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 \item{parameters}{Chemical parameters from parameterize_steadystate
 function, overrides chem.name and chem.cas.}
 
-\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human").}
+\item{model}{The model used to calculate total clearance (defaults to "3compartmentss")}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
-\item{default.to.human}{Substitutes missing animal values with human values
-if true.}
+\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+default "Human").}
 
-\item{well.stirred.correction}{Uses correction in calculation of hepatic
-clearance for well-stirred model if TRUE.  This assumes clearance relative
-to amount unbound in whole blood instead of plasma, but converted to use
-with plasma concentration.}
-
-\item{restrictive.clearance}{Protein binding is not taken into account (set
-to 1) in liver clearance if FALSE.}
-
-\item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
-TRUE.}
-
-\item{...}{Additional parameters passed to parameterize_steadystate if
+\item{...}{Additional parameters passed to parameterize function if 
 parameters is NULL.}
 }
 \value{
@@ -66,7 +51,6 @@ steady state model.
 \examples{
 
 calc_total_clearance(chem.name="Ibuprofen") 
-
 
 }
 \author{

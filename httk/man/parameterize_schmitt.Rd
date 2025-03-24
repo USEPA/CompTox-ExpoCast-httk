@@ -70,14 +70,28 @@ affinity} \item{Fprotein.plasma}{protein fraction in plasma}
 \description{
 This function provides the necessary parameters to run
 \code{\link{predict_partitioning_schmitt}}, excluding the data in table
-\code{\link{tissue.data}}. The model is based on the Schmitt (2008) method
-for predicting tissue:plasma partition coefficients as modified by Pearce 
-et al. (2017). The modifications include approaches adapted from Peyret 
-et al. (2010).
+\code{\link{tissue.data}}. The model is based on the  
+Schmitt (2008) (\doi{10.1016/j.tiv.2007.09.010})
+method for predicting tissue:plasma partition coefficients as modified by 
+Pearce et al. (2017) (\doi{10.1007/s10928-017-9548-7}). 
+The modifications include approaches adapted from 
+Peyret et al. (2010) (\doi{10.1016/j.taap.2010.09.010}).
 }
 \examples{
 
-parameterize_schmitt(chem.name='bisphenola')
+library(httk)
+
+# Create a list of parameters (that you can potentially change):
+p <- parameterize_schmitt(chem.name="bisphenola")
+
+# Predict the partition coefficients using a list of parameters:
+PCs <- predict_partitioning_schmitt(parameters = p)
+
+# Lump the tissues into the compartments for model "pbtk":
+lump_tissues(PCs)
+
+# Lump the tissues into a single volume of distribution
+calc_vdist(parameters=c(p, PCs))
 
 }
 \references{

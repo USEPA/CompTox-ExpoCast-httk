@@ -1,9 +1,3 @@
----
-title: "News for R package httk"
-date: "September, 2024"
-output: html_document
----                                                 
-
 # version feature/dermal
 This version accompanies the submission of the Meade et al. manuscript 
 "Title here"
@@ -12,54 +6,100 @@ This version accompanies the submission of the Meade et al. manuscript
 * Added new high throughput PBTK model for dermal exposure 'solve_dermal_pbtk'
 * Added new vignette on "Vignette Name"
 
+# httk 2.6.0 (2025-03-24)
+This release accompanies the submission of the new manuscript "Interpretation of thyroid-relevant bioactivity data for comparison to in vivo exposures: A prioritization approach for putative chemical inhibitors of in vitro deiodinase activity" and includes a new model describing human gestation in the first trimester (model "1tri_pbtk") which links to model "fetal_pbtk" and is accessed through new function 'solve_full_pregnancy'.
+
+## Bug Fixes
+* Corrected calculation of total clearance in 'calc_total_clearance' to take into account systemic oral bioavailability: Cl_tot = f_bio / Css -- was using f_bio = 1 previously
+* At least three diffrent vesions of the argument parameterize.args.list were in use -- "parameterize.args.list" and "parameterize.arg.list" have been renamed in all functions to "parameterize.args.list"
+* Defined function prototypes for forcings for several models in init.c to increase stability
+* Added flexible tolerance to 'calc_css' to increase stability
+* Arguments restrictive.clearance and/or species were being ignored by several functions -- 'calc_tkstats', 'solve_model', 'calc_total_clearance', 'calc_analytic_css', 'calc_hep_bioavailability', 'calc_hep_clearance;' -- this has been corrected
+
 ## Enhancements
-* Added additional unit conversions to 'convert_units'
+* Added 'onUnload' internal function call, appears to improve stability when using multiple models with [deSolve](https://CRAN.R-project.org/package=deSolve)
+* Added class.exclude and physchem.exclude arguments to solve_[MODEL] and parameterize_[MODEL] functions
+* Expanded model documentation of solve_[MODEL] and parameterize_[MODEL] functions to explain physchem filter (models without inhalation/exhalation exclude chemicals more volatile than Acetone by default) and class filter (models not suited to per- and polyfluoroalkyl substances excluded by default. These filters can be turned of using arguments exclude.physchem = FALSE and exclude.class = FALSE, respectively.
+* Added use of Caco-2 data for estimating oral permeability to the models "fetal_pbtk", "gas_pbtk", and "sumclearances".
+* Refactored multiple functions to pass arguments using ellipsis (three dots/...) and/or parameterize.args.list so that when new arguments are added to parameterize functions these other functions do not need to be modified
+
+## New Features
+* Added new function 'list_models' to identify all available HTTK models.
+* Added argument chem_include to 'load_sipes2017', 'load_pradeep2020', 'load_dawson2021', 'load_honda2023' to speed up loading of in silico predicted values by only loading chemicals specified by argument
+
+# httk 2.5.0 (2024-12-20)
+This release accompanies the submission of the new manuscript
+"A Simple Physiologically-Based Toxicokinetic Model for Multi-Route <i>In Vitro-In Vivo</i> Extrapolation"
+and includes new models incorporating inhalation/exhalation ("sumclearances" and "3compartment2").
+
+## Bug Fixes
+* Corrected units in [Armitage model](https://doi.org/10.1021/es501955g) documentation (does not impact performance)
+* Corrected calculation in `calc_analytic_css_1comp` to reflect that Vdist is the effective plasma (not blood) volume (thanks Shenghong Wang)
+* Updated `check_model` argument logic to include "force.human.clint.fup"
+* `calc_css` Now passing arguments "well.stirred.correction" and "restrictive.clearance" to the model parameterization function, so `calc_css` should now respect user specifications for those options, rather than previous behavior of always calculating with defaults well-stirred and restrictive = TRUE
+* `solve_model`: Pass restrictive clearance argument to model parameterization function
+* `parameterize_steadystate`: pass minimum.Funbound.plasma to `get_fup`
+* `parameterize_1comp`: pass "minimum.Funbound.plasma" argument to `calc_vdist`
+* `calc_total_clearance`: arguments "well.stirred.correction" and "adjusted.Funbound.plasma" are no longer explicit arguments for the function but are still able to be used as part of the '...' arguments
+* `solve_gas_pbtk`: the "restrictive.clearance" argument default was changed from TRUE to FALSE
+* Documentation updates to clarify and/or correct descriptions to better explicate 'httk' functionality and methods.
+* Clarified examples for `calc_vdist`, `parameterize_schmitt`, and `predict_partitioning_schmitt` to correctly show how to predict volume of distribution from a list of parameters
+
+## Enhancements
+* New model functions for TK models with inhalation/exhalation: `parameterize_sumclearances`, `parameterize_3comp2`, `solve_3comp2`
+* Separate forcing functions are now declared in init.c for models (such as "gas_pbtk") that use the [deSolve forcing functionality](https://tpetzoldt.github.io/deSolve-forcing/deSolve-forcing.html).
+* Revised init.c file to try to make it more clear that the forcing function handler needs to be defined if forcings are used.
+* Revised examples with respect to adding species 
+* modelinfo_1comp: Adding a Henry's Law Constant threshold to 1-comp model 
+* `parameterize_1comp`: Add calls to `check_model` for models "1compartment" and "3compartmentss", since we use `parameterize_steadystate` to parameterize "1compartment".
+* Added argument class.exclude to multiple functions to allow class-based exclusion (for example, no PFAS) to be turned off (class.exculde = FALSE) -- defaults to TRUE
+* To be consistent with [Linakis et al. (2020)](https://doi.org/10.1038/s41370-020-0238-y) the hepatic metabolism for `solve_gas_pbtk` is now non-restrictive by default, but argument restrictive.clearance=TRUE makes the model behave similarly to the default pbtk model.
 
 # httk 2.4.0 (2024-8-14)
 This release accompanies the submission of the new manuscript
-"Enabling Transparent Toxicokinetic Modeling for Public Health Risk Assessment"
+["Enabling Transparent Toxicokinetic Modeling for Public Health Risk Assessment"](https://doi.org/10.1101/2024.08.19.608571)
 and includes changes intended to better facilitate development of new HTTK
 models through improved model clarity.
 
 In addition we have incorporated comments received
-on manuscript "Impact of Gut Permeability on Estimation of 
-Oral Bioavailability for Chemicals in Commerce and the Environment" 
+on manuscript ["Impact of Gut Permeability on Estimation of 
+Oral Bioavailability for Chemicals in Commerce and the Environment"](https://doi.org/10.14573/altex.2403271) 
 provided by reviewers at ALTEX.
 
 ## Bug Fixes
-* Cleaned up functions for model 3compartment
+* Cleaned up functions for model "3compartment"
 * Corrected error where non-restrictive clearance option was not working for model pbtk
-* Set restrictive.clearance=TRUE by defailt in 'calc_hep_clearance' when model = "unscaled"
+* Set restrictive.clearance=TRUE by defailt in `calc_hep_clearance` when model = "unscaled"
 * Corrected compartment names for model "gas_pbk" -- "Calv", "Cendexh", and "Cmixexh" were being returned in ppmv units, while "Calvppmv", "Cendexhppmv", and "Cmixexhppmv" were in uM
 * Calculation of Fabs corrected for non-human species to follow [Yu and Amidon (1999)](https://doi.org/10.1016/s0378-5173(99)00147-7) using small intestine mean residence time and radius. (Thank you ALTEX reviewers)
 * Intestinal flow rate correction to the Qgut model now scales with body weight (rodent Fgut was being predicted way too low) 
-* Corrected units of Peff in calculation of Fabs by 'calc_fabs.oral'-- calculations now indicate that more chemicals are poorly absorbed.
-* Revised 'calc_css' to handle models with no specified analytic solution
-* Revised ionization code in 'armitage_eval' so that pka_donor and pka_accept values now correctly used (thank you Meredith Scherer)
-* Corrected bug in 'solve_model' when only specific times requesed and plots=TRUE (thank you Kimberly Troung)
-* Corrected bug with 'get_chem_id' when using 'add_chemtable' without DTXSIDs (thank you Marc Beal and Miyuki Breen)
-* Corrected bug with 'create_mc_samples' where arguments were not getting passed to 'invitro_mc' (thank you Hsing-Chieh Lin and Weihsueh Chiu)
-* Corrected bug in 'solve_model' where tsteps was ignored if times were specified
+* Corrected units of Peff in calculation of Fabs by `calc_fabs.oral` -- calculations now indicate that more chemicals are poorly absorbed.
+* Revised `calc_css` to handle models with no specified analytic solution
+* Revised ionization code in `armitage_eval` so that pka_donor and pka_accept values now correctly used (thank you Meredith Scherer)
+* Corrected bug in `solve_model` when only specific times requesed and plots=TRUE (thank you Kimberly Troung)
+* Corrected bug with `get_chem_id` when using `add_chemtable` without DTXSIDs (thank you Marc Beal and Miyuki Breen)
+* Corrected bug with `create_mc_samples` where arguments were not getting passed to 'invitro_mc' (thank you Hsing-Chieh Lin and Weihsueh Chiu)
+* Corrected bug in `solve_model` where tsteps was ignored if times were specified
 
 ## Enhancements
-* A physiology data table from 'httkpop_generate' can now be passed to 'calc_mc_css' and 'calc_mc_tk' (and 'calc_mc_css' via ...) so that a consistent population can be used across monte carlo runs. See argument httkpop.dt.
+* A physiology data table from 'httkpop_generate' can now be passed to `calc_mc_css` and `calc_mc_tk` (and `calc_mc_css` via ...) so that a consistent population can be used across monte carlo runs. See argument httkpop.dt.
 * Physico-chemical properties are now retrieved from the CompTox Chemicals Dashboard programmatically using [R package ctxR](https://cran.r-project.org/package=ctxR) (Thank you Paul Kruse)
-* 'calc_fabs.oral' now calculates oral uptake rate kgutabs using Caco-2 permeability, according to method of [Lennernas (1997)](https://doi.org/10.1111/j.2042-7158.1997.tb06084.x) (Thank you ALTEX reviewers)
-* Revised and changed name of 'get_fabsgut' to 'get_fbio' and modified function to use 'calc_fbio.oral' rather than call oral bioavailability subfunctions directly
+* `calc_fabs.oral` now calculates oral uptake rate kgutabs using Caco-2 permeability, according to method of [Lennernas (1997)](https://doi.org/10.1111/j.2042-7158.1997.tb06084.x) (Thank you ALTEX reviewers)
+* Revised and changed name of `get_fabsgut` to `get_fbio` and modified function to use `calc_fbio.oral` rather than call oral bioavailability subfunctions directly
 * Replaced conversion of human effective gut permeability to rat using [Wahajudin et al. (2011)](https://doi.org/10.1055/s-0031-1296240) regression (Thank you ALTEX reviewers) 
 * Loading message displaying version now appears when package is loaded (thank you EPA NAMs class)
 * Cleaned up code for various ODE models to make them more consistent and better annotated (added more comments)
 * Reordered variables in modelinfo files for consistency so that diff can be used more easily to compare two models
-* Modified 'calc_kair' to only allow neutral chemical fraction to partition into air  (thank you Jon Arnot)
+* Modified `calc_kair` to only allow neutral chemical fraction to partition into air  (thank you Jon Arnot)
 * Updated help files describing models
 * Default ODE solver tolerances increased to just below significant figures reported by HTTK (we report 4 sig figs, now require the solver to only converge to 5)
-* 'solve_[MODEL]' functions now exclusively pass arguments to deSolve through "..."
+* `solve_[MODEL]` functions now exclusively pass arguments to deSolve through "..."
 * New modelinfo file variable default.solver.method can be set -- specifies the default ODE solver approach for deSolve if "lsoda" is not desired
-* Revised 'calc_css' to better calculate the day on which steady-state is reached
-* Added internal function 'check_model' to provide more informative error messages when key model parameters are missing
+* Revised `calc_css` to better calculate the day on which steady-state is reached
+* Added internal function `check_model` to provide more informative error messages when key model parameters are missing
 * Updated scoping on several functions so that data.tables are handled locally within the functions and not passed by reference.
-* Precision of time points added by tsteps argument in 'solve_model' now limited to ten times higher than small.time
-* Additional time points now reported in 'solve_model' immediately after dose events to improve plotting
+* Precision of time points added by tsteps argument in `solve_model` now limited to ten times higher than small.time
+* Additional time points now reported in `solve_model` immediately after dose events to improve plotting
 
 # httk 2.3.1 (2024-3-19)
 This patch addresses a number of bugs.
@@ -92,10 +132,11 @@ suggesting refinements and putting up with bugs
 ***dosing*** for a given model and route (acceptible dosing.params are now
 specified by the modelinfo_[MODEL].R file)
 
+>>>>>>> dev
 # httk 2.3.0 (2023-12-05)
 This version accompanies the submission of manuscript Honda et al. 
-"Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals 
-in Commerce and the Environment". Find the analysis scripts on 
+["Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals 
+in Commerce and the Environment"](https://doi.org/10.14573/altex.2403271). Find the analysis scripts on 
 [GitHub](https://github.com/USEPA/comptox-expocast-caco2)
 
 ## Bug Fixes
@@ -130,14 +171,10 @@ permeability for ~10,000 chemicals -- QSPR is optimized to detect low
 permeability chemicals and therefore predicts only three values 
 (low/medium/high permeability)
 * Added new functions `calc_fbio.oral`, `calc_fabs.oral`, and `calc_fgut.oral` 
-for calculating systemic bioavailability as $Fbio = Fabs \times Fgut \times Fhep$ 
+for calculating systemic bioavailability as ***Fbio = Fabs * Fgut * Fhep*** 
 where first-pass hepatic metabolism was already available from 
 `calc_hep_bioavailability`.
-* Changed the name of the variable describing fraction absorbed from the gut
-prior to first-pass hepatic metabolism to $Fabsgut$ to reflect that
-$Fabs$ and $Fgut$ are now modeled separately
-(that is, ***Fabsgut = Fabs \times Fgut***).
-* Integrated $Fabs$ and $Fgut$ into oral exposure for all TK models and 
+* Integrated ***Fabs*** and ***Fgut*** into oral exposure for all TK models and 
 integrated into population variability and uncertainty functions within 
 `invitro_uv`
 * Added new function `benchmark_httk` to compare current function of the 

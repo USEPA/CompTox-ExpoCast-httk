@@ -27,7 +27,7 @@ create_mc_samples(
   httkpop.generate.arg.list = list(method = "direct resampling"),
   convert.httkpop.arg.list = NULL,
   propagate.invitrouv.arg.list = NULL,
-  parameterize.arg.list = NULL,
+  parameterize.args.list = NULL,
   Caco2.options = NULL
 )
 }
@@ -118,7 +118,7 @@ convert_httkpop_* function for the model.}
 \item{propagate.invitrouv.arg.list}{Additional parameters passed to model's
 associated in vitro uncertainty and variability propagation function}
 
-\item{parameterize.arg.list}{Additional parameters passed to the 
+\item{parameterize.args.list}{Additional parameters passed to the 
 parameterize_* function for the model.}
 
 \item{Caco2.options}{Arguments describing how to handle Caco2 absorption data

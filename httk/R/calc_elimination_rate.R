@@ -21,41 +21,22 @@
 #' 
 #' @param parameters Chemical parameters from parameterize_steadystate or
 #' 1compartment function, overrides chem.name and chem.cas.
-#' 
+#'
+#' @param model The model used to calculate total clearance (defaults to "3compartmentss")
+#'
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' 
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' 
-#' @param default.to.human Substitutes missing animal values with human values
-#' if true.
-#' 
-#' @param restrictive.clearance In calculating elimination rate, protein
-#' binding is not taken into account (set to 1) in liver clearance if FALSE.
-#' 
-#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
-#' TRUE along with partition coefficients calculated with this value.
-#' 
-#' @param adjusted.Clint Uses Kilford et al. (2008) hepatocyte incubation
-#' binding adjustment for Clint when set to TRUE (Default).
-#' 
-#' @param regression Whether or not to use the regressions in calculating
-#' partition coefficients.
-#' 
-#' @param well.stirred.correction Uses correction in calculation of hepatic
-#' clearance for -stirred model if TRUE.  This assumes clearance relative
-#' to amount unbound in whole blood instead of plasma, but converted to use
-#' with plasma concentration.
-#' 
-#' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
-#' vitro clearance assay result has a p-values greater than the threshold are
-#' set to zero.
-#' 
-#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
-#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
-#' dataset).
-#' 
+#' @param ... Additional parameters passed to parameterize function if 
+#' parameters is NULL.
+#'
 #' @return \item{Elimination rate}{Units of 1/h.}
+#' 
+#' @seealso \code{\link{calc_total_clearance}} for calculation of total clearance
+#' 
+#' @seealso \code{\link{calc_vdist}} for calculation of volume of distribution
 #' 
 #' @author John Wambaugh
 #' 
@@ -78,108 +59,50 @@
 #'}
 #'
 #' @export calc_elimination_rate
-
 calc_elimination_rate <- function(chem.cas=NULL,
                                   chem.name=NULL,
                                   dtxsid=NULL,
                                   parameters=NULL,
                                   species="Human",
+                                  model="3compartmentss",
                                   suppress.messages=TRUE,
-                                  default.to.human=FALSE,
-                                  restrictive.clearance=TRUE,
-                                  adjusted.Funbound.plasma=TRUE,
-                                  adjusted.Clint=TRUE,
-                                  regression=TRUE,
-                                  well.stirred.correction=TRUE,
-                                  clint.pvalue.threshold=0.05,
-                                  minimum.Funbound.plasma=0.0001)
+                                  ...
+                                  )
 {
-  
-  name.list <- c("Clint",
-                 "Funbound.plasma",
-                 "Qtotal.liverc",
-                 "million.cells.per.gliver",
-                 "Vliverc",
-                 "BW",
-                 "liver.density",
-                 'Fhep.assay.correction')
+  if ('Vdist' %in% names(parameters))
+  {
+    Vd <- parameters[['Vdist']]
+  } else {
+      Vd <- do.call(calc_vdist, 
+                    args=c(list(chem.cas=chem.cas,
+                                chem.name=chem.name,
+                                dtxsid=dtxsid,
+                                species=species,
+                                parameters=parameters,
+                                suppress.messages=suppress.messages
+                                ),
+                           list(...)
+                           )
+                    ) 
+  } # L/kgBW 
 
-# This function likes to have the blood flow to the liver per kg bw^0.75 in a 
-# variable named Qtotal.liverc:
-  if (!is.null(parameters))
-  {
-    if (all(c("Qcardiacc","Qgutf","Qliverf")%in%names(parameters)))
-    {
-      parameters[["Qtotal.liverc"]] <- parameters[["Qcardiacc"]]*(parameters[["Qgutf"]]+parameters[["Qliverf"]])
-    }
-  }
-  
-  if(is.null(parameters))
-  {
-    parameters <- parameterize_steadystate(chem.cas=chem.cas,
-                    chem.name=chem.name,
-                    dtxsid=dtxsid,
-                    species=species,
-                    default.to.human=default.to.human,
-                    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                    clint.pvalue.threshold=clint.pvalue.threshold,
-                    minimum.Funbound.plasma=minimum.Funbound.plasma)
-                    
-    Vd <- calc_vdist(chem.cas=chem.cas,
-                     chem.name=chem.name,
-                     dtxsid=dtxsid,
-                     species=species,
-                     suppress.messages=suppress.messages,
-                     default.to.human=default.to.human,
-                     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                     regression=regression,
-                     minimum.Funbound.plasma=minimum.Funbound.plasma) 
-  } else { 
-    if(!all(name.list %in% names(parameters)))
-    {
-      if(is.null(chem.cas) & is.null(chem.name))
-      { 
-        stop('chem.cas or chem.name must be specified when not including all 3compartment or pbtk parameters.')
-      }
-      params <- parameterize_steadystate(chem.cas=chem.cas,
-                  chem.name=chem.name,
-                  dtxsid=dtxsid,
-                  species=species,
-                  default.to.human=default.to.human,
-                  adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                  minimum.Funbound.plasma=minimum.Funbound.plasma)
-      parameters <- c(parameters,params[name.list[!(name.list %in% names(parameters))]])
-    }
-    if('Vdist' %in% names(parameters)){
-      Vd <- parameters[['Vdist']]
-    }else{
-#        if(is.null(chem.name) & is.null(chem.cas))stop('chem.cas or chem.name must be specified when Vdist is not included in parameters.')
-      Vd <- calc_vdist(chem.cas=chem.cas,
-                       chem.name=chem.name,
-                       dtxsid=dtxsid,
-                       parameters=parameters,
-                       species=species,
-                       suppress.messages=suppress.messages,
-                       default.to.human=default.to.human,
-                       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                       regression=regression,
-                       minimum.Funbound.plasma=minimum.Funbound.plasma) 
-    }    
-  } 
-  clearance <- calc_total_clearance(chem.name=chem.name,
+  clearance <- do.call(calc_total_clearance, 
+                       args = c(list(chem.name=chem.name,
                                     chem.cas=chem.cas,
                                     dtxsid=dtxsid,
                                     species=species,
                                     parameters=parameters,
-                                    suppress.messages=suppress.messages,
-                                    default.to.human=default.to.human,
-                                    restrictive.clearance=restrictive.clearance,
-                                    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                                    clint.pvalue.threshold=clint.pvalue.threshold,
-                                    well.stirred.correction=well.stirred.correction,
-                                    minimum.Funbound.plasma=minimum.Funbound.plasma) #L/h/kgBW
-
-  if(!suppress.messages)cat(paste(toupper(substr(species,1,1)),substr(species,2,nchar(species)),sep=''),"elimination rate returned in units of 1/h.\n")
+                                    model=model,
+                                    suppress.messages=suppress.messages
+                                    ),
+                               list(...)
+                               ) 
+                       ) #L/h/kgBW
+                       
+  if (!suppress.messages) cat(paste(
+      toupper(substr(species,1,1)),
+      substr(species,2,nchar(species)),sep=''),
+      "elimination rate returned in units of 1/h.\n")
 
   return(set_httk_precision(as.numeric(clearance/Vd)))
 }

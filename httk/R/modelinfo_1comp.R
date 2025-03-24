@@ -6,6 +6,9 @@
 # Model identifier for the model.list:
 THIS.MODEL <- "1compartment" 
 
+# Dose this model work with Monte Carlo parameter sampling?
+model.list[[THIS.MODEL]]$monte.carlo <- TRUE
+
 # Analytic expression for steady-state plasma concentration.
 model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_1comp"
 
@@ -216,6 +219,9 @@ model.list[[THIS.MODEL]]$exclude.fup.zero <- TRUE
 # These are the parameter names needed to describe steady-state dosing:
 model.list[[THIS.MODEL]]$css.dosing.params <- list(
   oral=c("hourly.dose"))
+
+# Filter out volatile compounds with Henry's Law Constant Threshold
+model.list[[THIS.MODEL]]$log.henry.threshold <- c(-4.5)
 
 # Filter out compounds belonging to select chemical classes
 model.list[[THIS.MODEL]]$chem.class.filt <- c("PFAS")

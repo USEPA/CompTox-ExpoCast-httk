@@ -1,11 +1,3 @@
-<<<<<<< HEAD
-Processing 2971-36-0 in HTTK-AllChems.smi (1/5). 
-Processing 94-75-7 in HTTK-AllChems.smi (2/5). 
-Processing 94-82-6 in HTTK-AllChems.smi (3/5). 
-Processing 90-43-7 in HTTK-AllChems.smi (4/5). 
-Processing 1007-28-9 in HTTK-AllChems.smi (5/5). 
-Descriptor calculation completed in 0.772 secs . Average speed: 0.15 s/mol.
-=======
 Processing 2971-36-0 in HTTK-AllChems.smi (1/10330). 
 Processing 94-75-7 in HTTK-AllChems.smi (2/10330). 
 Processing 94-82-6 in HTTK-AllChems.smi (3/10330). 
@@ -10337,4 +10329,3 @@ Processing 79944-56-2 in HTTK-AllChems.smi (10328/10330). Average speed: 0.06 s/
 Processing 354812-41-2 in HTTK-AllChems.smi (10329/10330). Average speed: 0.06 s/mol.
 Processing 57726-65-5 in HTTK-AllChems.smi (10330/10330). Average speed: 0.06 s/mol.
 All workers stopped for unknown reason.
->>>>>>> dev

@@ -33,6 +33,18 @@
 #' \ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}
 #' using \code{\link{calc_fgut.oral}}.
 #' 
+#' Because this model does not simulate exhalation, inhalation, and other 
+#' processes relevant to volatile chemicals, this model is by default 
+#' restricted to chemicals with a logHenry's Law Constant less than that of 
+#' Acetone, a known volatile chemical. That is, chemicals with logHLC > -4.5 
+#' (Log10 atm-m3/mole) are excluded. Volatility is not purely determined by the 
+#' Henry's Law Constant, therefore this chemical exclusion may be turned off 
+#' with the argument "physchem.exclude = FALSE". Similarly, per- and 
+#' polyfluoroalkyl substances (PFAS) are excluded by default because the 
+#' transporters that often drive PFAS toxicokinetics are not included in this 
+#' model. However, PFAS chemicals can be included with the argument 
+#' "class.exclude = FALSE".
+#' 
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- the 
 #' chemical must be identified by either CAS, name, or DTXISD
 #' 
@@ -50,6 +62,10 @@
 #' 
 #' @param class.exclude Exclude chemical classes identified as outside of 
 #' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' 
+#' @param physchem.exclude Exclude chemicals on the basis of physico-chemical
+#' properties (currently only Henry's law constant) as specified by 
+#' the relevant modelinfo_[MODEL] file (default TRUE).
 #' 
 #' @param tissuelist Specifies compartment names and tissues groupings.
 #' Remaining tissues in tissue.data are lumped in the rest of the body.
@@ -79,13 +95,17 @@
 #' @param minimum.Funbound.plasma \eqn{f_{up}} is not allowed to drop below
 #' this value (default is 0.0001).      
 #' 
-#' @param Caco2.options A list of options to use when working with Caco2 apical to
-#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
-#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
-#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' @param Caco2.options A list of options to use when working with Caco2 apical 
+#' to basolateral data \code{Caco2.Pab}, default is Caco2.options = 
+#' list(Caco2.Pab.default = 1.6, Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, 
+#' overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the 
+#' default value for Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE 
+#' uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+#' Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE 
+#' overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
+#' with 1 (i.e. 100 percent) regardless of other settings.
 #' See \code{\link{get_fbio}} for further details.
 #' 
 #' @param minimum.Funbound.plasma \eqn{f_{up}} is not allowed to drop below
@@ -96,6 +116,8 @@
 #' @param liver.density Liver density (defaults to 1.05 g/mL from International Commission on Radiological Protection (1975))
 #'
 #' @param kgutabs Oral absorption rate from gut (determined from Peff)
+#' 
+#' @param ... Additional arguments, not currently used.
 #' 
 #' @return \item{BW}{Body Weight, kg.} 
 #' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
@@ -167,15 +189,24 @@
 #'
 #' @examples
 #' 
-#'  parameters <- parameterize_pbtk(chem.cas='80-05-7')
+#'  parameters1 <- parameterize_pbtk(chem.cas='80-05-7')
 #' 
-#'  parameters <- parameterize_pbtk(chem.name='Bisphenol-A',species='Rat')
+#'  parameters2 <- parameterize_pbtk(chem.name='Bisphenol-A',species='Rat')
 #' 
 #'  # Change the tissue lumping (note, these model parameters will not work with our current solver):
 #'  compartments <- list(liver=c("liver"),fast=c("heart","brain","muscle","kidney"),
 #'                       lung=c("lung"),gut=c("gut"),slow=c("bone"))
 #'  parameterize_pbtk(chem.name="Bisphenol a",species="Rat",default.to.human=TRUE,
-#'                    tissuelist=compartments) 
+#'                    tissuelist=compartments)
+#'
+#' # The following will not work because Diquat dibromide monohydrate's 
+#' # Henry's Law Constant (-3.912) is higher than that of Acetone (~-4.5):
+#' try(parameters3 <- parameterize_pbtk(chem.cas = "6385-62-2"))
+#' # However, we can turn off checking for phys-chem properties, since we know
+#' # that  Diquat dibromide monohydrate is not too volatile:
+#' parameters3 <- parameterize_pbtk(chem.cas = "6385-62-2",
+#'                                  physchem.exclude = FALSE) 
+#' 
 #' @export parameterize_pbtk
 parameterize_pbtk <- function(
                        chem.cas=NULL,
@@ -197,16 +228,18 @@ parameterize_pbtk <- function(
                        restrictive.clearance=TRUE,
                        minimum.Funbound.plasma=0.0001,
                        class.exclude=TRUE,
+                       physchem.exclude=TRUE,
                        million.cells.per.gliver= 110, # 10^6 cells/g-liver Carlile et al. (1997)
                        liver.density= 1.05, # g/mL International Commission on Radiological Protection (1975)
                        kgutabs = NA, # 1/h, Wambaugh et al. (2018)
-                       Caco2.options = NULL
+                       Caco2.options = NULL,
+                       ...
                        )
 {
-  # Give a binding to the physiology.data
+  #Give a binding to the physiology.data
   physiology.data <- physiology.data
   
-  # We need to describe the chemical to be simulated one way or another:
+  #We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
       is.null(dtxsid))
@@ -219,8 +252,6 @@ parameterize_pbtk <- function(
   chem.cas <- out$chem.cas
   chem.name <- out$chem.name
   dtxsid <- out$dtxsid
-   
-  if(class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
 
 # Make sure we have all the parameters we need:
   check_model(chem.cas=chem.cas, 
@@ -229,10 +260,11 @@ parameterize_pbtk <- function(
             model="pbtk",
             species=species,
             class.exclude=class.exclude,
-            default.to.human=default.to.human)
+            physchem.exclude=physchem.exclude,
+            default.to.human=default.to.human|force.human.clint.fup
+            )
   
 # Get the intrinsic hepatic clearance:  
-# Clint has units of uL/min/10^6 cells
   Clint.list <- get_clint(
       dtxsid=dtxsid,
       chem.name=chem.name,
@@ -245,7 +277,7 @@ parameterize_pbtk <- function(
   Clint.point <- Clint.list$Clint.point
   Clint.dist <- Clint.list$Clint.dist
 
-  # Get phys-chemical properties:
+# Get phys-chemical properties:
   MW <- get_physchem_param("MW",chem.cas=chem.cas) #g/mol
   # acid dissociation constants
   pKa_Donor <- suppressWarnings(get_physchem_param(
@@ -260,21 +292,21 @@ parameterize_pbtk <- function(
     "logP",
     chem.cas=chem.cas) 
     
-  # Calculate unbound fraction of chemical in the hepatocyte intrinsic 
-  # clearance assay (Kilford et al., 2008)
+# Calculate unbound fraction of chemical in the hepatocyte intrinsic 
+# clearance assay (Kilford et al., 2008)
   Fu_hep <- calc_hep_fu(parameters=list(
     Pow=Pow,
     pKa_Donor=pKa_Donor,
     pKa_Accept=pKa_Accept)) # fraction 
 
-  # Correct for unbound fraction of chemical in the hepatocyte intrinsic 
-  # clearance assay (Kilford et al., 2008)
+# Correct for unbound fraction of chemical in the hepatocyte intrinsic 
+# clearance assay (Kilford et al., 2008)
   if (adjusted.Clint) Clint.point <- apply_clint_adjustment(
-            Clint.point,
-            Fu_hep=Fu_hep,
-            suppress.messages=suppress.messages)
-                
-  # Predict the PCs for all tissues in the tissue.data table:
+                               Clint.point,
+                               Fu_hep=Fu_hep,
+                               suppress.messages=suppress.messages)
+                                   
+# Predict the PCs for all tissues in the tissue.data table:
   schmitt.params <- parameterize_schmitt(
                       chem.cas=chem.cas,
                       species=species,
@@ -283,36 +315,30 @@ parameterize_pbtk <- function(
                       force.human.fup=force.human.clint.fup,
                       suppress.messages=suppress.messages,
                       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-                      minimum.Funbound.plasma=minimum.Funbound.plasma
-                      )
-
-  # Check to see if we should use the in vitro fup assay correction:
-  if(adjusted.Funbound.plasma){
-    fup <- schmitt.params$Funbound.plasma
-    if (!suppress.messages) warning('Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.')
-  } else fup <- schmitt.params$unadjusted.Funbound.plasma
-  # Restrict the value of fup:
-  if (fup < minimum.Funbound.plasma) fup <- minimum.Funbound.plasma
-
+                      minimum.Funbound.plasma=minimum.Funbound.plasma)
+       
+  fup <- schmitt.params$Funbound.plasma
+  
   PCs <- predict_partitioning_schmitt(
-           parameters=schmitt.params,
-           species=species,
-           adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-           regression=regression,
-           minimum.Funbound.plasma=minimum.Funbound.plasma,
-           model="pbtk",
-           suppress.messages=suppress.messages)
+    parameters=schmitt.params,
+    species=species,
+    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+    regression=regression,
+    minimum.Funbound.plasma=minimum.Funbound.plasma,
+    model="pbtk",
+    suppress.messages=suppress.messages)
 
   # Get_lumped_tissues returns a list with the lumped PCs, vols, and flows:
   lumped_params <- lump_tissues(
-                     PCs,
-                     tissuelist=tissuelist,
-                     species=species,
-                     model="pbtk",
-                     suppress.messages=suppress.messages)
-  
-  # Check the species argument for capitalization problems and whether or not 
-  # it is in the table:  
+    PCs,
+    tissuelist=tissuelist,
+    species=species,
+    model="pbtk",
+    suppress.messages=suppress.messages)
+
+# Check the species argument for capitalization problems and whether or not 
+# it is in the table:  
+
   if (!(species %in% colnames(physiology.data)))
   {
     if (toupper(species) %in% toupper(colnames(physiology.data)))
@@ -326,15 +352,13 @@ parameterize_pbtk <- function(
   this.phys.data <- physiology.data[,phys.species]
   names(this.phys.data) <- physiology.data[,1]
   
-  #INITIALIZE outlist
   outlist <- list()
-
   # Begin flows:
   #mL/min/kgBW^(3/4) converted to L/h/kgBW^(3/4):
   QGFRc <- this.phys.data["GFR"]/1000*60 
   Qcardiacc = this.phys.data["Cardiac Output"]/1000*60 
   flows <- unlist(lumped_params[substr(names(lumped_params),1,1) == 'Q'])
-
+  
   outlist <- c(outlist,c(
     Qcardiacc = as.numeric(Qcardiacc),
     flows[!names(flows) %in% c('Qlungf','Qtotal.liverf')],
@@ -354,13 +378,13 @@ parameterize_pbtk <- function(
                Vvenc = as.numeric(Vvenc),
                lumped_params[substr(names(lumped_params),1,1) == 'V'],
                lumped_params[substr(names(lumped_params),1,1) == 'K'])
- 
+  
+
   # Create the list of parameters:
   BW <- this.phys.data["Average BW"]
   hematocrit = this.phys.data["Hematocrit"]
   
   outlist <- c(outlist,list(BW = as.numeric(BW),
-
                             Funbound.plasma = fup, # unitless fraction
                             Funbound.plasma.dist = schmitt.params$Funbound.plasma.dist,
                             hematocrit = as.numeric(hematocrit), # unitless ratio
@@ -377,7 +401,7 @@ parameterize_pbtk <- function(
       schmitt.params$Funbound.plasma.adjustment
   } else outlist["Funbound.plasma.adjustment"] <- NA
    
-  # Blood to plasma ratio:
+# Blood to plasma ratio:
   outlist <- c(outlist,
     Rblood2plasma=available_rblood2plasma(chem.cas=chem.cas,
       species=species,
@@ -385,7 +409,7 @@ parameterize_pbtk <- function(
       adjusted.Funbound.plasma=adjusted.Funbound.plasma,
       suppress.messages=suppress.messages))
 
-  # Liver metabolism properties:
+# Liver metabolism properties:
   outlist <- c(
     outlist,
     list(Clint=Clint.point,
@@ -409,7 +433,7 @@ parameterize_pbtk <- function(
       million.cells.per.gliver=110, # 10^6 cells/g-liver
       liver.density=1.05)) # g/mL
    
-  # Oral bioavailability parameters:
+# Oral bioavailability parameters:
   outlist <- c(
     outlist, do.call(get_fbio, args=purrr::compact(c(
     list(
@@ -429,6 +453,6 @@ parameterize_pbtk <- function(
   # Only include parameters specified in modelinfo:
   outlist <- outlist[model.list[["pbtk"]]$param.names]
   
-  # Set precision:
+# Set precision:
   return(lapply(outlist, set_httk_precision))
 }

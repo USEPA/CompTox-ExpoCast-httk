@@ -7,6 +7,9 @@
 # Model identifier for the model.list:
 THIS.MODEL <- "pbtk" 
 
+# Dose this model work with Monte Carlo parameter sampling?
+model.list[[THIS.MODEL]]$monte.carlo <- TRUE
+
 # Analytic expression for steady-state plasma concentration to be used by
 # calc_analytic_css:
 model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_pbtk"
@@ -31,16 +34,16 @@ model.list[[THIS.MODEL]]$solve.func <- "solve_pbtk"
 # otherwise.
 model.list[[THIS.MODEL]]$alltissues=c(
   "adipose",
-  "bone",       
-  "brain",      
-  "gut",       
-  "heart",      
-  "kidney",     
-  "liver",      
-  "lung",      
+  "bone",            
+  "brain",           
+  "gut",            
+  "heart",           
+  "kidney",          
+  "liver",           
+  "lung",           
   "muscle", 
-  "skin",       
-  "spleen",     
+  "skin",            
+  "spleen",          
   "red blood cells",
   "rest")
 
@@ -48,11 +51,11 @@ model.list[[THIS.MODEL]]$alltissues=c(
 # PBTK model has liver, kidney, gut, and lung compartments that draw info
 # from tissue.data; everything else from alltissues should be lumped.
 model.list[[THIS.MODEL]]$tissuelist=list(
-  liver=c("liver"),
-  kidney=c("kidney"),
-  lung=c("lung"),
-  gut=c("gut"))
-
+                         liver=c("liver"),
+                         kidney=c("kidney"),
+                         lung=c("lung"),
+                         gut=c("gut"))
+                                   
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
@@ -96,33 +99,36 @@ model.list[[THIS.MODEL]]$param.names <- c(
   "Vlungc",
   "Vrestc",
   "Vvenc")
-          
-# This subset of R parameters are needed to initially parameterize the compiled
-# code for the solver: (must match ORDER under "parameters" in C code)
+                    
+#
+# String representations of the R version of names of
+# the parameters are assigned to the C variable name in this scheme.
 model.list[[THIS.MODEL]]$Rtosolvermap <- list(
   BW="BW",
-  Clmetabolismc = "Clmetabolismc",
-  hematocrit = "hematocrit",
-  kgutabs = "kgutabs",
-  Kkidney2pu = "Kkidney2pu",
-  Kliver2pu = "Kliver2pu",
-  Krest2pu = "Krest2pu",
-  Kgut2pu = "Kgut2pu",
-  Klung2pu = "Klung2pu",
-  Qcardiacc = "Qcardiacc",
-  Qgfrc = "Qgfrc",
-  Qgutf = "Qgutf",
-  Qkidneyf = "Qkidneyf",
-  Qliverf = "Qliverf",
-  Vartc = "Vartc",
-  Vgutc = "Vgutc",
-  Vkidneyc = "Vkidneyc",
-  Vliverc = "Vliverc",
-  Vlungc = "Vlungc",
-  Vrestc = "Vrestc",
-  Vvenc = "Vvenc",
-  Fraction_unbound_plasma = "Funbound.plasma",
-  Rblood2plasma = "Rblood2plasma"
+  Clmetabolismc="Clmetabolismc",
+  hematocrit="hematocrit",
+  kgutabs="kgutabs",
+  Kkidney2pu="Kkidney2pu",
+  Kliver2pu="Kliver2pu",
+  Krest2pu="Krest2pu",
+  Kgut2pu="Kgut2pu",
+  Klung2pu="Klung2pu",
+  Qcardiacc="Qcardiacc",
+  Qgfrc="Qgfrc",
+  Qgutf="Qgutf",
+  Qkidneyf="Qkidneyf",
+  Qliverf="Qliverf",
+  Vartc="Vartc",
+  Vgutc="Vgutc",
+  Vkidneyc="Vkidneyc",
+  Vliverc="Vliverc",
+  Vlungc="Vlungc",
+  Vrestc="Vrestc",
+  Vvenc="Vvenc",
+  Fraction_unbound_plasma="Funbound.plasma",
+  Rblood2plasma="Rblood2plasma"
+
+
 )
 
 # This function translates the R model parameters into the compiled model
@@ -196,6 +202,7 @@ model.list[[THIS.MODEL]]$derivative.output.names <- c(
   "Aplasma"
   )
 
+
 #list of variables to be monitored (plotted). This list should be able to be
 #constructed from states and outputs. 
 model.list[[THIS.MODEL]]$default.monitor.vars <- c(
@@ -214,15 +221,29 @@ model.list[[THIS.MODEL]]$default.monitor.vars <- c(
 
 # Allowable units assigned to dosing input:
 model.list[[THIS.MODEL]]$allowed.units.input <- list(
-  "oral" = c('umol','mg','mg/kg'),
-  "iv" = c('umol','mg','mg/kg')
-  )
-  
+       "oral" = c('umol','mg','mg/kg'),
+       "iv" = c('umol','mg','mg/kg'))
+
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[[THIS.MODEL]]$allowed.units.output <- list(
-  "oral" = c('uM','mg/L','umol','mg','uM*days','mg/L*days'), 
-  "iv" = c('uM','mg/L','umol','mg','uM*days','mg/L*days')
-  )  
+       "oral" = c('uM','mg/l','umol','mg','uM*days','mg/L*days'),
+       "iv" = c('uM','mg/l','umol','mg','uM*days','mg/L*days'))
+
+## These parameters specify the exposure scenario simulated by the model:
+#model.list[[THIS.MODEL]]$dosing.params <- c("daily.dose",
+#  "initial.dose",
+#  "doses.per.day",
+#  "dosing.matrix")
+#model.list[[THIS.MODEL]]$routes <- c("oral","iv")
+## We need to know which compartment gets the dose 
+#model.list[[THIS.MODEL]]$dose.variable <- list(oral="Agutlumen",
+#  iv="Aven")
+## Can take the values "add" to add dose C1 <- C1 + dose,
+##"replace" to change the value C1 <- dose
+##or "multiply" to change the value to C1 <- C1*dose
+#model.list[[THIS.MODEL]]$dose.type <- list(oral="add",
+#  iv="add")
+  
 model.list[[THIS.MODEL]]$routes <- list(
   "oral" = list(
 # We need to know which compartment gets the dose 
@@ -231,17 +252,15 @@ model.list[[THIS.MODEL]]$routes <- list(
 # "replace" to change the value C1 <- dose
 # or "multiply" to change the value to C1 <- C1*dose
     "dose.type" = "add",
-    "dosing.params" = c(
-      "daily.dose",
-      "initial.dose",
-      "doses.per.day",
-      "dosing.matrix")),
+"dosing.params" = c("daily.dose",
+                    "initial.dose",
+                    "doses.per.day",
+                    "dosing.matrix")),
   "iv" = list(
     "entry.compartment" = "Aven",
     "dose.type" = "add",
-    "dosing.params" = c(
-      "initial.dose",
-      "dosing.matrix"))
+    "dosing.params" = c("initial.dose",
+                       "dosing.matrix"))
   )
 
 # ORDERED LIST of state variables (must match Model variables: 
@@ -249,44 +268,45 @@ model.list[[THIS.MODEL]]$routes <- list(
 # mostly calculated in amounts, though AUC (area under plasma concentration
 # curve) also appears here: 
 model.list[[THIS.MODEL]]$state.vars <- c(
-  "Agutlumen",
-  "Agut",
-  "Aliver",
-  "Aven",
-  "Alung",
-  "Aart",
-  "Arest",
-  "Akidney", 
-  "Atubules",
-  "Ametabolized",
-  "AUC"
-  ) 
+    "Agutlumen",
+    "Agut",
+    "Aliver",
+    "Aven",
+    "Alung",
+    "Aart",
+    "Arest",
+    "Akidney", 
+    "Atubules",
+    "Ametabolized",
+    "AUC"
+    ) 
     
 # Actual (intrinsic) units assigned to each of the time dependent
 # variables of the model system including state variables and any transformed
 # outputs (for example, concentrations calculated from amounts.)
 # AUC values should also be included.
 model.list[[THIS.MODEL]]$compartment.units <- c(
-  "Agutlumen"="umol",
-  "Agut"="umol",
-  "Aliver"="umol",
-  "Aven"="umol",
-  "Alung"="umol",
-  "Aart"="umol",
-  "Arest"="umol",
-  "Akidney"="umol",
-  "Atubules"="umol",
-  "Ametabolized"="umol",
-  "Cgut"="uM",
-  "Cliver"="uM",
-  "Cven"="uM",
-  "Clung"="uM",
-  "Cart"="uM",
-  "Crest"="uM",
-  "Ckidney"="uM",
-  "Cplasma"="uM",
-  "Aplasma"="umol",
-  "AUC"="uM*days"
+    "Agutlumen"="umol",
+    "Agut"="umol",
+    "Aliver"="umol",
+    "Aven"="umol",
+    "Alung"="umol",
+    "Aart"="umol",
+    "Arest"="umol",
+    "Akidney"="umol", 
+    "Atubules"="umol",
+    "Ametabolized"="umol",
+    "Cgut"="uM",
+
+    "Cliver"="uM",
+    "Cven"="uM",
+    "Clung"="uM",
+    "Cart"="uM",
+    "Crest"="uM",
+    "Ckidney"="uM",
+    "Cplasma"="uM",
+    "Aplasma"="umol",
+    "AUC"="uM*days"
   )
 
 # Compartment state of matter, needed for proper unit conversion, if all
@@ -332,8 +352,7 @@ model.list[[THIS.MODEL]]$httkpop.params <- c(
   "Vliverc",
   "Vlungc",
   "Vrestc",
-  "Vvenc"
-  )
+  "Vvenc")
 
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
 model.list[[THIS.MODEL]]$calcpc <- TRUE

@@ -24,6 +24,7 @@ parameterize_dermal_pbtk(
   minimum.Funbound.plasma = 1e-04,
   skin_depth = 0.12,
   skin.pH = 7,
+  BW = NULL,
   height = 175,
   totalSA = NULL,
   Kvehicle2water = "water",

@@ -9,12 +9,11 @@ calc_vdist(
   chem.name = NULL,
   dtxsid = NULL,
   parameters = NULL,
-  default.to.human = FALSE,
-  species = "Human",
   suppress.messages = FALSE,
   adjusted.Funbound.plasma = TRUE,
-  regression = TRUE,
-  minimum.Funbound.plasma = 1e-04
+  species = "Human",
+  default.to.human = FALSE,
+  ...
 )
 }
 \arguments{
@@ -30,23 +29,19 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 \item{parameters}{Parameters from parameterize_3comp, parameterize_pbtk or
 predict_partitioning_schmitt.}
 
-\item{default.to.human}{Substitutes missing animal values with human values
-if true.}
+\item{suppress.messages}{Whether or not the output message is suppressed.}
+
+\item{adjusted.Funbound.plasma}{Uses Pearce et al. (2017) lipid binding adjustment
+for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Default).}
 
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
-\item{suppress.messages}{Whether or not the output message is suppressed.}
+\item{default.to.human}{Substitutes missing animal values with human values
+if true.}
 
-\item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
-TRUE along with parition coefficients calculated with this value.}
-
-\item{regression}{Whether or not to use the regressions in calculating
-partition coefficients.}
-
-\item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
-equal to this value (default is 0.0001 -- half the lowest measured Fup in our
-dataset).}
+\item{...}{Additional parameters passed to parameterize function if 
+parameters is NULL.}
 }
 \value{
 \item{Volume of distribution}{Units of L/ kg BW.}
@@ -71,6 +66,16 @@ clearance.
 calc_vdist(chem.cas="80-05-7")
 calc_vdist(chem.name="Bisphenol A")
 calc_vdist(chem.name="Bisphenol A",species="Rat")
+
+# Create a list of parameters (that you can potentially change):
+p <- parameterize_schmitt(chem.name="propranolol")
+# Need to use those parameters to predict partition coefficients:
+PCs <- predict_partitioning_schmitt(parameters = p)
+
+# Lump the tissues into a single volume of distribution
+calc_vdist(parameters=c(p,PCs))
+# Should be the same as chemical by name:
+calc_vdist(chem.name="propranolol")
 
 }
 \references{

@@ -112,7 +112,6 @@ This produces an updated version of the top panel of Figure 3 from the paper
 [Armitage, 2014](https://doi.org/10.1021/es501955g)
 
 
-=======
 ```{r MakeTable, eval = execute.vignette}
 armitage.dt <- copy(armitage_input)
 armitage.dt[,well_number:=384] %>% 

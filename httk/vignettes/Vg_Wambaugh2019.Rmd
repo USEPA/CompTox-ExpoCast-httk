@@ -99,7 +99,6 @@ From the R command prompt:
 install.packages("X")
 
 Or, if using RStudio, look for 'Install Packages' under 'Tools' 
-
 ```{r setup, eval = execute.vignette}
 library(data.table)
 library(httk)

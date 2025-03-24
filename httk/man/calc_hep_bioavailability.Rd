@@ -10,6 +10,7 @@ calc_hep_bioavailability(
   dtxsid = NULL,
   parameters = NULL,
   restrictive.clearance = TRUE,
+  default.to.human = FALSE,
   flow.34 = TRUE,
   suppress.messages = FALSE,
   species = "Human"
@@ -34,6 +35,9 @@ for the model indicated by argument model}
 \item{restrictive.clearance}{Protein binding not taken into account (set to 1) in 
 liver clearance if FALSE.}
 
+\item{default.to.human}{Substitutes missing animal values with human values
+if true (hepatic intrinsic clearance or fraction of unbound plasma).}
+
 \item{flow.34}{A logical constraint}
 
 \item{suppress.messages}{Whether or not to suppress the output message.}
@@ -53,7 +57,6 @@ liver (Rowland, 1973 Equation 29, where k21 is blood flow through the liver
 and k23 is clearance from the liver in Figure 1 in that paper).
 }
 \references{
-Rowland, Malcolm, Leslie Z. Benet, and Garry G. Graham. 
 \insertRef{rowland1973clearance}{httk}
 }
 \author{
