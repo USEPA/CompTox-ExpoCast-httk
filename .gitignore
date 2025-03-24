@@ -36,6 +36,10 @@ httk/man/frechen2021.Rd
 
 # Session Data files
 .RData
+!datatables/Tables.RData
+!httk/data/Tables.RData
+!datatables/sysdata.rda
+!httk/R/sysdata.rda
 
 # User-specific files
 .Ruserdata
@@ -70,6 +74,10 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# Data files generated for lifestage models
+httk/data/nhanes*params*.Rds
+httk/data/nhanes_physiology.Rds
 
 ## R package Sub-directory Files to Ignore ##
 # history files
