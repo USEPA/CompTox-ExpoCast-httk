@@ -6,6 +6,9 @@
 #'  \code{reth}, \code{age_months}, \code{age_years}, \code{weight}, and
 #'  \code{height}.
 #'  
+#'@param add_variability An option to add variability to calculated masses and
+#'  flows. Default is TRUE; use FALSE for repeatable calculations.
+#'  
 #'@return The same data.table, with aditional variables describing tissue masses
 #'  and flows.
 #'  
@@ -33,7 +36,8 @@
 #'
 #'@import stats
 
-tissue_masses_flows <- function(tmf_dt){
+tissue_masses_flows <- function(tmf_dt,
+                                add_variability = TRUE) {
   
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -157,19 +161,31 @@ tissue_masses_flows <- function(tmf_dt){
   #Add variability to tissue masses
   #For those tissues with normal distribution of residual variability,
   #draw individual tissue mass from a normal distribution
-  tmp_dt[mass_dist=='Normal',
-         mass:=truncnorm::rtruncnorm(n=length(mass_dist),
-                                     a=0, #truncated at zero below (because mass can't be negative)
-                                     mean=mass_mean, #with mean = mass predicted above,
-                                     sd=mass_cv*mass_mean)]  #cv given by the mass_cv from McNally et al, (2014)
+  if (add_variability) {
+    tmp_dt[mass_dist=='Normal',
+           mass:=truncnorm::rtruncnorm(n=length(mass_dist),
+                                       a=0, #truncated at zero below (because mass can't be negative)
+                                       mean=mass_mean, #with mean = mass predicted above,
+                                       sd=mass_cv*mass_mean)]  #cv given by the mass_cv from McNally et al, (2014)
+  } else {
+    tmp_dt[mass_dist=='Normal',
+           mass:=mass_mean]
+  }
+  
   #For those tissues with log-normal distribution of residual variability:
   #draw individual tissue mass from a log-normal distribution,
   #with mean = log(mass predicted above),
   #sd derived from mass_cv.
-  tmp_dt[mass_dist=='Log-normal',
-         mass:=exp(rnorm(n=length(mass_dist),
-                         mean=log(mass_mean),
-                         sd=sqrt(log(mass_cv^2+1))))]
+  if (add_variability) {
+    tmp_dt[mass_dist=='Log-normal',
+           mass:=exp(rnorm(n=length(mass_dist),
+                           mean=log(mass_mean),
+                           sd=sqrt(log(mass_cv^2+1))))]
+  } else {
+    tmp_dt[mass_dist=='Log-normal',
+           mass:=mass_mean]
+  }
+  
   
   #Flows: allometrically scaled
   tmp_dt[tissue=='CO',
@@ -188,13 +204,21 @@ tissue_masses_flows <- function(tmf_dt){
          flow_mean:=flow_frac*CO_flow_mean]
   #Add variability to flows (normal distribution)
   #note: exclude CO and lung flow
-  tmp_dt[tissue!='CO' & 
-           tissue!='Lung' &
-           !is.na(flow_mean), 
-         flow:=truncnorm::rtruncnorm(n=length(flow_mean),
-                                     a=0,
-                                     mean=flow_mean,
-                                     sd=flow_cv*flow_mean)]
+  if (add_variability) {
+    tmp_dt[tissue!='CO' & 
+             tissue!='Lung' &
+             !is.na(flow_mean), 
+           flow:=truncnorm::rtruncnorm(n=length(flow_mean),
+                                       a=0,
+                                       mean=flow_mean,
+                                       sd=flow_cv*flow_mean)]
+  } else {
+    tmp_dt[tissue!='CO' & 
+             tissue!='Lung' &
+             !is.na(flow_mean), 
+           flow:=flow_mean]
+  }
+  
   
   #Lung flow is a fixed fraction of CO
   tmp_dt[tissue=='Lung', 
@@ -256,11 +280,17 @@ tissue_masses_flows <- function(tmf_dt){
   #Then the rest of weight not accounted for by
   #the sum of non-adipose tissues must be adipose.
   #Include log-normal residual variability.
-  tmf_dt[(weight-org_mass_sum)>1, 
-         Adipose_mass:=exp(rnorm(n=length(weight),
-                                 mean=log(weight-org_mass_sum),
-                                 sd=sqrt(log(0.42^2+1)) #CV from McNally et al. (2014) table 5
-         ))]
+  if (add_variability) {
+    tmf_dt[(weight-org_mass_sum)>1, 
+           Adipose_mass:=exp(rnorm(n=length(weight),
+                                   mean=log(weight-org_mass_sum),
+                                   sd=sqrt(log(0.42^2+1)) #CV from McNally et al. (2014) table 5
+           ))]
+  } else {
+    tmf_dt[(weight-org_mass_sum)>1, 
+           Adipose_mass:=(weight-org_mass_sum)]
+  }
+  
   
   #If non-adipose tissues accounted for all of body mass,
   #or more than body mass,
@@ -303,9 +333,14 @@ tissue_masses_flows <- function(tmf_dt){
              lower.tail=FALSE) #=var unexplained/var explained
   R2 <- Fval/(1+Fval) #=var explained / var total
   sigma <- sqrt((1-R2)*sigma.total^2) #remaining variance of ln data
-  tmf_dt[, million.cells.per.gliver:=exp(rnorm(n=nrow(tmf_dt),
-                                               mean=mu,
-                                               sd=sigma))]
+  if (add_variability) {
+    tmf_dt[, million.cells.per.gliver:=exp(rnorm(n=nrow(tmf_dt),
+                                                 mean=mu,
+                                                 sd=sigma))]
+  } else {
+    tmf_dt[, million.cells.per.gliver:=mu]
+  }
+  
   
   #Harmonize names
   setnames(tmf_dt,
