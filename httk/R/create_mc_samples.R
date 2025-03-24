@@ -293,7 +293,7 @@ create_mc_samples <- function(chem.cas=NULL,
                                         adjusted.Clint=FALSE, # We want the unadjusted in vitro measured value
                                         suppress.messages=suppress.messages),
                                         parameterize.args.list))
-  if (!is.null(Caco2.options)) parameterize.args[["Caco2.options"]] <- Caco2.options
+  if (!is.null(Caco2.options)) parameterize.args.list[["Caco2.options"]] <- Caco2.options
   
   # Check to see if we need to call the parameterize_MODEL function:
   if (is.null(parameters))
@@ -302,7 +302,7 @@ create_mc_samples <- function(chem.cas=NULL,
 #    parameterize.args.list<- parameterize.args[names(parameterize.args) %in% 
 #                                             methods::formalArgs(paramfun)]
     parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
-                         args=purrr::compact(parameterize.args))
+                         args=purrr::compact(parameterize.args.list))
   } else {
     if (!is.list(parameters)) stop(
 "Argument \"parameters\" to create_mc_samples should be a list of model parameters.")
@@ -310,8 +310,8 @@ create_mc_samples <- function(chem.cas=NULL,
   }
   # Pass all 'parameterize.args' arguments and the 'suppress.messages'
   # arguments to the 'parameterize_schmitt' function.
-  args.schmitt <- parameterize.args[which(
-    names(parameterize.args) %in% names(formals(fun = parameterize_schmitt))
+  args.schmitt <- parameterize.args.list[which(
+    names(parameterize.args.list) %in% names(formals(fun = parameterize_schmitt))
     )]
   args.schmitt$suppress.messages <- TRUE
   # The Schmitt parameters are useful if we need to redo partitioning later, though
@@ -537,12 +537,12 @@ Set species=\"Human\" to run httkpop model.')
 # Calculate Krbc2plasma from blood:plasma ratio (if available). We use the average
 # value because we want this PC to be the same for all individuals since we 
 # don't have the phys-chem to recalculate. But we need the adjusted values:
-    parameterize.args$adjusted.Funbound.plasma <- TRUE
-    parameterize.args$suppress.messages=TRUE
+    parameterize.args.list$adjusted.Funbound.plasma <- TRUE
+    parameterize.args.list$suppress.messages=TRUE
     if (is.null(parameters))
     {
       adj.parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
-                           args=purrr::compact(parameterize.args))
+                           args=purrr::compact(parameterize.args.list))
     } else adj.parameters.mean <- parameters
     parameters.dt[,Krbc2pu:=calc_krbc2pu(
       Rb2p = adj.parameters.mean$Rblood2plasma,

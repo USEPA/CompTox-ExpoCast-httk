@@ -176,6 +176,9 @@ calc_tkstats <-function(
     }
 # Stats for a particular chemical:    
   } else {
+  
+  
+  
     dosing <- list(
         initial.dose=dose,
         dosing.matrix=NULL,
@@ -242,21 +245,20 @@ calc_tkstats <-function(
     {
       # Retrieve this argument from ... if it is present:
       if ("parameterize.args.list" %in% names(list(...)))
-        adjusted.Funbound.plasma <- list(...)[[parameterize.args.list[["adjusted.Funbound.plasma"]]]]
+        adjusted.Funbound.plasma <- list(...)[["parameterize.args.list"]][["adjusted.Funbound.plasma"]]
       else adjusted.Funbound.plasma <- NULL
         
       parameters[['Rblood2plasma']] <- 
         do.call(available_rblood2plasma,
-                args=purrr::compact(c(
+                args=purrr::compact(
                   list(
                     chem.name=chem.name,
                     chem.cas=chem.cas,
                     dtxsid=dtxsid,
                     species=species,
-                    suppress.messages=TRUE
-                    ),
-                  adjusted.Funbound.plasma
-                  )))
+                    suppress.messages=TRUE,
+                    adjusted.Funbound.plasma = adjusted.Funbound.plasma
+                    )))
     }
   
     # Blood or plasma concentration:
@@ -405,7 +407,7 @@ calc_stats <-function(
                  default.to.human=default.to.human,
                  adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                  regression=regression,
-                 restrictive.clearance = restrictive.clearance,
+                 restrictive.clearance = restrictive.clearance
                ),
                suppress.messages=suppress.messages,
                ...))
