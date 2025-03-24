@@ -121,20 +121,10 @@
 #' @param recalc.clearance Recalculates the the hepatic clearance
 #' (Clmetabolism) with new million.cells.per.gliver parameter.
 #' 
-#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
-#' TRUE along with partition coefficients calculated with this value.
-#' 
-#' @param restrictive.clearance Protein binding not taken into account (set to
-#' 1) in liver clearance if FALSE.
-#' 
 #' @param ... Additional arguments passed to the integrator.
 #' 
 #' @param monitor.vars Which variables are returned as a function of time. 
 #' Default values of NULL looks up variables specified in modelinfo_MODEL.R
-#' 
-#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
-#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
-#' dataset)
 #' 
 #' @param parameterize.args.list Additional parameters passed to the model
 #'   parameterization function (other than chemical identifier, `species`,
@@ -239,9 +229,6 @@ solve_model <- function(chem.name = NULL,
                     atol=1e-6,
                     recalc.blood2plasma=FALSE,
                     recalc.clearance=FALSE,
-                    restrictive.clearance=TRUE,
-                    adjusted.Funbound.plasma=TRUE,
-                    minimum.Funbound.plasma=0.0001,
                     parameterize.args.list =list(),
                     small.time = 1e-4, 
                     forcings = NULL,
@@ -421,37 +408,13 @@ specification in compartment_units for model ", model)
 # necessarily need all parameters associated with a given model to do this:)
   if (is.null(parameters))
   {
-    # restrictive.clearance can be set two places, so check for issues:
-    parameterize.restrictive.clearance <- restrictive.clearance
-    if ("restrictive.clearance" %in% names(parameterize.args.list))
-    {
-      if (restrictive.clearance != 
-          parameterize.args.list[["restrictive.clearance"]])
-      {
-        warning(paste("Value",
-                      parameterize.args.list[["restrictive.clearance"]],
-                      "for restrictive.clearance in parameterze.arg.list",
-                      "has overwritten value",
-                      restrictive.clearance,
-                      "in arguments to solve.model."))
-        parameterize.restrictive.clearance <- 
-          parameterize.args.list[["restrictive.clearance"]]
-       }
-       parameterize.args.list <- parameterize.args.list[!(
-                                   names(parameterize.args.list) %in%
-                                   "restrictive.clearance")]
-    } 
-
     parameters <- do.call(parameterize_function, args=purrr::compact(c(
       list(
         chem.cas=chem.cas,
         chem.name=chem.name,
         dtxsid=dtxsid,
         species=species,
-        suppress.messages=suppress.messages,
-        adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-        minimum.Funbound.plasma=minimum.Funbound.plasma,
-        restrictive.clearance=parameterize.restrictive.clearance
+        suppress.messages=suppress.messages
         ),
       parameterize.args.list))) 
   } else {
@@ -492,15 +455,19 @@ specification in compartment_units for model ", model)
     {
       if (is.null(chem.name) & is.null(chem.cas)) 
         stop('Chemical name or CAS must be specified to recalculate hepatic clearance.')
-      ss.params <- parameterize_steadystate(chem.name=chem.name,chem.cas=chem.cas)
+      ss.params <- parameterize_steadystate(chem.name=chem.name,
+                                            chem.cas=chem.cas)
     }
     ss.params[[names(ss.params) %in% names(parameters)]] <- 
       parameters[[names(ss.params) %in% names(parameters)]]
-    parameters[['Clmetabolismc']] <- calc_hep_clearance(parameters=ss.params,
-      species = species,
-      hepatic.model='unscaled',
-      restrictive.clearance = restrictive.clearance,
-      suppress.messages=TRUE)
+    parameters[['Clmetabolismc']] <- do.call(calc_hep_clearance, 
+                                             args=purrr::compact(c(
+                                               parameters=ss.params,
+                                               species = species,
+                                               hepatic.model='unscaled',
+                                               restrictive.clearance = 
+                                                 parameterize.args.list[["restrictive.clearance"]],
+                                               suppress.messages=TRUE)))
   }
     
   # If there is not an explicit liver we need to include a factor for first-
