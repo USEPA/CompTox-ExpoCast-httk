@@ -1,4 +1,5 @@
 ## Enhancements
+* pKa values are now predicted by ChemAxon
 * Refactored Henderson-Hasselbach calculations within calc_ionization to be clearer. Expanded documentation for 'calc_ionization'. No known change to previously calculated values by that function. Introduced new argument return_charge_matrix which gives a table listing each ionization state to explain how the values in 'calc_ionization' are derived.
 * When models (either OPERA or ChemAxon) predict that a chemical does not ionize, that prediction is now stored as a blank space (that is, " ") rather than an "NA". "NA" is intended to indicate that no prediction was available. This change should not impact the function of the code or any predictions, but hopefully clarifies the chemical descriptors.
 
