@@ -2060,12 +2060,12 @@ CAS.table <- subset(chem.physical_and_invitro.data,is.na(DTXSID))
 cat("Looking up missing DTXSID by CAS with CCD API...\n")
 cheminfo.by.cas <- chemical_equal_batch(word_list=CAS.table$CAS)
 NOCAS.table <- subset(CAS.table,
-                      DTXSID %in% subset(cheminfo.by.cas, is.na(dtxsid))$dtxsid)
+                      DTXSID %in% subset(cheminfo.by.cas$valid, is.na(dtxsid))$dtxsid)
 cat("Looking up missing DTXSID and CAS by Compound Name with CCD API...\n")
 cheminfo.by.name <- chemical_equal_batch(word_list=NOCAS.table$Compound)
 
-cheminfo.by.cas <- subset(cheminfo.by.cas, !is.na(dtxsid))
-cheminfo.by.name <- subset(cheminfo.by.name, !is.na(dtxsid))
+cheminfo.by.cas <- subset(cheminfo.by.cas$valid, !is.na(dtxsid))
+cheminfo.by.name <- subset(cheminfo.by.name$valid, !is.na(dtxsid))
 
 # Clean up cas numbers:
 for (this.cas in cheminfo.by.cas$searchValue)
@@ -2177,22 +2177,43 @@ EPA.ref <- paste('CompTox Dashboard', Sys.Date())
 #
 #
 cat("Reading HTTK-AllChems_pKa.xlsx")
-
-# Check for domain of applicability:
-opera.preds <- subset(opera.preds, AD_pKa==1)
-
-# Indicate that no ionizations are predicted with blank " ":
-opera.preds[is.nan(opera.preds$pKa_a_pred),"pKa_a_pred"] <- " "
-opera.preds[is.nan(opera.preds$pKa_b_pred),"pKa_b_pred"] <- " "
+chemaxon.preds <- as.data.frame(
+  read_excel("HTTK-AllChems_pKa.xlsx",
+             sheet="ChemAxon",
+             skip=1))
+# Acidic/donor electrons:
+chemaxon.preds$pKa_Donor <- apply(chemaxon.preds, 1, function(x) 
+  paste(
+    signif(as.numeric(x["apKa1"]),3),
+    signif(as.numeric(x["apKa2"]),3),
+    signif(as.numeric(x["apKa3"]),3),
+    signif(as.numeric(x["apKa4"]),3),
+    signif(as.numeric(x["apKa5"]),3),
+    signif(as.numeric(x["apKa6"]),3),
+    sep=","))
+chemaxon.preds$pKa_Donor <- gsub(",NA","",chemaxon.preds$pKa_Donor)
+chemaxon.preds$pKa_Donor <- gsub("NA"," ",chemaxon.preds$pKa_Donor)
+# Basic/acceptor electrons:
+chemaxon.preds$pKa_Accept <- apply(chemaxon.preds, 1, function(x) 
+  paste(
+    signif(as.numeric(x["bpKa1"]),3),
+    signif(as.numeric(x["bpKa2"]),3),
+    signif(as.numeric(x["bpKa3"]),3),
+    signif(as.numeric(x["bpKa4"]),3),
+    signif(as.numeric(x["bpKa5"]),3),
+    signif(as.numeric(x["bpKa6"]),3),
+    sep=","))
+chemaxon.preds$pKa_Accept <- gsub(",NA","",chemaxon.preds$pKa_Accept)
+chemaxon.preds$pKa_Accept <- gsub("NA"," ",chemaxon.preds$pKa_Accept)
 
 chem.physical_and_invitro.data <- add_chemtable(
-  opera.preds,
+  chemaxon.preds,
   current.table = chem.physical_and_invitro.data,
-  data.list=list(CAS='MoleculeID',
-    pKa_Donor="pKa_a_pred",
-    pKa_Accept="pKa_b_pred"
+  data.list=list(CAS='CAS #',
+    pKa_Donor="pKa_Donor",
+    pKa_Accept="pKa_Accept"
     ),
-  reference=paste("OPERAv",OPERA.VERSION,sep=""),
+  reference="ChemAxon",
   overwrite=TRUE)
 
 
@@ -2242,28 +2263,6 @@ cat(" use that file to in OPERA to generate phys-chem properties including pKa.\
 cat("Enter \"c\" to continue when ready.\n")
 #browser()
 
-#
-#
-# Add Strope 2018 (ChemAxon) pKa values where we don't have them from OPERA
-# 
-#
-load('Strope2018.RData')
-
-# Only add chemicals not covered by OPERA:
-CorypKaTable <- subset(CorypKaTable,
-                       !(CASRN.DSStox  %in% 
-                           subset(opera.preds,AD_pKa==1)$MoleculeID))
-# Indicate no predicted ionization with a blank (" ")
-CorypKaTable[CorypKaTable$Accept=="", "Accept"] <- " "
-CorypKaTable[CorypKaTable$Donor=="", "Donor"] <- " "
-chem.physical_and_invitro.data <- add_chemtable(CorypKaTable,
-                                                current.table = 
-                                                  chem.physical_and_invitro.data,
-                                                data.list = list(CAS='CASRN.DSStox',
-                                                                 pKa_Accept='Accept',
-                                                                 pKa_Donor='Donor'),
-                                                reference='Strope 2018', 
-                                                overwrite=TRUE)
 #
 #
 # Annotate important chemicals classes as concatenated list:
