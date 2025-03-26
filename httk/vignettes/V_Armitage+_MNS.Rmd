@@ -1,0 +1,224 @@
+---
+title: "Modeling in vitro distribution improves accuracy of bioavailable dose estimation"
+author: "Meredith N. Scherer, Katie Paul-Friedman, and John F. Wambaugh"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{h) Kapraun (2022): Human Gestational Model}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+*Please send questions to wambaugh.john@epa.gov*
+
+from "Modeling in vitro distribution improves accuracy of bioavailable dose estimation"
+
+Meredith N. Scherer, Katie Paul-Friedman, John F.Wambaugh
+
+2025 Society of Toxicology Annual Meeting
+
+INSERT FIGSHARE LINK TO POSTER HERE
+
+
+## Abstract
+
+Abstract Title: Modeling in vitro distribution improves accuracy of bioavailable dose estimation.
+Background and Purpose:
+	Quantitative in vitro to in vivo extrapolation (IVIVE) relies on accurate estimations of the in vivo toxic dose. Use of the nominal effect concentration as proxy for bioavailable effective dose lacks accuracy due to chemical partitioning and binding to in vitro assay components. In vitro chemical distribution is often ignored because the bioavailable dose is not typically measured experimentally. The aim of this project is to adjust large quantities of new approach methodology data for in vitro distribution. Therefore, we are examining the accuracy of an in vitro distribution model in the context of a high throughput approach. This poster includes an additional review of the literature and has identified 86 observations of 36 new chemicals.
+Methods:
+The Armitage et al. (2014) in vitro distribution model (as implemented within R package “httk”) has been modified to include ionization and plastic binding with the goal of increasing the applicability domain and more accurately modelling more chemicals. Paired experimental measurements of in vitro nominal and bioavailable concentrations were extracted from 13 studies in the peer-reviewed literature. The updated Armitage et al. (2014) model was evaluated with parameters corresponding to the experimental conditions of each study. Prediction errors were quantified using root mean squared log10 error (RMSLE).
+Results:
+	Results of this analysis show that the Armitage model’s predictions of bioavailable concentrations are more accurate (RMSLE = 2.57) than assuming the nominal concentration is equal to the bioavailable concentration (RMSLE = 3.08). This result is similar when different ionization states are considered; the Armitage model better predicts neutral (RMSLE = 1.81) and acidic chemicals compared to the nominal concentration (RMSLE = 2.87 for neutral chemicals) with only a slight improvement when using the nominal concentration to predict basic chemicals. 
+Conclusions:
+	This research suggests that the Armitage chemical distribution model is a more accurate method for predicting bioavailable concentrations for high throughput applications including next generation risk assessments using IVIVE.  In this context, the bioavailable concentration is a proxy for tissue concentration in in vivo systems and accurately modeling in vitro distribution is necessary to accurately assess chemical hazards. This abstract does not reflect U.S. EPA policy.
+
+## HTTK Version 
+
+This vignette was created with **httk** v2.1.0. Although we attempt to maintain 
+backward compatibility, if you encounter issues with the latest release of 
+**httk**
+and cannot easily address the changes, historical versions of httk are 
+available from: https://cran.r-project.org/src/contrib/Archive/httk/
+
+## Prepare for session
+R package **knitr** generates html and PDF documents from this RMarkdown file,
+Each bit of code that follows is known as a "chunk". We start by telling 
+**knitr** how we want our chunks to look.
+```{r configure_knitr, eval = TRUE}
+knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+### Clear the memory
+It is a bad idea to let variables and other information from previous R
+sessions float around, so we first remove everything in the R memory.
+```{r clear_memory, eval = TRUE}
+rm(list=ls()) 
+```
+
+### eval = execute.vignette
+If you are using the RMarkdown version of this vignette (extension, .RMD) you
+will be able to see that several chunks of code in this vignette
+have the statement "eval = execute.vignette". The next chunk of code, by default,
+sets execute.vignette = FALSE.  This means that the code is included (and necessary) but was
+not run when the vignette was built. We do this because some steps require 
+extensive computing time and the checks on CRAN limit how long we can spend
+building the package. If you want this vignette to work, you must run all code,
+either by cutting and pasting it into R. Or, if viewing the .RMD file, you can
+either change execute.vignette to TRUE or press "play" (the green arrow) on
+each chunk in RStudio.
+```{r runchunks, eval = TRUE}
+# Set whether or not the following chunks will be executed (run):
+execute.vignette <- TRUE
+```
+
+### Load the relevant libraries
+We use the command 'library()' to load various R packages for our analysis.
+If you get the message "Error in library(X) : there is no package called 'X'"
+then you will need to install that package: 
+
+From the R command prompt:
+
+install.packages("X")
+
+Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
+
+```{r load_packages, eval = execute.vignette}
+#
+#
+# Setup
+#
+#
+library(tidyverse)  # data wrangling
+library(ggplot2)    # plotting
+#library(httk)       # run Armitage.R in vitro distribution model
+library(Metrics)    # calculate RMSLE
+library(ggpubr)     # arrange plots for publication
+
+##delete once httk has been updated with armitage.R file and model_param_armitage.R and un-tab out library(httk) above
+library(devtools) # to run httk
+setwd("C:/Users/mscherer/httk-dev") # to load httk
+devtools::load_all("httk") # for armitage
+```
+
+
+# Data Collection
+
+Data sets were curated from the literature to evaluate the in vitro distribution model. 
+
+
+# Load and format the data
+
+```{r load_IVD_data, eval = execute.vignette}
+IVD_data <- read_csv("ExtractedData_27FEB2025.csv")
+#MFdata <- httk::aylward2014
+
+cat(paste("summarized data from ", 
+          length(unique(IVD_data$Citation)),
+          " studies covering ", 
+          length(unique(IVD_data$ChemicalName)),
+          " unique chemicals\n",sep=""))
+
+IVD_data$well_number<-suppressWarnings(as.numeric(IVD_data$well_number))
+IVD_data$v_working<-suppressWarnings(as.numeric(IVD_data$v_working))
+
+##check ivd_data is a data.table (otherwise convert...)
+
+```
+
+# Run the in vitro distribution model
+```{r run_IVD_model, eval = execute.vignette}
+# run the model, output concentrations in umol/L (e.g. uM)
+armitageOutput_data.dt <- armitage_eval(tcdata=IVD_data, 
+                                        restrict.ion.partitioning = TRUE)
+```
+
+# Calculate RMSLE for Nominal and Modeled Values
+```{r stats_nominal_modeled, eval = execute.vignette}
+
+#nomconc = nominal concentration
+#ccells = intracellular concentrations predicted by the armitage_eval function
+#CellConcentration_uM = experimental intracellular concentration values
+
+#compare nominal and experimental values
+rmsle((armitageOutput_data.dt$CellConcentration_uM), (armitageOutput_data.dt$nomconc)) 
+#2.96
+
+#compare modeled and experimental values
+rmsle((armitageOutput_data.dt$CellConcentration_uM), (armitageOutput_data.dt$ccells)) 
+#2.128
+
+```
+
+
+# Plot Nominal and Modeled Values
+```{r plot_nominal_modeled, eval = execute.vignette}
+
+#nominal values
+named_poster_nominal<-ggplot(armitageOutput_data.dt, aes(nomconc, CellConcentration_uM,
+                        colour = ChemicalName)) + 
+                        geom_point() +
+                        geom_abline(intercept=0, slope=1, linetype = "dashed") +
+                        scale_y_continuous(labels = function(x) sprintf("%g", x), limits = c(0.001, 100000), trans='log10') +
+                        scale_x_continuous(labels = function(x) sprintf("%g", x), limits = c(0.001, 10000), trans='log10') +
+                        xlab("Nominal Concentration (\U00B5M)") + 
+                        ylab("Experimental Intracellular Concentration (\U00B5M)")+
+                        annotate(geom="text", x=300, y=0.001, label="RMSLE: 2.96") +
+                        labs(fill = "Chemical Name") +
+                        theme_bw() + #now make it look good
+                        theme(legend.position="bottom",
+                          panel.border = element_blank(), 
+                              panel.grid.major = element_blank(),
+                              panel.grid.minor = element_blank(), 
+                              axis.line = element_line(colour = "black"),
+                              axis.title=element_text(size=14)) +
+                        guides(color=guide_legend(nrow=8, byrow=TRUE)) +
+                        labs(colour="Chemical Name")
+
+#modeled values
+named_poster_pred<-ggplot(armitageOutput_data.dt, aes(ccells, CellConcentration_uM,
+                        colour = ChemicalName)) + 
+                        geom_point() +
+                        geom_abline(intercept=0,slope=1, linetype = "dashed") +
+                        scale_y_continuous(labels = function(x) sprintf("%g", x), limits = c(0.001, 100000), trans='log10') +
+                        scale_x_continuous(labels = function(x) sprintf("%g", x), limits = c(0.001, 10000), trans='log10') +
+                        xlab("Predicted Intracellular Concentration (\U00B5M)") + 
+                        ylab("Experimental Intracellular Concentration (\U00B5M)")+
+                        annotate(geom="text", x=300, y=0.001, label="RMSLE: 2.13") +
+                        theme_bw() + #now make it look good
+                        theme(legend.position="bottom",
+                          panel.border = element_blank(), 
+                              panel.grid.major = element_blank(),
+                              panel.grid.minor = element_blank(), 
+                              axis.line = element_line(colour = "black"),        
+                              axis.title=element_text(size=14),
+                              plot.title = element_text(face="bold")) +
+                        guides(color=guide_legend(nrow=8, byrow=TRUE)) +
+                        labs(colour="Chemical Name")
+
+
+fig2_SOT2025<-ggarrange(named_poster_nominal, named_poster_pred, common.legend = T, legend = "bottom")
+
+print(fig2_SOT2025)
+
+```
+
+
+# Characterize Chemicals by Ionization State
+```{r assign_ionization, eval = execute.vignette}
+
+armitageOutput_data.dt[Fneutral > 0.5, Type := "Neutral"] %>% 
+  .[Fpositive > 0.5, Type := "Base"] %>% 
+  .[Fnegative > 0.5, Type := "Acid"]
+  
+```
+
+# Table for Nominal and Modeled Values by Ionization State
+```{r table_ionized_nominal_modeled, eval = execute.vignette}
+
+armitageOutput_data.dt[, .(rmsle_ccell=rmsle(CellConcentration_uM, ccells)), by = Type]
+armitageOutput_data.dt[, .(rmsle_ccell_nom=rmsle(CellConcentration_uM, nomconc)), by = Type]
+
+#print(this table)
+
+```
+
