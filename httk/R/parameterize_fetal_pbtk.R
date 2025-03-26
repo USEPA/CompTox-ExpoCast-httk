@@ -384,15 +384,21 @@ parameterize_fetal_pbtk<- function(
   parms <- c(parms, lumped_fetal_pcs) #Keep expanding our parms list
   parms$pH_Plasma_fet <- fetal.blood.pH
 
-  
-
-          
-# Set appropriate precision and standard order:
-  parms <- lapply(parms[model.list[["fetal_pbtk"]]$param.names],set_httk_precision)
+# Set appropriate precision:
+  parms <- lapply(parms, set_httk_precision)
 
 #Now for the many parameters associated with the dynamic physiologic equations
 #for pregnancy from Kapraun et al. (2019):
   if (return.kapraun2019) parms <- c(parms, httk::kapraun2019)
+
+# Set standard order with flexibility because of return.kapraun2019 argument:
+  param.name.order <- model.list[["fetal_pbtk"]]$param.names[
+                                 model.list[["fetal_pbtk"]]$param.names %in%
+                                 names(parms)]
+  parms <- parms[param.name.order]
+  
+# For Truong et al. 2025 we did not use Caco2:
+  parms[["Fabsgut"]] <- 1.0
  
  return(parms)                             
 }
