@@ -69,7 +69,7 @@ load_honda2023 <- function(
   Pab.Pred.AD <- NULL
   #End R CMD CHECK appeasement.
 
-  cat(paste("Chemicals outside the applicability domain are",
+  cat(paste("Chemicals outside the applicabilty domain are",
             ifelse(exclude_oad,""," not"),
             " excluded when predictions were loaded.\n",sep=""))
   if (exclude_oad)

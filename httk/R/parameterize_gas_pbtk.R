@@ -7,6 +7,12 @@
 #' and flows are retrieved from table \code{\link{physiology.data}}). This model
 #' was first described by Linakis et al. (2020).
 #' 
+#' Per- and 
+#' polyfluoroalkyl substances (PFAS) are excluded by default because the 
+#' transporters that often drive PFAS toxicokinetics are not included in this 
+#' model. However, PFAS chemicals can be included with the argument 
+#' "class.exclude = FALSE".
+#' 
 #' @param chem.name Either the chemical name or the CAS number must be
 #' specified. 
 #' 
@@ -64,6 +70,10 @@
 #' @param class.exclude Exclude chemical classes identified as outside of 
 #' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
 #' 
+#' @param physchem.exclude Exclude chemicals on the basis of physico-chemical
+#' properties (currently only Henry's law constant) as specified by 
+#' the relevant modelinfo_[MODEL] file (default TRUE).
+#' 
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE. (Default is FALSE.)
 #' 
@@ -73,13 +83,17 @@
 #' @param VD Anatomical dead space (L), to be modulated especially as part of
 #' simulating the state of exercise
 #' 
-#' @param Caco2.options A list of options to use when working with Caco2 apical to
-#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
-#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
-#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' @param Caco2.options A list of options to use when working with Caco2 apical 
+#' to basolateral data \code{Caco2.Pab}, default is Caco2.options = 
+#' list(Caco2.Pab.default = 1.6, Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, 
+#' overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the 
+#' default value for Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE 
+#' uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+#' Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE 
+#' overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
+#' with 1 (i.e. 100 percent) regardless of other settings.
 #' See \code{\link{get_fbio}} for further details.
 #' 
 #' @param ... Other parameters
@@ -218,8 +232,9 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
                               VD = 0.15,
                               suppress.messages=FALSE,
                               minimum.Funbound.plasma=0.0001,
-                              Caco2.options=NULL,
+                              Caco2.options=list(),
                               class.exclude=TRUE,
+                              physchem.exclude = TRUE,
                               restrictive.clearance = FALSE,
                               ...)
 {
@@ -247,6 +262,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
             model="gas_pbtk",
             species=species,
             class.exclude=class.exclude,
+            physchem.exclude=physchem.exclude,
             default.to.human=default.to.human|force.human.clint.fup)
             
   if (is(tissuelist,'list')==FALSE) stop("tissuelist must be a list of vectors.") 

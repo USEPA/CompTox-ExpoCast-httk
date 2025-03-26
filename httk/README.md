@@ -182,6 +182,8 @@ Matt Linakis [MLINAKIS@ramboll.com], and
 Dustin Kapraun [kapraun.dustin@epa.gov]
 
 ### Bug-Fixes Vignette edits, and Parameter Values
+Caroline Stevens [Stevens.Caroline@epa.gov]
+Nathan Pollesch [pollesch.nathan@epa.gov],         
 Miyuki Breen, 
 Shannon Bell [Shannon.bell@inotivco.com], 
 Xiaoqing Chang [Xiaoqing.chang@inotivco.com], 

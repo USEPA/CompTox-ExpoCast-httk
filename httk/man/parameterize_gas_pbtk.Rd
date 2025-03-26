@@ -25,8 +25,9 @@ parameterize_gas_pbtk(
   VD = 0.15,
   suppress.messages = FALSE,
   minimum.Funbound.plasma = 1e-04,
-  Caco2.options = NULL,
+  Caco2.options = list(),
   class.exclude = TRUE,
+  physchem.exclude = TRUE,
   restrictive.clearance = FALSE,
   ...
 )
@@ -92,17 +93,25 @@ simulating the state of exercise}
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 
-\item{Caco2.options}{A list of options to use when working with Caco2 apical to
-basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
-Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
-Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+\item{Caco2.options}{A list of options to use when working with Caco2 apical 
+to basolateral data \code{Caco2.Pab}, default is Caco2.options = 
+list(Caco2.Pab.default = 1.6, Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, 
+overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the 
+default value for Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE 
+uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE 
+overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
+with 1 (i.e. 100 percent) regardless of other settings.
 See \code{\link{get_fbio}} for further details.}
 
 \item{class.exclude}{Exclude chemical classes identified as outside of 
 domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
+
+\item{physchem.exclude}{Exclude chemicals on the basis of physico-chemical
+properties (currently only Henry's law constant) as specified by 
+the relevant modelinfo_[MODEL] file (default TRUE).}
 
 \item{restrictive.clearance}{Protein binding not taken into account (set to
 1) in liver clearance if FALSE. (Default is FALSE.)}
@@ -177,6 +186,13 @@ parameters are generated. These include tissue:plasma partition coefficients
 via Schmitt (2008)'s method as modified by Pearce et al. (2017). Organ volumes 
 and flows are retrieved from table \code{\link{physiology.data}}). This model
 was first described by Linakis et al. (2020).
+}
+\details{
+Per- and 
+polyfluoroalkyl substances (PFAS) are excluded by default because the 
+transporters that often drive PFAS toxicokinetics are not included in this 
+model. However, PFAS chemicals can be included with the argument 
+"class.exclude = FALSE".
 }
 \examples{
 parameters <- parameterize_gas_pbtk(chem.cas='129-00-0')

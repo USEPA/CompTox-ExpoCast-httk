@@ -43,7 +43,17 @@
 #' appropriate physiological data(volumes and flows) but substitutes human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #' 
-#' 
+#' Because this model does not simulate exhalation, inhalation, and other 
+#' processes relevant to volatile chemicals, this model is by default 
+#' restricted to chemicals with a logHenry's Law Constant less than that of 
+#' Acetone, a known volatile chemical. That is, chemicals with logHLC > -4.5 
+#' (Log10 atm-m3/mole) are excluded. Volatility is not purely determined by the 
+#' Henry's Law Constant, therefore this chemical exclusion may be turned off 
+#' with the argument "physchem.exclude = FALSE". Similarly, per- and 
+#' polyfluoroalkyl substances (PFAS) are excluded by default because the 
+#' transporters that often drive PFAS toxicokinetics are not included in this 
+#' model. However, PFAS chemicals can be included with the argument 
+#' "class.exclude = FALSE".
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
@@ -96,6 +106,10 @@
 #' @param class.exclude Exclude chemical classes identified as outside of 
 #' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
 #' 
+#' @param physchem.exclude Exclude chemicals on the basis of physico-chemical
+#' properties (currently only Henry's law constant) as specified by 
+#' the relevant modelinfo_[MODEL] file (default TRUE).
+#' 
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
 #' hematocrit, Funbound.plasma, and Krbc2pu.
@@ -120,13 +134,17 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' 
-#' @param Caco2.options A list of options to use when working with Caco2 apical to
-#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
-#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
-#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' @param Caco2.options A list of options to use when working with Caco2 apical 
+#' to basolateral data \code{Caco2.Pab}, default is Caco2.options = 
+#' list(Caco2.Pab.default = 1.6, Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, 
+#' overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the 
+#' default value for Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE 
+#' uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+#' Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE 
+#' overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
+#' with 1 (i.e. 100 percent) regardless of other settings.
 #' See \code{\link{get_fbio}} for further details.
 #' 
 #' @param monitor.vars Which variables are returned as a function of time. 
@@ -201,6 +219,13 @@
 #'     plot.title = element_text(size = 17)) +
 #'   ggtitle("Bisphenol A")
 #' print(c.vs.t)
+#'
+#' # The following will not work because Diquat dibromide monohydrate's 
+#' # Henry's Law Constant (-3.912) is higher than that of Acetone (~-4.5):
+#' try(head(solve_pbtk(chem.cas = "6385-62-2")))
+#' # However, we can turn off checking for phys-chem properties, since we know
+#' # that  Diquat dibromide monohydrate is not too volatile:
+#' head(solve_pbtk(chem.cas = "6385-62-2", physchem.exclude = FALSE))
 #' }
 #' 
 #' @export solve_pbtk
@@ -226,6 +251,7 @@ solve_pbtk <- function(chem.name = NULL,
                     output.units=NULL,
                     default.to.human=FALSE,
                     class.exclude=TRUE,
+                    physchem.exclude = TRUE,
                     recalc.blood2plasma=FALSE,
                     recalc.clearance=FALSE,
                     dosing.matrix=NULL,
@@ -264,13 +290,14 @@ solve_pbtk <- function(chem.name = NULL,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
     minimum.Funbound.plasma=minimum.Funbound.plasma,
-    parameterize.arg.list=list(
+    parameterize.args.list =list(
                       default.to.human=default.to.human,
                       clint.pvalue.threshold=0.05,
                       restrictive.clearance = restrictive.clearance,
                       regression=regression,
                       Caco2.options=Caco2.options,
-                      class.exclude=class.exclude),
+                      class.exclude=class.exclude,
+                      physchem.exclude=physchem.exclude),
     ...)
   
   return(out) 
