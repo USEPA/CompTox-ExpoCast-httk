@@ -254,3 +254,8 @@ void rootpbtk (int *neq, double *t, double *y, int *ng, double *gout, double *ou
 
 } /* root */
 
+/*----- Forcing functions (NOT USED WITH THIS MODEL) */
+void initforcpbtk (void (* odeforcs)(int *, double *))
+{
+
+}

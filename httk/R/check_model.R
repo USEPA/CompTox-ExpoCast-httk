@@ -55,6 +55,13 @@ check_model <- function(chem.name=NULL,
                         physchem.exclude=TRUE,
                         default.to.human=FALSE)
 {
+  out <- get_chem_id(dtxsid=dtxsid,
+                    chem.cas=chem.cas,
+                    chem.name=chem.name)
+  dtxsid <- out$dtxsid
+  chem.cas <- out$chem.cas
+  chem.name <- out$chem.name
+
   good.chems <- get_cheminfo(info=c("Compound",
                                     "CAS",
                                     "DTXSID"),
@@ -70,6 +77,14 @@ check_model <- function(chem.name=NULL,
                              species=species,
                              class.exclude=class.exclude,
                              physchem.exclude=FALSE,
+                             suppress.messages=TRUE)
+  good.chems.noclass <- get_cheminfo(info=c("Compound",
+                                    "CAS",
+                                    "DTXSID"),
+                             model=model,
+                             species=species,
+                             class.exclude=FALSE,
+                             physchem.exclude=TRUE,
                              suppress.messages=TRUE)
   if (tolower(species) != "human" & default.to.human)
   {
@@ -87,44 +102,31 @@ check_model <- function(chem.name=NULL,
                                                 
   chem.present <- FALSE
   chem.present.nophyschem <- FALSE
+  chem.present.noclass <- FALSE
   if (!is.null(chem.cas))
   { 
     if (chem.cas %in% good.chems[,"CAS"]) chem.present <- TRUE
     if (chem.cas %in% good.chems.nophyschem[,"CAS"]) chem.present.nophyschem <- TRUE
-  }
-  if (!is.null(dtxsid))
+    if (chem.cas %in% good.chems.noclass[,"CAS"]) chem.present.noclass <- TRUE
+  } else if (!is.null(dtxsid))
   {
     if (dtxsid %in% good.chems[,"DTXSID"]) chem.present <- TRUE
     if (dtxsid %in% good.chems.nophyschem[,"DTXSID"]) chem.present.nophyschem <- TRUE
-  }
-  if (!is.null(chem.name))
+    if (dtxsid %in% good.chems.noclass[,"DTXSID"]) chem.present.noclass <- TRUE
+  } else if (!is.null(chem.name))
   {
     if (chem.name %in% good.chems[,"Compound"]) chem.present <- TRUE
     if (chem.name %in% good.chems.nophyschem[,"Compound"]) chem.present.nophyschem <- TRUE
+    if (chem.name %in% good.chems.noclass[,"Compound"]) chem.present.noclass <- TRUE
   }  
   
   if (!(chem.present)) 
   {
-    #need to get DTXSID if we don't alerady have it
-    if(is.null(dtxsid)){
-      if(!is.null(chem.cas)) dtxsid <- get_chem_id(chem.cas = chem.cas)$dtxsid
-      if(!is.null(chem.name)) dtxsid <- get_chem_id(chem.name = chem.name)$dtxsid
-    }
-    
     this.index <- which(dtxsid == chem.physical_and_invitro.data[,"DTXSID"])
-    
     
     if (any(this.index))
     {
-      chem.class.filt <- model.list[[model]]$chem.class.filt
-      if (!is.null(chem.class.filt))
-      {
-        chem.class <- strsplit(
-          chem.physical_and_invitro.data[this.index,"Chemical.Class"],
-          split = ",")
-        # check if the chemical class is in the filter-out object
-        in.domain <- !(any(chem.class %in% chem.class.filt))
-        if (!in.domain) stop(paste0("Chemical CAS: ",
+      if (chem.present.noclass) stop(paste0("Chemical CAS: ",
           chem.cas,
           ", DTXSID: ",
           dtxsid,
@@ -134,21 +136,20 @@ check_model <- function(chem.name=NULL,
           model,
           ". See help(get_cheminfo)."
           ))
-      } 
+    } 
       
-      if (chem.present.nophyschem)
-      {
-        stop(paste0("Chemical CAS: ",
-          chem.cas,
-          ", DTXSID: ",
-          dtxsid,
-          ", named: ",
-          chem.name,
-          " is outside the physico-chemical property domain for model ",
-          model,
-          ". See help(get_cheminfo)."
-          ))
-       }
+    if (chem.present.nophyschem)
+    {
+      stop(paste0("Chemical CAS: ",
+        chem.cas,
+        ", DTXSID: ",
+        dtxsid,
+        ", named: ",
+        chem.name,
+        " is outside the physico-chemical property domain for model ",
+        model,
+        ". See help(get_cheminfo)."
+        ))
      }
 
     if (tolower(species) != "human" &
