@@ -12,7 +12,7 @@ This release accompanies the submission of the new manuscript "Interpretation of
 * Added 'onUnload' internal function call, appears to improve stability when using multiple models with [deSolve](https://CRAN.R-project.org/package=deSolve)
 * Added class.exclude and physchem.exclude arguments to solve_[MODEL] and parameterize_[MODEL] functions
 * Expanded model documentation of solve_[MODEL] and parameterize_[MODEL] functions to explain physchem filter (models without inhalation/exhalation exclude chemicals more volatile than Acetone by default) and class filter (models not suited to per- and polyfluoroalkyl substances excluded by default. These filters can be turned of using arguments exclude.physchem = FALSE and exclude.class = FALSE, respectively.
-* Added use of Caco-2 data for estimating oral permeability to the models "fetal_pbtk", "gas_pbtk", and "sumclearances".
+* Added use of Caco-2 data for estimating oral permeability to the models "gas_pbtk", and "sumclearances".
 * Refactored multiple functions to pass arguments using ellipsis (three dots/...) and/or parameterize.args.list so that when new arguments are added to parameterize functions these other functions do not need to be modified
 
 ## New Features
