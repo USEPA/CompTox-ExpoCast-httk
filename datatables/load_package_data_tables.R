@@ -2,7 +2,7 @@
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
-SCRIPT.VERSION <- "January2025"
+SCRIPT.VERSION <- "March2025"
 
 ## R Packages ##
 library(reshape)
@@ -529,8 +529,6 @@ for (this.row in 1:dim(Schmitt.table)[1])
 
 cat("Loading HTTK data from Lombardo 2018\n")
 
-if ("pKa_Accept" %in% colnames(chem.prop)) 
-  chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
@@ -566,6 +564,8 @@ if ("pKa_Accept" %in% colnames(chem.prop))
   chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
+
+cat("Loading HTTK data from TNO\n")
 
 cat("Loading HTTK data from TNO\n")
 
@@ -838,6 +838,8 @@ if ("pKa_Accept" %in% colnames(chem.prop))
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
+chem.prop[chem.prop$Compound=="Bensulide",]
+
 cat("Loading HTTK data from Paixao 2012\n")
 
 Paixao2012.table2 <- set.precision(read_excel("Paixao-2012.xlsx",sheet=1))
@@ -896,14 +898,14 @@ chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 chem.prop[chem.prop$Compound=="Abamectin",]
 
-chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
-
 chem.prop[chem.prop$CAS=="33286-22-5","Compound"] <- "Diltiazem hydrochloride"
 chem.prop[chem.prop$CAS=="64118-84-9","Compound"] <- "4'-Hydroxydiclofenac"
 chem.prop[chem.prop$Compound=="Abamectin",]
 
 if ("pKa_Accept" %in% colnames(chem.prop)) 
   chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
+cat("Loading physchem data from Endo 2011\n")
+
 cat("Loading physchem data from Endo 2011\n")
 
 MA.data <- set.precision(read_excel("Endo-2011.xlsx"))
@@ -2056,14 +2058,14 @@ browser()
 # Find DTXSIDs for chemicals that don't have them
 CAS.table <- subset(chem.physical_and_invitro.data,is.na(DTXSID))
 cat("Looking up missing DTXSID by CAS with CCD API...\n")
-cheminfo.by.cas <- chemical_equal_batch(word_list=CAS.table$CAS)$valid
+cheminfo.by.cas <- chemical_equal_batch(word_list=CAS.table$CAS)
 NOCAS.table <- subset(CAS.table,
-                      !(CAS %in% cheminfo.by.cas$searchValue))
+                      DTXSID %in% subset(cheminfo.by.cas$valid, is.na(dtxsid))$dtxsid)
 cat("Looking up missing DTXSID and CAS by Compound Name with CCD API...\n")
-cheminfo.by.name <- chemical_equal_batch(word_list=NOCAS.table$Compound)$valid
+cheminfo.by.name <- chemical_equal_batch(word_list=NOCAS.table$Compound)
 
-cheminfo.by.cas <- subset(cheminfo.by.cas, !is.na(dtxsid))
-cheminfo.by.name <- subset(cheminfo.by.name, !is.na(dtxsid))
+cheminfo.by.cas <- subset(cheminfo.by.cas$valid, !is.na(dtxsid))
+cheminfo.by.name <- subset(cheminfo.by.name$valid, !is.na(dtxsid))
 
 # Clean up cas numbers:
 for (this.cas in cheminfo.by.cas$searchValue)
@@ -2164,8 +2166,8 @@ EPA.ref <- paste('CompTox Dashboard', Sys.Date())
 
 #
 #
-# PKA's aren't quite right on the CCD API yet, use values manually generated
-# from OPERA for now.
+# PKA's aren't quite right on the CCD API yet, use values prediced by ChemAxon
+# (From Caroline Stevens)
 #
 # Important to recall that in the case of pKa, "NA" is a prediction that there
 # is no ionization and does not necessarily mean that that there is no 
@@ -2174,34 +2176,49 @@ EPA.ref <- paste('CompTox Dashboard', Sys.Date())
 # (which means no prediction has been attempted for that chemical. #
 #
 #
-OPERA.VERSION <- "2.9"
-cat(paste("Reading HTTK-AllChems-smi_OPERA",OPERA.VERSION,"Pred.csv\n",sep=""))
-opera.preds <- read.csv(paste(
-  "HTTK-AllChems-smi_OPERA",OPERA.VERSION,"Pred.csv",sep=""))
-
-# Check for domain of applicability:
-opera.preds <- subset(opera.preds, AD_pKa==1)
-
-# Indicate that no ionizations are predicted with blank " ":
-opera.preds[is.nan(opera.preds$pKa_a_pred),"pKa_a_pred"] <- " "
-opera.preds[is.nan(opera.preds$pKa_b_pred),"pKa_b_pred"] <- " "
+cat("Reading HTTK-AllChems_pKa.xlsx")
+chemaxon.preds <- as.data.frame(
+  read_excel("HTTK-AllChems_pKa.xlsx",
+             sheet="ChemAxon",
+             skip=1))
+# Acidic/donor electrons:
+chemaxon.preds$pKa_Donor <- apply(chemaxon.preds, 1, function(x) 
+  paste(
+    signif(as.numeric(x["apKa1"]),3),
+    signif(as.numeric(x["apKa2"]),3),
+    signif(as.numeric(x["apKa3"]),3),
+    signif(as.numeric(x["apKa4"]),3),
+    signif(as.numeric(x["apKa5"]),3),
+    signif(as.numeric(x["apKa6"]),3),
+    sep=","))
+chemaxon.preds$pKa_Donor <- gsub(",NA","",chemaxon.preds$pKa_Donor)
+chemaxon.preds$pKa_Donor <- gsub("NA"," ",chemaxon.preds$pKa_Donor)
+# Basic/acceptor electrons:
+chemaxon.preds$pKa_Accept <- apply(chemaxon.preds, 1, function(x) 
+  paste(
+    signif(as.numeric(x["bpKa1"]),3),
+    signif(as.numeric(x["bpKa2"]),3),
+    signif(as.numeric(x["bpKa3"]),3),
+    signif(as.numeric(x["bpKa4"]),3),
+    signif(as.numeric(x["bpKa5"]),3),
+    signif(as.numeric(x["bpKa6"]),3),
+    sep=","))
+chemaxon.preds$pKa_Accept <- gsub(",NA","",chemaxon.preds$pKa_Accept)
+chemaxon.preds$pKa_Accept <- gsub("NA"," ",chemaxon.preds$pKa_Accept)
 
 chem.physical_and_invitro.data <- add_chemtable(
-  opera.preds,
+  chemaxon.preds,
   current.table = chem.physical_and_invitro.data,
-  data.list=list(CAS='MoleculeID',
-    pKa_Donor="pKa_a_pred",
-    pKa_Accept="pKa_b_pred"
+  data.list=list(CAS='CAS #',
+    pKa_Donor="pKa_Donor",
+    pKa_Accept="pKa_Accept"
     ),
-  reference=paste("OPERAv",OPERA.VERSION,sep=""),
+  reference="ChemAxon",
   overwrite=TRUE)
-# Set references:
-chem.physical_and_invitro.data[
-  chem.physical_and_invitro.data$CAS %in% opera.preds$MoleculeID, 
-  "pKa_Accept.Reference"] <- paste("OPERAv",OPERA.VERSION,sep="")
-chem.physical_and_invitro.data[
-  chem.physical_and_invitro.data$CAS %in% opera.preds$MoleculeID, 
-  "pKa_Donor.Reference"] <- paste("OPERAv",OPERA.VERSION,sep="")
+
+
+
+
 
 
 # Make sure there are no duplicate rows after reading CAS and DTXSID from dashboard:
@@ -2246,28 +2263,6 @@ cat(" use that file to in OPERA to generate phys-chem properties including pKa.\
 cat("Enter \"c\" to continue when ready.\n")
 #browser()
 
-#
-#
-# Add Strope 2018 (ChemAxon) pKa values where we don't have them from OPERA
-# 
-#
-load('Strope2018.RData')
-
-# Only add chemicals not covered by OPERA:
-CorypKaTable <- subset(CorypKaTable,
-                       !(CASRN.DSStox  %in% 
-                           subset(opera.preds,AD_pKa==1)$MoleculeID))
-# Indicate no predicted ionization with a blank (" ")
-CorypKaTable[CorypKaTable$Accept=="", "Accept"] <- " "
-CorypKaTable[CorypKaTable$Donor=="", "Donor"] <- " "
-chem.physical_and_invitro.data <- add_chemtable(CorypKaTable,
-                                                current.table = 
-                                                  chem.physical_and_invitro.data,
-                                                data.list = list(CAS='CASRN.DSStox',
-                                                                 pKa_Accept='Accept',
-                                                                 pKa_Donor='Donor'),
-                                                reference='Strope 2018', 
-                                                overwrite=TRUE)
 #
 #
 # Annotate important chemicals classes as concatenated list:
