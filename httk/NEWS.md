@@ -3,6 +3,9 @@
 * Refactored Henderson-Hasselbach calculations within calc_ionization to be clearer. Expanded documentation for 'calc_ionization'. No known change to previously calculated values by that function. Introduced new argument return_charge_matrix which gives a table listing each ionization state to explain how the values in 'calc_ionization' are derived.
 * When models (either OPERA or ChemAxon) predict that a chemical does not ionize, that prediction is now stored as a blank space (that is, " ") rather than an "NA". "NA" is intended to indicate that no prediction was available. This change should not impact the function of the code or any predictions, but hopefully clarifies the chemical descriptors.
 
+## Bug Fixes
+* Blank values for human Clint in [Woods et al. 2017](https://doi.org/10.1124/dmd.117.077040) were incorrectly being recorded as 0 -- these have been fixed
+
 # httk 2.6.0 (2025-03-24)
 This release accompanies the submission of the new manuscript "Interpretation of thyroid-relevant bioactivity data for comparison to in vivo exposures: A prioritization approach for putative chemical inhibitors of in vitro deiodinase activity" and includes a new model describing human gestation in the first trimester (model "1tri_pbtk") which links to model "fetal_pbtk" and is accessed through new function 'solve_full_pregnancy'.
 
@@ -19,10 +22,12 @@ This release accompanies the submission of the new manuscript "Interpretation of
 * Expanded model documentation of solve_[MODEL] and parameterize_[MODEL] functions to explain physchem filter (models without inhalation/exhalation exclude chemicals more volatile than Acetone by default) and class filter (models not suited to per- and polyfluoroalkyl substances excluded by default. These filters can be turned of using arguments exclude.physchem = FALSE and exclude.class = FALSE, respectively.
 * Added use of Caco-2 data for estimating oral permeability to the models "fetal_pbtk", "gas_pbtk", and "sumclearances".
 * Refactored multiple functions to pass arguments using ellipsis (three dots/...) and/or parameterize.args.list so that when new arguments are added to parameterize functions these other functions do not need to be modified
+* Added flexible tolerance to `calc_css` to increase stability
 
 ## New Features
 * Added new function 'list_models' to identify all available HTTK models.
 * Added argument chem_include to 'load_sipes2017', 'load_pradeep2020', 'load_dawson2021', 'load_honda2023' to speed up loading of in silico predicted values by only loading chemicals specified by argument
+* Added rat and human fup data from [Lynn et al. 2025](https://doi.org/10.1016/j.tiv.2025.106036) 
 
 # httk 2.5.0 (2024-12-20)
 This release accompanies the submission of the new manuscript
