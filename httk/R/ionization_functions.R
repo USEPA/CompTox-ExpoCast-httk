@@ -268,7 +268,11 @@ calc_dow <- function(Pow=NULL,
 #' @keywords Parameter
 #' 
 #' @examples
-#' # Donor pKa's 9.78,10.39 -- Should be almost all neutral at plasma pH:
+#'
+#' # Neutral compound:
+#' calc_ionization(chem.name="Acetochlor",pH=7.4)
+#'
+  #' # Donor pKa's 9.78,10.39 -- Should be almost all neutral at plasma pH:
 #' out <- calc_ionization(chem.name='bisphenola',pH=7.4)
 #' print(out)
 #' out[["fraction_neutral"]]==max(unlist(out))
@@ -335,8 +339,8 @@ calc_ionization <- function(
   {
 # If one of pKa_Donor/Accept is specified but not the other, we assume the other
 # is not present:
-    if (is.null(pKa_Donor)) pKa_Donor <- NA
-    if (is.null(pKa_Accept)) pKa_Accept <- NA
+    if (is.null(pKa_Donor)) pKa_Donor <- " "
+    if (is.null(pKa_Accept)) pKa_Accept <- " "
   } else {
     stop(
 "Either pKa_Donor and pKa_Accept must be in input parameters or chemical identifier must be supplied.")
@@ -390,9 +394,9 @@ calc_ionization <- function(
       this.pKa_Accept <- pKa_Accept[[1]]
       this.pH <- pH[[1]]
     }
-    if (is.null(this.pKa_Donor)) this.pKa_Donor <- NA
-    if (is.null(this.pKa_Accept)) this.pKa_Accept <- NA
-    if (!is.na(this.pKa_Donor))
+    if (is.null(this.pKa_Donor)) this.pKa_Donor <- " "
+    if (is.null(this.pKa_Accept)) this.pKa_Accept <- " "
+    if (this.pKa_Donor != " ")
     {
       if (is.character(this.pKa_Donor)) this.pKa_Donor <- 
       {
@@ -403,7 +407,7 @@ calc_ionization <- function(
       }
     }
 
-    if (!is.na(this.pKa_Accept))
+    if (this.pKa_Accept != " ")
     {
       if (is.character(this.pKa_Accept)) this.pKa_Accept <- 
       {
@@ -418,19 +422,19 @@ calc_ionization <- function(
 
   # Multiple equilibirum points may still be separated by commas, split them into vectors here:
      
-    if(all(is.na(this.pKa_Donor))) this.pKa_Donor <- NULL
-    if(all(is.na(this.pKa_Accept))) this.pKa_Accept <- NULL
+    if (all(this.pKa_Donor == " ")) this.pKa_Donor <- NULL
+    if (all(this.pKa_Accept == " ")) this.pKa_Accept <- NULL
   
   # Make a vector of all equilibirum points:
-    eq.points <- c(this.pKa_Donor,this.pKa_Accept)
-    if (all(!is.null(eq.points)))
+    eq.points <- unique(c(this.pKa_Donor,this.pKa_Accept))
+    if (!is.null(eq.points))
     {
   # Annotate whether each equilibirum point is a H-donation or acceptance:
       eq.point.types <- c(rep("Donate",length(this.pKa_Donor)),
         rep("Accept",length(this.pKa_Accept)))
       eq.point.types <- eq.point.types[order(eq.points)]    #label each point
       eq.points <- eq.points[order(eq.points)]     #order points
-    }
+    } else eq.point.types <- NULL
     
     # There are one more charged species that eq.points:
     NUM.SPECIES <- 1 + length(eq.points)
@@ -446,41 +450,48 @@ calc_ionization <- function(
     # Now, in order of pKa's from lowest to highest, indicate acceptor sites
     # with "A" and donor sites with "D":
     lowest.state <- "X"
-    for (this.type in eq.point.types)
+    if (!is.null(eq.points))
     {
-      if (this.type == "Donate") lowest.state <- paste(lowest.state, 
-                                                      "D", 
-                                                      sep ="")
-      else if (this.type == "Accept") lowest.state <- paste(lowest.state,
-                                                            "A",
-                                                            sep="")
-    }
-    charge_matrix[1,"Notation"] <- lowest.state
-    # Now strip off ionization sites in order:
-    for (this.row in 2:NUM.SPECIES)
-    {
-      prev.notation <- charge_matrix[this.row-1, "Notation"]
-      charge_matrix[this.row, "Notation"] <- paste("X",
-        substr(prev.notation, 3, nchar(prev.notation)),
-        sep="")
-    }                                                        
-                               
-    for (this.eq in 1:length(eq.points))
-    {
-      this.index <- which(charge_matrix[,"pKa"]==eq.points[this.eq])
-      if (eq.point.types[this.eq] == "Donate")
+      for (this.type in eq.point.types)
       {
-        # If it is an acid, (donates a hydrogen), then all species after this
-        # equilibrium (including this one) have donated a hydrogen
-        charge_matrix[this.index:NUM.SPECIES,"Donated"] <- 
-          charge_matrix[this.index:NUM.SPECIES,"Donated"] + 1
-      } else {
-        # If it is an base, (accepts a hydrogen), then all species before this
-        # equilibrium have donated a hydrogen
-        charge_matrix[1:(this.index-1),"Accepted"] <- 
-          charge_matrix[1:(this.index-1),"Accepted"] + 1
+        if (this.type == "Donate") lowest.state <- paste(lowest.state, 
+                                                        "D", 
+                                                        sep ="")
+        else if (this.type == "Accept") lowest.state <- paste(lowest.state,
+                                                              "A",
+                                                              sep="")
       }
-    }  
+      charge_matrix[1,"Notation"] <- lowest.state
+      # Now strip off ionization sites in order:
+      for (this.row in 2:NUM.SPECIES)
+      {
+        prev.notation <- charge_matrix[this.row-1, "Notation"]
+        charge_matrix[this.row, "Notation"] <- paste("X",
+          substr(prev.notation, 3, nchar(prev.notation)),
+          sep="")
+      }                                                        
+                                 
+      for (this.eq in 1:length(eq.points))
+      {
+        this.index <- which(charge_matrix[,"pKa"]==eq.points[this.eq])
+        if (eq.point.types[this.eq] == "Donate")
+        {
+          # If it is an acid, (donates a hydrogen), then all species after this
+          # equilibrium (including this one) have donated a hydrogen
+          charge_matrix[this.index:NUM.SPECIES,"Donated"] <- 
+            charge_matrix[this.index:NUM.SPECIES,"Donated"] + 1
+        } else {
+          # If it is an base, (accepts a hydrogen), then all species before this
+          # equilibrium have donated a hydrogen
+          charge_matrix[1:(this.index-1),"Accepted"] <- 
+            charge_matrix[1:(this.index-1),"Accepted"] + 1
+        }
+      }  
+    } else {
+      charge_matrix[1,"Notation"] <- lowest.state
+      charge_matrix[1,"Donated"] <- 0
+      charge_matrix[1,"Accepted"] <- 0
+    }
     charge_matrix <- as.data.frame(charge_matrix)
 
     # Calculate the charge of each species:
@@ -510,7 +521,8 @@ calc_ionization <- function(
     # x1
     charge_matrix[1,"RatioToLowest"] <- 0
     # Calculate cumulative constant:
-    for (this.row in 2:NUM.SPECIES)
+    if (NUM.SPECIES > 1)
+      for (this.row in 2:NUM.SPECIES)
     {
       charge_matrix[this.row,"RatioToLowest"] <- 
         charge_matrix[this.row-1,"RatioToLowest"] + 
