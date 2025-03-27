@@ -72,10 +72,11 @@ model.list[["1tri_pbtk"]]$param.names <- c(
   "Pow",            
 # Basic PK parameters:
   "pre_pregnant_BW", # parms[0]
+  "BW",
   "Clmetabolismc",                
   "Clint",
+  "Fabsgut",
   "kgutabs",                      
-  "Fgutabs",      
   "Funbound.plasma",              
 # Maternal tissue partition coefficients:
   "Kadipose2pu",
