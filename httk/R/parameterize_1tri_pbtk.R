@@ -354,6 +354,12 @@ parameterize_1tri_pbtk<- function(
     # kapraun2019.1tri$Qbrain_percent_terminal <- 8.8
     
     parms <- c(parms, kapraun2019.1tri)
+    
+    # Set standard order with flexibility because of return.kapraun2019 argument:
+    param.name.order <- model.list[["1tri_pbtk"]]$param.names[
+      model.list[["1tri_pbtk"]]$param.names %in%
+        names(parms)]
+    parms <- parms[param.name.order]
  
  return(parms)                             
 }
