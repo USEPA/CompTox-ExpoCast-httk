@@ -1,7 +1,7 @@
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
-SCRIPT.VERSION <- "feature/PFAS February 2025"
+SCRIPT.VERSION <- "feature/PFAS March 2025"
 
 ## R Packages ##
 library(reshape)
@@ -528,8 +528,6 @@ for (this.row in 1:dim(Schmitt.table)[1])
 
 cat("Loading HTTK data from Lombardo 2018\n")
 
-if ("pKa_Accept" %in% colnames(chem.prop)) 
-  chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
@@ -556,7 +554,6 @@ Obach2018.table[Obach2018.table[,"CAS #"]=="120443-16-5", "CAS #"] <-
 # Carnitine_l -> "levocarnitine", dashboard gives CAS="541-15-1"
 Obach2018.table[Obach2018.table[,"Name"]=="Carnitine_L",
   "CAS #"] <- "541-15-1"  
-  
 # Get rid of non-numeric fu values:
 Obach2018.table$fu <- signif(as.numeric(Obach2018.table[,
   "fraction unbound \r\nin plasma (fu)"]),4)
@@ -574,6 +571,8 @@ if ("pKa_Accept" %in% colnames(chem.prop))
   chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
+
+cat("Loading HTTK data from TNO\n")
 
 cat("Loading HTTK data from TNO\n")
 
@@ -846,6 +845,8 @@ if ("pKa_Accept" %in% colnames(chem.prop))
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
+chem.prop[chem.prop$Compound=="Bensulide",]
+
 cat("Loading HTTK data from Paixao 2012\n")
 
 Paixao2012.table2 <- set.precision(read_excel("Paixao-2012.xlsx",sheet=1))
@@ -904,14 +905,14 @@ chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 chem.prop[chem.prop$Compound=="Abamectin",]
 
-chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
-
 chem.prop[chem.prop$CAS=="33286-22-5","Compound"] <- "Diltiazem hydrochloride"
 chem.prop[chem.prop$CAS=="64118-84-9","Compound"] <- "4'-Hydroxydiclofenac"
 chem.prop[chem.prop$Compound=="Abamectin",]
 
 if ("pKa_Accept" %in% colnames(chem.prop)) 
   chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
+cat("Loading physchem data from Endo 2011\n")
+
 cat("Loading physchem data from Endo 2011\n")
 
 MA.data <- set.precision(read_excel("Endo-2011.xlsx"))
@@ -1705,8 +1706,8 @@ chem.physical_and_invitro.data <- check_duplicates(
 #
 # ADD NEW DATA HERE:
 
-# Add new Pab measurements from Honda2023:
-cat("Loading HTTK data from Honda 2024\n")
+# Add new Pab measurements from Honda2025:
+cat("Loading HTTK data from Honda 2025\n")
 
 caco2.dt <- read.csv("CACO-2/TableAllCaco2PabData_10e-6cmps.txt",sep="\t")
 caco2.dt <- subset(caco2.dt,regexpr("DTXSID",dtxsid)!=-1)
@@ -1774,12 +1775,13 @@ chem.physical_and_invitro.data <- add_chemtable(epa.caco2,
                                     DTXSID='dtxsid',
                                     Caco2.Pab="PabInterval"),
                                   overwrite=TRUE,
-                                  reference = 'HondaUnpublished',
+                                  reference = 'Honda 2025',
                                   species="Human") 
 
 #
 # Add literature Pab measurements compiled by Honda2023:
 #
+cat("Loading literature HTTK data from Honda 2025...\n")
 lit.caco2.dt <- subset(caco2.unique, Data.Origin!="EPA")
 
 # Need a column of all numeric Pab's (no NA's) for calculations:
@@ -1871,6 +1873,7 @@ load("CACO-2/all_gut_data.RData")
 #
 # Kim 2014 in vivo data:
 #
+cat("Loading HTTK data from Kim 2014...\n")
 chem.physical_and_invitro.data <- add_chemtable(
   subset(gut.data, !is.na(kim_fbioh)),
   current.table = chem.physical_and_invitro.data,
@@ -1885,6 +1888,7 @@ chem.physical_and_invitro.data <- add_chemtable(
 #
 # Varma 2010 in vivo data:
 #
+cat("Loading HTTK data from Varma 2010...\n")
 chem.physical_and_invitro.data <- add_chemtable(
   subset(gut.data, !is.na(vo_F)),
   current.table = chem.physical_and_invitro.data,
@@ -1932,6 +1936,7 @@ chem.physical_and_invitro.data <- add_chemtable(
 #
 # Wambaugh 2019 in vivo data:
 #
+cat("Loading HTTK data from Wambaugh 2019...\n")
 chem.physical_and_invitro.data <- add_chemtable(
   subset(gut.data, !is.na(pk_fbior)),
   current.table = chem.physical_and_invitro.data,
@@ -1946,6 +1951,7 @@ chem.physical_and_invitro.data <- add_chemtable(
 #
 # Musther 2014 in vivo data:
 #
+cat("Loading HTTK data from Musther 2014...\n")
 chem.physical_and_invitro.data <- add_chemtable(
   subset(gut.data, !is.na(musther_Fbio_human)),
   current.table = chem.physical_and_invitro.data,
@@ -2272,6 +2278,7 @@ chem.physical_and_invitro.data <- add_chemtable(
   reference="Musther 2014")
 
 ## Load in Dawson 2021 Predictions ##
+cat("Loading HTTK data from Dawson2021...\n")
 dawson.clint.1 <- 
   read.csv("Dawson2021/Novel_clint_predictions_with_AD_Main29_descs_from_Opera2.9.csv")
 dawson.clint.2 <- 
@@ -2374,9 +2381,38 @@ chem.physical_and_invitro.data <- add_chemtable(droge2019,
 #
 # 
 #
-
-
-
+## Load Lynn 2025 fup data
+cat("Loading HTTK data from Lynn 2025...\n")
+lynn2025 <- as.data.frame(read_excel("Lynn-2025-ThreeSpeciesFup.xlsx",
+                       sheet="Table S11",
+                       skip=1))
+                       
+chem.physical_and_invitro.data <- add_chemtable(subset(lynn2025,
+                                                       Species %in%
+                                                       c("Human","Rat")),
+                current.table = chem.physical_and_invitro.data, 
+                data.list = list(Compound='Chemical',
+                                 CAS = 'CAS#',
+                                 DTXSID='DTSXID',
+                                 Funbound.plasma = 'fup mean...15',
+                                 Species="Species"
+                                 ),
+                                 overwrite=FALSE,
+                                 reference="Lynn 2025")       
+                                                             
+#
+# Clean up CASRN
+#
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$CAS=="61337-67-5",
+                               "CAS"] <- "85650-52-8"
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$CAS=="130636-43-0",
+                               "CAS"] <- "130656-51-8"
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$CAS=="78473-71-9",
+                               "CAS"] <- "77756-20-8"
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$CAS=="15302-18-8",
+                               "CAS"] <- "22148-75-0"
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$CAS=="NOCAS_47129",
+                               "CAS"] <- "2349-14-6"
 #
 #
 #
@@ -2411,12 +2447,12 @@ CAS.table <- subset(chem.physical_and_invitro.data,is.na(DTXSID))
 cat("Looking up missing DTXSID by CAS with CCD API...\n")
 cheminfo.by.cas <- chemical_equal_batch(word_list=CAS.table$CAS)
 NOCAS.table <- subset(CAS.table,
-                      !(CAS %in% cheminfo.by.cas$searchValue))
+                      DTXSID %in% subset(cheminfo.by.cas$valid, is.na(dtxsid))$dtxsid)
 cat("Looking up missing DTXSID and CAS by Compound Name with CCD API...\n")
 cheminfo.by.name <- chemical_equal_batch(word_list=NOCAS.table$Compound)
 
-cheminfo.by.cas <- subset(cheminfo.by.cas, !is.na(dtxsid))
-cheminfo.by.name <- subset(cheminfo.by.name, !is.na(dtxsid))
+cheminfo.by.cas <- subset(cheminfo.by.cas$valid, !is.na(dtxsid))
+cheminfo.by.name <- subset(cheminfo.by.name$valid, !is.na(dtxsid))
 
 # Clean up cas numbers:
 for (this.cas in cheminfo.by.cas$searchValue)
@@ -2517,38 +2553,8 @@ EPA.ref <- paste('CompTox Dashboard', Sys.Date())
 
 #
 #
-# CREATE .SMI FILE FOR OPERA (Not needed currently, but just in case)
-#
-#
-
-good.smiles <- chem.physical_and_invitro.data[,c("SMILES.desalt","CAS")]
-# Get rid of NA values:
-good.smiles <- subset(good.smiles, !(SMILES.desalt %in% c("NA","N/A")))
-good.smiles <- subset(good.smiles, !is.na(SMILES.desalt))
-# Get rid of concatonated SMILES:
-good.smiles$SMILES.desalt <-
-  sapply(good.smiles$SMILES.desalt,function(x) strsplit(x,",")[[1]][1])
-# Get rid of quotation marks:
-good.smiles$SMILES.desalt <-
-  gsub("\"","",good.smiles$SMILES.desalt)
-# Get rid of truncated smiles (API only returns first 255 characters):
-good.smiles <- subset(good.smiles, nchar(SMILES.desalt) < 255)
-
-write.table(good.smiles,
-  file="HTTK-AllChems.smi",
-  row.names=F,
-  sep="\t",
-  col.names=F,
-  quote=F)
-cat("Chemical QSAR-ready SMILES written to HTTK-AllChems.smi")
-cat(" use that file to in OPERA to generate phys-chem properties including pKa.\n")
-cat("Enter \"c\" to continue when ready.\n")
-browser()
-
-#
-#
-# PKA's aren't quite right on the CCD API yet, use values manually generated
-# from OPERA for now.
+# PKA's aren't quite right on the CCD API yet, use values prediced by ChemAxon
+# (From Caroline Stevens)
 #
 # Important to recall that in the case of pKa, "NA" is a prediction that there
 # is no ionization and does not necessarily mean that that there is no 
@@ -2557,34 +2563,49 @@ browser()
 # (which means no prediction has been attempted for that chemical. #
 #
 #
-OPERA.VERSION <- "2.9"
-cat(paste("Reading HTTK-AllChems-smi_OPERA",OPERA.VERSION,"Pred.csv\n",sep=""))
-opera.preds <- read.csv(paste(
-  "HTTK-AllChems-smi_OPERA",OPERA.VERSION,"Pred.csv",sep=""))
-
-# Check for domain of applicability:
-opera.preds <- subset(opera.preds, AD_pKa==1)
-
-# Indicate that no ionizations are predicted with blank " ":
-opera.preds[is.nan(opera.preds$pKa_a_pred),"pKa_a_pred"] <- " "
-opera.preds[is.nan(opera.preds$pKa_b_pred),"pKa_b_pred"] <- " "
+cat("Reading HTTK-AllChems_pKa.xlsx")
+chemaxon.preds <- as.data.frame(
+  read_excel("HTTK-AllChems_pKa.xlsx",
+             sheet="ChemAxon",
+             skip=1))
+# Acidic/donor electrons:
+chemaxon.preds$pKa_Donor <- apply(chemaxon.preds, 1, function(x) 
+  paste(
+    signif(as.numeric(x["apKa1"]),3),
+    signif(as.numeric(x["apKa2"]),3),
+    signif(as.numeric(x["apKa3"]),3),
+    signif(as.numeric(x["apKa4"]),3),
+    signif(as.numeric(x["apKa5"]),3),
+    signif(as.numeric(x["apKa6"]),3),
+    sep=","))
+chemaxon.preds$pKa_Donor <- gsub(",NA","",chemaxon.preds$pKa_Donor)
+chemaxon.preds$pKa_Donor <- gsub("NA"," ",chemaxon.preds$pKa_Donor)
+# Basic/acceptor electrons:
+chemaxon.preds$pKa_Accept <- apply(chemaxon.preds, 1, function(x) 
+  paste(
+    signif(as.numeric(x["bpKa1"]),3),
+    signif(as.numeric(x["bpKa2"]),3),
+    signif(as.numeric(x["bpKa3"]),3),
+    signif(as.numeric(x["bpKa4"]),3),
+    signif(as.numeric(x["bpKa5"]),3),
+    signif(as.numeric(x["bpKa6"]),3),
+    sep=","))
+chemaxon.preds$pKa_Accept <- gsub(",NA","",chemaxon.preds$pKa_Accept)
+chemaxon.preds$pKa_Accept <- gsub("NA"," ",chemaxon.preds$pKa_Accept)
 
 chem.physical_and_invitro.data <- add_chemtable(
-  opera.preds,
+  chemaxon.preds,
   current.table = chem.physical_and_invitro.data,
-  data.list=list(CAS='MoleculeID',
-    pKa_Donor="pKa_a_pred",
-    pKa_Accept="pKa_b_pred"
+  data.list=list(CAS='CAS #',
+    pKa_Donor="pKa_Donor",
+    pKa_Accept="pKa_Accept"
     ),
-  reference=paste("OPERAv",OPERA.VERSION,sep=""),
+  reference="ChemAxon",
   overwrite=TRUE)
-# Set references:
-chem.physical_and_invitro.data[
-  chem.physical_and_invitro.data$CAS %in% opera.preds$MoleculeID, 
-  "pKa_Accept.Reference"] <- paste("OPERAv",OPERA.VERSION,sep="")
-chem.physical_and_invitro.data[
-  chem.physical_and_invitro.data$CAS %in% opera.preds$MoleculeID, 
-  "pKa_Donor.Reference"] <- paste("OPERAv",OPERA.VERSION,sep="")
+
+
+
+
 
 
 # Make sure there are no duplicate rows after reading CAS and DTXSID from dashboard:
@@ -2614,26 +2635,18 @@ for (this.id in unique(dup.cas))
 
 #
 #
-# Add Strope 2018 (ChemAxon) pKa values where we don't have them from OPERA
-# 
+# CREATE .SMI FILE FOR OPERA (Not needed currently, but just in case)
 #
-load('Strope2018.RData')
+#
 
-# Only add chemicals not covered by OPERA:
-CorypKaTable <- subset(CorypKaTable,
-                       !(CASRN.DSStox  %in% 
-                           subset(opera.preds,AD_pKa==1)$MoleculeID))
-# Indicate no predicted ionization with a blank (" ")
-CorypKaTable[CorypKaTable$Accept=="", "Accept"] <- " "
-CorypKaTable[CorypKaTable$Donor=="", "Donor"] <- " "
-chem.physical_and_invitro.data <- add_chemtable(CorypKaTable,
-                                                current.table = 
-                                                  chem.physical_and_invitro.data,
-                                                data.list = list(CAS='CASRN.DSStox',
-                                                                 pKa_Accept='Accept',
-                                                                 pKa_Donor='Donor'),
-                                                reference='Strope 2018', 
-                                                overwrite=TRUE)
+write.table(chem.physical_and_invitro.data[,c("SMILES.desalt","CAS")],
+  file="HTTK-AllChems.smi",
+  row.names=FALSE,
+  sep="\t",
+  col.names=FALSE,
+  quote=FALSE)
+cat("Chemical QSAR-ready SMILES written to HTTK-AllChems.smi")
+cat(" use that file to generate phys-chem properties including pKa.\n")
 #
 #
 # Annotate important chemicals classes as concatenated list:

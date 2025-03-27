@@ -21,10 +21,6 @@ calc_tkstats(
   concentration = "plasma",
   tissue = "plasma",
   model = "pbtk",
-  default.to.human = FALSE,
-  adjusted.Funbound.plasma = TRUE,
-  regression = TRUE,
-  restrictive.clearance = TRUE,
   suppress.messages = FALSE,
   ...
 )
@@ -75,21 +71,9 @@ model,'3compartment' for the three compartment model, '3compartmentss' for
 the three compartment steady state model, and '1compartment' for one
 compartment model.}
 
-\item{default.to.human}{Substitutes missing animal values with human values
-if true (hepatic intrinsic clearance or fraction of unbound plasma).}
-
-\item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
-TRUE along with partition coefficients calculated with this value.}
-
-\item{regression}{Whether or not to use the regressions in calculating
-partition coefficients.}
-
-\item{restrictive.clearance}{Protein binding not taken into account (set to
-1) in liver clearance if FALSE.}
-
 \item{suppress.messages}{Whether to suppress output message.}
 
-\item{...}{Arguments passed to solve function.}
+\item{...}{Additional arguments passed to the \code{\link{solve_model}}}
 }
 \value{
 \item{AUC}{Area under the plasma concentration curve.}
