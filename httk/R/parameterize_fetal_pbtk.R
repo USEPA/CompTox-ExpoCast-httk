@@ -396,9 +396,6 @@ parameterize_fetal_pbtk<- function(
                                  model.list[["fetal_pbtk"]]$param.names %in%
                                  names(parms)]
   parms <- parms[param.name.order]
-  
-# For Truong et al. 2025 we did not use Caco2:
-  parms[["Fabsgut"]] <- 1.0
  
  return(parms)                             
 }
