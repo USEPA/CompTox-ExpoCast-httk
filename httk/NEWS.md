@@ -69,6 +69,7 @@ Oral Bioavailability for Chemicals in Commerce and the Environment"](https://doi
 provided by reviewers at ALTEX.
 
 ## Bug Fixes
+>>>>>>> dev
 * Cleaned up functions for model "3compartment"
 * Corrected error where non-restrictive clearance option was not working for model pbtk
 * Set restrictive.clearance=TRUE by defailt in `calc_hep_clearance` when model = "unscaled"
@@ -136,10 +137,7 @@ specified by the modelinfo_[MODEL].R file)
 
 <<<<<<< HEAD
 =======
-<<<<<<< HEAD
-=======
 >>>>>>> dev
->>>>>>> feature/betterpka
 >>>>>>> dev
 # httk 2.3.0 (2023-12-05)
 This version accompanies the submission of manuscript Honda et al. 
@@ -180,8 +178,6 @@ permeability chemicals and therefore predicts only three values
 (low/medium/high permeability)
 * Added new functions `calc_fbio.oral`, `calc_fabs.oral`, and `calc_fgut.oral` 
 <<<<<<< HEAD
-=======
-<<<<<<< HEAD
 for calculating systemic bioavailability as $Fbio = Fabs \times Fgut \times Fhep$ 
 where first-pass hepatic metabolism was already available from 
 `calc_hep_bioavailability`.
@@ -191,15 +187,11 @@ $Fabs$ and $Fgut$ are now modeled separately
 (that is, ***Fabsgut = Fabs \times Fgut***).
 * Integrated $Fabs$ and $Fgut$ into oral exposure for all TK models and 
 =======
->>>>>>> feature/betterpka
 for calculating systemic bioavailability as ***Fbio = Fabs * Fgut * Fhep*** 
 where first-pass hepatic metabolism was already available from 
 `calc_hep_bioavailability`.
 * Integrated ***Fabs*** and ***Fgut*** into oral exposure for all TK models and 
-<<<<<<< HEAD
-=======
 >>>>>>> dev
->>>>>>> feature/betterpka
 integrated into population variability and uncertainty functions within 
 `invitro_uv`
 * Added new function `benchmark_httk` to compare current function of the 
@@ -909,9 +901,5 @@ naming convention.
 <<<<<<< HEAD
 Initial public (CRAN) release (March 6, 2015)
 =======
-<<<<<<< HEAD
-Initial public (CRAN) release (March 6, 2015)
-=======
 Initial public (CRAN) release (March 6, 2015)
 >>>>>>> dev
->>>>>>> feature/betterpka
