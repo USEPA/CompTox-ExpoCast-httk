@@ -617,10 +617,16 @@ model.list[[THIS.MODEL]]$routes <- list(
 # desolve events can take the values "add" to add dose C1 <- C1 + dose,
 # "replace" to change the value C1 <- dose
 # or "multiply" to change the value to C1 <- C1*dose
-    "dose.type" = "add"),
+    "dose.type" = "add",
+"dosing.params" = c("daily.dose",
+                    "initial.dose",
+                    "doses.per.day",
+                    "dosing.matrix")),
   "iv" = list(
     "entry.compartment" = "Aven",
-    "dose.type" = "add")
+    "dose.type" = "add",
+    "dosing.params" = c("initial.dose",
+                       "dosing.matrix"))
   )
 
 # ORDERED LIST of state variables (must match Model variables: 
