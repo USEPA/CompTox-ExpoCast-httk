@@ -1,7 +1,7 @@
 #' Parameterize_1tri_PBTK
 #' 
 #' This function initializes the parameters needed in the functions
-#' solve_1tri_pbtk by calling solve_pbtk and adding additional parameters.
+#' solve_1tri_pbtk by calling parameterize_pbtk and adding additional parameters.
 #' 
 #' Because this model does not simulate exhalation, inhalation, and other 
 #' processes relevant to volatile chemicals, this model is by default 
@@ -17,23 +17,31 @@
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
 #' specified. 
+#' 
 #' @param chem.cas Either the chemical name or the CAS number must be
-#' specified. 
+#' specified.
+#'  
 #' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human"). Currently only a human model is supported. 
+#' 
 #' @param return.kapraun2019 If TRUE (default), empirical parameters from 
 #' Kapraun et al. (2019) necessary for defining the model are provided.
-#' This is a subset of the httk::kapraun2019 list object with additional parameters. 
+#' This is a subset of the httk::kapraun2019 list object with additional parameters.
+#'  
 #' @param suppress.messages Whether or not the output message is suppressed.
+#' 
 #' @param ... Arguments passed to parameterize_pbtk.
 #'
 #' @return \item{pre_pregnant_BW}{Body Weight before pregnancy, kg.}
 #' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
+#' \item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of the dose that enters the gutlumen.}
 #' \item{Funbound.plasma}{Fraction of plasma that is not bound.}
 #' \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
 #' assay using the method of Kilford et al. (2008)} 
+#' \item{hematocrit}{Percent volume of red blood cells in the blood.}
 #' \item{Kadipose2pu}{Ratio of concentration of chemical in adipose tissue to unbound concentration in plasma.}
 #' \item{Kconceptus2pu_initial}{Ratio of concentration of chemical in "conceptus" 
 #' compartment to unbound concentration in plasma at time 0.} 
@@ -55,6 +63,8 @@
 #' \item{million.cells.per.gliver}{Millions cells per gram of liver tissue.} 
 #' \item{MW}{Molecular Weight, g/mol.} 
 #' \item{pH_Plasma_mat}{pH of the maternal plasma.}
+#' \item{Qgfr}{Glomerular Filtration Rate, L/h/kg BW^3/4, volume of fluid
+#' filtered from kidney and excreted.} 
 #' \item{Vgutc}{Volume of the gut per kg body weight, L/kg BW.} 
 #' \item{Vkidneyc}{Volume of the kidneys per kg body weight, L/kg BW.} 
 #' \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
@@ -331,7 +341,7 @@ parameterize_1tri_pbtk<- function(
   
 
 # Set appropriate precision:
-  parms <- lapply(parms[sort(names(parms))], set_httk_precision)
+  parms <- lapply(parms, set_httk_precision)
   
   
 #Now for the many parameters associated with the dynamic physiologic equations
