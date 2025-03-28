@@ -1,28 +1,34 @@
 # Add a human gestational PBTK model for the 1st trimester of pregnancy 
 # to augment the fetal_pbtk model 
 
+# Model identifier for the model.list:
+THIS.MODEL <- "1tri_pbtk"
+
+# Dose this model work with Monte Carlo parameter sampling?
+model.list[[THIS.MODEL]]$monte.carlo <- FALSE
+
 #Analytic expression for steady-state plasma concentration.
-#model.list[["1tri_pbtk"]]$analytic.css.func <- "calc_analytic_css_1tri_pbtk" <function not yet developed
+#model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_1tri_pbtk" <function not yet developed
 
 # When calculating steady-state, which compartment do we test? 
 # ("C" is preprended):
-model.list[["1tri_pbtk"]]$steady.state.compartment <- "plasma"
+model.list[[THIS.MODEL]]$steady.state.compartment <- "plasma"
                                               
 # What units does the analytic function return:
-model.list[["1tri_pbtk"]]$steady.state.units <- "mg/L"
+model.list[[THIS.MODEL]]$steady.state.units <- "mg/L"
 
 # Function used for generating model parameters:
-model.list[["1tri_pbtk"]]$parameterize.func <- "parameterize_1tri_pbtk"
+model.list[[THIS.MODEL]]$parameterize.func <- "parameterize_1tri_pbtk"
 
 # Function called for running the model:
-model.list[["1tri_pbtk"]]$solve.func <- "solve_1tri_pbtk"
+model.list[[THIS.MODEL]]$solve.func <- "solve_1tri_pbtk"
 
 # Here are the tissues from tissue.data that are considered (for example,
 # do we include placenta or not? Here, yes we do). They should correspond
 # in name to the names present in the tissue.data object, if the parameters
 # necessary for describing the tissue/compartment aren't going to be provided
 # otherwise.
-model.list[["1tri_pbtk"]]$alltissues=c(
+model.list[[THIS.MODEL]]$alltissues=c(
   "adipose",
   "bone",            
   "brain",           
@@ -43,7 +49,7 @@ model.list[["1tri_pbtk"]]$alltissues=c(
 # the model: The 1tri_pbtk model has liver, kidney, gut, and lung compartments
 # that draw info from tissue.data; everything else from alltissues should be 
 # lumped.
-model.list[["1tri_pbtk"]]$tissuelist=list(
+model.list[[THIS.MODEL]]$tissuelist=list(
   adipose = c("adipose"),
   # brain = c("brain"),
   gut = c("gut"),
@@ -57,27 +63,23 @@ model.list[["1tri_pbtk"]]$tissuelist=list(
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
-model.list[["1tri_pbtk"]]$param.names <- c(
-# TK IVIVE parameters:
+model.list[[THIS.MODEL]]$param.names <- c(
+  "pre_pregnant_BW",
+  "BW",
+  "Clint",
+  "Clint.dist",
+  "Clmetabolismc",   
+  "Fabsgut",
   "Fhep.assay.correction",
+  "Funbound.plasma", 
   "Funbound.plasma.adjustment",
   "Funbound.plasma.dist",
-  "Clint.dist",
-  "MA", # don't know what this parameter means 
+  "kgutabs", 
+  "MA", 
   "million.cells.per.gliver",
   "MW",                           
-  "pKa_Accept",
-  "pKa_Donor",
   "pH_Plasma_mat",
   "Pow",            
-# Basic PK parameters:
-  "pre_pregnant_BW", # parms[0]
-  "BW",
-  "Clmetabolismc",                
-  "Clint",
-  "Fabsgut",
-  "kgutabs",                      
-  "Funbound.plasma",              
 # Maternal tissue partition coefficients:
   "Kadipose2pu",
   "Kgut2pu",
@@ -88,6 +90,7 @@ model.list[["1tri_pbtk"]]$param.names <- c(
   "Krbc2pu", # parms[10]
   "Kthyroid2pu",                  
 #  "Kbrain2pu",
+# Dynamical Kconceptus2pu described by two parameters:
   "Kconceptus2pu_initial",
   "Kconceptus2pu_final", 
 # Scaled (1/kg BW) constant tissue volumes:
@@ -153,9 +156,9 @@ model.list[["1tri_pbtk"]]$param.names <- c(
   "Qgfr_quadratic_theta0",
   "Qgfr_quadratic_theta1",
   "Qgfr_quadratic_theta2" # parms[80]
-# Parameters unique to 1st tri model:
 #  "Qbrain_percent_initial",
 #  "Qbrain_percent_terminal", # parms[82]
+# These were initialized in the C model file:
   # "fBW_13wks",
   # "Vplacenta_13wks",
   # "Vamnf_13wks",
@@ -174,7 +177,7 @@ model.list[["1tri_pbtk"]]$param.names <- c(
 #
 # Note that because scaling is performed in the C code that we only need
 # pass scaled parameters (V[tissue]c and Q[tissue]f)
-model.list[["1tri_pbtk"]]$Rtosolvermap <- list(
+model.list[[THIS.MODEL]]$Rtosolvermap <- list(
   pre_pregnant_BW = "pre_pregnant_BW", # parms[0]
   Clmetabolismc = "Clmetabolismc",
   kgutabs = "kgutabs",
@@ -263,7 +266,7 @@ model.list[["1tri_pbtk"]]$Rtosolvermap <- list(
 
 # This function translates the R model parameters into the compiled model
 # parameters:
-model.list[["1tri_pbtk"]]$compiled.parameters.init <- "getParms_firsttrimester" 
+model.list[[THIS.MODEL]]$compiled.parameters.init <- "getParms_firsttrimester" 
 
 # This needs to be a global variable so that R CMD check --as-cran can test
 # the code (the HTTK package does not use this):
@@ -273,7 +276,7 @@ compiled_parameters_init <- "getParms_firsttrimester"
 # calculate the derivative of the system of equations describing the model.
 # The order agrees with the order present in the associated .model / .C 
 # file's listing of parameters. 
-model.list[["1tri_pbtk"]]$compiled.param.names <- c(
+model.list[[THIS.MODEL]]$compiled.param.names <- c(
   "pre_pregnant_BW",
   "Clmetabolismc",
   "Clmetabolism",
@@ -368,15 +371,15 @@ model.list[["1tri_pbtk"]]$compiled.param.names <- c(
 )
 
 # This function initializes the state vector for the compiled model:
-model.list[["1tri_pbtk"]]$compiled.init.func <- "initmod_firsttrimester" 
+model.list[[THIS.MODEL]]$compiled.init.func <- "initmod_firsttrimester" 
 
 # This is the function that calculates the derivative of the model as a function
 # of time, state, and parameters:
-model.list[["1tri_pbtk"]]$derivative.func <- "derivs_firsttrimester" 
+model.list[[THIS.MODEL]]$derivative.func <- "derivs_firsttrimester" 
 
 # This is the ORDERED list of variables returned by the derivative function
 # (from Model variables: Outputs):
-model.list[["1tri_pbtk"]]$derivative.output.names <- c(
+model.list[[THIS.MODEL]]$derivative.output.names <- c(
   "Cgut",
   "Cliver",
   "Ckidney",
@@ -406,7 +409,7 @@ model.list[["1tri_pbtk"]]$derivative.output.names <- c(
 
 #Which variables to track by default (should be able to build this from
 #state vars and outputs):
-model.list[["1tri_pbtk"]]$default.monitor.vars <- c(
+model.list[[THIS.MODEL]]$default.monitor.vars <- c(
   "Cgut",
   "Cliver",
   "Ckidney",
@@ -429,19 +432,19 @@ model.list[["1tri_pbtk"]]$default.monitor.vars <- c(
    )
 
 # Allowable units assigned to dosing input:
-model.list[["1tri_pbtk"]]$allowed.units.input <- list(
+model.list[[THIS.MODEL]]$allowed.units.input <- list(
   "oral" = c('umol','mg','mg/kg'),
   "iv" = c('umol','mg','mg/kg'))
 
 # Allowable units assigned to entries in the output columns of the ode system
-model.list[["1tri_pbtk"]]$allowed.units.output <- list(
+model.list[[THIS.MODEL]]$allowed.units.output <- list(
   "oral" = c('uM','mg/L','umol','mg','uM*days',
              'mg/L*days',"unitless", "L", "L/day"),
   "iv" = c('uM','mg/L','umol','mg','uM*days',
              'mg/L*days',"unitless", "L", "L/day"))
 
 ## These parameters specify the exposure scenario simulated by the model:
-model.list[["1tri_pbtk"]]$routes <- list(
+model.list[[THIS.MODEL]]$routes <- list(
   "oral" = list(
 # We need to know which compartment gets the dose 
     "entry.compartment" = "Agutlumen",
@@ -458,7 +461,7 @@ model.list[["1tri_pbtk"]]$routes <- list(
 # States in C code, each of which is associated with a differential equation),
 # mostly calculated in amounts, though AUC (area under plasma concentration
 # curve) also appears here: 
-model.list[["1tri_pbtk"]]$state.vars <- c(
+model.list[[THIS.MODEL]]$state.vars <- c(
   "Agutlumen", # 0x00000
   "Agut",
   "Aliver",
@@ -480,7 +483,7 @@ model.list[["1tri_pbtk"]]$state.vars <- c(
 # variables of the model system including state variables and any transformed
 # outputs (for example, concentrations calculated from amounts.)
 # AUC values should also be included.
-model.list[["1tri_pbtk"]]$compartment.units <- c(
+model.list[[THIS.MODEL]]$compartment.units <- c(
   "Agutlumen" = "umol",
   "Agut" = "umol",
   "Aliver" = "umol",
@@ -525,10 +528,10 @@ model.list[["1tri_pbtk"]]$compartment.units <- c(
 
 # Compartment state of matter, needed for proper unit conversion, if all
 # compartments of the same only include one state and set it to "all":
-model.list[["1tri_pbtk"]]$compartment.state <- list(liquid="all")
+model.list[[THIS.MODEL]]$compartment.state <- list(liquid="all")
        
 #Parameters needed to make a prediction (this is used by get_cheminfo):
-model.list[["1tri_pbtk"]]$required.params <- c(
+model.list[[THIS.MODEL]]$required.params <- c(
   "Clint",
   "Funbound.plasma",
   "Pow",
@@ -538,19 +541,19 @@ model.list[["1tri_pbtk"]]$required.params <- c(
   )
 
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
-model.list[["1tri_pbtk"]]$calcpc <- TRUE
+model.list[[THIS.MODEL]]$calcpc <- TRUE
   
 # Do we need to recalculate first pass metabolism when doing Monte Carlo?
-model.list[["1tri_pbtk"]]$firstpass <- FALSE
+model.list[[THIS.MODEL]]$firstpass <- FALSE
 
 # Do we ignore the Fups where the value was below the limit of detection?
-model.list[["1tri_pbtk"]]$exclude.fup.zero <- TRUE
+model.list[[THIS.MODEL]]$exclude.fup.zero <- TRUE
 
 # These are the parameter names needed to describe steady-state dosing:
-model.list[["1tri_pbtk"]]$css.dosing.params <- c("hourly.dose")
+model.list[[THIS.MODEL]]$css.dosing.params <- c("hourly.dose")
 
 # Filter out volatile compounds with Henry's Law Constant Threshold
-model.list[["1tri_pbtk"]]$log.henry.threshold <- c(-4.5)
+model.list[[THIS.MODEL]]$log.henry.threshold <- c(-4.5)
 
 # Filter out compounds belonging to select chemical classes
-model.list[["1tri_pbtk"]]$chem.class.filt <- c("PFAS")
+model.list[[THIS.MODEL]]$chem.class.filt <- c("PFAS")

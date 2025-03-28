@@ -41,61 +41,81 @@
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
+#' 
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
+#' 
 #' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
+#' 
 #' @param times Optional time sequence in days. Dosing sequence begins at the
 #' beginning of times. Default is from 0th week of pregnancy to 13th due to 
 #' model representation. 
-#' @param parameters Chemical parameters from parameterize_fetal_pbtk function,
+#' 
+#' @param parameters Chemical parameters from parameterize_1tri_pbtk function,
 #' overrides chem.name and chem.cas.
+#' 
 #' @param days Length of the simulation.
+#' 
 #' @param species Included for compatibility with other functions, but the model
 #' will not run for non-human species (default "Human").
+#' 
 #' @param tsteps The number time steps per hour. Default of 4. 
+#' 
+#' @param dose Amount of a single, initial oral dose in mg/kg BW. 
+#' 
+#' @param dosing.matrix A matrix of either one column (or row) with a set of
+#' dosing times or with two columns (or rows) correspondingly named "dose" and
+#' "time" containing the time and amount, in mg/kg BW, of each dose.
+#' 
 #' @param daily.dose Total daily dose, mg/kg BW.
-#' @param dose Amount of a single, initial oral dose in mg/kg BW.  
+#' 
 #' @param doses.per.day Number of doses per day.
+#' 
 #' @param initial.values Vector containing the initial concentrations or
 #' amounts of the chemical in specified tissues with units corresponding to
 #' compartment.units.  Defaults are zero.
+#' 
 #' @param plots Plots all outputs if true.
+#' 
 #' @param suppress.messages Whether or not the output message is suppressed.
+#' 
 #' @param iv.dose Simulates a single i.v. dose if true.
+#' 
 #' @param input.units Input units of interest assigned to dosing, defaults to
 #' mg/kg BW
+#' 
 #' @param output.units A named vector of output units expected for the model
 #' results. Default, NULL, returns model results in units specified in the
 #' 'modelinfo' file. See table below for details.
-#' @param method Method used by integrator (deSolve).
-#' @param rtol Argument passed to integrator (deSolve).
-#' @param atol Argument passed to integrator (deSolve).
-#' @param default.to.human Substitutes missing animal values with human values
-#' if true (hepatic intrinsic clearance or fraction of unbound plasma).
-#' @param class.exclude Exclude chemical classes identified as outside of 
-#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
 #' 
 #' @param physchem.exclude Exclude chemicals on the basis of physico-chemical
 #' properties (currently only Henry's law constant) as specified by 
 #' the relevant modelinfo_[MODEL] file (default TRUE).
+#' 
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' 
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
 #' hematocrit, Funbound.plasma, and Krbc2pu.
+#' 
 #' @param recalc.clearance Recalculates the the hepatic clearance
 #' (Clmetabolism) with new million.cells.per.gliver parameter.
-#' @param dosing.matrix A matrix of either one column (or row) with a set of
-#' dosing times or with two columns (or rows) correspondingly named "dose" and
-#' "time" containing the time and amount, in mg/kg BW, of each dose.
+#' 
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE along with partition coefficients calculated with this value.
+#' 
 #' @param regression Whether or not to use the regressions in calculating
 #' partition coefficients.
+#' 
 #' @param restrictive.clearance Protein binding not taken into account (set to
 #' 1) in liver clearance if FALSE.
+#' 
 #' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
+#' 
 #' @param monitor.vars Which variables to track by default 
 #' 
 #' @param Caco2.options A list of options to use when working with Caco2 apical 
@@ -111,7 +131,12 @@
 #' with 1 (i.e. 100 percent) regardless of other settings.
 #' See \code{\link{get_fbio}} for further details.
 #' 
+#' @param atol Argument passed to integrator (deSolve).
+#' 
+#' @param rtol Argument passed to integrator (deSolve).
+#' 
 #' @param ... Additional arguments passed to the integrator.
+#' 
 #' @return A matrix of class deSolve with a column for time(in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
 #' for each time point.
