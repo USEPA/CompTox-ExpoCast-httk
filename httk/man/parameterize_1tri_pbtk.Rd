@@ -38,9 +38,11 @@ This is a subset of the httk::kapraun2019 list object with additional parameters
 \value{
 \item{pre_pregnant_BW}{Body Weight before pregnancy, kg.}
 \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
+\item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of the dose that enters the gutlumen.}
 \item{Funbound.plasma}{Fraction of plasma that is not bound.}
 \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
 assay using the method of Kilford et al. (2008)} 
+\item{hematocrit}{Percent volume of red blood cells in the blood.}
 \item{Kadipose2pu}{Ratio of concentration of chemical in adipose tissue to unbound concentration in plasma.}
 \item{Kconceptus2pu_initial}{Ratio of concentration of chemical in "conceptus" 
 compartment to unbound concentration in plasma at time 0.} 
@@ -62,6 +64,8 @@ unbound concentration in plasma.}
 \item{million.cells.per.gliver}{Millions cells per gram of liver tissue.} 
 \item{MW}{Molecular Weight, g/mol.} 
 \item{pH_Plasma_mat}{pH of the maternal plasma.}
+\item{Qgfr}{Glomerular Filtration Rate, L/h/kg BW^3/4, volume of fluid
+filtered from kidney and excreted.} 
 \item{Vgutc}{Volume of the gut per kg body weight, L/kg BW.} 
 \item{Vkidneyc}{Volume of the kidneys per kg body weight, L/kg BW.} 
 \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
@@ -70,7 +74,7 @@ unbound concentration in plasma.}
 }
 \description{
 This function initializes the parameters needed in the functions
-solve_1tri_pbtk by calling solve_pbtk and adding additional parameters.
+solve_1tri_pbtk by calling parameterize_pbtk and adding additional parameters.
 }
 \details{
 Because this model does not simulate exhalation, inhalation, and other 
@@ -95,8 +99,6 @@ model. However, PFAS chemicals can be included with the argument
 
 }
 \references{
-Add Kimberly's publication here. 
-
 Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 (2008). Hepatocellular binding of drugs: correction for unbound fraction in
 hepatocyte incubations using microsomal binding or drug lipophilicity data.

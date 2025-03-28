@@ -74,7 +74,7 @@
 #'
 #' @author Kimberly Truong, Mark Sfeir, Dustin Kapraun, John Wambaugh
 #'
-#' @references Add Kimberly's publication here. 
+#' @references 
 #' 
 #' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
 #' (2008). Hepatocellular binding of drugs: correction for unbound fraction in

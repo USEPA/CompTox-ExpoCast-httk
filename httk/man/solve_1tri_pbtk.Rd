@@ -32,6 +32,7 @@ solve_1tri_pbtk(
   restrictive.clearance = TRUE,
   minimum.Funbound.plasma = 1e-04,
   monitor.vars = NULL,
+  Caco2.options = list(),
   atol = 1e-08,
   rtol = 1e-08,
   ...
@@ -51,7 +52,7 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 beginning of times. Default is from 0th week of pregnancy to 13th due to 
 model representation.}
 
-\item{parameters}{Chemical parameters from parameterize_fetal_pbtk function,
+\item{parameters}{Chemical parameters from parameterize_1tri_pbtk function,
 overrides chem.name and chem.cas.}
 
 \item{days}{Length of the simulation.}
@@ -117,16 +118,24 @@ dataset).}
 
 \item{monitor.vars}{Which variables to track by default}
 
+\item{Caco2.options}{A list of options to use when working with Caco2 apical 
+to basolateral data \code{Caco2.Pab}, default is Caco2.options = 
+list(Caco2.Pab.default = 1.6, Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, 
+overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the 
+default value for Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE 
+uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE 
+overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
+with 1 (i.e. 100 percent) regardless of other settings.
+See \code{\link{get_fbio}} for further details.}
+
 \item{atol}{Argument passed to integrator (deSolve).}
 
 \item{rtol}{Argument passed to integrator (deSolve).}
 
 \item{...}{Additional arguments passed to the integrator.}
-
-\item{method}{Method used by integrator (deSolve).}
-
-\item{default.to.human}{Substitutes missing animal values with human values
-if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each
