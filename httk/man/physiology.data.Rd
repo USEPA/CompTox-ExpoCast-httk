@@ -5,7 +5,7 @@
 \alias{physiology.data}
 \title{Species-specific physiology parameters}
 \format{
-A data.frame containing 11 rows and 7 columns.
+A data.frame containing 18 rows and 7 columns.
 }
 \usage{
 physiology.data
@@ -13,8 +13,11 @@ physiology.data
 \description{
 This data set contains values from Davies and Morris (1993) necessary to
 paramaterize a toxicokinetic model for human, mouse, rat, dog, or rabbit.
-The temperature for each species are taken from Robertshaw et al. (2004),
-Gordon (1993), and Stammers(1926).
+The temperature for each species are taken from Reece (2015),
+Jordon (1995), and Stammers (1926). Mean residence time for the small 
+intestine is from Grandoni et al. (2019). Human small intestine radius is
+from Yu et al. (1999). Rat small intestine radius is from Griffin and
+O'Driscoll (2008).
 }
 \examples{
 # We can add a new species (for example, wolverines) by adding new information
