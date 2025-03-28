@@ -86,9 +86,6 @@
 #' results. Default, NULL, returns model results in units specified in the
 #' 'modelinfo' file. See table below for details.
 #' 
-#' @param default.to.human Substitutes missing animal values with human values
-#' if true (hepatic intrinsic clearance or fraction of unbound plasma).
-#' 
 #' @param class.exclude Exclude chemical classes identified as outside of 
 #' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
 #' 

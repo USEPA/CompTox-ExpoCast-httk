@@ -138,9 +138,6 @@ numerical precision-- defaults to 1e-8.}
 numerical precision -- defaults to 1e-8.}
 
 \item{...}{Additional arguments passed to the integrator.}
-
-\item{default.to.human}{Substitutes missing animal values with human values
-if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each
