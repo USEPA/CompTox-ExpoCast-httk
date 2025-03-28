@@ -41,7 +41,7 @@ included for predicting tissue:plasma partition coefficients and
 volume of distribution
 ([Pearce et al., 2017](https://doi.org/10.1007/s10928-017-9548-7)).
 These functions and data provide a set of tools for
-IVIVE of high-throughput screening data (for example, [Tox21](https://tox21.gov/), [ToxCast](https://www.epa.gov/chemical-research/exploring-toxcast-data)) 
+IVIVE of high-throughput screening data (for example, [Tox21](https://tox21.gov/), [ToxCast](https://www.epa.gov/comptox-tools/exploring-toxcast-data)) 
 to real-world exposures via reverse dosimetry (also known as "RTK")
 ([Wetmore et al., 2015](https://doi.org/10.1093/toxsci/kfv171)).
 
