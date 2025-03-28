@@ -81,7 +81,7 @@
 #' 
 #' # plot solution based on output 
 #' plt.out <- solve_full_pregnancy(chem.name = "genistein", 
-#'                                 dose = 1, plt = T)
+#'                                 dose = 1, plt = TRUE)
 #'
 #' @export solve_full_pregnancy
 #' @importFrom dplyr bind_rows

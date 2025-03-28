@@ -86,11 +86,12 @@ Authors@R: c(
            )
 Depends: R (>= 2.10)
 Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats,
-        graphics, utils, magrittr, purrr, methods, Rdpack, ggplot2
+        graphics, utils, magrittr, purrr, methods, Rdpack, ggplot2,
+        dplyr
 RdMacros: Rdpack
 Suggests: knitr, rmarkdown, gplots, scales, EnvStats, MASS,
         RColorBrewer, stringr, reshape, viridis, gmodels, colorspace,
-        cowplot, ggrepel, dplyr, forcats, smatr, gridExtra, readxl, ks,
+        cowplot, ggrepel, forcats, smatr, gridExtra, readxl, ks,
         testthat
 License: GPL-3
 LazyData: true
