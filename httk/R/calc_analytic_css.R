@@ -249,15 +249,15 @@ calc_analytic_css <- function(chem.name=NULL,
   if (!is.null(IVIVE)) 
   {
     out <- honda.ivive(method=IVIVE, tissue=tissue)
-    parameterize.args[["restrictive.clearance"]] <- out[["restrictive.clearance"]]
     tissue <- out[["tissue"]]
     bioactive.free.invivo <- out[["bioactive.free.invivo"]]
     concentration <- out[["concentration"]]
-
+    # warn if IVIVE overwrites parameterize.args.list:
     if ("restrictive.clearance" %in% names(parameterize.args.list))
-      if (restrictive.clearance != parameterize.args.list[["restrictive.clearance"]])
-          warning("Argument restrictive.clerance in paramaterize.args changed in calc_analytic_css")
-    parameterize.args.list[["restrictive.clearance"]] <- restrictive.clearance
+      if (parameterize.args.list[["restrictive.clearance"]]  != 
+          out[["restrictive.clearance"]])
+          warning("Argument restrictive.clerance in paramaterize.args.list changed in calc_analytic_css")
+    parameterize.args.list[["restrictive.clearance"]] <- out[["restrictive.clearance"]]
   }
   
   if ((bioactive.free.invivo == TRUE & !is.null(tissue)) | 
