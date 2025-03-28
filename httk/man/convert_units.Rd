@@ -88,13 +88,15 @@ convert_units("mg/L","uM",chem.cas="80-05-7")
 # 1 uM -> 296.148/1000 =  0.296
 convert_units("uM","mg/L",chem.name="diclofenac")
 
-convert_units("uM","ppmv",chem.name="styrene")
+# ppmv only works for gasses:
+try(convert_units("uM","ppmv",chem.name="styrene"))
+convert_units("uM","ppmv",chem.name="styrene",state="gas")
 
 # Compare with https://www3.epa.gov/ceampubl/learn2model/part-two/onsite/ia_unit_conversion.html
 # 1 ug/L Toluene -> 0.263 ppmv
-convert_units("ug/L","ppmv",chem.name="toluene")
+convert_units("ug/L","ppmv",chem.name="toluene",state="gas")
 # 1 pppmv Toluene, 0.0038 mg/L
-convert_units("ppmv","mg/L",chem.name="toluene")
+convert_units("ppmv","mg/L",chem.name="toluene",state="gas")
 
 MW_pyrene <- get_physchem_param(param='MW', chem.name='pyrene')
 conversion_factor <- convert_units(input.units='mg/L', output.units ='uM',
