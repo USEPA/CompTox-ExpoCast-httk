@@ -100,11 +100,11 @@
 #'
 #' @examples
 #' 
-#' 
+#' \donttest{
 #'  parameters <- parameterize_1tri_pbtk(dtxsid = "DTXSID7020182")
 #' 
 #'  parameters <- parameterize_1tri_pbtk(chem.name='Bisphenol-A')
-#' 
+#' } 
 #' 
 #' @export parameterize_1tri_pbtk
 parameterize_1tri_pbtk<- function(

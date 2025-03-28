@@ -121,6 +121,7 @@
 #'
 #' @examples
 #' 
+#' \donttest{
 #'  parameters1 <- parameterize_fetal_pbtk(chem.cas='80-05-7')
 #' 
 #'  parameters2 <- parameterize_fetal_pbtk(chem.name='Bisphenol-A',species='Rat')
@@ -132,6 +133,7 @@
 #' # that  Diquat dibromide monohydrate is not too volatile:
 #' parameters3 <- parameterize_fetal_pbtk(chem.cas = "6385-62-2",
 #'                                        physchem.exclude = FALSE)
+#' }
 #'  
 #' @author Mark Sfeir, Dustin Kapraun, John Wambaugh
 #' 
