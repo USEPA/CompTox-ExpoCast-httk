@@ -142,6 +142,7 @@
 #'
 #' @examples
 #' 
+#' \donttest{
 #'  parameters1 <- parameterize_1comp(chem.name='Bisphenol-A',species='Rat')
 #'  parameters2 <- parameterize_1comp(chem.cas='80-05-7',
 #'                                   restrictive.clearance=FALSE,
@@ -154,7 +155,6 @@
 #' # that  Diquat dibromide monohydrate is not too volatile:
 #' parameters3 <- parameterize_1comp(chem.cas = "6385-62-2",
 #'                                   physchem.exclude = FALSE)
-#' \donttest{
 #' out <- solve_1comp(parameters=parameters1, days=1)
 #' }
 #'
