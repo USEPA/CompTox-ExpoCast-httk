@@ -48,7 +48,7 @@ Warning messages:
 > calc_analytic_css(chem.cas="15972-60-8",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-[1] 0.07527
+[1] 0.1784
 Warning messages:
 1: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
@@ -192,16 +192,14 @@ Warning messages:
 > calc_mc_css(chem.cas="15972-60-8",model="1compartment",samples=NSAMP)
 Human volume of distribution returned in units of L/kg BW.
 Human plasma concentration returned in mg/L units for 0.95 quantile.
-    95% 
-0.07895 
+   95% 
+0.1413 
 Warning messages:
 1: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
-2: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
-  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-3: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
+2: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
   Human in vivo measured Rblood2plasma used.
-4: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+3: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
   calc_analytic_css deprecated argument daily.dose replaced with new argument dose, value given assigned to dose
 > set.seed(1234)
 > calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP)
