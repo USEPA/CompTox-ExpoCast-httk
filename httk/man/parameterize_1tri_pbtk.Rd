@@ -91,11 +91,11 @@ model. However, PFAS chemicals can be included with the argument
 }
 \examples{
 
-
+\donttest{
  parameters <- parameterize_1tri_pbtk(dtxsid = "DTXSID7020182")
 
  parameters <- parameterize_1tri_pbtk(chem.name='Bisphenol-A')
-
+} 
 
 }
 \references{
