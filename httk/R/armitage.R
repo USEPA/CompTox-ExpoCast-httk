@@ -688,10 +688,19 @@ armitage_eval <- function(chem.cas=NULL,
   
   ### Adjust DR_kcw to account for lysosomal trapping ###
   
-  #split up pKa_Accept for the bases to get the highest value ()
+  #split up pKa_Accept for the bases to get the highest value
+  
   tcdata[IOC_Type_cell=="Base" & is.character(pKa_Accept) & regexpr(",",pKa_Accept)!=-1,
-      largest_pKa_Accept := max(as.numeric(unlist(strsplit(pKa_Accept, ","))))] %>% #if pka given as ("1, 2, 3"), split on the commas and get largest value
-    .[IOC_Type_cell=="Base" & length(pKa_Accept)>2, largest_pKa_Accept := as.numeric(max(pKa_Accept))] #if pka given as vector
+         largest_pKa_Accept := suppressWarnings(max(as.numeric(unlist(strsplit(pKa_Accept, ","))))), 
+         by = seq_len(nrow(tcdata[IOC_Type_cell=="Base" & is.character(pKa_Accept) & regexpr(",",pKa_Accept)!=-1,]))] %>%  #pull out largest value
+    .[IOC_Type_cell=="Base" & is.character(pKa_Accept) & (pKa_Accept != " ") & is.na(largest_pKa_Accept), 
+      largest_pKa_Accept:=as.numeric(pKa_Accept),
+      by = seq_len(nrow(tcdata[IOC_Type_cell=="Base" & is.character(pKa_Accept) & (pKa_Accept != " ") & is.na(largest_pKa_Accept),]))]  #if only one pka accept value, set that at the largest value
+    #if there are no lines that fit the criteria, we wont use largest pka (line 708) so do not need to set to zero
+  
+  #tcdata[IOC_Type_cell=="Base" & is.character(pKa_Accept) & regexpr(",",pKa_Accept)!=-1,
+  #    largest_pKa_Accept := max(as.numeric(unlist(strsplit(pKa_Accept, ","))))] %>% #if pka given as ("1, 2, 3"), split on the commas and get largest value
+  #  .[IOC_Type_cell=="Base" & length(pKa_Accept)>2, largest_pKa_Accept := as.numeric(max(pKa_Accept))] #if pka given as vector
   
   #Account for lysosomal trapping with Lyso_pump; sorption to anionics already accounted for in Dmw
   tcdata[, Lyso_MemVF:= ((4/3*pi*(Lyso_Diam/2)^3)-(4/3*pi*((Lyso_Diam/2)-2)^3)/(4/3*pi*(Lyso_Diam/2)^3))] %>% #lysosome membrane volume fraction
@@ -794,7 +803,7 @@ armitage_eval <- function(chem.cas=NULL,
     .[,eta_free := cwat_s/nomconc] %>%  # Effective availability ratio
     .[,cfree.invitro := cwat_s] # Free in vitro concentration in micromolar
 
-  print("rearranged order of operations 2/12/25, added lysosomal sequestration and ion trapping 3/18/25, finished tying it all together 3/24/25")
+  print("rearranged order of operations 2/12/25, added lysosomal sequestration and ion trapping 3/18/25, finished tying it all together 3/24/25, fixed largest pka issue 3/31")
   
   return(tcdata)
   #output concentrations in mol/L
