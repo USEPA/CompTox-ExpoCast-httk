@@ -1,5 +1,5 @@
 # httk 2.6.0 (2025-03-24)
-This release accompanies the submission of the new manuscript "Interpretation of thyroid-relevant bioactivity data for comparison to in vivo exposures: A prioritization approach for putative chemical inhibitors of in vitro deiodinase activity" and includes a new model describing human gestation in the first trimester (model "1tri_pbtk") which links to model "fetal_pbtk" and is accessed through new function 'solve_full_pregnancy'.
+This release accompanies the submission of the new manuscript "Interpretation of thyroid-relevant bioactivity data for comparison to in vivo exposures: A prioritization approach for putative chemical inhibitors of in vitro deiodinase activity" and includes a new model describing human gestation in the first trimester (model "1tri_pbtk") which links to model "fetal_pbtk" and is accessed through new function 'solve_full_pregnancy'. A version control glitch caused an outdated version of model "3compartmentss" to be used in the initial submission of the manuscript. These values will be updated in any revsion, and in the meantime the submitted values can be obtained using v2.6.0 model "3compartmentssold".
 
 ## Bug Fixes
 * Corrected calculation of total clearance in 'calc_total_clearance' to take into account systemic oral bioavailability: Cl_tot = f_bio / Css -- was using f_bio = 1 previously
