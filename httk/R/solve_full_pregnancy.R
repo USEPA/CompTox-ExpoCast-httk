@@ -50,6 +50,7 @@
 #' @seealso \code{\link{parameterize_fetal_pbtk}}
 #' 
 #' @examples
+#' \donttest{
 #' 
 #' # dosing schedule of 1 mg/kg BW/day for 40 weeks
 #' # return solution by hour
@@ -83,6 +84,7 @@
 #' plt.out <- solve_full_pregnancy(chem.name = "genistein", 
 #'                                 dose = 1, plt = TRUE)
 #'
+#' }
 #' @export solve_full_pregnancy
 #' @importFrom dplyr bind_rows
 
