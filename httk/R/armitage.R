@@ -510,7 +510,7 @@ armitage_eval <- function(chem.cas=NULL,
   # Check if we allowed ionized molecules to partition into various in vitro components:
   if (restrict.ion.partitioning)
   {
-    if (!all(c("pKa_Donor") %in% names(tcdata))) #SPLIT THIS PORTION INTO DONOR AND ACCEPT JUST TO TEST, CAN CHANGE BACK LATER
+    if (!all(c("pKa_Donor") %in% names(tcdata))) 
     {
       # If not, pull them:
       tcdata[, "pKa_Donor" := as.data.frame(get_physchem_param(
@@ -706,7 +706,7 @@ armitage_eval <- function(chem.cas=NULL,
     #if there are no lines that fit the criteria, we wont use largest pka (line 702) so do not need to set to zero
 
   #Account for lysosomal trapping with Lyso_pump; sorption to anionics already accounted for in Dmw
-  tcdata[, Lyso_MemVF:= ((4/3*pi*(Lyso_Diam/2)^3)-(4/3*pi*((Lyso_Diam/2)-2)^3)/(4/3*pi*(Lyso_Diam/2)^3))] %>% #lysosome membrane volume fraction
+  tcdata[, Lyso_MemVF:= (((4/3*pi*(Lyso_Diam/2)^3)-(4/3*pi*((Lyso_Diam/2)-5)^3))/(4/3*pi*(Lyso_Diam/2)^3))] %>% #lysosome membrane volume fraction
     .[IOC_Type_cell=="Neutral" | IOC_Type_cell=="Acid", Lyso_Pump:= 1] %>% #sequestration factor
     .[IOC_Type_cell=="Base", Lyso_Pump:= ((1 + 10^(largest_pKa_Accept - Lyso_pH)) / (1 + 10^(largest_pKa_Accept - this.cell_pH)))] %>% #sequestration factor
     .[, DR_kcw := (1 - Lyso_VF) * (DR_kcw_preadj) + Lyso_VF * (Lyso_MemVF * cell_DR_kmw * IOC_mult * Lyso_Pump)]
