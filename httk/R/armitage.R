@@ -570,7 +570,7 @@ armitage_eval <- function(chem.cas=NULL,
                             conc_ser_lip = this.conc_ser_lip, Vdom = this.Vdom)
   
   check.list <- c("duow","duaw", "SFkow", "SFmw", "SFbsa_acidic", "SFbsa_basic", "SFplw",
-                  "gkmw_n","gkcw_n","gkbsa_n","gkpl_n","ksalt")
+                  "gkmw_n","gkbsa_n","gkpl_n","ksalt")
   
   req.list <- c("Tsys","Tref","option.kbsa2","option.swat2",
                 "FBSf","pseudooct","memblip","nlom","P_nlom","P_dom","P_cells",
@@ -646,12 +646,20 @@ armitage_eval <- function(chem.cas=NULL,
     pH = this.cell_pH,    
     pKa_Donor = x["pKa_Donor"], 
     pKa_Accept = x["pKa_Accept"])[["fraction_neutral"]])] %>% 
+    .[, Fcharged_cell := apply(.SD,1,function(x) calc_ionization(
+      pH = this.cell_pH,    
+      pKa_Donor = x["pKa_Donor"], 
+      pKa_Accept = x["pKa_Accept"])[["fraction_charged"]])] %>% 
     .[, Fpositive_cell := apply(.SD,1,function(x) calc_ionization(
       pH = this.cell_pH,    
       pKa_Donor = x["pKa_Donor"], 
       pKa_Accept = x["pKa_Accept"])[["fraction_positive"]])] %>% 
-    .[, Fcharged_cell := 1- Fneutral_cell] %>% 
-    .[, Fnegative_cell := Fcharged_cell - Fpositive_cell]
+    .[, Fnegative_cell := apply(.SD,1,function(x) calc_ionization(
+      pH = this.cell_pH,    
+      pKa_Donor = x["pKa_Donor"], 
+      pKa_Accept = x["pKa_Accept"])[["fraction_negative"]])] 
+    #.[, Fcharged_cell := 1- Fneutral_cell] %>% 
+    #.[, Fnegative_cell := Fcharged_cell - Fpositive_cell]
   
   #characterize chemical by ionization state (for cell pH)
   tcdata[Fneutral_cell > 0.5, IOC_Type_cell := "Neutral"] %>% 
@@ -695,7 +703,7 @@ armitage_eval <- function(chem.cas=NULL,
     .[IOC_Type_cell=="Base" & is.character(pKa_Accept) & (pKa_Accept != " ") & is.na(largest_pKa_Accept), 
       largest_pKa_Accept:=as.numeric(pKa_Accept),
       by = seq_len(nrow(tcdata[IOC_Type_cell=="Base" & is.character(pKa_Accept) & (pKa_Accept != " ") & is.na(largest_pKa_Accept),]))]  #if only one pka accept value, set that at the largest value
-    #if there are no lines that fit the criteria, we wont use largest pka (line 708) so do not need to set to zero
+    #if there are no lines that fit the criteria, we wont use largest pka (line 702) so do not need to set to zero
 
   #Account for lysosomal trapping with Lyso_pump; sorption to anionics already accounted for in Dmw
   tcdata[, Lyso_MemVF:= ((4/3*pi*(Lyso_Diam/2)^3)-(4/3*pi*((Lyso_Diam/2)-2)^3)/(4/3*pi*(Lyso_Diam/2)^3))] %>% #lysosome membrane volume fraction
@@ -737,13 +745,17 @@ armitage_eval <- function(chem.cas=NULL,
     .[MP_K>Tsys, swat_solid.GSE:=10^gswat_solid.GSE] %>% #unlog
     .[MP_K>Tsys, swat_subcooled_liquid.GSE := swat_solid.GSE/F_ratio] %>% #if the chem is solid at sys temp, use F_ratio to get sub-cooled liquid water solubility limit (not needed for liquids)
     .[MP_K>Tsys, gswat_subcooled_liquid.GSE_25C := log10(swat_subcooled_liquid.GSE)] %>% # log transform gswat (at 25C)
-    .[MP_K>Tsys, gswat_subcooled_liquid.GSE := gswat_subcooled_liquid.GSE_25C-(-1*duow)*Tcor] #temp correction bc calculated for 25C
+    .[MP_K>Tsys, gswat_subcooled_liquid.GSE := gswat_subcooled_liquid.GSE_25C-(-1*duow)*Tcor] %>% #temp correction bc calculated for 25C
+    .[MP_K>Tsys, swat_subcooled_liquid.GSE := 10^gswat_subcooled_liquid.GSE] #un-log
   
   #assign gse value if the alt water solubility correction is true
-  tcdata[option.swat2==TRUE & MP_K>Tsys,swat:=gswat_solid.GSE] %>% # system temp lower than melting point (SOLID)
-    .[option.swat2==TRUE & MP_K>Tsys,swat_L:=gswat_subcooled_liquid.GSE] %>%  # #subcooled liquid water solubility for Activity calculation 
-    .[option.swat2==TRUE & MP_K<=Tsys,swat:=swat_liquid.GSE] %>% # system temp higher than melting point (LIQUID)
-    .[option.swat2==TRUE & MP_K<=Tsys,swat_L:=swat_liquid.GSE] #use regular liquid water solubility for Activity calculation 
+  tcdata[option.swat2==TRUE & MP_K>Tsys, DR_swat:=swat_solid.GSE] %>% # system temp lower than melting point (SOLID) %>% 
+    .[option.swat2==TRUE & MP_K>Tsys, swat_L:=swat_subcooled_liquid.GSE] %>%  # #subcooled liquid water solubility for Activity calculation 
+    .[option.swat2==TRUE & MP_K<=Tsys, DR_swat:=swat_liquid.GSE] %>% # system temp higher than melting point (LIQUID)
+    .[option.swat2==TRUE & MP_K<=Tsys, swat_L:=swat_liquid.GSE] #use regular liquid water solubility for Activity calculation 
+  
+  #otherwise assign swat value if the alt water solubility correction is false (default)
+  tcdata[option.swat2==FALSE, swat_L:=DR_swat/F_ratio]
     
   ### Calculate the volume (in Liters) of each compartment ###
   tcdata[,Vbm:=v_working/1e6] %>% # uL to L; the volume of bulk medium
