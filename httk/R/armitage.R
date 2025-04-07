@@ -548,9 +548,9 @@ armitage_eval <- function(chem.cas=NULL,
     .[, Fnegative := 0]
   
   #characterize chemical by ionization state
-  tcdata[Fneutral > 0.990, IOC_Type := "Neutral"] %>% 
-    .[Fneutral < 0.990 & Fpositive > Fnegative, IOC_Type := "Base"] %>% 
-    .[Fneutral < 0.990 & Fnegative > Fpositive, IOC_Type := "Acid"]
+  tcdata[Fneutral > 0.5, IOC_Type := "Neutral"] %>% 
+    .[Fneutral < 0.5 & Fpositive > Fnegative, IOC_Type := "Base"] %>% 
+    .[Fneutral < 0.5 & Fnegative > Fpositive, IOC_Type := "Acid"]
   
   manual.input.list <- list(Tsys=this.Tsys, Tref=this.Tref,
                             option.kbsa2=this.option.kbsa2, 
@@ -654,9 +654,9 @@ armitage_eval <- function(chem.cas=NULL,
     .[, Fnegative_cell := Fcharged_cell - Fpositive_cell]
   
   #characterize chemical by ionization state (for cell pH)
-  tcdata[Fneutral_cell > 0.990, IOC_Type_cell := "Neutral"] %>% 
-    .[Fneutral_cell < 0.990 & Fpositive_cell > Fnegative_cell, IOC_Type_cell := "Base"] %>% 
-    .[Fneutral_cell < 0.990 & Fnegative_cell > Fpositive_cell, IOC_Type_cell := "Acid"]
+  tcdata[Fneutral_cell > 0.5, IOC_Type_cell := "Neutral"] %>% 
+    .[Fneutral_cell < 0.5 & Fpositive_cell > Fnegative_cell, IOC_Type_cell := "Base"] %>% 
+    .[Fneutral_cell < 0.5 & Fnegative_cell > Fpositive_cell, IOC_Type_cell := "Acid"]
   
   #convert logged PCs to unlogged versions
   tcdata[,kow_n := 10^(gkow_n_temp)] %>% 
@@ -689,7 +689,6 @@ armitage_eval <- function(chem.cas=NULL,
   ### Adjust DR_kcw to account for lysosomal trapping ###
   
   #split up pKa_Accept for the bases to get the highest value
-  
   tcdata[IOC_Type_cell=="Base" & is.character(pKa_Accept) & regexpr(",",pKa_Accept)!=-1,
          largest_pKa_Accept := suppressWarnings(max(as.numeric(unlist(strsplit(pKa_Accept, ","))))), 
          by = seq_len(nrow(tcdata[IOC_Type_cell=="Base" & is.character(pKa_Accept) & regexpr(",",pKa_Accept)!=-1,]))] %>%  #pull out largest value
@@ -697,11 +696,7 @@ armitage_eval <- function(chem.cas=NULL,
       largest_pKa_Accept:=as.numeric(pKa_Accept),
       by = seq_len(nrow(tcdata[IOC_Type_cell=="Base" & is.character(pKa_Accept) & (pKa_Accept != " ") & is.na(largest_pKa_Accept),]))]  #if only one pka accept value, set that at the largest value
     #if there are no lines that fit the criteria, we wont use largest pka (line 708) so do not need to set to zero
-  
-  #tcdata[IOC_Type_cell=="Base" & is.character(pKa_Accept) & regexpr(",",pKa_Accept)!=-1,
-  #    largest_pKa_Accept := max(as.numeric(unlist(strsplit(pKa_Accept, ","))))] %>% #if pka given as ("1, 2, 3"), split on the commas and get largest value
-  #  .[IOC_Type_cell=="Base" & length(pKa_Accept)>2, largest_pKa_Accept := as.numeric(max(pKa_Accept))] #if pka given as vector
-  
+
   #Account for lysosomal trapping with Lyso_pump; sorption to anionics already accounted for in Dmw
   tcdata[, Lyso_MemVF:= ((4/3*pi*(Lyso_Diam/2)^3)-(4/3*pi*((Lyso_Diam/2)-2)^3)/(4/3*pi*(Lyso_Diam/2)^3))] %>% #lysosome membrane volume fraction
     .[IOC_Type_cell=="Neutral" | IOC_Type_cell=="Acid", Lyso_Pump:= 1] %>% #sequestration factor
@@ -803,7 +798,7 @@ armitage_eval <- function(chem.cas=NULL,
     .[,eta_free := cwat_s/nomconc] %>%  # Effective availability ratio
     .[,cfree.invitro := cwat_s] # Free in vitro concentration in micromolar
 
-  print("rearranged order of operations 2/12/25, added lysosomal sequestration and ion trapping 3/18/25, finished tying it all together 3/24/25, fixed largest pka issue 3/31")
+  print("4/7/24 Working Version")
   
   return(tcdata)
   #output concentrations in mol/L
