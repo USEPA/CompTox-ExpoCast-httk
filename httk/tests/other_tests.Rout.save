@@ -76,6 +76,9 @@ Warning messages:
   Default value of 1.6 used for Caco2 permeability.
 > 
 > calc_css(chem.name="endrin")
+Extending simulation...
+Extending simulation...
+Extending simulation...
 $avg
 [1] 681.8
 

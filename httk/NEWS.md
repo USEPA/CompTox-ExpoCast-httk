@@ -1,5 +1,5 @@
 # httk 2.6.0 (2025-03-24)
-This release accompanies the submission of the new manuscript "Interpretation of thyroid-relevant bioactivity data for comparison to in vivo exposures: A prioritization approach for putative chemical inhibitors of in vitro deiodinase activity" and includes a new model describing human gestation in the first trimester (model "1tri_pbtk") which links to model "fetal_pbtk" and is accessed through new function 'solve_full_pregnancy'.
+This release accompanies the submission of the new manuscript "Interpretation of thyroid-relevant bioactivity data for comparison to in vivo exposures: A prioritization approach for putative chemical inhibitors of in vitro deiodinase activity" and includes a new model describing human gestation in the first trimester (model "1tri_pbtk") which links to model "fetal_pbtk" and is accessed through new function 'solve_full_pregnancy'. A version control glitch caused an outdated version of model "3compartmentss" to be used in the initial submission of the manuscript. These values will be updated in any revsion, and in the meantime the submitted values can be obtained using v2.6.0 model "3compartmentssold".
 
 ## Bug Fixes
 * Corrected calculation of total clearance in 'calc_total_clearance' to take into account systemic oral bioavailability: Cl_tot = f_bio / Css -- was using f_bio = 1 previously
@@ -12,7 +12,7 @@ This release accompanies the submission of the new manuscript "Interpretation of
 * Added 'onUnload' internal function call, appears to improve stability when using multiple models with [deSolve](https://CRAN.R-project.org/package=deSolve)
 * Added class.exclude and physchem.exclude arguments to solve_[MODEL] and parameterize_[MODEL] functions
 * Expanded model documentation of solve_[MODEL] and parameterize_[MODEL] functions to explain physchem filter (models without inhalation/exhalation exclude chemicals more volatile than Acetone by default) and class filter (models not suited to per- and polyfluoroalkyl substances excluded by default. These filters can be turned of using arguments exclude.physchem = FALSE and exclude.class = FALSE, respectively.
-* Added use of Caco-2 data for estimating oral permeability to the models "fetal_pbtk", "gas_pbtk", and "sumclearances".
+* Added use of Caco-2 data for estimating oral permeability to the models "gas_pbtk", and "sumclearances".
 * Refactored multiple functions to pass arguments using ellipsis (three dots/...) and/or parameterize.args.list so that when new arguments are added to parameterize functions these other functions do not need to be modified
 
 ## New Features

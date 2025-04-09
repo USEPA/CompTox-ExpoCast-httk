@@ -15,8 +15,8 @@ A data.frame containing 9411 rows and 54 columns.
 (\url{https://comptox.epa.gov/dashboard}) \tab none \cr                  
  Formula \tab The proportions of atoms within the chemical compound  \tab none \cr                   
  All.Compound.Names \tab All names of the chemical as they occured in the
-data \tab none \cr              
- logHenry \tab The log10 Henry's law constant \tab 
+data \tab none \cr                                           
+ logHenry \tab The log10 Henry's law constant (Conc_air = 10^logH * Conc_liquid)\tab 
 log10(atmosphers*m^3/mole) \cr                 
  logHenry.Reference \tab Reference for Henry's law constant \tab \cr           
  logP \tab The log10 octanol:water partition coefficient (PC)\tab log10 unitless ratio \cr                 

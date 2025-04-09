@@ -1,7 +1,7 @@
 #' Parameterize_fetal_PBTK
 #' 
 #' This function initializes the parameters needed in the functions
-#' solve_fetal_pbtk by calling solve_pbtk and adding additional parameters.
+#' solve_fetal_pbtk by calling parameterize_pbtk and adding additional parameters.
 #' 
 #' Because this model does not simulate exhalation, inhalation, and other 
 #' processes relevant to volatile chemicals, this model is by default 
@@ -40,47 +40,60 @@
 #' @param ... Arguments passed to parameterize_pbtk.
 #'
 #' @return \item{pre_pregnant_BW}{Body Weight before pregnancy, kg.}
-#' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} \item{Fabsgut}{Fraction
-#' of the oral dose absorbed, i.e. the fraction of the dose that enters the
-#' gutlumen.} \item{Funbound.plasma}{Fraction of plasma that is not bound.}
+#' \item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
+#' \item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of the dose that enters the gutlumen.} 
+#' \item{Funbound.plasma}{Fraction of plasma that is not bound.}
 #' \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
-#' assay using the method of Kilford et al. (2008)} \item{hematocrit}{Percent
-#' volume of red blood cells in the blood.} \item{Kgut2pu}{Ratio of
-#' concentration of chemical in gut tissue to unbound concentration in plasma.}
+#' assay using the method of Kilford et al. (2008)} 
+#' \item{hematocrit}{Percent volume of red blood cells in the blood.} 
+#' \item{Kadipose2pu}{Ratio of concentration of chemical in adipose tissue to unbound concentration in plasma.}
+#' \item{Kgut2pu}{Ratio of concentration of chemical in gut tissue to unbound concentration in plasma.}
 #' \item{kgutabs}{Rate that chemical enters the gut from gutlumen, 1/h.}
 #' \item{Kkidney2pu}{Ratio of concentration of chemical in kidney tissue to
-#' unbound concentration in plasma.} \item{Kliver2pu}{Ratio of concentration of
+#' unbound concentration in plasma.} 
+#' \item{Kliver2pu}{Ratio of concentration of
 #' chemical in liver tissue to unbound concentration in plasma.}
 #' \item{Klung2pu}{Ratio of concentration of chemical in lung tissue to unbound
-#' concentration in plasma.} \item{Krbc2pu}{Ratio of concentration of chemical
+#' concentration in plasma.} 
+#' \item{Krbc2pu}{Ratio of concentration of chemical
 #' in red blood cells to unbound concentration in plasma.}
 #' \item{Krest2pu}{Ratio of concentration of chemical in rest of body tissue to
-#' unbound concentration in plasma.} \item{million.cells.per.gliver}{Millions
-#' cells per gram of liver tissue.} \item{MW}{Molecular Weight, g/mol.}
-#' \item{Qgfrc}{Glomerular Filtration Rate, L/h/kg BW^3/4, volume of fluid
-#' filtered from kidney and excreted.} \item{Rblood2plasma}{The ratio of the
-#' concentration of the chemical in the blood to the concentration in the
-#' plasma from available_rblood2plasma.} \item{Vgutc}{Volume of the gut per kg body
-#' weight, L/kg BW.} \item{Vkidneyc}{Volume of the kidneys per kg body weight, L/kg
-#' BW.} \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
-#' \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
-#' \item{Vthyroidc}{Volume of the thyroid per kg body weight, L/kg BW.}
+#' unbound concentration in plasma.} 
+#' \item{Kthyroid2pu}{Ratio of concentration of chemical in thyroid tissue to unbound concentration in plasma.}
 #' \item{Kfgut2pu}{Ratio of concentration of chemical in fetal gut tissue to
-#' unbound concentration in plasma.} \item{Kfkidney2pu}{Ratio of concentration
+#' unbound concentration in plasma.} 
+#' \item{Kfkidney2pu}{Ratio of concentration
 #' of chemical in fetal kidney tissue to unbound concentration in plasma.}
 #' \item{Kfliver2pu}{Ratio of concentration of chemical in fetal liver tissue
-#' to unbound concentration in plasma.} \item{Kflung2pu}{Ratio of concentration
+#' to unbound concentration in plasma.} 
+#' \item{Kflung2pu}{Ratio of concentration
 #' of chemical in fetal lung tissue to unbound concentration in plasma.}
 #' \item{Kfrest2pu}{Ratio of concentration of chemical in fetal rest of body
-#' tissue to unbound concentration in plasma.} \item{Kfbrain2pu}{Ratio of
-#' concentration of chemical in fetal brain tissue to unbound concentration in
-#' plasma.} \item{Kthyroid2pu}{Ratio of concentration of chemical in fetal
-#' thyroid tissue to unbound concentration in plasma.}
+#' tissue to unbound concentration in plasma.} 
+#' \item{Kfbrain2pu}{Ratio of concentration of chemical in fetal brain tissue to 
+#' unbound concentration in plasma.} 
 #' \item{Kfthyroid2pu}{Ratio of concentration of chemical in fetal thyroid
-#' tissue to unbound concentration in plasma.} \item{Kplacenta2pu}{Ratio of
-#' concentration of chemical in placental tissue to unbound concentration in
-#' maternal plasma.} \item{Kfplacenta2pu}{Ratio of concentration of chemical in
+#' tissue to unbound concentration in plasma.} 
+#' \item{Kplacenta2pu}{Ratio of concentration of chemical in placental tissue to 
+#' unbound concentration in maternal plasma.} 
+#' \item{Kfplacenta2pu}{Ratio of concentration of chemical in
 #' placental tissue to unbound concentration in fetal plasma.} 
+#' \item{million.cells.per.gliver}{Millions
+#' cells per gram of liver tissue.} 
+#' \item{MW}{Molecular Weight, g/mol.}
+#' \item{pH_Plasma_mat}{pH of the maternal plasma.}
+#' \item{Qgfr}{Glomerular Filtration Rate, L/h/kg BW^3/4, volume of fluid
+#' filtered from kidney and excreted.} 
+#' \item{Rblood2plasma}{The ratio of the
+#' concentration of the chemical in the blood to the concentration in the
+#' plasma from available_rblood2plasma.} 
+#' \item{Vgutc}{Volume of the gut per kg body
+#' weight, L/kg BW.} 
+#' \item{Vkidneyc}{Volume of the kidneys per kg body weight, L/kg
+#' BW.} 
+#' \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
+#' \item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
+#' \item{Vthyroidc}{Volume of the thyroid per kg body weight, L/kg BW.}
 #'
 #' @author Robert Pearce, Mark Sfeir, John Wambaugh, and Dustin Kapraun
 #'
@@ -108,6 +121,7 @@
 #'
 #' @examples
 #' 
+#' \donttest{
 #'  parameters1 <- parameterize_fetal_pbtk(chem.cas='80-05-7')
 #' 
 #'  parameters2 <- parameterize_fetal_pbtk(chem.name='Bisphenol-A',species='Rat')
@@ -119,6 +133,7 @@
 #' # that  Diquat dibromide monohydrate is not too volatile:
 #' parameters3 <- parameterize_fetal_pbtk(chem.cas = "6385-62-2",
 #'                                        physchem.exclude = FALSE)
+#' }
 #'  
 #' @author Mark Sfeir, Dustin Kapraun, John Wambaugh
 #' 
@@ -238,13 +253,18 @@ parameterize_fetal_pbtk<- function(
 
   #Call parameterize_pbtk function to obtain useful parameters that these
   #models exactly share. 
-  pbtk_parms <- parameterize_pbtk(
-    chem.cas=chem.cas,
-    chem.name=chem.name,
-    dtxsid=dtxsid,
-    species=species,
-    suppress.messages=TRUE,
-    ...)
+  pbtk_parms <- do.call(parameterize_pbtk, 
+                        args = purrr::compact(c(list(
+                          chem.cas=chem.cas,
+                          chem.name=chem.name,
+                          dtxsid=dtxsid,
+                          species=species,
+                          suppress.messages=TRUE
+                        ),
+                        list(...)
+                        ))
+  )
+  
   pbtk_parms$BW <- parms$pre_pregnant_BW #Override parameterize_pbtk's
     #body weight listing with average prepregnant case, as scale dosing 
     #requires an entry named 'BW'
@@ -379,15 +399,18 @@ parameterize_fetal_pbtk<- function(
   parms <- c(parms, lumped_fetal_pcs) #Keep expanding our parms list
   parms$pH_Plasma_fet <- fetal.blood.pH
 
-  
-
-          
-# Set appropriate precision and standard order:
-  parms <- lapply(parms[model.list[["fetal_pbtk"]]$param.names],set_httk_precision)
+# Set appropriate precision:
+  parms <- lapply(parms, set_httk_precision)
 
 #Now for the many parameters associated with the dynamic physiologic equations
 #for pregnancy from Kapraun et al. (2019):
   if (return.kapraun2019) parms <- c(parms, httk::kapraun2019)
+
+# Set standard order with flexibility because of return.kapraun2019 argument:
+  param.name.order <- model.list[["fetal_pbtk"]]$param.names[
+                                 model.list[["fetal_pbtk"]]$param.names %in%
+                                 names(parms)]
+  parms <- parms[param.name.order]
  
  return(parms)                             
 }

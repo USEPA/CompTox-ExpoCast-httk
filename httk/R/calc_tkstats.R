@@ -139,7 +139,6 @@ calc_tkstats <-function(
                 dose=dose,
                 daily.dose=daily.dose,
                 doses.per.day=doses.per.day,
-                concentration=concentration,
                 output.units=output.units,
                 route=route,
                 forcings = forcings,
