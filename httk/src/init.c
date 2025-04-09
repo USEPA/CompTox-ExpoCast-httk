@@ -53,9 +53,16 @@ extern void initmodfetal_pbtk(void *);
 extern void derivsfetal_pbtk(int *, double *, double *, double *, double *, int *);
 extern void jacfetal_pbtk(int *, double *, double *, int *, int *, double *, int *, double *, int *);
 extern void eventfetal_pbtk(int *, double *, double *);
-extern void rootfetal_pbtk(int *, double *, double *, int *, double *, double *, int *);
-extern void initfetal_pbtk(void *);
+extern void rootfetal_pbtk (int *, double *, double *, int *, double *, double *, int *);
 extern void initforcfetal_pbtk(void *);
+
+extern void getParms_firsttrimester(double *, double *, int *);
+extern void initmod_firsttrimester(void *);
+extern void derivs_firsttrimester(int *, double *, double *, double *, double *, int *);
+extern void jac_firsttrimester(int *, double *, double *, int *, int *, double *, int *, double *, int *);
+extern void event_firsttrimester(int *, double *, double *);
+extern void root_firsttrimester(int *, double *, double *, int *, double *, double *, int *);
+extern void initforc_firsttrimester(void *);
 
 static const R_CMethodDef CEntries[] = {
     {"getParmspbtk",       (DL_FUNC) &getParmspbtk,       3},
@@ -104,7 +111,15 @@ static const R_CMethodDef CEntries[] = {
     {"jacfetal_pbtk", (DL_FUNC) &jacfetal_pbtk, 9},
     {"eventfetal_pbtk", (DL_FUNC) &eventfetal_pbtk, 3},
     {"rootfetal_pbtk", (DL_FUNC) &rootfetal_pbtk, 7},
-    {"initforcfetal_pbtk", (DL_FUNC) &initforcfetal_pbtk, 1},
+//    {"initforcfetal_pbtk", (DL_FUNC) &initforcfetal_pbtk, 1},
+
+    {"getParms_firsttrimester", (DL_FUNC) &getParms_firsttrimester, 3},
+    {"initmod_firsttrimester", (DL_FUNC) &initmod_firsttrimester, 1}, 	
+    {"derivs_firsttrimester", (DL_FUNC) &derivs_firsttrimester, 6},
+    {"jac_firsttrimester", (DL_FUNC) &jac_firsttrimester, 9},
+    {"event_firsttrimester", (DL_FUNC) &event_firsttrimester, 3},
+    {"root_firsttrimester", (DL_FUNC) &root_firsttrimester, 7},
+//    {"init_firsttrimester", (DL_FUNC) &initforcfetal_pbtk, 1},
 
     {NULL, NULL, 0}
 };
