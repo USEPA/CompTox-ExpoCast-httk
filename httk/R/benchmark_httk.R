@@ -336,7 +336,19 @@ benchmark_httk <- function(
     FitData <- subset(FitData,
                       !(Compound=="Propyzamide" &
                       Source=="Wambaugh et al. (2018), NHEERL/RTI"))
-    if (any(regexpr("parameterize.arg", formalArgs(calc_analytic_css))!=-1))
+    if (any(regexpr("parameterize.args.list", formalArgs(calc_analytic_css))!=-1))
+    {
+      FitData$Css.pred <- sapply(FitData$CAS,
+        function(x) as.numeric(try(ifelse(x %in% get_cheminfo(),
+          calc_analytic_css(
+            chem.cas=x,
+            species="Rat",
+            model="3compartmentss",
+            suppress.messages=suppress.messages,
+            output.units="mg/l",
+            parameterize.args.list=list(default.to.human=TRUE)),
+            NA))))    
+    } else if (any(regexpr("parameterize.args", formalArgs(calc_analytic_css))!=-1))
     {
       FitData$Css.pred <- sapply(FitData$CAS,
         function(x) as.numeric(try(ifelse(x %in% get_cheminfo(),

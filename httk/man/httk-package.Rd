@@ -28,6 +28,7 @@ Authors:
   \item Mark Sfeir
   \item Matt Linakis \email{MLINAKIS@ramboll.com} (\href{https://orcid.org/0000-0003-0526-2395}{ORCID})
   \item Dustin Kapraun \email{kapraun.dustin@epa.gov} (\href{https://orcid.org/0000-0001-5570-6383}{ORCID})
+  \item Kimberly Truong \email{truong.kimberly@epa.gov} (\href{https://orcid.org/0000-0003-1716-1006}{ORCID})
 }
 
 Other contributors:
