@@ -1,3 +1,5 @@
+#R CMD BATCH --vanilla httk-for-dashboard.R
+
 library(httk)
 library(parallel)
 library(data.table)
