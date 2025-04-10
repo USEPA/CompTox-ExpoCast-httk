@@ -4,6 +4,9 @@
 # Model identifier for the model.list:
 THIS.MODEL <- "pbtk_lifestage" 
 
+# Does this model work with Monte Carlo parameter sampling?
+model.list[[THIS.MODEL]]$monte.carlo <- TRUE
+
 # Analytic expression for steady-state plasma concentration to be used by
 # calc_analytic_css:
 model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_pbtk"

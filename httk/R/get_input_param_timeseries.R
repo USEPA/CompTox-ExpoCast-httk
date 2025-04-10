@@ -262,23 +262,6 @@ get_input_param_timeseries <- function(model,
       message(paste("Initial value of", param, "taken to be", initial.param))
     }
     
-    # rel.inds <- (pop.age >= start.age - bandwidth) & 
-    #   (pop.age <= ceiling(start.age+days*12/365) + 1)
-    # xi <- pop.param[rel.inds]
-    # ti <- pop.age[rel.inds]
-    # 
-    # ai <- sapply(time.vals,
-    #              function(t) sapply(
-    #                ai.upper.bound <- sapply(pop.age + 1, 
-    #                                         function(x) min(t + bandwidth, x))
-    #                ai.lower.bound <- sapply(pop.age, 
-    #                                         function(x) max(t - bandwidth, x))
-    #                3*(ai.upper.bound - ai.lower.bound)/(4*bandwidth) +
-    #                  (ai.upper.bound - ai.lower.bound)^3/(4*bandwidth)
-    #              ))
-    # 
-    # param.timeseries <- 2*bandwidth.space
-    
     for (time in time.vals) {
       rel.inds <- abs(pop.age - time) < bandwidth/2
       order.param <- order(pop.param[rel.inds])

@@ -133,9 +133,4 @@ gen_input_params <- function(model,
                                                   sep = ""))
   saveRDS(as.data.table(stored.input.params), param.data.file)
     
-  # this.func.dir <- utils::getSrcDirectory(gen_input_params)
-  # httk.dir <- substr(this.func.dir, 1, nchar(this.func.dir)-2)  
-  # saveRDS(as.data.table(stored.input.params),
-  #         paste(httk.dir, "/data/input_params_", model, "_", chem.cas, ".Rds", 
-  #               sep="" ))
 }
