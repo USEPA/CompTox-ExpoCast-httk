@@ -65,7 +65,6 @@ calc_elimination_rate <- function(chem.cas=NULL,
                                   parameters=NULL,
                                   model="3compartmentss",
                                   species="Human",
-                                  model="3compartmentss",
                                   suppress.messages=TRUE,
                                   ...
                                   )
