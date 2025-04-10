@@ -94,9 +94,8 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 
 
 
-
-
-#' Evaluate the updated Armitage model
+#' Armitage In Vitro Distribution Model
+#' 
 #' 
 #' Evaluate the Armitage model for chemical distributon \emph{in vitro}. Takes input
 #' as data table or vectors of values. Outputs a data table. Updates over
@@ -118,7 +117,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' 
 #' @param this.well_number For single value, plate format default is 384, used
 #' if is.na(tcdata)==TRUE. This value chooses default surface area settings for
-#' \code{\link{armitage_estimate_sarea}} based on the number of plates per well.
+#' \code{\link{armitage_estimate_sarea}} based on the number of wells per plate.
 #' 
 #' @param this.FBSf Fraction fetal bovine serum, must be entered by user.
 #' 
@@ -311,7 +310,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #'   logP=4.27, 
 #'   logHenry=log10(7.69e-8),
 #'   logWSol=log10(1.58e-4),
-#'   MP_K=	99.4,
+#'   MP=	99.4,
 #'   MW=268.404
 #'   )
 #'   
@@ -327,7 +326,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #'   logP="logP",
 #'   logHenry="logHenry",
 #'   logWSol="logWSol",
-#'   MP_K="MP_K"),
+#'   MP="MP"),
 #'   species="Human",
 #'   reference="CompTox Dashboard 31921")
 #' 
@@ -341,6 +340,8 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' print(out)
 #' 
 #' @export armitage_eval
+#' 
+
 armitage_eval <- function(chem.cas=NULL,
                           chem.name=NULL,
                           dtxsid = NULL,
@@ -382,43 +383,8 @@ armitage_eval <- function(chem.cas=NULL,
                           surface.area.switch = TRUE #calculate surface area (assumes yes)
 )
 {
-  # this.Tsys <- 37 
-  # this.Tref <- 298.15
-  # this.option.kbsa2 <- F
-  # this.option.swat2 <- F
-  # this.FBSf <- 0.1
-  # this.pseudooct <- 0.01 # storage lipid content of cells
-  # this.memblip <- 0.04 # membrane lipid content of cells
-  # this.nlom <- 0.20 # structural protein content of cells
-  # this.P_nlom <- 0.035 # proportionality constant to octanol structural protein
-  # this.P_dom <- 0.05 # proportionality constant to octanol dom
-  # this.P_cells <- 1 # proportionality constant to octanol storage-liqid
-  # this.csalt <- 0.15 # ionic strength of buffer, mol/L
-  # this.celldensity<-1 # kg/L g/mL  mg/uL
-  # this.cellmass <- 3 #ng/cell
-  # this.f_oc <- 1 # everything assumed to be like proteins
   
-  
-  #R CMD CHECK throws notes about "no visible binding for global variable", for
-  #each time a data.table column name is used without quotes. To appease R CMD
-  #CHECK, a variable has to be created for each of these column names and set to
-  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
-  #this is pointless and annoying.
-  casrn<-ac50<-MP_K <- MP_C <-gkow<-gkaw<-gswat<-sarea<-v_total<-v_working<-NULL
-  cell_yield<-cellwat<-pseudooct<-memblip<-nlom<-Tsys<-Tcor<-Tref<-Vm<-NULL
-  Vwell<-Vair<-Vcells<-cellmass<-celldensity<-Valb<-FBSf<-Vslip<-Vdom<-NULL
-  duow<-duaw<-F_ratio<-gs1.GSE<-s1.GSE<-gss.GSE<-ss.GSE<-gkmw<-kmw<-NULL
-  kow<-kaw<-swat<-gkpl<-kpl<-gkcw<-P_cells<-P_nlom<-kcw<-gkbsa<-kbsa<-NULL
-  option.kbsa2<-ksalt<-csalt<-swat_L<-option.swat2<-NULL
-  mtot<-cwat<-P_dom<-f_oc<-cwat_s<-csat<-activity<-cair<-calb<-cslip<-cdom<-NULL
-  ccell<-cplastic<-mwat_s<-mair<-mbsa<-mslip<-mdom<-mcells<-mplastic<-NULL
-  mprecip<-xwat_s<-xair<-xbsa<-xslip<-xdom<-xcells<-xplastic<-xprecip<-NULL
-  ccells<-eta_free <- cfree.invitro <- nomconc <- well_number <- NULL
-  logHenry <- logWSol <- NULL
-  conc_ser_alb <- conc_ser_lip <- Vbm <- NULL
-  Fneutral <- MW <- NULL
-  #End R CMD CHECK appeasement.
-  
+  #if no data table supplied
   if (all(is.na(tcdata)))
   {
     if (length(casrn.vector) > 1) chem.cas <- casrn.vector
@@ -458,100 +424,7 @@ armitage_eval <- function(chem.cas=NULL,
     stop("this.FBSf must be defined or FBSf must be a column in tcdata")
   }
   
-  #check surface area on/off
-  if(surface.area.switch){
-    if(!all(names(tcdata) %in% c("sarea", "v_total", "v_working", "cell_yield")) |
-       any(is.na(tcdata[,.(sarea, v_total, v_working, cell_yield)]))){
-      
-      if(all(names(tcdata) %in% c("sarea", "v_total", "v_working", "cell_yield")) &
-         any(is.na(tcdata[,.(sarea, v_total, v_working, cell_yield)]))){
-        missing.rows <- which(is.na(tcdata[,sarea]))
-      }else{
-        missing.rows <- 1:length(tcdata[,casrn])
-      }
-      
-      if(any(is.na(tcdata[missing.rows, well_number]))){
-        print(paste0("Either well_number or geometry must be defined for rows: ", 
-                     paste(which(tcdata[, is.na(sarea) & is.na(well_number)]),
-                           collapse = ",")))
-        stop()
-      }else{
-        temp <- armitage_estimate_sarea(tcdata[missing.rows,])
-        tcdata[missing.rows,"sarea"] <- temp[,"sarea"]
-        if(any(is.na(tcdata[missing.rows,"v_total"]))){
-          tcdata[missing.rows,"v_total"] <- temp[,"v_total"]
-        }
-        tcdata[missing.rows,"v_working"] <- temp[,"v_working"]
-        tcdata[missing.rows,"cell_yield"] <- temp[,"cell_yield"]
-      }
-      
-    }
-  }
-  
-  # Check if required phys-chem parameters are provided:
-    #split out gkow from this chunk so it will stop overwriting the IVMBM data I am comparing to 
-  if (!all(c("gkow_n") %in% names(tcdata)))
-  {
-    tcdata[, "gkow_n" := as.data.frame(get_physchem_param(
-      param = "logP", chem.cas = casrn),row.names = casrn)]
-  }
-  
-  if(!all(c("logHenry","gswat_n","MP_C","MW") %in% names(tcdata)))
-  {
-    # If not, pull them:
-    tcdata[, c("logHenry","logWSol","MP_C","MW") := 
-             as.data.frame(get_physchem_param(param = c("logHenry",
-                                                        "logWSol",
-                                                        "MP",
-                                                        "MW"), 
-                                              chem.cas = casrn))]
-  }
-  
-  # Check if we allowed ionized molecules to partition into various in vitro components:
-  if (restrict.ion.partitioning)
-  {
-    if (!all(c("pKa_Donor") %in% names(tcdata))) 
-    {
-      # If not, pull them:
-      tcdata[, "pKa_Donor" := as.data.frame(get_physchem_param(
-        param = "pKa_Donor", chem.cas = casrn), row.names = casrn)]
-    }
-    
-    if (!all(c("pKa_Accept") %in% names(tcdata)))
-    {
-      tcdata[, "pKa_Accept" := as.data.frame(get_physchem_param(
-        param = "pKa_Accept", chem.cas = casrn),row.names = casrn)]
-    }
-    
-    # Calculate the fraction neutral:
-    tcdata[, Fneutral := apply(.SD,1,function(x) calc_ionization(
-      pH = this.pH,    
-      pKa_Donor = x["pKa_Donor"], 
-      pKa_Accept = x["pKa_Accept"])[["fraction_neutral"]])]
-    
-    # Calculate the fraction charged:
-    tcdata[, Fcharged := 1 - Fneutral]
-    
-    # Calculate the fraction positive:
-    tcdata[, Fpositive := apply(.SD,1,function(x) calc_ionization(
-      pH = this.pH,    
-      pKa_Donor = x["pKa_Donor"], 
-      pKa_Accept = x["pKa_Accept"])[["fraction_positive"]])]
-    
-    # Calculate the fraction negative:
-    tcdata[, Fnegative := Fcharged - Fpositive]
-    
-    # Otherwise allow all of the chemical to partition:
-  } else tcdata[, Fneutral := 1] %>% 
-    .[, Fcharged := 0] %>% 
-    .[, Fpositive := 0] %>% 
-    .[, Fnegative := 0]
-  
-  #characterize chemical by ionization state
-  tcdata[Fneutral > 0.5, IOC_Type := "Neutral"] %>% 
-    .[Fneutral < 0.5 & Fpositive > Fnegative, IOC_Type := "Base"] %>% 
-    .[Fneutral < 0.5 & Fnegative > Fpositive, IOC_Type := "Acid"]
-  
+  #add in the optional parameters:
   manual.input.list <- list(Tsys=this.Tsys, Tref=this.Tref,
                             option.kbsa2=this.option.kbsa2, 
                             option.swat2=this.option.swat2,
@@ -577,7 +450,7 @@ armitage_eval <- function(chem.cas=NULL,
                 "Anionic_VF", "A_Prop_acid", "A_Prop_base", "Lyso_VF", 
                 "Lyso_Diam", "Lyso_pH", "csalt","celldensity",
                 "cellmass","f_oc","conc_ser_alb", "conc_ser_lip","Vdom")
-                
+  
   if(!all(check.list%in%names(tcdata))){
     tcdata[,check.list[!(check.list %in% names(tcdata))]] <- as.double(NA)}
   
@@ -585,15 +458,34 @@ armitage_eval <- function(chem.cas=NULL,
     tcdata[,req.list[!(req.list %in% names(tcdata))]] <- 
       manual.input.list[!(names(manual.input.list) %in% names(tcdata))]}
   
-  ### Basic Calculations to Populate Future Equations ###
-  # Convert from chem.physical_and_invitro.data units to Armitage model units:
-  tcdata[, "gkaw_n" := logHenry - log10(298.15*8.2057338e-5)] # log10 atm-m3/mol to (mol/m3)/(mol/m3) (unitless)
-  tcdata[, "gswat_n" := logWSol + log10(MW*1000)] # log10 mol/L to log10 mg/L
+
+  #### Parameterize Armitage: ####
+  tcdata <- parameterize_armitage(tcdata) #call parameterize_armitage(), overwrite tcdata with the updated variables
+
   
-  #Calculate the fraction of the cell made up of water (ie not storage or membrane lipid or structural protein)
-  tcdata[,cellwat := 1-(pseudooct+memblip+nlom)]
+  #### Run Armitage Code: ####
+
+  # Check if we allowed ionized molecules to partition into various in vitro
+  # components:
+  if (restrict.ion.partitioning == FALSE)
+  {
+    # if not, allow all of the chemical to partition:
+    tcdata[, Fneutral := 1] %>% 
+      .[, Fcharged := 0] %>% 
+      .[, Fpositive := 0] %>% 
+      .[, Fnegative := 0]
+  }
   
+  #characterize chemical by ionization state
+  tcdata[Fneutral > 0.5, IOC_Type := "Neutral"] %>% 
+    .[Fneutral < 0.5 & Fpositive > Fnegative, IOC_Type := "Base"] %>% 
+    .[Fneutral < 0.5 & Fnegative > Fpositive, IOC_Type := "Acid"]
+
   R <- 8.3144621 # set gas law constant - units: J/(mol*K)
+  
+  #Calculate the fraction of the cell made up of water 
+  #(ie not storage or membrane lipid or structural protein)  
+  tcdata[,cellwat := 1-(pseudooct+memblip+nlom)]
   
   ### Single Parameter Linear Free Energy Relationships (spLFERs) ###
   # Use spLFERs to calculate partition coefficients not provided by user:
@@ -604,10 +496,10 @@ armitage_eval <- function(chem.cas=NULL,
   tcdata[option.kbsa2==TRUE & is.na(gkbsa_n) & gkow_n<4.5, gkbsa_n:=(1.08*gkow_n-0.7)] %>% # option 1 for kbsa calc
     .[option.kbsa2==TRUE & is.na(gkbsa_n) & gkow_n>=4.5, gkbsa_n:=(0.37*gkow_n+2.56)] %>% 
     .[option.kbsa2==FALSE & is.na(gkbsa_n),gkbsa_n:=(0.71*gkow_n+0.42)] # option 2 for kbsa calc
-    
+  
   # kpl (plastic-water PC) spLFER from Kramer 2012
   tcdata[is.na(gkpl_n),gkpl_n:=0.97*gkow_n-6.94] 
-    
+  
   ### Calculating Ionized Partition Coefficients ###
   # set up scaling factors (used to calculate PCs for the charged portion of the chemical)
   tcdata[is.na(SFkow),SFkow:=3.5] %>% # scaling factor for octanol-water
@@ -646,20 +538,12 @@ armitage_eval <- function(chem.cas=NULL,
     pH = this.cell_pH,    
     pKa_Donor = x["pKa_Donor"], 
     pKa_Accept = x["pKa_Accept"])[["fraction_neutral"]])] %>% 
-    .[, Fcharged_cell := apply(.SD,1,function(x) calc_ionization(
-      pH = this.cell_pH,    
-      pKa_Donor = x["pKa_Donor"], 
-      pKa_Accept = x["pKa_Accept"])[["fraction_charged"]])] %>% 
     .[, Fpositive_cell := apply(.SD,1,function(x) calc_ionization(
       pH = this.cell_pH,    
       pKa_Donor = x["pKa_Donor"], 
       pKa_Accept = x["pKa_Accept"])[["fraction_positive"]])] %>% 
-    .[, Fnegative_cell := apply(.SD,1,function(x) calc_ionization(
-      pH = this.cell_pH,    
-      pKa_Donor = x["pKa_Donor"], 
-      pKa_Accept = x["pKa_Accept"])[["fraction_negative"]])] 
-    #.[, Fcharged_cell := 1- Fneutral_cell] %>% 
-    #.[, Fnegative_cell := Fcharged_cell - Fpositive_cell]
+    .[, Fcharged_cell := 1- Fneutral_cell] %>% 
+    .[, Fnegative_cell := Fcharged_cell - Fpositive_cell]
   
   #characterize chemical by ionization state (for cell pH)
   tcdata[Fneutral_cell > 0.5, IOC_Type_cell := "Neutral"] %>% 
@@ -689,9 +573,9 @@ armitage_eval <- function(chem.cas=NULL,
     .[IOC_Type_cell=="Acid", IOC_mult:= 10^(this.cell_pH-this.pH)] %>% #Acid = 10^(cell_pH - system_pH)
     .[IOC_Type_cell=="Base", IOC_mult:= 10^(this.pH-this.cell_pH)] %>% #Base = 10^(system_pH - cell_pH)
     .[,DR_kcw_preadj:= (P_cells * pseudooct * cell_DR_kow + 
-                      memblip  * cell_DR_kmw + 
-                      P_nlom * nlom * cell_DR_kow + 
-                      cellwat) * IOC_mult] %>% 
+                          memblip  * cell_DR_kmw + 
+                          P_nlom * nlom * cell_DR_kow + 
+                          cellwat) * IOC_mult] %>% 
     .[,cell_DR_kmw:=cell_DR_kmw*IOC_mult] #correct cell_kmw to account for ion trapping
   
   ### Adjust DR_kcw to account for lysosomal trapping ###
@@ -703,15 +587,15 @@ armitage_eval <- function(chem.cas=NULL,
     .[IOC_Type_cell=="Base" & is.character(pKa_Accept) & (pKa_Accept != " ") & is.na(largest_pKa_Accept), 
       largest_pKa_Accept:=as.numeric(pKa_Accept),
       by = seq_len(nrow(tcdata[IOC_Type_cell=="Base" & is.character(pKa_Accept) & (pKa_Accept != " ") & is.na(largest_pKa_Accept),]))]  #if only one pka accept value, set that at the largest value
-    #if there are no lines that fit the criteria, we wont use largest pka (line 702) so do not need to set to zero
-
+  #if there are no lines that fit the criteria, we wont use largest pka (line 702) so do not need to set to zero
+  
   #Account for lysosomal trapping with Lyso_pump; sorption to anionics already accounted for in Dmw
   tcdata[, Lyso_MemVF:= (((4/3*pi*(Lyso_Diam/2)^3)-(4/3*pi*((Lyso_Diam/2)-5)^3))/(4/3*pi*(Lyso_Diam/2)^3))] %>% #lysosome membrane volume fraction
     .[IOC_Type_cell=="Neutral" | IOC_Type_cell=="Acid", Lyso_Pump:= 1] %>% #sequestration factor
     .[IOC_Type_cell=="Base", Lyso_Pump:= ((1 + 10^(largest_pKa_Accept - Lyso_pH)) / (1 + 10^(largest_pKa_Accept - this.cell_pH)))] %>% #sequestration factor
     .[, DR_kcw := (1 - Lyso_VF) * (DR_kcw_preadj) + Lyso_VF * (Lyso_MemVF * cell_DR_kmw * IOC_mult * Lyso_Pump)]
   #	Lyso_Pump: Neutral = 1, Acid = 1, Base = (1 + 10^(pKa - Lyso_pH)) / (1 + 10^(pKa - cell_pH))
-
+  
   ### End of cell-specific distribution ratio calculation ###
   
   ### Calculate pH dependent distribution ratios (DR) ###
@@ -733,7 +617,7 @@ armitage_eval <- function(chem.cas=NULL,
   tcdata[,MP_K:= MP_C+273.15] %>% # Convert melting point to degrees K
     .[,F_ratio:=10^(0.01*(298.15-MP_K))] %>% #calculate fugacity ratio at 25C
     .[MP_K<=Tsys,F_ratio:=1] #if the system temperature is above the melting point, the chemical is liquid
-          # F_ratio is only applicable for chemicals that are solid at system temperature
+  # F_ratio is only applicable for chemicals that are solid at system temperature
   
   ### General Solubility Equations (option.swat2==TRUE) ###
   #general solubility equation - estimate water solubility limits if none provided by user (option.swat2==TRUE)
@@ -756,7 +640,7 @@ armitage_eval <- function(chem.cas=NULL,
   
   #otherwise assign swat value if the alt water solubility correction is false (default)
   tcdata[option.swat2==FALSE, swat_L:=DR_swat/F_ratio]
-    
+  
   ### Calculate the volume (in Liters) of each compartment ###
   tcdata[,Vbm:=v_working/1e6] %>% # uL to L; the volume of bulk medium
     .[,Vwell:=v_total/1e6] %>% # uL to L; the volume of well
@@ -809,11 +693,13 @@ armitage_eval <- function(chem.cas=NULL,
     .[,xprecip:=mprecip/mtot] %>% # Fraction precipitated out of solution
     .[,eta_free := cwat_s/nomconc] %>%  # Effective availability ratio
     .[,cfree.invitro := cwat_s] # Free in vitro concentration in micromolar
-
-  print("4/7/24 Working Version")
+  
+  print("4/10/24 Working Version")
   
   return(tcdata)
-  #output concentrations in mol/L
+  
+  #output concentrations in umol/L
   #output mass (mwat_s etc.) in mols
   #output mol fraction xbsa etc.
+
 }
