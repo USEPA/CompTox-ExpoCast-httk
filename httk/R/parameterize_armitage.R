@@ -42,7 +42,8 @@ parameterize_armitage <- function(tcdata = NA,                   #Data.table wit
                                 this.conc_ser_lip = 1.9, # g/L mass concentration of lipids in serum
                                 this.Vdom = 0, # L the volume of dissolved organic matter (DOM)
                                 this.option.plastic = FALSE,   #Automatically set surface area to zero
-                                restrict.ion.partitioning = FALSE # Should we restrict the partitioning concentration to neutral only?
+                                restrict.ion.partitioning = FALSE, # Should we restrict the partitioning concentration to neutral only?
+                                surface.area.switch = TRUE       #Calculate surface area of the well (assumes yes)
 )
 {
 
@@ -64,13 +65,14 @@ parameterize_armitage <- function(tcdata = NA,                   #Data.table wit
   #merge the two
   #p_Armitage_output <- merge(tcdata, p_IVD_output)
   
-
+  # Rename variables for armitage code
+  p_Armitage_output[, "gkow_n" := gkow] %>% 
+    .[,"MP_C":=MP]
+  
   
   # Convert from chem.physical_and_invitro.data units to Armitage model units:
-  p_Armitage_output[, "gkaw" := logHenry - log10(298.15*8.2057338e-5)] # log10 atm-m3/mol to (mol/m3)/(mol/m3) (unitless)
-  p_Armitage_output[, "gswat" := logWSol + log10(MW*1000)] # log10 mol/L to log10 mg/L 
-  
-  
+  p_Armitage_output[, "gkaw_n" := logHenry - log10(298.15*8.2057338e-5)] # log10 atm-m3/mol to (mol/m3)/(mol/m3) (unitless)
+  p_Armitage_output[, "gswat_n" := logWSol + log10(MW*1000)] # log10 mol/L to log10 mg/L
   
   return(p_Armitage_output)
 

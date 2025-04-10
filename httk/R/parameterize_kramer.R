@@ -12,11 +12,11 @@
 #' @param this.cell_yield For single value, optionally supply cell_yield,
 #' otherwise estimated based on well number
 #' 
-#' @param this.v_total_m3 For single value, optionally supply total volume,
-#' otherwise estimated based on well number (m^3)
+#' @param this.v_total For single value, optionally supply total volume,
+#' otherwise estimated based on well number (uL)
 #' 
-#' @param this.v_working_m3 For single value, optionally supply working volume,
-#' otherwise estimated based on well number (m^3)
+#' @param this.v_working For single value, optionally supply working volume,
+#' otherwise estimated based on well number (uL)
 #' 
 #' @return A data table composed of any input data.table \emph{tcdata}
 #' with only the following columns either created or altered by this function:  
@@ -43,8 +43,8 @@ parameterize_kramer <- function(tcdata = NA,                   #Data.table with 
                                 this.logKow = NA_real_,        #Log octanol-water PC (unitless)
                                 this.Hconst = NA_real_,        #Henry's law constant (atm*m^3/mol)
                                 this.serum = NA_real_,         #Concentration of serum in media (%)
-                                this.v_total_m3 = NA_real_,    #Total volume of well (L)
-                                this.v_working_m3 = NA_real_,  #Volume of medium/well (L)
+                                this.v_total = NA_real_,       #Total volume of well (uL)
+                                this.v_working = NA_real_,     #Volume of medium/well (uL)
                                 this.cell_yield = NA_real_,    #Number of cells/well seeded
                                 this.sarea = NA_real_,         #Surface area of plastic exposed to medium (m^2)
                                 this.temp_k = 298.15,          #Temperature (Kelvin)
@@ -66,8 +66,8 @@ parameterize_kramer <- function(tcdata = NA,                   #Data.table with 
                          well_number = this.well_number,
                          sarea = this.sarea,
                          cell_yield = this.cell_yield,
-                         v_total_m3 = this.v_total_m3,
-                         v_working_m3 = this.v_working_m3,
+                         v_total = this.v_total,
+                         v_working = this.v_working,
                          BSA = this.BSA,
                          serum = this.serum,
                          prot_conc = this.prot_conc,
@@ -83,6 +83,8 @@ parameterize_kramer <- function(tcdata = NA,                   #Data.table with 
   #merge the two
   p_Kramer_output <- merge(tcdata, p_IVD_output)
   
+  #rename serum
+  p_Kramer_output[,serum:=FBSf*100] #convert from decimal to percent
   
   #check for additional parameters we need
   manual.input.list <- list(temp_k=this.temp_k, prot_conc=this.prot_conc, BSA=this.BSA)
@@ -95,15 +97,15 @@ parameterize_kramer <- function(tcdata = NA,                   #Data.table with 
     
   #### System specific input parameters ####
   p_Kramer_output[,Hconst := 10^(logHenry)] %>%             #atm-m3/mol 
-    .[is.na(v_total_m3), v_total_m3 := conv_unit(v_total, "ul", "m3")]  %>%         #total volume of each well (m^3)
-    .[is.na(v_working_m3),v_working_m3 := conv_unit(v_working, "ul", "m3")] %>%        #filled volume of each well (m^3)
-    .[,vol_h := conv_unit((vol_t-vol_m), "l", "m3")] %>%    #volume of headspace per well (m^3)
-    .[,BSA_kg:= conv_unit(BSA, "g", "kg")] %>%              #BSA g/L to kg/L
+    .[, v_total_m3 := (v_total*1.0E-9)]  %>%         #total volume of each well (m^3) #conv_unit(v_total, "ul", "m3")
+    .[, v_working_m3 := (v_working*1.0E-9)] %>%        #filled volume of each well (m^3) #conv_unit(v_working, "ul", "m3")
+    .[, v_headspace_m3 := (v_total_m3-v_working_m3)] %>%    #volume of headspace per well (m^3)
+    .[,BSA_kg:= (BSA/1000)] %>%              #BSA g/L to kg/L #conv_unit(BSA, "g", "kg")
     .[,BSA2 := BSA_kg*(serum/100)] %>%                                            #concentration of serum constituents (kg/L)
-    .[,conc_cell_mg := (cell_yield/1000000)*prot_conc*0.23/vol_m] %>%             #concentration cell lipid (mg/L)
+    .[,conc_cell_mg := (cell_yield/1000000)*prot_conc*0.23/v_working_m3] %>%             #concentration cell lipid (mg/m3)
     #0.23 mg lipid per mg protein (estimated by Gülden and Seibert 2002)
-    .[,conc_cell := conv_unit(conc_cell_mg, "mg", "kg")] %>%                      #concentration cell lipid (kg/L)
-    .[,conc_plastic := sarea/vol_m]                                               #concentration of plastic (m^2/m^3)
+    .[,conc_cell := (conc_cell_mg/1e+6)] %>%                      #concentration cell lipid (kg/m3) #conv_unit(conc_cell_mg, "mg", "kg")
+    .[,conc_plastic := sarea/v_working_m3]                                               #concentration of plastic (m^2/m^3)
 
   #### Return data table ####
   return(p_Kramer_output)

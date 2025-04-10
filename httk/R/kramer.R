@@ -19,9 +19,9 @@
 #' 
 #' @param nomconc Nominal test concentration (uM)
 #' 
-#' @param v_total_m3 Total volume of well (L)
+#' @param v_total Total volume of well (uL)
 #' 
-#' @param v_working_m3 Volume of medium per well (L)
+#' @param v_working Volume of medium per well (uL)
 #' 
 #' @param cell_yield Number of cells/well seeded (unitless)
 #' 
@@ -60,16 +60,6 @@
 #' 
 #' @export kramer_eval
 
-##remove this later, just for testing the code :) 
-#httk wd:
-setwd("C:/Users/mscherer/httk-dev")
-
-#load packages
-library(tidyverse)
-library(devtools) 
-library(measurements) #for unit conversions
-library(magrittr)
-devtools::load_all("httk")
 
 kramer_eval <- function(chem.cas=NULL,
                         chem.name=NULL,
@@ -82,8 +72,8 @@ kramer_eval <- function(chem.cas=NULL,
                         this.gKow = NA_real_,          #Log octanol-water PC (unitless)
                         this.Hconst = NA_real_,        #Henry's law constant (atm*m^3/mol)
                         this.BSA = 44,                 #BSA concentration in serum (g/L)
-                        this.v_total_m3 = NA_real_,    #Total volume of well (L)
-                        this.v_working_m3 = NA_real_,  #Volume of medium/well (L)
+                        this.v_total = NA_real_,       #Total volume of well (uL)
+                        this.v_working = NA_real_,     #Volume of medium/well (uL)
                         this.cell_yield = NA_real_,    #Number of cells/well seeded
                         this.L_per_mil_cells = 2.772e-6, #Liters per 1 million cells
                         this.sarea = NA_real_,         #Surface area of plastic exposed to medium (m^2)
@@ -129,8 +119,8 @@ kramer_eval <- function(chem.cas=NULL,
                          well_number = this.well_number,
                          sarea = this.sarea,
                          cell_yield = this.cell_yield,
-                         v_total = this.vol_t,
-                         v_working = this.vol_m,
+                         v_total = this.v_total,
+                         v_working = this.v_working,
                          BSA = this.BSA,
                          serum = this.serum,
                          prot_conc = this.prot_conc,
@@ -153,12 +143,23 @@ kramer_eval <- function(chem.cas=NULL,
   
   #### Parameterize Kramer: ####
   tcdata <- parameterize_kramer(tcdata) #call parameterize_kramer(), overwrite tcdata with the updated variables
+  
+  #check for required variables
+  if (!(c("L_per_mil_cells") %in% names(tcdata))){
+    # If not present, auto assign:
+    tcdata[,L_per_mil_cells := this.L_per_mil_cells]}
+  
+  #if (!(c("BSA") %in% names(tcdata))){
+  #  # If not present, auto assign:
+  #  tcdata[,BSA := this.BSA]}
 
   #### Run Kramer Code: ####
   
   ##### Calculations for Partition Coefficients  ##### 
   
   R <- 8.2057338e-5  #Ideal Gas Constant (atm*m^3/mol/K)
+  
+  tcdata[, BSA2 := (BSA/1000)*(serum/100)] #calculate serum constituents
   
   tcdata[,Ka := Hconst/(R*temp_k)] %>%    #Ka (air to water PC), unitless
     .[,Ks:= 10^(0.71*gkow+0.42)] %>%    #Ks (bovine serum albumin to water PC), L/kg BSA Endo and Goss 2011
@@ -189,9 +190,9 @@ kramer_eval <- function(chem.cas=NULL,
   
   ##### Calculations for Fractions, all unitless  ##### 
   
-  tcdata[,frac_free := 1/(1+Ks*BSA2+Kp*conc_plastic+Kc*conc_cell+Ka*(vol_h/vol_m))] %>%  #Fraction free medium
-    .[,frac_headspace:= (Ka*frac_free*vol_h)/vol_m] %>%               #Fraction absorbed into headspace
-    .[,frac_plastic:= (Kp*frac_free*sarea)/vol_m] %>%                 #Fraction absorbed to plastic
+  tcdata[,frac_free := 1/(1+Ks*BSA2+Kp*conc_plastic+Kc*conc_cell+Ka*(v_headspace_m3/v_working_m3))] %>%  #Fraction free medium
+    .[,frac_headspace:= (Ka*frac_free*v_headspace_m3)/v_working_m3] %>%               #Fraction absorbed into headspace
+    .[,frac_plastic:= (Kp*frac_free*sarea)/v_working_m3] %>%                 #Fraction absorbed to plastic
     .[,frac_cells:= Kc*frac_free*conc_cell] %>%                       #Fraction absorbed to cells
     .[,frac_serum:= Ks*frac_free*BSA2] %>%                            #Fraction absorbed to serum
     .[,frac_equilib:= frac_free+frac_serum] %>%                       #Fraction in medium at equilibrium
@@ -199,19 +200,19 @@ kramer_eval <- function(chem.cas=NULL,
   
   ##### Calculations for Concentrations  ##### 
   
-  tcdata[,system_umol := nomconc*(conv_unit(vol_m, "l", "ml"))] %>% #umol in the system
+  tcdata[,system_umol := nomconc*(v_working_m3*1000)] %>% #umol in the system #(conv_unit(v_working_m3, "m3", "l"))
     .[,cell_umol := system_umol * frac_cells] %>% # umol in cell compartment
     .[,cellcompartment_L := (L_per_mil_cells*cell_yield)/1000000] %>% #volume of cells (liters)
     .[,concentration_cells := cell_umol/cellcompartment_L] %>% #concentration in cells (uM)
     .[,plastic_umol := system_umol * frac_plastic] %>% # umol in plastic compartment
     .[,concentration_plastic := plastic_umol/sarea] %>% #umol/m^2
     .[,air_umol := system_umol * frac_headspace] %>% # umol in headspace compartment
-    .[,concentration_air := air_umol/(conv_unit(vol_h, "m3", "l")) ] %>% #concentration in headspace (uM)
+    .[,concentration_air := air_umol/(v_headspace_m3 * 1000)] %>% #concentration in headspace (uM) #conv_unit(v_headspace_m3, "m3", "l")
     .[,concentration_medium:= nomconc*frac_free]      #concentration in medium (uM)
   
   # Check concentration_medium (umol/L) against water solubility (mol/L)
   tcdata[, "swat_mol" := 10^(logWSol+log10(1+(1-Fneutral/Fneutral)))] %>%  #account for the ionized portion of the chemical in the water solubility from https://docs.chemaxon.com/display/lts-europium/theory-of-aqueous-solubility-prediction.md and arnot email (and unlog it for convenience)
-    .[,swat_umol := conv_unit(swat_mol, "mol", "umol")] %>% #convert swat_mol (mol/L) to umol/L
+    .[,swat_umol := (swat_mol * 1000000)] %>% #convert swat_mol (mol/L) to umol/L #conv_unit(swat_mol, "mol", "umol")
     .[concentration_medium>swat_umol,csat:=1] %>% #medium conc greater than solubility = saturated
     .[concentration_medium<=swat_umol,csat:=0] # medium conc less than solubility = unsaturated
   #csat: Is the solution saturated (yes = 1, no = 0) 
