@@ -188,7 +188,6 @@ parameterize_IVD <- function(tcdata = NA, # optionally supply columns v_working,
     # If not present, auto assign:
     tcdata[,pH := this.pH]}
   
-  
   # Calculate the fraction neutral:
   tcdata[, Fneutral := apply(.SD,1,function(x) calc_ionization(
     pH = as.numeric(x["pH"]),
@@ -206,6 +205,10 @@ parameterize_IVD <- function(tcdata = NA, # optionally supply columns v_working,
   
   # Calculate the fraction negative:
   tcdata[, Fnegative := Fcharged - Fpositive]
+  
+  # Rename variables for both models
+  tcdata[, "gkow_n" := gkow] %>% 
+    .[,"MP_C":=MP]
   
   #### Return data table ####
   return(tcdata)
