@@ -471,6 +471,7 @@ model.list[[THIS.MODEL]]$routes <- list(
     "dosing.params" = c("initial.dose",
                         "dosing.matrix")
   )
+)
 
 # ORDERED LIST of state variables (must match Model variables: 
 # States in C code, each of which is associated with a differential equation),
