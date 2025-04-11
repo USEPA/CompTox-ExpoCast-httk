@@ -86,38 +86,7 @@ parameterize_IVD <- function(tcdata = NA, # optionally supply columns v_working,
   
 
   
-#  #### Call Surface Area Function ####
-  
-  
-  #check surface area on/off
-  if(surface.area.switch){
-    if(!all(names(tcdata) %in% c("sarea", "v_total", "v_working", "cell_yield")) |
-       any(is.na(tcdata[,.(sarea, v_total, v_working, cell_yield)]))){
-      
-      if(all(names(tcdata) %in% c("sarea", "v_total", "v_working", "cell_yield")) &
-         any(is.na(tcdata[,.(sarea, v_total, v_working, cell_yield)]))){
-        missing.rows <- which(is.na(tcdata[,sarea]))
-      }else{
-        missing.rows <- 1:length(tcdata[,casrn])
-      }
-      
-      if(any(is.na(tcdata[missing.rows, well_number]))){
-        print(paste0("Either well_number or geometry must be defined for rows: ", 
-                     paste(which(tcdata[, is.na(sarea) & is.na(well_number)]),
-                           collapse = ",")))
-        stop()
-      }else{
-        temp <- armitage_estimate_sarea(tcdata[missing.rows,])
-        tcdata[missing.rows,"sarea"] <- temp[,"sarea"]
-        if(any(is.na(tcdata[missing.rows,"v_total"]))){
-          tcdata[missing.rows,"v_total"] <- temp[,"v_total"]
-        }
-        tcdata[missing.rows,"v_working"] <- temp[,"v_working"]
-        tcdata[missing.rows,"cell_yield"] <- temp[,"cell_yield"]
-      }
-      
-    }
-  }
+
 #  
 #  if(!all(names(tcdata) %in% c("sarea", "v_total", "v_working", "cell_yield")) | #not all the things we need present
 #     any(is.na(tcdata[,.(sarea, v_total, v_working, cell_yield)]))){              #or present and NA

@@ -93,7 +93,6 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 }
 
 
-
 #' Armitage In Vitro Distribution Model
 #' 
 #' 
@@ -383,6 +382,7 @@ armitage_eval <- function(chem.cas=NULL,
                           surface.area.switch = TRUE #calculate surface area (assumes yes)
 )
 {
+  sarea<-v_total<-v_working<-cell_yield<-NULL
   
   #if no data table supplied
   if (all(is.na(tcdata)))
@@ -458,13 +458,45 @@ armitage_eval <- function(chem.cas=NULL,
     tcdata[,req.list[!(req.list %in% names(tcdata))]] <- 
       manual.input.list[!(names(manual.input.list) %in% names(tcdata))]}
   
-
+  
+  #### Call Surface Area Function ####
+  
+  #check surface area on/off
+  if(surface.area.switch){
+    if(!all(names(tcdata) %in% c("sarea", "v_total", "v_working", "cell_yield")) |
+       any(is.na(tcdata[,.(sarea, v_total, v_working, cell_yield)]))){
+      
+      if(all(names(tcdata) %in% c("sarea", "v_total", "v_working", "cell_yield")) &
+         any(is.na(tcdata[,.(sarea, v_total, v_working, cell_yield)]))){
+        missing.rows <- which(is.na(tcdata[,sarea]))
+      }else{
+        missing.rows <- 1:length(tcdata[,casrn])
+      }
+      
+      if(any(is.na(tcdata[missing.rows, well_number]))){
+        print(paste0("Either well_number or geometry must be defined for rows: ", 
+                     paste(which(tcdata[, is.na(sarea) & is.na(well_number)]),
+                           collapse = ",")))
+        stop()
+      }else{
+        temp <- armitage_estimate_sarea(tcdata[missing.rows,])
+        tcdata[missing.rows,"sarea"] <- temp[,"sarea"]
+        if(any(is.na(tcdata[missing.rows,"v_total"]))){
+          tcdata[missing.rows,"v_total"] <- temp[,"v_total"]
+        }
+        tcdata[missing.rows,"v_working"] <- temp[,"v_working"]
+        tcdata[missing.rows,"cell_yield"] <- temp[,"cell_yield"]
+      }
+      
+    }
+  }
+  
   #### Parameterize Armitage: ####
   tcdata <- parameterize_armitage(tcdata) #call parameterize_armitage(), overwrite tcdata with the updated variables
-
+  
   
   #### Run Armitage Code: ####
-
+  
   # Check if we allowed ionized molecules to partition into various in vitro
   # components:
   if (restrict.ion.partitioning == FALSE)
@@ -480,7 +512,7 @@ armitage_eval <- function(chem.cas=NULL,
   tcdata[Fneutral > 0.5, IOC_Type := "Neutral"] %>% 
     .[Fneutral < 0.5 & Fpositive > Fnegative, IOC_Type := "Base"] %>% 
     .[Fneutral < 0.5 & Fnegative > Fpositive, IOC_Type := "Acid"]
-
+  
   R <- 8.3144621 # set gas law constant - units: J/(mol*K)
   
   #Calculate the fraction of the cell made up of water 
@@ -701,5 +733,5 @@ armitage_eval <- function(chem.cas=NULL,
   #output concentrations in umol/L
   #output mass (mwat_s etc.) in mols
   #output mol fraction xbsa etc.
-
+  
 }
