@@ -46,7 +46,7 @@ parameterize_armitage <- function(tcdata = NA,                   #Data.table wit
                                 surface.area.switch = TRUE       #Calculate surface area of the well (assumes yes)
 )
 {
-
+  
   
   #### Set tcdata variables ####
   if(all(is.na(tcdata))){
@@ -61,9 +61,6 @@ parameterize_armitage <- function(tcdata = NA,                   #Data.table wit
   
   #### Call parameterize_IVD ####
   p_Armitage_output<- parameterize_IVD(tcdata)
-  
-  #merge the two
-  #p_Armitage_output <- merge(tcdata, p_IVD_output)
   
   
   # Convert from chem.physical_and_invitro.data units to Armitage model units:
