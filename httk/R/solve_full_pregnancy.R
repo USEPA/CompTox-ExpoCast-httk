@@ -36,7 +36,7 @@
 #' 
 #' @param plt plots all outputs, if TRUE
 #' 
-#' @return A dataframe with columns for time (in days), each compartment, the 
+#' @return A matrix with columns for time (in days), each compartment, the 
 #' area under the curve (for plasma vs time), and plasma, and a row for each time 
 #' point.
 #' 
@@ -289,7 +289,10 @@ solve_full_pregnancy <- function(
   }
   
   # convert full_sol to deSolve object for plotting to work
-  full_sol <- structure(as.matrix(full_sol), class = "deSolve")
+  # full_sol <- structure(as.matrix(full_sol), class = "deSolve")
+  
+  # convert to matrix for consistency with fetal, 1tri solve outputs
+  full_sol <- as.matrix(full_sol)
   
   # PLOTTING from deSolve
   if (plt == TRUE) {
@@ -313,7 +316,8 @@ solve_full_pregnancy <- function(
     
     # again always include the compartment that receives the dose for visual check 
     # of dosing
-    graphics::plot(full_sol, select=unique(c("Agutlumen",track.vars)),
+    graphics::plot(structure(full_sol, class = "deSolve"), # convert to deSolve obj for plotting to work
+                   select=unique(c("Agutlumen",track.vars)),
                    ylab = plot_units_vector, xlab = 'time (days)')
   }  
   
