@@ -1,5 +1,12 @@
 # Add a human gestational PBTK model for the 1st trimester of pregnancy 
 # to augment the fetal_pbtk model 
+#
+# Truong, Kimberly T. et al.
+# "Interpretation of thyroid-relevant bioactivity data 
+# for comparison to in vivo exposures: A prioritization 
+# approach for putative chemical inhibitors of in vitro 
+# deiodinase activity"
+# Submitted
 
 # Model identifier for the model.list:
 THIS.MODEL <- "1tri_pbtk"
@@ -72,6 +79,7 @@ model.list[[THIS.MODEL]]$param.names <- c(
   "Fabsgut",
   "Fhep.assay.correction",
   "Funbound.plasma", 
+
   "Funbound.plasma.adjustment",
   "Funbound.plasma.dist",
   "kgutabs", 
@@ -315,12 +323,12 @@ model.list[[THIS.MODEL]]$compiled.param.names <- c(
   "placenta_density",
   "amnf_density",
   "brain_density",
-  "BW_cubic_theta1",
+ "BW_cubic_theta1",
   "BW_cubic_theta2",
   "BW_cubic_theta3",
   "Wadipose_linear_theta0", # parms[40]
   "Wadipose_linear_theta1",
-  "hematocrit_quadratic_theta0",
+ "hematocrit_quadratic_theta0",
   "hematocrit_quadratic_theta1",
   "hematocrit_quadratic_theta2",
   "fBW_gompertz_theta0",
@@ -407,6 +415,7 @@ model.list[[THIS.MODEL]]$derivative.output.names <- c(
   "Vallx"
   )
 
+
 #Which variables to track by default (should be able to build this from
 #state vars and outputs):
 model.list[[THIS.MODEL]]$default.monitor.vars <- c(
@@ -451,10 +460,16 @@ model.list[[THIS.MODEL]]$routes <- list(
 # desolve events can take the values "add" to add dose C1 <- C1 + dose,
 # "replace" to change the value C1 <- dose
 # or "multiply" to change the value to C1 <- C1*dose
-    "dose.type" = "add"),
+    "dose.type" = "add",
+    "dosing.params" = c("daily.dose",
+                        "initial.dose",
+                        "doses.per.day",
+                        "dosing.matrix")),
   "iv" = list(
     "entry.compartment" = "Aven",
-    "dose.type" = "add")
+    "dose.type" = "add",
+    "dosing.params" = c("initial.dose",
+                        "dosing.matrix")
   )
 
 # ORDERED LIST of state variables (must match Model variables: 
