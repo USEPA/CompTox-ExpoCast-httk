@@ -13,9 +13,9 @@
 #' this.v_total, etc.). Chemical parameters are taken from 
 #' \code{\link{chem.physical_and_invitro.data}}.
 #' 
-#' @param gkow Log octanol to water PC (unitless)
+#' @param gkow_n Log octanol to water PC (unitless)
 #' 
-#' @param Hconst Henry's law constant (atm*m^3/mol)
+#' @param logHenry log10 Henry's law constant (atm*m^3/mol)
 #' 
 #' @param nomconc Nominal test concentration (uM)
 #' 
@@ -27,7 +27,9 @@
 #' 
 #' @param sarea Surface area of plastic exposed to medium (m^2)
 #' 
-#' @param temp_k Temperature (Kelvin)
+#' @param Tsys System temperature (Celcius)
+#' 
+#' @param Tref Reference temperature (Kelvin)
 #' 
 #' @param prot_conc Cell protein concentration (mg protein/million cells)
 #' 
@@ -59,6 +61,7 @@
 #' ...something here...
 #' 
 #' @export kramer_eval
+# 
 
 
 kramer_eval <- function(chem.cas=NULL,
@@ -71,13 +74,15 @@ kramer_eval <- function(chem.cas=NULL,
                         this.serum = NA_real_,         #Concentration of serum in media (%)
                         this.gKow = NA_real_,          #Log octanol-water PC (unitless)
                         this.Hconst = NA_real_,        #Henry's law constant (atm*m^3/mol)
+                        this.csalt = 0.15,             # Ionic strength of buffer, mol/L
                         this.BSA = 44,                 #BSA concentration in serum (g/L)
                         this.v_total = NA_real_,       #Total volume of well (uL)
                         this.v_working = NA_real_,     #Volume of medium/well (uL)
                         this.cell_yield = NA_real_,    #Number of cells/well seeded
                         this.L_per_mil_cells = 2.772e-6, #Liters per 1 million cells
                         this.sarea = NA_real_,         #Surface area of plastic exposed to medium (m^2)
-                        this.pH = 7,                   #pH of medium
+                        this.Tsys = 37,                #System temperature
+                        this.Tref = 298.15,            #Reference temperature (equivalent to 25C)
                         this.temp_k = 298.15,          #Temperature (Kelvin)
                         this.prot_conc = 0.21,         #Cell protein concentration (mg protein/million cells)
                         this.option.bottom = TRUE,     #Include the bottom of the well in surface area calculation
@@ -85,15 +90,15 @@ kramer_eval <- function(chem.cas=NULL,
                         restrict.ion.partitioning = FALSE, #only allow the neutral fraction to partition
                         this.option.piechart = FALSE,   #Do not return pie chart
                         surface.area.switch = TRUE      #Calculate surface area of the well (assumes yes)
-    )
+)
 
-  
-  
+
+
 {
   well_number<-nomconc<-serum<-BSA<-v_total<-v_working<-cell_yield<-NULL
   prot_conc<-temp_k<-sarea<-casrn<-NULL
-  Fneutral <- ksalt<- csalt<- NULL
-
+  Fneutral <<- csalt<- NULL
+  
   if (all(is.na(tcdata)))
   {
     if (length(casrn.vector) > 1) chem.cas <- casrn.vector
@@ -128,8 +133,8 @@ kramer_eval <- function(chem.cas=NULL,
                          L_per_mil_cells = this.L_per_mil_cells,
                          option.piechart = this.option.piechart)
   }
-
-
+  
+  
   #### Check user input for bare minimum the code needs to run #### 
   # Check CAS and nomconc supplied
   #if(any(is.na(tcdata[,.(casrn, nomconc)]))){
@@ -144,48 +149,101 @@ kramer_eval <- function(chem.cas=NULL,
   #### Parameterize Kramer: ####
   tcdata <- parameterize_kramer(tcdata) #call parameterize_kramer(), overwrite tcdata with the updated variables
   
-  #check for required variables
-  if (!(c("L_per_mil_cells") %in% names(tcdata))){
-    # If not present, auto assign:
-    tcdata[,L_per_mil_cells := this.L_per_mil_cells]}
-  
-  #if (!(c("BSA") %in% names(tcdata))){
-  #  # If not present, auto assign:
-  #  tcdata[,BSA := this.BSA]}
 
+  #add in the optional parameters:
+  manual.input.list <- list(Tsys=this.Tsys, Tref=this.Tref, BSA=this.BSA,
+                            L_per_mil_cells=this.L_per_mil_cells,
+                            csalt=this.csalt, prot_conc = this.prot_conc)
+
+  check.list <- c("ksalt")
+
+  req.list <- c("Tsys","Tref", "BSA", "L_per_mil_cells", "csalt", "prot_conc")
+
+  if(!all(check.list%in%names(tcdata))){
+    tcdata[,check.list[!(check.list %in% names(tcdata))]] <- as.double(NA)}
+
+  if(!all(req.list%in%names(tcdata))){
+    tcdata[,req.list[!(req.list %in% names(tcdata))]] <-
+      manual.input.list[!(names(manual.input.list) %in% names(tcdata))]}
+  
+  #Check if we allowed ionized molecules to partition into various in vitro
+  # components:
+  if (restrict.ion.partitioning == FALSE){
+    # if not, allow all of the chemical to partition:
+    tcdata[, Fneutral := 1] %>%
+      .[, Fcharged := 0] %>%
+      .[, Fpositive := 0] %>%
+      .[, Fnegative := 0]
+    }
+  
   #### Run Kramer Code: ####
   
   ##### Calculations for Partition Coefficients  ##### 
   
-  R <- 8.2057338e-5  #Ideal Gas Constant (atm*m^3/mol/K)
+  R <- 8.3144621  #Ideal Gas Constant units: J/(mol*K)
   
   tcdata[, BSA2 := (BSA/1000)*(serum/100)] #calculate serum constituents
   
-  tcdata[,Ka := Hconst/(R*temp_k)] %>%    #Ka (air to water PC), unitless
-    .[,Ks:= 10^(0.71*gkow+0.42)] %>%    #Ks (bovine serum albumin to water PC), L/kg BSA Endo and Goss 2011
-    .[,Kp:=10^(0.97*gkow-6.94)] %>%     #Kp (plastic to water PC), m
-    .[,Kc:=10^(1.25*gkow-3.7)]          #Kc (lipid to water PC), m3/kg cell lipid
+  tcdata[, gkaw_n := logHenry - log10(Tref*R)] %>% #Ka (air to water PC), unitless
+    .[,gkbsa_n:= (0.71*gkow+0.42)] %>%    #Ks (bovine serum albumin to water PC), L/kg BSA Endo and Goss 2011
+    .[,gkpl_n:=(0.97*gkow-6.94)] %>%     #Kp (plastic to water PC), m
+    .[,gkcw_n:=(1.25*gkow-3.7)]          #Kc (lipid to water PC), m3/kg cell lipid
+  
+  ### Calculating Ionized Partition Coefficients ###
+  # set up scaling factors (used to calculate PCs for the charged portion of the chemical)
+  tcdata[,SFmw:=1] %>% # scaling factor for membrane-water (and cell-water)
+    .[,SFbsa_acidic:=0] %>% # scaling factor for bsa-water (for acidic chemicals)
+    .[,SFbsa_basic:=1] %>% # scaling factor for bsa-water (for basic chemicals)
+    .[,SFplw:=3.5] # scaling factor for plastic-water
+
+    # calculate partitioning properties of the charged form of the chemical
+  tcdata[,gkcw_i:=(gkcw_n-SFmw)] %>% # gkcw_ionized - uses kmw SF
+    .[,gkbsa_i_acidic:=(gkbsa_n-SFbsa_acidic)] %>% # gkbsa_ionized_acidic
+    .[,gkbsa_i_basic:=(gkbsa_n-SFbsa_basic)] %>% # gkbsa_ionized_basic
+    .[,gkpl_i:=(gkpl_n-SFplw)] # gkpl_ionized
+  
+  ### Calculate Setschenow salting-out constant (Ksalt) if not provided ###
+  tcdata[is.na(ksalt),ksalt:=0.04*gkow_n+0.114] #Ni, N.; Yalkowsky, S. H., Prediction of Setschenow constants 2003
+
+  ### System Temperature Correction ###
+  #gkcw_n, gkcw_i, gkbsa_n, gkbsa_i, reference temperature is already 37 C (spLFER equations derived using logKow @ 25C)
+  #need to correct gkaw_n (reference temperature is 25 C)
+
+  #Adjust gKaw_n to match system temperature
+  tcdata[,Tsys:=Tsys+273.15] %>%  #convert from Celcius to Kelvin
+    .[,Tcor:=((1/Tsys)-(1/Tref))/(2.303*R)] %>% # calculate temperature correction using van't Hoff approach (2.303 is from ln(10))
+    .[,duaw:=60000] %>% # internal energy of phase change for air-water (J/mol)
+    .[,gkaw_n_temp := gkaw_n-duaw*Tcor] #correct gkaw for temp
+
+    #convert logged PCs to unlogged versions
+  tcdata[,kcw_n := 10^(gkcw_n)] %>%
+    .[,kcw_i := 10^(gkcw_i)] %>%
+    .[,kbsa_n := 10^(gkbsa_n)] %>%
+    .[,kbsa_i_acidic := 10^(gkbsa_i_acidic)] %>%
+    .[,kbsa_i_basic := 10^(gkbsa_i_basic)] %>%
+    .[,kaw_n := 10^(gkaw_n_temp)] %>%
+    .[,kpl_n := 10^(gkpl_n)] %>%
+    .[,kpl_i := 10^(gkpl_i)]
+  
+   ### Calculate pH dependent distribution ratios (DR) ###
+  tcdata[Fneutral == 0, Fneutral := 0.00001] %>% #if Fneutral=0, reassign bc we use it to divide
+    .[,DR_kcw:= (Fneutral*kcw_n) +(Fcharged*kcw_i)] %>% #DR kcw
+    .[,DR_kbsa:= (Fneutral*kbsa_n)+(Fpositive*kbsa_i_basic)+(Fnegative*kbsa_i_acidic)] %>% # DR kbsa (depends on acid/base)
+    .[,DR_kaw:= (Fneutral*kaw_n)] %>% # no dependence on ionization: charged form assumed to have negligible vapor pressure
+    .[,DR_kpl:= (Fneutral*kpl_n)+(Fcharged*kpl_i)]# DR kpl
   
 
-  # Check if we allowed ionized molecules to partition into various in vitro components:
+  ### Adjust DRs to account for salting out ###
+  tcdata[,DR_kcw:= DR_kcw / 10^(-1*ksalt*csalt)] %>%
+    .[,DR_kbsa:= DR_kbsa / 10^(-1*ksalt*csalt)] %>%
+    .[,DR_kaw:= DR_kaw / 10^(-1*ksalt*csalt)] %>%
+    .[,DR_kpl:= DR_kpl / 10^(-1*ksalt*csalt)]
   
-  # Check if we allowed ionized molecules to partition into various in vitro
-  # components:
-  if (restrict.ion.partitioning == FALSE)
-  {
-    # if not, allow all of the chemical to partition:
-    tcdata[, Fneutral := 1]
-  }
-  
-  #reassign values that are corrected for only the neutral fraction partitioning
-  #value of alpha defines whether we allow the ionized portion to partition or only the fneutral 
-  # (alpha = 1: both charged and neutral partition, alpha=0.0001: only neutral partitions) - MNS
-  tcdata[,ksalt:=0.04*gkow+0.114] %>%  # Setschenow Constant, L/mol
-    .[,csalt := 0.15 ] %>%  # ionic strength of buffer, mol/L
-    .[,Ka := Fneutral*Ka/(10^(-1*ksalt*csalt))] %>% #correct for partitioning  - equivalent to kaw in Armitage
-    .[,Ks := Fneutral*Ks/(10^(-1*ksalt*csalt))] %>% #correct for partitioning  - equivalent to kbsa in Armitage
-    .[,Kc := Fneutral*Kc/(10^(-1*ksalt*csalt))] #correct for partitioning - equivalent to kcw in Armitage
-  #kpl not adjusted in armitage (thus no kp here)
+  #convert DR variable names to og kramer names
+  tcdata[,Ka := (DR_kaw)] %>%
+    .[,Ks := (DR_kbsa)] %>%
+    .[,Kp := (DR_kpl)] %>%
+    .[,Kc := (DR_kcw)] 
 
   
   ##### Calculations for Fractions, all unitless  ##### 
@@ -222,14 +280,14 @@ kramer_eval <- function(chem.cas=NULL,
   
   #if option.piechart=TRUE...
   #if(tcdata[option.piechart==TRUE]){
-
-    
+  
+  
   #  for (chemical in tcdata$compound_name){
-      
+  
   #    temp_for_piechart<-data.frame(group = c("Free in medium", "Bound in plasma", "Associated with cells", "In headspace", "Soaked to well plastic"), values= t(as.data.frame(tcdata[compound_name==chemical,c("frac_free", "frac_serum", "frac_cells", "frac_headspace", "frac_plastic")])))                                                         #collect data
   #    temp_for_piechart$values<-round(temp_for_piechart$values, digits = 4) #round values
   #    temp_for_piechart$label<-scales::percent(temp_for_piechart$values) #create labels for percentages
-      
+  
   #    piechartPlot <- plot.piechart(temp_for_piechart) #call pie chart function
   #    }
   #    
