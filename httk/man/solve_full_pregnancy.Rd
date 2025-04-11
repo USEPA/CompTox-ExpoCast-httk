@@ -47,7 +47,7 @@ files for fetal_pbtk and 1tri_pbtk.}
 \item{plt}{plots all outputs, if TRUE}
 }
 \value{
-A dataframe with columns for time (in days), each compartment, the 
+A matrix with columns for time (in days), each compartment, the 
 area under the curve (for plasma vs time), and plasma, and a row for each time 
 point.
 }
