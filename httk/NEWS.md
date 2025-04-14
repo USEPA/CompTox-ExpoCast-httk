@@ -7,6 +7,7 @@ This release accompanies the submission of the new manuscript "Interpretation of
 * Defined function prototypes for forcings for several models in init.c to increase stability
 * Added flexible tolerance to 'calc_css' to increase stability
 * Arguments restrictive.clearance and/or species were being ignored by several functions -- 'calc_tkstats', 'solve_model', 'calc_total_clearance', 'calc_analytic_css', 'calc_hep_bioavailability', 'calc_hep_clearance;' -- this has been corrected
+* Species argument was being igored in oral bioavailability functions
 
 ## Enhancements
 * Added 'onUnload' internal function call, appears to improve stability when using multiple models with [deSolve](https://CRAN.R-project.org/package=deSolve)
