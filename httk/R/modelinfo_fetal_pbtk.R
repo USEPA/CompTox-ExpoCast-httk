@@ -11,7 +11,7 @@ THIS.MODEL <- "fetal_pbtk"
 model.list[[THIS.MODEL]]$monte.carlo <- FALSE
 
 #Analytic expression for steady-state plasma concentration.
-#model.list[["fetal_pbtk"]]$analytic.css.func <- "calc_analytic_css_fetal_pbtk" <function not yet developed
+#model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_fetal_pbtk" <function not yet developed
 
 # When calculating steady-state, which compartment do we test? 
 # ("C" is preprended):

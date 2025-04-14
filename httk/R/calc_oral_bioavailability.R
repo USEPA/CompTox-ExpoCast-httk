@@ -122,14 +122,15 @@ calc_fbio.oral <- function(parameters = NULL,
     # a list of parameters we will never reach this bit of this function
     # recursively:
     param.args<-purrr::compact(c(list(chem.cas=chem.cas,
-                                                     chem.name=chem.name,
-                                                     dtxsid=dtxsid,
-                                                     suppress.messages =
-                                                       suppress.messages
-                                                     ),
-                                                list(...)
-                                                )
-                                              )
+                                      chem.name=chem.name,
+                                      dtxsid=dtxsid,
+                                      species=species,
+                                      suppress.messages =
+                                      suppress.messages
+                                      ),
+                                 list(...)
+                                 )
+                                )
     param.args <- param.args[unique(names(param.args))]
     parameters <- do.call(parameterize_steadystate, 
                           args = param.args
@@ -391,6 +392,7 @@ calc_peff <- function(parameters = NULL,
                                   chem.cas=chem.cas,
                                   chem.name=chem.name,
                                   dtxsid=dtxsid,
+                                  species=species,
                                   suppress.messages=suppress.messages),
                                   parameterize.args.list)))
     }
@@ -459,6 +461,7 @@ calc_kgutabs<- function(parameters = NULL,
                                 chem.cas=chem.cas,
                                 chem.name=chem.name,
                                 dtxsid=dtxsid,
+                                species=species,
                                 suppress.messages=suppress.messages),
                                 parameterize.args.list)))
   }
@@ -546,6 +549,7 @@ calc_fgut.oral <- function(parameters = NULL,
                                 chem.cas=chem.cas,
                                 chem.name=chem.name,
                                 dtxsid=dtxsid,
+                                species=species,
                                 suppress.messages=suppress.messages),
                                 parameterize.args.list)))
   }
