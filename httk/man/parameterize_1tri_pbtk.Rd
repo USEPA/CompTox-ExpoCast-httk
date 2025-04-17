@@ -100,8 +100,11 @@ model. However, PFAS chemicals can be included with the argument
 }
 \references{
 \insertRef{kilford2008hepatocellular}{httk}
+
 \insertRef{kapraun2019empirical}{httk}
+
 \insertRef{kapraun2022fetalmodel}{httk} 
+
 \insertRef{truong2025fullpregnancy}{httk}
 }
 \seealso{
