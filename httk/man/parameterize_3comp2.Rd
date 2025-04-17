@@ -147,6 +147,8 @@ model. However, PFAS chemicals can be included with the argument
 \insertRef{pearce2017evaluation}{httk}
 
 \insertRef{kilford2008hepatocellular}{httk}
+
+\insertRef{wambaugh2025simple}{httk}
 }
 \seealso{
 \code{\link{solve_3comp}}

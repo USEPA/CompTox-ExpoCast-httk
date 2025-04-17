@@ -143,6 +143,9 @@
 #' 
 #' @author Kimberly Truong, John Wambaugh, Mark Sfeir, Dustin Kapraun
 #'
+#' @references 
+#' \insertRef{truong2025fullpregnancy}{httk}
+#'
 #' @keywords Solve
 #'
 #' @seealso \code{\link{solve_model}}
@@ -198,42 +201,45 @@ and end at day 91.')
   if (species!="human") stop("The time-varying parameters for this model only 
 describe human gestation.")
   
-  out <- solve_model(
-    chem.name = chem.name,
-    chem.cas = chem.cas,
-    dtxsid=dtxsid,
-    times=times,
-    parameters=parameters,
-    model="1tri_pbtk",
-    route=ifelse(iv.dose,"iv","oral"),
-    dosing=list(
-      initial.dose=dose,
-      dosing.matrix=dosing.matrix,
-      daily.dose=daily.dose,
-      doses.per.day=doses.per.day
-    ),
-    days=days,
-    tsteps = tsteps, # tsteps is number of steps per hour
-    initial.values=initial.values,
-    plots=plots,
-    monitor.vars=monitor.vars,
-    suppress.messages=suppress.messages,
-    species='Human', #other species not (yet) supported by solve_1tri_pbtk
-    input.units=input.units,
-    output.units=output.units,
-    recalc.blood2plasma=recalc.blood2plasma,
-    recalc.clearance=recalc.clearance,
-    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-    minimum.Funbound.plasma=minimum.Funbound.plasma,
-    parameterize.args.list=list(
-                  restrictive.clearance = restrictive.clearance,
-                  regression = regression,
-                  Caco2.options = Caco2.options,
-                  physchem.exclude = physchem.exclude,
-                  class.exclude = class.exclude), 
-    atol=atol, 
-    rtol=rtol,
-    ...)
+  out <- do.call(solve_model, 
+                 args=purrr::compact(c(
+                   list(
+                    chem.name = chem.name,
+                    chem.cas = chem.cas,
+                    dtxsid=dtxsid,
+                    times=times,
+                    parameters=parameters,
+                    model="1tri_pbtk",
+                    route=ifelse(iv.dose,"iv","oral"),
+                    dosing=list(
+                      initial.dose=dose,
+                      dosing.matrix=dosing.matrix,
+                      daily.dose=daily.dose,
+                      doses.per.day=doses.per.day
+                    ),
+                    days=days,
+                    tsteps = tsteps, # tsteps is number of steps per hour
+                    initial.values=initial.values,
+                    plots=plots,
+                    monitor.vars=monitor.vars,
+                    suppress.messages=suppress.messages,
+                    species='Human', #other species not (yet) supported by solve_1tri_pbtk
+                    input.units=input.units,
+                    output.units=output.units,
+                    recalc.blood2plasma=recalc.blood2plasma,
+                    recalc.clearance=recalc.clearance,
+                    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                    minimum.Funbound.plasma=minimum.Funbound.plasma,
+                    parameterize.args.list=list(
+                                  restrictive.clearance = restrictive.clearance,
+                                  regression = regression,
+                                  Caco2.options = Caco2.options,
+                                  physchem.exclude = physchem.exclude,
+                                  class.exclude = class.exclude), 
+                    atol=atol, 
+                    rtol=rtol),
+                    list(...)
+                    )))
   
   return(out) 
 }
