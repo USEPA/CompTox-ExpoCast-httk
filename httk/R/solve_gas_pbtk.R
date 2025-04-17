@@ -224,8 +224,6 @@
 #'
 #' @references 
 #' \insertRef{linakis2020development}{httk}
-#' 
-#' \insertRef{pearce2017httk}{httk}
 #'
 #' @keywords Solve
 #'

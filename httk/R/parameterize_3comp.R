@@ -122,7 +122,9 @@
 #'
 #' \insertRef{kilford2008hepatocellular}{httk}
 #'
-#' @keywords Parameter 3compartment2
+#' \insertRef{wambaugh2025simple}{httk}
+#'
+#' @keywords Parameter 3compartment
 #'
 #' @seealso \code{\link{solve_3comp}}
 #'

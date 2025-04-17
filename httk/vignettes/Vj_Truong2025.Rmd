@@ -9,6 +9,15 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+from "Interpretation of thyroid-relevant bioactivity data for comparison to 
+in vivo exposures: A prioritization approach for putative chemical inhibitors 
+of in vitro deiodinase activity"
+
+Kimberly T Truong, John F Wambaugh, Dustin F Kapraun, Sarah E Davidson-Fritz,
+Stephanie Eytcheson, Richard S Judson, and Katie Paul Friedman
+
+Toxicological Sciences, 2025
+
 ## Overview
 
 In this vignette, we show how to use the full human gestational model from **httk** to perform *in vitro-in vivo* extrapolation (IVIVE) on a relevant *in vitro* bioactivity dataset. Briefly, this demonstrates how to take thyroid-related *in vitro* bioactivity data from ToxCast, perform IVIVE using the 3-compartment steady state model and the full human pregnancy model within **httk**, and compare it with the latest exposure estimates from ExpoCast as a method of prioritization. This is detailed in Truong et al. 2025 (in review). 
@@ -34,7 +43,7 @@ Several chunks of code in this vignette have "eval = execute.vignette" and we se
 building the package. You can still reproduce the end figures knitting the .Rmd file, since all the necessary and minimal data objects have been stored in *httk*. If you want to rerun the whole workflow on your own, you must rerun all code from top to bottom, either by changing execute.vignette to TRUE or clicking on the "green arrow" in RStudio. 
 
 ```{r}
-execute.vignette <- FALSE 
+execute.vignette <- TRUE
 ```
 
 ## Data Import 
@@ -59,7 +68,6 @@ library(latex2exp)
 library(viridis)
 library(scales)
 library(ggstar)
-
 ```
 
 # IVIVE using 3-compartment steady state model
@@ -572,7 +580,7 @@ fig10 <- plot_grid(preg.vs.nonpreg.pp, seem3pp,
 ```
 
 # Code used to create data distributed with vignette
-```{r create_distributable_data, eval = execute.vignette}
+```{r create_distributable_data, eval = FALSE}
 thyroid.ac50s <- ac50.dt
 truong25.seem3 <- SEEM
 
