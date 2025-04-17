@@ -41,6 +41,10 @@
 #' point.
 #' 
 #' @author Kimberly Truong
+#'
+#' @references 
+#' \insertRef{kapraun2022fetalmodel}{httk}
+#' \insertRef{truong2025fullpregnancy}{httk}
 #' 
 #' @keywords Solve
 #' 

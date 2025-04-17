@@ -190,6 +190,9 @@ doses.per.day = 3)
 
 
 }
+\references{
+\insertRef{truong2025fullpregnancy}{httk}
+}
 \seealso{
 \code{\link{solve_model}}
 

@@ -99,10 +99,10 @@ model. However, PFAS chemicals can be included with the argument
 
 }
 \references{
-Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
-(2008). Hepatocellular binding of drugs: correction for unbound fraction in
-hepatocyte incubations using microsomal binding or drug lipophilicity data.
-Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+\insertRef{kilford2008hepatocellular}{httk}
+\insertRef{kapraun2019empirical}{httk}
+\insertRef{kapraun2022fetalmodel}{httk} 
+\insertRef{truong2025fullpregnancy}{httk}
 }
 \seealso{
 \code{\link{solve_1tri_pbtk}}
