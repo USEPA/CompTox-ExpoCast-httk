@@ -1974,6 +1974,7 @@
 #' @docType data
 #' @format data.table and data.frame
 #' @keywords data
+"thyroid.ac50s"
 
 #' SEEM3 Example Data for Truong et al. 2025 
 #' 
@@ -1989,4 +1990,4 @@
 #' @keywords data
 #' @references
 #' \insertRef{Ring2017SEEM}{httk}
-
+"truong25.seem3"
