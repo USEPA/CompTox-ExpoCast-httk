@@ -123,6 +123,8 @@
 #'
 #' \insertRef{kilford2008hepatocellular}{httk}
 #'
+#' \insertRef{wambaugh2025simple}{httk}
+#'
 #' @seealso \code{\link{calc_analytic_css_3compss}}
 #'
 #' @seealso \code{\link{apply_clint_adjustment}}

@@ -215,7 +215,7 @@ calc_fbio.oral <- function(parameters = NULL,
       fhep.oral <- parameters[,"hepatic.bioavailability",with=TRUE]
     }
   } else {
-    # otherwise assume parameeters is a list:
+    # otherwise assume parameters is a list:
     if (!is.null(parameters[['hepatic.bioavailability']]))
     {
       fhep.oral <- parameters[['hepatic.bioavailability']]
@@ -227,6 +227,7 @@ calc_fbio.oral <- function(parameters = NULL,
                                   chem.cas = chem.cas,
                                   chem.name = chem.name,
                                   dtxsid = dtxsid,
+                                  species=species,
                                   suppress.messages = suppress.messages),
                              list(...)[c("species",
                                                  "restrictive.clearance")]

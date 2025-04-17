@@ -169,6 +169,8 @@ parameters3 <- parameterize_steadystate(chem.cas = "6385-62-2",
 \insertRef{pearce2017httk}{httk}
 
 \insertRef{kilford2008hepatocellular}{httk}
+
+\insertRef{wambaugh2025simple}{httk}
 }
 \seealso{
 \code{\link{calc_analytic_css_3compss}}

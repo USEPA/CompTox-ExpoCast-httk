@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+<meta name="author" content="Kimberly T.Truong, John F. Wambaugh, Dustin F. Kapraun, Sarah E. Davidson-Fritz, Stephanie Eytcheson, Richard Judson, Katie Paul-Friedman" />
+
+<meta name="date" content="2025-04-17" />
+
+<title>Truong et al. (2025): Full Human Gestational IVIVE</title>
+
+<script>// Pandoc 2.9 adds attributes on both header and div. We remove the former (to
+// be compatible with the behavior of Pandoc < 2.8).
+document.addEventListener('DOMContentLoaded', function(e) {
+  var hs = document.querySelectorAll("div.section[class*='level'] > :first-child");
+  var i, h, a;
+  for (i = 0; i < hs.length; i++) {
+    h = hs[i];
+    if (!/^h[1-6]$/i.test(h.tagName)) continue;  // it should be a header h1-h6
+    a = h.attributes;
+    while (a.length > 0) h.removeAttribute(a[0].name);
+  }
+});
+</script>
+
+<style type="text/css">
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+span.underline{text-decoration: underline;}
+div.column{display: inline-block; vertical-align: top; width: 50%;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+</style>
+
+
+
+<style type="text/css">
+code {
+white-space: pre;
+}
+.sourceCode {
+overflow: visible;
+}
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+{ counter-reset: source-line 0; }
+pre.numberSource code > span
+{ position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+{ content: counter(source-line);
+position: relative; left: -1em; text-align: right; vertical-align: baseline;
+border: none; display: inline-block;
+-webkit-touch-callout: none; -webkit-user-select: none;
+-khtml-user-select: none; -moz-user-select: none;
+-ms-user-select: none; user-select: none;
+padding: 0 4px; width: 4em;
+color: #aaaaaa;
+}
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa; padding-left: 4px; }
+div.sourceCode
+{ }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } 
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.at { color: #7d9029; } 
+code span.bn { color: #40a070; } 
+code span.bu { color: #008000; } 
+code span.cf { color: #007020; font-weight: bold; } 
+code span.ch { color: #4070a0; } 
+code span.cn { color: #880000; } 
+code span.co { color: #60a0b0; font-style: italic; } 
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.do { color: #ba2121; font-style: italic; } 
+code span.dt { color: #902000; } 
+code span.dv { color: #40a070; } 
+code span.er { color: #ff0000; font-weight: bold; } 
+code span.ex { } 
+code span.fl { color: #40a070; } 
+code span.fu { color: #06287e; } 
+code span.im { color: #008000; font-weight: bold; } 
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } 
+code span.kw { color: #007020; font-weight: bold; } 
+code span.op { color: #666666; } 
+code span.ot { color: #007020; } 
+code span.pp { color: #bc7a00; } 
+code span.sc { color: #4070a0; } 
+code span.ss { color: #bb6688; } 
+code span.st { color: #4070a0; } 
+code span.va { color: #19177c; } 
+code span.vs { color: #4070a0; } 
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } 
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    var j = 0;
+    while (j < rules.length) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") {
+        j++;
+        continue;
+      }
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') {
+        j++;
+        continue;
+      }
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; } 
+code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Truong et al. (2025): Full Human
+Gestational IVIVE</h1>
+<h4 class="author">Kimberly T.Truong, John F. Wambaugh, Dustin F.
+Kapraun, Sarah E. Davidson-Fritz, Stephanie Eytcheson, Richard Judson,
+Katie Paul-Friedman</h4>
+<h4 class="date">2025-04-17</h4>
+
+
+
+<p>from “Interpretation of thyroid-relevant bioactivity data for
+comparison to in vivo exposures: A prioritization approach for putative
+chemical inhibitors of in vitro deiodinase activity”</p>
+<p>Kimberly T Truong, John F Wambaugh, Dustin F Kapraun, Sarah E
+Davidson-Fritz, Stephanie Eytcheson, Richard S Judson, and Katie Paul
+Friedman</p>
+<p>Toxicological Sciences, 2025</p>
+<div id="overview" class="section level2">
+<h2>Overview</h2>
+<p>In this vignette, we show how to use the full human gestational model
+from <strong>httk</strong> to perform <em>in vitro-in vivo</em>
+extrapolation (IVIVE) on a relevant <em>in vitro</em> bioactivity
+dataset. Briefly, this demonstrates how to take thyroid-related <em>in
+vitro</em> bioactivity data from ToxCast, perform IVIVE using the
+3-compartment steady state model and the full human pregnancy model
+within <strong>httk</strong>, and compare it with the latest exposure
+estimates from ExpoCast as a method of prioritization. This is detailed
+in Truong et al. 2025 (in review).</p>
+<p>Truong et al. 2025 describes a prioritization workflow for
+thyroid-related bioactivity data related to deiodinase inhibition by
+applying the full human gestational model to compute administered
+equivalent doses (AEDs) and bioactivity-to-exposure ratios (BERs) by
+integrating SEEM3 ExpoCast predictions. See Figure 1 for an overview of
+the workflow.</p>
+<p>This vignette reproduces Figures 9 and 10 from Truong et
+al. 2025.</p>
+</div>
+<div id="httk-version" class="section level2">
+<h2>HTTK Version</h2>
+<p>This vignette was created with <strong>httk</strong> v2.6.0 which
+includes new model functionality (see <strong>Simulate full-term human
+pregnancy model</strong>).</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="fu">rm</span>(<span class="at">list =</span> <span class="fu">ls</span>())</span></code></pre></div>
+<div id="eval-execute.vignette" class="section level3">
+<h3>eval = execute.vignette</h3>
+<p>Several chunks of code in this vignette have “eval =
+execute.vignette” and we set execute.vignette to be FALSE, by default.
+We do this to include all the code that was necessary to produce the
+figures but was not run when the vignette was built since some of these
+chunks take a considerable amount of time and the checks on CRAN limit
+how long we can spend building the package. You can still reproduce the
+end figures knitting the .Rmd file, since all the necessary and minimal
+data objects have been stored in <em>httk</em>. If you want to rerun the
+whole workflow on your own, you must rerun all code from top to bottom,
+either by changing execute.vignette to TRUE or clicking on the “green
+arrow” in RStudio.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a>execute.vignette <span class="ot">&lt;-</span> <span class="cn">FALSE</span> </span></code></pre></div>
+</div>
+</div>
+<div id="data-import" class="section level2">
+<h2>Data Import</h2>
+<p>We need to load in the processed <em>in vitro</em> bioactivity data.
+This is stored within <em>httk</em> and can be accessed by
+<code>httk::thyroid.ac50s</code>. From the R command prompt,
+<code>?thyroid.ac50s</code> for more details.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a>ac50.dt <span class="ot">&lt;-</span> httk<span class="sc">::</span>thyroid.ac50s</span></code></pre></div>
+<div id="load-libraries" class="section level3">
+<h3>Load libraries</h3>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="fu">library</span>(httk)</span>
+<span id="cb4-2"><a href="#cb4-2" tabindex="-1"></a><span class="fu">library</span>(data.table)</span>
+<span id="cb4-3"><a href="#cb4-3" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb4-4"><a href="#cb4-4" tabindex="-1"></a><span class="fu">library</span>(openxlsx)</span>
+<span id="cb4-5"><a href="#cb4-5" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
+<span id="cb4-6"><a href="#cb4-6" tabindex="-1"></a><span class="fu">library</span>(cowplot)</span>
+<span id="cb4-7"><a href="#cb4-7" tabindex="-1"></a><span class="fu">library</span>(ggrepel)</span>
+<span id="cb4-8"><a href="#cb4-8" tabindex="-1"></a><span class="fu">library</span>(latex2exp)</span>
+<span id="cb4-9"><a href="#cb4-9" tabindex="-1"></a><span class="fu">library</span>(viridis)</span>
+<span id="cb4-10"><a href="#cb4-10" tabindex="-1"></a><span class="fu">library</span>(scales)</span>
+<span id="cb4-11"><a href="#cb4-11" tabindex="-1"></a><span class="fu">library</span>(ggstar)</span></code></pre></div>
+</div>
+</div>
+<div id="ivive-using-3-compartment-steady-state-model" class="section level1">
+<h1>IVIVE using 3-compartment steady state model</h1>
+<div id="examine-chemicals" class="section level2">
+<h2>Examine Chemicals</h2>
+<p>Only 50 chemicals have experimental toxicokinetic (TK) parameters
+sufficient for <em>httk</em>.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="co"># how many chems had experimental TK params?</span></span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>human.data.pre <span class="ot">&lt;-</span> <span class="fu">subset</span>(<span class="fu">get_cheminfo</span>(<span class="at">info =</span> <span class="st">&#39;all&#39;</span>, <span class="at">species =</span> <span class="st">&#39;Human&#39;</span>, </span>
+<span id="cb5-3"><a href="#cb5-3" tabindex="-1"></a>                                      <span class="at">model =</span> <span class="st">&#39;3compartmentss&#39;</span>), </span>
+<span id="cb5-4"><a href="#cb5-4" tabindex="-1"></a>                         DTXSID <span class="sc">%in%</span> ac50.dt<span class="sc">$</span>dsstox_substance_id)  </span>
+<span id="cb5-5"><a href="#cb5-5" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" tabindex="-1"></a><span class="fu">nrow</span>(human.data.pre)</span></code></pre></div>
+<div id="in-silico-predictions-of-tk-parameters" class="section level3">
+<h3>In silico predictions of TK parameters</h3>
+<p>We need to supplement these with <em>in silico</em> predictions of TK
+parameters.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="co"># predict Clint/fup values for missing chems </span></span>
+<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a><span class="co"># this loads new chem.physical_and_invitro.data table into the global env </span></span>
+<span id="cb6-3"><a href="#cb6-3" tabindex="-1"></a><span class="fu">load_dawson2021</span>() <span class="co"># most data for ToxCast chems</span></span>
+<span id="cb6-4"><a href="#cb6-4" tabindex="-1"></a><span class="fu">load_sipes2017</span>() <span class="co"># most data for pharma compounds </span></span>
+<span id="cb6-5"><a href="#cb6-5" tabindex="-1"></a><span class="fu">load_pradeep2020</span>() <span class="co"># best ML method for in silico prediction </span></span></code></pre></div>
+</div>
+<div id="examine-missing-chemicals" class="section level3">
+<h3>Examine missing chemicals</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" tabindex="-1"></a>human.httk.dt <span class="ot">&lt;-</span> <span class="fu">subset</span>(ac50.dt, dsstox_substance_id <span class="sc">%in%</span> <span class="fu">get_cheminfo</span>(<span class="at">info =</span> <span class="st">&#39;DTXSID&#39;</span>, </span>
+<span id="cb7-2"><a href="#cb7-2" tabindex="-1"></a>                                                                       <span class="at">species =</span> <span class="st">&#39;Human&#39;</span>, </span>
+<span id="cb7-3"><a href="#cb7-3" tabindex="-1"></a>                                                                       <span class="at">model =</span> <span class="st">&#39;3compartmentss&#39;</span>, </span>
+<span id="cb7-4"><a href="#cb7-4" tabindex="-1"></a>                                                                       <span class="at">physchem.exclude =</span> <span class="cn">FALSE</span>,  </span>
+<span id="cb7-5"><a href="#cb7-5" tabindex="-1"></a>                                                                       <span class="at">median.only =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb7-6"><a href="#cb7-6" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" tabindex="-1"></a>missing.dtxsids <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(ac50.dt<span class="sc">$</span>dsstox_substance_id, human.httk.dt<span class="sc">$</span>dsstox_substance_id)</span>
+<span id="cb7-8"><a href="#cb7-8" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" tabindex="-1"></a><span class="fu">View</span>(ac50.dt[dsstox_substance_id <span class="sc">%in%</span> missing.dtxsids])</span></code></pre></div>
+</div>
+</div>
+<div id="predicting-aeds-based-on-css50-in-plasma" class="section level2">
+<h2>Predicting AEDs based on Css50 (in plasma)</h2>
+<p>There are two ways to compute an oral AED in <em>httk</em>:<br />
+1. compute a steady-state plasma concentration via
+<code>calc_mc_css</code> and then: <span class="math display">\[
+AED = \frac{AC_{50}}{CSS_{50}}
+\]</span> 2. use <code>calc_mc_oral_equiv</code> passing the AC50 to the
+<code>conc</code> argument and specifying
+<code>which.quantile = c(0.5)</code>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" tabindex="-1"></a></span>
+<span id="cb8-2"><a href="#cb8-2" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(human.httk.dt)) {</span>
+<span id="cb8-3"><a href="#cb8-3" tabindex="-1"></a>  </span>
+<span id="cb8-4"><a href="#cb8-4" tabindex="-1"></a>  <span class="fu">message</span>(<span class="st">&#39;Calculating for chemical: &#39;</span>, human.httk.dt<span class="sc">$</span>chnm[i], <span class="st">&#39;</span><span class="sc">\n</span><span class="st">&#39;</span>)</span>
+<span id="cb8-5"><a href="#cb8-5" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" tabindex="-1"></a>  out <span class="ot">&lt;-</span> <span class="fu">calc_mc_css</span>(<span class="at">dtxsid =</span> human.httk.dt<span class="sc">$</span>dsstox_substance_id[i], </span>
+<span id="cb8-7"><a href="#cb8-7" tabindex="-1"></a>                     <span class="at">species =</span> <span class="st">&#39;Human&#39;</span>, </span>
+<span id="cb8-8"><a href="#cb8-8" tabindex="-1"></a>                     <span class="at">daily.dose =</span> <span class="dv">1</span>, </span>
+<span id="cb8-9"><a href="#cb8-9" tabindex="-1"></a>                     <span class="at">which.quantile =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.95</span>), </span>
+<span id="cb8-10"><a href="#cb8-10" tabindex="-1"></a>                     <span class="at">model =</span> <span class="st">&#39;3compartmentss&#39;</span>, </span>
+<span id="cb8-11"><a href="#cb8-11" tabindex="-1"></a>                     <span class="at">output.units =</span> <span class="st">&#39;uM&#39;</span>, </span>
+<span id="cb8-12"><a href="#cb8-12" tabindex="-1"></a>                     <span class="at">parameterize.args.list=</span><span class="fu">list</span>(<span class="at">physchem.exclude=</span><span class="cn">FALSE</span>), </span>
+<span id="cb8-13"><a href="#cb8-13" tabindex="-1"></a>                     <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-14"><a href="#cb8-14" tabindex="-1"></a>  </span>
+<span id="cb8-15"><a href="#cb8-15" tabindex="-1"></a>  human.httk.dt<span class="sc">$</span>mc.css50[i] <span class="ot">&lt;-</span> out[<span class="st">&quot;50%&quot;</span>]</span>
+<span id="cb8-16"><a href="#cb8-16" tabindex="-1"></a></span>
+<span id="cb8-17"><a href="#cb8-17" tabindex="-1"></a>  <span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb8-18"><a href="#cb8-18" tabindex="-1"></a>  oralequiv.out <span class="ot">&lt;-</span> <span class="fu">calc_mc_oral_equiv</span>(<span class="at">conc =</span> human.httk.dt<span class="sc">$</span>min_ac50[i],</span>
+<span id="cb8-19"><a href="#cb8-19" tabindex="-1"></a>                                      <span class="at">dtxsid =</span> human.httk.dt<span class="sc">$</span>dsstox_substance_id[i], </span>
+<span id="cb8-20"><a href="#cb8-20" tabindex="-1"></a>                                      <span class="at">species =</span> <span class="st">&#39;Human&#39;</span>,</span>
+<span id="cb8-21"><a href="#cb8-21" tabindex="-1"></a>                                      <span class="at">which.quantile =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.95</span>),</span>
+<span id="cb8-22"><a href="#cb8-22" tabindex="-1"></a>                                      <span class="at">input.units =</span> <span class="st">&#39;uM&#39;</span>,</span>
+<span id="cb8-23"><a href="#cb8-23" tabindex="-1"></a>                                      <span class="at">output.units =</span> <span class="st">&#39;mgpkgpday&#39;</span>,</span>
+<span id="cb8-24"><a href="#cb8-24" tabindex="-1"></a>                                      <span class="at">model =</span> <span class="st">&#39;3compartmentss&#39;</span>,</span>
+<span id="cb8-25"><a href="#cb8-25" tabindex="-1"></a>                                      <span class="at">restrictive.clearance =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb8-26"><a href="#cb8-26" tabindex="-1"></a>                                      <span class="at">parameterize.args.list=</span><span class="fu">list</span>(<span class="at">physchem.exclude=</span><span class="cn">FALSE</span>),</span>
+<span id="cb8-27"><a href="#cb8-27" tabindex="-1"></a>                                      <span class="at">suppress.messages =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-28"><a href="#cb8-28" tabindex="-1"></a>  </span>
+<span id="cb8-29"><a href="#cb8-29" tabindex="-1"></a>   human.httk.dt<span class="sc">$</span>oral_equiv50[i] <span class="ot">&lt;-</span> oralequiv.out[<span class="st">&quot;50%&quot;</span>]</span>
+<span id="cb8-30"><a href="#cb8-30" tabindex="-1"></a>}                                                                </span>
+<span id="cb8-31"><a href="#cb8-31" tabindex="-1"></a></span>
+<span id="cb8-32"><a href="#cb8-32" tabindex="-1"></a>human.httk.dt[, calc.aed50 <span class="sc">:=</span> min_ac50<span class="sc">/</span>mc.css50]</span>
+<span id="cb8-33"><a href="#cb8-33" tabindex="-1"></a>human.httk.dt[, fold_diff50 <span class="sc">:=</span> <span class="fu">log10</span>(oral_equiv50<span class="sc">/</span>calc.aed50)]</span></code></pre></div>
+</div>
+<div id="load-expocast-predictions-seem3" class="section level2">
+<h2>Load ExpoCast predictions (SEEM3)</h2>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" tabindex="-1"></a></span>
+<span id="cb9-2"><a href="#cb9-2" tabindex="-1"></a><span class="co"># let&#39;s use the aed values from the division </span></span>
+<span id="cb9-3"><a href="#cb9-3" tabindex="-1"></a>human.httk.dt2 <span class="ot">&lt;-</span> human.httk.dt[, <span class="fu">c</span>(<span class="st">&#39;dsstox_substance_id&#39;</span>, <span class="st">&#39;chnm&#39;</span>, </span>
+<span id="cb9-4"><a href="#cb9-4" tabindex="-1"></a>                                    <span class="st">&#39;DIO1&#39;</span>, <span class="st">&#39;DIO2&#39;</span>, <span class="st">&#39;DIO3&#39;</span>, <span class="st">&#39;IYD&#39;</span>, <span class="st">&#39;min_ac50&#39;</span>, </span>
+<span id="cb9-5"><a href="#cb9-5" tabindex="-1"></a>                                    <span class="st">&#39;mc.css50&#39;</span>, <span class="st">&#39;calc.aed50&#39;</span>)]</span>
+<span id="cb9-6"><a href="#cb9-6" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" tabindex="-1"></a>SEEM <span class="ot">&lt;-</span> httk<span class="sc">::</span>truong25.seem3</span>
+<span id="cb9-8"><a href="#cb9-8" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" tabindex="-1"></a><span class="co"># integrate SEEM3 predictions with merge</span></span>
+<span id="cb9-10"><a href="#cb9-10" tabindex="-1"></a>human.httk.dt2.seem3 <span class="ot">&lt;-</span> <span class="fu">merge.data.table</span>(human.httk.dt2, </span>
+<span id="cb9-11"><a href="#cb9-11" tabindex="-1"></a>                                         SEEM[, <span class="fu">c</span>(<span class="st">&quot;dsstox_substance_id&quot;</span>, <span class="st">&quot;seem3&quot;</span>, <span class="st">&quot;seem3.u95&quot;</span>)], </span>
+<span id="cb9-12"><a href="#cb9-12" tabindex="-1"></a>                                         <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;dsstox_substance_id&quot;</span>), </span>
+<span id="cb9-13"><a href="#cb9-13" tabindex="-1"></a>                                         <span class="at">all.x =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb9-14"><a href="#cb9-14" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" tabindex="-1"></a>human.httk.dt2.seem3[, plasmaBER50 <span class="sc">:=</span> calc.aed50<span class="sc">/</span>seem3.u95]</span>
+<span id="cb9-16"><a href="#cb9-16" tabindex="-1"></a>human.httk.dt2.seem3[, log.pBER50 <span class="sc">:=</span> <span class="fu">log10</span>(plasmaBER50)]</span>
+<span id="cb9-17"><a href="#cb9-17" tabindex="-1"></a></span>
+<span id="cb9-18"><a href="#cb9-18" tabindex="-1"></a>ivive.moe.tb <span class="ot">&lt;-</span> human.httk.dt2.seem3</span>
+<span id="cb9-19"><a href="#cb9-19" tabindex="-1"></a><span class="fu">setnames</span>(ivive.moe.tb, <span class="st">&quot;dsstox_substance_id&quot;</span>, <span class="st">&quot;dtxsid&quot;</span>)</span></code></pre></div>
+</div>
+</div>
+<div id="ivive-using-the-full-human-gestational-model" class="section level1">
+<h1>IVIVE using the Full Human Gestational Model</h1>
+<div id="compute-half-lives" class="section level3">
+<h3>Compute half-lives</h3>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(ivive.moe.tb)) {</span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a>  ivive.moe.tb<span class="sc">$</span>half.life[i] <span class="ot">&lt;-</span> <span class="fu">calc_half_life</span>(<span class="at">dtxsid =</span> ivive.moe.tb<span class="sc">$</span>dtxsid[i], <span class="co"># t1/2 in hours </span></span>
+<span id="cb10-3"><a href="#cb10-3" tabindex="-1"></a>                                              <span class="at">physchem.exclude =</span> <span class="cn">FALSE</span>) </span>
+<span id="cb10-4"><a href="#cb10-4" tabindex="-1"></a>  ivive.moe.tb<span class="sc">$</span>half.life.days[i] <span class="ot">&lt;-</span> ivive.moe.tb<span class="sc">$</span>half.life[i]<span class="sc">/</span><span class="dv">24</span> <span class="co"># in days</span></span>
+<span id="cb10-5"><a href="#cb10-5" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="simulate-full-term-human-pregnancy-model" class="section level2">
+<h2>Simulate full-term human pregnancy model</h2>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" tabindex="-1"></a></span>
+<span id="cb11-2"><a href="#cb11-2" tabindex="-1"></a><span class="co"># tissues where DIO enzymes live </span></span>
+<span id="cb11-3"><a href="#cb11-3" tabindex="-1"></a>impacted_tissues <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;Cliver&#39;</span>, <span class="st">&#39;Cthyroid&#39;</span>, <span class="st">&#39;Cfliver&#39;</span>, <span class="st">&#39;Cfbrain&#39;</span>, <span class="st">&#39;Cfthyroid&#39;</span>, </span>
+<span id="cb11-4"><a href="#cb11-4" tabindex="-1"></a>                      <span class="st">&#39;Cplacenta&#39;</span>, <span class="st">&#39;Cconceptus&#39;</span>, <span class="st">&#39;Cplasma&#39;</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" tabindex="-1"></a>targets <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;DIO1&#39;</span>, <span class="st">&#39;DIO2&#39;</span>, <span class="st">&#39;DIO3&#39;</span>, <span class="st">&#39;IYD&#39;</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" tabindex="-1"></a><span class="co"># max conc in every tissue for every chemical</span></span>
+<span id="cb11-8"><a href="#cb11-8" tabindex="-1"></a>Cmax.tissues <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">ncol =</span> <span class="fu">length</span>(impacted_tissues) <span class="sc">+</span> <span class="dv">1</span>, </span>
+<span id="cb11-9"><a href="#cb11-9" tabindex="-1"></a>                                  <span class="at">nrow =</span> <span class="fu">nrow</span>(ivive.moe.tb), </span>
+<span id="cb11-10"><a href="#cb11-10" tabindex="-1"></a>                                  <span class="at">dimnames =</span> <span class="fu">list</span>(<span class="cn">NULL</span>, <span class="fu">c</span>(<span class="st">&#39;dtxsid&#39;</span>, impacted_tissues))))</span>
+<span id="cb11-11"><a href="#cb11-11" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(ivive.moe.tb)) {</span>
+<span id="cb11-13"><a href="#cb11-13" tabindex="-1"></a>  </span>
+<span id="cb11-14"><a href="#cb11-14" tabindex="-1"></a>  sol.out <span class="ot">&lt;-</span> <span class="fu">solve_full_pregnancy</span>(<span class="at">dtxsid =</span> ivive.moe.tb<span class="sc">$</span>dtxsid[i],</span>
+<span id="cb11-15"><a href="#cb11-15" tabindex="-1"></a>                            <span class="at">daily.dose =</span> <span class="dv">1</span>, </span>
+<span id="cb11-16"><a href="#cb11-16" tabindex="-1"></a>                            <span class="at">doses.per.day =</span> <span class="dv">1</span>,</span>
+<span id="cb11-17"><a href="#cb11-17" tabindex="-1"></a>                            <span class="at">time.course =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">40</span><span class="sc">*</span><span class="dv">7</span>, <span class="dv">1</span><span class="sc">/</span><span class="dv">24</span>), <span class="co"># view solution by hour</span></span>
+<span id="cb11-18"><a href="#cb11-18" tabindex="-1"></a>                            <span class="at">track.vars =</span> impacted_tissues, </span>
+<span id="cb11-19"><a href="#cb11-19" tabindex="-1"></a>                            <span class="at">physchem.exclude =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb11-20"><a href="#cb11-20" tabindex="-1"></a></span>
+<span id="cb11-21"><a href="#cb11-21" tabindex="-1"></a>  </span>
+<span id="cb11-22"><a href="#cb11-22" tabindex="-1"></a>  <span class="co"># get max of every column re: compt </span></span>
+<span id="cb11-23"><a href="#cb11-23" tabindex="-1"></a>  Cmax.tissues[i, impacted_tissues] <span class="ot">&lt;-</span> <span class="fu">apply</span>(sol.out[, impacted_tissues], <span class="dv">2</span>, max, <span class="at">na.rm =</span> T)</span>
+<span id="cb11-24"><a href="#cb11-24" tabindex="-1"></a>  Cmax.tissues[i, <span class="st">&#39;dtxsid&#39;</span>] <span class="ot">&lt;-</span> ivive.moe.tb<span class="sc">$</span>dtxsid[i]</span>
+<span id="cb11-25"><a href="#cb11-25" tabindex="-1"></a>  </span>
+<span id="cb11-26"><a href="#cb11-26" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="calculate-aeds-by-target-and-tissue" class="section level2">
+<h2>Calculate AEDs by Target and Tissue</h2>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" tabindex="-1"></a>tissue.aeds <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb12-2"><a href="#cb12-2" tabindex="-1"></a></span>
+<span id="cb12-3"><a href="#cb12-3" tabindex="-1"></a><span class="co"># tissues specific for each target </span></span>
+<span id="cb12-4"><a href="#cb12-4" tabindex="-1"></a>tissue_list <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">DIO1 =</span> <span class="fu">c</span>(<span class="st">&#39;Cliver&#39;</span>, <span class="st">&#39;Cfliver&#39;</span>, <span class="st">&#39;Cthyroid&#39;</span>, <span class="st">&#39;Cfthyroid&#39;</span>, <span class="st">&#39;Cconceptus&#39;</span>), </span>
+<span id="cb12-5"><a href="#cb12-5" tabindex="-1"></a>                    <span class="at">DIO2 =</span> <span class="fu">c</span>(<span class="st">&#39;Cthyroid&#39;</span>, <span class="st">&#39;Cfthyroid&#39;</span>, <span class="st">&#39;Cfbrain&#39;</span>, <span class="st">&#39;Cconceptus&#39;</span>), </span>
+<span id="cb12-6"><a href="#cb12-6" tabindex="-1"></a>                    <span class="at">DIO3 =</span> <span class="fu">c</span>(<span class="st">&#39;Cthyroid&#39;</span>, <span class="st">&#39;Cfthyroid&#39;</span>, <span class="st">&#39;Cfbrain&#39;</span>, <span class="st">&#39;Cplacenta&#39;</span>, <span class="st">&#39;Cconceptus&#39;</span>), </span>
+<span id="cb12-7"><a href="#cb12-7" tabindex="-1"></a>                    <span class="at">IYD =</span> <span class="fu">c</span>(<span class="st">&#39;Cthyroid&#39;</span>, <span class="st">&#39;Cfthyroid&#39;</span>, <span class="st">&#39;Cconceptus&#39;</span>))</span>
+<span id="cb12-8"><a href="#cb12-8" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="fu">names</span>(tissue_list)) {</span>
+<span id="cb12-10"><a href="#cb12-10" tabindex="-1"></a>  active.chem.ind <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="sc">!</span><span class="fu">is.na</span>(ivive.moe.tb[, ..i]))</span>
+<span id="cb12-11"><a href="#cb12-11" tabindex="-1"></a>  n.chems <span class="ot">&lt;-</span> <span class="fu">length</span>(active.chem.ind)</span>
+<span id="cb12-12"><a href="#cb12-12" tabindex="-1"></a>  </span>
+<span id="cb12-13"><a href="#cb12-13" tabindex="-1"></a>  empty.mat <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">nrow =</span> n.chems, <span class="at">ncol =</span> <span class="fu">length</span>(tissue_list[[i]]) <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb12-14"><a href="#cb12-14" tabindex="-1"></a>  df.target <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(empty.mat)</span>
+<span id="cb12-15"><a href="#cb12-15" tabindex="-1"></a>  <span class="fu">colnames</span>(df.target) <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;dtxsid&#39;</span>, tissue_list[[i]])</span>
+<span id="cb12-16"><a href="#cb12-16" tabindex="-1"></a> </span>
+<span id="cb12-17"><a href="#cb12-17" tabindex="-1"></a>  df.target[, <span class="dv">2</span><span class="sc">:</span> (<span class="fu">length</span>(tissue_list[[i]])<span class="sc">+</span><span class="dv">1</span>) ] <span class="ot">&lt;-</span> <span class="fu">mapply</span>(<span class="cf">function</span>(x,y) x<span class="sc">/</span>y, ivive.moe.tb[active.chem.ind, ..i], Cmax.tissues[active.chem.ind, tissue_list[[i]]])</span>
+<span id="cb12-18"><a href="#cb12-18" tabindex="-1"></a>  </span>
+<span id="cb12-19"><a href="#cb12-19" tabindex="-1"></a>  df.target<span class="sc">$</span>dtxsid <span class="ot">&lt;-</span> ivive.moe.tb<span class="sc">$</span>dtxsid[active.chem.ind]</span>
+<span id="cb12-20"><a href="#cb12-20" tabindex="-1"></a>  tissue.aeds[[i]] <span class="ot">&lt;-</span> df.target</span>
+<span id="cb12-21"><a href="#cb12-21" tabindex="-1"></a>}</span></code></pre></div>
+</div>
+<div id="figure-9-priority-chemicals-based-on-maternal-fetal-bers" class="section level2">
+<h2>Figure 9: Priority Chemicals based on maternal-fetal BERs</h2>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" tabindex="-1"></a>impacted_tissues <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;Cliver&#39;</span>, <span class="st">&#39;Cthyroid&#39;</span>, <span class="st">&#39;Cfliver&#39;</span>, <span class="st">&#39;Cfbrain&#39;</span>, <span class="st">&#39;Cfthyroid&#39;</span>, </span>
+<span id="cb13-2"><a href="#cb13-2" tabindex="-1"></a>                      <span class="st">&#39;Cplacenta&#39;</span>, <span class="st">&#39;Cconceptus&#39;</span>, <span class="st">&#39;Cplasma&#39;</span>)</span>
+<span id="cb13-3"><a href="#cb13-3" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" tabindex="-1"></a>get_ber_data <span class="ot">&lt;-</span> <span class="cf">function</span>(name, df) {</span>
+<span id="cb13-5"><a href="#cb13-5" tabindex="-1"></a>  </span>
+<span id="cb13-6"><a href="#cb13-6" tabindex="-1"></a>  df<span class="sc">$</span>exposure <span class="ot">&lt;-</span> ivive.moe.tb<span class="sc">$</span>seem3.u95[<span class="fu">match</span>(df<span class="sc">$</span>dtxsid, ivive.moe.tb<span class="sc">$</span>dtxsid)]</span>
+<span id="cb13-7"><a href="#cb13-7" tabindex="-1"></a>  df.m <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span>exposure) <span class="sc">%&gt;%</span></span>
+<span id="cb13-8"><a href="#cb13-8" tabindex="-1"></a>    reshape2<span class="sc">::</span><span class="fu">melt</span>(<span class="at">id.vars =</span> <span class="fu">c</span>(<span class="st">&#39;dtxsid&#39;</span>), </span>
+<span id="cb13-9"><a href="#cb13-9" tabindex="-1"></a>                   <span class="at">variable.name =</span> <span class="st">&#39;compt&#39;</span>, <span class="at">value.name =</span> <span class="st">&#39;aed&#39;</span>)</span>
+<span id="cb13-10"><a href="#cb13-10" tabindex="-1"></a>  df.m<span class="sc">$</span>exposure <span class="ot">&lt;-</span> ivive.moe.tb<span class="sc">$</span>seem3.u95[<span class="fu">match</span>(df.m<span class="sc">$</span>dtxsid, ivive.moe.tb<span class="sc">$</span>dtxsid)]</span>
+<span id="cb13-11"><a href="#cb13-11" tabindex="-1"></a>  df.m<span class="sc">$</span>ber <span class="ot">=</span> df.m<span class="sc">$</span>aed<span class="sc">/</span>df.m<span class="sc">$</span>exposure</span>
+<span id="cb13-12"><a href="#cb13-12" tabindex="-1"></a>  df.m2 <span class="ot">&lt;-</span> df.m <span class="sc">%&gt;%</span> </span>
+<span id="cb13-13"><a href="#cb13-13" tabindex="-1"></a>    <span class="fu">select</span>(<span class="sc">-</span>exposure) <span class="sc">%&gt;%</span></span>
+<span id="cb13-14"><a href="#cb13-14" tabindex="-1"></a>    reshape2<span class="sc">::</span><span class="fu">melt</span>(<span class="at">id.vars =</span> <span class="fu">c</span>(<span class="st">&#39;dtxsid&#39;</span>, <span class="st">&#39;compt&#39;</span>, <span class="st">&#39;ber&#39;</span>))</span>
+<span id="cb13-15"><a href="#cb13-15" tabindex="-1"></a>  </span>
+<span id="cb13-16"><a href="#cb13-16" tabindex="-1"></a>  <span class="co"># add melted ExpoCast data as rows for each unique chem </span></span>
+<span id="cb13-17"><a href="#cb13-17" tabindex="-1"></a>  expocast.dat <span class="ot">&lt;-</span> df <span class="sc">%&gt;%</span> <span class="fu">select</span>(dtxsid, exposure) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-18"><a href="#cb13-18" tabindex="-1"></a>    reshape2<span class="sc">::</span><span class="fu">melt</span>(<span class="at">id.vars =</span> <span class="fu">c</span>(<span class="st">&#39;dtxsid&#39;</span>))</span>
+<span id="cb13-19"><a href="#cb13-19" tabindex="-1"></a>  </span>
+<span id="cb13-20"><a href="#cb13-20" tabindex="-1"></a>  df.m2 <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(df.m2, expocast.dat)</span>
+<span id="cb13-21"><a href="#cb13-21" tabindex="-1"></a>  df.m2<span class="sc">$</span>value <span class="ot">&lt;-</span> <span class="fu">log10</span>(df.m2<span class="sc">$</span>value)</span>
+<span id="cb13-22"><a href="#cb13-22" tabindex="-1"></a>  df.m2<span class="sc">$</span>ber <span class="ot">&lt;-</span> <span class="fu">log10</span>(df.m2<span class="sc">$</span>ber)</span>
+<span id="cb13-23"><a href="#cb13-23" tabindex="-1"></a>  df.m2<span class="sc">$</span>chnm <span class="ot">&lt;-</span> ivive.moe.tb<span class="sc">$</span>chnm[<span class="fu">match</span>(df.m2<span class="sc">$</span>dtxsid, ivive.moe.tb<span class="sc">$</span>dtxsid)]</span>
+<span id="cb13-24"><a href="#cb13-24" tabindex="-1"></a>  df.m2<span class="sc">$</span>enzyme <span class="ot">&lt;-</span> name</span>
+<span id="cb13-25"><a href="#cb13-25" tabindex="-1"></a>  <span class="fu">return</span>(df.m2)</span>
+<span id="cb13-26"><a href="#cb13-26" tabindex="-1"></a>}</span>
+<span id="cb13-27"><a href="#cb13-27" tabindex="-1"></a></span>
+<span id="cb13-28"><a href="#cb13-28" tabindex="-1"></a>new.list <span class="ot">&lt;-</span> <span class="fu">Map</span>(get_ber_data, <span class="fu">names</span>(tissue.aeds), tissue.aeds)</span>
+<span id="cb13-29"><a href="#cb13-29" tabindex="-1"></a>ggdata <span class="ot">=</span> <span class="fu">bind_rows</span>(new.list) </span>
+<span id="cb13-30"><a href="#cb13-30" tabindex="-1"></a><span class="fu">setDT</span>(ggdata)</span>
+<span id="cb13-31"><a href="#cb13-31" tabindex="-1"></a></span>
+<span id="cb13-32"><a href="#cb13-32" tabindex="-1"></a><span class="co"># order chemicals within each enzyme group by the most sensitive tissue/lifestage BER</span></span>
+<span id="cb13-33"><a href="#cb13-33" tabindex="-1"></a>ggdata[, min_ber <span class="sc">:=</span> <span class="fu">min</span>(ber, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), keyby <span class="ot">=</span> .(enzyme, dtxsid)]</span>
+<span id="cb13-34"><a href="#cb13-34" tabindex="-1"></a>ggdata <span class="ot">&lt;-</span> ggdata[<span class="fu">order</span>(min_ber), .SD, keyby <span class="ot">=</span> .(enzyme)]</span>
+<span id="cb13-35"><a href="#cb13-35" tabindex="-1"></a></span>
+<span id="cb13-36"><a href="#cb13-36" tabindex="-1"></a><span class="co"># exposure values are dependent on dtxsid not httk compt </span></span>
+<span id="cb13-37"><a href="#cb13-37" tabindex="-1"></a>ggdata[variable <span class="sc">==</span> <span class="st">&#39;exposure&#39;</span>, compt <span class="sc">:=</span> <span class="st">&#39;exposure&#39;</span>]</span>
+<span id="cb13-38"><a href="#cb13-38" tabindex="-1"></a></span>
+<span id="cb13-39"><a href="#cb13-39" tabindex="-1"></a><span class="co"># make a deep copy or else it will be modified by reference </span></span>
+<span id="cb13-40"><a href="#cb13-40" tabindex="-1"></a>tissue.bers <span class="ot">&lt;-</span> <span class="fu">copy</span>(ggdata)</span>
+<span id="cb13-41"><a href="#cb13-41" tabindex="-1"></a></span>
+<span id="cb13-42"><a href="#cb13-42" tabindex="-1"></a><span class="co"># round all numerical values including BERs to 2 sigfigs </span></span>
+<span id="cb13-43"><a href="#cb13-43" tabindex="-1"></a>num.cols <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&quot;value&quot;</span>, <span class="st">&quot;ber&quot;</span>, <span class="st">&quot;min_ber&quot;</span>)</span>
+<span id="cb13-44"><a href="#cb13-44" tabindex="-1"></a>tissue.bers[, <span class="fu">c</span>(num.cols) <span class="sc">:=</span> <span class="fu">lapply</span>(.SD, signif, <span class="at">digits =</span> <span class="dv">2</span>), .SDcols <span class="ot">=</span> num.cols]</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" tabindex="-1"></a>min_val <span class="ot">&lt;-</span> tissue.bers[min_ber <span class="sc">&lt;=</span> <span class="dv">3</span>, <span class="fu">min</span>(value), by <span class="ot">=</span> enzyme][, <span class="fu">min</span>(V1)]</span>
+<span id="cb14-2"><a href="#cb14-2" tabindex="-1"></a>max_val <span class="ot">&lt;-</span> tissue.bers[min_ber <span class="sc">&lt;=</span> <span class="dv">3</span>, <span class="fu">max</span>(value), by <span class="ot">=</span> enzyme][, <span class="fu">max</span>(V1)]</span>
+<span id="cb14-3"><a href="#cb14-3" tabindex="-1"></a>ylims <span class="ot">&lt;-</span> <span class="fu">c</span>(min_val, max_val)</span>
+<span id="cb14-4"><a href="#cb14-4" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" tabindex="-1"></a><span class="co"># generate a set of 3 viridis colors for lifestage </span></span>
+<span id="cb14-6"><a href="#cb14-6" tabindex="-1"></a><span class="co"># yellow represents neither maternal or fetal, i.e., conceptus</span></span>
+<span id="cb14-7"><a href="#cb14-7" tabindex="-1"></a>my_viridis_colors <span class="ot">&lt;-</span> <span class="fu">viridis</span>(<span class="at">n =</span> <span class="dv">3</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" tabindex="-1"></a></span>
+<span id="cb14-9"><a href="#cb14-9" tabindex="-1"></a>listgg <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb14-10"><a href="#cb14-10" tabindex="-1"></a><span class="cf">for</span>(k <span class="cf">in</span> <span class="fu">names</span>(tissue.aeds)) {</span>
+<span id="cb14-11"><a href="#cb14-11" tabindex="-1"></a>  </span>
+<span id="cb14-12"><a href="#cb14-12" tabindex="-1"></a>  aeds <span class="ot">&lt;-</span> tissue.bers[enzyme <span class="sc">==</span> k <span class="sc">&amp;</span> ber <span class="sc">&lt;=</span> <span class="dv">3</span>]</span>
+<span id="cb14-13"><a href="#cb14-13" tabindex="-1"></a>  chems <span class="ot">&lt;-</span> tissue.bers[enzyme <span class="sc">==</span> k <span class="sc">&amp;</span> ber <span class="sc">&lt;=</span> <span class="dv">3</span>, dtxsid]</span>
+<span id="cb14-14"><a href="#cb14-14" tabindex="-1"></a>  exposures <span class="ot">&lt;-</span> tissue.bers[enzyme <span class="sc">==</span> k <span class="sc">&amp;</span> variable <span class="sc">==</span> <span class="st">&quot;exposure&quot;</span> <span class="sc">&amp;</span> dtxsid <span class="sc">%in%</span> chems]</span>
+<span id="cb14-15"><a href="#cb14-15" tabindex="-1"></a>  </span>
+<span id="cb14-16"><a href="#cb14-16" tabindex="-1"></a>  listgg[[k]] <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> <span class="fu">rbind</span>(aeds,exposures), </span>
+<span id="cb14-17"><a href="#cb14-17" tabindex="-1"></a>                        <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(chnm, <span class="sc">-</span>min_ber), </span>
+<span id="cb14-18"><a href="#cb14-18" tabindex="-1"></a>                                      <span class="at">y =</span> value)) <span class="sc">+</span></span>
+<span id="cb14-19"><a href="#cb14-19" tabindex="-1"></a>    <span class="fu">geom_star</span>(<span class="fu">aes</span>(<span class="at">starshape =</span> compt, <span class="at">fill =</span> compt, <span class="at">color =</span> compt), </span>
+<span id="cb14-20"><a href="#cb14-20" tabindex="-1"></a>              <span class="at">alpha =</span> <span class="fl">0.65</span>, <span class="at">size =</span> <span class="fl">1.25</span>, <span class="co"># default: 1.5</span></span>
+<span id="cb14-21"><a href="#cb14-21" tabindex="-1"></a>              <span class="at">starstroke =</span> <span class="fl">0.25</span>, <span class="co"># default: 0.5</span></span>
+<span id="cb14-22"><a href="#cb14-22" tabindex="-1"></a>              <span class="at">show.legend =</span> T) <span class="sc">+</span></span>
+<span id="cb14-23"><a href="#cb14-23" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(ylims[<span class="dv">1</span>], ylims[<span class="dv">2</span>], <span class="dv">1</span>),</span>
+<span id="cb14-24"><a href="#cb14-24" tabindex="-1"></a>                       <span class="at">limits =</span> ylims) <span class="sc">+</span></span>
+<span id="cb14-25"><a href="#cb14-25" tabindex="-1"></a>    <span class="fu">scale_starshape_manual</span>(<span class="at">name =</span> <span class="st">&quot;Compartment corresponding to AED </span><span class="sc">\n</span><span class="st"> or Exposure&quot;</span>, </span>
+<span id="cb14-26"><a href="#cb14-26" tabindex="-1"></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;maternal liver&quot;</span>, <span class="st">&quot;fetal liver&quot;</span>, </span>
+<span id="cb14-27"><a href="#cb14-27" tabindex="-1"></a>                                  <span class="st">&quot;maternal thyroid&quot;</span>, <span class="st">&quot;fetal thyroid&quot;</span>, </span>
+<span id="cb14-28"><a href="#cb14-28" tabindex="-1"></a>                                  <span class="st">&quot;conceptus&quot;</span>, </span>
+<span id="cb14-29"><a href="#cb14-29" tabindex="-1"></a>                                  <span class="st">&quot;fetal brain&quot;</span>, </span>
+<span id="cb14-30"><a href="#cb14-30" tabindex="-1"></a>                                  <span class="st">&quot;placenta&quot;</span>, <span class="st">&quot;exposure&quot;</span>),</span>
+<span id="cb14-31"><a href="#cb14-31" tabindex="-1"></a>                       <span class="at">values =</span> <span class="fu">c</span>(<span class="st">&#39;Cfbrain&#39;</span> <span class="ot">=</span> <span class="dv">15</span>,</span>
+<span id="cb14-32"><a href="#cb14-32" tabindex="-1"></a>                                  <span class="st">&#39;exposure&#39;</span> <span class="ot">=</span> <span class="dv">28</span>, </span>
+<span id="cb14-33"><a href="#cb14-33" tabindex="-1"></a>                                  <span class="st">&#39;Cliver&#39;</span> <span class="ot">=</span> <span class="dv">11</span>,</span>
+<span id="cb14-34"><a href="#cb14-34" tabindex="-1"></a>                                  <span class="st">&#39;Cfliver&#39;</span> <span class="ot">=</span> <span class="dv">11</span>, </span>
+<span id="cb14-35"><a href="#cb14-35" tabindex="-1"></a>                                  <span class="st">&#39;Cplacenta&#39;</span> <span class="ot">=</span> <span class="dv">13</span>, </span>
+<span id="cb14-36"><a href="#cb14-36" tabindex="-1"></a>                                  <span class="st">&#39;Cthyroid&#39;</span> <span class="ot">=</span> <span class="dv">1</span>,</span>
+<span id="cb14-37"><a href="#cb14-37" tabindex="-1"></a>                                  <span class="st">&#39;Cfthyroid&#39;</span> <span class="ot">=</span> <span class="dv">1</span>, </span>
+<span id="cb14-38"><a href="#cb14-38" tabindex="-1"></a>                                  <span class="st">&#39;Cconceptus&#39;</span> <span class="ot">=</span> <span class="dv">23</span>), </span>
+<span id="cb14-39"><a href="#cb14-39" tabindex="-1"></a>                       <span class="at">drop =</span> F) <span class="sc">+</span> <span class="co"># this makes sure all levels of a factor are displayed even if unused </span></span>
+<span id="cb14-40"><a href="#cb14-40" tabindex="-1"></a>    <span class="fu">scale_fill_manual</span>(<span class="at">name =</span> <span class="st">&quot;Compartment corresponding to AED </span><span class="sc">\n</span><span class="st"> or Exposure&quot;</span>, </span>
+<span id="cb14-41"><a href="#cb14-41" tabindex="-1"></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;maternal liver&quot;</span>, <span class="st">&quot;fetal liver&quot;</span>, </span>
+<span id="cb14-42"><a href="#cb14-42" tabindex="-1"></a>                                  <span class="st">&quot;maternal thyroid&quot;</span>, <span class="st">&quot;fetal thyroid&quot;</span>, </span>
+<span id="cb14-43"><a href="#cb14-43" tabindex="-1"></a>                                  <span class="st">&quot;conceptus&quot;</span>, </span>
+<span id="cb14-44"><a href="#cb14-44" tabindex="-1"></a>                                  <span class="st">&quot;fetal brain&quot;</span>, </span>
+<span id="cb14-45"><a href="#cb14-45" tabindex="-1"></a>                                  <span class="st">&quot;placenta&quot;</span>, <span class="st">&quot;exposure&quot;</span>),</span>
+<span id="cb14-46"><a href="#cb14-46" tabindex="-1"></a>                       <span class="at">values =</span> <span class="fu">c</span>(<span class="st">&#39;Cfbrain&#39;</span> <span class="ot">=</span> my_viridis_colors[<span class="dv">2</span>],</span>
+<span id="cb14-47"><a href="#cb14-47" tabindex="-1"></a>                                  <span class="st">&#39;exposure&#39;</span> <span class="ot">=</span> <span class="st">&#39;dimgrey&#39;</span>, </span>
+<span id="cb14-48"><a href="#cb14-48" tabindex="-1"></a>                                  <span class="st">&#39;Cliver&#39;</span> <span class="ot">=</span> my_viridis_colors[<span class="dv">1</span>],</span>
+<span id="cb14-49"><a href="#cb14-49" tabindex="-1"></a>                                  <span class="st">&#39;Cfliver&#39;</span> <span class="ot">=</span> my_viridis_colors[<span class="dv">2</span>], </span>
+<span id="cb14-50"><a href="#cb14-50" tabindex="-1"></a>                                  <span class="st">&#39;Cplacenta&#39;</span> <span class="ot">=</span> <span class="st">&#39;#990066&#39;</span>, </span>
+<span id="cb14-51"><a href="#cb14-51" tabindex="-1"></a>                                  <span class="st">&#39;Cthyroid&#39;</span> <span class="ot">=</span> my_viridis_colors[<span class="dv">1</span>],</span>
+<span id="cb14-52"><a href="#cb14-52" tabindex="-1"></a>                                  <span class="st">&#39;Cfthyroid&#39;</span> <span class="ot">=</span> my_viridis_colors[<span class="dv">2</span>], </span>
+<span id="cb14-53"><a href="#cb14-53" tabindex="-1"></a>                                  <span class="st">&#39;Cconceptus&#39;</span> <span class="ot">=</span> <span class="st">&#39;#73D055FF&#39;</span>), </span>
+<span id="cb14-54"><a href="#cb14-54" tabindex="-1"></a>                       <span class="at">drop =</span> F) <span class="sc">+</span></span>
+<span id="cb14-55"><a href="#cb14-55" tabindex="-1"></a>     <span class="fu">scale_color_manual</span>(<span class="at">name =</span> <span class="st">&quot;Compartment corresponding to AED </span><span class="sc">\n</span><span class="st"> or Exposure&quot;</span>,</span>
+<span id="cb14-56"><a href="#cb14-56" tabindex="-1"></a>                       <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">&quot;maternal liver&quot;</span>, <span class="st">&quot;fetal liver&quot;</span>,</span>
+<span id="cb14-57"><a href="#cb14-57" tabindex="-1"></a>                                  <span class="st">&quot;maternal thyroid&quot;</span>, <span class="st">&quot;fetal thyroid&quot;</span>,</span>
+<span id="cb14-58"><a href="#cb14-58" tabindex="-1"></a>                                  <span class="st">&quot;conceptus&quot;</span>,</span>
+<span id="cb14-59"><a href="#cb14-59" tabindex="-1"></a>                                  <span class="st">&quot;fetal brain&quot;</span>,</span>
+<span id="cb14-60"><a href="#cb14-60" tabindex="-1"></a>                                  <span class="st">&quot;placenta&quot;</span>, <span class="st">&quot;exposure&quot;</span>),</span>
+<span id="cb14-61"><a href="#cb14-61" tabindex="-1"></a>                       <span class="at">values =</span> <span class="fu">c</span>(<span class="st">&#39;Cfbrain&#39;</span> <span class="ot">=</span> my_viridis_colors[<span class="dv">2</span>],</span>
+<span id="cb14-62"><a href="#cb14-62" tabindex="-1"></a>                                  <span class="st">&#39;exposure&#39;</span> <span class="ot">=</span> <span class="st">&#39;dimgrey&#39;</span>,</span>
+<span id="cb14-63"><a href="#cb14-63" tabindex="-1"></a>                                  <span class="st">&#39;Cliver&#39;</span> <span class="ot">=</span> my_viridis_colors[<span class="dv">1</span>],</span>
+<span id="cb14-64"><a href="#cb14-64" tabindex="-1"></a>                                  <span class="st">&#39;Cfliver&#39;</span> <span class="ot">=</span> my_viridis_colors[<span class="dv">2</span>],</span>
+<span id="cb14-65"><a href="#cb14-65" tabindex="-1"></a>                                  <span class="st">&#39;Cplacenta&#39;</span> <span class="ot">=</span> <span class="st">&#39;#990066&#39;</span>,</span>
+<span id="cb14-66"><a href="#cb14-66" tabindex="-1"></a>                                  <span class="st">&#39;Cthyroid&#39;</span> <span class="ot">=</span> my_viridis_colors[<span class="dv">1</span>],</span>
+<span id="cb14-67"><a href="#cb14-67" tabindex="-1"></a>                                  <span class="st">&#39;Cfthyroid&#39;</span> <span class="ot">=</span> my_viridis_colors[<span class="dv">2</span>],</span>
+<span id="cb14-68"><a href="#cb14-68" tabindex="-1"></a>                                  <span class="st">&#39;Cconceptus&#39;</span> <span class="ot">=</span> <span class="st">&#39;#73D055FF&#39;</span>),</span>
+<span id="cb14-69"><a href="#cb14-69" tabindex="-1"></a>                       <span class="at">drop =</span> F) <span class="sc">+</span></span>
+<span id="cb14-70"><a href="#cb14-70" tabindex="-1"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;Chemical&#39;</span>, <span class="at">y =</span> <span class="st">&#39;Oral AED or Exposure (log10 mg/kg-bw/day)&#39;</span>, <span class="at">title =</span> k) <span class="sc">+</span></span>
+<span id="cb14-71"><a href="#cb14-71" tabindex="-1"></a>    <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb14-72"><a href="#cb14-72" tabindex="-1"></a>    <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;none&quot;</span>, </span>
+<span id="cb14-73"><a href="#cb14-73" tabindex="-1"></a>          <span class="at">plot.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>), </span>
+<span id="cb14-74"><a href="#cb14-74" tabindex="-1"></a>          <span class="at">plot.margin =</span> <span class="fu">unit</span>(<span class="fu">c</span>(<span class="fl">0.1</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>,<span class="fl">0.1</span>), <span class="st">&quot;cm&quot;</span>),</span>
+<span id="cb14-75"><a href="#cb14-75" tabindex="-1"></a>          <span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>), </span>
+<span id="cb14-76"><a href="#cb14-76" tabindex="-1"></a>          <span class="at">axis.text.y =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">5</span>), </span>
+<span id="cb14-77"><a href="#cb14-77" tabindex="-1"></a>          <span class="at">axis.text.x =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>),</span>
+<span id="cb14-78"><a href="#cb14-78" tabindex="-1"></a>          <span class="at">legend.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>), </span>
+<span id="cb14-79"><a href="#cb14-79" tabindex="-1"></a>          <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">6</span>, <span class="at">hjust =</span> <span class="fl">0.5</span>))<span class="sc">+</span></span>
+<span id="cb14-80"><a href="#cb14-80" tabindex="-1"></a>    <span class="fu">coord_flip</span>()</span>
+<span id="cb14-81"><a href="#cb14-81" tabindex="-1"></a>}</span>
+<span id="cb14-82"><a href="#cb14-82" tabindex="-1"></a></span>
+<span id="cb14-83"><a href="#cb14-83" tabindex="-1"></a><span class="co"># remove extra axis labels </span></span>
+<span id="cb14-84"><a href="#cb14-84" tabindex="-1"></a>listgg<span class="sc">$</span>IYD <span class="ot">&lt;-</span> listgg<span class="sc">$</span>IYD <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;&#39;</span>, <span class="at">y =</span> <span class="st">&#39;&#39;</span>)</span>
+<span id="cb14-85"><a href="#cb14-85" tabindex="-1"></a>listgg<span class="sc">$</span>DIO3 <span class="ot">&lt;-</span> listgg<span class="sc">$</span>DIO3 <span class="sc">+</span> </span>
+<span id="cb14-86"><a href="#cb14-86" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;&#39;</span>) </span>
+<span id="cb14-87"><a href="#cb14-87" tabindex="-1"></a>listgg<span class="sc">$</span>DIO1 <span class="ot">&lt;-</span> listgg<span class="sc">$</span>DIO1 <span class="sc">+</span> <span class="fu">labs</span>(<span class="at">y =</span> <span class="st">&#39;&#39;</span>)</span>
+<span id="cb14-88"><a href="#cb14-88" tabindex="-1"></a></span>
+<span id="cb14-89"><a href="#cb14-89" tabindex="-1"></a><span class="co"># arrange DIO1 and DIO2 with equal sizes since they have ~20 chems each (21 vs 24)</span></span>
+<span id="cb14-90"><a href="#cb14-90" tabindex="-1"></a>pcol1 <span class="ot">&lt;-</span> <span class="fu">plot_grid</span>(listgg<span class="sc">$</span>DIO1, listgg<span class="sc">$</span>DIO2, </span>
+<span id="cb14-91"><a href="#cb14-91" tabindex="-1"></a>                  <span class="at">align =</span> <span class="st">&quot;hv&quot;</span>, <span class="at">nrow =</span> <span class="dv">2</span>, </span>
+<span id="cb14-92"><a href="#cb14-92" tabindex="-1"></a>                  <span class="at">rel_heights =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="fl">1.1</span>))</span>
+<span id="cb14-93"><a href="#cb14-93" tabindex="-1"></a></span>
+<span id="cb14-94"><a href="#cb14-94" tabindex="-1"></a><span class="co"># make DIO3 3x taller than IYD (44 chems vs 4)</span></span>
+<span id="cb14-95"><a href="#cb14-95" tabindex="-1"></a>pcol2 <span class="ot">&lt;-</span> <span class="fu">plot_grid</span>(listgg<span class="sc">$</span>IYD, listgg<span class="sc">$</span>DIO3, </span>
+<span id="cb14-96"><a href="#cb14-96" tabindex="-1"></a>                   <span class="at">align =</span> <span class="st">&quot;hv&quot;</span>, <span class="at">nrow =</span> <span class="dv">2</span>, </span>
+<span id="cb14-97"><a href="#cb14-97" tabindex="-1"></a>                   <span class="at">rel_heights =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">3</span>))</span>
+<span id="cb14-98"><a href="#cb14-98" tabindex="-1"></a></span>
+<span id="cb14-99"><a href="#cb14-99" tabindex="-1"></a><span class="co"># combine two columns of plots</span></span>
+<span id="cb14-100"><a href="#cb14-100" tabindex="-1"></a>prow <span class="ot">&lt;-</span> <span class="fu">plot_grid</span>(pcol1, pcol2, </span>
+<span id="cb14-101"><a href="#cb14-101" tabindex="-1"></a>                    <span class="at">align =</span> <span class="st">&quot;h&quot;</span>, <span class="at">ncol =</span> <span class="dv">2</span>, </span>
+<span id="cb14-102"><a href="#cb14-102" tabindex="-1"></a>                    <span class="at">rel_widths =</span> <span class="fu">c</span>(<span class="dv">1</span>,<span class="dv">1</span>))</span>
+<span id="cb14-103"><a href="#cb14-103" tabindex="-1"></a></span>
+<span id="cb14-104"><a href="#cb14-104" tabindex="-1"></a><span class="co"># extract legend from one of the plots</span></span>
+<span id="cb14-105"><a href="#cb14-105" tabindex="-1"></a>grobs <span class="ot">&lt;-</span> <span class="fu">ggplotGrob</span>(</span>
+<span id="cb14-106"><a href="#cb14-106" tabindex="-1"></a>  listgg<span class="sc">$</span>DIO2 <span class="sc">+</span> </span>
+<span id="cb14-107"><a href="#cb14-107" tabindex="-1"></a>  <span class="fu">guides</span>(</span>
+<span id="cb14-108"><a href="#cb14-108" tabindex="-1"></a>    <span class="at">starshape =</span> <span class="fu">guide_legend</span>(<span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">byrow =</span> F, </span>
+<span id="cb14-109"><a href="#cb14-109" tabindex="-1"></a>                             <span class="at">keyheight =</span> <span class="fu">unit</span>(<span class="fl">0.25</span>, <span class="st">&quot;cm&quot;</span>)), </span>
+<span id="cb14-110"><a href="#cb14-110" tabindex="-1"></a>    <span class="at">fill =</span> <span class="fu">guide_legend</span>(<span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">byrow =</span> F, </span>
+<span id="cb14-111"><a href="#cb14-111" tabindex="-1"></a>                        <span class="at">keyheight =</span> <span class="fu">unit</span>(<span class="fl">0.25</span>, <span class="st">&quot;cm&quot;</span>)), </span>
+<span id="cb14-112"><a href="#cb14-112" tabindex="-1"></a>    <span class="at">color =</span> <span class="fu">guide_legend</span>(<span class="at">ncol =</span> <span class="dv">2</span>, <span class="at">byrow =</span> F, </span>
+<span id="cb14-113"><a href="#cb14-113" tabindex="-1"></a>                         <span class="at">keyheight =</span> <span class="fu">unit</span>(<span class="fl">0.25</span>, <span class="st">&quot;cm&quot;</span>)),</span>
+<span id="cb14-114"><a href="#cb14-114" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb14-115"><a href="#cb14-115" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">&quot;bottom&quot;</span>)</span>
+<span id="cb14-116"><a href="#cb14-116" tabindex="-1"></a>  )<span class="sc">$</span>grobs</span>
+<span id="cb14-117"><a href="#cb14-117" tabindex="-1"></a>legend2 <span class="ot">&lt;-</span> grobs[[<span class="fu">which</span>(<span class="fu">sapply</span>(grobs, <span class="cf">function</span>(x) x<span class="sc">$</span>name) <span class="sc">==</span> <span class="st">&quot;guide-box&quot;</span>)]]</span>
+<span id="cb14-118"><a href="#cb14-118" tabindex="-1"></a></span>
+<span id="cb14-119"><a href="#cb14-119" tabindex="-1"></a><span class="co"># add the legend underneath the plots; make it 10% of the height of the combined plots</span></span>
+<span id="cb14-120"><a href="#cb14-120" tabindex="-1"></a>fig9 <span class="ot">&lt;-</span> <span class="fu">plot_grid</span>(prow, legend2, </span>
+<span id="cb14-121"><a href="#cb14-121" tabindex="-1"></a>          <span class="at">nrow =</span> <span class="dv">2</span>, <span class="at">rel_heights =</span> <span class="fu">c</span>(<span class="fl">0.88</span>,<span class="fl">0.12</span>)) <span class="sc">+</span></span>
+<span id="cb14-122"><a href="#cb14-122" tabindex="-1"></a>   <span class="fu">theme</span>(<span class="at">plot.background =</span> <span class="fu">element_rect</span>(<span class="at">fill =</span> <span class="st">&quot;white&quot;</span>, <span class="at">color =</span> <span class="st">&quot;white&quot;</span>))</span>
+<span id="cb14-123"><a href="#cb14-123" tabindex="-1"></a></span>
+<span id="cb14-124"><a href="#cb14-124" tabindex="-1"></a><span class="co"># ggsave(plot = fig9,</span></span>
+<span id="cb14-125"><a href="#cb14-125" tabindex="-1"></a><span class="co">#        units = &quot;mm&quot;,</span></span>
+<span id="cb14-126"><a href="#cb14-126" tabindex="-1"></a><span class="co">#        dpi = 300,</span></span>
+<span id="cb14-127"><a href="#cb14-127" tabindex="-1"></a><span class="co">#        width = 190, height = 150,</span></span>
+<span id="cb14-128"><a href="#cb14-128" tabindex="-1"></a><span class="co">#        device = &quot;png&quot;,</span></span>
+<span id="cb14-129"><a href="#cb14-129" tabindex="-1"></a><span class="co">#        filename = &quot;./figures/preg_prioritization_by_BER.png&quot;)</span></span></code></pre></div>
+</div>
+</div>
+<div id="comparing-ivive-models-based-on-ber-prioritization" class="section level1">
+<h1>Comparing IVIVE models based on BER prioritization</h1>
+<div id="table-8" class="section level2">
+<h2>Table 8</h2>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" tabindex="-1"></a>targets <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">&#39;DIO1&#39;</span>, <span class="st">&#39;DIO2&#39;</span>, <span class="st">&#39;DIO3&#39;</span>, <span class="st">&#39;IYD&#39;</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" tabindex="-1"></a><span class="co"># DATA WRANGLING</span></span>
+<span id="cb15-4"><a href="#cb15-4" tabindex="-1"></a>tissue.bers[min_ber <span class="sc">==</span> ber, most_sensitive_tissue <span class="sc">:=</span> compt]</span>
+<span id="cb15-5"><a href="#cb15-5" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" tabindex="-1"></a><span class="co"># table matching order of chemicals in enzyme subplots with all calculated BERs</span></span>
+<span id="cb15-7"><a href="#cb15-7" tabindex="-1"></a><span class="co"># every enzyme x chem x min BER constitutes a row </span></span>
+<span id="cb15-8"><a href="#cb15-8" tabindex="-1"></a>minber.by.chem <span class="ot">&lt;-</span> tissue.bers[<span class="sc">!</span><span class="fu">is.na</span>(most_sensitive_tissue), </span>
+<span id="cb15-9"><a href="#cb15-9" tabindex="-1"></a>                       .(chnm, min_ber, most_sensitive_tissue), by <span class="ot">=</span> .(enzyme, dtxsid)]</span>
+<span id="cb15-10"><a href="#cb15-10" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" tabindex="-1"></a><span class="co"># check if there are multiple most-sensitive tissues per chem in each enzyme group </span></span>
+<span id="cb15-12"><a href="#cb15-12" tabindex="-1"></a>minber.by.chem[, <span class="cf">if</span>(.N <span class="sc">&gt;</span> <span class="dv">1</span>) .SD, by <span class="ot">=</span> .(enzyme, dtxsid)][, <span class="fu">length</span>(<span class="fu">unique</span>(dtxsid))] <span class="co">#70 chems</span></span>
+<span id="cb15-13"><a href="#cb15-13" tabindex="-1"></a></span>
+<span id="cb15-14"><a href="#cb15-14" tabindex="-1"></a><span class="co"># collapse multiple most-sensitive tissues per chem in each enzyme group</span></span>
+<span id="cb15-15"><a href="#cb15-15" tabindex="-1"></a>min.ber.reduced <span class="ot">&lt;-</span> minber.by.chem[, most_sensitive_compts <span class="sc">:=</span> <span class="fu">paste</span>(most_sensitive_tissue, <span class="at">collapse =</span> <span class="st">&quot;, &quot;</span>), by <span class="ot">=</span> .(enzyme, dtxsid)][, .(chnm, min_ber, most_sensitive_compts), by <span class="ot">=</span> .(enzyme, dtxsid)]</span>
+<span id="cb15-16"><a href="#cb15-16" tabindex="-1"></a>min.ber.reduced <span class="ot">&lt;-</span> <span class="fu">unique</span>(min.ber.reduced)</span>
+<span id="cb15-17"><a href="#cb15-17" tabindex="-1"></a></span>
+<span id="cb15-18"><a href="#cb15-18" tabindex="-1"></a><span class="co"># min BER matrix</span></span>
+<span id="cb15-19"><a href="#cb15-19" tabindex="-1"></a>min.ber.mat <span class="ot">&lt;-</span> data.table<span class="sc">::</span><span class="fu">dcast</span>(min.ber.reduced[, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>], </span>
+<span id="cb15-20"><a href="#cb15-20" tabindex="-1"></a>                     dtxsid <span class="sc">+</span> chnm <span class="sc">~</span> enzyme, <span class="at">value.var =</span> <span class="fu">c</span>(<span class="st">&#39;min_ber&#39;</span>))</span>
+<span id="cb15-21"><a href="#cb15-21" tabindex="-1"></a>min.ber.mat[, min_across_enzyme <span class="sc">:=</span> <span class="fu">pmin</span>(DIO1, DIO2, DIO3, IYD, <span class="at">na.rm =</span> T)]</span>
+<span id="cb15-22"><a href="#cb15-22" tabindex="-1"></a>min.ber.mat <span class="ot">&lt;-</span> min.ber.mat[<span class="fu">order</span>(min_across_enzyme)]</span>
+<span id="cb15-23"><a href="#cb15-23" tabindex="-1"></a></span>
+<span id="cb15-24"><a href="#cb15-24" tabindex="-1"></a><span class="co"># find the target corresponding to the min_across_enzyme</span></span>
+<span id="cb15-25"><a href="#cb15-25" tabindex="-1"></a>min.ber.mat[, enzyme <span class="sc">:=</span> <span class="fu">mapply</span>(<span class="cf">function</span>(x) targets[x], <span class="fu">apply</span>(min.ber.mat[, targets, <span class="at">with =</span> <span class="cn">FALSE</span>], <span class="dv">1</span>, which.min))]</span>
+<span id="cb15-26"><a href="#cb15-26" tabindex="-1"></a></span>
+<span id="cb15-27"><a href="#cb15-27" tabindex="-1"></a><span class="co"># merge data on most sensitive tissues reflecting min BER </span></span>
+<span id="cb15-28"><a href="#cb15-28" tabindex="-1"></a>new.ranking.tissues <span class="ot">&lt;-</span> <span class="fu">merge.data.table</span>(min.ber.mat, </span>
+<span id="cb15-29"><a href="#cb15-29" tabindex="-1"></a>                                 minber.by.chem[, .(dtxsid, chnm, enzyme, min_ber, most_sensitive_tissue)], </span>
+<span id="cb15-30"><a href="#cb15-30" tabindex="-1"></a>                                 <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&#39;dtxsid&#39;</span>, <span class="st">&#39;chnm&#39;</span>, <span class="st">&#39;enzyme&#39;</span>), </span>
+<span id="cb15-31"><a href="#cb15-31" tabindex="-1"></a>                                 <span class="at">all.x =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb15-32"><a href="#cb15-32" tabindex="-1"></a><span class="fu">setnames</span>(new.ranking.tissues, <span class="at">old =</span> <span class="st">&#39;enzyme&#39;</span>, <span class="at">new =</span> <span class="st">&#39;target_min&#39;</span>)</span>
+<span id="cb15-33"><a href="#cb15-33" tabindex="-1"></a></span>
+<span id="cb15-34"><a href="#cb15-34" tabindex="-1"></a><span class="co"># round all BERs to 2 sigfigs for easy table viewing </span></span>
+<span id="cb15-35"><a href="#cb15-35" tabindex="-1"></a>ranked.by.plasma <span class="ot">&lt;-</span> ivive.moe.tb[, lmoe50 <span class="sc">:=</span> <span class="fu">signif</span>(log.pBER50, <span class="at">digits =</span> <span class="dv">2</span>)][<span class="fu">order</span>(lmoe50)]</span>
+<span id="cb15-36"><a href="#cb15-36" tabindex="-1"></a></span>
+<span id="cb15-37"><a href="#cb15-37" tabindex="-1"></a>final.new.ranking <span class="ot">&lt;-</span> new.ranking.tissues[, <span class="sc">-</span><span class="fu">c</span>(<span class="st">&quot;target_min&quot;</span>, <span class="st">&quot;min_ber&quot;</span>)]</span>
+<span id="cb15-38"><a href="#cb15-38" tabindex="-1"></a>final.new.ranking <span class="ot">&lt;-</span> final.new.ranking[<span class="fu">order</span>(min_across_enzyme)]</span>
+<span id="cb15-39"><a href="#cb15-39" tabindex="-1"></a></span>
+<span id="cb15-40"><a href="#cb15-40" tabindex="-1"></a><span class="co"># comparing tissue BERs from full preg model with plasma BERs from 3compss model </span></span>
+<span id="cb15-41"><a href="#cb15-41" tabindex="-1"></a>plasma.tissue.bers <span class="ot">&lt;-</span> <span class="fu">merge.data.table</span>(ranked.by.plasma[, <span class="fu">c</span>(<span class="st">&#39;dtxsid&#39;</span>, <span class="st">&#39;chnm&#39;</span>, <span class="st">&#39;lmoe50&#39;</span>)], </span>
+<span id="cb15-42"><a href="#cb15-42" tabindex="-1"></a>                           final.new.ranking[, <span class="sc">-</span><span class="fu">c</span>(<span class="st">&#39;chnm&#39;</span>)], </span>
+<span id="cb15-43"><a href="#cb15-43" tabindex="-1"></a>                           <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&#39;dtxsid&#39;</span>))</span>
+<span id="cb15-44"><a href="#cb15-44" tabindex="-1"></a></span>
+<span id="cb15-45"><a href="#cb15-45" tabindex="-1"></a><span class="fu">setnames</span>(plasma.tissue.bers, <span class="at">old =</span> <span class="fu">colnames</span>(plasma.tissue.bers)[<span class="dv">3</span><span class="sc">:</span><span class="dv">8</span>], </span>
+<span id="cb15-46"><a href="#cb15-46" tabindex="-1"></a>         <span class="at">new =</span> <span class="fu">c</span>(<span class="st">&#39;plasma_BER50&#39;</span>, <span class="st">&#39;DIO1_BER&#39;</span>, <span class="st">&#39;DIO2_BER&#39;</span>, <span class="st">&#39;DIO3_BER&#39;</span>, <span class="st">&#39;IYD_BER&#39;</span>, <span class="st">&#39;min_BER&#39;</span>))</span>
+<span id="cb15-47"><a href="#cb15-47" tabindex="-1"></a></span>
+<span id="cb15-48"><a href="#cb15-48" tabindex="-1"></a>plasma.tissue.bers <span class="ot">&lt;-</span> plasma.tissue.bers[<span class="fu">order</span>(min_BER)]</span></code></pre></div>
+</div>
+<div id="figure-10-understanding-and-interpreting-maternal-fetal-bers" class="section level2">
+<h2>Figure 10: Understanding and Interpreting Maternal-Fetal BERs</h2>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" tabindex="-1"></a><span class="co"># merge min BER with plasma BER for each chem with unique row for each chem</span></span>
+<span id="cb16-2"><a href="#cb16-2" tabindex="-1"></a><span class="co"># ignoring multiple sensitive tissues</span></span>
+<span id="cb16-3"><a href="#cb16-3" tabindex="-1"></a>ber.comp <span class="ot">&lt;-</span> <span class="fu">merge.data.table</span>(ranked.by.plasma[, <span class="fu">c</span>(<span class="st">&#39;dtxsid&#39;</span>, <span class="st">&#39;chnm&#39;</span>, <span class="st">&#39;lmoe50&#39;</span>)], </span>
+<span id="cb16-4"><a href="#cb16-4" tabindex="-1"></a>                             min.ber.mat[, <span class="sc">-</span><span class="fu">c</span>(<span class="st">&quot;chnm&quot;</span>)], </span>
+<span id="cb16-5"><a href="#cb16-5" tabindex="-1"></a>                             <span class="at">by =</span> <span class="fu">c</span>(<span class="st">&quot;dtxsid&quot;</span>))</span>
+<span id="cb16-6"><a href="#cb16-6" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" tabindex="-1"></a><span class="fu">setnames</span>(ber.comp, <span class="at">old =</span> <span class="fu">colnames</span>(ber.comp)[<span class="dv">3</span><span class="sc">:</span><span class="dv">8</span>], </span>
+<span id="cb16-8"><a href="#cb16-8" tabindex="-1"></a>         <span class="at">new =</span> <span class="fu">c</span>(<span class="st">&#39;plasma_BER50&#39;</span>, <span class="st">&#39;DIO1_BER&#39;</span>, <span class="st">&#39;DIO2_BER&#39;</span>, <span class="st">&#39;DIO3_BER&#39;</span>, <span class="st">&#39;IYD_BER&#39;</span>, <span class="st">&#39;min_BER&#39;</span>))</span>
+<span id="cb16-9"><a href="#cb16-9" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" tabindex="-1"></a>max_ber <span class="ot">&lt;-</span> <span class="fu">max</span>(ber.comp[, <span class="fu">c</span>(<span class="st">&#39;plasma_BER50&#39;</span>, <span class="st">&#39;min_BER&#39;</span>)], <span class="at">na.rm =</span> T)</span>
+<span id="cb16-11"><a href="#cb16-11" tabindex="-1"></a>min_ber <span class="ot">&lt;-</span> <span class="fu">min</span>(ber.comp[, <span class="fu">c</span>(<span class="st">&#39;plasma_BER50&#39;</span>, <span class="st">&#39;min_BER&#39;</span>)], <span class="at">na.rm =</span> T)</span>
+<span id="cb16-12"><a href="#cb16-12" tabindex="-1"></a>ber.lims <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">floor</span>(min_ber), <span class="fu">ceiling</span>(max_ber))</span>
+<span id="cb16-13"><a href="#cb16-13" tabindex="-1"></a></span>
+<span id="cb16-14"><a href="#cb16-14" tabindex="-1"></a><span class="co"># chems with labels </span></span>
+<span id="cb16-15"><a href="#cb16-15" tabindex="-1"></a>chem.labels <span class="ot">&lt;-</span> ber.comp[min_BER <span class="sc">&lt;</span> <span class="dv">0</span>][<span class="fu">order</span>(min_BER)][<span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>, chnm]</span>
+<span id="cb16-16"><a href="#cb16-16" tabindex="-1"></a></span>
+<span id="cb16-17"><a href="#cb16-17" tabindex="-1"></a><span class="co"># theme for the next 2 figures </span></span>
+<span id="cb16-18"><a href="#cb16-18" tabindex="-1"></a>my_theme <span class="ot">&lt;-</span> <span class="fu">theme_bw</span>() <span class="sc">+</span></span>
+<span id="cb16-19"><a href="#cb16-19" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">axis.title =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">8</span>, <span class="at">face =</span> <span class="st">&quot;bold&quot;</span>), </span>
+<span id="cb16-20"><a href="#cb16-20" tabindex="-1"></a>        <span class="at">axis.text =</span> <span class="fu">element_text</span>(<span class="at">size =</span> <span class="dv">7</span>))</span>
+<span id="cb16-21"><a href="#cb16-21" tabindex="-1"></a>  </span>
+<span id="cb16-22"><a href="#cb16-22" tabindex="-1"></a>preg.vs.nonpreg.pp <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> ber.comp, <span class="fu">aes</span>(<span class="at">x =</span> plasma_BER50, <span class="at">y =</span> min_BER)) <span class="sc">+</span></span>
+<span id="cb16-23"><a href="#cb16-23" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.75</span>, <span class="at">size =</span> <span class="dv">1</span>, </span>
+<span id="cb16-24"><a href="#cb16-24" tabindex="-1"></a>             <span class="at">show.legend =</span> T) <span class="sc">+</span></span>
+<span id="cb16-25"><a href="#cb16-25" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>, <span class="at">linetype =</span> <span class="st">&#39;solid&#39;</span>, <span class="at">color =</span> <span class="st">&quot;#666666&quot;</span>) <span class="sc">+</span></span>
+<span id="cb16-26"><a href="#cb16-26" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="fu">aes</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">1</span>), <span class="at">linetype =</span> <span class="st">&#39;longdash&#39;</span>, <span class="at">color =</span> <span class="st">&#39;grey&#39;</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>) <span class="sc">+</span> <span class="co"># default linesize = 1</span></span>
+<span id="cb16-27"><a href="#cb16-27" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="fu">aes</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="sc">-</span><span class="dv">1</span>), <span class="at">linetype =</span> <span class="st">&#39;longdash&#39;</span>, <span class="at">color =</span> <span class="st">&#39;grey&#39;</span>, <span class="at">linewidth =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb16-28"><a href="#cb16-28" tabindex="-1"></a>  <span class="fu">geom_label_repel</span>(<span class="fu">aes</span>(<span class="at">label =</span> chnm),</span>
+<span id="cb16-29"><a href="#cb16-29" tabindex="-1"></a>                   <span class="at">data =</span> ber.comp[chnm <span class="sc">%in%</span> chem.labels],</span>
+<span id="cb16-30"><a href="#cb16-30" tabindex="-1"></a>                   <span class="at">max.overlaps =</span> <span class="cn">Inf</span>, </span>
+<span id="cb16-31"><a href="#cb16-31" tabindex="-1"></a>                   <span class="at">force =</span> <span class="dv">50</span>, </span>
+<span id="cb16-32"><a href="#cb16-32" tabindex="-1"></a>                   <span class="at">size =</span> <span class="dv">2</span>, </span>
+<span id="cb16-33"><a href="#cb16-33" tabindex="-1"></a>                   <span class="at">label.padding =</span> <span class="fl">0.1</span>, </span>
+<span id="cb16-34"><a href="#cb16-34" tabindex="-1"></a>                   <span class="at">label.size =</span> <span class="fl">0.1</span>, </span>
+<span id="cb16-35"><a href="#cb16-35" tabindex="-1"></a>                   <span class="at">label.r =</span> <span class="fl">0.08</span>, </span>
+<span id="cb16-36"><a href="#cb16-36" tabindex="-1"></a>                   <span class="at">segment.size =</span> <span class="fl">0.2</span>, </span>
+<span id="cb16-37"><a href="#cb16-37" tabindex="-1"></a>                   <span class="at">min.segment.length =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb16-38"><a href="#cb16-38" tabindex="-1"></a>  my_theme <span class="sc">+</span></span>
+<span id="cb16-39"><a href="#cb16-39" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(ber.lims[<span class="dv">1</span>], ber.lims[<span class="dv">2</span>], <span class="dv">1</span>), </span>
+<span id="cb16-40"><a href="#cb16-40" tabindex="-1"></a>                     <span class="at">limits =</span> ber.lims) <span class="sc">+</span></span>
+<span id="cb16-41"><a href="#cb16-41" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(ber.lims[<span class="dv">1</span>], ber.lims[<span class="dv">2</span>], <span class="dv">1</span>), </span>
+<span id="cb16-42"><a href="#cb16-42" tabindex="-1"></a>                     <span class="at">limits =</span> ber.lims) <span class="sc">+</span></span>
+<span id="cb16-43"><a href="#cb16-43" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;plasma BER using 3compss model&#39;</span>, <span class="at">y =</span> <span class="st">&#39;min BER across DIO/IYD targets and tissues&#39;</span>)</span>
+<span id="cb16-44"><a href="#cb16-44" tabindex="-1"></a></span>
+<span id="cb16-45"><a href="#cb16-45" tabindex="-1"></a><span class="co"># how many chems to the right of y = x?</span></span>
+<span id="cb16-46"><a href="#cb16-46" tabindex="-1"></a>ber.comp[plasma_BER50 <span class="sc">&gt;</span> min_BER, .N] <span class="co">#89 chems </span></span>
+<span id="cb16-47"><a href="#cb16-47" tabindex="-1"></a></span>
+<span id="cb16-48"><a href="#cb16-48" tabindex="-1"></a><span class="co"># plot SEEM3 uncertainty</span></span>
+<span id="cb16-49"><a href="#cb16-49" tabindex="-1"></a>ivive.moe.tb<span class="sc">$</span>uncertainty <span class="ot">=</span> <span class="fu">log10</span>(ivive.moe.tb<span class="sc">$</span>seem3.u95<span class="sc">/</span>ivive.moe.tb<span class="sc">$</span>seem3)</span>
+<span id="cb16-50"><a href="#cb16-50" tabindex="-1"></a>ber.comp<span class="sc">$</span>uncertainty <span class="ot">&lt;-</span> ivive.moe.tb<span class="sc">$</span>uncertainty[<span class="fu">match</span>(ber.comp<span class="sc">$</span>dtxsid, ivive.moe.tb<span class="sc">$</span>dtxsid)]</span>
+<span id="cb16-51"><a href="#cb16-51" tabindex="-1"></a></span>
+<span id="cb16-52"><a href="#cb16-52" tabindex="-1"></a>min.min.ber <span class="ot">&lt;-</span> <span class="fu">min</span>(ber.comp<span class="sc">$</span>min_BER)</span>
+<span id="cb16-53"><a href="#cb16-53" tabindex="-1"></a>max.min.ber <span class="ot">&lt;-</span> <span class="fu">max</span>(ber.comp<span class="sc">$</span>min_BER)</span>
+<span id="cb16-54"><a href="#cb16-54" tabindex="-1"></a>min.ber.lims <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="fu">floor</span>(min.min.ber), <span class="fu">ceiling</span>(max.min.ber))</span>
+<span id="cb16-55"><a href="#cb16-55" tabindex="-1"></a>max.uncertainty <span class="ot">&lt;-</span> <span class="fu">max</span>(ber.comp<span class="sc">$</span>uncertainty)</span>
+<span id="cb16-56"><a href="#cb16-56" tabindex="-1"></a></span>
+<span id="cb16-57"><a href="#cb16-57" tabindex="-1"></a>seem3pp <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(<span class="at">data =</span> ber.comp, </span>
+<span id="cb16-58"><a href="#cb16-58" tabindex="-1"></a>       <span class="at">mapping =</span> <span class="fu">aes</span>(<span class="at">x =</span> min_BER, </span>
+<span id="cb16-59"><a href="#cb16-59" tabindex="-1"></a>                     <span class="at">y =</span> uncertainty)) <span class="sc">+</span></span>
+<span id="cb16-60"><a href="#cb16-60" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">1</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb16-61"><a href="#cb16-61" tabindex="-1"></a>  <span class="fu">geom_label_repel</span>(<span class="fu">aes</span>(<span class="at">label =</span> chnm),</span>
+<span id="cb16-62"><a href="#cb16-62" tabindex="-1"></a>                   <span class="at">data =</span> <span class="fu">subset</span>(ber.comp, chnm <span class="sc">%in%</span> chem.labels), </span>
+<span id="cb16-63"><a href="#cb16-63" tabindex="-1"></a>                   <span class="at">max.overlaps =</span> <span class="cn">Inf</span>, </span>
+<span id="cb16-64"><a href="#cb16-64" tabindex="-1"></a>                   <span class="at">force =</span> <span class="dv">75</span>,</span>
+<span id="cb16-65"><a href="#cb16-65" tabindex="-1"></a>                   <span class="at">size =</span> <span class="dv">2</span>, </span>
+<span id="cb16-66"><a href="#cb16-66" tabindex="-1"></a>                   <span class="at">label.padding =</span> <span class="fl">0.1</span>, </span>
+<span id="cb16-67"><a href="#cb16-67" tabindex="-1"></a>                   <span class="at">label.size =</span> <span class="fl">0.1</span>, </span>
+<span id="cb16-68"><a href="#cb16-68" tabindex="-1"></a>                   <span class="at">label.r =</span> <span class="fl">0.08</span>, </span>
+<span id="cb16-69"><a href="#cb16-69" tabindex="-1"></a>                   <span class="at">segment.size =</span> <span class="fl">0.2</span>, </span>
+<span id="cb16-70"><a href="#cb16-70" tabindex="-1"></a>                   <span class="at">min.segment.length =</span> <span class="dv">0</span>) <span class="sc">+</span></span>
+<span id="cb16-71"><a href="#cb16-71" tabindex="-1"></a>  my_theme <span class="sc">+</span></span>
+<span id="cb16-72"><a href="#cb16-72" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(min.ber.lims[<span class="dv">1</span>], min.ber.lims[<span class="dv">2</span>], <span class="dv">1</span>), </span>
+<span id="cb16-73"><a href="#cb16-73" tabindex="-1"></a>                     <span class="at">limits =</span> min.ber.lims) <span class="sc">+</span></span>
+<span id="cb16-74"><a href="#cb16-74" tabindex="-1"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="fu">ceiling</span>(max.uncertainty), <span class="dv">1</span>), </span>
+<span id="cb16-75"><a href="#cb16-75" tabindex="-1"></a>                     <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="fu">ceiling</span>(max.uncertainty))) <span class="sc">+</span></span>
+<span id="cb16-76"><a href="#cb16-76" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">&#39;min BER by Chemical&#39;</span>, <span class="at">y =</span> <span class="fu">TeX</span>(r<span class="st">&#39;($log_{10}ExpoCast_{u95} - log_{10}ExpoCast_{med}$)&#39;</span>))</span>
+<span id="cb16-77"><a href="#cb16-77" tabindex="-1"></a></span>
+<span id="cb16-78"><a href="#cb16-78" tabindex="-1"></a><span class="fu">median</span>(ber.comp<span class="sc">$</span>min_BER)</span>
+<span id="cb16-79"><a href="#cb16-79" tabindex="-1"></a><span class="co">#&gt; [1] 2.9</span></span>
+<span id="cb16-80"><a href="#cb16-80" tabindex="-1"></a></span>
+<span id="cb16-81"><a href="#cb16-81" tabindex="-1"></a>fig10 <span class="ot">&lt;-</span> <span class="fu">plot_grid</span>(preg.vs.nonpreg.pp, seem3pp, </span>
+<span id="cb16-82"><a href="#cb16-82" tabindex="-1"></a>          <span class="at">labels =</span> <span class="st">&quot;AUTO&quot;</span>, <span class="at">label_size =</span> <span class="dv">10</span>)</span>
+<span id="cb16-83"><a href="#cb16-83" tabindex="-1"></a></span>
+<span id="cb16-84"><a href="#cb16-84" tabindex="-1"></a><span class="co"># ggsave(plot = fig10,</span></span>
+<span id="cb16-85"><a href="#cb16-85" tabindex="-1"></a><span class="co">#        units = &quot;mm&quot;,</span></span>
+<span id="cb16-86"><a href="#cb16-86" tabindex="-1"></a><span class="co">#        dpi = 300,</span></span>
+<span id="cb16-87"><a href="#cb16-87" tabindex="-1"></a><span class="co">#        width = 190, height = 100,</span></span>
+<span id="cb16-88"><a href="#cb16-88" tabindex="-1"></a><span class="co">#        device = &quot;png&quot;,</span></span>
+<span id="cb16-89"><a href="#cb16-89" tabindex="-1"></a><span class="co">#        filename = &quot;./figures/BER_uncertainty.png&quot;)</span></span></code></pre></div>
+</div>
+</div>
+<div id="code-used-to-create-data-distributed-with-vignette" class="section level1">
+<h1>Code used to create data distributed with vignette</h1>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" tabindex="-1"></a>thyroid.ac50s <span class="ot">&lt;-</span> ac50.dt</span>
+<span id="cb17-2"><a href="#cb17-2" tabindex="-1"></a>truong25.seem3 <span class="ot">&lt;-</span> SEEM</span>
+<span id="cb17-3"><a href="#cb17-3" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" tabindex="-1"></a><span class="fu">save</span>(thyroid.ac50s, truong25.seem3,</span>
+<span id="cb17-5"><a href="#cb17-5" tabindex="-1"></a>     <span class="at">file=</span><span class="st">&quot;./httk/Truong2025Vignette.RData&quot;</span>)</span></code></pre></div>
+</div>
+
+
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
