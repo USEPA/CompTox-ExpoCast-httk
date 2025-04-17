@@ -70,11 +70,11 @@
 #' 
 #' # For a metabolized compound, non-restrictive clearance should be faster:
 #' h1 <- calc_half_life(
-#'   chem.name="toluene"
+#'   chem.name="toluene",
 #'   model="sumclearances",
 #'   suppress.messages=TRUE)
 #' h2 <- calc_half_life(
-#'   chem.name="toluene"
+#'   chem.name="toluene",
 #'   model="sumclearances",
 #'   restrictive.clearance=FALSE,
 #'   suppress.messages=TRUE)
