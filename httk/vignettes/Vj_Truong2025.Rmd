@@ -43,7 +43,7 @@ Several chunks of code in this vignette have "eval = execute.vignette" and we se
 building the package. You can still reproduce the end figures knitting the .Rmd file, since all the necessary and minimal data objects have been stored in *httk*. If you want to rerun the whole workflow on your own, you must rerun all code from top to bottom, either by changing execute.vignette to TRUE or clicking on the "green arrow" in RStudio. 
 
 ```{r}
-execute.vignette <- TRUE
+execute.vignette <- FALSE
 ```
 
 ## Data Import 
