@@ -133,8 +133,11 @@ parameters3 <- parameterize_fetal_pbtk(chem.cas = "6385-62-2",
 }
 \references{
 \insertRef{kilford2008hepatocellular}{httk}
+
 \insertRef{mcnamara2002protein}{httk}
+
 \insertRef{kapraun2019empirical}{httk}
+
 \insertRef{kapraun2022fetalmodel}{httk}
 }
 \seealso{
