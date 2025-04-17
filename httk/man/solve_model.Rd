@@ -232,6 +232,7 @@ solve_pbtk(chem.name="Besonprodil",
 }
 \references{
 \insertRef{pearce2017httk}{httk}
+\insertRef{davidson2025enabling}{httk}
 }
 \author{
 John Wambaugh, Robert Pearce, Miyuki Breen, Mark Sfeir, and

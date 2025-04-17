@@ -146,6 +146,9 @@
 #' 
 #' @author John Wambaugh, Mark Sfeir, and Dustin Kapraun
 #'
+#' @references 
+#' \insertRef{kapraun2022fetalmodel}{httk}
+#'
 #' @keywords Solve
 #'
 #' @seealso \code{\link{solve_model}}

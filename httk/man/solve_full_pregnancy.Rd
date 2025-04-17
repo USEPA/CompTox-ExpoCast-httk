@@ -99,6 +99,11 @@ plt.out <- solve_full_pregnancy(chem.name = "genistein",
 
 }
 }
+\references{
+\insertRef{kapraun2022fetalmodel}{httk}
+
+\insertRef{truong2025fullpregnancy}{httk}
+}
 \seealso{
 \code{\link{solve_1tri_pbtk}}
 
