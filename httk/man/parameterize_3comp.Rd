@@ -162,6 +162,8 @@ out <- solve_3comp(parameters=parameters1, plots=TRUE)
 \insertRef{pearce2017evaluation}{httk}
 
 \insertRef{kilford2008hepatocellular}{httk}
+
+\insertRef{wambaugh2025simple}{httk}
 }
 \seealso{
 \code{\link{solve_3comp}}
@@ -179,5 +181,5 @@ out <- solve_3comp(parameters=parameters1, plots=TRUE)
 \author{
 Robert Pearce and John Wambaugh
 }
-\keyword{3compartment2}
+\keyword{3compartment}
 \keyword{Parameter}

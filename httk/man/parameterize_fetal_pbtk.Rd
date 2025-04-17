@@ -134,8 +134,11 @@ parameters3 <- parameterize_fetal_pbtk(chem.cas = "6385-62-2",
 \references{
 \insertRef{kilford2008hepatocellular}{httk}
 
-McNamara PJ, Alcorn J. Protein binding predictions in infants. 
-AAPS PharmSci. 2002;4(1):E4. doi: 10.1208/ps040104. PMID: 12049488.
+\insertRef{mcnamara2002protein}{httk}
+
+\insertRef{kapraun2019empirical}{httk}
+
+\insertRef{kapraun2022fetalmodel}{httk}
 }
 \seealso{
 \code{\link{solve_fetal_pbtk}}

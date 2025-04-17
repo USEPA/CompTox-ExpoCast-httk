@@ -1958,3 +1958,36 @@
 #' @seealso \code{\link{load_sipes2017}} 
 #' @keywords data
 "sipes2017"
+
+#' ToxCast thyroid-related bioactivity data 
+#'
+#' Truong et al. 2025 uses ToxCast data for 4 thyroid-related assay endpoints
+#' concerning inhibition of deiodinases ("DIO1", "DIO2", "DIO3", and "IYD") and 
+#' identified 120 priority chemicals with activity for at least one deiodinase. 
+#' These 120 chemicals were curated after assessment for target selectivity and 
+#' assay interference. 
+#'
+#' The AC50s (in uM) for each of the 120 chemicals were retrieved from ToxCast 
+#' invitrodb v3.5 and are used in the "Full Human Gestational IVIVE" vignette.
+#' 
+#' @name thyroid.ac50s
+#' @docType data
+#' @format data.table and data.frame
+#' @keywords data
+"thyroid.ac50s"
+
+#' SEEM3 Example Data for Truong et al. 2025 
+#' 
+#' We can grab SEEM daily intake rate predictions already in RData format from
+#' https://github.com/HumanExposure/SEEM3RPackage/blob/main/scripts/
+#' Download the file chem.preds-2018-11-28.RData
+#' 
+#' We do not have the space to distribute all the SEEM predictions within
+#' this R package, but we can give you our "Full Human Gestational IVIVE" example chemicals.
+#' @name truong25.seem3
+#' @docType data
+#' @format data.table and data.frame
+#' @keywords data
+#' @references
+#' \insertRef{Ring2017SEEM}{httk}
+"truong25.seem3"

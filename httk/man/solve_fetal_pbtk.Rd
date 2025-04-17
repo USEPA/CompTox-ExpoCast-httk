@@ -212,6 +212,9 @@ head(solve_fetal_pbtk(chem.cas = "6385-62-2", physchem.exclude = FALSE))
 }
 
 }
+\references{
+\insertRef{kapraun2022fetalmodel}{httk}
+}
 \seealso{
 \code{\link{solve_model}}
 
