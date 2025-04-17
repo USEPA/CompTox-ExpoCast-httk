@@ -196,6 +196,7 @@
 #' solve_3comp(chem.name="Besonprodil",
 #'             daily.dose=1, dose=NULL,
 #'             days=2.5, doses.per.day=4)
+#' }
 #'
 #' # The following will not work because Diquat dibromide monohydrate's 
 #' # Henry's Law Constant (-3.912) is higher than that of Acetone (~-4.5):
