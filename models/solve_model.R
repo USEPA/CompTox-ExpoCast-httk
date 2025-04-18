@@ -149,6 +149,7 @@
 #' 
 #' @references
 #' \insertRef{pearce2017httk}{httk}
+#' \insertRef{davidson2025enabling}{httk}
 #' 
 #' @keywords Solve
 #'
