@@ -28,8 +28,8 @@ Microtiter Plate Well Descriptions for Armitage et al. (2014) model from
 Honda et al. (2019)
 }
 \references{
-Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
-2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
+\insertRef{armitage2014application}{httk} 
+
 \insertRef{honda2019using}{httk}
 }
 \author{
