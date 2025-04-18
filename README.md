@@ -181,7 +181,7 @@ Dustin Kapraun [kapraun.dustin@epa.gov],
 Kimberly Truong [truong.kimberly@epa.gov], and
 Colin Thomson [thomson.colin@epa.gov]
 
-### Bug-Fixes Vignette edits, and Parameter Values
+### Bug-Fixes, Vignette edits, and Parameter Values
 Todor Antonijevic [tantonijevic@toxstrategies.com], 
 Miyuki Breen, 
 Shannon Bell [Shannon.bell@inotivco.com], 
@@ -200,7 +200,7 @@ Barbara Wetmore [wetmore.barbara@epa.gov],
 Lily Whipple
 
 ### Statistical Expertise
-Woodrow Setzer [setzer.woodrow@epa.gov]
+Woodrow Setzer
 ## License
 
 License: GPL-3 <https://www.gnu.org/licenses/gpl-3.0.en.html>

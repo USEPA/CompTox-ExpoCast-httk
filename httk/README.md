@@ -163,8 +163,6 @@ vignette(package = "httk")
 vignette("IntroToHTTK")
 ```
 
-
-
 ## Authors
 
 ### Principal Investigator 
@@ -183,7 +181,7 @@ Dustin Kapraun [kapraun.dustin@epa.gov],
 Kimberly Truong [truong.kimberly@epa.gov], and
 Colin Thomson [thomson.colin@epa.gov]
 
-### Bug-Fixes Vignette edits, and Parameter Values
+### Bug-Fixes, Vignette edits, and Parameter Values
 Todor Antonijevic [tantonijevic@toxstrategies.com], 
 Miyuki Breen, 
 Shannon Bell [Shannon.bell@inotivco.com], 
