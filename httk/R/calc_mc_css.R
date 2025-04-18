@@ -183,7 +183,7 @@
 #' @param convert.httkpop.arg.list Additional parameters passed to the 
 #' convert_httkpop_* function for the model.
 #'
-#' @param parameterize.arg.list A list of arguments to be passed to the model
+#' @param parameterize.args.list A list of arguments to be passed to the model
 #' parameterization function (that is, parameterize_MODEL) corresponding to
 #' argument "model". (Defaults to NULL.)  
 #'
@@ -309,6 +309,14 @@
 #'              invitrouv=FALSE,
 #'              vary.params=list(Pow=0.3))
 #'  
+#' # The following will not work because Diquat dibromide monohydrate's 
+#' # Henry's Law Constant (-3.912) is higher than that of Acetone (~-4.5):
+#' try(calc_mc_css(chem.cas="6385-62-2"))
+#' 
+#' # However, we can turn off checking for phys-chem properties, since we know
+#' # that  Diquat dibromide monohydrate is not too volatile:
+#' calc_mc_css(chem.cas="6385-62-2", parameterize.args.list =list(physchem.exclude=FALSE))
+#'
 #' # We can also use the Monte Carlo functions by passing a table
 #' # where each row represents a different Monte Carlo draw of parameters:
 #' p <- create_mc_samples(chem.cas="80-05-7")
@@ -351,7 +359,7 @@ calc_mc_css <- function(chem.cas = NULL,
                         httkpop.generate.arg.list = 
                           list(method = "direct resampling"),
                         convert.httkpop.arg.list = NULL,
-                        parameterize.arg.list = NULL,
+                        parameterize.args.list = NULL,
                         calc.analytic.css.arg.list = NULL,
                         Caco2.options=NULL
                         ) 
@@ -425,7 +433,7 @@ calc_mc_css <- function(chem.cas = NULL,
                               invitro.mc.arg.list=invitro.mc.arg.list,
                               httkpop.generate.arg.list=httkpop.generate.arg.list,
                               convert.httkpop.arg.list=convert.httkpop.arg.list,
-                              parameterize.arg.list=parameterize.arg.list,
+                              parameterize.args.list =parameterize.args.list,
                               Caco2.options=Caco2.options))))
   else parameter.dt <- parameters
 #
@@ -434,23 +442,45 @@ calc_mc_css <- function(chem.cas = NULL,
 # Calculate CSS for each row in the parameter matrix (each row corresponds to
 # a different individual):
 #
-
-  parameter.dt[,Css:= do.call(calc_analytic_css,
-# we use purrr::compact to drop NULL values from arguments list:
-                              args=purrr::compact(c(list(
-                              parameters=.SD,
-                              model=model,
-                              suppress.messages=TRUE,
-                              chem.cas=chem.cas,
-                              chem.name=chem.name,
-                              dtxsid=dtxsid,
-                              tissue=tissue,
-                              concentration=concentration,
-                              output.units=output.units,
-                              daily.dose=daily.dose,
-                              clint.pvalue.threshold=
-                                parameterize.arg.list$clint.pvalue.threshold),
-                              calc.analytic.css.arg.list)))]
+  if (!is.null(model.list[[model]]$analytic.css.func))
+  {
+    parameter.dt[,Css:= do.call(calc_analytic_css,
+  # we use purrr::compact to drop NULL values from arguments list:
+                                args=purrr::compact(c(list(
+                                parameters=.SD,
+                                model=model,
+                                suppress.messages=TRUE,
+                                chem.cas=chem.cas,
+                                chem.name=chem.name,
+                                dtxsid=dtxsid,
+                                species=species,
+                                tissue=tissue,
+                                concentration=concentration,
+                                output.units=output.units,
+                                daily.dose=daily.dose,
+                                clint.pvalue.threshold=
+                                  parameterize.args.list$clint.pvalue.threshold),
+                                calc.analytic.css.arg.list)))]
+  } else {
+    parameter.dt[,Css:= do.call(calc_css,
+  # we use purrr::compact to drop NULL values from arguments list:
+                                args=purrr::compact(c(list(
+                                parameters=as.list(.SD),
+                                model=model,
+                                suppress.messages=TRUE,
+                                chem.cas=chem.cas,
+                                chem.name=chem.name,
+                                dtxsid=dtxsid,
+                                species=species,
+                                tissue=tissue,
+                                concentration=concentration,
+                                output.units=output.units,
+                                daily.dose=daily.dose,
+                                clint.pvalue.threshold=
+                                  parameterize.args.list$clint.pvalue.threshold),
+                                calc.analytic.css.arg.list))),
+                                by=1:nrow(parameter.dt)] # Do this one row at a time
+  }
 
   css.list <- parameter.dt$Css 
   

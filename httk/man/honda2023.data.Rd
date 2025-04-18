@@ -38,6 +38,6 @@ CAS \tab Chemical Abstracts Service Registry Number \tab \cr
 
 \insertRef{gaulton2012chembl}{httk}
 
-\insertRef{HondaUnpublishedCaco2}{httk}
+\insertRef{honda2025impact}{httk}
 }
 \keyword{datasets}

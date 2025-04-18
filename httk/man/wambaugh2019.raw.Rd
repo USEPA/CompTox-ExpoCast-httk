@@ -91,8 +91,7 @@ hepatic clearance of the chemical by pooled human hepatocytes.
 This file includes replicates (diferent CompoundName id's but same chemical')
 }
 \references{
-Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and
-Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
+\insertRef{wambaugh2019assessing}{httk}
 }
 \author{
 John Wambaugh

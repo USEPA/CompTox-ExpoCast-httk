@@ -49,15 +49,13 @@ The model outputs are provided in the following units:
 [3,]    1e-06     0.09600        0.37 1500.0  0.00069      2.1e+00 0.00066
 [4,]    1e-06     0.16000        0.41 2600.0  0.00170      6.3e+00 0.00200
 Warning messages:
-1: In solve_model(chem.name = chem.name, chem.cas = chem.cas, dtxsid = dtxsid,  :
-  Value FALSE for restrictive.clearance in parameterze.arg.list has overwritting value TRUE in arguments to solve.model.
-2: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
+1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
   Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
-3: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "pyrene",  :
+2: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "pyrene",  :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
-4: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "pyrene",  :
+3: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "pyrene",  :
   Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.
-5: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+4: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > signif(head(solve_gas_pbtk(chem.cas="129-00-0",times=c(0,0.1,0.05),
 +                     method = "lsode",mf = 10)),2)
@@ -81,15 +79,13 @@ The model outputs are provided in the following units:
 [3,]    1e-06     0.09600        0.37 1500.0  0.00069      2.1e+00 0.00066
 [4,]    1e-06     0.16000        0.41 2600.0  0.00170      6.3e+00 0.00200
 Warning messages:
-1: In solve_model(chem.name = chem.name, chem.cas = chem.cas, dtxsid = dtxsid,  :
-  Value FALSE for restrictive.clearance in parameterze.arg.list has overwritting value TRUE in arguments to solve.model.
-2: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
+1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
   Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
-3: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "Pyrene",  :
+2: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "Pyrene",  :
   Funbound.plasma adjusted for in vitro partitioning (Pearce, 2017). Set adjusted.Funbound.plasma to FALSE to use original value.
-4: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "Pyrene",  :
+3: In parameterize_gas_pbtk(chem.cas = "129-00-0", chem.name = "Pyrene",  :
   Cannot calculate saturable metabolism with Vmax = 0. Defaulting to first-order metabolic clearance.
-5: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+4: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > signif(head(solve_gas_pbtk(
 +   parameters=parameterize_gas_pbtk(chem.cas="129-00-0"),
@@ -151,6 +147,8 @@ Warning messages:
 > # Try to standardize order of variable names
 > for (this.param in names(p)[order(toupper(names(p)))]) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
 BW: 70
+Caco2.Pab: 1.6
+Caco2.Pab.dist: NA
 Clint: 56.4
 Clint.dist: NA
 Clmetabolismc: 9.568

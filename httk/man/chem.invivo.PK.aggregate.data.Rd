@@ -8,7 +8,7 @@
 data.frame
 }
 \source{
-Wambaugh et al. 2018 Toxicological Sciences, in press
+Wambaugh et al. 2018
 }
 \usage{
 chem.invivo.PK.aggregate.data
@@ -19,6 +19,9 @@ data aggregated from chem.invivo.PK.data, performed in Wambaugh et al. 2018.
 Data includes volume of distribution (Vdist, L/kg), elimination rate (kelim,
 1/h), gut absorption rate (kgutabs, 1/h), fraction absorbed (Fabsgut), and
 steady state concentration (Css, mg/L).
+}
+\references{
+\insertRef{wambaugh2018evaluating}{httk}
 }
 \author{
 John Wambaugh
