@@ -207,3 +207,5 @@ Woodrow Setzer [setzer.woodrow@epa.gov]
 ## License
 
 License: GPL-3 <https://www.gnu.org/licenses/gpl-3.0.en.html>
+
+<img src="man/figures/httk-logo.png" align="center" width="50%"/>
