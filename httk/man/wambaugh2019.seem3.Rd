@@ -21,12 +21,9 @@ National Health and Nutrition Examination Survey (NHANES). They reflect the
 populaton median intake rate (mg/kg body weight/day), with uncertainty.
 }
 \references{
-Ring, Caroline L., et al. "Consensus modeling of median chemical
-intake for the US population based on predictions of exposure pathways."
-Environmental science & technology 53.2 (2018): 719-732.
+\insertRef{Ring2017SEEM}{httk}
 
-Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and
-Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
+\insertRef{wambaugh2019assessing}{httk}
 }
 \author{
 John Wambaugh

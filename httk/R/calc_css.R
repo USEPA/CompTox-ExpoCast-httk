@@ -46,28 +46,8 @@
 #'  model,'3compartment' for the three compartment model, and '1compartment' for
 #'  the one compartment model.
 #'
-#'@param default.to.human Substitutes missing animal values with human values if
-#'  true (hepatic intrinsic clearance or fraction of unbound plasma).
-#'
 #'@param f.change Fractional change of daily steady state concentration reached
 #'  to stop calculating.
-#'
-#'@param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to TRUE
-#'  along with partition coefficients calculated with this value.
-#'
-#'@param minimum.Funbound.plasma If compound Funbound.plasma is lower than this
-#'  value, it will be set to this value. Default 1e-4.
-#'
-#'@param regression Whether or not to use the regressions in calculating
-#'  partition coefficients.
-#'
-#'@param well.stirred.correction Uses correction in calculation of hepatic
-#'  clearance for well-stirred model if TRUE for model 1compartment elimination
-#'  rate.  This assumes clearance relative to amount unbound in whole blood
-#'  instead of plasma, but converted to use with plasma concentration.
-#'
-#'@param restrictive.clearance Protein binding not taken into account (set to 1)
-#'  in liver clearance if FALSE.
 #'
 #'@param dosing The dosing object for more complicated scenarios. Defaults to
 #'  repeated \code{daily.dose} spread out over \code{doses.per.day}
@@ -77,12 +57,12 @@
 #'@param route Route of exposure (either "oral", "iv", or "inhalation" default
 #'  "oral").
 #'
-#'@param parameterize.args Named list of any additional arguments passed to
+#'@param parameterize.args.list Named list of any additional arguments passed to
 #'  model parameterization function (other than the already-named arguments).
 #'  Default `list()` to pass no additional arguments.
 #'
-#'@param ... Additional arguments passed to model solver (default of
-#'  \code{\link{solve_pbtk}}).
+#'@param ... Additional arguments passed to \code{\link{solve_model}} (defaults
+#' model is "pbtk").
 #'
 #'@return \item{frac}{Ratio of the mean concentration on the day steady state is
 #'  reached (baed on doses.per.day) to the analytical Css (based on infusion
@@ -140,15 +120,9 @@ calc_css <- function(chem.name=NULL,
                     suppress.messages=FALSE,
                     tissue=NULL,
                     model='pbtk',
-                    default.to.human=FALSE,
                     f.change = 0.00001,
-                    adjusted.Funbound.plasma=TRUE,
-                    minimum.Funbound.plasma = 1e-4,
-                    regression=TRUE,
-                    well.stirred.correction=TRUE,
-                    restrictive.clearance=TRUE,
                     dosing=NULL,
-                    parameterize.args = list(),
+                    parameterize.args.list = list(),
                     ...)
 {
   # We need to describe the chemical to be simulated one way or another:
@@ -207,14 +181,8 @@ calc_css <- function(chem.name=NULL,
       chem.name=chem.name,
       dtxsid=dtxsid,
       species=species,
-      default.to.human=default.to.human,
-      suppress.messages=suppress.messages,
-      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-      minimum.Funbound.plasma = minimum.Funbound.plasma,
-      regression=regression,
-      well.stirred.correction=well.stirred.correction,
-      restrictive.clearance=restrictive.clearance),
-      parameterize.args)))
+      suppress.messages=suppress.messages),
+      parameterize.args.list)))
   }
 
   if (is.null(dosing))
@@ -241,12 +209,7 @@ calc_css <- function(chem.name=NULL,
     model=model,
     output.units = output.units,
     suppress.messages=TRUE,
-    adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-    regression=regression,
-    well.stirred.correction=well.stirred.correction,
-    restrictive.clearance=restrictive.clearance,
-    minimum.Funbound.plasma = minimum.Funbound.plasma,
-    parameterize.args = parameterize.args
+    parameterize.args.list = parameterize.args.list
   )
   # Check to see if there is analytic Css funtion:
   if (!is.null(model.list[[model]]$analytic.css.func))
@@ -270,8 +233,12 @@ calc_css <- function(chem.name=NULL,
   # in case we need to restart the simulation):
   monitor.vars <- unique(c(state.vars, target))
   
+# set an initial precision (larger is faster):
+  atol <- rtol <- 1e-6
+# set an inintial of time steps per hour (smaller is faster):
+  tsteps <- 4
 # Initial call to solver, maybe we'll get lucky and achieve rapid steady-state
-  out <- do.call(solve_model,
+  out <- try(do.call(solve_model,
 # we use purrr::compact to drop NULL values from arguments list:
       args=purrr::compact(c(list(    
       parameters=parameters,
@@ -282,38 +249,103 @@ calc_css <- function(chem.name=NULL,
     suppress.messages=TRUE,
     days=days,
     output.units = output.units,
-    minimum.Funbound.plasma = minimum.Funbound.plasma,
-    restrictive.clearance=restrictive.clearance,
     monitor.vars=monitor.vars,
-    parameterize.arg.list = parameterize.args),
-    ...)))
+    parameterize.args.list = parameterize.args.list,
+    atol = atol,
+    rtol = rtol,
+    tsteps = tsteps),
+    ...))))
+    # Check for an error:
+    RETRY <- inherits(out, "try-error")
+    # Can only check if it ran long enough if not an error:
+    if ("time" %in% colnames(out)) RETRY <- RETRY | !(days %in% out[,"time"])
+# If the initial run crashes, try decreasing the tolerance (more precise,
+# slower calculations):
+    while (RETRY &
+           atol > 1e-13) 
+    {
+      cat("Optimizing solver parameters...\n")
+      atol <- atol/10
+      rtol <- atol
+      tsteps <- round(tsteps*1.5)
+      out <- try(do.call(solve_model,
+  # we use purrr::compact to drop NULL values from arguments list:
+        args=purrr::compact(c(list(    
+        parameters=parameters,
+      model=model, 
+      dosing=dosing,
+      route=route,
+      input.units=dose.units,
+      suppress.messages=TRUE,
+      days=days,
+      output.units = output.units,
+      monitor.vars=monitor.vars,
+      parameterize.args.list = parameterize.args.list,
+      atol = atol,
+      rtol = rtol,
+      tsteps = tsteps),
+      ...))))
+    # Check for an error:
+    RETRY <- inherits(out, "try-error")
+    # Can only check if it ran long enough if not an error:
+    if ("time" %in% colnames(out)) RETRY <- RETRY | !(days %in% out[,"time"])
+  }            
     
 # Make sure we have the compartment we need: 
   if (!(target %in% colnames(out))) stop(paste(
     "Requested tissue",ss.compartment,"is not an output of model",model))
     
-  Final_Conc <- out[dim(out)[1],monitor.vars]
+  Final_State <- out[dim(out)[1],monitor.vars]
   total.days <- days
   additional.days <- days
+  NMinusOne_Conc <- try(out[match((additional.days - 1), 
+                       floor(out[,'time'])), target])
+  NMinusTwo_Conc <- try(out[match((additional.days - 2), 
+                 floor(out[,'time'])), target])
+                 
+  # Check for problems:
+  if (inherits(NMinusOne_Conc, "try-error") |
+      inherits(NMinusTwo_Conc, "try-error")) stop(paste(
+      "Could not solve model",
+      model,
+      "for",
+      days,
+      "days and route",
+      route,
+      "with tolerance",
+      atol))
 
+  # Check for problems:
+  if (is.na(NMinusOne_Conc) |
+      is.na(NMinusTwo_Conc)) 
+    stop(paste(
+      "Could not solve model",
+      model,
+      "for",
+      days,
+      "days and route",
+      route,
+      "with tolerance",
+      atol))
+      
   # Calculate the fractional change on the last simulated day:
-  conc.delta <- (out[match((additional.days - 1), floor(out[,'time'])), target] -
-                out[match((additional.days - 2), floor(out[,'time'])), target]) /
-                out[match((additional.days - 2), floor(out[,'time'])), target] 
-#  # For the 3-compartment model:  
-#  colnames(out)[colnames(out)=="Csyscomp"]<-"Cplasma"
-
+  if (NMinusTwo_Conc > 0)
+  {
+    conc.delta <- abs(NMinusOne_Conc -
+                  NMinusTwo_Conc) /
+                  NMinusTwo_Conc 
+  } else conc.delta <- 0
+  
 # Until we reach steady-state, keep running the solver for longer times, 
 # restarting each time from where we left off:
   while(all(out[,target] < target.conc) & 
        (conc.delta > f.change))
   {
+    cat("Extending simulation...\n")
     if(additional.days < 1000)
     {
       additional.days <- additional.days * 5
-    }#else{
-    #  additional.days <- additional.days * 3
-    #}
+    }
     total.days <- total.days + additional.days
 
     out <- do.call(solve_model,
@@ -321,25 +353,51 @@ calc_css <- function(chem.name=NULL,
       args=purrr::compact(c(list(    
       parameters=parameters,
       model=model,
-      initial.values = Final_Conc[state.vars],  
+      initial.values = Final_State[state.vars],  
       dosing=dosing,
       route=route,
       input.units=dose.units,
       days = additional.days,
       output.units = output.units,
-      minimum.Funbound.plasma = minimum.Funbound.plasma,
-      restrictive.clearance=restrictive.clearance,
       monitor.vars=monitor.vars,
-      parameterize.arg.list = parameterize.args,   
+      parameterize.args.list = parameterize.args.list,   
       suppress.messages=TRUE,
+      atol = atol,
+      rtol = rtol,
+      tsteps=tsteps,
       ...))))
-    Final_Conc <- out[dim(out)[1],monitor.vars]
+
+    Final_State <- out[dim(out)[1],monitor.vars]
+    NMinusOne_Conc <- try(out[match((additional.days - 1), 
+                         floor(out[,'time'])), target])
+    NMinusTwo_Conc <- try(out[match((additional.days - 2), 
+                   floor(out[,'time'])), target])
+                   
+    # Check for problems:
+    if (inherits(NMinusOne_Conc, "try-error") |
+        inherits(NMinusTwo_Conc, "try-error")) browser()
   
-# Calculate the fractional change on the last simulated day:
-  conc.delta <- (out[match((additional.days - 1), floor(out[,'time'])), target] -
-                out[match((additional.days - 2), floor(out[,'time'])), target]) /
-                out[match((additional.days - 2), floor(out[,'time'])), target] 
-        
+    # Check for problems:
+    if (is.na(NMinusOne_Conc) |
+        is.na(NMinusTwo_Conc)) 
+      stop(paste(
+        "Could not solve model",
+        model,
+        "for",
+        days,
+        "days and route",
+        route,
+        "with tolerance",
+        atol))
+
+    # Calculate the fractional change on the last simulated day:
+    if (NMinusTwo_Conc > 0)
+    {
+      conc.delta <- abs(NMinusOne_Conc -
+                    NMinusTwo_Conc) /
+                    NMinusTwo_Conc 
+    } else conc.delta <- 0
+              
     if(total.days > 36500) break 
   }
   

@@ -1,0 +1,575 @@
+# Add a human gestational PBTK model for the 1st trimester of pregnancy 
+# to augment the fetal_pbtk model 
+#
+# Truong, Kimberly T. et al.
+# "Interpretation of thyroid-relevant bioactivity data 
+# for comparison to in vivo exposures: A prioritization 
+# approach for putative chemical inhibitors of in vitro 
+# deiodinase activity"
+# Submitted
+
+# Model identifier for the model.list:
+THIS.MODEL <- "1tri_pbtk"
+
+# Dose this model work with Monte Carlo parameter sampling?
+model.list[[THIS.MODEL]]$monte.carlo <- FALSE
+
+#Analytic expression for steady-state plasma concentration.
+#model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_1tri_pbtk" <function not yet developed
+
+# When calculating steady-state, which compartment do we test? 
+# ("C" is preprended):
+model.list[[THIS.MODEL]]$steady.state.compartment <- "plasma"
+                                              
+# What units does the analytic function return:
+model.list[[THIS.MODEL]]$steady.state.units <- "mg/L"
+
+# Function used for generating model parameters:
+model.list[[THIS.MODEL]]$parameterize.func <- "parameterize_1tri_pbtk"
+
+# Function called for running the model:
+model.list[[THIS.MODEL]]$solve.func <- "solve_1tri_pbtk"
+
+# Here are the tissues from tissue.data that are considered (for example,
+# do we include placenta or not? Here, yes we do). They should correspond
+# in name to the names present in the tissue.data object, if the parameters
+# necessary for describing the tissue/compartment aren't going to be provided
+# otherwise.
+model.list[[THIS.MODEL]]$alltissues=c(
+  "adipose",
+  "bone",            
+  "brain",           
+  "gut",            
+  "heart",           
+  "kidney",          
+  "liver",           
+  "lung",           
+  "muscle", 
+  "skin",            
+  "spleen",
+  "red blood cells",
+  "thyroid",
+  "placenta",
+  "rest")
+
+# Which tissues from tissue.data are not lumped together when forming
+# the model: The 1tri_pbtk model has liver, kidney, gut, and lung compartments
+# that draw info from tissue.data; everything else from alltissues should be 
+# lumped.
+model.list[[THIS.MODEL]]$tissuelist=list(
+  adipose = c("adipose"),
+  # brain = c("brain"),
+  gut = c("gut"),
+  liver=c("liver"),
+  kidney=c("kidney"),
+  lung=c("lung"),
+  thyroid = c("thyroid"),
+  conceptus = c("placenta")
+  )
+  
+# These are all the parameters returned by the R model parameterization function.
+# Some of these parameters are not directly used to solve the model, but describe
+# how other parameters were calculated:
+model.list[[THIS.MODEL]]$param.names <- c(
+  "pre_pregnant_BW",
+  "BW",
+  "Clint",
+  "Clint.dist",
+  "Clmetabolismc",   
+  "Fabsgut",
+  "Fhep.assay.correction",
+  "Funbound.plasma", 
+
+  "Funbound.plasma.adjustment",
+  "Funbound.plasma.dist",
+  "kgutabs", 
+  "MA", 
+  "million.cells.per.gliver",
+  "MW",                           
+  "pH_Plasma_mat",
+  "Pow",            
+# Maternal tissue partition coefficients:
+  "Kadipose2pu",
+  "Kgut2pu",
+  "Kkidney2pu",
+  "Kliver2pu",                    
+  "Krest2pu",
+  "Klung2pu",
+  "Krbc2pu", # parms[10]
+  "Kthyroid2pu",                  
+#  "Kbrain2pu",
+# Dynamical Kconceptus2pu described by two parameters:
+  "Kconceptus2pu_initial",
+  "Kconceptus2pu_final", 
+# Scaled (1/kg BW) constant tissue volumes:
+  "Vgutc",                       
+  "Vkidneyc", 
+  "Vliverc",
+  "Vlungc", # parms[20]
+  "Vthyroidc", 
+#  "Vbrainc",   
+# Tissue Densities:
+  "gut_density",  
+  "kidney_density",
+  "liver_density",                
+  "lung_density", # parms[30]
+  "thyroid_density",
+  "adipose_density",              
+  "ffmx_density",
+  "placenta_density",
+  "amnf_density",                 
+  "brain_density",
+# Kapraun 2019 growth parameters:
+  "BW_cubic_theta1",
+  "BW_cubic_theta2",
+  "BW_cubic_theta3",
+  "Wadipose_linear_theta0", # parms[40]
+  "Wadipose_linear_theta1",
+  "hematocrit_quadratic_theta0",
+  "hematocrit_quadratic_theta1",
+  "hematocrit_quadratic_theta2",
+  "fBW_gompertz_theta0",
+  "fBW_gompertz_theta1",
+  "fBW_gompertz_theta2",
+  "Vplacenta_cubic_theta1",
+  "Vplacenta_cubic_theta2",
+  "Vplacenta_cubic_theta3", # parms[50]
+  "Vamnf_logistic_theta0",
+  "Vamnf_logistic_theta1",
+  "Vamnf_logistic_theta2",
+  "Vplasma_mod_logistic_theta0",
+  "Vplasma_mod_logistic_theta1",
+  "Vplasma_mod_logistic_theta2",
+  "Vplasma_mod_logistic_theta3",
+  "venous_blood_fraction",
+  "arterial_blood_fraction",
+  "Qcardiac_cubic_theta0", # parms[60]
+  "Qcardiac_cubic_theta1",
+  "Qcardiac_cubic_theta2",
+  "Qcardiac_cubic_theta3",
+  "term",
+  "Qgut_percent_initial",
+  "Qgut_percent_terminal",
+  "Qkidney_cubic_theta0",
+  "Qkidney_cubic_theta1",
+  "Qkidney_cubic_theta2",
+  "Qkidney_cubic_theta3", # parms[70]
+  "Qliver_percent_initial",
+  "Qliver_percent_terminal",
+  "Qthyroid_percent_initial",
+  "Qthyroid_percent_terminal",
+  "Qplacenta_linear_theta1",
+  "Qadipose_percent_initial",
+  "Qadipose_percent_terminal",
+  "Qgfr_quadratic_theta0",
+  "Qgfr_quadratic_theta1",
+  "Qgfr_quadratic_theta2" # parms[80]
+#  "Qbrain_percent_initial",
+#  "Qbrain_percent_terminal", # parms[82]
+# These were initialized in the C model file:
+  # "fBW_13wks",
+  # "Vplacenta_13wks",
+  # "Vamnf_13wks",
+  # "Vconceptus_final", # parms[86]
+  # "Vconceptus_initial",
+  # "Qconceptus_final",
+  # "Qconceptus_initial" #parms[89]
+)
+
+# This subset of R parameters are needed to initially parameterize the compiled
+# code for the solver (must match ORDER under "parameters" in C code, even if 
+# some items are omitted). 
+#
+# String representations of the R version of names of
+# the parameters are assigned to the C variable name in this scheme.
+#
+# Note that because scaling is performed in the C code that we only need
+# pass scaled parameters (V[tissue]c and Q[tissue]f)
+model.list[[THIS.MODEL]]$Rtosolvermap <- list(
+  pre_pregnant_BW = "pre_pregnant_BW", # parms[0]
+  Clmetabolismc = "Clmetabolismc",
+  kgutabs = "kgutabs",
+  Kkidney2pu="Kkidney2pu",
+  Kliver2pu="Kliver2pu",
+  Kadipose2pu="Kadipose2pu",
+  Krest2pu="Krest2pu",
+  Klung2pu="Klung2pu",
+  Kgut2pu="Kgut2pu",
+  Krbc2pu="Krbc2pu", # parms[10]
+  Kthyroid2pu="Kthyroid2pu",
+#  Kbrain2pu="Kbrain2pu",
+  Kconceptus2pu_initial="Kconceptus2pu_initial",
+  Kconceptus2pu_final="Kconceptus2pu_final",
+  Vgutc = "Vgutc",
+  Vkidneyc = "Vkidneyc",
+  Vliverc = "Vliverc",
+  Vlungc = "Vlungc", # parms[20]
+  Vthyroidc = "Vthyroidc",
+#  Vbrainc = "Vbrainc",
+  Fraction_unbound_plasma = "Funbound.plasma",
+  gut_density = "gut_density",
+  kidney_density = "kidney_density",
+  liver_density = "liver_density",
+  lung_density = "lung_density", # parms[30]
+  thyroid_density = "thyroid_density",
+  adipose_density = "adipose_density",
+  ffmx_density = "ffmx_density",
+  placenta_density = "placenta_density",
+  amnf_density = "amnf_density",                 
+  brain_density = "brain_density",
+  BW_cubic_theta1 = "BW_cubic_theta1",
+  BW_cubic_theta2 = "BW_cubic_theta2",
+  BW_cubic_theta3 = "BW_cubic_theta3",
+  Wadipose_linear_theta0 = "Wadipose_linear_theta0", # parms[40]
+  Wadipose_linear_theta1 = "Wadipose_linear_theta1",
+  hematocrit_quadratic_theta0  = "hematocrit_quadratic_theta0",
+  hematocrit_quadratic_theta1 = "hematocrit_quadratic_theta1",
+  hematocrit_quadratic_theta2 = "hematocrit_quadratic_theta2",
+  fBW_gompertz_theta0 = "fBW_gompertz_theta0",
+  fBW_gompertz_theta1 = "fBW_gompertz_theta1",
+  fBW_gompertz_theta2 = "fBW_gompertz_theta2",
+  Vplacenta_cubic_theta1 = "Vplacenta_cubic_theta1",
+  Vplacenta_cubic_theta2 = "Vplacenta_cubic_theta2",
+  Vplacenta_cubic_theta3 = "Vplacenta_cubic_theta3", # parms[50]
+  Vamnf_logistic_theta0 = "Vamnf_logistic_theta0",
+  Vamnf_logistic_theta1 = "Vamnf_logistic_theta1",
+  Vamnf_logistic_theta2 = "Vamnf_logistic_theta2",
+  Vplasma_mod_logistic_theta0 = "Vplasma_mod_logistic_theta0",
+  Vplasma_mod_logistic_theta1 = "Vplasma_mod_logistic_theta1",
+  Vplasma_mod_logistic_theta2 = "Vplasma_mod_logistic_theta2",
+  Vplasma_mod_logistic_theta3 = "Vplasma_mod_logistic_theta3",
+  venous_blood_fraction = "venous_blood_fraction",
+  arterial_blood_fraction = "arterial_blood_fraction",
+  Qcardiac_cubic_theta0 = "Qcardiac_cubic_theta0", # parms[60]
+  Qcardiac_cubic_theta1 = "Qcardiac_cubic_theta1",
+  Qcardiac_cubic_theta2 = "Qcardiac_cubic_theta2",
+  Qcardiac_cubic_theta3 = "Qcardiac_cubic_theta3",
+  term = "term",
+  Qgut_percent_initial = "Qgut_percent_initial",
+  Qgut_percent_termina = "Qgut_percent_terminal",
+  Qkidney_cubic_theta0 = "Qkidney_cubic_theta0",
+  Qkidney_cubic_theta1 = "Qkidney_cubic_theta1",
+  Qkidney_cubic_theta2 = "Qkidney_cubic_theta2",
+  Qkidney_cubic_theta3 = "Qkidney_cubic_theta3", # parms[70]
+  Qliver_percent_initial = "Qliver_percent_initial",
+  Qliver_percent_terminal = "Qliver_percent_terminal",
+  Qthyroid_percent_initial = "Qthyroid_percent_initial",
+  Qthyroid_percent_terminal = "Qthyroid_percent_terminal",
+  Qplacenta_linear_theta1 = "Qplacenta_linear_theta1",
+  Qadipose_percent_initial = "Qadipose_percent_initial",
+  Qadipose_percent_terminal = "Qadipose_percent_terminal",
+  Qgfr_quadratic_theta0 = "Qgfr_quadratic_theta0",
+  Qgfr_quadratic_theta1 = "Qgfr_quadratic_theta1",
+  Qgfr_quadratic_theta2 = "Qgfr_quadratic_theta2" # parms[80]
+  # Qbrain_percent_initial = "Qbrain_percent_initial",
+  # Qbrain_percent_terminal = "Qbrain_percent_terminal", # parms[82]
+  # fBW_13wks = "fBW_13wks",
+  # Vplacenta_13wks = "Vplacenta_13wks",
+  # Vamnf_13wks = "Vamnf_13wks",
+  # Vconceptus_final = "Vconceptus_final",
+  # Vconceptus_initial = "Vconceptus_initial",
+  # Qconceptus_final = "Qconceptus_final",
+  # Qconceptus_initial = "Qconceptus_initial"# parms[89]
+)
+
+# This function translates the R model parameters into the compiled model
+# parameters:
+model.list[[THIS.MODEL]]$compiled.parameters.init <- "getParms_firsttrimester" 
+
+# This needs to be a global variable so that R CMD check --as-cran can test
+# the code (the HTTK package does not use this):
+compiled_parameters_init <- "getParms_firsttrimester" 
+
+# This is the ORDERED full list of parameters used by the compiled code to 
+# calculate the derivative of the system of equations describing the model.
+# The order agrees with the order present in the associated .model / .C 
+# file's listing of parameters. 
+model.list[[THIS.MODEL]]$compiled.param.names <- c(
+  "pre_pregnant_BW",
+  "Clmetabolismc",
+  "Clmetabolism",
+  "kgutabs",
+  "Kkidney2pu",
+  "Kliver2pu",
+  "Kadipose2pu",
+  "Krest2pu",
+  "Klung2pu",
+  "Kgut2pu",
+  "Krbc2pu", # parms[10]
+  "Kthyroid2pu",
+  # "Kbrain2pu",
+  "Kconceptus2pu_initial",
+  "Kconceptus2pu_final", 
+  "Vgutc",
+  "Vgut",
+  "Vkidneyc",
+  "Vkidney",
+  "Vliverc",
+  "Vliver",
+  "Vlungc", # parms[20]
+  "Vlung",
+  "Vthyroidc",
+  "Vthyroid",
+  # "Vbrainc",
+  # "Vbrain",
+  "Fraction_unbound_plasma",
+  "gut_density",
+  "kidney_density",
+  "liver_density",
+  "lung_density", # parms[30]
+  "thyroid_density",
+  "adipose_density",
+  "ffmx_density",
+  "placenta_density",
+  "amnf_density",
+  "brain_density",
+ "BW_cubic_theta1",
+  "BW_cubic_theta2",
+  "BW_cubic_theta3",
+  "Wadipose_linear_theta0", # parms[40]
+  "Wadipose_linear_theta1",
+ "hematocrit_quadratic_theta0",
+  "hematocrit_quadratic_theta1",
+  "hematocrit_quadratic_theta2",
+  "fBW_gompertz_theta0",
+  "fBW_gompertz_theta1",
+  "fBW_gompertz_theta2",
+  "Vplacenta_cubic_theta1",
+  "Vplacenta_cubic_theta2",
+  "Vplacenta_cubic_theta3", # parms[50]
+  "Vamnf_logistic_theta0",
+  "Vamnf_logistic_theta1",
+  "Vamnf_logistic_theta2",
+  "Vplasma_mod_logistic_theta0",
+  "Vplasma_mod_logistic_theta1",
+  "Vplasma_mod_logistic_theta2",
+  "Vplasma_mod_logistic_theta3",
+  "venous_blood_fraction",
+  "arterial_blood_fraction",
+  "Qcardiac_cubic_theta0", # parms[60]
+  "Qcardiac_cubic_theta1",
+  "Qcardiac_cubic_theta2",
+  "Qcardiac_cubic_theta3",
+  "term",
+  "Qgut_percent_initial",
+  "Qgut_percent_terminal",
+  "Qkidney_cubic_theta0",
+  "Qkidney_cubic_theta1",
+  "Qkidney_cubic_theta2",
+  "Qkidney_cubic_theta3", # parms[70]
+  "Qliver_percent_initial",
+  "Qliver_percent_terminal",
+  "Qthyroid_percent_initial",
+  "Qthyroid_percent_terminal",
+  "Qplacenta_linear_theta1",
+  "Qadipose_percent_initial",
+  "Qadipose_percent_terminal",
+  "Qgfr_quadratic_theta0",
+  "Qgfr_quadratic_theta1",
+  "Qgfr_quadratic_theta2", # parms[80]
+  # "Qbrain_percent_initial",
+  # "Qbrain_percent_terminal", # parms[82]
+  "fBW_13wks",
+  "Vplacenta_13wks", 
+  "Vamnf_13wks", 
+  "Vconceptus_final",  
+  "Vconceptus_initial", 
+  "Qconceptus_final", 
+  "Qconceptus_initial" # parms[89]
+)
+
+# This function initializes the state vector for the compiled model:
+model.list[[THIS.MODEL]]$compiled.init.func <- "initmod_firsttrimester" 
+
+# This is the function that calculates the derivative of the model as a function
+# of time, state, and parameters:
+model.list[[THIS.MODEL]]$derivative.func <- "derivs_firsttrimester" 
+
+# This is the ORDERED list of variables returned by the derivative function
+# (from Model variables: Outputs):
+model.list[[THIS.MODEL]]$derivative.output.names <- c(
+  "Cgut",
+  "Cliver",
+  "Ckidney",
+  "Clung",
+  "Cven",
+  "Cart",
+  "Cadipose",
+  "Cthyroid",
+  "Crest",
+  # "Cbrain",
+  "Cconceptus",
+  #"Vconceptus",
+  #"Qconceptus",
+  "Cplasma",
+  "Aplasma",
+  "Rblood2plasma", 
+  "Vven",
+  "Vart",
+  "Vadipose",
+  "Vrest",
+  "hematocrit", 
+  "Vconceptus",
+  "Qconceptus",
+  "Vffmx",
+  "Vallx"
+  )
+
+
+#Which variables to track by default (should be able to build this from
+#state vars and outputs):
+model.list[[THIS.MODEL]]$default.monitor.vars <- c(
+  "Cgut",
+  "Cliver",
+  "Ckidney",
+  "Clung",
+  "Cven",
+  "Cart",
+  "Cadipose",
+  "Cthyroid",
+  "Crest",
+  # "Cbrain",
+  "Cconceptus",
+  #"Vconceptus",
+  #"Qconceptus",
+  "Cplasma",
+  "Aplasma",
+  "Rblood2plasma",
+  "Atubules",
+  "Ametabolized",
+  "AUC"
+   )
+
+# Allowable units assigned to dosing input:
+model.list[[THIS.MODEL]]$allowed.units.input <- list(
+  "oral" = c('umol','mg','mg/kg'),
+  "iv" = c('umol','mg','mg/kg'))
+
+# Allowable units assigned to entries in the output columns of the ode system
+model.list[[THIS.MODEL]]$allowed.units.output <- list(
+  "oral" = c('uM','mg/L','umol','mg','uM*days',
+             'mg/L*days',"unitless", "L", "L/day"),
+  "iv" = c('uM','mg/L','umol','mg','uM*days',
+             'mg/L*days',"unitless", "L", "L/day"))
+
+## These parameters specify the exposure scenario simulated by the model:
+model.list[[THIS.MODEL]]$routes <- list(
+  "oral" = list(
+# We need to know which compartment gets the dose 
+    "entry.compartment" = "Agutlumen",
+# desolve events can take the values "add" to add dose C1 <- C1 + dose,
+# "replace" to change the value C1 <- dose
+# or "multiply" to change the value to C1 <- C1*dose
+    "dose.type" = "add",
+    "dosing.params" = c("daily.dose",
+                        "initial.dose",
+                        "doses.per.day",
+                        "dosing.matrix")),
+  "iv" = list(
+    "entry.compartment" = "Aven",
+    "dose.type" = "add",
+    "dosing.params" = c("initial.dose",
+                        "dosing.matrix")
+  )
+)
+
+# ORDERED LIST of state variables (must match Model variables: 
+# States in C code, each of which is associated with a differential equation),
+# mostly calculated in amounts, though AUC (area under plasma concentration
+# curve) also appears here: 
+model.list[[THIS.MODEL]]$state.vars <- c(
+  "Agutlumen", # 0x00000
+  "Agut",
+  "Aliver",
+  "Akidney",
+  "Alung",
+  "Aven",
+  "Aart", # 0x00005
+  "Aadipose",
+  "Athyroid",
+  "Arest",
+  # "Abrain",
+  "Aconceptus", # 0x0000a
+  "Atubules",
+  "Ametabolized",
+  "AUC"# 0x0000e
+  ) 
+
+# Actual (intrinsic) units assigned to each of the time dependent
+# variables of the model system including state variables and any transformed
+# outputs (for example, concentrations calculated from amounts.)
+# AUC values should also be included.
+model.list[[THIS.MODEL]]$compartment.units <- c(
+  "Agutlumen" = "umol",
+  "Agut" = "umol",
+  "Aliver" = "umol",
+  "Aven" = "umol",
+  "Alung" = "umol",
+  "Aart" = "umol",
+  "Aadipose" = "umol",
+  "Arest" = "umol",
+  "Akidney" = "umol",
+  # "Abrain" = "umol",
+  "Aconceptus" = "umol",
+  "Atubules" = "umol",
+  "Ametabolized" = "umol",
+  "AUC" = "uM*days",
+  "Athyroid" = "umol",
+  "Aplasma" = "umol",
+  "Cgut" = "uM",
+  "Cliver" = "uM",
+  "Cven" = "uM",
+  "Clung" = "uM",
+  "Cart" = "uM",
+  "Cadipose" = "uM",
+  "Crest" = "uM",
+  "Ckidney" = "uM",
+  # "Cbrain" = "uM",
+  "Cconceptus" = "uM",
+  "Cplasma" = "uM",
+  "Cthyroid" = "uM",
+  "Rblood2plasma" = "unitless",
+  #"Vconceptus" = "L", 
+  #"Qconceptus" = "L/d", 
+  "Vven" = "L",
+  "Vart" = "L",
+  "Vadipose" = "L",
+  "Vrest" = "L",
+  "hematocrit" = "unitless", 
+  "Vconceptus" = "L",
+  "Qconceptus" = "L/day",
+  "Vffmx" = "L",
+  "Vallx" = "L"
+  )
+
+# Compartment state of matter, needed for proper unit conversion, if all
+# compartments of the same only include one state and set it to "all":
+model.list[[THIS.MODEL]]$compartment.state <- list(liquid="all")
+       
+#Parameters needed to make a prediction (this is used by get_cheminfo):
+model.list[[THIS.MODEL]]$required.params <- c(
+  "Clint",
+  "Funbound.plasma",
+  "Pow",
+  "pKa_Donor",
+  "pKa_Accept",
+  "MW"
+  )
+
+# Do we need to recalculate partition coefficients when doing Monte Carlo?
+model.list[[THIS.MODEL]]$calcpc <- TRUE
+  
+# Do we need to recalculate first pass metabolism when doing Monte Carlo?
+model.list[[THIS.MODEL]]$firstpass <- FALSE
+
+# Do we ignore the Fups where the value was below the limit of detection?
+model.list[[THIS.MODEL]]$exclude.fup.zero <- TRUE
+
+# These are the parameter names needed to describe steady-state dosing:
+model.list[[THIS.MODEL]]$css.dosing.params <- c("hourly.dose")
+
+# Filter out volatile compounds with Henry's Law Constant Threshold
+model.list[[THIS.MODEL]]$log.henry.threshold <- c(-4.5)
+
+# Filter out compounds belonging to select chemical classes
+model.list[[THIS.MODEL]]$chem.class.filt <- c("PFAS")

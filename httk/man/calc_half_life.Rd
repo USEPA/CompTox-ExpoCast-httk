@@ -9,17 +9,10 @@ calc_half_life(
   chem.name = NULL,
   dtxsid = NULL,
   parameters = NULL,
-  model = "3compartmentss",
   species = "Human",
+  model = "3compartmentss",
   suppress.messages = TRUE,
-  default.to.human = FALSE,
-  class.exclude = TRUE,
-  restrictive.clearance = TRUE,
-  adjusted.Funbound.plasma = TRUE,
-  regression = TRUE,
-  well.stirred.correction = TRUE,
-  clint.pvalue.threshold = 0.05,
-  minimum.Funbound.plasma = 1e-04
+  ...
 )
 }
 \arguments{
@@ -33,40 +26,15 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 \item{parameters}{Chemical parameters from parameterize_steadystate or
 1compartment function, overrides chem.name and chem.cas.}
 
-\item{model}{The model used to calculate elimination rate (defaults to "3compartmentss")}
-
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
+\item{model}{The model used to calculate elimination rate (defaults to "3compartmentss")}
+
 \item{suppress.messages}{Whether or not the output message is suppressed.}
 
-\item{default.to.human}{Substitutes missing animal values with human values
-if true.}
-
-\item{class.exclude}{Exclude chemical classes identified as outside of 
-domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
-
-\item{restrictive.clearance}{In calculating elimination rate, protein
-binding is not taken into account (set to 1) in liver clearance if FALSE.}
-
-\item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
-TRUE along with partition coefficients calculated with this value.}
-
-\item{regression}{Whether or not to use the regressions in calculating
-partition coefficients.}
-
-\item{well.stirred.correction}{Uses correction in calculation of hepatic
-clearance for -stirred model if TRUE.  This assumes clearance relative
-to amount unbound in whole blood instead of plasma, but converted to use
-with plasma concentration.}
-
-\item{clint.pvalue.threshold}{Hepatic clearance for chemicals where the in
-vitro clearance assay result has a p-values greater than the threshold are
-set to zero.}
-
-\item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
-equal to this value (default is 0.0001 -- half the lowest measured Fup in our
-dataset).}
+\item{...}{Additional parameters passed to parameterize function if 
+parameters is NULL.}
 }
 \value{
 \item{Half life}{Units of h.}
@@ -81,11 +49,60 @@ Half life is calculated by dividing the natural-log of 2 by the elimination
 rate from the one compartment model.
 }
 \examples{
-
 calc_half_life(chem.name="Bisphenol A")
 \donttest{
 calc_half_life(chem.name="Bisphenol A",species="Rat")
+
 calc_half_life(chem.cas="80-05-7")
+
+# Volatiles are outside the domain of default model:
+try(calc_half_life(
+     chem.name="toluene"))
+
+# We can turn off physchem checking:
+calc_half_life(
+     chem.name="toluene",
+     physchem.exclude=FALSE)
+
+# Or use an appropriate model for volatiles:
+calc_half_life(
+     chem.name="toluene",
+     model="sumclearances")
+
+# PFAS are outside the domain:
+try(calc_half_life(
+     dtxsid="DTXSID8031865",
+     model="sumclearances"))
+
+# Can turn off chemical class checking:
+calc_half_life(
+  dtxsid="DTXSID8031865",
+  model="sumclearances",
+  class.exclude=FALSE,
+  suppress.messages=TRUE)
+
+# For a metabolized compound, non-restrictive clearance should be faster:
+h1 <- calc_half_life(
+  chem.name="toluene",
+  model="sumclearances",
+  suppress.messages=TRUE)
+h2 <- calc_half_life(
+  chem.name="toluene",
+  model="sumclearances",
+  restrictive.clearance=FALSE,
+  suppress.messages=TRUE)
+# Check that h2 < h1:
+if (!(h2 < h1)) stop("h2 not less than h1")
+
+# Change species: 
+calc_half_life(
+  dtxsid="DTXSID8031865",
+  species="rat",
+  model="sumclearances",
+  default.to.human=TRUE,
+  class.exclude=FALSE,
+  physchem.exclude=FALSE,
+  suppress.messages=TRUE)
 }
 
 }
