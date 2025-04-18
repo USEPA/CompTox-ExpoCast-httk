@@ -64,8 +64,12 @@ gen_input_params <- function(model,
                                list(nsamp = 10000,
                                     method = "direct resampling"),
                              seed = NULL,
-                             input.param.dir = NULL) {
-  
+                             input.param.dir = NULL) 
+{
+  ## Defining data.table arguments mistaken by check for global variables ##
+  ..param <- weight_class <- gfr_class <- reth <- param.gen.function <- NULL
+  ####
+    
   # Required for reproducibility
   if (!is.null(seed)) {
     set.seed(seed)

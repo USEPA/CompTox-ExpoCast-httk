@@ -177,7 +177,7 @@
 #'
 #' @seealso \code{\link{get_input_param_timeseries}}
 #'
-#' @keywords Solve pbtk, lifestage
+#' @keywords Solve pbtk lifestage
 #'
 #' @examples
 #' \donttest{

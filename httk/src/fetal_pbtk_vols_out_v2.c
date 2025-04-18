@@ -477,11 +477,10 @@ void initmodfetal_pbtk (void (* odeparms)(int *, double *))
   odeparms(&N, parms);
 }
 
-// void initforc (void (* odeforcs)(int *, double *))
-// {
-//   int N=0;
-//   odeforcs(&N, forc);
-// }
+void initforcfetal_pbtk (void (* odeforcs)(int *, double *))
+{
+
+}
 // 
 // 
 // /* Calling R code will ensure that input y has same

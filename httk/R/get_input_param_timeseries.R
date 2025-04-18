@@ -85,7 +85,7 @@
 #' \donttest{
 #' 
 #' params <- parameterize_pbtk(chem.name = 'Bisphenol A')
-#' ts <- get_input_param_timeseries('pbtk_growthcurve',
+#' ts <- get_input_param_timeseries('pbtk_lifestage"',
 #'                                  chem.name = 'Bisphenol A',
 #'                                  initial.params = params,
 #'                                  start.age = 600, # age fifty

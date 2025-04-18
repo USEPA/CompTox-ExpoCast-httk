@@ -123,7 +123,7 @@
 #' @author John Wambaugh
 #'
 #' @references 
-#' \insertRef{DavidsonFritzUnpublishedModelAdding}{httk}
+#' \insertRef{davidson2025enabling}{httk}
 #'
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 aes
