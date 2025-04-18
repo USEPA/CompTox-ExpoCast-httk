@@ -5,7 +5,7 @@
 \alias{httk.performance}
 \title{Historical Performance of R Package httk}
 \format{
-An object of class \code{data.frame} with 25 rows and 18 columns.
+An object of class \code{data.frame} with 26 rows and 18 columns.
 }
 \usage{
 httk.performance
@@ -42,7 +42,7 @@ to help identify unintended degradtion of package capabilities.
 }
 }
 \references{
-\insertRef{DavidsonFritzUnpublishedModelAdding}{httk}
+\insertRef{davidson2025enabling}{httk}
 }
 \seealso{
 \code{\link{benchmark_httk}}

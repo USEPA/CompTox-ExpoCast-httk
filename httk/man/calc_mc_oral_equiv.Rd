@@ -228,6 +228,14 @@ calc_mc_oral_equiv(0.1,chem.cas="34256-82-1", model='pbtk',
                    samples=NSAMP,
                    which.quantile=c(0.05,0.5,0.95), tissue='brain')
  
+# The following will not work because Diquat dibromide monohydrate's 
+# Henry's Law Constant (-3.912) is higher than that of Acetone (~-4.5):
+try(calc_mc_oral_equiv(3, chem.cas="6385-62-2"))
+
+# However, we can turn off checking for phys-chem properties, since we know
+# that  Diquat dibromide monohydrate is not too volatile:
+calc_mc_oral_equiv(3, chem.cas="6385-62-2", parameterize.args.list =list(physchem.exclude=FALSE))
+ 
 # We can also use the Monte Carlo functions by passing a table
 # where each row represents a different Monte Carlo draw of parameters:
 p <- create_mc_samples(chem.cas="80-05-7")

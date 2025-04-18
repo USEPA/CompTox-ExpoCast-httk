@@ -1,0 +1,38 @@
+States = {
+Agutlumen,
+Acompartment,
+Arest,
+Ametabolized,
+AUC,
+};
+
+Inputs = {
+};
+
+Outputs = {
+Ccompartment,
+Crest,
+};
+
+Vdist = 0;
+Cltotal=0;
+kgutabs=1;
+Vrest=0;
+Qrest=0;
+
+Initialize{
+kgutabs = kgutabs * 24;
+Cltotal = Cltotal * 24;
+}
+
+Dynamics{
+Ccompartment = Acompartment / Vdist;
+Crest = Arest / Vrest;
+
+dt (Agutlumen)  = -kgutabs * Agutlumen; 
+dt (Acompartment) = kgutabs * Agutlumen - Cltotal * Ccompartment + Qrest * (Crest - Ccompartment);
+dt (Arest) = Qrest * (Ccompartment- Crest);
+dt (Ametabolized) = Cltotal * Ccompartment;
+dt (AUC) = Ccompartment;
+}
+End.

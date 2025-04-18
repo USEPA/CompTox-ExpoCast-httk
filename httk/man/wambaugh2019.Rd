@@ -53,8 +53,7 @@ unbound in the presence of pooled human plasma protein and the intrnsic
 hepatic clearance of the chemical by pooled human hepatocytes.
 }
 \references{
-Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and
-Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
+\insertRef{wambaugh2019assessing}{httk}
 }
 \author{
 John Wambaugh

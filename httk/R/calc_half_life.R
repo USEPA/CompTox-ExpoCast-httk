@@ -24,33 +24,8 @@
 #' 
 #' @param suppress.messages Whether or not the output message is suppressed.
 #' 
-#' @param default.to.human Substitutes missing animal values with human values
-#' if true.
-#' 
-#' @param restrictive.clearance In calculating elimination rate, protein
-#' binding is not taken into account (set to 1) in liver clearance if FALSE.
-#' 
-#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
-#' TRUE along with partition coefficients calculated with this value.
-#' 
-#' @param regression Whether or not to use the regressions in calculating
-#' partition coefficients.
-#' 
-#' @param well.stirred.correction Uses correction in calculation of hepatic
-#' clearance for -stirred model if TRUE.  This assumes clearance relative
-#' to amount unbound in whole blood instead of plasma, but converted to use
-#' with plasma concentration.
-#' 
-#' @param clint.pvalue.threshold Hepatic clearance for chemicals where the in
-#' vitro clearance assay result has a p-values greater than the threshold are
-#' set to zero.
-#' 
-#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
-#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
-#' dataset).
-#' 
-#' @param class.exclude Exclude chemical classes identified as outside of 
-#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' @param ... Additional parameters passed to parameterize function if 
+#' parameters is NULL.
 #'
 #' @return \item{Half life}{Units of h.}
 #'
@@ -61,46 +36,83 @@
 #' @keywords Parameter  1compartment
 #' 
 #' @examples
-#' 
 #' calc_half_life(chem.name="Bisphenol A")
 #'\donttest{
 #' calc_half_life(chem.name="Bisphenol A",species="Rat")
+#' 
 #' calc_half_life(chem.cas="80-05-7")
+#' 
+#' # Volatiles are outside the domain of default model:
+#' try(calc_half_life(
+#'      chem.name="toluene"))
+#' 
+#' # We can turn off physchem checking:
+#' calc_half_life(
+#'      chem.name="toluene",
+#'      physchem.exclude=FALSE)
+#'
+#' # Or use an appropriate model for volatiles:
+#' calc_half_life(
+#'      chem.name="toluene",
+#'      model="sumclearances")
+#'
+#' # PFAS are outside the domain:
+#' try(calc_half_life(
+#'      dtxsid="DTXSID8031865",
+#'      model="sumclearances"))
+#' 
+#' # Can turn off chemical class checking:
+#' calc_half_life(
+#'   dtxsid="DTXSID8031865",
+#'   model="sumclearances",
+#'   class.exclude=FALSE,
+#'   suppress.messages=TRUE)
+#' 
+#' # For a metabolized compound, non-restrictive clearance should be faster:
+#' h1 <- calc_half_life(
+#'   chem.name="toluene",
+#'   model="sumclearances",
+#'   suppress.messages=TRUE)
+#' h2 <- calc_half_life(
+#'   chem.name="toluene",
+#'   model="sumclearances",
+#'   restrictive.clearance=FALSE,
+#'   suppress.messages=TRUE)
+#' # Check that h2 < h1:
+#' if (!(h2 < h1)) stop("h2 not less than h1")
+#' 
+#' # Change species: 
+#' calc_half_life(
+#'   dtxsid="DTXSID8031865",
+#'   species="rat",
+#'   model="sumclearances",
+#'   default.to.human=TRUE,
+#'   class.exclude=FALSE,
+#'   physchem.exclude=FALSE,
+#'   suppress.messages=TRUE)
 #'}
 #'
 #' @export calc_half_life
-calc_half_life <- function (chem.cas = NULL, 
+calc_half_life <- function(chem.cas = NULL, 
                             chem.name = NULL, 
                             dtxsid = NULL,
                             parameters = NULL,
+                            species="Human",
                             model = "3compartmentss", 
-                            species = "Human",
                             suppress.messages = TRUE,
-                            default.to.human = FALSE,
-                            class.exclude = TRUE, 
-                            restrictive.clearance = TRUE,
-                            adjusted.Funbound.plasma = TRUE,
-                            regression = TRUE, 
-                            well.stirred.correction = TRUE,
-                            clint.pvalue.threshold = 0.05,
-                            minimum.Funbound.plasma = 1e-04)
+                            ...
+                            )
 {
-  
-  elim_rate <- calc_elimination_rate(chem.cas = chem.cas,
-                                     chem.name = chem.name,
-                                     dtxsid = dtxsid,
-                                     parameters = parameters,
-                                     model = model,
-                                     species = species,
-                                     suppress.messages = suppress.messages,
-                                     default.to.human = default.to.human,
-                                     class.exclude = class.exclude,
-                                     restrictive.clearance = restrictive.clearance,
-                                     adjusted.Funbound.plasma = adjusted.Funbound.plasma,
-                                     regression = regression,
-                                     well.stirred.correction = well.stirred.correction,
-                                     clint.pvalue.threshold = clint.pvalue.threshold,
-                                     minimum.Funbound.plasma = minimum.Funbound.plasma)
+  elim_rate <- do.call(calc_elimination_rate, 
+                       args=c(list(chem.cas = chem.cas,
+                                 chem.name = chem.name,
+                                 dtxsid = dtxsid,
+                                 parameters = parameters,
+                                 model = model,
+                                 species = species,
+                                 suppress.messages = suppress.messages),
+                                 list(...))
+                       )
   
   half_life <- log(2)/elim_rate # calculate the elimination rate
   

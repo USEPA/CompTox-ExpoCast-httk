@@ -69,6 +69,11 @@
 #' flows) but default.to.human = TRUE must be used to substitute human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #'  
+#' Per- and 
+#' polyfluoroalkyl substances (PFAS) are excluded by default because the 
+#' transporters that often drive PFAS toxicokinetics are not included in this 
+#' model. However, PFAS chemicals can be included with the argument 
+#' "class.exclude = FALSE".
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
@@ -143,6 +148,10 @@
 #' @param class.exclude Exclude chemical classes identified as outside of 
 #' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
 #' 
+#' @param physchem.exclude Exclude chemicals on the basis of physico-chemical
+#' properties (currently only Henry's law constant) as specified by 
+#' the relevant modelinfo_[MODEL] file (default TRUE).
+#' 
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
 #' hematocrit, Funbound.plasma, and Krbc2pu.
@@ -193,6 +202,19 @@
 #' between various OS systems we suggest changing the default method of "lsoda"
 #' to "lsode" and also adding the argument mf = 10.
 #' See [deSolve::ode()] for further details.)
+#' 
+#' @param Caco2.options A list of options to use when working with Caco2 apical 
+#' to basolateral data \code{Caco2.Pab}, default is Caco2.options = 
+#' list(Caco2.Pab.default = 1.6, Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, 
+#' overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the 
+#' default value for Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE 
+#' uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+#' Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE 
+#' overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
+#' with 1 (i.e. 100 percent) regardless of other settings.
+#' See \code{\link{get_fbio}} for further details.
 #'
 #' @return A matrix of class deSolve with a column for time(in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
@@ -202,8 +224,6 @@
 #'
 #' @references 
 #' \insertRef{linakis2020development}{httk}
-#' 
-#' \insertRef{pearce2017httk}{httk}
 #'
 #' @keywords Solve
 #'
@@ -272,6 +292,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            output.units=NULL,
                            default.to.human=FALSE,
                            class.exclude=TRUE,
+                           physchem.exclude = TRUE,
                            recalc.blood2plasma=FALSE,
                            recalc.clearance=FALSE,
                            adjusted.Funbound.plasma=TRUE,
@@ -285,6 +306,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
                            fR = 12,
                            VT = 0.75,
                            VD = 0.15,
+                           Caco2.options = list(),
                            ...)
 {
   
@@ -353,7 +375,6 @@ solve_gas_pbtk <- function(chem.name = NULL,
     }
   }
   
-  
   #Only generate the forcings if other dosing metrics are null; they're not
   #designed to work together in a very meaningful way
   if (is.null(dosing.matrix) & is.null(doses.per.day) & is.null(forcings))
@@ -374,11 +395,14 @@ solve_gas_pbtk <- function(chem.name = NULL,
       #Provide for case in which forcing functionality is effectively turned off
       if (exp.conc == 0) {
         conc.matrix = NULL
+      } else if (period == 0) {
+        conc.matrix = matrix(c(exp.start.time,exp.conc), nrow=1)
+        colnames(conc.matrix <- c("times","forcing_values"))
       } else {
-      Nrep <- ceiling((days - exp.start.time)/period) 
-      times <- rep(c(exp.start.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
-      forcing_values  <- rep(c(exp.conc,0), Nrep)
-      conc.matrix = cbind(times,forcing_values)
+        Nrep <- ceiling((days - exp.start.time)/period) 
+        times <- rep(c(exp.start.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))
+        forcing_values  <- rep(c(exp.conc,0), Nrep)
+        conc.matrix = cbind(times,forcing_values)
       }
       return(conc.matrix)
     }
@@ -420,17 +444,19 @@ solve_gas_pbtk <- function(chem.name = NULL,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-    parameterize.arg.list = list(
+    parameterize.args.list = list(
       regression=regression,
       default.to.human=default.to.human,
       class.exclude=class.exclude,
+      physchem.exclude = physchem.exclude,
       restrictive.clearance = restrictive.clearance,
       exercise = exercise,
       vmax = vmax,
       km = km,
       fR = fR,
       VT = VT,
-      VD = VD),
+      VD = VD,
+      Caco2.options = Caco2.options),
     minimum.Funbound.plasma=minimum.Funbound.plasma,
     ...)
   

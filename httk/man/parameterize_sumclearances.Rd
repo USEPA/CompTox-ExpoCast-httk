@@ -11,6 +11,8 @@ parameterize_sumclearances(
   species = "Human",
   clint.pvalue.threshold = 0.05,
   default.to.human = FALSE,
+  physchem.exclude = TRUE,
+  class.exclude = TRUE,
   force.human.clint.fup = FALSE,
   adjusted.Funbound.plasma = TRUE,
   adjusted.Clint = TRUE,
@@ -41,6 +43,13 @@ having p-values greater than the threshold are set to zero.}
 \item{default.to.human}{Substitutes missing species-specific values with human values if
 TRUE (default is FALSE).}
 
+\item{physchem.exclude}{Exclude chemicals on the basis of physico-chemical
+properties (currently only Henry's law constant) as specified by 
+the relevant modelinfo_[MODEL] file (default TRUE).}
+
+\item{class.exclude}{Exclude chemical classes identified as outside of 
+domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
+
 \item{force.human.clint.fup}{Uses human hepatic intrinsic clearance and fraction
 of unbound plasma in calculation of partition coefficients for rats if true.}
 
@@ -63,13 +72,17 @@ value is 0.0005.}
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 
-\item{Caco2.options}{A list of options to use when working with Caco2 apical to
-basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
-Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
-Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+\item{Caco2.options}{A list of options to use when working with Caco2 apical 
+to basolateral data \code{Caco2.Pab}, default is Caco2.options = 
+list(Caco2.Pab.default = 1.6, Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, 
+overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the 
+default value for Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE 
+uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE 
+overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
+with 1 (i.e. 100 percent) regardless of other settings.
 See \code{\link{get_fbio}} for further details.}
 
 \item{...}{Other parameters}
@@ -123,6 +136,12 @@ using \code{\link{calc_fabs.oral}}.
 Intrinsic hepatic metabolism is used to very roughly estimate
 \ifelse{html}{\out{F<sub>gut</sub>}}{\eqn{F_{gut}}}
 using \code{\link{calc_fgut.oral}}.
+
+Per- and 
+polyfluoroalkyl substances (PFAS) are excluded by default because the 
+transporters that often drive PFAS toxicokinetics are not included in this 
+model. However, PFAS chemicals can be included with the argument 
+"class.exclude = FALSE".
 }
 \examples{
 
@@ -134,6 +153,8 @@ using \code{\link{calc_fgut.oral}}.
 \insertRef{pearce2017httk}{httk}
 
 \insertRef{kilford2008hepatocellular}{httk}
+
+\insertRef{wambaugh2025simple}{httk}
 }
 \seealso{
 \code{\link{calc_analytic_css_3compss}}
