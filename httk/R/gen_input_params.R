@@ -57,7 +57,7 @@
 gen_input_params <- function(model,
                              chem.cas=NULL,
                              chem.name=NULL,
-                             chem.dtxsid=NULL,
+                             dtxsid=NULL,
                              samples = 10000,
                              httkpop.dt = NULL,
                              httkpop.generate.arg.list =
