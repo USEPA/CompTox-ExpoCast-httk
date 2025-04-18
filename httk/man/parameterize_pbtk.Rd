@@ -191,6 +191,7 @@ model. However, PFAS chemicals can be included with the argument
 \examples{
 
  parameters1 <- parameterize_pbtk(chem.cas='80-05-7')
+\donttest{
 
  parameters2 <- parameterize_pbtk(chem.name='Bisphenol-A',species='Rat')
 
@@ -207,6 +208,7 @@ try(parameters3 <- parameterize_pbtk(chem.cas = "6385-62-2"))
 # that  Diquat dibromide monohydrate is not too volatile:
 parameters3 <- parameterize_pbtk(chem.cas = "6385-62-2",
                                  physchem.exclude = FALSE) 
+}
 
 }
 \references{
