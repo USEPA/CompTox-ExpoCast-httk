@@ -178,19 +178,28 @@ Robert Pearce,
 Caroline Ring [Ring.Caroline@epa.gov],
 Greg Honda [honda.gregory@epa.gov], 
 Mark Sfeir, 
-Matt Linakis [MLINAKIS@ramboll.com], and
-Dustin Kapraun [kapraun.dustin@epa.gov]
+Matt Linakis [MLINAKIS@ramboll.com], 
+Dustin Kapraun [kapraun.dustin@epa.gov],
+Kimberly Truong [truong.kimberly@epa.gov], and
+Colin Thomson [thomson.colin@epa.gov]
 
 ### Bug-Fixes Vignette edits, and Parameter Values
+Todor Antonijevic [tantonijevic@toxstrategies.com], 
 Miyuki Breen, 
 Shannon Bell [Shannon.bell@inotivco.com], 
 Xiaoqing Chang [Xiaoqing.chang@inotivco.com], 
-Todor Antonijevic [tantonijevic@toxstrategies.com], 
 Jimena Davis, 
-Elaina Kenyon [kenyon.elaina@epa.gov]
+Elaina Kenyon [kenyon.elaina@epa.gov],
+Gilberto Padilla Mercado [PadillaMercado.Gilberto@epa.gov],
+Katie Paul Friedman [Paul-Friedman.Katie@epa.gov],
+Nathan Pollesch [pollesch.nathan@epa.gov],
+Meredith Scherer [Scherer.Meredith@epa.gov],
+Celia Schacht [Schacht.Celia@epa.gov],
+Noelle Sinski [Noelle.Sinski@icf.com],
+Nisha Sipes [sipes.nisha@epa.gov],
 James Sluka [jsluka@indiana.edu],  
-Nisha Sipes [sipes.nisha@epa.gov], and 
-Barbara Wetmore [wetmore.barbara@epa.gov]
+Barbara Wetmore [wetmore.barbara@epa.gov],
+Lily Whipple
 
 ### Statistical Expertise
 Woodrow Setzer [setzer.woodrow@epa.gov]
