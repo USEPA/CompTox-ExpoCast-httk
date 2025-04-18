@@ -1,0 +1,443 @@
+---
+title: "Predictions for Clint using models presented in Dawson et al. 2021"
+
+author: "Tabatabaei Sadeghi S, Guider C, Davidson-Fritz S, Dinallo R, Li L, Strock C , Wambaugh JF"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{h) Dawson's Model Evaluation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+*Please send questions to tabatabaeisadeghi.sahar@epa.gov*
+---
+
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+This R markdown script will allow a user to predict Clint values for chemicals based on the QSAR Models presented in Dawson et al. 2021: Designing QSARs for parameters of high throughput toxicokinetic models using open-source descriptors. Environmental Science and Technology. 
+
+Data to accomplish this is contained in separate Clint folder, which each contain the random forest objects, and the means and standard deviations of the training set used to create the models. This script will read in novel chemicals for which predictors have been computed, standardize the parameters of the chemical according to the training set(s), and predict Clint for those chemicals. 
+
+To fit predictions from the Clint model, you will need OPERA model predictions and PaDEL descriptions for your chemicals of interest. 
+
+### OPERA predictors include:
+
+"LogP"   "LogWS"  "LogBCF" "LogKM"  "MP"     "LogVP"  "LogD55" "LogD74" "LogOH" 
+
+### PaDEL descriptors include:
+
+ "CrippenLogP"       "nBase"             "XLogP"             "AATS1v"            "AATS0i"           
+ "ETA_EtaP_F"        "ZMIC2"             "maxHBa"            "minsssN"           "AATS1i"           
+ "ETA_dEpsilon_B"    "GATS1i"            "ZMIC1"             "SsssN"             "nAromBond"        
+ "AATSC0p"           "minHBd"            "LipoaffinityIndex" "AATS3v"            "AATS2i"           
+ "C2SP2"             "AATS4v"            "Kier2"             "AATS6m"            "AATS6v"           
+ "minssCH2"          "AATS5v"            "AATS5i"            "ATSC2c"            "ATSC6c"           
+ "ATSC3m"            "ATSC3e"            "AATSC0c"           "AATSC0v"           "MATS1c"           
+ "MATS8c"            "GATS5c"            "GATS1e"            "GATS5e"            "BCUTc.1l"         
+ "BCUTp.1l"          "BCUTp.1h"          "nBondsM"           "SpMin2_Bhm"        "SpMax2_Bhp"       
+ "minHaaCH"          "minaaCH"           "IC1"               "MLFER_BH"          "piPC8"            
+ "R_TpiPCTPC"     
+
+These sets are included in the file "CombinedDescriptors_DED050621.RData", included in this folder. 
+
+Several but not all needed OPERA predictors are available from the EPA CompTox Dashboard. However, PaDEL descriptors are not available at all from the dashboard.To calculate these descriptors for your data, we recommend downloading the OPERA(Open QSAR app) application from https://github.com/NIEHS/OPERA
+
+The OPERA application is an open-source, stand-alone application that will produce both Opera predictions and PaDEL descriptions; Opera models are based entirely upon PaDEL descriptors and fingerprints. You will need either a chemical description ID(i.e., DTXSID,CASRN) or structural description(SMILES,MOL) for each chemical. Make sure to select all of the opera models you want, and select the "keep full descriptor files" box. This will generate and keep all calculations for all PaDEL descriptors, as well as your desired Opera predictors. Keep in mind that they may range from minutes to hours, depending on the number chemicals for which predictions are desired(10's to 1000's).   
+
+
+If you want to use SMILES codes to run through the OPERA function, you can download them from the CompTox Dashboard. Then, you can write out the text file to be used in the OPERA application. Whatever data source you used, make sure there are no column headers or row number in your data file. For more information, read the documentation for data input into the OPERA application. 
+
+By checking the "keep full descriptor files" box, OPERA will produce a lot of files you don't need. You only need the Opera predictions (with default suffix "_OPERA2.6Pred") and PaDEL descriptors (default suffix "_PadelDesc").  
+
+
+# Read in data and prepare for prediction
+Once the descriptors are calculated, load the files here, and prepare them to be used to make predictions. You have to make sure all of the descriptor names in your data match the descriptors used in the RF model objects. If you used SMILES codes, you also have make sure that the molecule ID output from Opera aligns with the DTXSID or CASRN of the chemicals in your set.  
+
+In the example below, we use the Tox21 dataset used to produce predictions presented in the paper. We downloaded the smiles codes from the Comptox Dashboard ("Tox21_FromCompToxDashboard.xlsx") through the OPERA application. Then we loaded the OPERA descriptors and PaDEL descriptors produced from the OPERA application, and a combined list of OPERA and PaDEL descriptors used in both the Clint and fup models. We then create a combined set of Opera and Padel descriptors based on their DTXSID's. Note that if you only load SMILES into the OPERA application without a CAS or DTXSID, you have to align the molecule ID with the SMILES at this step. This is important in the case that either PaDEL or Opera predictors can't be calculated for a given chemical, and you end up with a missing chemical in the Opera prediction file.  
+
+
+## LOAD PACKAGES
+```{r}
+
+packages <- c("ggplot2","randomForest","caret","OneR", "readxl", "httk",
+              "data.table","scales","viridis","openxlsx", "randomForest", "stringr","dplyr")
+sapply(packages, require, character.only=TRUE) #Note, the "character.only" argument is necessary here
+
+```
+
+
+```{r}
+#setting wd to the folder where the file is
+
+setwd("C:/Users/stabatab/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ExpoCast_Projec/Project_Pred_Caco2_Clint_Fup/invitroTKstats/CyprotexTO1/out_clint")
+
+Operaversion = 2.9
+Datalabel = "NewChemicals162_Dec12_2024"
+load("CombinedDescriptors_DED050621.RData")#descriptors in both models
+Descriptors$Opera=paste0(Descriptors$Opera, "_pred")
+
+#adding the new opera predictions
+Padel= read.csv("Unique160_Clint_PadelOutput.csv")
+Padel=Padel[163:nrow(Padel),]
+Opera=read.csv("Unique160_Clint-smi_OPERA2.9Pred.csv")
+
+#adding new padel predictors
+
+Opera=Opera[,c(1,which(names(Opera)%in%Descriptors$Opera))]
+Padel=Padel[,c(1,which(names(Padel)%in%Descriptors$Padel))]
+
+
+#Merge with truncated opera and padel lists
+chemlist=merge(Opera, Padel, by.x="MoleculeID", by.y="Name", all.x=TRUE)
+chemlist=chemlist[chemlist$MoleculeID!="DTXSID3035214",]
+
+desccols=which(names(chemlist)%in%Descriptors$Padel | names(chemlist)%in%Descriptors$Opera)
+Descnames=names(chemlist)[desccols]
+
+```
+
+# Intrinsic Clearance (Clint)
+Read in clint model object and training data mean and std. 
+Normalize your data using the training data. Then, use the predict function to predict clint bin. Use the training data from the included Revised S2 file from the Dawson et al. 2021 paper to calculate the bin median values. Finally, determine whether clint predictions are in or out of the AD, using the the method from Roy et al. 2015. 
+
+```{r}
+load("ClintModel_3Bin_040121.RData")
+msd=read.csv("mean_std_training_descriptors_DED021621.csv")
+submsd=msd[,which(names(msd)%in%names(chemlist))]
+
+##Standardize by training set mean and sd 
+chemlistsc=chemlist
+for(i in Descnames){
+  sub1=subset(submsd, select=c(names(submsd)==i))  
+  chemlistsc[,i]=(chemlist[,i]-sub1[1,1]) / sub1[2,1]
+}
+
+#Subset to only Clint model 
+Clintmodvars=row.names(importance(ClintClass3Mod))
+chemlistClintmodvars=which(names(chemlistsc)%in%Clintmodvars)
+
+IDcolstart=1
+IDcolend=1
+chemlistsc_Clint=chemlistsc[,c(IDcolstart:IDcolend,chemlistClintmodvars)]
+
+#filter for only important descriptors (drop the rest)
+
+#Take out incomplete descriptors (the issue is here that we are getting rid of incomplete descriptors i.e. all the 200 new chemicals)
+ClintComplete=complete.cases(chemlistsc_Clint)
+chemlistsc_Clint_narm=chemlistsc_Clint[which(ClintComplete==TRUE),]
+IncompleteClint=chemlistsc[which(ClintComplete==FALSE),]
+write.csv(IncompleteClint,file=paste0("Incomplete_Opera_PaDEL_Clint_predictions_",Datalabel,".csv"))
+
+#Make Predictions with only five chemicals
+set.seed(1255)
+chemlistpredictClint=predict(ClintClass3Mod,chemlistsc_Clint_narm) 
+chemlistsc_Clint_narm$ClintPredictBin=chemlistpredictClint
+
+
+#Convert to clearance ul/10^6 hepatic cells based on training data 
+training=read.xlsx("S2_Dawson et al. Supporting_Information_Revision_Final_Sharing.xlsx", sheet=3)
+training$Bin3.Adj=ifelse(training$Bin3.Adj==4,3,training$Bin3.Adj)
+tmeanagtable=aggregate(training$Clearance.Adj~training$Bin3.Adj, FUN="median")
+tsdagtable=aggregate(training$Clearance.Adj~training$Bin3.Adj, FUN="sd")
+chemlistsc_Clint_narm$ClintPredictBin_MD=ifelse(chemlistsc_Clint_narm$ClintPredictBin==1, tmeanagtable[1,2], ifelse(
+                                                chemlistsc_Clint_narm$ClintPredictBin==2, tmeanagtable[2,2], tmeanagtable[3,2]))
+chemlistsc_Clint_narm$ClintPredictBin_SD=ifelse(chemlistsc_Clint_narm$ClintPredictBin==1, tsdagtable[1,2], ifelse(
+                                                chemlistsc_Clint_narm$ClintPredictBin==2, tsdagtable[2,2] ,tsdagtable[3,2]))
+
+```
+
+
+## Apply applicability domain 
+Using methodology of Roy et al 2015, apply applicability domain of Clint model to predictions of new chemicals and export
+
+```{r}
+ a=chemlistsc_Clint_narm  
+ b=a[,c("MoleculeID")]
+ a=a[,which(names(a)%in%Clintmodvars)]
+ a=abs(a)
+ SImin=apply(a,1,min) #Find the min, max, sd, and mean
+ SImax=apply(a,1,max)
+ SImean=apply(a,1,mean)
+ SIsd=apply(a,1,sd)
+  
+    
+  #Several are NA when SD is calculated
+  SIdf=data.frame(SImin, SImax, SImean, SIsd)
+  SIdf$SI90=SIdf$SImean + (1.28 * SIdf$SIsd)
+  SIdf$Outlier=0 #something is assumed to be inside the AD unless it it found to not be 
+
+    #Based Algorithm specificed in Roy et al. 2015)
+    for(i in 1:length(SIdf[,1])){
+      if(SIdf$SImax[i]<3){ next } else 
+        if (SIdf$SImin[i] > 3) {
+          SIdf$Outlier[i] = 1 } else if 
+      (SIdf$SImean[i] + (1.28 * SIdf$SIsd[i]) > 3){
+        SIdf$Outlier[i]=1}
+    }
+    
+chemlistsc_Clint_narm=data.frame(chemlistsc_Clint_narm, SIdf)
+write.csv(chemlistsc_Clint_narm, file=paste0("Novel_clint_predictions_with_AD_",Datalabel,"_descs_from_Opera",Operaversion, ".csv"))
+
+total=length(chemlistsc_Clint_narm$Outlier)
+inside=sum(chemlistsc_Clint_narm$Outlier==0)
+outside=sum(chemlistsc_Clint_narm$Outlier==1)
+inside_per=inside/total*100
+outside_per=outside/total*100
+
+print(paste0(signif(inside_per,3),
+             "% are in the Roy et al. (2015) estimated domain o applicability"))
+
+
+Summary=data.frame(Domain=c("Inside AD","Outside AD"),
+                   Count=c(inside,outside))
+
+```
+# Plot applicability domain summary
+```{r}
+
+applicability_domain_plot <- ggplot(Summary, aes(x = "", y = Count, fill = Domain)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y") +
+  ggtitle("Applicability Domain") +
+  theme_void() +
+  scale_fill_manual(values=c("Inside AD"="steelblue", "Outside AD"="lightcoral"))+
+  theme(plot.title = element_text(size = 14,face="bold",hjust = 0.5))
+
+
+ggsave("C:\\Users\\stabatab\\OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\ExpoCast_Projec\\Project_Pred_Caco2_Clint_Fup\\invitroTKstats\\CyprotexTO1\\out_clint\\applicability_domain_pie_plot.jpg", plot = applicability_domain_plot, width = 6, height = 4, units = "in", dpi = 300)
+
+print(applicability_domain_plot)
+
+
+
+
+```
+## Evlaute the Model with the test set:
+
+For the new data from Cyprotex (according to the paper Dawson 2021): 
+Everything <3.9 μL/min/106 cells) is “very
+slow” (bin 1)
+ 
+Everything (3.9−9.3 μL/min/106) is  “slow”  (bin 2)
+ 
+Everthing  (>9.3 μL/min/106 cells) is "Fast" (bin 3)
+
+
+````{r}
+
+library(readr)
+
+test.set=read_tsv("Cyprotex-Clint-Level4.tsv", show_col_types = FALSE)
+testclint=test.set$Clint.1.Med
+
+
+# Divide Clint into Bins for New Test Set: 
+
+
+testclinbins=ifelse(testclint< 3.9,1,
+             ifelse(testclint>=3.9 & testclint<=9.3,2,3))
+
+testclinbins=factor(testclinbins, levels=c(1,2,3))
+
+
+confusion <- confusionMatrix(data = chemlistsc_Clint_narm$ClintPredictBin,reference = testclinbins)
+testsummary <- postResample(pred = chemlistsc_Clint_narm$ClintPredictBin,obs = testclinbins)
+
+print(confusion)
+print(testsummary)
+
+
+
+````
+### Heatmaps
+```{r}
+
+# Load necessary libraries
+library(ggplot2)
+library(reshape2)
+library(pheatmap)
+library(tidyr)
+
+# Load your dataset (Modify filename as needed)
+
+#Subset to only Clint model 
+Clintmodvars=row.names(importance(ClintClass3Mod))
+chemClintmodvars=which(names(chemlist)%in%Clintmodvars)
+
+IDcolstart=1
+IDcolend=1
+chemClint=chemlist[,c(IDcolstart:IDcolend,chemClintmodvars)]
+data=chemClint
+data$Compound.Name=test.set$Compound.Name
+data <- data[, -1]
+data=data[,c(ncol(data), 1:(ncol(data)-1))]
+
+# Remove non-numeric columns (Assuming the first column is chemical names)
+descriptors <- data[, -1]  # Adjust index if necessary
+chemical_names <- data[, 1]  # Store chemical names
+
+
+# Load required libraries
+library(ggplot2)
+library(reshape2)
+library(tidyr)
+
+# Ensure the first column is compound names
+rownames(data) <- data$Compound.Name 
+data <- data[, -1] 
+
+# Compute Z-scores for each descriptor
+z_scores <- scale(data)
+
+# Convert to dataframe
+z_scores_df <- as.data.frame(z_scores)
+z_scores_df$Compound <- rownames(z_scores_df) 
+
+# Reshape for ggplot heatmap
+z_melted <- z_scores_df %>% 
+  pivot_longer(cols=!Compound, names_to = "Descriptors",values_to = "Z_Scores")
+
+z_melted=as.data.frame(z_melted)
+  
+# Create the heatmap
+
+heatmap_clint=ggplot(z_melted, aes(x = Compound, y = Descriptors, fill = Z_Scores)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "darkred", mid = "yellow", high = "darkred", midpoint = 0) +
+  theme_minimal() +
+  labs(title = "Heatmap of Z-Scores", x = "Compound", y = "Descriptors", fill = "Z_Scores") +
+  theme(
+     plot.background = element_rect(fill = "white",color=NA),
+     panel.background = element_rect(fill = "white",color=NA),
+     axis.text.x = element_text(angle = 90, vjust=0.5,hjust = 1, size = 5,face="bold"),
+        axis.text.y = element_text(size = 8),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "right"
+        
+      ) + 
+     coord_fixed((ratio=2))
+
+ggsave("heatmap_clint.png", width=16,height = 10,dpi=700)
+
+ggsave(
+  filename  = paste0(setwd("C:/Users/stabatab/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ExpoCast_Projec/Project_Pred_Caco2_Clint_Fup/invitroTKstats/CyprotexTO1/out_clint"),"heatmap_clint.png"),
+  plot = heatmap_clint,
+  height = 7, width = 7, units = "in", dpi = 300
+)
+
+
+
+
+```
+### check padels
+```{r}
+
+
+naPadel=colSums(is.na(Padel))
+ind=which(naPadel > 0)
+Na_namespadel=names(ind)
+rownames(RF.fit$importance)
+rmv=str_remove(rownames(RF.fit$importance), "^padel_|^Opera_")
+
+Padelind=which(rmv %in% Na_namespadel)
+padelcomimp=data.frame(rmv[Padelind])
+
+
+
+
+```
+### check graphs
+````{r}
+
+# Extract log-transformed Clint values
+log_clint <- log10(testclint[testclint > 0])  # Avoid log(0)
+
+# Assign bins based on clusters
+test_set_bins <- cut(log_clint, breaks=3, labels=1:3)
+
+bin_medians <- tapply(testclint[testclint > 0], test_set_bins, median, na.rm=TRUE)
+
+print(bin_medians)
+
+actual_clint_values <- bin_medians[as.character(test.set.bin)]
+
+Clint=test.set1[,c("DTXSID", "Clint.1.Med")]
+
+Newtest.set=merge(Clint,chemlistsc_Clint, by.x="DTXSID", by.y="MoleculeID", all.x=TRUE)
+
+
+test.set2$Clint.1.Med[test.set2$Clint.1.Med==0]=1e-6
+
+
+library(ggplot2)
+library(scales)
+
+FigQSPRClint <- ggplot(Newtest.set) +
+  geom_point(aes(x = as.numeric(test.set2$Clint.1.Med),
+                 y = as.numeric(unlist(actual_clint_values)),
+             color = "Cyprotex"), alpha = 0.8, size = 5) +
+  geom_abline(slope = 1, linetype = "dashed") +
+  labs(y = expression(bold("QSPR Predicted ")~bolditalic("Clint")~bold('(10'^'-6'~'µL/min')),
+      x = expression(bold("Measured ")~bolditalic("Clint")~bold('(10'^'-6'~'µL/min)')),
+       color = "Data Source") +
+  scale_x_log10(labels = scientific_format()) +
+  scale_y_log10(labels = scientific_format()) +
+  scale_colour_manual(values=c("Cyproex"="purple"))+
+  scale_colour_viridis_d() +
+  theme_minimal() +
+  theme(
+    legend.position = "top",  # Move legend to the top
+    legend.title = element_text(size = 18, face = "bold"),  # Adjust legend text
+    legend.text = element_text(size = 16),
+    axis.text = element_text(size=18),
+    axis.title = element_text(size=20,face="bold"),
+    panel.background = element_rect(fill = "white", color = NA),
+    plot.background = element_rect(fill = "white", color = NA),
+    axis.line = element_line(color="black",size=1),
+    text = element_text(size = 16)  # Adjust text size
+  ) +
+  expand_limits(x = c(1e-2, 1e4), y = c(1e-2, 1e4))  # Ensure all points are shown
+
+# **Save the plot**
+ggsave(
+  filename  = paste0(setwd("C:/Users/stabatab/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ExpoCast_Projec/Project_Pred_Caco2_Clint_Fup/invitroTKstats/CyprotexTO1/out_clint"),"/FigQSPRClint.png"),
+  plot = FigQSPRClint,
+  height = 7, width = 7, units = "in", dpi = 600
+)
+
+
+
+
+
+#Interval Plot
+
+# install.packages("caret")
+library(caret)
+
+packages <- c("ggplot2","randomForest","caret","OneR", "readxl", "httk",
+              "data.table","scales","viridis")
+sapply(packages, require, character.only=TRUE) #Note, the "character.only" argument is necessary here
+
+ggplot(test.set1, aes(x = Lab.Compound.Name, y = Clint.1.Med)) +
+  geom_point(color = "blue", size = 3) +  
+  geom_errorbar(aes(ymin = Clint.1.Low, ymax = Clint.1.High), width = 0.3) +  
+  labs(title = "Intrinsic Clearance (Clint) Intervals",x = "Compounds",y = "Clint (μL/min/10⁶ cells)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1))  
+
+range(test.set1$Clint.1.Med)
+range(test.set1$Clint.1.Low)
+range(test.set1$Clint.1.High)
+
+
+
+
+
+
+
+```
+
