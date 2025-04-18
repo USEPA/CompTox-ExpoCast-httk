@@ -33,7 +33,9 @@
 #' @author Greg Honda
 #'
 #' @references 
-#' \insertRef{armitage2013development}{httk} 
+#' \insertRef{armitage2014application}{httk} 
+#'
+#' \insertRef{honda2019using}{httk}
 #'
 #' @import magrittr
 #'
@@ -276,10 +278,9 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #'
 #' @author Greg Honda
 #'
-#' @references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 
-#' 2014, 48, 9770-9779. https://doi.org/10.1021/es501955g
-#'
 #' @references 
+#' \insertRef{armitage2014application}{httk}
+#'
 #' \insertRef{honda2019using}{httk} 
 #'
 #' @import magrittr

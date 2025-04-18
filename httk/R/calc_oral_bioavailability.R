@@ -87,9 +87,13 @@
 #'
 #' @references 
 #' \insertRef{darwich2010interplay}{httk}
+#'
 #' \insertRef{yang2007prediction}{httk}
-#' \insertRef{HondaUnpublishedCaco2}{httk}
+#'
+#' \insertRef{honda2025impact}{httk}
+#'
 #' \insertRef{yu1999compartmental}{httk}
+#'
 #' \insertRef{lennernas1997human}{httk}
 #' 
 #' @export calc_fbio.oral

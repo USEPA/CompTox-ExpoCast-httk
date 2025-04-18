@@ -40,9 +40,6 @@
 #' @param ... Additional parameters passed to parameterize function if 
 #' parameters is NULL.
 #' 
-#' @param class.exclude Exclude chemical classes identified as outside of 
-#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
-#' 
 #' @return \item{Volume of distribution}{Units of L/ kg BW.}
 #' 
 #' @author John Wambaugh and Robert Pearce
