@@ -36,6 +36,10 @@ httk/man/frechen2021.Rd
 
 # Session Data files
 .RData
+!datatables/Tables.RData
+!httk/data/Tables.RData
+!datatables/sysdata.rda
+!httk/R/sysdata.rda
 
 # User-specific files
 .Ruserdata
@@ -54,8 +58,8 @@ httk/man/frechen2021.Rd
 .Rproj.user/
 
 # produced vignettes
-vignettes/*.html
-vignettes/*.pdf
+httk/vignettes/*.html
+httk/vignettes/*.pdf
 
 # OAuth2 token, see https://github.com/hadley/httr/releases/tag/v0.3
 .httr-oauth
@@ -70,6 +74,9 @@ vignettes/*.pdf
 
 # R Environment Variables
 .Renviron
+
+# Data files generated for lifestage models
+*input_param*.Rds
 
 ## R package Sub-directory Files to Ignore ##
 # history files

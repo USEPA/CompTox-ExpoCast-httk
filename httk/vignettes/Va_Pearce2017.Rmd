@@ -188,11 +188,11 @@ for (this.cas in chem.list)
                                                     output.units = "uM",
                                                     suppress.messages=TRUE)))
     this.row <- cbind(this.row,
-                      as.data.frame(calc_mc_css(chem.cas = this.cas,
-                                                which.quantile = 0.50,
-                                                output.units = "uM",
-                                                samples = NSAMP,
-                                                suppress.messages=TRUE)))
+                        as.data.frame(calc_mc_css(chem.cas = this.cas,
+                                                  which.quantile = 0.50,
+                                                  output.units = "uM",
+                                                  samples = NSAMP,
+                                                  suppress.messages=TRUE)))
     css.table <- rbind(css.table, this.row)
 }
 colnames(css.table) <- c("Compound","DTXSID","CAS", "PBTK", "Wetmore", "MC")
@@ -616,7 +616,7 @@ colnames(physiology.data)[length(colnames(physiology.data))] <- "Wolverine"
 Now we can make predictions for wolverines!
 ```{r add_a_species3, eval = execute.vignette}
 calc_mc_css(chem.cas="80-05-7",species="wolverine",
-            parameterize.arg.list=list(default.to.human=TRUE),
+            parameterize.args.list =list(default.to.human=TRUE),
             suppress.messages=TRUE,
             samples = NSAMP)
 ```

@@ -27,7 +27,7 @@ Pab.Quant.Pred \tab Median and 95-percent interval for values within the predict
 }
 }
 \references{
-\insertRef{HondaUnpublishedCaco2}{httk}
+\insertRef{honda2025impact}{httk}
 }
 \seealso{
 \code{\link{load_honda2023}}

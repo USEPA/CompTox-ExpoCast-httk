@@ -25,8 +25,8 @@ specified.}
 \item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
-\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human"). Currently only a narrow human model is supported.}
+\item{species}{Included for compatibility with other functions, but the model
+will not run for non-human species (default "Human").}
 
 \item{fetal_fup_adjustment}{Logical indicator of whether to use an adjusted
 estimate for fetal fup based on the fetal:maternal plasma protein binding
@@ -42,66 +42,103 @@ Kapraun et al. (2019) maternal-fetal growth parameters are provided.}
 }
 \value{
 \item{pre_pregnant_BW}{Body Weight before pregnancy, kg.}
-\item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} \item{Fabsgut}{Fraction
-of the oral dose absorbed, i.e. the fraction of the dose that enters the
-gutlumen.} \item{Funbound.plasma}{Fraction of plasma that is not bound.}
+\item{Clmetabolismc}{Hepatic Clearance, L/h/kg BW.} 
+\item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of the dose that enters the gutlumen.} 
+\item{Funbound.plasma}{Fraction of plasma that is not bound.}
 \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte
-assay using the method of Kilford et al. (2008)} \item{hematocrit}{Percent
-volume of red blood cells in the blood.} \item{Kgut2pu}{Ratio of
-concentration of chemical in gut tissue to unbound concentration in plasma.}
+assay using the method of Kilford et al. (2008)} 
+\item{hematocrit}{Percent volume of red blood cells in the blood.} 
+\item{Kadipose2pu}{Ratio of concentration of chemical in adipose tissue to unbound concentration in plasma.}
+\item{Kgut2pu}{Ratio of concentration of chemical in gut tissue to unbound concentration in plasma.}
 \item{kgutabs}{Rate that chemical enters the gut from gutlumen, 1/h.}
 \item{Kkidney2pu}{Ratio of concentration of chemical in kidney tissue to
-unbound concentration in plasma.} \item{Kliver2pu}{Ratio of concentration of
+unbound concentration in plasma.} 
+\item{Kliver2pu}{Ratio of concentration of
 chemical in liver tissue to unbound concentration in plasma.}
 \item{Klung2pu}{Ratio of concentration of chemical in lung tissue to unbound
-concentration in plasma.} \item{Krbc2pu}{Ratio of concentration of chemical
+concentration in plasma.} 
+\item{Krbc2pu}{Ratio of concentration of chemical
 in red blood cells to unbound concentration in plasma.}
 \item{Krest2pu}{Ratio of concentration of chemical in rest of body tissue to
-unbound concentration in plasma.} \item{million.cells.per.gliver}{Millions
-cells per gram of liver tissue.} \item{MW}{Molecular Weight, g/mol.}
-\item{Qgfrc}{Glomerular Filtration Rate, L/h/kg BW^3/4, volume of fluid
-filtered from kidney and excreted.} \item{Rblood2plasma}{The ratio of the
-concentration of the chemical in the blood to the concentration in the
-plasma from available_rblood2plasma.} \item{Vgutc}{Volume of the gut per kg body
-weight, L/kg BW.} \item{Vkidneyc}{Volume of the kidneys per kg body weight, L/kg
-BW.} \item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
-\item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
-\item{Vthyroidc}{Volume of the thyroid per kg body weight, L/kg BW.}
+unbound concentration in plasma.} 
+\item{Kthyroid2pu}{Ratio of concentration of chemical in thyroid tissue to unbound concentration in plasma.}
 \item{Kfgut2pu}{Ratio of concentration of chemical in fetal gut tissue to
-unbound concentration in plasma.} \item{Kfkidney2pu}{Ratio of concentration
+unbound concentration in plasma.} 
+\item{Kfkidney2pu}{Ratio of concentration
 of chemical in fetal kidney tissue to unbound concentration in plasma.}
 \item{Kfliver2pu}{Ratio of concentration of chemical in fetal liver tissue
-to unbound concentration in plasma.} \item{Kflung2pu}{Ratio of concentration
+to unbound concentration in plasma.} 
+\item{Kflung2pu}{Ratio of concentration
 of chemical in fetal lung tissue to unbound concentration in plasma.}
 \item{Kfrest2pu}{Ratio of concentration of chemical in fetal rest of body
-tissue to unbound concentration in plasma.} \item{Kfbrain2pu}{Ratio of
-concentration of chemical in fetal brain tissue to unbound concentration in
-plasma.} \item{Kthyroid2pu}{Ratio of concentration of chemical in fetal
-thyroid tissue to unbound concentration in plasma.}
+tissue to unbound concentration in plasma.} 
+\item{Kfbrain2pu}{Ratio of concentration of chemical in fetal brain tissue to 
+unbound concentration in plasma.} 
 \item{Kfthyroid2pu}{Ratio of concentration of chemical in fetal thyroid
-tissue to unbound concentration in plasma.} \item{Kplacenta2pu}{Ratio of
-concentration of chemical in placental tissue to unbound concentration in
-maternal plasma.} \item{Kfplacenta2pu}{Ratio of concentration of chemical in
-placental tissue to unbound concentration in fetal plasma.}
+tissue to unbound concentration in plasma.} 
+\item{Kplacenta2pu}{Ratio of concentration of chemical in placental tissue to 
+unbound concentration in maternal plasma.} 
+\item{Kfplacenta2pu}{Ratio of concentration of chemical in
+placental tissue to unbound concentration in fetal plasma.} 
+\item{million.cells.per.gliver}{Millions
+cells per gram of liver tissue.} 
+\item{MW}{Molecular Weight, g/mol.}
+\item{pH_Plasma_mat}{pH of the maternal plasma.}
+\item{Qgfr}{Glomerular Filtration Rate, L/h/kg BW^3/4, volume of fluid
+filtered from kidney and excreted.} 
+\item{Rblood2plasma}{The ratio of the
+concentration of the chemical in the blood to the concentration in the
+plasma from available_rblood2plasma.} 
+\item{Vgutc}{Volume of the gut per kg body
+weight, L/kg BW.} 
+\item{Vkidneyc}{Volume of the kidneys per kg body weight, L/kg
+BW.} 
+\item{Vliverc}{Volume of the liver per kg body weight, L/kg BW.}
+\item{Vlungc}{Volume of the lungs per kg body weight, L/kg BW.}
+\item{Vthyroidc}{Volume of the thyroid per kg body weight, L/kg BW.}
 }
 \description{
 This function initializes the parameters needed in the functions
-solve_fetal_pbtk by calling solve_pbtk and adding additional parameters.
+solve_fetal_pbtk by calling parameterize_pbtk and adding additional parameters.
+}
+\details{
+Because this model does not simulate exhalation, inhalation, and other 
+processes relevant to volatile chemicals, this model is by default 
+restricted to chemicals with a logHenry's Law Constant less than that of 
+Acetone, a known volatile chemical. That is, chemicals with logHLC > -4.5 
+(Log10 atm-m3/mole) are excluded. Volatility is not purely determined by the 
+Henry's Law Constant, therefore this chemical exclusion may be turned off 
+with the argument "physchem.exclude = FALSE". Similarly, per- and 
+polyfluoroalkyl substances (PFAS) are excluded by default because the 
+transporters that often drive PFAS toxicokinetics are not included in this 
+model. However, PFAS chemicals can be included with the argument 
+"class.exclude = FALSE".
 }
 \examples{
 
+\donttest{
+ parameters1 <- parameterize_fetal_pbtk(chem.cas='80-05-7')
 
- parameters <- parameterize_fetal_pbtk(chem.cas='80-05-7')
+ parameters2 <- parameterize_fetal_pbtk(chem.name='Bisphenol-A',species='Rat')
 
- parameters <- parameterize_fetal_pbtk(chem.name='Bisphenol-A',species='Rat')
-
+# The following will not work because Diquat dibromide monohydrate's 
+# Henry's Law Constant (-3.912) is higher than that of Acetone (~-4.5):
+try(parameters3 <- parameterize_fetal_pbtk(chem.cas = "6385-62-2"))
+# However, we can turn off checking for phys-chem properties, since we know
+# that  Diquat dibromide monohydrate is not too volatile:
+parameters3 <- parameterize_fetal_pbtk(chem.cas = "6385-62-2",
+                                       physchem.exclude = FALSE)
+}
  
 }
 \references{
 \insertRef{kilford2008hepatocellular}{httk}
 
-McNamara PJ, Alcorn J. Protein binding predictions in infants. 
-AAPS PharmSci. 2002;4(1):E4. doi: 10.1208/ps040104. PMID: 12049488.
+\insertRef{mcnamara2002protein}{httk}
+
+\insertRef{kapraun2019empirical}{httk}
+
+\insertRef{kapraun2022fetalmodel}{httk}
 }
 \seealso{
 \code{\link{solve_fetal_pbtk}}
