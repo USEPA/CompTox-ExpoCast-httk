@@ -1,3 +1,5 @@
+#R CMD BATCH --vanilla httk-for-dashboard.R
+
 library(httk)
 library(parallel)
 library(data.table)
@@ -62,8 +64,6 @@ load_pradeep2020()
 # Caco-2 QSPR:
 load_honda2023()
  
-<<<<<<< HEAD
-=======
 # Find all the duplicates:
 # First eliminate NA DTXSIDs (can't do logical tests on them)
 chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
@@ -112,8 +112,6 @@ dup.chems <- unique(dup.chems,
 # This should be true:
 length(dup.chems) == 0
 
-
->>>>>>> dev
 # Organize HTTK data by species:
 HTTK.data.list <- list()
 all.ids <- NULL
