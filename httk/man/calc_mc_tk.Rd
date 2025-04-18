@@ -27,7 +27,7 @@ calc_mc_tk(
   invitro.mc.arg.list = NULL,
   httkpop.generate.arg.list = list(method = "direct resampling"),
   convert.httkpop.arg.list = NULL,
-  parameterize.arg.list = NULL,
+  parameterize.args.list = NULL,
   return.all.sims = FALSE
 )
 }
@@ -116,7 +116,7 @@ Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut wit
 \item{convert.httkpop.arg.list}{Additional parameters passed to the 
 convert_httkpop_* function for the model.}
 
-\item{parameterize.arg.list}{Additional parameters passed to the 
+\item{parameterize.args.list}{Additional parameters passed to the 
 parameterize_* function for the model.}
 
 \item{return.all.sims}{Logical indicating whether to return the results

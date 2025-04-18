@@ -263,8 +263,9 @@
 #'
 #' @author Greg Honda
 #'
-#' @references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
-#'2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
+#' @references 
+#' \insertRef{armitage2014application}{httk} 
+#'
 #' \insertRef{honda2019using}{httk}
 "well_param"
 
@@ -285,8 +286,9 @@
 #'@keywords data
 #'
 #'@author Greg Honda
-#'@references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
-#'2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
+#' @references 
+#' \insertRef{armitage2014application}{httk} 
+#'
 #' \insertRef{honda2019using}{httk}
 "armitage_input"
 
@@ -301,8 +303,8 @@
 #'@source \url{https://comptox.epa.gov/dashboard/chemical_lists/swisspharma}
 #'@keywords data
 #'
-#'@references Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and
-#'Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
+#' @references 
+#' \insertRef{wambaugh2019assessing}{httk}
 "pharma"
 
 #' in vitro Toxicokinetic Data from Wambaugh et al. (2019)
@@ -352,8 +354,8 @@
 #'
 #'@author John Wambaugh
 #'
-#'@references Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and
-#'Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
+#' @references 
+#' \insertRef{wambaugh2019assessing}{httk}
 "wambaugh2019"
 
 
@@ -763,7 +765,9 @@
 #' @docType data
 #' @format data.frame
 #' @author John Wambaugh
-#' @source Wambaugh et al. 2018 Toxicological Sciences, in press
+#' @source Wambaugh et al. 2018 
+#' @references
+#' \insertRef{wambaugh2018evaluating}{httk}
 #' @keywords data
 "chem.invivo.PK.aggregate.data"
 
@@ -853,8 +857,8 @@
 #'
 #'@author John Wambaugh
 #'
-#'@references Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and
-#'Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
+#' @references 
+#' \insertRef{wambaugh2019assessing}{httk}
 "wambaugh2019.raw"
 
 #' NHANES Chemical Intake Rates for chemicals in Wambaugh et al. (2019)
@@ -882,9 +886,8 @@
 #'
 #' @references 
 #' \insertRef{ring2017identifying}{httk}
-#'
-#'@references Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and
-#'Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
+#' 
+#' \insertRef{wambaugh2019assessing}{httk}
 "wambaugh2019.nhanes"
 
 #' ExpoCast SEEM3 Consensus Exposure Model Predictions for Chemical Intake Rates
@@ -903,12 +906,10 @@
 #'
 #'@author John Wambaugh
 #'
-#'@references Ring, Caroline L., et al. "Consensus modeling of median chemical
-#' intake for the US population based on predictions of exposure pathways."
-#' Environmental science & technology 53.2 (2018): 719-732.
+#' @references 
+#' \insertRef{Ring2017SEEM}{httk}
 #'
-#'@references Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and
-#'Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
+#' \insertRef{wambaugh2019assessing}{httk}
 "wambaugh2019.seem3"
 
 
@@ -963,8 +964,8 @@
 #' (\url{https://comptox.epa.gov/dashboard}) \tab none \cr                  
 #'  Formula \tab The proportions of atoms within the chemical compound  \tab none \cr                   
 #'  All.Compound.Names \tab All names of the chemical as they occured in the
-#' data \tab none \cr              
-#'  logHenry \tab The log10 Henry's law constant \tab 
+#' data \tab none \cr                                           
+#'  logHenry \tab The log10 Henry's law constant (Conc_air = 10^logH * Conc_liquid)\tab 
 #' log10(atmosphers*m^3/mole) \cr                 
 #'  logHenry.Reference \tab Reference for Henry's law constant \tab \cr           
 #'  logP \tab The log10 octanol:water partition coefficient (PC)\tab log10 unitless ratio \cr                 
@@ -1393,7 +1394,7 @@
 #' # Species is now available for calculations:
 #' calc_mc_css(chem.cas="80-05-7",
 #'             species="wolverine",
-#'             parameterize.arg.list=list(default.to.human=TRUE),
+#'             parameterize.args.list =list(default.to.human=TRUE),
 #'             suppress.messages=TRUE,
 #'             samples = 100)
 #'
@@ -1504,7 +1505,7 @@
 #' # Species is now available for calculations:
 #' calc_mc_css(chem.cas="80-05-7",
 #'             species="wolverine",
-#'             parameterize.arg.list=list(default.to.human=TRUE),
+#'             parameterize.args.list =list(default.to.human=TRUE),
 #'             suppress.messages=TRUE,
 #'             samples = 100)
 #'
@@ -1876,7 +1877,7 @@
 #' 
 #' \insertRef{gaulton2012chembl}{httk}
 #' 
-#' \insertRef{HondaUnpublishedCaco2}{httk}
+#' \insertRef{honda2025impact}{httk}
 #' @name honda2023.data
 "honda2023.data"
 
@@ -1896,7 +1897,7 @@
 #' Pab.Quant.Pred \tab Median and 95-percent interval for values within the predicted class's training data  moderate (2), or fast (3) \tab 10^-6 cm/s \cr
 #' }
 #' @references
-#' \insertRef{HondaUnpublishedCaco2}{httk}
+#' \insertRef{honda2025impact}{httk}
 #' @seealso \code{\link{load_honda2023}} 
 #' @name honda2023.qspr
 "honda2023.qspr"
@@ -1934,7 +1935,7 @@
 #'
 #' @seealso \code{\link{benchmark_httk}} 
 #' @references
-#' \insertRef{DavidsonFritzUnpublishedModelAdding}{httk}
+#' \insertRef{davidson2025enabling}{httk}
 #' @name httk.performance
 "httk.performance"
 
@@ -1958,3 +1959,40 @@
 #' @seealso \code{\link{load_sipes2017}} 
 #' @keywords data
 "sipes2017"
+
+#' ToxCast thyroid-related bioactivity data 
+#'
+#' Truong et al. 2025 uses ToxCast data for 4 thyroid-related assay endpoints
+#' concerning inhibition of deiodinases ("DIO1", "DIO2", "DIO3", and "IYD") and 
+#' identified 120 priority chemicals with activity for at least one deiodinase. 
+#' These 120 chemicals were curated after assessment for target selectivity and 
+#' assay interference. 
+#'
+#' The AC50s (in uM) for each of the 120 chemicals were retrieved from ToxCast 
+#' invitrodb v3.5 and are used in the "Full Human Gestational IVIVE" vignette.
+#' 
+#' @name thyroid.ac50s
+#' @docType data
+#' @format data.table and data.frame
+#' @keywords data
+#' @references 
+#' \insertRef{truong2025fullpregnancy}{httk}
+"thyroid.ac50s"
+
+#' SEEM3 Example Data for Truong et al. 2025 
+#' 
+#' We can grab SEEM daily intake rate predictions already in RData format from
+#' https://github.com/HumanExposure/SEEM3RPackage/blob/main/scripts/
+#' Download the file chem.preds-2018-11-28.RData
+#' 
+#' We do not have the space to distribute all the SEEM predictions within
+#' this R package, but we can give you our "Full Human Gestational IVIVE" example chemicals.
+#' @name truong25.seem3
+#' @docType data
+#' @format data.table and data.frame
+#' @keywords data
+#' @references 
+#' \insertRef{truong2025fullpregnancy}{httk}
+#'
+#' \insertRef{Ring2017SEEM}{httk}
+"truong25.seem3"

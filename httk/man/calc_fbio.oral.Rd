@@ -14,9 +14,8 @@ calc_fbio.oral(
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = FALSE,
   suppress.messages = FALSE,
-  restrictive.clearance = FALSE
+  ...
 )
 
 calc_fabs.oral(
@@ -35,9 +34,9 @@ calc_peff(
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = FALSE,
   suppress.messages = FALSE,
-  Caco2.Pab = NULL
+  Caco2.Pab = NULL,
+  parameterize.args.list = list()
 )
 
 calc_kgutabs(
@@ -46,8 +45,8 @@ calc_kgutabs(
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = FALSE,
-  suppress.messages = FALSE
+  suppress.messages = FALSE,
+  parameterize.args.list = list()
 )
 
 calc_fgut.oral(
@@ -56,9 +55,9 @@ calc_fgut.oral(
   chem.name = NULL,
   dtxsid = NULL,
   species = "Human",
-  default.to.human = FALSE,
   suppress.messages = FALSE,
-  Caco2.Pab.default = 1.6
+  Caco2.Pab.default = 1.6,
+  parameterize.args.list = list()
 )
 }
 \arguments{
@@ -82,20 +81,18 @@ must be specified).}
 \item{species}{(Character) Species desired (either "Rat", "Rabbit", "Dog",
 "Mouse", or default "Human").}
 
-\item{default.to.human}{(Logical) Substitutes missing rat values with
-human values if TRUE. (Not applicable for `calc_fabs.oral`.)
-(Defaults to `FALSE`.)}
-
 \item{suppress.messages}{(Logical) Whether or not the output message is
 suppressed. (Defaults to `FALSE`.)}
 
-\item{restrictive.clearance}{Protein binding not taken into account (set to 1) in 
-liver clearance if FALSE.}
+\item{...}{Additional parameters passed to parameterize function if 
+parameters is NULL.}
 
 \item{Caco2.Pab.default}{(Numeric) Caco2 apical to basolateral data.
 (Defaults to  1.6.) (Not applicable for `calc_fbio.oral`.)}
 
 \item{Caco2.Pab}{(Numeric) Caco2 apical to basolaterial permeability used by calc_peff}
+
+\item{parameterize.args.list}{List of arguments passed to \code{\link{parameterize_steadystate}}}
 }
 \value{
 \item{fbio.oral}{Oral bioavailability, the fraction of oral dose 
@@ -161,9 +158,13 @@ If argument keepit100 is used then there is complete absorption from the gut
 }}
 \references{
 \insertRef{darwich2010interplay}{httk}
+
 \insertRef{yang2007prediction}{httk}
-\insertRef{HondaUnpublishedCaco2}{httk}
+
+\insertRef{honda2025impact}{httk}
+
 \insertRef{yu1999compartmental}{httk}
+
 \insertRef{lennernas1997human}{httk}
 }
 \author{

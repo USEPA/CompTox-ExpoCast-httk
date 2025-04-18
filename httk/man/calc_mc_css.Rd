@@ -28,7 +28,7 @@ calc_mc_css(
   invitro.mc.arg.list = NULL,
   httkpop.generate.arg.list = list(method = "direct resampling"),
   convert.httkpop.arg.list = NULL,
-  parameterize.arg.list = NULL,
+  parameterize.args.list = NULL,
   calc.analytic.css.arg.list = NULL,
   Caco2.options = NULL
 )
@@ -126,7 +126,7 @@ specific tissue.}
 \item{convert.httkpop.arg.list}{Additional parameters passed to the 
 convert_httkpop_* function for the model.}
 
-\item{parameterize.arg.list}{A list of arguments to be passed to the model
+\item{parameterize.args.list}{A list of arguments to be passed to the model
 parameterization function (that is, parameterize_MODEL) corresponding to
 argument "model". (Defaults to NULL.)}
 
@@ -324,6 +324,14 @@ calc_mc_oral_equiv(chem.cas="2451-62-9", conc=3, samples=NSAMP)
              invitrouv=FALSE,
              vary.params=list(Pow=0.3))
  
+# The following will not work because Diquat dibromide monohydrate's 
+# Henry's Law Constant (-3.912) is higher than that of Acetone (~-4.5):
+try(calc_mc_css(chem.cas="6385-62-2"))
+
+# However, we can turn off checking for phys-chem properties, since we know
+# that  Diquat dibromide monohydrate is not too volatile:
+calc_mc_css(chem.cas="6385-62-2", parameterize.args.list =list(physchem.exclude=FALSE))
+
 # We can also use the Monte Carlo functions by passing a table
 # where each row represents a different Monte Carlo draw of parameters:
 p <- create_mc_samples(chem.cas="80-05-7")

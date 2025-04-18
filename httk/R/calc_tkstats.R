@@ -13,50 +13,62 @@
 #' 
 #' 
 #' @param days Length of the simulation.
+#' 
 #' @param chem.name Name of desired chemical.
+#' 
 #' @param chem.cas CAS number of desired chemical.
+#' 
 #' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
+#' 
 #' @param parameters Chemical parameters from parameterize_pbtk function,
 #' overrides chem.name and chem.cas.
+#' 
 #' @param route String specification of route of exposure for simulation:
 #' "oral", "iv", "inhalation", ...
+#' 
 #' @param stats Desired values (either 'AUC', 'mean', 'peak', or a vector
 #' containing any combination).
+#' 
 #' @param daily.dose Total daily dose, mg/kg BW.
+#' 
 #' @param dose Amount of a single dose at time zero, mg/kg BW. 
+#' 
 #' @param forcings Manual input of 'forcings' data series argument for ode
 #' integrator, defaults is NULL. Then other input parameters
 #' (see exp.start.time, exp.conc, exp.duration, and period) provide the
 #' necessary information to assemble a forcings data series. 
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
+#' 
 #' @param doses.per.day Number of doses per day.
+#' 
 #' @param output.units Desired units (either "mg/L", "mg", "umol", or default
 #' "uM").
+#' 
 #' @param model Model used in calculation, 'pbtk' for the multiple compartment
 #' model,'3compartment' for the three compartment model, '3compartmentss' for
 #' the three compartment steady state model, and '1compartment' for one
 #' compartment model.
+#' 
 #' @param concentration Desired concentration type, 'blood' or default
 #' 'plasma'.
+#' 
 #' @param tissue Desired steady state tissue conentration.
-#' @param default.to.human Substitutes missing animal values with human values
-#' if true (hepatic intrinsic clearance or fraction of unbound plasma).
-#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
-#' TRUE along with partition coefficients calculated with this value.
-#' @param regression Whether or not to use the regressions in calculating
-#' partition coefficients.
-#' @param restrictive.clearance Protein binding not taken into account (set to
-#' 1) in liver clearance if FALSE.
-#' @param ... Additional arguments passed to the integrator.
+#' 
+#' @param ... Additional arguments passed to the \code{\link{solve_model}}
+#' 
 #' @param suppress.messages Whether to suppress output message.
-#' @param ... Arguments passed to solve function.
+#' 
 #' @return \item{AUC}{Area under the plasma concentration curve.}
 #' \item{mean.conc}{The area under the curve divided by the number of days.}
 #' \item{peak.conc}{The highest concentration.}
+#' 
 #' @author Robert Pearce and John Wambaugh 
+#' 
 #' @keywords Solve Statistics
+#' 
 #' @examples
 #' 
 #' calc_tkstats(chem.name='Bisphenol-A',days=100,stats='mean',model='3compartment')
@@ -68,6 +80,8 @@
 #' }
 #' 
 #' @export calc_tkstats
+#' 
+#' @importFrom purrr compact 
 calc_tkstats <-function(
                chem.name=NULL,
                chem.cas=NULL,
@@ -85,11 +99,7 @@ calc_tkstats <-function(
                concentration='plasma',
                tissue='plasma',
                model='pbtk',
-               default.to.human=FALSE,
-               adjusted.Funbound.plasma=TRUE,
-               regression=TRUE,
-               restrictive.clearance = TRUE,
-               suppress.messages=FALSE,
+               suppress.messages = FALSE,
                ...)
 {
 ### ERROR CHECKING
@@ -129,10 +139,12 @@ calc_tkstats <-function(
                 dose=dose,
                 daily.dose=daily.dose,
                 doses.per.day=doses.per.day,
-                concentration=concentration,
                 output.units=output.units,
+                route=route,
+                forcings = forcings,
+                concentration=concentration,
+                tissue=tissue,
                 model=model,
-                default.to.human=default.to.human,
                 suppress.messages=TRUE,
                 ...)
 
@@ -163,6 +175,9 @@ calc_tkstats <-function(
     }
 # Stats for a particular chemical:    
   } else {
+  
+  
+  
     dosing <- list(
         initial.dose=dose,
         dosing.matrix=NULL,
@@ -185,12 +200,6 @@ calc_tkstats <-function(
                       dosing=dosing,
                       suppress.messages=TRUE,
                       output.units=output.units,
-                      parameterize.arg.list = list(
-                        default.to.human=default.to.human,
-                        clint.pvalue.threshold=0.05,
-                        restrictive.clearance = TRUE,
-                        regression=TRUE
-                      ),
                       ...)
     
 # Skip any transients in first 5 minutes (for intravenous):
@@ -233,13 +242,22 @@ calc_tkstats <-function(
     # We need to have the blood:plasma ratio:
     if (is.null(parameters[['Rblood2plasma']]))
     {
-      parameters[['Rblood2plasma']] <- available_rblood2plasma(
-        chem.name=chem.name,
-        chem.cas=chem.cas,
-        dtxsid=dtxsid,
-        species=species,
-        adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-        suppress.messages=TRUE)
+      # Retrieve this argument from ... if it is present:
+      if ("parameterize.args.list" %in% names(list(...)))
+        adjusted.Funbound.plasma <- list(...)[["parameterize.args.list"]][["adjusted.Funbound.plasma"]]
+      else adjusted.Funbound.plasma <- NULL
+        
+      parameters[['Rblood2plasma']] <- 
+        do.call(available_rblood2plasma,
+                args=purrr::compact(
+                  list(
+                    chem.name=chem.name,
+                    chem.cas=chem.cas,
+                    dtxsid=dtxsid,
+                    species=species,
+                    suppress.messages=TRUE,
+                    adjusted.Funbound.plasma = adjusted.Funbound.plasma
+                    )))
     }
   
     # Blood or plasma concentration:
@@ -384,10 +402,12 @@ calc_stats <-function(
                concentration=concentration,
                tissue=tissue,
                model=model,
-               default.to.human=default.to.human,
-               adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-               regression=regression,
-               restrictive.clearance = restrictive.clearance,
+               parameterize.args.list = list(
+                 default.to.human=default.to.human,
+                 adjusted.Funbound.plasma=adjusted.Funbound.plasma,
+                 regression=regression,
+                 restrictive.clearance = restrictive.clearance
+               ),
                suppress.messages=suppress.messages,
                ...))
 }

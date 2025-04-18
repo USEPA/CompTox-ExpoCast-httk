@@ -14,6 +14,18 @@
 #'
 #' where K_i is the tissue:unbound plasma concentration partition coefficient
 #' for tissue i.
+#' 
+#' Because this model does not simulate exhalation, inhalation, and other 
+#' processes relevant to volatile chemicals, this model is by default 
+#' restricted to chemicals with a logHenry's Law Constant less than that of 
+#' Acetone, a known volatile chemical. That is, chemicals with logHLC > -4.5 
+#' (Log10 atm-m3/mole) are excluded. Volatility is not purely determined by the 
+#' Henry's Law Constant, therefore this chemical exclusion may be turned off 
+#' with the argument "physchem.exclude = FALSE". Similarly, per- and 
+#' polyfluoroalkyl substances (PFAS) are excluded by default because the 
+#' transporters that often drive PFAS toxicokinetics are not included in this 
+#' model. However, PFAS chemicals can be included with the argument 
+#' "class.exclude = FALSE".
 #'
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- the 
 #' chemical must be identified by either CAS, name, or DTXISD
@@ -30,6 +42,13 @@
 #' @param default.to.human Substitutes missing rat values with human values if
 #' true.
 #' 
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' 
+#' @param physchem.exclude Exclude chemicals on the basis of physico-chemical
+#' properties (currently only Henry's law constant) as specified by 
+#' the relevant modelinfo_[MODEL] file (default TRUE).
+#'
 #' @param adjusted.Funbound.plasma Uses Pearce et al. (2017) lipid binding adjustment
 #' for Funbound.plasma (which impacts volume of distribution) when set to TRUE (Default).
 #' 
@@ -58,16 +77,17 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' 
-#' @param class.exclude Exclude chemical classes identified as outside of 
-#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
-#' 
-#' @param Caco2.options A list of options to use when working with Caco2 apical to
-#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
-#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
-#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' @param Caco2.options A list of options to use when working with Caco2 apical 
+#' to basolateral data \code{Caco2.Pab}, default is Caco2.options = 
+#' list(Caco2.Pab.default = 1.6, Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, 
+#' overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the 
+#' default value for Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE 
+#' uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+#' Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE 
+#' overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
+#' with 1 (i.e. 100 percent) regardless of other settings.
 #' See \code{\link{get_fbio}} for further details.
 #' 
 #' @param ... Additional arguments, not currently used.
@@ -122,12 +142,21 @@
 #'
 #' @examples
 #' 
-#'  parameters <- parameterize_1comp(chem.name='Bisphenol-A',species='Rat')
-#'  parameters <- parameterize_1comp(chem.cas='80-05-7',
+#' \donttest{
+#'  parameters1 <- parameterize_1comp(chem.name='Bisphenol-A',species='Rat')
+#'  parameters2 <- parameterize_1comp(chem.cas='80-05-7',
 #'                                   restrictive.clearance=FALSE,
 #'                                   species='rabbit',
 #'                                   default.to.human=TRUE)
-#'  out <- solve_1comp(parameters=parameters,days=1)
+#' # The following will not work because Diquat dibromide monohydrate's 
+#' # Henry's Law Constant (-3.912) is higher than that of Acetone (~-4.5):
+#' try(parameters3 <- parameterize_1comp(chem.cas = "6385-62-2"))
+#' # However, we can turn off checking for phys-chem properties, since we know
+#' # that  Diquat dibromide monohydrate is not too volatile:
+#' parameters3 <- parameterize_1comp(chem.cas = "6385-62-2",
+#'                                   physchem.exclude = FALSE)
+#' out <- solve_1comp(parameters=parameters1, days=1)
+#' }
 #'
 #' @export parameterize_1comp
 parameterize_1comp <- function(
@@ -145,6 +174,7 @@ parameterize_1comp <- function(
                         clint.pvalue.threshold=0.05,
                         minimum.Funbound.plasma=0.0001,
                         class.exclude=TRUE,
+                        physchem.exclude = TRUE,
                         Caco2.options = list(),
                         ...
                         )
@@ -179,6 +209,7 @@ parameterize_1comp <- function(
                 model="1compartment",
                 species=species,
                 class.exclude=class.exclude,
+                physchem.exclude=physchem.exclude,
                 default.to.human=default.to.human)
     
     #Check also to make sure we can use steady-state model,
@@ -190,6 +221,7 @@ parameterize_1comp <- function(
                 model="3compartmentss",
                 species=species,
                 class.exclude=class.exclude,
+                physchem.exclude=physchem.exclude,
                 default.to.human=default.to.human)
      
   params <- list()
@@ -199,6 +231,7 @@ parameterize_1comp <- function(
                          dtxsid=dtxsid,
                          species=species,
                          default.to.human=default.to.human,
+                         class.exclude=class.exclude,
                          adjusted.Funbound.plasma=adjusted.Funbound.plasma,
                          regression=regression,
                          suppress.messages=suppress.messages,
@@ -218,6 +251,7 @@ parameterize_1comp <- function(
                                   minimum.Funbound.plasma=
                                     minimum.Funbound.plasma,
                                   class.exclude = class.exclude,
+                                  physchem.exclude = physchem.exclude,
                                   Caco2.options = Caco2.options))
   ss.params <- c(ss.params, params['Vdist'])
   

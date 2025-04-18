@@ -123,7 +123,7 @@
 #' @author John Wambaugh
 #'
 #' @references 
-#' \insertRef{DavidsonFritzUnpublishedModelAdding}{httk}
+#' \insertRef{davidson2025enabling}{httk}
 #'
 #' @importFrom ggplot2 ggplot
 #' @importFrom ggplot2 aes
@@ -336,44 +336,48 @@ benchmark_httk <- function(
     FitData <- subset(FitData,
                       !(Compound=="Propyzamide" &
                       Source=="Wambaugh et al. (2018), NHEERL/RTI"))
-    if ("parameterize.args" %in% formalArgs(calc_analytic_css))
+    if (any(regexpr("parameterize.args.list", formalArgs(calc_analytic_css))!=-1))
     {
-      FitData$Css.pred <- sapply(FitData$CAS,
-        function(x) as.numeric(try(ifelse(x %in% get_cheminfo(),
-          calc_analytic_css(
+      calc_analytic_css.args <- function(x) return(list(
             chem.cas=x,
             species="Rat",
             model="3compartmentss",
             suppress.messages=suppress.messages,
             output.units="mg/l",
-            parameterize.args=list(default.to.human=TRUE)),
-            NA))))    
+            parameterize.args.list=list(default.to.human=TRUE)))
+    } else if (any(regexpr("parameterize.args", formalArgs(calc_analytic_css))!=-1))
+    {
+      calc_analytic_css.args <- function(x) return(list(
+            chem.cas=x,
+            species="Rat",
+            model="3compartmentss",
+            suppress.messages=suppress.messages,
+            output.units="mg/l",
+            parameterize.args=list(default.to.human=TRUE)))
     } else if ("default.to.human" %in% formalArgs(calc_analytic_css)) {
-      FitData$Css.pred <- sapply(FitData$CAS,
-        function(x) as.numeric(try(ifelse(x %in% get_cheminfo(),
-          calc_analytic_css(
+      calc_analytic_css.args <- function(x) return(list(
             chem.cas=x,
             species="Rat",
             model="3compartmentss",
             suppress.messages=suppress.messages,
             output.units="mg/l",
-            default.to.human=TRUE),
-            NA))))
+            default.to.human=TRUE))
     # No default.to.human argument in v1.1
     } else {
-      FitData$Css.pred <- sapply(FitData$CAS,
-        function(x) as.numeric(try(ifelse(x %in% get_cheminfo(),
-          calc_analytic_css(
+      calc_analytic_css.args <- function(x) return(list(
             parameters=parameterize_steadystate(
               chem.cas=x,
               species="Rat",
               default.to.human=TRUE),
             model="3compartmentss",
             suppress.messages=suppress.messages,
-            output.units="mg/l"),
-            NA))))
+            output.units="mg/l"))
     }
-    
+    FitData$Css.pred <- sapply(FitData$CAS,
+        function(x) as.numeric(try(ifelse(x %in% get_cheminfo(),
+          do.call(calc_analytic_css, calc_analytic_css.args(x)),
+            NA))))
+            
     RMSLE.invivocss <- signif(mean(log10(as.numeric(FitData$Css.pred) /
                               as.numeric(FitData$Css))^2,
                          na.rm=TRUE)^(1/2),4) 

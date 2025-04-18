@@ -24,6 +24,8 @@ solve_3comp2(
   input.units = "mg/kg",
   output.units = NULL,
   default.to.human = FALSE,
+  physchem.exclude = TRUE,
+  class.exclude = TRUE,
   recalc.blood2plasma = FALSE,
   recalc.clearance = FALSE,
   clint.pvalue.threshold = 0.05,
@@ -89,6 +91,13 @@ results. Default, NULL, returns model results in units specified in the
 \item{default.to.human}{Substitutes missing animal values with human values
 if true (hepatic intrinsic clearance or fraction of unbound plasma).}
 
+\item{physchem.exclude}{Exclude chemicals on the basis of physico-chemical
+properties (currently only Henry's law constant) as specified by 
+the relevant modelinfo_[MODEL] file (default TRUE).}
+
+\item{class.exclude}{Exclude chemical classes identified as outside of 
+domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
+
 \item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical
 in the blood to plasma using the input parameters, calculated with
 hematocrit, Funbound.plasma, and Krbc2pu.}
@@ -116,13 +125,17 @@ partition coefficients.}
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 
-\item{Caco2.options}{A list of options to use when working with Caco2 apical to
-basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
-Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
-Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+\item{Caco2.options}{A list of options to use when working with Caco2 apical 
+to basolateral data \code{Caco2.Pab}, default is Caco2.options = 
+list(Caco2.Pab.default = 1.6, Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, 
+overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the 
+default value for Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE 
+uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE 
+overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
+with 1 (i.e. 100 percent) regardless of other settings.
 See \code{\link{get_fbio}} for further details.}
 
 \item{monitor.vars}{Which variables are returned as a function of time. 
@@ -180,39 +193,21 @@ Model Schematic"}}
 When species is specified as rabbit, dog, or mouse, the function uses the
 appropriate physiological data(volumes and flows) but substitues human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
+
+Per- and 
+polyfluoroalkyl substances (PFAS) are excluded by default because the 
+transporters that often drive PFAS toxicokinetics are not included in this 
+model. However, PFAS chemicals can be included with the argument 
+"class.exclude = FALSE".
 }
 \examples{
 \donttest{ 
-solve_3comp(chem.name='Bisphenol-A', 
-            doses.per.day=2, 
-            daily.dose=.5,
-            days=1,
-            tsteps=2)
-
-# By storing the model parameters in a vector first, you can potentially
-# edit them before using the model:
-params <-parameterize_3comp(chem.cas="80-05-7")
-solve_3comp(parameters=params, days=1)
-
-head(solve_3comp(chem.name="Terbufos", daily.dose=NULL, dose=1, days=1))
-head(solve_3comp(chem.name="Terbufos", daily.dose=NULL, dose=1, 
-                 days=1, iv.dose=TRUE))
-
-# A dose matrix specifies times and magnitudes of doses:
-dm <- matrix(c(0,1,2,5,5,5),nrow=3)
-colnames(dm) <- c("time","dose")
-solve_3comp(chem.name="Methenamine", dosing.matrix=dm,
-            dose=NULL, daily.dose=NULL,
-            days=2.5)
-
-solve_3comp(chem.name="Besonprodil",
-            daily.dose=1, dose=NULL,
-            days=2.5, doses.per.day=4)
+solve_3comp2(dtxsid="DTXSID0020573",route="inhalation",dose=1,input.units="ppmv")
 }
 
 }
 \references{
-\insertRef{pearce2017httk}{httk}
+\insertRef{wambaugh2025simple}{httk}
 }
 \seealso{
 \code{\link{solve_model}}

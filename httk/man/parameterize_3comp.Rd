@@ -10,6 +10,8 @@ parameterize_3comp(
   dtxsid = NULL,
   species = "Human",
   default.to.human = FALSE,
+  class.exclude = TRUE,
+  physchem.exclude = TRUE,
   force.human.clint.fup = FALSE,
   clint.pvalue.threshold = 0.05,
   adjusted.Funbound.plasma = TRUE,
@@ -38,6 +40,13 @@ default "Human").}
 \item{default.to.human}{Substitutes missing animal values with human values
 if true.}
 
+\item{class.exclude}{Exclude chemical classes identified as outside of 
+domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
+
+\item{physchem.exclude}{Exclude chemicals on the basis of physico-chemical
+properties (currently only Henry's law constant) as specified by 
+the relevant modelinfo_[MODEL] file (default TRUE).}
+
 \item{force.human.clint.fup}{Forces use of human values for hepatic
 intrinsic clearance and fraction of unbound plasma if true.}
 
@@ -62,13 +71,17 @@ binding is not taken into account (set to 1) in liver clearance if FALSE.}
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
 
-\item{Caco2.options}{A list of options to use when working with Caco2 apical to
-basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
-Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
-Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+\item{Caco2.options}{A list of options to use when working with Caco2 apical 
+to basolateral data \code{Caco2.Pab}, default is Caco2.options = 
+list(Caco2.Pab.default = 1.6, Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, 
+overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the 
+default value for Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE 
+uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE 
+overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
+with 1 (i.e. 100 percent) regardless of other settings.
 See \code{\link{get_fbio}} for further details.}
 
 \item{...}{Additional arguments, not currently used.}
@@ -111,12 +124,34 @@ as modified by Pearce et al. (2017) to predict partition coefficients based
 on descriptions in \code{\link{tissue.data}}. Organ volumes and flows are
 retrieved from table \code{\link{physiology.data}}.
 }
+\details{
+Because this model does not simulate exhalation, inhalation, and other 
+processes relevant to volatile chemicals, this model is by default 
+restricted to chemicals with a logHenry's Law Constant less than that of 
+Acetone, a known volatile chemical. That is, chemicals with logHLC > -4.5 
+(Log10 atm-m3/mole) are excluded. Volatility is not purely determined by the 
+Henry's Law Constant, therefore this chemical exclusion may be turned off 
+with the argument "physchem.exclude = FALSE". Similarly, per- and 
+polyfluoroalkyl substances (PFAS) are excluded by default because the 
+transporters that often drive PFAS toxicokinetics are not included in this 
+model. However, PFAS chemicals can be included with the argument 
+"class.exclude = FALSE".
+}
 \examples{
 
- parameters <- parameterize_3comp(chem.name='Bisphenol-A',species='Rat')
- parameters <- parameterize_3comp(chem.cas='80-05-7',
+parameters1 <- parameterize_3comp(chem.name='Bisphenol-A',species='Rat')
+parameters2 <- parameterize_3comp(chem.cas='80-05-7',
                                   species='rabbit',default.to.human=TRUE)
- out <- solve_3comp(parameters=parameters,plots=TRUE)
+# The following will not work because Diquat dibromide monohydrate's 
+# Henry's Law Constant (-3.912) is higher than that of Acetone (~-4.5):
+try(parameters3 <- parameterize_3comp(chem.cas = "6385-62-2"))
+# However, we can turn off checking for phys-chem properties, since we know
+# that  Diquat dibromide monohydrate is not too volatile:
+parameters3 <- parameterize_3comp(chem.cas = "6385-62-2",
+                                  physchem.exclude = FALSE)
+\donttest{
+out <- solve_3comp(parameters=parameters1, plots=TRUE)
+}
 
 }
 \references{
@@ -127,6 +162,8 @@ retrieved from table \code{\link{physiology.data}}.
 \insertRef{pearce2017evaluation}{httk}
 
 \insertRef{kilford2008hepatocellular}{httk}
+
+\insertRef{wambaugh2025simple}{httk}
 }
 \seealso{
 \code{\link{solve_3comp}}
@@ -144,5 +181,5 @@ retrieved from table \code{\link{physiology.data}}.
 \author{
 Robert Pearce and John Wambaugh
 }
-\keyword{3compartment2}
+\keyword{3compartment}
 \keyword{Parameter}
