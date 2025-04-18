@@ -228,7 +228,7 @@ out <- solve_pbtk_lifestage(chem.name = 'Bisphenol A',
                             start.age = 600, # age fifty
                             weight_category=c('Underweight',
                                               'Normal',
-                                              'Overweight')
+                                              'Overweight'),
                             doses.per.day = 3,
                             daily.dose = 1)
 
