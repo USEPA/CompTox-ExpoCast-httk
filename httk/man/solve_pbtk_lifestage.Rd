@@ -247,4 +247,4 @@ Colin Thomson
 }
 \keyword{Solve}
 \keyword{lifestage}
-\keyword{pbtk,}
+\keyword{pbtk}
