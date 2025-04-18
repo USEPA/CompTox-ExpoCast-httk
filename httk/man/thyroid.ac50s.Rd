@@ -21,4 +21,7 @@ assay interference.
 The AC50s (in uM) for each of the 120 chemicals were retrieved from ToxCast 
 invitrodb v3.5 and are used in the "Full Human Gestational IVIVE" vignette.
 }
+\references{
+\insertRef{truong2025fullpregnancy}{httk}
+}
 \keyword{data}

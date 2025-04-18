@@ -8,7 +8,7 @@
 #' preserve the percentile score of the given starting values. 
 #' 
 #' @details
-#' For each time-dependent model, there should be a function (such as \code{\link{gen_nhanes_params_pbtk_growthcurve}})
+#' For each time-dependent model, there should be a function (such as \code{\link{gen_input_params}})
 #' that determines the model parameter values for each individual in the NHANES dataset.
 #' The resulting value are used to form the non-parametric regression curve. 
 #'
@@ -75,7 +75,7 @@
 #'
 #' @author Colin Thomson
 #'
-#' @seealso \code{\link{solve_pbtk_growthcurve}}
+#' @seealso \code{\link{solve_pbtk_lifestage}}
 #'
 #' @seealso \code{\link{gen_input_params}}
 #'
@@ -85,7 +85,7 @@
 #' \donttest{
 #' 
 #' params <- parameterize_pbtk(chem.name = 'Bisphenol A')
-#' ts <- get_input_param_timeseries('pbtk_growthcurve',
+#' ts <- get_input_param_timeseries("pbtk_lifestage",
 #'                                  chem.name = 'Bisphenol A',
 #'                                  initial.params = params,
 #'                                  start.age = 600, # age fifty
@@ -126,7 +126,10 @@ get_input_param_timeseries <- function(model,
                                        get.median.param.vals = FALSE,
                                        input.param.dir = NULL) 
   {
-  
+  ## Defining data.table arguments mistaken by check for global variables ##
+  weight_class <- gfr_class <- reth <- param.gen.function <- NULL
+  ####
+    
   # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 

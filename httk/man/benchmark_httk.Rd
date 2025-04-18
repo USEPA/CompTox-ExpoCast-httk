@@ -133,7 +133,7 @@ tissue composition and the ability to predict the ionization state of the
 compounds being modeled.
 }
 \references{
-\insertRef{DavidsonFritzUnpublishedModelAdding}{httk}
+\insertRef{davidson2025enabling}{httk}
 }
 \author{
 John Wambaugh

@@ -20,6 +20,8 @@ We do not have the space to distribute all the SEEM predictions within
 this R package, but we can give you our "Full Human Gestational IVIVE" example chemicals.
 }
 \references{
+\insertRef{truong2025fullpregnancy}{httk}
+
 \insertRef{Ring2017SEEM}{httk}
 }
 \keyword{data}

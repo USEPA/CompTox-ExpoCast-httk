@@ -57,15 +57,19 @@
 gen_input_params <- function(model,
                              chem.cas=NULL,
                              chem.name=NULL,
-                             chem.dtxsid=NULL,
+                             dtxsid=NULL,
                              samples = 10000,
                              httkpop.dt = NULL,
                              httkpop.generate.arg.list =
                                list(nsamp = 10000,
                                     method = "direct resampling"),
                              seed = NULL,
-                             input.param.dir = NULL) {
-  
+                             input.param.dir = NULL) 
+{
+  ## Defining data.table arguments mistaken by check for global variables ##
+  ..param <- weight_class <- gfr_class <- reth <- param.gen.function <- NULL
+  ####
+    
   # Required for reproducibility
   if (!is.null(seed)) {
     set.seed(seed)
