@@ -24,6 +24,10 @@
 #' If exclude_oad=TRUE (DEFAULT) chemicals outside the applicability domain do not
 #' have their predicted values loaded.
 #' 
+#' @param chem_include A vector of CAS numbers indicating only the chemicals to
+#' be included in the loading process. If set to `NULL` all applicable chemicals are
+#' loaded. (Default is `NULL`.)
+#' 
 #' @param target.env The environment where the new
 #' \code{\link{chem.physical_and_invitro.data}} is loaded. Defaults to global environment.
 #' 
@@ -62,6 +66,59 @@
 #'
 #' # We should be back to our original number:
 #' num.chems == length(get_cheminfo())
+#'
+#' # Demonstrate loading data for specific chemicals:
+#' #
+#' # Find chemicals with a clint and no fup:
+#' subset(chem.physical_and_invitro.data,!is.na(Human.Clint) & Human.Funbound.plasma==0)$CAS
+#' chem1 <- "32598-13-3"
+#' chem2 <- "2971-36-0"
+#' # Take a look at what parameterize_steadystate gives (working from a default fup of 0.005):
+#' a1 <- parameterize_steadystate(chem.cas=chem1)
+#' a2 <- parameterize_steadystate(chem.cas=chem2)
+#' 
+#' # load Dawson for this chemical:
+#' load_dawson2021(chem_include=chem1)
+#' # Check values, only fup for the first chemical should change:
+#' a3 <- parameterize_steadystate(chem.cas=chem1)
+#' a4 <- parameterize_steadystate(chem.cas=chem2)
+#' # All tests should be true:
+#' a1[["Clint"]] == a3[["Clint"]]
+#' a1[["Funbound.plasma"]] != a3[["Funbound.plasma"]]
+#' a2[["Clint"]] == a4[["Clint"]]
+#' a2[["Funbound.plasma"]] == a4[["Funbound.plasma"]]
+#' 
+#' # load Dawson for this chemical, but allow it to overwrite the clint:
+#' load_dawson2021(chem_include=chem1, overwrite=TRUE)
+#' # Check values, both clint and fup for the first chemical should change:
+#' a5 <- parameterize_steadystate(chem.cas=chem1)
+#' a6 <- parameterize_steadystate(chem.cas=chem2)
+#' # All tests should be true:
+#' a1[["Clint"]] != a5[["Clint"]]
+#' a1[["Funbound.plasma"]] != a5[["Funbound.plasma"]]
+#' a2[["Clint"]] == a6[["Clint"]]
+#' a2[["Funbound.plasma"]] == a6[["Funbound.plasma"]]
+#' 
+#' # Load Dawson for all chemicals, fup should change for second chemical:
+#' load_dawson2021()
+#' a7 <- parameterize_steadystate(chem.cas=chem1)
+#' a8 <- parameterize_steadystate(chem.cas=chem2)
+#' # All tests should be true:
+#' a1[["Clint"]] != a7[["Clint"]]
+#' a1[["Funbound.plasma"]] != a7[["Funbound.plasma"]]
+#' a2[["Clint"]] == a8[["Clint"]]
+#' a2[["Funbound.plasma"]] != a8[["Funbound.plasma"]]
+#' 
+#' # load Dawson for this chemical, but allow it to overwrite all clints:
+#' load_dawson2021(overwrite=TRUE)
+#' # Both clint and fup should now be changed for second chemical:
+#' a9 <- parameterize_steadystate(chem.cas=chem1)
+#' a10 <- parameterize_steadystate(chem.cas=chem2)
+#' # All tests should be true:
+#' a1[["Clint"]] != a9[["Clint"]]
+#' a1[["Funbound.plasma"]] != a9[["Funbound.plasma"]]
+#' a2[["Clint"]] != a10[["Clint"]]
+#' a2[["Funbound.plasma"]] != a10[["Funbound.plasma"]]
 #' }                        
 #' 
 #' @importFrom Rdpack reprompt
@@ -70,6 +127,7 @@
 load_dawson2021 <- function(
     overwrite=FALSE,
     exclude_oad=TRUE,
+    chem_include = NULL,
     target.env=.GlobalEnv)
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -95,6 +153,11 @@ load_dawson2021 <- function(
       dplyr::select(`CASRN`,`QSAR_Clint`,`QSAR_Fup`) %>% 
       as.data.frame()
   }
+  # check whether there is any information on specific chemicals to include
+  if(!is.null(chem_include)){
+    tmp_dawson2021 <- httk_chem_subset(tmp_dawson2021,chem_include = chem_include)
+  }
+  
   cat(paste("Loading CLint and Fup predictions from Dawson et al. (2021) for",
             dim(tmp_dawson2021)[1],"chemicals.\n"))
   cat(paste("Existing data are",

@@ -3,34 +3,6 @@
 #' This function solves for the amounts or concentrations in uM of a chemical
 #' in different tissues of a maternofetal system as functions of time based on
 #' the dose and dosing frequency.
-#' In this PBTK formulation. \eqn{C_{tissue}} is the concentration in tissue at 
-#' time t. Since the perfusion limited partition coefficients describe 
-#' instantaneous equilibrium between the tissue and the free fraction in 
-#' plasma, the whole plasma concentration is 
-#' \eqn{C_{tissue,plasma} = \frac{1}{f_{up}*K_{tissue2fup}}*C_{tissue}}. 
-#' Note that we use a single, 
-#' constant value of \eqn{f_{up}} across all tissues. Corespondingly the free 
-#' plasma 
-#' concentration is modeled as 
-#' \eqn{C_{tissue,free plasma} = \frac{1}{K_{tissue2fup}}*C_tissue}. 
-#' The amount of blood flowing from tissue x is \eqn{Q_{tissue}} (L/h) at a 
-#' concentration 
-#' \eqn{C_{x,blood} = \frac{R_{b2p}}{f_{up}*K_{tissue2fup}}*C_{tissue}}, where 
-#' we use a 
-#' single \eqn{R_{b2p}} value throughout the body.
-#' Metabolic clearance is modelled as being from the total plasma 
-#' concentration here, though it is restricted to the free fraction in 
-#' \code{\link{calc_hep_clearance}} by default. Renal clearance via 
-#' glomerulsr filtration is from the free plasma concentration.
-#' The maternal compartments used in this model are the gut lumen, gut, liver, 
-#' venous blood, arterial blood, lung, adipose tissue, kidney, thyroid, 
-#' and rest of body. A placenta is modeled as a joint organ shared by mother
-#' and fetus, through which chemical exchange can occur with the fetus. Fetal
-#' compartments include arterial blood, venous blood, kidney, thyroid, liver,
-#' lung, gut, brain, and rest of body. 
-#' The extra compartments include the amounts or concentrations metabolized by
-#' the liver and excreted by the kidneys through the tubules.
-#' AUC is the area under the curve of the plasma concentration.
 #' 
 #' The stage of pregnancy simulated here begins by default at the 13th week due
 #' to a relative lack of data to support parameterization prior, in line with 
@@ -42,7 +14,31 @@
 #' 
 #' Default NULL value for doses.per.day solves for a single dose.
 #' 
+#' The maternal compartments used in this model are the gut lumen, gut, liver, 
+#' venous blood, arterial blood, lung, adipose tissue, kidney, thyroid, 
+#' and rest of body. A placenta is modeled as a joint organ shared by mother
+#' and fetus, through which chemical exchange can occur with the fetus. Fetal
+#' compartments include arterial blood, venous blood, kidney, thyroid, liver,
+#' lung, gut, brain, and rest of body. 
+#' 
+#' The extra compartments include the amounts or concentrations metabolized by
+#' the liver and excreted by the kidneys through the tubules.
+#' 
+#' AUC is the area under the curve of the plasma concentration.
+#' 
 #' This gestational model is only parameterized for humans.
+#' 
+#' Because this model does not simulate exhalation, inhalation, and other 
+#' processes relevant to volatile chemicals, this model is by default 
+#' restricted to chemicals with a logHenry's Law Constant less than that of 
+#' Acetone, a known volatile chemical. That is, chemicals with logHLC > -4.5 
+#' (Log10 atm-m3/mole) are excluded. Volatility is not purely determined by the 
+#' Henry's Law Constant, therefore this chemical exclusion may be turned off 
+#' with the argument "physchem.exclude = FALSE". Similarly, per- and 
+#' polyfluoroalkyl substances (PFAS) are excluded by default because the 
+#' transporters that often drive PFAS toxicokinetics are not included in this 
+#' model. However, PFAS chemicals can be included with the argument 
+#' "class.exclude = FALSE".
 #' 
 #' @param chem.name Either the chemical name, CAS number, or the parameters
 #' must be specified.
@@ -50,7 +46,7 @@
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
 #' 
-#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' 
 #' @param times Optional time sequence in days. Dosing sequence begins at the
@@ -69,7 +65,7 @@
 #' 
 #' @param daily.dose Total daily dose, mg/kg BW.
 #' 
-#' @param dose Amount of a single, initial oral dose in mg/kg BW.  
+#' @param dose Amount of a single, initial oral dose in mg/kg BW.
 #' 
 #' @param doses.per.day Number of doses per day.
 #' 
@@ -90,8 +86,12 @@
 #' results. Default, NULL, returns model results in units specified in the
 #' 'modelinfo' file. See table below for details.
 #' 
-#' @param default.to.human Substitutes missing animal values with human values
-#' if true (hepatic intrinsic clearance or fraction of unbound plasma).
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
+#' 
+#' @param physchem.exclude Exclude chemicals on the basis of physico-chemical
+#' properties (currently only Henry's law constant) as specified by 
+#' the relevant modelinfo_[MODEL] file (default TRUE).
 #' 
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
@@ -103,7 +103,7 @@
 #' @param dosing.matrix A matrix of either one column (or row) with a set of
 #' dosing times or with two columns (or rows) correspondingly named "dose" and
 #' "time" containing the time and amount, in mg/kg BW, of each dose.
-#' 
+#'
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE along with partition coefficients calculated with this value.
 #' 
@@ -125,6 +125,19 @@
 #' @param atol Absolute tolerance used by integrator (deSolve) to determine
 #' numerical precision-- defaults to 1e-8.
 #' 
+#' @param Caco2.options A list of options to use when working with Caco2 apical 
+#' to basolateral data \code{Caco2.Pab}, default is Caco2.options = 
+#' list(Caco2.Pab.default = 1.6, Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, 
+#' overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the 
+#' default value for Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE 
+#' uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+#' Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE 
+#' overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
+#' with 1 (i.e. 100 percent) regardless of other settings.
+#' See \code{\link{get_fbio}} for further details.
+#'
 #' @param ... Additional arguments passed to the integrator.
 #' 
 #' @return A matrix of class deSolve with a column for time(in days), each
@@ -132,6 +145,9 @@
 #' for each time point.
 #' 
 #' @author John Wambaugh, Mark Sfeir, and Dustin Kapraun
+#'
+#' @references 
+#' \insertRef{kapraun2022fetalmodel}{httk}
 #'
 #' @keywords Solve
 #'
@@ -141,6 +157,7 @@
 #'
 #' @examples
 #' 
+#' \donttest{
 #' out = solve_fetal_pbtk(chem.name = 'bisphenol a', daily.dose = 1,
 #' doses.per.day = 3)
 #'
@@ -155,6 +172,14 @@
 #'                           fetal_fup_adjustment = FALSE)
 #' head(solve_fetal_pbtk(parameters = fetal_parms_fup_unadjusted))
 #' 
+#' # The following will not work because Diquat dibromide monohydrate's 
+#' # Henry's Law Constant (-3.912) is higher than that of Acetone (~-4.5):
+#' try(head(solve_fetal_pbtk(chem.cas = "6385-62-2")))
+#' # However, we can turn off checking for phys-chem properties, since we know
+#' # that  Diquat dibromide monohydrate is not too volatile:
+#' head(solve_fetal_pbtk(chem.cas = "6385-62-2", physchem.exclude = FALSE))
+#' }
+#'
 #' @export solve_fetal_pbtk
 #'
 #' @import deSolve
@@ -176,7 +201,8 @@ solve_fetal_pbtk <- function(chem.name = NULL,
                              iv.dose=FALSE,
                              input.units='mg/kg',
                              output.units=NULL,
-                             default.to.human=FALSE,
+                             physchem.exclude = TRUE,
+                             class.exclude = TRUE,
                              recalc.blood2plasma=FALSE,
                              recalc.clearance=FALSE,
                              adjusted.Funbound.plasma=TRUE,
@@ -184,6 +210,7 @@ solve_fetal_pbtk <- function(chem.name = NULL,
                              restrictive.clearance = TRUE,
                              minimum.Funbound.plasma = 0.0001,
                              monitor.vars = NULL,
+                             Caco2.options = list(),
                              atol=1e-8,
                              rtol=1e-8,
                              ...)
@@ -219,15 +246,18 @@ describe human gestation.")
     species='Human', #other species not (yet) supported by solve_fetal_pbtk
     input.units=input.units,
     output.units=output.units,
-    default.to.human=default.to.human,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-    regression=regression,
-    restrictive.clearance = restrictive.clearance,
     minimum.Funbound.plasma=minimum.Funbound.plasma,
+    parameterize.args.list =list(
+                  restrictive.clearance = restrictive.clearance,
+                  regression=regression,
+                  Caco2.options=Caco2.options,
+                  physchem.exclude = physchem.exclude,
+                  class.exclude = class.exclude),
     atol=atol,
-    rotl=rtol,
+    rtol=rtol,
     ...)
   
   return(out) 

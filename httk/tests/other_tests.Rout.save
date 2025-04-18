@@ -29,16 +29,16 @@ Type 'q()' to quit R.
 > calc_css(chem.name='nicotine', model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 $avg
-[1] 0.3637
+[1] 0.7859
 
 $frac
-[1] 0.9232
+[1] 0.9408
 
 $max
-[1] 1.177
+[1] 1.585
 
 $the.day
-[1] 4
+[1] 5
 
 Warning messages:
 1: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
@@ -76,6 +76,9 @@ Warning messages:
   Default value of 1.6 used for Caco2 permeability.
 > 
 > calc_css(chem.name="endrin")
+Extending simulation...
+Extending simulation...
+Extending simulation...
 $avg
 [1] 681.8
 
@@ -162,7 +165,7 @@ $mean
 +   chem.name='Bisphenol-A',
 +   tissue='liver',
 +   species='rabbit',
-+   parameterize.args = list(
++   parameterize.args.list = list(
 +     default.to.human=TRUE,
 +     adjusted.Funbound.plasma=TRUE,
 +     regression=TRUE,

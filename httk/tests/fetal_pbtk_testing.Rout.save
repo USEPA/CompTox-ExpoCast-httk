@@ -35,36 +35,35 @@ The model outputs are provided in the following units:
 	uM: Cgut, Cliver, Cven, Clung, Cart, Cadipose, Crest, Ckidney, Cplasma, Cplacenta, Cfliver, Cfven, Cfart, Cfgut, Cflung, Cfrest, Cfthyroid, Cfkidney, Cfbrain, Cfplasma
 	unitless: Rblood2plasma, Rfblood2plasma
 	uM*days: AUC, fAUC
-	L/d: Qcardiac, Qthyroid
 
-         time Agutlumen    Cgut    Cliver      Cven    Clung    Cart Cadipose
-[1,] 90.99990     0.000 0.00000 0.0000000 0.000e+00 0.000000 0.0e+00   0.0000
-[2,] 91.00000     0.000 0.00000 0.0000000 0.000e+00 0.000000 0.0e+00   0.0000
-[3,] 91.00010    57.410 0.04509 0.0005921 4.540e-06 0.000001 1.0e-07   0.0000
-[4,] 91.33323     2.954 2.09200 2.9590000 5.400e-01 1.133000 5.4e-01   0.8699
-[5,] 91.33333     2.951 2.09200 2.9590000 5.401e-01 1.133000 5.4e-01   0.8699
-[6,] 91.33343    60.360 2.13700 2.9600000 5.401e-01 1.133000 5.4e-01   0.8700
-      Crest Ckidney   Cplasma Atubules Ametabolized Rblood2plasma     AUC
-[1,] 0.0000 0.0e+00 0.000e+00   0.0000       0.0000         3.390 0.00000
-[2,] 0.0000 0.0e+00 0.000e+00   0.0000       0.0000         3.390 0.00000
-[3,] 0.0000 1.0e-08 1.340e-06   0.0000       0.0000         3.390 0.00000
-[4,] 0.7718 3.1e+00 1.593e-01   0.2141       0.1961         3.389 0.04107
-[5,] 0.7718 3.1e+00 1.593e-01   0.2142       0.1962         3.389 0.04108
-[6,] 0.7719 3.1e+00 1.594e-01   0.2143       0.1963         3.389 0.04110
+         time Agutlumen    Cgut    Cliver      Cven    Clung      Cart Cadipose
+[1,] 91.00000     0.000 0.00000 0.0000000 0.000e+00 0.000000 0.0000000   0.0000
+[2,] 91.00010    57.410 0.04509 0.0005921 4.540e-06 0.000001 0.0000001   0.0000
+[3,] 91.33323     2.954 2.09200 2.9590000 5.400e-01 1.133000 0.5400000   0.8699
+[4,] 91.33333     2.951 2.09200 2.9590000 5.401e-01 1.133000 0.5400000   0.8699
+[5,] 91.33343    60.360 2.13700 2.9600000 5.401e-01 1.133000 0.5400000   0.8700
+[6,] 91.66657     3.106 4.17400 5.9680000 1.096e+00 2.300000 1.0960000   1.7910
+      Crest   Ckidney   Cplasma Atubules Ametabolized Rblood2plasma     AUC
+[1,] 0.0000 0.000e+00 0.000e+00   0.0000       0.0000         3.390 0.00000
+[2,] 0.0000 1.000e-08 1.340e-06   0.0000       0.0000         3.390 0.00000
+[3,] 0.7718 3.100e+00 1.593e-01   0.2141       0.1961         3.389 0.04107
+[4,] 0.7718 3.100e+00 1.593e-01   0.2142       0.1962         3.389 0.04108
+[5,] 0.7719 3.100e+00 1.594e-01   0.2143       0.1963         3.389 0.04110
+[6,] 1.5740 6.293e+00 3.234e-01   0.7122       0.6297         3.389 0.13650
         fAUC Aplacenta Cplacenta Cfliver  Cfven  Cfart Cfgut Cflung Cfrest
-[1,] 0.00000   0.00000    0.0000   0.000 0.0000 0.0000  0.00  0.000 0.0000
-[2,] 0.00000   0.00000    0.0000   0.000 0.0000 0.0000  0.00  0.000 0.0000
-[3,] 0.00000   0.00000    0.0000   0.000 0.0000 0.0000  0.00  0.000 0.0000
-[4,] 0.03146   0.06167    0.5733   2.667 0.4737 0.4737  1.91  1.098 0.7407
-[5,] 0.03148   0.06168    0.5733   2.667 0.4737 0.4737  1.91  1.098 0.7407
-[6,] 0.03149   0.06168    0.5734   2.667 0.4737 0.4737  1.91  1.098 0.7407
-     Cfthyroid Cfkidney Cfbrain Cfplasma Rfblood2plasma Qcardiac Qthyroid
-[1,]     0.000    0.000  0.0000   0.0000          3.788     8656    118.6
-[2,]     0.000    0.000  0.0000   0.0000          3.788     8656    118.6
-[3,]     0.000    0.000  0.0000   0.0000          3.788     8656    118.6
-[4,]     1.044    2.871  0.8332   0.1249          3.792     8661    118.6
-[5,]     1.044    2.871  0.8332   0.1249          3.792     8661    118.6
-[6,]     1.045    2.871  0.8332   0.1249          3.792     8661    118.6
+[1,] 0.00000   0.00000    0.0000   0.000 0.0000 0.0000 0.000  0.000 0.0000
+[2,] 0.00000   0.00000    0.0000   0.000 0.0000 0.0000 0.000  0.000 0.0000
+[3,] 0.03146   0.06167    0.5733   2.667 0.4737 0.4737 1.910  1.098 0.7407
+[4,] 0.03148   0.06168    0.5733   2.667 0.4737 0.4737 1.910  1.098 0.7407
+[5,] 0.03149   0.06168    0.5734   2.667 0.4737 0.4737 1.910  1.098 0.7407
+[6,] 0.10560   0.12610    1.1640   5.421 0.9636 0.9635 3.882  2.232 1.5050
+     Cfthyroid Cfkidney Cfbrain Cfplasma Rfblood2plasma
+[1,]     0.000    0.000  0.0000   0.0000          3.788
+[2,]     0.000    0.000  0.0000   0.0000          3.788
+[3,]     1.044    2.871  0.8332   0.1249          3.792
+[4,]     1.044    2.871  0.8332   0.1249          3.792
+[5,]     1.045    2.871  0.8332   0.1249          3.792
+[6,]     2.123    5.835  1.6940   0.2538          3.796
 > head(solve_fetal_pbtk(chem.cas="80-05-7"))
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
@@ -75,7 +74,6 @@ The model outputs are provided in the following units:
 	uM: Cgut, Cliver, Cven, Clung, Cart, Cadipose, Crest, Ckidney, Cplasma, Cplacenta, Cfliver, Cfven, Cfart, Cfgut, Cflung, Cfrest, Cfthyroid, Cfkidney, Cfbrain, Cfplasma
 	unitless: Rblood2plasma, Rfblood2plasma
 	uM*days: AUC, fAUC
-	L/d: Qcardiac, Qthyroid
 
         time Agutlumen   Cgut   Cliver      Cven    Clung      Cart Cadipose
 [1,] 91.0000 1.724e+02 0.0000 0.000000 0.000e+00 0.000000 0.0000000    0.000
@@ -98,13 +96,13 @@ The model outputs are provided in the following units:
 [4,] 0.7296    0.1905 1.709e+00   7.971 1.423 1.423 5.708  3.281  2.214
 [5,] 1.0970    0.1891 1.661e+00   7.745 1.387 1.387 5.546  3.188  2.151
 [6,] 1.4550    0.1875 1.613e+00   7.525 1.351 1.351 5.389  3.097  2.090
-     Cfthyroid Cfkidney Cfbrain Cfplasma Rfblood2plasma Qcardiac Qthyroid
-[1,]     0.000    0.000   0.000   0.0000          3.788     8656    118.6
-[2,]     0.000    0.000   0.000   0.0000          3.788     8656    118.6
-[3,]     3.211    8.828   2.564   0.3840          3.800     8673    118.7
-[4,]     3.120    8.579   2.491   0.3731          3.812     8690    118.8
-[5,]     3.032    8.335   2.420   0.3626          3.824     8707    118.9
-[6,]     2.946    8.099   2.352   0.3523          3.836     8724    119.0
+     Cfthyroid Cfkidney Cfbrain Cfplasma Rfblood2plasma
+[1,]     0.000    0.000   0.000   0.0000          3.788
+[2,]     0.000    0.000   0.000   0.0000          3.788
+[3,]     3.211    8.828   2.564   0.3840          3.800
+[4,]     3.120    8.579   2.491   0.3731          3.812
+[5,]     3.032    8.335   2.420   0.3626          3.824
+[6,]     2.946    8.099   2.352   0.3523          3.836
 > head(solve_fetal_pbtk(parameters=parameterize_fetal_pbtk(chem.cas="80-05-7")))
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
@@ -115,7 +113,6 @@ The model outputs are provided in the following units:
 	uM: Cgut, Cliver, Cven, Clung, Cart, Cadipose, Crest, Ckidney, Cplasma, Cplacenta, Cfliver, Cfven, Cfart, Cfgut, Cflung, Cfrest, Cfthyroid, Cfkidney, Cfbrain, Cfplasma
 	unitless: Rblood2plasma, Rfblood2plasma
 	uM*days: AUC, fAUC
-	L/d: Qcardiac, Qthyroid
 
         time Agutlumen   Cgut   Cliver      Cven    Clung      Cart Cadipose
 [1,] 91.0000 1.724e+02 0.0000 0.000000 0.000e+00 0.000000 0.0000000    0.000
@@ -138,13 +135,13 @@ The model outputs are provided in the following units:
 [4,] 0.7296    0.1905 1.709e+00   7.971 1.423 1.423 5.708  3.281  2.214
 [5,] 1.0970    0.1891 1.661e+00   7.745 1.387 1.387 5.546  3.188  2.151
 [6,] 1.4550    0.1875 1.613e+00   7.525 1.351 1.351 5.389  3.097  2.090
-     Cfthyroid Cfkidney Cfbrain Cfplasma Rfblood2plasma Qcardiac Qthyroid
-[1,]     0.000    0.000   0.000   0.0000          3.788     8656    118.6
-[2,]     0.000    0.000   0.000   0.0000          3.788     8656    118.6
-[3,]     3.211    8.828   2.564   0.3840          3.800     8673    118.7
-[4,]     3.120    8.579   2.491   0.3731          3.812     8690    118.8
-[5,]     3.032    8.335   2.420   0.3626          3.824     8707    118.9
-[6,]     2.946    8.099   2.352   0.3523          3.836     8724    119.0
+     Cfthyroid Cfkidney Cfbrain Cfplasma Rfblood2plasma
+[1,]     0.000    0.000   0.000   0.0000          3.788
+[2,]     0.000    0.000   0.000   0.0000          3.788
+[3,]     3.211    8.828   2.564   0.3840          3.800
+[4,]     3.120    8.579   2.491   0.3731          3.812
+[5,]     3.032    8.335   2.420   0.3626          3.824
+[6,]     2.946    8.099   2.352   0.3523          3.836
 Warning messages:
 1: In solve_model(chem.name = chem.name, chem.cas = chem.cas, dtxsid = dtxsid,  :
   Rblood2plasma not recalculated. 

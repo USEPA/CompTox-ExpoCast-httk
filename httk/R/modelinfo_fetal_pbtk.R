@@ -1,11 +1,14 @@
 # Add the human gestational PBTK model to the list of models:
 # 
-# Kapraun, Dustin F., et al. 
-# "Evaluation of a rapid, generic human gestational dose model." 
+# Kapraun, Dustin F., et al.
+# "Evaluation of a rapid, generic human gestational dose model."
 # Reproductive Toxicology 113 (2022): 172-188.
 
 # Model identifier for the model.list:
-THIS.MODEL <- "fetal_pbtk" 
+THIS.MODEL <- "fetal_pbtk"
+
+# Dose this model work with Monte Carlo parameter sampling?
+model.list[[THIS.MODEL]]$monte.carlo <- FALSE
 
 #Analytic expression for steady-state plasma concentration.
 #model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_fetal_pbtk" <function not yet developed
@@ -78,9 +81,7 @@ model.list[[THIS.MODEL]]$param.names <- c(
   "kgutabs",                      
 # Maternal tissue partition coefficients:
   "Kadipose2pu",
-
   "Kgut2pu",
-
   "Kkidney2pu",
   "Kliver2pu",                    
   "Klung2pu",
@@ -88,7 +89,7 @@ model.list[[THIS.MODEL]]$param.names <- c(
   "Krest2pu",
   "Kplacenta2pu",
   "Kthyroid2pu",                  
-# Maternal tissue partition coefficients:
+# Fetal tissue partition coefficients:
   "Kfbrain2pu",                  
   "Kfgut2pu",
   "Kfkidney2pu",                  
@@ -109,11 +110,6 @@ model.list[[THIS.MODEL]]$param.names <- c(
   "Vthyroidc",    
   "Vkidneyc",                     
   "Vgutc",                       
-
-
-
-
-
   "Vliverc",
   "Vlungc",                       
 # Tissue Densities:
@@ -317,7 +313,7 @@ model.list[[THIS.MODEL]]$Rtosolvermap <- list(
   Qcardiac_cubic_theta3 = "Qcardiac_cubic_theta3",
   term = "term",
   Qgut_percent_initial = "Qgut_percent_initial",
-  Qgut_percent_termina = "Qgut_percent_terminal",
+  Qgut_percent_terminal = "Qgut_percent_terminal",
   Qkidney_cubic_theta0 = "Qkidney_cubic_theta0",
   Qkidney_cubic_theta1 = "Qkidney_cubic_theta1",
   Qkidney_cubic_theta2 = "Qkidney_cubic_theta2",
@@ -345,7 +341,7 @@ model.list[[THIS.MODEL]]$Rtosolvermap <- list(
   Qfplacenta_logistic_theta1= "Qfplacenta_logistic_theta1",
   Qfplacenta_logistic_theta2 = "Qfplacenta_logistic_theta2",
   Qfdv_gompertz_theta0  = "Qfdv_gompertz_theta0",
-  Qfdv_gompertz_theta =  "Qfdv_gompertz_theta1",
+  Qfdv_gompertz_theta1 =  "Qfdv_gompertz_theta1",
   Qfdv_gompertz_theta2 =  "Qfdv_gompertz_theta2",
   Qfnonplacental_percent =  "Qfnonplacental_percent",
   Qfgut_percent = "Qfgut_percent",
@@ -354,6 +350,7 @@ model.list[[THIS.MODEL]]$Rtosolvermap <- list(
   Qbrain_percent = "Qbrain_percent",
   Qkidney_percent = "Qkidney_percent",
   Qgut_percent = "Qgut_percent",
+  Qfliver_percent = "Qfliver_percent",
   Qfthyroid_percent  = "Qfthyroid_percent"
 )
 
@@ -547,8 +544,27 @@ model.list[[THIS.MODEL]]$derivative.output.names <- c(
   "Afplasma",
   "Cfplasma",
   "Rfblood2plasma",
-  "Qcardiac",
-  "Qthyroid")
+  "fBW",
+  "Vamnf",
+  "Vplacenta",
+  "Vfart",
+  "Vfven",
+  "Vfkidney",
+  "Vfthyroid",
+  "Vfliver",
+  "Vfbrain",
+  "Vfgut",
+  "Vflung",
+  "Vfrest", 
+  "fhematocrit", 
+  "Vven",
+  "Vart",
+  "Vadipose",
+  "Vrest",
+  "Vffmx",
+  "Vallx"
+  )
+
 
 #Which variables to track by default (should be able to build this from
 #state vars and outputs):
@@ -579,9 +595,7 @@ model.list[[THIS.MODEL]]$default.monitor.vars <- c(
   "Cfkidney",
   "Cfbrain",
   "Cfplasma",
-  "Rfblood2plasma",
-  "Qcardiac",
-  "Qthyroid")
+  "Rfblood2plasma")
 
 # Allowable units assigned to dosing input:
 model.list[[THIS.MODEL]]$allowed.units.input <- list(
@@ -591,18 +605,18 @@ model.list[[THIS.MODEL]]$allowed.units.input <- list(
 # Allowable units assigned to entries in the output columns of the ode system
 model.list[[THIS.MODEL]]$allowed.units.output <- list(
   "oral" = c('uM','mg/L','umol','mg','uM*days',
-             'mg/L*days',"unitless","L/d"),
+             'mg/L*days',"unitless","L"),
   "iv" = c('uM','mg/L','umol','mg','uM*days',
-             'mg/L*days',"unitless","L/d"))
+             'mg/L*days',"unitless","L"))
 
 ## These parameters specify the exposure scenario simulated by the model:
 model.list[[THIS.MODEL]]$routes <- list(
   "oral" = list(
-    # We need to know which compartment gets the dose 
+# We need to know which compartment gets the dose 
     "entry.compartment" = "Agutlumen",
-    # desolve events can take the values "add" to add dose C1 <- C1 + dose,
-    # "replace" to change the value C1 <- dose
-    # or "multiply" to change the value to C1 <- C1*dose
+# desolve events can take the values "add" to add dose C1 <- C1 + dose,
+# "replace" to change the value C1 <- dose
+# or "multiply" to change the value to C1 <- C1*dose
     "dose.type" = "add",
     "dosing.params" = c("daily.dose",
                         "initial.dose",
@@ -699,9 +713,27 @@ model.list[[THIS.MODEL]]$compartment.units <- c(
   "AUC" = "uM*days",
   "fAUC" = "uM*days",
   "Rblood2plasma" = "unitless",
-  "Rfblood2plasma" = "unitless",
-  "Qcardiac" = "L/d",
-  "Qthyroid" = "L/d")
+  "Rfblood2plasma" = "unitless", 
+  "fBW" = "L",
+  "Vamnf" = "L",
+  "Vplacenta" = "L",
+  "Vfart" = "L",
+  "Vfven" = "L",
+  "Vfkidney" = "L",
+  "Vfthyroid" = "L",
+  "Vfliver" = "L",
+  "Vfbrain" = "L",
+  "Vfgut" = "L",
+  "Vflung" = "L",
+  "Vfrest" = "L", 
+  "fhematocrit" = "unitless", 
+  "Vven" = "L",
+  "Vart" = "L",
+  "Vadipose" = "L",
+  "Vrest" = "L",
+  "Vffmx" = "L",
+  "Vallx" = "L"
+  )
 
 # Compartment state of matter, needed for proper unit conversion, if all
 # comaprtments of the same only include one state and set it to "all":
@@ -720,7 +752,6 @@ model.list[[THIS.MODEL]]$required.params <- c(
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
 model.list[[THIS.MODEL]]$calcpc <- TRUE
   
-
 # Do we need to recalculate first pass metabolism when doing Monte Carlo?
 model.list[[THIS.MODEL]]$firstpass <- FALSE
 
@@ -728,8 +759,7 @@ model.list[[THIS.MODEL]]$firstpass <- FALSE
 model.list[[THIS.MODEL]]$exclude.fup.zero <- TRUE
 
 # These are the parameter names needed to describe steady-state dosing:
-model.list[[THIS.MODEL]]$css.dosing.params <- list(
-  oral=c("hourly.dose"))
+model.list[[THIS.MODEL]]$css.dosing.params <- c("hourly.dose")
 
 # Filter out volatile compounds with Henry's Law Constant Threshold
 model.list[[THIS.MODEL]]$log.henry.threshold <- c(-4.5)

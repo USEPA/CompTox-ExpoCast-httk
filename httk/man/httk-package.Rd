@@ -28,18 +28,21 @@ Authors:
   \item Mark Sfeir
   \item Matt Linakis \email{MLINAKIS@ramboll.com} (\href{https://orcid.org/0000-0003-0526-2395}{ORCID})
   \item Dustin Kapraun \email{kapraun.dustin@epa.gov} (\href{https://orcid.org/0000-0001-5570-6383}{ORCID})
+  \item Kimberly Truong \email{truong.kimberly@epa.gov} (\href{https://orcid.org/0000-0003-1716-1006}{ORCID})
+  \item Colin Thomson \email{thomson.colin@epa.gov} (\href{https://orcid.org/0000-0001-5303-6646}{ORCID})
 }
 
 Other contributors:
 \itemize{
-  \item Nathan Pollesch \email{pollesch.nathan@epa.gov} (\href{https://orcid.org/0000-0001-8992-9294}{ORCID}) [contributor]
   \item Miyuki Breen \email{breen.miyuki@epa.gov} (\href{https://orcid.org/0000-0001-8511-4653}{ORCID}) [contributor]
   \item Shannon Bell \email{Shannon.bell@inotivco.com} (\href{https://orcid.org/0000-0002-5754-6085}{ORCID}) [contributor]
   \item Xiaoqing Chang \email{Xiaoqing.chang@inotivco.com} (\href{https://orcid.org/0000-0003-0752-1848}{ORCID}) [contributor]
   \item Todor Antonijevic \email{tantonijevic@toxstrategies.com} (\href{https://orcid.org/0000-0002-0248-8412}{ORCID}) [contributor]
   \item Jimena Davis [contributor]
   \item Elaina Kenyon \email{kenyon.elaina@epa.gov} (\href{https://orcid.org/0000-0001-8781-2391}{ORCID}) [contributor]
+  \item Gilberto Padilla Mercado \email{PadillaMercado.Gilberto@epa.gov} (\href{https://orcid.org/0000-0001-5423-1646}{ORCID}) [contributor]
   \item Katie Paul Friedman \email{Paul-Friedman.Katie@epa.gov} (\href{https://orcid.org/0000-0002-2710-1691}{ORCID}) [contributor]
+  \item Nathan Pollesch \email{pollesch.nathan@epa.gov} (\href{https://orcid.org/0000-0001-8992-9294}{ORCID}) [contributor]
   \item Celia Schacht \email{Schacht.Celia@epa.gov} (\href{https://orcid.org/0000-0002-8131-513X}{ORCID}) [contributor]
   \item Meredith Scherer \email{Scherer.Meredith@epa.gov} (\href{https://orcid.org/0000-0002-9785-7363}{ORCID}) [contributor]
   \item James Sluka \email{jsluka@indiana.edu} (\href{https://orcid.org/0000-0002-5901-1404}{ORCID}) [contributor]
