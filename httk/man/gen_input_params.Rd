@@ -8,7 +8,7 @@ gen_input_params(
   model,
   chem.cas = NULL,
   chem.name = NULL,
-  chem.dtxsid = NULL,
+  dtxsid = NULL,
   samples = 10000,
   httkpop.dt = NULL,
   httkpop.generate.arg.list = list(nsamp = 10000, method = "direct resampling"),
@@ -25,6 +25,9 @@ chemical must be identified by either CAS, name, or DTXISD}
 
 \item{chem.name}{Chemical name (spaces and capitalization ignored) --  the 
 chemical must be identified by either CAS, name, or DTXISD}
+
+\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
+-- the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{samples}{Size of the stored population; default 10000. Overridden by
 the size of \code{httkpop.dt}, if specified, or by \code{nsamp} in 
@@ -45,9 +48,6 @@ null, in which case no seed is set.}
 which is used to store all \code{input_param} data files. If \code{input_params_data_files}
 does not exist, this function will create it in the specified path. Default \code{NULL}, 
 in which case the present working directory is used as default.}
-
-\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
--- the chemical must be identified by either CAS, name, or DTXSIDs}
 }
 \description{
 Generates and stores a population using \code{\link{create_mc_samples}} for 

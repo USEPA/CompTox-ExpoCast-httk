@@ -134,9 +134,11 @@ model. However, PFAS chemicals can be included with the argument
 \examples{
 
  parameters <- parameterize_3comp2(chem.name='Bisphenol-A',species='Rat')
+\donttest{
  parameters <- parameterize_3comp2(chem.cas='80-05-7',
                                   species='rabbit',default.to.human=TRUE)
  out <- solve_3comp2(parameters=parameters,plots=TRUE)
+}
 
 }
 \references{

@@ -97,7 +97,7 @@ queries a virutal population and non-parametrically produces timeseries that
 preserve the percentile score of the given starting values.
 }
 \details{
-For each time-dependent model, there should be a function (such as \code{\link{gen_nhanes_params_pbtk_growthcurve}})
+For each time-dependent model, there should be a function (such as \code{\link{gen_input_params}})
 that determines the model parameter values for each individual in the NHANES dataset.
 The resulting value are used to form the non-parametric regression curve.
 }
@@ -105,7 +105,7 @@ The resulting value are used to form the non-parametric regression curve.
 \donttest{
 
 params <- parameterize_pbtk(chem.name = 'Bisphenol A')
-ts <- get_input_param_timeseries('pbtk_lifestage"',
+ts <- get_input_param_timeseries("pbtk_lifestage",
                                  chem.name = 'Bisphenol A',
                                  initial.params = params,
                                  start.age = 600, # age fifty
@@ -118,7 +118,7 @@ ts <- get_input_param_timeseries('pbtk_lifestage"',
 
 }
 \seealso{
-\code{\link{solve_pbtk_growthcurve}}
+\code{\link{solve_pbtk_lifestage}}
 
 \code{\link{gen_input_params}}
 }
