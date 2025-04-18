@@ -84,12 +84,12 @@ gen_input_params <- function(model,
                sep = ""))
   }
   
-  if (is.null(chem.cas) & is.null(chem.name) & is.null(chem.dtxsid)) {
+  if (is.null(chem.cas) & is.null(chem.name) & is.null(dtxsid)) {
     stop('chem.name, chem.cas, or dtxsid must be specified.')
   } else{
     chem.cas <- get_chem_id(chem.cas = chem.cas,
                             chem.name = chem.name,
-                            dtxsid = chem.dtxsid)$chem.cas
+                            dtxsid = dtxsid)$chem.cas
   }
   
   if (is.null(httkpop.dt)) {
