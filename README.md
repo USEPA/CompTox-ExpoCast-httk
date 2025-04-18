@@ -205,4 +205,5 @@ Woodrow Setzer
 
 License: GPL-3 <https://www.gnu.org/licenses/gpl-3.0.en.html>
 
-<img src="../httk/man/figures/httk-logo.png" align="center" width="50%"/>
+<img src="httk/man/figures/httk-logo.png" align="center" width="50%"/>
+                           
