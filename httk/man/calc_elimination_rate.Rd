@@ -70,8 +70,7 @@ if (!(kelim2 > kelim1)) stop("kelim2 is not faster than kelim1")
 
 }
 \references{
-Schmitt, Walter. "General approach for the calculation of tissue 
-to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+\insertRef{schmitt2008general}{httk}
 
 \insertRef{dawson2021qsar}{httk} 
 
