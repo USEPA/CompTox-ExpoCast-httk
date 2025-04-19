@@ -101,13 +101,9 @@ out[["fraction_zwitter"]]==max(unlist(out))
 
 }
 \references{
-Pearce, Robert G., et al. "Evaluation and calibration of
-high-throughput predictions of chemical distribution to tissues." Journal of
-Pharmacokinetics and Pharmacodynamics 44.6 (2017): 549-565.
+\insertRef{pearce2017evaluation}{httk}
 
-Strope, Cory L., et al. "High-throughput in-silico prediction of ionization 
-equilibria for pharmacokinetic modeling." Science of The Total Environment 
-615 (2018): 150-160.
+\insertRef{strope2018high}{httk}
 }
 \author{
 Robert Pearce and John Wambaugh

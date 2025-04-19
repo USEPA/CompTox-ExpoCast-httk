@@ -281,8 +281,7 @@ J. Pediatr. 93, 62-66.
 Lubin, B., 1987. Reference values in infancy and childhood. In: Nathan, D., Oski, F. (Eds.),
 Hematology of Infancy and Childhood.
 
-Wambaugh, J.F., Wetmore, B.A., Pearce, R., Strope, C., Goldsmith, R., Sluka, J.P., et al.,
-2015. Toxicokinetic triage for environmental chemicals. Toxicol. Sci. 147, 55-67
+\insertRef{wambaugh2015toxicokinetic}{httk}
 
 Ma, M.K., Woo, M.H., Mcleod, H.L., 2002. Genetic basis of drug metabolism. Am. J.
 Health Syst. Pharm. 59, 2061-2069.
@@ -290,22 +289,15 @@ Health Syst. Pharm. 59, 2061-2069.
 Yasuda, S.U., Zhang, L., Huang, S.M., 2008. The role of ethnicity in variability in response
 to drugs: focus on clinical pharmacology studies. Clin. Pharmacol. Ther. 84, 417-423.
 
-Rotroff, D.M., Wetmore, B.A., Dix, D.J., Ferguson, S.S., Clewell, H.J., Houck, K.A., et al.,
-2010. Incorporating human dosimetry and exposure into high-throughput in vitro
-toxicity screening. Toxicol. Sci. 117, 348-358.
+\insertRef{rotroff2010incorporating}{httk}
 
-Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Sochaski, M.A., Rotroff, D.M., Freeman,
-K., et al., 2012. Integration of dosimetry, exposure, and high-throughput screening
-data in chemical toxicity assessment. Toxicol. Sci. 125, 157-174.
+\insertRef{wetmore2012integration}{httk}
 
 Wetmore, B.A., Allen, B., Clewell 3rd, H.J., Parker, T., Wambaugh, J.F., Almond, L.M.,
 et al., 2014. Incorporating population variability and susceptible subpopulations into
 dosimetry for high-throughput toxicity testing. Toxicol. Sci. 142, 210-224.
 
-Wetmore, B.A., Wambaugh, J.F., Allen, B., Ferguson, S.S., Sochaski, M.A., Setzer, R.W.,
-et al., 2015. Incorporating high-throughput exposure predictions with Dosimetryadjusted
-in vitro bioactivity to inform chemical toxicity testing. Toxicol. Sci. 148,
-121-136.
+\insertRef{wetmore2015incorporating}{httk}
 }
 \author{
 Caroline Ring
