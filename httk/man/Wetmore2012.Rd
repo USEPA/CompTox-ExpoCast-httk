@@ -16,6 +16,6 @@ This data set overlaps with Wetmore.data and is used only in Vignette 4 for
 steady state concentration.
 }
 \references{
-\insertRef{wetmore2012integration}
+\insertRef{wetmore2012integration}{httk}
 }
 \keyword{data}
