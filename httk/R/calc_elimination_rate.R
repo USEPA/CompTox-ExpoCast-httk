@@ -41,8 +41,7 @@
 #' @author John Wambaugh
 #' 
 #' @references 
-#' Schmitt, Walter. "General approach for the calculation of tissue 
-#' to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+#' \insertRef{schmitt2008general}{httk}
 #'
 #' \insertRef{dawson2021qsar}{httk} 
 #'
