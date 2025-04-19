@@ -124,17 +124,11 @@
 #' @keywords Retrieval
 #' 
 #'@references 
-#' Rotroff, Daniel M., et al. "Incorporating human dosimetry and exposure into 
-#' high-throughput in vitro toxicity screening." Toxicological Sciences 117.2 
-#' (2010): 348-358.
+#' \insertRef{rotroff2010incorporating}{httk}
 #' 
-#' Waters, Nigel J., et al. "Validation of a rapid equilibrium dialysis approach 
-#' for the measurement of plasma protein binding." Journal of pharmaceutical 
-#' sciences 97.10 (2008): 4586-4595.
+#' \insertRef{waters2008validation}{httk}
 #'
-#' Wambaugh, John F., et al. "Assessing toxicokinetic uncertainty and 
-#' variability in risk prioritization." Toxicological Sciences 172.2 (2019): 
-#' 235-251.
+#' \insertRef{wambaugh2019assessing}{httk}
 #'
 #' @examples
 #' 

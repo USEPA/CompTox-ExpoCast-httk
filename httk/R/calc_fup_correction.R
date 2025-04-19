@@ -86,9 +86,7 @@
 #'
 #' \insertRef{schmitt2008general}{httk}
 #' 
-#' Waters, Nigel J., et al. "Validation of a rapid equilibrium dialysis 
-#' approach for the measurement of plasma protein binding." Journal of 
-#' pharmaceutical sciences 97.10 (2008): 4586-4595.
+#' \insertRef{waters2008validation}{httk}
 #'
 #' @keywords in-vitro
 #'

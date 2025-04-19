@@ -14,12 +14,9 @@ pc.data
 Measured rat in vivo partition coefficients and data for predicting them.
 }
 \references{
-Schmitt, W., General approach for the calculation of tissue to
-plasma partition coefficients. Toxicology in Vitro, 2008. 22(2): p. 457-467.
+\insertRef{schmitt2008general}{httk}
 
-Schmitt, W., Corrigendum to:"General approach for the calculation of tissue
-to plasma partition coefficients"[Toxicology in Vitro 22 (2008) 457-467].
-Toxicology in Vitro, 2008. 22(6): p. 1666.
+\insertRef{schmitt2008corrigendum}{httk}
 
 Poulin, P. and F.P. Theil, A priori prediction of tissue: plasma partition
 coefficients of drugs to facilitate the use of physiologically based
@@ -53,9 +50,7 @@ Bjorkman, S., Prediction of the volume of distribution of a drug: which
 tissue-plasma partition coefficients are needed? Journal of pharmacy and
 pharmacology, 2002. 54(9): p. 1237-1245.
 
-Yun, Y. and A. Edginton, Correlation-based prediction of tissue-to-plasma
-partition coefficients using readily available input parameters.
-Xenobiotica, 2013. 43(10): p. 839-852.
+\insertRef{yun2013correlation}{httk}
 
 Uchimura, T., et al., Prediction of human blood-to-plasma drug concentration
 ratio. Biopharmaceutics & drug disposition, 2010. 31(5-6): p. 286-297.
