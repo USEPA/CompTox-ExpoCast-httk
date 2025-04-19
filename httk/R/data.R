@@ -1493,7 +1493,7 @@
 #' @docType data
 #' @format A data.frame containing 13 rows and 15 columns.
 #' @references 
-#' \insertRef{wetmore2012integration}
+#' \insertRef{wetmore2012integration}{httk}
 #' @keywords data
 "Wetmore2012"
 
@@ -1618,7 +1618,7 @@
 #' @format data.frame
 #' @author Robert G. Pearce
 #' @references
-#' \insertRef{pearce2017evaluation}
+#' \insertRef{pearce2017evaluation}{httk}
 #' @seealso \code{\link{predict_partitioning_schmitt}} 
 #' @source Pearce et al. 2017 Regression Models
 #' @keywords data

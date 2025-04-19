@@ -24,7 +24,7 @@ Predictions were made with regression models,
 as reported in Pearce et al. (2017).
 }
 \references{
-\insertRef{pearce2017evaluation}
+\insertRef{pearce2017evaluation}{httk}
 }
 \seealso{
 \code{\link{predict_partitioning_schmitt}}
