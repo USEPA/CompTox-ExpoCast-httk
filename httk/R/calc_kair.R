@@ -69,9 +69,8 @@
 #'
 #' @author John Wambaugh and Matt Linakis
 #'
-#' @references Linakis, Matthew W., et al. "Development and evaluation of a 
-#' high throughput inhalation model for organic chemicals." Journal of exposure 
-#' Science & Environmental Epidemiology 30.5 (2020): 866-877.
+#' @references
+#' \insertRef{linakis2020development}{httk}
 #' 
 #' Clewell III, Harvey J., et al. "Development of a physiologically based 
 #' pharmacokinetic model of isopropanol and its metabolite acetone." 

@@ -104,9 +104,7 @@ tissues may vary.
 
 }
 \references{
-Pearce, Robert G., et al. "Evaluation and calibration of 
-high-throughput predictions of chemical distribution to tissues." Journal of
-pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
+\insertRef{pearce2017evaluation}{httk}
 }
 \seealso{
 \code{\link{predict_partitioning_schmitt}}
