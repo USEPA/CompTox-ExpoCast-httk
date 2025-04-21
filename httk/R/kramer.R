@@ -213,14 +213,12 @@ kramer_eval <- function(chem.cas=NULL,
   
   ##### Calculations for Partition Coefficients  ##### 
   
-  R <- 8.3144621  #Ideal Gas Constant units: J/(mol*K)
-  
   tcdata[, BSA2 := (BSA/1000)*(serum/100)] #calculate serum constituents
   
-  tcdata[, gkaw_n := logHenry - log10(Tref*R)] %>% #Ka (air to water PC), unitless
-    .[,gkbsa_n:= (0.71*gkow+0.42)] %>%    #Ks (bovine serum albumin to water PC), L/kg BSA Endo and Goss 2011
-    .[,gkpl_n:=(0.97*gkow-6.94)] %>%     #Kp (plastic to water PC), m
-    .[,gkcw_n:=(1.25*gkow-3.7)]          #Kc (lipid to water PC), m3/kg cell lipid
+  tcdata[,gkbsa_n:= (0.71*gkow+0.42)] %>%   #Ks (bovine serum albumin to water PC), L/kg BSA Endo and Goss 2011
+    .[,gkpl_n:=(0.97*gkow-6.94)] %>%        #Kp (plastic to water PC), m
+    .[,gkcw_n:=(1.25*gkow-3.7)]             #Kc (lipid to water PC), m3/kg cell lipid
+                                            #Ka (air to water PC), unitless - calculated in p_IVD.R
   
   ### Calculating Ionized Partition Coefficients ###
   # set up scaling factors (used to calculate PCs for the charged portion of the chemical)
@@ -243,6 +241,8 @@ kramer_eval <- function(chem.cas=NULL,
   #need to correct gkaw_n (reference temperature is 25 C)
 
   #Adjust gKaw_n to match system temperature
+  R <- 8.3144621  #Ideal Gas Constant units: J/(mol*K)
+  
   tcdata[,Tsys:=Tsys+273.15] %>%  #convert from Celcius to Kelvin
     .[,Tcor:=((1/Tsys)-(1/Tref))/(2.303*R)] %>% # calculate temperature correction using van't Hoff approach (2.303 is from ln(10))
     .[,duaw:=60000] %>% # internal energy of phase change for air-water (J/mol)
