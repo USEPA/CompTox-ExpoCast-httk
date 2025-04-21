@@ -81,6 +81,19 @@ calc_half_life(
   class.exclude=FALSE,
   suppress.messages=TRUE)
 
+# For a metabolized compound, non-restrictive clearance should be faster:
+h1 <- calc_half_life(
+  chem.name="toluene",
+  model="sumclearances",
+  suppress.messages=TRUE)
+h2 <- calc_half_life(
+  chem.name="toluene",
+  model="sumclearances",
+  restrictive.clearance=FALSE,
+  suppress.messages=TRUE)
+# Check that h2 < h1:
+if (!(h2 < h1)) stop("h2 not less than h1")
+
 # Change species: 
 calc_half_life(
   dtxsid="DTXSID8031865",

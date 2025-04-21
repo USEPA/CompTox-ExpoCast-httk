@@ -21,7 +21,6 @@ Singer et al 2016, DOI: 10.1021/acs.est.5b03332. The original data is
 available on the NORMAN Suspect List Exchange.
 }
 \references{
-Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and
-Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
+\insertRef{wambaugh2019assessing}{httk}
 }
 \keyword{data}

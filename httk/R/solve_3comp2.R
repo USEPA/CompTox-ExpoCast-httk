@@ -161,7 +161,7 @@
 #' @author John Wambaugh and Robert Pearce
 #'
 #' @references 
-#' \insertRef{pearce2017httk}{httk}
+#' \insertRef{wambaugh2025simple}{httk}
 #'
 #' @keywords Solve 3compartment
 #'

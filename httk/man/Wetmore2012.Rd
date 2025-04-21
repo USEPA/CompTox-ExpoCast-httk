@@ -16,11 +16,6 @@ This data set overlaps with Wetmore.data and is used only in Vignette 4 for
 steady state concentration.
 }
 \references{
-Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Sochaski, M.A.,
-Rotroff, D.M., Freeman, K., Clewell, H.J., Dix, D.H., Andersen, M.E., Houck,
-K.A., Allen, B., Judson, R.S., Sing, R., Kavlock, R.J., Richard, A.M., and
-Thomas, R.S., "Integration of Dosimetry, Exposure and High-Throughput
-Screening Data in Chemical Toxicity Assessment," Toxicological Sciences 125
-157-174 (2012)
+\insertRef{wetmore2012integration}{httk}
 }
 \keyword{data}

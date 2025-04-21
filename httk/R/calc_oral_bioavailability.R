@@ -87,9 +87,13 @@
 #'
 #' @references 
 #' \insertRef{darwich2010interplay}{httk}
+#'
 #' \insertRef{yang2007prediction}{httk}
-#' \insertRef{HondaUnpublishedCaco2}{httk}
+#'
+#' \insertRef{honda2025impact}{httk}
+#'
 #' \insertRef{yu1999compartmental}{httk}
+#'
 #' \insertRef{lennernas1997human}{httk}
 #' 
 #' @export calc_fbio.oral
@@ -122,14 +126,15 @@ calc_fbio.oral <- function(parameters = NULL,
     # a list of parameters we will never reach this bit of this function
     # recursively:
     param.args<-purrr::compact(c(list(chem.cas=chem.cas,
-                                                     chem.name=chem.name,
-                                                     dtxsid=dtxsid,
-                                                     suppress.messages =
-                                                       suppress.messages
-                                                     ),
-                                                list(...)
-                                                )
-                                              )
+                                      chem.name=chem.name,
+                                      dtxsid=dtxsid,
+                                      species=species,
+                                      suppress.messages =
+                                      suppress.messages
+                                      ),
+                                 list(...)
+                                 )
+                                )
     param.args <- param.args[unique(names(param.args))]
     parameters <- do.call(parameterize_steadystate, 
                           args = param.args
@@ -214,7 +219,7 @@ calc_fbio.oral <- function(parameters = NULL,
       fhep.oral <- parameters[,"hepatic.bioavailability",with=TRUE]
     }
   } else {
-    # otherwise assume parameeters is a list:
+    # otherwise assume parameters is a list:
     if (!is.null(parameters[['hepatic.bioavailability']]))
     {
       fhep.oral <- parameters[['hepatic.bioavailability']]
@@ -226,6 +231,7 @@ calc_fbio.oral <- function(parameters = NULL,
                                   chem.cas = chem.cas,
                                   chem.name = chem.name,
                                   dtxsid = dtxsid,
+                                  species=species,
                                   suppress.messages = suppress.messages),
                              list(...)[c("species",
                                                  "restrictive.clearance")]
@@ -391,6 +397,7 @@ calc_peff <- function(parameters = NULL,
                                   chem.cas=chem.cas,
                                   chem.name=chem.name,
                                   dtxsid=dtxsid,
+                                  species=species,
                                   suppress.messages=suppress.messages),
                                   parameterize.args.list)))
     }
@@ -459,6 +466,7 @@ calc_kgutabs<- function(parameters = NULL,
                                 chem.cas=chem.cas,
                                 chem.name=chem.name,
                                 dtxsid=dtxsid,
+                                species=species,
                                 suppress.messages=suppress.messages),
                                 parameterize.args.list)))
   }
@@ -546,6 +554,7 @@ calc_fgut.oral <- function(parameters = NULL,
                                 chem.cas=chem.cas,
                                 chem.name=chem.name,
                                 dtxsid=dtxsid,
+                                species=species,
                                 suppress.messages=suppress.messages),
                                 parameterize.args.list)))
   }

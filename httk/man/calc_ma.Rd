@@ -43,13 +43,9 @@ Yun and Edgington (2013) was identified as the best:
 \ifelse{html}{\out{MA = 10^(1.294 + 0.304 * log<sub>10</sub>(P<sub>ow</sub>)}}{\deqn{MA = 10^(1.294 + 0.304 * log_{10}(P_{ow}))}}
 }
 \references{
-Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-predictions of chemical distribution to tissues." Journal of pharmacokinetics 
-and pharmacodynamics 44.6 (2017): 549-565.
+\insertRef{pearce2017evaluation}{httk}
 
-Yun, Y. E., and A. N. Edginton. "Correlation-based prediction of 
-tissue-to-plasma partition coefficients using readily available input 
-parameters." Xenobiotica 43.10 (2013): 839-852.
+\insertRef{yun2013correlation}{httk}
 }
 \author{
 John Wambaugh
