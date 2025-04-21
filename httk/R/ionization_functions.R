@@ -501,9 +501,9 @@ calc_ionization <- function(
     if (!is.na(charge_matrix[this.row,"Type"]))
     {
       if (charge_matrix[this.row, "Type"] == "Donate")
-         charge_matrix[this.row, "Ratio"] <- pH - charge_matrix[this.row,"pKa"]
+         charge_matrix[this.row, "Ratio"] <- this.pH - charge_matrix[this.row,"pKa"]
       if (charge_matrix[this.row, "Type"] == "Accept")
-         charge_matrix[this.row, "Ratio"] <- pH - charge_matrix[this.row,"pKa"]
+         charge_matrix[this.row, "Ratio"] <- this.pH - charge_matrix[this.row,"pKa"]
  # Folllowing is for pKb's, which we don't have:
  #        charge_matrix[this.row, "Ratio"] <- 14 - pH - charge_matrix[this.row,"pKa"]
     }          
