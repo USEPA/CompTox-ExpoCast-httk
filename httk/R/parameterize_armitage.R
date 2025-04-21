@@ -64,7 +64,6 @@ parameterize_armitage <- function(tcdata = NA,                   #Data.table wit
   
   
   # Convert from chem.physical_and_invitro.data units to Armitage model units:
-  p_Armitage_output[, "gkaw_n" := logHenry - log10(298.15*8.2057338e-5)] # log10 atm-m3/mol to (mol/m3)/(mol/m3) (unitless)
   p_Armitage_output[, "gswat_n" := logWSol + log10(MW*1000)] # log10 mol/L to log10 mg/L
   
   return(p_Armitage_output)
