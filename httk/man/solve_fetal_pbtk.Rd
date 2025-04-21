@@ -12,7 +12,7 @@ solve_fetal_pbtk(
   parameters = NULL,
   days = NULL,
   species = "human",
-  tsteps = 4,
+  tsteps = 1,
   dose = NULL,
   dosing.matrix = NULL,
   daily.dose = NULL,
@@ -33,8 +33,8 @@ solve_fetal_pbtk(
   minimum.Funbound.plasma = 1e-04,
   monitor.vars = NULL,
   Caco2.options = list(),
-  atol = 1e-07,
-  rtol = 1e-07,
+  atol = 1e-06,
+  rtol = 1e-06,
   ...
 )
 }

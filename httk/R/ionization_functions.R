@@ -325,13 +325,17 @@ calc_ionization <- function(
   if (all(c("pKa_Donor","pKa_Accept") %in% names(parameters)))
   {
     pKa_Donor <- parameters$pKa_Donor
-    pKa_Accept <- parameters$pKa_Accept
-  } else if(!is.null(pKa_Donor) | !is.null(pKa_Accept))
+    pKa_Accept <- parameters$pKa_Accept  
+  } else if (!is.null(pKa_Donor) | !is.null(pKa_Accept))
   {
-# If one of pKa_Donor/Accept is specified but not the other, we assume the other
-# is not present:
+    # If one equilibrium is givenm, assume the other isn't present:
     if (is.null(pKa_Donor)) pKa_Donor <- " "
     if (is.null(pKa_Accept)) pKa_Accept <- " "
+  # Assume missing values are not ionized:
+  } else if (any(is.na(pKa_Donor)) | any(is.na(pKa_Accept)))
+  {
+    pKa_Donor[is.na(pKa_Donor)] <- " "
+    pKa_Accept[is.na(pKa_Accept)] <- " "
   } else {
     stop(
 "Either pKa_Donor and pKa_Accept must be in input parameters or chemical identifier must be supplied.")
