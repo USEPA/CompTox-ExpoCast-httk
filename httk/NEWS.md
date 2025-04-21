@@ -1,10 +1,13 @@
-# httk 2.6.1 (2025-05-01)
+# httk 2.6.1 (2025-04-21)
 
 ## Bug fixes
 * Blank values for human Clint in [Woods et al. 2017](https://doi.org/10.1124/dmd.117.077040) were incorrectly being recorded as 0 -- these have been fixed
 
 ## Enhancements
 * Added rat and human fup data from [Lynn et al. 2025](https://doi.org/10.1016/j.tiv.2025.106036) 
+* pKa values are now predicted by ChemAxon
+* Refactored Henderson-Hasselbach calculations within calc_ionization to be clearer. Expanded documentation for 'calc_ionization'. No known change to previously calculated values by that function. Introduced new argument return_charge_matrix which gives a table listing each ionization state to explain how the values in 'calc_ionization' are derived.
+* When models (either OPERA or ChemAxon) predict that a chemical does not ionize, that prediction is now stored as a blank space (that is, " ") rather than an "NA". "NA" is intended to indicate that no prediction was available. This change should not impact the function of the code or any predictions, but hopefully clarifies the chemical descriptors.
 
 # httk 2.6.0 (2025-04-18)
 This release accompanies the publication of Truong et al. (2025) manuscript "Interpretation of thyroid-relevant bioactivity data for comparison to in vivo exposures: A prioritization approach for putative chemical inhibitors of in vitro deiodinase activity" and includes a new model describing human gestation in the first trimester (model "1tri_pbtk") which links to model "fetal_pbtk" and is accessed through new function `solve_full_pregnancy`.
@@ -179,6 +182,14 @@ permeability for ~10,000 chemicals -- QSPR is optimized to detect low
 permeability chemicals and therefore predicts only three values 
 (low/medium/high permeability)
 * Added new functions `calc_fbio.oral`, `calc_fabs.oral`, and `calc_fgut.oral` 
+for calculating systemic bioavailability as $Fbio = Fabs \times Fgut \times Fhep$ 
+where first-pass hepatic metabolism was already available from 
+`calc_hep_bioavailability`.
+* Changed the name of the variable describing fraction absorbed from the gut
+prior to first-pass hepatic metabolism to $Fabsgut$ to reflect that
+$Fabs$ and $Fgut$ are now modeled separately
+(that is, ***Fabsgut = Fabs \times Fgut***).
+* Integrated $Fabs$ and $Fgut$ into oral exposure for all TK models and 
 for calculating systemic bioavailability as ***Fbio = Fabs * Fgut * Fhep*** 
 where first-pass hepatic metabolism was already available from 
 `calc_hep_bioavailability`.

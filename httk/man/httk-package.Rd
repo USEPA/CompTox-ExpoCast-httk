@@ -48,6 +48,7 @@ Other contributors:
   \item James Sluka \email{jsluka@indiana.edu} (\href{https://orcid.org/0000-0002-5901-1404}{ORCID}) [contributor]
   \item Noelle Sinski \email{Noelle.Sinski@icf.com} [contributor]
   \item Nisha Sipes \email{sipes.nisha@epa.gov} (\href{https://orcid.org/0000-0003-4203-6426}{ORCID}) [contributor]
+  \item Caroline Stevens \email{stevens.caroline@epa.gov} (\href{https://orcid.org/0000-0001-7780-2691}{ORCID}) [contributor]
   \item Barbara Wetmore \email{wetmore.barbara@epa.gov} (\href{https://orcid.org/0000-0002-6878-5348}{ORCID}) [contributor]
   \item Lily Whipple [contributor]
   \item Woodrow Setzer (\href{https://orcid.org/0000-0002-6709-9186}{ORCID}) [contributor]

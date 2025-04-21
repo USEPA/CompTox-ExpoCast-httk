@@ -1,6 +1,6 @@
 Package: httk
-Version: 2.6.0
-Date: 2025-04-17
+Version: 2.6.1
+Date: 2025-4-21
 Title: High-Throughput Toxicokinetics
 Description: Pre-made models that can be rapidly tailored to various chemicals
              and species using chemical-specific in vitro data and physiological 
@@ -82,6 +82,8 @@ Authors@R: c(
              role = c("ctb")), 
            person("Nisha", "Sipes", email = "sipes.nisha@epa.gov", 
              role = c("ctb"), comment = c(ORCID = "0000-0003-4203-6426")), 
+           person("Caroline", "Stevens", email = "stevens.caroline@epa.gov", 
+             role = c("ctb"), comment = c(ORCID = "0000-0001-7780-2691")), 
            person("Barbara", "Wetmore", email = "wetmore.barbara@epa.gov", 
              role = c("ctb"), comment = c(ORCID = "0000-0002-6878-5348")),
            person("Lily", "Whipple",role = c("ctb")),
@@ -103,8 +105,7 @@ LazyDataCompression: xz
 Encoding: UTF-8
 VignetteBuilder: knitr
 RoxygenNote: 7.3.2
-URL:
-        https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research
+URL: https://www.epa.gov/chemical-research/rapid-chemical-exposure-and-dose-research
 BugReports: https://github.com/USEPA/CompTox-ExpoCast-httk/issues
 NeedsCompilation: yes
 Packaged: 2025-01-13 22:14:40 UTC; jwambaug
@@ -132,6 +133,7 @@ Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>),
   James Sluka [ctb] (<https://orcid.org/0000-0002-5901-1404>),
   Noelle Sinski [ctb],
   Nisha Sipes [ctb] (<https://orcid.org/0000-0003-4203-6426>),
+  Carine Stevens [ctb] (<https://orcid.org/0000-0001-7780-2691>),
   Barbara Wetmore [ctb] (<https://orcid.org/0000-0002-6878-5348>),
   Lily Whipple [ctb],
   Woodrow Setzer [ctb] (<https://orcid.org/0000-0002-6709-9186>)

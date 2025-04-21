@@ -33,8 +33,8 @@ solve_fetal_pbtk(
   minimum.Funbound.plasma = 1e-04,
   monitor.vars = NULL,
   Caco2.options = list(),
-  atol = 1e-08,
-  rtol = 1e-08,
+  atol = 1e-07,
+  rtol = 1e-07,
   ...
 )
 }

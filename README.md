@@ -181,7 +181,7 @@ Dustin Kapraun [kapraun.dustin@epa.gov],
 Kimberly Truong [truong.kimberly@epa.gov], and
 Colin Thomson [thomson.colin@epa.gov]
 
-### Bug-Fixes, Vignette edits, and Parameter Values
+### Bug-Fixes Vignette edits, and Parameter Values
 Todor Antonijevic [tantonijevic@toxstrategies.com], 
 Miyuki Breen, 
 Shannon Bell [Shannon.bell@inotivco.com], 
@@ -196,6 +196,7 @@ Celia Schacht [Schacht.Celia@epa.gov],
 Noelle Sinski [Noelle.Sinski@icf.com],
 Nisha Sipes [sipes.nisha@epa.gov],
 James Sluka [jsluka@indiana.edu],  
+Caroline Stevens [Stevens.Caroline@epa.gov]
 Barbara Wetmore [wetmore.barbara@epa.gov],
 Lily Whipple
 
