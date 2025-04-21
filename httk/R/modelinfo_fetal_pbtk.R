@@ -766,3 +766,6 @@ model.list[[THIS.MODEL]]$log.henry.threshold <- c(-4.5)
 
 # Filter out compounds belonging to select chemical classes
 model.list[[THIS.MODEL]]$chem.class.filt <- c("PFAS")
+
+# Different systems of equations are better suited to different ODE solvers:
+model.list[[THIS.MODEL]]$default.solver.method <- "lsode"
