@@ -71,26 +71,11 @@ get_lit_oral_equiv(0.1,chem.cas="34256-82-1",which.quantile=c(0.05,0.5,0.95))
 
 }
 \references{
-Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Sochaski, M.A.,
-Rotroff, D.M., Freeman, K., Clewell, H.J., Dix, D.H., Andersen, M.E., Houck,
-K.A., Allen, B., Judson, R.S., Sing, R., Kavlock, R.J., Richard, A.M., and
-Thomas, R.S., "Integration of Dosimetry, Exposure and High-Throughput
-Screening Data in Chemical Toxicity Assessment," Toxicological Sciences 125
-157-174 (2012)
+\insertRef{wetmore2012integration}{httk}
 
-Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Li, L., Clewell, H.J. III,
-Judson, R.S., Freeman, K., Bao, W, Sochaski, M.A., Chu T.-M., Black, M.B.,
-Healy, E, Allen, B., Andersen M.E., Wolfinger, R.D., and Thomas R.S., "The
-Relative Impact of Incorporating Pharmacokinetics on Predicting in vivo
-Hazard and Mode-of-Action from High-Throughput in vitro Toxicity Assays"
-Toxicological Sciences, 132:327-346 (2013).
+\insertRef{wetmore2013relative}{httk}
 
-Wetmore, B. A., Wambaugh, J. F., Allen, B., Ferguson, S. S., Sochaski, M.
-A., Setzer, R. W., Houck, K. A., Strope, C. L., Cantwell, K., Judson, R. S.,
-LeCluyse, E., Clewell, H.J. III, Thomas, R.S., and Andersen, M. E. (2015).
-"Incorporating High-Throughput Exposure Predictions with Dosimetry-Adjusted
-In Vitro Bioactivity to Inform Chemical Toxicity Testing" Toxicological
-Sciences, kfv171.
+\insertRef{wetmore2015incorporating}{httk}
 }
 \author{
 John Wambaugh
