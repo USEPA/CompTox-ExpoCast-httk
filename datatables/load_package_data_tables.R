@@ -487,6 +487,8 @@ Obach2018.table[Obach2018.table[,"CAS #"]=="4731-52-6", "CAS #"] <-
   "444731-52-6"
 Obach2018.table[Obach2018.table[,"CAS #"]=="66981-73-5", "CAS #"] <- 
   "72797-41-2"
+Obach2018.table[Obach2018.table[,"CAS #"]=="51931-66-9", "CAS #"] <- 
+  "32447-90-8"
 
 # Get rid of non-numeric fu values:
 Obach2018.table$fu <- signif(as.numeric(Obach2018.table[,
@@ -1678,8 +1680,8 @@ chem.physical_and_invitro.data <- check_duplicates(
 #
 # ADD NEW DATA HERE:
 
-# Add new Pab measurements from Honda2023:
-cat("Loading HTTK data from Honda 2024\n")
+# Add new Pab measurements from Honda2025:
+cat("Loading HTTK data from Honda 2025\n")
 
 caco2.dt <- read.csv("CACO-2/TableAllCaco2PabData_10e-6cmps.txt",sep="\t")
 caco2.dt <- subset(caco2.dt,regexpr("DTXSID",dtxsid)!=-1)
@@ -1747,12 +1749,13 @@ chem.physical_and_invitro.data <- add_chemtable(epa.caco2,
                                     DTXSID='dtxsid',
                                     Caco2.Pab="PabInterval"),
                                   overwrite=TRUE,
-                                  reference = 'HondaUnpublished',
+                                  reference = 'Honda 2025',
                                   species="Human") 
 
 #
 # Add literature Pab measurements compiled by Honda2023:
 #
+cat("Loading literature HTTK data from Honda 2025...\n")
 lit.caco2.dt <- subset(caco2.unique, Data.Origin!="EPA")
 
 # Need a column of all numeric Pab's (no NA's) for calculations:
@@ -1844,6 +1847,7 @@ load("CACO-2/all_gut_data.RData")
 #
 # Kim 2014 in vivo data:
 #
+cat("Loading HTTK data from Kim 2014...\n")
 chem.physical_and_invitro.data <- add_chemtable(
   subset(gut.data, !is.na(kim_fbioh)),
   current.table = chem.physical_and_invitro.data,
@@ -1858,6 +1862,7 @@ chem.physical_and_invitro.data <- add_chemtable(
 #
 # Varma 2010 in vivo data:
 #
+cat("Loading HTTK data from Varma 2010...\n")
 chem.physical_and_invitro.data <- add_chemtable(
   subset(gut.data, !is.na(vo_F)),
   current.table = chem.physical_and_invitro.data,
@@ -1905,6 +1910,7 @@ chem.physical_and_invitro.data <- add_chemtable(
 #
 # Wambaugh 2019 in vivo data:
 #
+cat("Loading HTTK data from Wambaugh 2019...\n")
 chem.physical_and_invitro.data <- add_chemtable(
   subset(gut.data, !is.na(pk_fbior)),
   current.table = chem.physical_and_invitro.data,
@@ -1919,6 +1925,7 @@ chem.physical_and_invitro.data <- add_chemtable(
 #
 # Musther 2014 in vivo data:
 #
+cat("Loading HTTK data from Musther 2014...\n")
 chem.physical_and_invitro.data <- add_chemtable(
   subset(gut.data, !is.na(musther_Fbio_human)),
   current.table = chem.physical_and_invitro.data,
@@ -1977,6 +1984,7 @@ chem.physical_and_invitro.data <- add_chemtable(
 
  
 ## Load in Dawson 2021 Predictions ##
+cat("Loading HTTK data from Dawson2021...\n")
 dawson.clint.1 <- 
   read.csv("Dawson2021/Novel_clint_predictions_with_AD_Main29_descs_from_Opera2.9.csv")
 dawson.clint.2 <- 
@@ -2005,6 +2013,39 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dawson.clint.2,CASRN!="")
                                  ), species="Human",
                                  overwrite=FALSE,
                                  reference="Dawson 2023")                                   
+
+## Load Lynn 2025 fup data
+cat("Loading HTTK data from Lynn 2025...\n")
+lynn2025 <- as.data.frame(read_excel("Lynn-2025-ThreeSpeciesFup.xlsx",
+                       sheet="Table S11",
+                       skip=1))
+                       
+chem.physical_and_invitro.data <- add_chemtable(subset(lynn2025,
+                                                       Species %in%
+                                                       c("Human","Rat")),
+                current.table = chem.physical_and_invitro.data, 
+                data.list = list(Compound='Chemical',
+                                 CAS = 'CAS#',
+                                 DTXSID='DTSXID',
+                                 Funbound.plasma = 'fup mean...15',
+                                 Species="Species"
+                                 ),
+                                 overwrite=FALSE,
+                                 reference="Lynn 2025")       
+                                                             
+#
+# Clean up CASRN
+#
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$CAS=="61337-67-5",
+                               "CAS"] <- "85650-52-8"
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$CAS=="130636-43-0",
+                               "CAS"] <- "130656-51-8"
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$CAS=="78473-71-9",
+                               "CAS"] <- "77756-20-8"
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$CAS=="15302-18-8",
+                               "CAS"] <- "22148-75-0"
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$CAS=="NOCAS_47129",
+                               "CAS"] <- "2349-14-6"
 #
 #
 #
