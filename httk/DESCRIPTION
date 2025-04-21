@@ -1,6 +1,6 @@
 Package: httk
-Version: 2.5.1
-Date: 2025-2-14
+Version: 2.6.0
+Date: 2025-04-17
 Title: High-Throughput Toxicokinetics
 Description: Pre-made models that can be rapidly tailored to various chemicals
              and species using chemical-specific in vitro data and physiological 
@@ -51,8 +51,10 @@ Authors@R: c(
              role = c("aut"), comment = c(ORCID = "0000-0003-0526-2395")), 
            person("Dustin", "Kapraun", email = "kapraun.dustin@epa.gov",
              role = c("aut"), comment = c(ORCID= "0000-0001-5570-6383")),
-           person("Nathan","Pollesch",email = "pollesch.nathan@epa.gov",
-             role = c("ctb"),comment = c(ORCID = "0000-0001-8992-9294")),
+           person("Kimberly", "Truong", email = "truong.kimberly@epa.gov", 
+             role = c("aut"), comment = c(ORCID = "0000-0003-1716-1006")), 
+           person("Colin", "Thomson", email = "thomson.colin@epa.gov", 
+             role = c("aut"), comment = c(ORCID = "0000-0001-5303-6646")), 
            person("Miyuki", "Breen", email = "breen.miyuki@epa.gov",
              role = c("ctb"), comment = c(ORCID= "0000-0001-8511-4653")),
            person("Shannon", "Bell", email="Shannon.bell@inotivco.com",
@@ -64,8 +66,12 @@ Authors@R: c(
            person("Jimena", "Davis", role = c("ctb")), 
            person("Elaina", "Kenyon", email="kenyon.elaina@epa.gov",
              role = c("ctb"), comment = c(ORCID = "0000-0001-8781-2391")),
+           person("Gilberto", "Padilla Mercado", email="PadillaMercado.Gilberto@epa.gov",
+             role = c("ctb"), comment = c(ORCID = "0000-0001-5423-1646")),
            person("Katie", "Paul Friedman", email="Paul-Friedman.Katie@epa.gov",
              role = c("ctb"), comment = c(ORCID = "0000-0002-2710-1691")),
+           person("Nathan","Pollesch",email = "pollesch.nathan@epa.gov",
+             role = c("ctb"),comment = c(ORCID = "0000-0001-8992-9294")),
            person("Celia", "Schacht", email="Schacht.Celia@epa.gov",
              role = c("ctb"), comment = c(ORCID = "0000-0002-8131-513X")),
            person("Meredith", "Scherer", email="Scherer.Meredith@epa.gov",
@@ -84,11 +90,12 @@ Authors@R: c(
            )
 Depends: R (>= 2.10)
 Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats,
-        graphics, utils, magrittr, purrr, methods, Rdpack, ggplot2
+        graphics, utils, magrittr, purrr, methods, Rdpack (>= 2.3), ggplot2,
+        dplyr
 RdMacros: Rdpack
 Suggests: knitr, rmarkdown, gplots, scales, EnvStats, MASS,
         RColorBrewer, stringr, reshape, viridis, gmodels, colorspace,
-        cowplot, ggrepel, dplyr, forcats, smatr, gridExtra, readxl, ks,
+        cowplot, ggrepel, forcats, smatr, gridExtra, readxl, ks,
         testthat
 License: GPL-3
 LazyData: true
@@ -109,14 +116,17 @@ Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>),
   Mark Sfeir [aut],
   Matt Linakis [aut] (<https://orcid.org/0000-0003-0526-2395>),
   Dustin Kapraun [aut] (<https://orcid.org/0000-0001-5570-6383>),
-  Nathan Pollesch [ctb] (<https://orcid.org/0000-0001-8992-9294>),
+  Kimberly Truong [aut] (<https://orcid.org/0000-0003-1716-1006>),
+  Colin Thomson [aut] (<https://orcid.org/0000-0001-5303-6646>),
   Miyuki Breen [ctb] (<https://orcid.org/0000-0001-8511-4653>),
   Shannon Bell [ctb] (<https://orcid.org/0000-0002-5754-6085>),
   Xiaoqing Chang [ctb] (<https://orcid.org/0000-0003-0752-1848>),
   Todor Antonijevic [ctb] (<https://orcid.org/0000-0002-0248-8412>),
   Jimena Davis [ctb],
   Elaina Kenyon [ctb] (<https://orcid.org/0000-0001-8781-2391>),
+  Gilberto Padilla Mercado [ctb] (<https://orcid.org/0000-0001-5423-1646>),
   Katie Paul Friedman [ctb] (<https://orcid.org/0000-0002-2710-1691>),
+  Nathan Pollesch [ctb] (<https://orcid.org/0000-0001-8992-9294>),
   Celia Schacht [ctb] (<https://orcid.org/0000-0002-8131-513X>),
   Meredith Scherer [ctb] (<https://orcid.org/0000-0002-9785-7363>),
   James Sluka [ctb] (<https://orcid.org/0000-0002-5901-1404>),

@@ -190,6 +190,7 @@
 #' @examples
 #' 
 #'  parameters1 <- parameterize_pbtk(chem.cas='80-05-7')
+#' \donttest{
 #' 
 #'  parameters2 <- parameterize_pbtk(chem.name='Bisphenol-A',species='Rat')
 #' 
@@ -206,6 +207,7 @@
 #' # that  Diquat dibromide monohydrate is not too volatile:
 #' parameters3 <- parameterize_pbtk(chem.cas = "6385-62-2",
 #'                                  physchem.exclude = FALSE) 
+#' }
 #' 
 #' @export parameterize_pbtk
 parameterize_pbtk <- function(

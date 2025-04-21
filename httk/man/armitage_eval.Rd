@@ -268,8 +268,7 @@ print(out)
 
 }
 \references{
-Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 
-2014, 48, 9770-9779. https://doi.org/10.1021/es501955g
+\insertRef{armitage2014application}{httk}
 
 \insertRef{honda2019using}{httk}
 }

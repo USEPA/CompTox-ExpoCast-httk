@@ -1,11 +1,11 @@
-/* fetal/model_fetal_pbtk-raw.c for R deSolve package
+/* fetal/fetal_pbtk_vols_out_v2-raw.c for R deSolve package
    ___________________________________________________
 
-   Model File:  fetal/model_fetal_pbtk.model
+   Model File:  fetal/fetal_pbtk_vols_out_v2.model
 
-   Date:  Fri Jul 21 08:48:27 2023
+   Date:  Thu Feb 29 09:39:33 2024
 
-   Created by:  "C:/Users/sdavid01/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/Git/httk-dev/models/mod.exe v6.1.0"
+   Created by:  "C:/Users/ktruong/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/httk-dev/models/mod.exe v6.1.0"
     -- a model preprocessor by Don Maszle
    ___________________________________________________
 
@@ -39,7 +39,7 @@
      Afkidney = 0.0,
      Afbrain = 0.0,
 
-   27 Outputs:
+   44 Outputs:
     "Cgut",
     "Cliver",
     "Cven",
@@ -65,8 +65,25 @@
     "Afplasma",
     "Cfplasma",
     "Rfblood2plasma",
-    "Qcardiac",
-    "Qthyroid",
+    "fBW",
+    "Vamnf",
+    "Vplacenta",
+    "Vfart",
+    "Vfven",
+    "Vfkidney",
+    "Vfthyroid",
+    "Vfliver",
+    "Vfbrain",
+    "Vfgut",
+    "Vflung",
+    "Vfrest",
+    "fhematocrit",
+    "Vven",
+    "Vart",
+    "Vadipose",
+    "Vrest",
+    "Vffmx",
+    "Vallx",
 
    0 Inputs:
 
@@ -264,8 +281,25 @@
 #define ID_Afplasma 0x00016
 #define ID_Cfplasma 0x00017
 #define ID_Rfblood2plasma 0x00018
-#define ID_Qcardiac 0x00019
-#define ID_Qthyroid 0x0001a
+#define ID_fBW 0x00019
+#define ID_Vamnf 0x0001a
+#define ID_Vplacenta 0x0001b
+#define ID_Vfart 0x0001c
+#define ID_Vfven 0x0001d
+#define ID_Vfkidney 0x0001e
+#define ID_Vfthyroid 0x0001f
+#define ID_Vfliver 0x00020
+#define ID_Vfbrain 0x00021
+#define ID_Vfgut 0x00022
+#define ID_Vflung 0x00023
+#define ID_Vfrest 0x00024
+#define ID_fhematocrit 0x00025
+#define ID_Vven 0x00026
+#define ID_Vart 0x00027
+#define ID_Vadipose 0x00028
+#define ID_Vrest 0x00029
+#define ID_Vffmx 0x0002a
+#define ID_Vallx 0x0002b
 
 /* Parameters */
 static double parms[134];
@@ -404,7 +438,7 @@ static double parms[134];
 #define Qgut_percent parms[131]
 #define Qfliver_percent parms[132]
 #define Qfthyroid_percent parms[133]
-
+// 
 // /* Forcing (Input) functions */
 // static double forc[0];
 // 
@@ -443,13 +477,13 @@ void initmodfetal_pbtk (void (* odeparms)(int *, double *))
   odeparms(&N, parms);
 }
 
-// void initforcfetal_pbtk (void (* odeforcs)(int *, double *))
+// void initforc (void (* odeforcs)(int *, double *))
 // {
 //   int N=0;
 //   odeforcs(&N, forc);
 // }
-
-
+// 
+// 
 // /* Calling R code will ensure that input y has same
 //    dimension as yini */
 // void initState (double *y)
@@ -498,30 +532,13 @@ void derivsfetal_pbtk (int *neq, double *pdTime, double *y, double *ydot, double
   /* local */ double Wfgut;
   /* local */ double Wflung;
   /* local */ double hematocrit;
-  /* local */ double fhematocrit;
-  /* local */ double fBW;
-  /* local */ double Vplacenta;
-  /* local */ double Vamnf;
   /* local */ double Vplasma;
   /* local */ double Vrbcs;
-  /* local */ double Vven;
-  /* local */ double Vart;
-  /* local */ double Vadipose;
-  /* local */ double Vffmx;
-  /* local */ double Vallx;
-  /* local */ double Vrest;
-  /* local */ double Vfart;
-  /* local */ double Vfven;
-  /* local */ double Vfkidney;
-  /* local */ double Vfthyroid;
-  /* local */ double Vfliver;
-  /* local */ double Vfbrain;
-  /* local */ double Vfgut;
-  /* local */ double Vflung;
-  /* local */ double Vfrest;
+  /* local */ double Qcardiac;
   /* local */ double Qgut;
   /* local */ double Qkidney;
   /* local */ double Qliver;
+  /* local */ double Qthyroid;
   /* local */ double Qplacenta;
   /* local */ double Qadipose;
   /* local */ double Qrest;
@@ -564,65 +581,65 @@ void derivsfetal_pbtk (int *neq, double *pdTime, double *y, double *ydot, double
 
   yout[ID_Rblood2plasma] = 1 - hematocrit + hematocrit * Krbc2pu * Fraction_unbound_plasma ;
 
-  fhematocrit = ( fhematocrit_cubic_theta1 * tw + fhematocrit_cubic_theta2 * pow ( tw , 2 ) + fhematocrit_cubic_theta3 * pow ( tw , 3 ) ) / 100 ;
+  yout[ID_fhematocrit] = ( fhematocrit_cubic_theta1 * tw + fhematocrit_cubic_theta2 * pow ( tw , 2 ) + fhematocrit_cubic_theta3 * pow ( tw , 3 ) ) / 100 ;
 
-  yout[ID_Rfblood2plasma] = 1 - fhematocrit + fhematocrit * Kfrbc2pu * Fraction_unbound_plasma_fetus ;
+  yout[ID_Rfblood2plasma] = 1 - yout[ID_fhematocrit] + yout[ID_fhematocrit] * Kfrbc2pu * Fraction_unbound_plasma_fetus ;
 
-  fBW = 0.001 * fBW_gompertz_theta0 * exp ( fBW_gompertz_theta1 / fBW_gompertz_theta2 * ( 1 - exp ( - fBW_gompertz_theta2 * tw ) ) ) ;
+  yout[ID_fBW] = 0.001 * fBW_gompertz_theta0 * exp ( fBW_gompertz_theta1 / fBW_gompertz_theta2 * ( 1 - exp ( - fBW_gompertz_theta2 * tw ) ) ) ;
 
-  Vplacenta = 0.001 * ( Vplacenta_cubic_theta1 * tw + Vplacenta_cubic_theta2 * pow ( tw , 2 ) + Vplacenta_cubic_theta3 * pow ( tw , 3 ) ) ;
+  yout[ID_Vplacenta] = 0.001 * ( Vplacenta_cubic_theta1 * tw + Vplacenta_cubic_theta2 * pow ( tw , 2 ) + Vplacenta_cubic_theta3 * pow ( tw , 3 ) ) ;
 
-  Vamnf = 0.001 * Vamnf_logistic_theta0 / ( 1 + exp ( - Vamnf_logistic_theta1 * ( tw - Vamnf_logistic_theta2 ) ) ) ;
+  yout[ID_Vamnf] = 0.001 * Vamnf_logistic_theta0 / ( 1 + exp ( - Vamnf_logistic_theta1 * ( tw - Vamnf_logistic_theta2 ) ) ) ;
 
   Vplasma = Vplasma_mod_logistic_theta0 / ( 1 + exp ( - Vplasma_mod_logistic_theta1 * ( tw - Vplasma_mod_logistic_theta2 ) ) ) + Vplasma_mod_logistic_theta3 ;
 
   Vrbcs = hematocrit / ( 1 - hematocrit ) * Vplasma ;
 
-  Vven = venous_blood_fraction * ( Vrbcs + Vplasma ) ;
+  yout[ID_Vven] = venous_blood_fraction * ( Vrbcs + Vplasma ) ;
 
-  Vart = arterial_blood_fraction * ( Vrbcs + Vplasma ) ;
+  yout[ID_Vart] = arterial_blood_fraction * ( Vrbcs + Vplasma ) ;
 
-  Vadipose = 1 / adipose_density * Wadipose ;
+  yout[ID_Vadipose] = 1 / adipose_density * Wadipose ;
 
-  Vffmx = 1 / ffmx_density * ( BW - Wadipose - ( fBW + placenta_density * Vplacenta + amnf_density * Vamnf ) ) ;
+  yout[ID_Vffmx] = 1 / ffmx_density * ( BW - Wadipose - ( yout[ID_fBW] + placenta_density * yout[ID_Vplacenta] + amnf_density * yout[ID_Vamnf] ) ) ;
 
-  Vallx = Vart + Vven + Vthyroid + Vkidney + Vgut + Vliver + Vlung ;
+  yout[ID_Vallx] = yout[ID_Vart] + yout[ID_Vven] + Vthyroid + Vkidney + Vgut + Vliver + Vlung ;
 
-  Vrest = Vffmx - Vallx ;
+  yout[ID_Vrest] = yout[ID_Vffmx] - yout[ID_Vallx] ;
 
-  Vfart = 0.001 * arterial_blood_fraction * fblood_weight_ratio * fBW ;
+  yout[ID_Vfart] = 0.001 * arterial_blood_fraction * fblood_weight_ratio * yout[ID_fBW] ;
 
-  Vfven = 0.001 * venous_blood_fraction * fblood_weight_ratio * fBW ;
+  yout[ID_Vfven] = 0.001 * venous_blood_fraction * fblood_weight_ratio * yout[ID_fBW] ;
 
-  Vfkidney = 1 / kidney_density * Wfkidney ;
+  yout[ID_Vfkidney] = 1 / kidney_density * Wfkidney ;
 
-  Vfthyroid = 1 / thyroid_density * Wfthyroid ;
+  yout[ID_Vfthyroid] = 1 / thyroid_density * Wfthyroid ;
 
-  Vfliver = 1 / liver_density * Wfliver ;
+  yout[ID_Vfliver] = 1 / liver_density * Wfliver ;
 
-  Vfbrain = 1 / brain_density * Wfbrain ;
+  yout[ID_Vfbrain] = 1 / brain_density * Wfbrain ;
 
-  Vfgut = 1 / gut_density * Wfgut ;
+  yout[ID_Vfgut] = 1 / gut_density * Wfgut ;
 
-  Vflung = 1 / lung_density * Wflung ;
+  yout[ID_Vflung] = 1 / lung_density * Wflung ;
 
-  Vfrest = fBW - ( Vfart + Vfven + Vfbrain + Vfkidney + Vfthyroid + Vfliver + Vfgut + Vflung ) ;
+  yout[ID_Vfrest] = yout[ID_fBW] - ( yout[ID_Vfart] + yout[ID_Vfven] + yout[ID_Vfbrain] + yout[ID_Vfkidney] + yout[ID_Vfthyroid] + yout[ID_Vfliver] + yout[ID_Vfgut] + yout[ID_Vflung] ) ;
 
-  yout[ID_Qcardiac] = 24 * ( Qcardiac_cubic_theta0 + Qcardiac_cubic_theta1 * tw + Qcardiac_cubic_theta2 * pow ( tw , 2 ) + Qcardiac_cubic_theta3 * pow ( tw , 3 ) ) ;
+  Qcardiac = 24 * ( Qcardiac_cubic_theta0 + Qcardiac_cubic_theta1 * tw + Qcardiac_cubic_theta2 * pow ( tw , 2 ) + Qcardiac_cubic_theta3 * pow ( tw , 3 ) ) ;
 
-  Qgut = 0.01 * ( Qgut_percent_initial + ( Qgut_percent_terminal - Qgut_percent_initial ) / term * tw ) * yout[ID_Qcardiac] ;
+  Qgut = 0.01 * ( Qgut_percent_initial + ( Qgut_percent_terminal - Qgut_percent_initial ) / term * tw ) * Qcardiac ;
 
   Qkidney = 24 * ( Qkidney_cubic_theta0 + Qkidney_cubic_theta1 * tw + Qkidney_cubic_theta2 * pow ( tw , 2 ) + Qkidney_cubic_theta3 * pow ( tw , 3 ) ) ;
 
-  Qliver = 0.01 * ( Qliver_percent_initial + ( Qliver_percent_terminal - Qliver_percent_initial ) / term * tw ) * yout[ID_Qcardiac] ;
+  Qliver = 0.01 * ( Qliver_percent_initial + ( Qliver_percent_terminal - Qliver_percent_initial ) / term * tw ) * Qcardiac ;
 
-  yout[ID_Qthyroid] = 0.01 * ( Qthyroid_percent_initial + ( Qthyroid_percent_terminal - Qthyroid_percent_initial ) / term * tw ) * yout[ID_Qcardiac] ;
+  Qthyroid = 0.01 * ( Qthyroid_percent_initial + ( Qthyroid_percent_terminal - Qthyroid_percent_initial ) / term * tw ) * Qcardiac ;
 
-  Qplacenta = 24 * Qplacenta_linear_theta1 * 1000 * Vplacenta ;
+  Qplacenta = 24 * Qplacenta_linear_theta1 * 1000 * yout[ID_Vplacenta] ;
 
-  Qadipose = 0.01 * ( Qadipose_percent_initial + ( Qadipose_percent_terminal - Qadipose_percent_initial ) / term * tw ) * yout[ID_Qcardiac] ;
+  Qadipose = 0.01 * ( Qadipose_percent_initial + ( Qadipose_percent_terminal - Qadipose_percent_initial ) / term * tw ) * Qcardiac ;
 
-  Qrest = yout[ID_Qcardiac] - ( Qgut + Qkidney + Qliver + yout[ID_Qthyroid] + Qplacenta + Qadipose ) ;
+  Qrest = Qcardiac - ( Qgut + Qkidney + Qliver + Qthyroid + Qplacenta + Qadipose ) ;
 
   Qgfr = 60 * 24 * 0.001 * ( Qgfr_quadratic_theta0 + Qgfr_quadratic_theta1 * tw + Qgfr_quadratic_theta2 * pow ( tw , 2 ) ) ;
 
@@ -660,95 +677,95 @@ void derivsfetal_pbtk (int *neq, double *pdTime, double *y, double *ydot, double
 
   yout[ID_Cliver] = y[ID_Aliver] / Vliver ;
 
-  yout[ID_Cven] = y[ID_Aven] / Vven ;
+  yout[ID_Cven] = y[ID_Aven] / yout[ID_Vven] ;
 
   yout[ID_Clung] = y[ID_Alung] / Vlung ;
 
-  yout[ID_Cart] = y[ID_Aart] / Vart ;
+  yout[ID_Cart] = y[ID_Aart] / yout[ID_Vart] ;
 
-  yout[ID_Cadipose] = y[ID_Aadipose] / Vadipose ;
+  yout[ID_Cadipose] = y[ID_Aadipose] / yout[ID_Vadipose] ;
 
-  yout[ID_Crest] = y[ID_Arest] / Vrest ;
+  yout[ID_Crest] = y[ID_Arest] / yout[ID_Vrest] ;
 
   yout[ID_Ckidney] = y[ID_Akidney] / Vkidney ;
 
-  yout[ID_Cplasma] = y[ID_Aven] / Vven / yout[ID_Rblood2plasma] ;
+  yout[ID_Cplasma] = y[ID_Aven] / yout[ID_Vven] / yout[ID_Rblood2plasma] ;
 
   yout[ID_Aplasma] = y[ID_Aven] / yout[ID_Rblood2plasma] * ( 1 - hematocrit ) ;
 
   yout[ID_Cthyroid] = y[ID_Athyroid] / Vthyroid ;
 
-  yout[ID_Cplacenta] = y[ID_Aplacenta] / Vplacenta ;
+  yout[ID_Cplacenta] = y[ID_Aplacenta] / yout[ID_Vplacenta] ;
 
-  yout[ID_Cfart] = y[ID_Afart] / Vfart ;
+  yout[ID_Cfart] = y[ID_Afart] / yout[ID_Vfart] ;
 
-  yout[ID_Cfven] = y[ID_Afven] / Vfven ;
+  yout[ID_Cfven] = y[ID_Afven] / yout[ID_Vfven] ;
 
-  yout[ID_Cfkidney] = y[ID_Afkidney] / Vfkidney ;
+  yout[ID_Cfkidney] = y[ID_Afkidney] / yout[ID_Vfkidney] ;
 
-  yout[ID_Cfrest] = y[ID_Afrest] / Vfrest ;
+  yout[ID_Cfrest] = y[ID_Afrest] / yout[ID_Vfrest] ;
 
-  yout[ID_Cfthyroid] = y[ID_Afthyroid] / Vfthyroid ;
+  yout[ID_Cfthyroid] = y[ID_Afthyroid] / yout[ID_Vfthyroid] ;
 
-  yout[ID_Cfliver] = y[ID_Afliver] / Vfliver ;
+  yout[ID_Cfliver] = y[ID_Afliver] / yout[ID_Vfliver] ;
 
-  yout[ID_Cfbrain] = y[ID_Afbrain] / Vfbrain ;
+  yout[ID_Cfbrain] = y[ID_Afbrain] / yout[ID_Vfbrain] ;
 
-  yout[ID_Cflung] = y[ID_Aflung] / Vflung ;
+  yout[ID_Cflung] = y[ID_Aflung] / yout[ID_Vflung] ;
 
-  yout[ID_Cfgut] = y[ID_Afgut] / Vfgut ;
+  yout[ID_Cfgut] = y[ID_Afgut] / yout[ID_Vfgut] ;
 
-  yout[ID_Cfplasma] = y[ID_Afven] / Vfven / yout[ID_Rfblood2plasma] ;
+  yout[ID_Cfplasma] = y[ID_Afven] / yout[ID_Vfven] / yout[ID_Rfblood2plasma] ;
 
-  yout[ID_Afplasma] = y[ID_Afven] / yout[ID_Rfblood2plasma] * ( 1 - fhematocrit ) ;
+  yout[ID_Afplasma] = y[ID_Afven] / yout[ID_Rfblood2plasma] * ( 1 - yout[ID_fhematocrit] ) ;
 
   ydot[ID_Agutlumen] = - kgutabs * y[ID_Agutlumen] ;
 
-  ydot[ID_Agut] = kgutabs * y[ID_Agutlumen] + Qgut * ( y[ID_Aart] / Vart - y[ID_Agut] / Vgut * yout[ID_Rblood2plasma] / Kgut2pu / Fraction_unbound_plasma ) ;
+  ydot[ID_Agut] = kgutabs * y[ID_Agutlumen] + Qgut * ( y[ID_Aart] / yout[ID_Vart] - y[ID_Agut] / Vgut * yout[ID_Rblood2plasma] / Kgut2pu / Fraction_unbound_plasma ) ;
 
-  ydot[ID_Aliver] = Qliver * y[ID_Aart] / Vart + Qgut * y[ID_Agut] / Vgut * yout[ID_Rblood2plasma] / Kgut2pu / Fraction_unbound_plasma - ( Qliver + Qgut ) * y[ID_Aliver] / Vliver / Kliver2pu / Fraction_unbound_plasma * yout[ID_Rblood2plasma] - Clmetabolism * y[ID_Aliver] / Vliver / Kliver2pu ;
+  ydot[ID_Aliver] = Qliver * y[ID_Aart] / yout[ID_Vart] + Qgut * y[ID_Agut] / Vgut * yout[ID_Rblood2plasma] / Kgut2pu / Fraction_unbound_plasma - ( Qliver + Qgut ) * y[ID_Aliver] / Vliver / Kliver2pu / Fraction_unbound_plasma * yout[ID_Rblood2plasma] - Clmetabolism * y[ID_Aliver] / Vliver / Kliver2pu ;
 
-  ydot[ID_Aven] = ( ( Qliver + Qgut ) * y[ID_Aliver] / Vliver / Kliver2pu + Qkidney * y[ID_Akidney] / Vkidney / Kkidney2pu + Qadipose * y[ID_Aadipose] / Vadipose / Kadipose2pu + Qrest * y[ID_Arest] / Vrest / Krest2pu + yout[ID_Qthyroid] * y[ID_Athyroid] / Vthyroid / Kthyroid2pu + Qplacenta * y[ID_Aplacenta] / Vplacenta / Kplacenta2pu ) * yout[ID_Rblood2plasma] / Fraction_unbound_plasma - yout[ID_Qcardiac] * y[ID_Aven] / Vven ;
+  ydot[ID_Aven] = ( ( Qliver + Qgut ) * y[ID_Aliver] / Vliver / Kliver2pu + Qkidney * y[ID_Akidney] / Vkidney / Kkidney2pu + Qadipose * y[ID_Aadipose] / yout[ID_Vadipose] / Kadipose2pu + Qrest * y[ID_Arest] / yout[ID_Vrest] / Krest2pu + Qthyroid * y[ID_Athyroid] / Vthyroid / Kthyroid2pu + Qplacenta * y[ID_Aplacenta] / yout[ID_Vplacenta] / Kplacenta2pu ) * yout[ID_Rblood2plasma] / Fraction_unbound_plasma - Qcardiac * y[ID_Aven] / yout[ID_Vven] ;
 
-  ydot[ID_Alung] = yout[ID_Qcardiac] * ( y[ID_Aven] / Vven - y[ID_Alung] / Vlung * yout[ID_Rblood2plasma] / Klung2pu / Fraction_unbound_plasma ) ;
+  ydot[ID_Alung] = Qcardiac * ( y[ID_Aven] / yout[ID_Vven] - y[ID_Alung] / Vlung * yout[ID_Rblood2plasma] / Klung2pu / Fraction_unbound_plasma ) ;
 
-  ydot[ID_Aart] = yout[ID_Qcardiac] * ( y[ID_Alung] / Vlung * yout[ID_Rblood2plasma] / Klung2pu / Fraction_unbound_plasma - y[ID_Aart] / Vart ) ;
+  ydot[ID_Aart] = Qcardiac * ( y[ID_Alung] / Vlung * yout[ID_Rblood2plasma] / Klung2pu / Fraction_unbound_plasma - y[ID_Aart] / yout[ID_Vart] ) ;
 
-  ydot[ID_Aadipose] = Qadipose * ( y[ID_Aart] / Vart - y[ID_Aadipose] / Vadipose * yout[ID_Rblood2plasma] / Kadipose2pu / Fraction_unbound_plasma ) ;
+  ydot[ID_Aadipose] = Qadipose * ( y[ID_Aart] / yout[ID_Vart] - y[ID_Aadipose] / yout[ID_Vadipose] * yout[ID_Rblood2plasma] / Kadipose2pu / Fraction_unbound_plasma ) ;
 
-  ydot[ID_Arest] = Qrest * ( y[ID_Aart] / Vart - y[ID_Arest] / Vrest * yout[ID_Rblood2plasma] / Krest2pu / Fraction_unbound_plasma ) ;
+  ydot[ID_Arest] = Qrest * ( y[ID_Aart] / yout[ID_Vart] - y[ID_Arest] / yout[ID_Vrest] * yout[ID_Rblood2plasma] / Krest2pu / Fraction_unbound_plasma ) ;
 
-  ydot[ID_Akidney] = Qkidney * y[ID_Aart] / Vart - Qkidney * y[ID_Akidney] / Vkidney / Kkidney2pu * yout[ID_Rblood2plasma] / Fraction_unbound_plasma - Qgfr * y[ID_Aart] / Vart / yout[ID_Rblood2plasma] * Fraction_unbound_plasma ;
+  ydot[ID_Akidney] = Qkidney * y[ID_Aart] / yout[ID_Vart] - Qkidney * y[ID_Akidney] / Vkidney / Kkidney2pu * yout[ID_Rblood2plasma] / Fraction_unbound_plasma - Qgfr * y[ID_Aart] / yout[ID_Vart] / yout[ID_Rblood2plasma] * Fraction_unbound_plasma ;
 
-  ydot[ID_Atubules] = Qgfr * y[ID_Aart] / Vart / yout[ID_Rblood2plasma] * Fraction_unbound_plasma ;
+  ydot[ID_Atubules] = Qgfr * y[ID_Aart] / yout[ID_Vart] / yout[ID_Rblood2plasma] * Fraction_unbound_plasma ;
 
   ydot[ID_Ametabolized] = Clmetabolism * y[ID_Aliver] / Vliver / Kliver2pu ;
 
-  ydot[ID_AUC] = y[ID_Aven] / Vven / yout[ID_Rblood2plasma] ;
+  ydot[ID_AUC] = y[ID_Aven] / yout[ID_Vven] / yout[ID_Rblood2plasma] ;
 
-  ydot[ID_Athyroid] = yout[ID_Qthyroid] * ( y[ID_Aart] / Vart - y[ID_Athyroid] / Vthyroid / Kthyroid2pu / Fraction_unbound_plasma * yout[ID_Rblood2plasma] ) ;
+  ydot[ID_Athyroid] = Qthyroid * ( y[ID_Aart] / yout[ID_Vart] - y[ID_Athyroid] / Vthyroid / Kthyroid2pu / Fraction_unbound_plasma * yout[ID_Rblood2plasma] ) ;
 
-  ydot[ID_Aplacenta] = Qplacenta * y[ID_Aart] / Vart - Qplacenta * ( y[ID_Aplacenta] / Vplacenta / Kplacenta2pu / Fraction_unbound_plasma * yout[ID_Rblood2plasma] ) - Qfplacenta * ( y[ID_Aplacenta] / Vplacenta / Kfplacenta2pu / Fraction_unbound_plasma_fetus * yout[ID_Rfblood2plasma] ) + Qfplacenta * y[ID_Afart] / Vfart ;
+  ydot[ID_Aplacenta] = Qplacenta * y[ID_Aart] / yout[ID_Vart] - Qplacenta * ( y[ID_Aplacenta] / yout[ID_Vplacenta] / Kplacenta2pu / Fraction_unbound_plasma * yout[ID_Rblood2plasma] ) - Qfplacenta * ( y[ID_Aplacenta] / yout[ID_Vplacenta] / Kfplacenta2pu / Fraction_unbound_plasma_fetus * yout[ID_Rfblood2plasma] ) + Qfplacenta * y[ID_Afart] / yout[ID_Vfart] ;
 
-  ydot[ID_Afart] = Qflung * y[ID_Aflung] / Vflung * yout[ID_Rfblood2plasma] / Kflung2pu / Fraction_unbound_plasma_fetus + Qfbypass * y[ID_Afven] / Vfven - Qfcardiac * y[ID_Afart] / Vfart ;
+  ydot[ID_Afart] = Qflung * y[ID_Aflung] / yout[ID_Vflung] * yout[ID_Rfblood2plasma] / Kflung2pu / Fraction_unbound_plasma_fetus + Qfbypass * y[ID_Afven] / yout[ID_Vfven] - Qfcardiac * y[ID_Afart] / yout[ID_Vfart] ;
 
-  ydot[ID_Afven] = ( ( Qfliver + Qfgut + Qfplacenta - Qfdv ) * y[ID_Afliver] / Vfliver / Kfliver2pu + Qfdv * y[ID_Aplacenta] / Vplacenta / Kfplacenta2pu + Qfthyroid * y[ID_Afthyroid] / Vfthyroid / Kfthyroid2pu + Qfrest * y[ID_Afrest] / Vfrest / Kfrest2pu + Qfkidney * y[ID_Afkidney] / Vfkidney / Kfkidney2pu + Qfbrain * y[ID_Afbrain] / Vfbrain / Kfbrain2pu ) * yout[ID_Rfblood2plasma] / Fraction_unbound_plasma_fetus - Qfcardiac * y[ID_Afven] / Vfven ;
+  ydot[ID_Afven] = ( ( Qfliver + Qfgut + Qfplacenta - Qfdv ) * y[ID_Afliver] / yout[ID_Vfliver] / Kfliver2pu + Qfdv * y[ID_Aplacenta] / yout[ID_Vplacenta] / Kfplacenta2pu + Qfthyroid * y[ID_Afthyroid] / yout[ID_Vfthyroid] / Kfthyroid2pu + Qfrest * y[ID_Afrest] / yout[ID_Vfrest] / Kfrest2pu + Qfkidney * y[ID_Afkidney] / yout[ID_Vfkidney] / Kfkidney2pu + Qfbrain * y[ID_Afbrain] / yout[ID_Vfbrain] / Kfbrain2pu ) * yout[ID_Rfblood2plasma] / Fraction_unbound_plasma_fetus - Qfcardiac * y[ID_Afven] / yout[ID_Vfven] ;
 
-  ydot[ID_Afkidney] = Qfkidney * ( y[ID_Afart] / Vfart - y[ID_Afkidney] / Vfkidney / Kfkidney2pu * yout[ID_Rfblood2plasma] / Fraction_unbound_plasma_fetus ) ;
+  ydot[ID_Afkidney] = Qfkidney * ( y[ID_Afart] / yout[ID_Vfart] - y[ID_Afkidney] / yout[ID_Vfkidney] / Kfkidney2pu * yout[ID_Rfblood2plasma] / Fraction_unbound_plasma_fetus ) ;
 
-  ydot[ID_Afrest] = Qfrest * ( y[ID_Afart] / Vfart - y[ID_Afrest] / Vfrest / Kfrest2pu * yout[ID_Rfblood2plasma] / Fraction_unbound_plasma_fetus ) ;
+  ydot[ID_Afrest] = Qfrest * ( y[ID_Afart] / yout[ID_Vfart] - y[ID_Afrest] / yout[ID_Vfrest] / Kfrest2pu * yout[ID_Rfblood2plasma] / Fraction_unbound_plasma_fetus ) ;
 
-  ydot[ID_Afthyroid] = Qfthyroid * ( y[ID_Afart] / Vfart - y[ID_Afthyroid] / Vfthyroid / Kfthyroid2pu * yout[ID_Rfblood2plasma] / Fraction_unbound_plasma_fetus ) ;
+  ydot[ID_Afthyroid] = Qfthyroid * ( y[ID_Afart] / yout[ID_Vfart] - y[ID_Afthyroid] / yout[ID_Vfthyroid] / Kfthyroid2pu * yout[ID_Rfblood2plasma] / Fraction_unbound_plasma_fetus ) ;
 
-  ydot[ID_Afliver] = Qfliver * y[ID_Afart] / Vfart + ( Qfgut * y[ID_Afgut] / Vfgut * yout[ID_Rfblood2plasma] / Kfgut2pu + ( Qfplacenta - Qfdv ) * y[ID_Aplacenta] / Vplacenta / Kfplacenta2pu * yout[ID_Rfblood2plasma] - ( Qfliver + Qfgut + Qfplacenta - Qfdv ) * y[ID_Afliver] / Vfliver / Kfliver2pu * yout[ID_Rfblood2plasma] ) / Fraction_unbound_plasma_fetus ;
+  ydot[ID_Afliver] = Qfliver * y[ID_Afart] / yout[ID_Vfart] + ( Qfgut * y[ID_Afgut] / yout[ID_Vfgut] * yout[ID_Rfblood2plasma] / Kfgut2pu + ( Qfplacenta - Qfdv ) * y[ID_Aplacenta] / yout[ID_Vplacenta] / Kfplacenta2pu * yout[ID_Rfblood2plasma] - ( Qfliver + Qfgut + Qfplacenta - Qfdv ) * y[ID_Afliver] / yout[ID_Vfliver] / Kfliver2pu * yout[ID_Rfblood2plasma] ) / Fraction_unbound_plasma_fetus ;
 
-  ydot[ID_Aflung] = Qflung * ( y[ID_Afven] / Vfven - y[ID_Aflung] / Vflung * yout[ID_Rfblood2plasma] / Kflung2pu / Fraction_unbound_plasma_fetus ) ;
+  ydot[ID_Aflung] = Qflung * ( y[ID_Afven] / yout[ID_Vfven] - y[ID_Aflung] / yout[ID_Vflung] * yout[ID_Rfblood2plasma] / Kflung2pu / Fraction_unbound_plasma_fetus ) ;
 
-  ydot[ID_Afgut] = Qfgut * ( y[ID_Afart] / Vfart - y[ID_Afgut] / Vfgut * yout[ID_Rfblood2plasma] / Kfgut2pu / Fraction_unbound_plasma_fetus ) ;
+  ydot[ID_Afgut] = Qfgut * ( y[ID_Afart] / yout[ID_Vfart] - y[ID_Afgut] / yout[ID_Vfgut] * yout[ID_Rfblood2plasma] / Kfgut2pu / Fraction_unbound_plasma_fetus ) ;
 
-  ydot[ID_Afbrain] = Qfbrain * ( y[ID_Afart] / Vfart - y[ID_Afbrain] / Vfbrain * yout[ID_Rfblood2plasma] / Kfbrain2pu / Fraction_unbound_plasma_fetus ) ;
+  ydot[ID_Afbrain] = Qfbrain * ( y[ID_Afart] / yout[ID_Vfart] - y[ID_Afbrain] / yout[ID_Vfbrain] * yout[ID_Rfblood2plasma] / Kfbrain2pu / Fraction_unbound_plasma_fetus ) ;
 
-  ydot[ID_fAUC] = y[ID_Afven] / Vfven / yout[ID_Rfblood2plasma] ;
+  ydot[ID_fAUC] = y[ID_Afven] / yout[ID_Vfven] / yout[ID_Rfblood2plasma] ;
 
 } /* derivs */
 
@@ -772,8 +789,3 @@ void rootfetal_pbtk (int *neq, double *t, double *y, int *ng, double *gout, doub
 
 } /* root */
 
-/*----- Forcing functions (NOT USED WITH THIS MODEL) */
-void initforcfetal_pbtk (void (* odeforcs)(int *, double *))
-{
-
-}

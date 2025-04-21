@@ -17,7 +17,7 @@ supptab1_Linakis2020
 Supplementary output from Linakis 2020 vignette analysis.
 }
 \references{
-DSStox database (https:// www.epa.gov/ncct/dsstox
+\insertRef{linakis2020development}{httk}
 }
 \author{
 Matt Linakis

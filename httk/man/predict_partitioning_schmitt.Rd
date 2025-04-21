@@ -140,20 +140,13 @@ calc_vdist(parameters=c(p,PCs1))
 
 }
 \references{
-Schmitt, Walter. "General approach for the calculation of tissue to plasma 
-partition coefficients." Toxicology in Vitro 22.2 (2008): 457-467.
+\insertRef{schmitt2008general}{httk}
 
-Birnbaum, L., et al. "Physiological parameter values for PBPK models." 
-International Life Sciences Institute, Risk Science Institute, Washington, 
-DC (1994).
+\insertRef{birnbaum1994physiological}{httk}
 
-Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-predictions of chemical distribution to tissues." Journal of pharmacokinetics 
-and pharmacodynamics 44.6 (2017): 549-565.
+\insertRef{pearce2017evaluation}{httk}
 
-Yun, Y. E., and A. N. Edginton. "Correlation-based prediction of 
-tissue-to-plasma partition coefficients using readily available input 
-parameters." Xenobiotica 43.10 (2013): 839-852.
+\insertRef{yun2013correlation}{httk}
 }
 \seealso{
 \code{\link{parameterize_schmitt}}

@@ -3,34 +3,6 @@
 #' This function solves for the amounts or concentrations in uM of a chemical
 #' in different tissues of a maternofetal system as functions of time based on
 #' the dose and dosing frequency.
-#' In this PBTK formulation. \eqn{C_{tissue}} is the concentration in tissue at 
-#' time t. Since the perfusion limited partition coefficients describe 
-#' instantaneous equilibrium between the tissue and the free fraction in 
-#' plasma, the whole plasma concentration is 
-#' \eqn{C_{tissue,plasma} = \frac{1}{f_{up}*K_{tissue2fup}}*C_{tissue}}. 
-#' Note that we use a single, 
-#' constant value of \eqn{f_{up}} across all tissues. Corespondingly the free 
-#' plasma 
-#' concentration is modeled as 
-#' \eqn{C_{tissue,free plasma} = \frac{1}{K_{tissue2fup}}*C_tissue}. 
-#' The amount of blood flowing from tissue x is \eqn{Q_{tissue}} (L/h) at a 
-#' concentration 
-#' \eqn{C_{x,blood} = \frac{R_{b2p}}{f_{up}*K_{tissue2fup}}*C_{tissue}}, where 
-#' we use a 
-#' single \eqn{R_{b2p}} value throughout the body.
-#' Metabolic clearance is modelled as being from the total plasma 
-#' concentration here, though it is restricted to the free fraction in 
-#' \code{\link{calc_hep_clearance}} by default. Renal clearance via 
-#' glomerulsr filtration is from the free plasma concentration.
-#' The maternal compartments used in this model are the gut lumen, gut, liver, 
-#' venous blood, arterial blood, lung, adipose tissue, kidney, thyroid, 
-#' and rest of body. A placenta is modeled as a joint organ shared by mother
-#' and fetus, through which chemical exchange can occur with the fetus. Fetal
-#' compartments include arterial blood, venous blood, kidney, thyroid, liver,
-#' lung, gut, brain, and rest of body. 
-#' The extra compartments include the amounts or concentrations metabolized by
-#' the liver and excreted by the kidneys through the tubules.
-#' AUC is the area under the curve of the plasma concentration.
 #' 
 #' The stage of pregnancy simulated here begins by default at the 13th week due
 #' to a relative lack of data to support parameterization prior, in line with 
@@ -41,6 +13,18 @@
 #' in days. Dose is in mg, not scaled for body weight.
 #' 
 #' Default NULL value for doses.per.day solves for a single dose.
+#' 
+#' The maternal compartments used in this model are the gut lumen, gut, liver, 
+#' venous blood, arterial blood, lung, adipose tissue, kidney, thyroid, 
+#' and rest of body. A placenta is modeled as a joint organ shared by mother
+#' and fetus, through which chemical exchange can occur with the fetus. Fetal
+#' compartments include arterial blood, venous blood, kidney, thyroid, liver,
+#' lung, gut, brain, and rest of body. 
+#' 
+#' The extra compartments include the amounts or concentrations metabolized by
+#' the liver and excreted by the kidneys through the tubules.
+#' 
+#' AUC is the area under the curve of the plasma concentration.
 #' 
 #' This gestational model is only parameterized for humans.
 #' 
@@ -62,7 +46,7 @@
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
 #' 
-#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
+#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' 
 #' @param times Optional time sequence in days. Dosing sequence begins at the
@@ -81,7 +65,7 @@
 #' 
 #' @param daily.dose Total daily dose, mg/kg BW.
 #' 
-#' @param dose Amount of a single, initial oral dose in mg/kg BW.  
+#' @param dose Amount of a single, initial oral dose in mg/kg BW.
 #' 
 #' @param doses.per.day Number of doses per day.
 #' 
@@ -119,7 +103,7 @@
 #' @param dosing.matrix A matrix of either one column (or row) with a set of
 #' dosing times or with two columns (or rows) correspondingly named "dose" and
 #' "time" containing the time and amount, in mg/kg BW, of each dose.
-#' 
+#'
 #' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
 #' TRUE along with partition coefficients calculated with this value.
 #' 
@@ -162,6 +146,9 @@
 #' 
 #' @author John Wambaugh, Mark Sfeir, and Dustin Kapraun
 #'
+#' @references 
+#' \insertRef{kapraun2022fetalmodel}{httk}
+#'
 #' @keywords Solve
 #'
 #' @seealso \code{\link{solve_model}}
@@ -170,10 +157,10 @@
 #'
 #' @examples
 #' 
+#' \donttest{
 #' out = solve_fetal_pbtk(chem.name = 'bisphenol a', daily.dose = 1,
 #' doses.per.day = 3)
 #'
-#' \donttest{
 #' # With adjustement to fraction unbound plasma for fetus:
 #' fetal_parms_fup_adjusted <- 
 #'   parameterize_fetal_pbtk(chem.name = "triclosan")
@@ -224,8 +211,8 @@ solve_fetal_pbtk <- function(chem.name = NULL,
                              minimum.Funbound.plasma = 0.0001,
                              monitor.vars = NULL,
                              Caco2.options = list(),
-                             atol=1e-7,
-                             rtol=1e-7,
+                             atol=1e-8,
+                             rtol=1e-8,
                              ...)
 {
   #Screen any 'times' input
@@ -270,7 +257,7 @@ describe human gestation.")
                   physchem.exclude = physchem.exclude,
                   class.exclude = class.exclude),
     atol=atol,
-    rotl=rtol,
+    rtol=rtol,
     ...)
   
   return(out) 

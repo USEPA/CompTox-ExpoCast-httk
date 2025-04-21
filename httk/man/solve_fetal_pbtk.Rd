@@ -33,8 +33,8 @@ solve_fetal_pbtk(
   minimum.Funbound.plasma = 1e-04,
   monitor.vars = NULL,
   Caco2.options = list(),
-  atol = 1e-07,
-  rtol = 1e-07,
+  atol = 1e-08,
+  rtol = 1e-08,
   ...
 )
 }
@@ -45,7 +45,7 @@ must be specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{times}{Optional time sequence in days. Dosing sequence begins at the
@@ -148,34 +148,6 @@ for each time point.
 This function solves for the amounts or concentrations in uM of a chemical
 in different tissues of a maternofetal system as functions of time based on
 the dose and dosing frequency.
-In this PBTK formulation. \eqn{C_{tissue}} is the concentration in tissue at 
-time t. Since the perfusion limited partition coefficients describe 
-instantaneous equilibrium between the tissue and the free fraction in 
-plasma, the whole plasma concentration is 
-\eqn{C_{tissue,plasma} = \frac{1}{f_{up}*K_{tissue2fup}}*C_{tissue}}. 
-Note that we use a single, 
-constant value of \eqn{f_{up}} across all tissues. Corespondingly the free 
-plasma 
-concentration is modeled as 
-\eqn{C_{tissue,free plasma} = \frac{1}{K_{tissue2fup}}*C_tissue}. 
-The amount of blood flowing from tissue x is \eqn{Q_{tissue}} (L/h) at a 
-concentration 
-\eqn{C_{x,blood} = \frac{R_{b2p}}{f_{up}*K_{tissue2fup}}*C_{tissue}}, where 
-we use a 
-single \eqn{R_{b2p}} value throughout the body.
-Metabolic clearance is modelled as being from the total plasma 
-concentration here, though it is restricted to the free fraction in 
-\code{\link{calc_hep_clearance}} by default. Renal clearance via 
-glomerulsr filtration is from the free plasma concentration.
-The maternal compartments used in this model are the gut lumen, gut, liver, 
-venous blood, arterial blood, lung, adipose tissue, kidney, thyroid, 
-and rest of body. A placenta is modeled as a joint organ shared by mother
-and fetus, through which chemical exchange can occur with the fetus. Fetal
-compartments include arterial blood, venous blood, kidney, thyroid, liver,
-lung, gut, brain, and rest of body. 
-The extra compartments include the amounts or concentrations metabolized by
-the liver and excreted by the kidneys through the tubules.
-AUC is the area under the curve of the plasma concentration.
 }
 \details{
 The stage of pregnancy simulated here begins by default at the 13th week due
@@ -187,6 +159,18 @@ Note that the model parameters have units of hours while the model output is
 in days. Dose is in mg, not scaled for body weight.
 
 Default NULL value for doses.per.day solves for a single dose.
+
+The maternal compartments used in this model are the gut lumen, gut, liver, 
+venous blood, arterial blood, lung, adipose tissue, kidney, thyroid, 
+and rest of body. A placenta is modeled as a joint organ shared by mother
+and fetus, through which chemical exchange can occur with the fetus. Fetal
+compartments include arterial blood, venous blood, kidney, thyroid, liver,
+lung, gut, brain, and rest of body. 
+
+The extra compartments include the amounts or concentrations metabolized by
+the liver and excreted by the kidneys through the tubules.
+
+AUC is the area under the curve of the plasma concentration.
 
 This gestational model is only parameterized for humans.
 
@@ -204,10 +188,10 @@ model. However, PFAS chemicals can be included with the argument
 }
 \examples{
 
+\donttest{
 out = solve_fetal_pbtk(chem.name = 'bisphenol a', daily.dose = 1,
 doses.per.day = 3)
 
-\donttest{
 # With adjustement to fraction unbound plasma for fetus:
 fetal_parms_fup_adjusted <- 
   parameterize_fetal_pbtk(chem.name = "triclosan")
@@ -227,6 +211,9 @@ try(head(solve_fetal_pbtk(chem.cas = "6385-62-2")))
 head(solve_fetal_pbtk(chem.cas = "6385-62-2", physchem.exclude = FALSE))
 }
 
+}
+\references{
+\insertRef{kapraun2022fetalmodel}{httk}
 }
 \seealso{
 \code{\link{solve_model}}

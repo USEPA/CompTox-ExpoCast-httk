@@ -41,8 +41,7 @@
 #' @author John Wambaugh
 #' 
 #' @references 
-#' Schmitt, Walter. "General approach for the calculation of tissue 
-#' to plasma partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+#' \insertRef{schmitt2008general}{httk}
 #'
 #' \insertRef{dawson2021qsar}{httk} 
 #'
@@ -53,9 +52,16 @@
 #' @examples
 #' 
 #' calc_elimination_rate(chem.name="Bisphenol A")
+#'
 #'\dontrun{
+#'
 #' calc_elimination_rate(chem.name="Bisphenol A",species="Rat")
-#' calc_elimination_rate(chem.cas="80-05-7")
+#'
+#' # non-restrictive clearance should be faster:
+#' kelim1 <- calc_elimination_rate(chem.cas="80-05-7")
+#' kelim2 <- calc_elimination_rate(chem.cas="80-05-7", 
+#'                                 restrictive.clearance=FALSE)
+#' if (!(kelim2 > kelim1)) stop("kelim2 is not faster than kelim1")
 #'}
 #'
 #' @export calc_elimination_rate
