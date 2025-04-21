@@ -23,13 +23,9 @@
 #' @author John Wambaugh and Robert Pearce
 #'
 #' @references 
-#' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-#' predictions of chemical distribution to tissues." Journal of 
-#' pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
+#' \insertRef{pearce2017evaluation}{httk}
 #'
-#' Ruark, Christopher D., et al. "Predicting passive and active tissue: plasma 
-#' partition coefficients: interindividual and interspecies variability." 
-#' Journal of pharmaceutical sciences 103.7 (2014): 2189-2198.
+#' \insertRef{ruark2014predicting}{httk}
 #'
 #' @keywords Parameter
 #'
