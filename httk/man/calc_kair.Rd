@@ -92,9 +92,7 @@ the air:mucus partition coefficient (PA:M) calculated as
 where Pow is the octanol/water partition coefficient
 }
 \references{
-Linakis, Matthew W., et al. "Development and evaluation of a 
-high throughput inhalation model for organic chemicals." Journal of exposure 
-Science & Environmental Epidemiology 30.5 (2020): 866-877.
+\insertRef{linakis2020development}{httk}
 
 Clewell III, Harvey J., et al. "Development of a physiologically based 
 pharmacokinetic model of isopropanol and its metabolite acetone." 

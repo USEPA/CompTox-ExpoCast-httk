@@ -90,7 +90,7 @@ Authors@R: c(
            )
 Depends: R (>= 2.10)
 Imports: deSolve, msm, data.table, survey, mvtnorm, truncnorm, stats,
-        graphics, utils, magrittr, purrr, methods, Rdpack, ggplot2,
+        graphics, utils, magrittr, purrr, methods, Rdpack (>= 2.3), ggplot2,
         dplyr
 RdMacros: Rdpack
 Suggests: knitr, rmarkdown, gplots, scales, EnvStats, MASS,
