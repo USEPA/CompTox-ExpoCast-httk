@@ -175,6 +175,10 @@ parameterize_IVD <- function(tcdata = NA, # optionally supply columns v_working,
   # Calculate the fraction negative:
   tcdata[, Fnegative := Fcharged - Fpositive]
   
+  # Calculate gkaw for both models:
+  tcdata[, "gkaw_n" := logHenry - log10(298.15*8.2057338e-5)] # log10 (atm*m3)/mol to (mol/m3)/(mol/m3) (unitless)
+  #using ideal gas constant (R) = 8.2e-5 (m3*atm / (K*mol)) because logHenry is (atm*m3)/mol
+  
   # Rename variables for both models
   tcdata[, "gkow_n" := gkow] %>% 
     .[,"MP_C":=MP]
