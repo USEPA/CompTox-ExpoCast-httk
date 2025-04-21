@@ -96,8 +96,7 @@ kramer_eval <- function(chem.cas=NULL,
 
 {
   well_number<-nomconc<-serum<-BSA<-v_total<-v_working<-cell_yield<-NULL
-  prot_conc<-temp_k<-sarea<-casrn<-NULL
-  Fneutral <<- csalt<- NULL
+  prot_conc<-temp_k<-sarea<-casrn<- csalt<- NULL
   
   if (all(is.na(tcdata)))
   {
