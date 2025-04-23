@@ -109,7 +109,7 @@ ts <- get_input_param_timeseries("pbtk_lifestage",
                                  chem.name = 'Bisphenol A',
                                  initial.params = params,
                                  start.age = 600, # age fifty
-                                 days = 365,
+                                 days = 100,
                                  weight_category=c('Underweight',
                                                    'Normal',
                                                    'Overweight'))
