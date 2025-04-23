@@ -7,7 +7,7 @@
 ## Enhancements
 * Added rat and human fup data from [Lynn et al. 2025](https://doi.org/10.1016/j.tiv.2025.106036) 
 * pKa values are now predicted by ChemAxon
-* Refactored Henderson-Hasselbach calculations within calc_ionization to be clearer. Expanded documentation for 'calc_ionization'. No known change to previously calculated values by that function. Introduced new argument return_charge_matrix which gives a table listing each ionization state to explain how the values in 'calc_ionization' are derived.
+* Refactored Henderson-Hasselbach calculations within `calc_ionization` to be clearer. Expanded documentation for `calc_ionization`. No known change to previously calculated values by that function. Introduced new argument return_charge_matrix which gives a table listing each ionization state to explain how the values in `calc_ionization` are derived.
 * When models (either OPERA or ChemAxon) predict that a chemical does not ionize, that prediction is now stored as a blank space (that is, " ") rather than an "NA". "NA" is intended to indicate that no prediction was available. This change should not impact the function of the code or any predictions, but hopefully clarifies the chemical descriptors.
 
 # httk 2.6.0 (2025-04-18)
