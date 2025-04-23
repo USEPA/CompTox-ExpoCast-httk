@@ -331,16 +331,18 @@ calc_ionization <- function(
     # If one equilibrium is givenm, assume the other isn't present:
     if (is.null(pKa_Donor)) pKa_Donor <- " "
     if (is.null(pKa_Accept)) pKa_Accept <- " "
-  # Assume missing values are not ionized:
-  } else if (any(is.na(pKa_Donor)) | any(is.na(pKa_Accept)))
-  {
-    pKa_Donor[is.na(pKa_Donor)] <- " "
-    pKa_Accept[is.na(pKa_Accept)] <- " "
   } else {
     stop(
 "Either pKa_Donor and pKa_Accept must be in input parameters or chemical identifier must be supplied.")
   }
   
+  # Assume missing values are not ionized:
+  if (any(is.na(pKa_Donor)) | any(is.na(pKa_Accept)))
+  {
+    pKa_Donor[is.na(pKa_Donor)] <- " "
+    pKa_Accept[is.na(pKa_Accept)] <- " "
+  } 
+    
   # Check if any of these arguments are vectors:
   if (length(pKa_Donor) < 2 & length(pKa_Accept) < 2 & length(pH) < 2)
   {

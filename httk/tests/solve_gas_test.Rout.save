@@ -1,6 +1,6 @@
 
-R Under development (unstable) (2024-08-07 r86984 ucrt) -- "Unsuffered Consequences"
-Copyright (C) 2024 The R Foundation for Statistical Computing
+R Under development (unstable) (2025-04-18 r88159 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2025 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -174,8 +174,8 @@ logHenry: -2.561
 MA: 155.2
 million.cells.per.gliver: 110
 MW: 104.2
-pKa_Accept: NA
-pKa_Donor: NA
+pKa_Accept:  
+pKa_Donor:  
 Pow: 891.3
 Qalvc: 18.59
 Qcardiacc: 13.88
