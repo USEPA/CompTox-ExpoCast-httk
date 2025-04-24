@@ -4,7 +4,7 @@ author: "Dustin F. Kapraun, Mark Sfeir, Robert Pearce, Sarah Davidson, Annie Lum
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{h) Kapraun (2022): Human Gestational Model}
+  %\VignetteIndexEntry{f) Kapraun (2022): Human Gestational Model}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
