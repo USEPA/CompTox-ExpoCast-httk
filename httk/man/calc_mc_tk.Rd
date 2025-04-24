@@ -192,7 +192,7 @@ for (age.lower in age.ranges)
 }
 
 set.seed(1234)    
-well-behaved chemical with a measured Rblood2plasma:
+# well-behaved chemical with a measured Rblood2plasma:
 lapply(calc_mc_tk(chem.cas="80-05-7",samples=NSAMP),function(x) x[-2,])
 }
 }
