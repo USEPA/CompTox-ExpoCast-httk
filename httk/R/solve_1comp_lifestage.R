@@ -86,6 +86,10 @@
 #' timeseries. Recommended column binding ages in months (as \code{age_months}) to
 #' the output of \code{\link{create_mc_samples}}.
 #' 
+#' @param time.varying.params Whether or not to allow parameters to vary in time 
+#' according to the nonparametric regression determined by \code{\link{get_input_param_timeseries}}. 
+#' Default is TRUE.
+#' 
 #' @param ... Additional arguments passed to the integrator.
 #'
 #' @return A matrix with a column for time(in days) and a column for the
@@ -93,7 +97,7 @@
 #'
 #' @author Colin Thomson
 #'
-#' @keywords Solve 1compartment, lifestage
+#' @keywords Solve 1compartment lifestage
 #'
 #' @examples
 #' 

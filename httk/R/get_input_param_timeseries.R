@@ -8,7 +8,7 @@
 #' preserve the percentile score of the given starting values. 
 #' 
 #' @details
-#' For each time-dependent model, there should be a function (such as \code{\link{gen_input_params}})
+#' For each time-dependent model, there should be a function 
 #' that determines the model parameter values for each individual in the NHANES dataset.
 #' The resulting value are used to form the non-parametric regression curve. 
 #'
@@ -58,8 +58,6 @@
 #'
 #' @seealso \code{\link{solve_pbtk_lifestage}}
 #'
-#' @seealso \code{\link{gen_input_params}}
-#'
 #' @keywords lifestage 
 #'
 #' @examples
@@ -93,7 +91,14 @@ get_input_param_timeseries <- function(model,
                                        bandwidth = 12,
                                        get.median.param.vals = FALSE) 
   {
-    
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
+  ..param <- NULL
+  #End R CMD CHECK appeasement.
+      
   # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
