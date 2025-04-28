@@ -163,8 +163,6 @@ vignette(package = "httk")
 vignette("IntroToHTTK")
 ```
 
-
-
 ## Authors
 
 ### Principal Investigator 
@@ -179,19 +177,29 @@ Caroline Ring [Ring.Caroline@epa.gov],
 Greg Honda [honda.gregory@epa.gov], 
 Mark Sfeir, 
 Matt Linakis [MLINAKIS@ramboll.com],
-Dustin Kapraun [kapraun.dustin@epa.gov], and
-Annabel Meade [aemeade7@gmail.com]
+Dustin Kapraun [kapraun.dustin@epa.gov],
+Kimberly Truong [truong.kimberly@epa.gov],
+Colin Thomson [thomson.colin@epa.gov],
+Annabel Meade [aemeade7@gmail.com], and
+Celia Schacht [Schacht.Celia@epa.gov]
 
-### Bug-Fixes Vignette edits, and Parameter Values
+### Bug-Fixes, Vignette edits, and Parameter Values
+Todor Antonijevic [tantonijevic@toxstrategies.com], 
 Miyuki Breen, 
 Shannon Bell [Shannon.bell@inotivco.com], 
 Xiaoqing Chang [Xiaoqing.chang@inotivco.com], 
-Todor Antonijevic [tantonijevic@toxstrategies.com], 
 Jimena Davis, 
-Elaina Kenyon [kenyon.elaina@epa.gov]
+Elaina Kenyon [kenyon.elaina@epa.gov],
+Gilberto Padilla Mercado [PadillaMercado.Gilberto@epa.gov],
+Katie Paul Friedman [Paul-Friedman.Katie@epa.gov],
+Nathan Pollesch [pollesch.nathan@epa.gov],
+Meredith Scherer [Scherer.Meredith@epa.gov],
+Noelle Sinski [Noelle.Sinski@icf.com],
+Nisha Sipes [sipes.nisha@epa.gov],
 James Sluka [jsluka@indiana.edu],  
-Nisha Sipes [sipes.nisha@epa.gov], and 
-Barbara Wetmore [wetmore.barbara@epa.gov]
+Caroline Stevens [Stevens.Caroline@epa.gov],
+Barbara Wetmore [wetmore.barbara@epa.gov], and
+Lily Whipple
 
 ### Statistical Expertise
 Woodrow Setzer [setzer.woodrow@epa.gov]
@@ -199,3 +207,5 @@ Woodrow Setzer [setzer.woodrow@epa.gov]
 ## License
 
 License: GPL-3 <https://www.gnu.org/licenses/gpl-3.0.en.html>
+
+<img src="man/figures/httk-logo.png" align="center" width="50%"/>

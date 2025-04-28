@@ -1,0 +1,1198 @@
+---
+title: "Predictions for Caco-2 using models presented in Honda et al. 2024"
+
+author: "Tabatabaei Sadeghi S, Guider C, Davidson-Fritz S, Dinallo R, Li L, Strock C , Wambaugh JF"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{h) Honda's Model Evaluation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+*Please send questions to tabatabaeisadeghi.sahar@epa.gov*
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+This R markdown script will allow a user to predict Caco2 permeability for chemicals based on the QSAR Models presented in Honda et al. 2024: Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals in Commerce and the Environment . 
+
+This script will read in novel chemicals for which predictors have been computed, standardize the parameters of the chemical according to the training set(s), and predict Caco2 for those chemicals. 
+
+To fit predictions from the Caco2 models, you will need OPERA model predictions and PaDEL descriptions for your chemicals of interest. 
+
+### OPERA predictors include:
+
+"LogP"   "LogWS"  "LogBCF" "LogKM"  "MP"     "LogVP"  "LogD55" "LogD74" "LogOH" 
+
+### PaDEL descriptors include:
+
+ "CrippenLogP"       "nBase"             "XLogP"             "AATS1v"            "AATS0i"           
+ "ETA_EtaP_F"        "ZMIC2"             "maxHBa"            "minsssN"           "AATS1i"           
+ "ETA_dEpsilon_B"    "GATS1i"            "ZMIC1"             "SsssN"             "nAromBond"        
+ "AATSC0p"           "minHBd"            "LipoaffinityIndex" "AATS3v"            "AATS2i"           
+ "C2SP2"             "AATS4v"            "Kier2"             "AATS6m"            "AATS6v"           
+ "minssCH2"          "AATS5v"            "AATS5i"            "ATSC2c"            "ATSC6c"           
+ "ATSC3m"            "ATSC3e"            "AATSC0c"           "AATSC0v"           "MATS1c"           
+ "MATS8c"            "GATS5c"            "GATS1e"            "GATS5e"            "BCUTc.1l"         
+ "BCUTp.1l"          "BCUTp.1h"          "nBondsM"           "SpMin2_Bhm"        "SpMax2_Bhp"       
+ "minHaaCH"          "minaaCH"           "IC1"               "MLFER_BH"          "piPC8"            
+ "R_TpiPCTPC"     
+
+Several but not all needed OPERA predictors are available from the EPA CompTox Dashboard. However, PaDEL descriptors are not available at all from the dashboard.To calculate these descriptors for your data, we recommend downloading the OPERA(Open QSAR app) application from https://github.com/NIEHS/OPERA
+
+The OPERA application is an open-source, stand-alone application that will produce both Opera predictions and PaDEL descriptions; Opera models are based entirely upon PaDEL descriptors and fingerprints. You will need either a chemical description ID(i.e., DTXSID,CASRN) or structural description(SMILES,MOL) for each chemical. Make sure to select all of the opera models you want, and select the "keep full descriptor files" box. This will generate and keep all calculations for all PaDEL descriptors, as well as your desired Opera predictors. Keep in mind that they may range from minutes to hours, depending on the number chemicals for which predictions are desired(10's to 1000's).   
+
+
+If you want to use SMILES codes to run through the OPERA function, you can download them from the CompTox Dashboard. Then, you can write out the text file to be used in the OPERA application. Whatever data source you used, make sure there are no column headers or row number in your data file. For more information, read the documentation for data input into the OPERA application. 
+
+By checking the "keep full descriptor files" box, OPERA will produce a lot of files you don't need. You only need the Opera predictions (with default suffix "_OPERA2.6Pred") and PaDEL descriptors (default suffix "_PadelDesc").  
+
+
+# Read in data and prepare for prediction
+Once the descriptors are calculated, load the files here, and prepare them to be used to make predictions. You have to make sure all of the descriptor names in your data match the descriptors used in the RF model objects. If you used SMILES codes, you also have make sure that the molecule ID output from Opera aligns with the DTXSID or CASRN of the chemicals in your set.  
+
+We downloaded the smiles codes from the Comptox Dashboard ("Tox21_FromCompToxDashboard.xlsx") through the OPERA application. Then we loaded the OPERA descriptors and PaDEL descriptors produced from the OPERA application, and a combined list of OPERA and PaDEL descriptors used in Caco-2 models. We then create a combined set of Opera and Padel descriptors based on their DTXSID's. Note that if you only load SMILES into the OPERA application without a CAS or DTXSID, you have to align the molecule ID with the SMILES at this step. This is important in the case that either PaDEL or Opera predictors can't be calculated for a given chemical, and you end up with a missing chemical in the Opera prediction file.  
+
+
+## LOAD PACKAGES
+```{r}
+packages=c("openxlsx", "randomForest", "stringr","dplyr")
+sapply(packages, require, character.only=TRUE)
+```
+
+### Set the working directory
+```{r knitr_setup}
+loc.wd <- "C:/Users/stabatab/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ExpoCast_Projec/Paper_John_Honda_Caco2/Honda_Caco2/comptox-expocast-caco2-main/Honda_Caco2"
+
+knitr::opts_chunk$set(echo = TRUE, fig.width=5, fig.height=4)
+knitr::opts_knit$set(root.dir = loc.wd)
+```
+
+### Load the relevant libraries
+```{r r_setup}
+
+packages <- c("ggplot2","randomForest","caret","OneR", "readxl", "httk",
+              "data.table","scales","viridis")
+sapply(packages, require, character.only=TRUE) #Note, the "character.only" argument is necessary here
+
+```
+
+```### Evaluate the optimal classification and regression models with the test set
+
+#### Classification model
+```{r qspr_testset}
+
+load(file=paste0(loc.wd,"/r_data/QSPR/optimal_model.RData"))
+load(file=paste0(loc.wd,"/r_data/QSPR/testset.RData"))
+load(file=paste0(loc.wd,"/r_data/QSPR/trainingdata-meansd.RData"))
+load(file=paste0(loc.wd,"/r_data/QSPR/qsprbinnumbersummary.RData"))
+load(paste0(loc.wd,"/r_data/QSPR/op_qsprbinnumbersummary_check.RData"))
+load(file=paste0(loc.wd,"/r_data/QSPR/chosen_model.RData"))
+
+
+class=load(paste0(loc.wd,"/r_data/QSPR/optimal_model.RData"))
+names(classmodopt)
+varImp(classmodopt$finalModel)
+
+library(openxlsx)
+PA2B_57=read.xlsx("C:\\Users\\stabatab\\OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\ExpoCast_Projec\\Project_Pred_Caco2_Clint_Fup\\invitroTKstats\\CyprotexTO1\\57Pab_v0.10.9.30.xlsx",na.strings = "#NUM!")
+
+#adding the new opera predictions and padel descriptors
+
+padel=read.csv(paste0(loc.wd,"/r_data/QSPR/Sahar/padel-caco2.csv"),check.names=FALSE)
+opera=read.csv(paste0(loc.wd,"/r_data/QSPR/Sahar/127Caco2_Chem_SMILES2-smi_OPERA2.9Pred.csv"), check.names=FALSE)
+
+
+opera=unique(opera[which(opera$MoleculeID %in%PA2B_57$DTXSID),])
+padel=unique(padel[which(padel$Name %in%PA2B_57$DTXSID),])
+padel=padel[,!names(padel) %in% names(opera)]
+
+
+#Merge with truncated opera and padel lists
+
+chems57_desc=merge(opera,padel, by.x="MoleculeID", by.y="Name", all.x=TRUE)
+
+Newtest.set=merge(PA2B_57,chems57_desc, by.x="DTXSID", by.y="MoleculeID", all.x=TRUE)
+Newtest.set=Newtest.set[order(match(Newtest.set$DTXSID,PA2B_57$DTXSID)),]
+dim(Newtest.set)
+Newtest.set=Newtest.set[!is.na(Newtest.set$Papp_A2B),]
+dim(Newtest.set)
+
+
+desc.cols <- rep(TRUE, dim(Newtest.set)[2])
+colnames(Newtest.set)[1] <- "dtxsid"
+desc.cols[regexpr("AD_",colnames(Newtest.set))!=-1] <- FALSE
+desc.cols[regexpr("_predRange",colnames(Newtest.set))!=-1] <- FALSE
+desc.cols[regexpr("Conf_index",colnames(Newtest.set))!=-1] <- FALSE
+Newtest.set <- subset(Newtest.set,!duplicated(Newtest.set))
+
+
+```
+
+## Caco-2 permeability 
+
+Read in the Caco-2 model object and training data mean and std. 
+Normalize your data using the training data. Then, use the predict function to predict Caco-2 permeability. After this, determine whether Caco-2 predictions
+are in or out of the AD, using the the method from Roy et al. 2015. 
+
+```{r}
+
+### Ionization fractions for each chemical:
+
+for (i in 1:dim(Newtest.set)[1])
+{
+  out <- calc_ionization(pH=7.4, 
+                         pKa_Donor=Newtest.set[i,"pKa_a_pred"],
+                         pKa_Accept=Newtest.set[i,"pKa_b_pred"])
+  for (this.col in names(out)) Newtest.set[i,this.col] <- out[[this.col]]
+}
+
+dim(Newtest.set)
+
+
+Newtest.set.ids <- Newtest.set[,"dtxsid"]
+Newtest.set.desc <- Newtest.set[,opt.desc]
+dim(Newtest.set.desc)
+
+
+# Replace NA's with mean of training set:
+for (this.col in colnames(train_msd))
+{
+  if (is.numeric(train_msd[1,this.col]))
+  {
+    Newtest.set[is.na(Newtest.set[,this.col]),this.col] <- train_msd[1,this.col]
+  }
+}
+
+```
+### Heatmaps
+```{r}
+
+# Load necessary libraries
+library(ggplot2)
+library(reshape2)
+library(pheatmap)
+library(tidyr)
+
+
+data=Newtest.set.desc
+data$Compound.Name=PA2B_57$Compound.Name
+data <- data[, -1]
+data=data[,c(ncol(data), 1:(ncol(data)-1))]
+
+# Remove non-numeric columns (Assuming the first column is chemical names)
+descriptors <- data[, -1]  
+chemical_names <- data[, 1]  
+
+
+# Ensure the first column is compound names
+rownames(data) <- data$Compound.Name 
+data <- data[, -1]  
+
+# Compute Z-scores for each descriptor
+z_scores <- scale(data)
+
+# Convert to dataframe
+z_scores_df <- as.data.frame(z_scores)
+z_scores_df$Compound <- rownames(z_scores_df)  
+
+# Reshape for ggplot heatmap
+z_melted <- z_scores_df %>% 
+  pivot_longer(cols=!Compound, names_to = "Descriptors",values_to = "Z_Scores")
+
+z_melted=as.data.frame(z_melted)
+  
+# Create the heatmap
+
+heatmap_fup=ggplot(z_melted, aes(x = Compound, y = Descriptors, fill = Z_Scores)) +
+  geom_tile() +
+  scale_fill_gradient2(low = "darkred", mid = "yellow", high = "darkred", midpoint = 0) +
+  theme_minimal() +
+  labs(title = "Heatmap of Z-Scores", x = "Compound", y = "Descriptors", fill = "Z_Scores") +
+  theme(
+     plot.background = element_rect(fill = "white",color=NA),
+     panel.background = element_rect(fill = "white",color=NA),
+     axis.text.x = element_text(angle = 90, vjust=0.5,hjust = 1, size = 5,face="bold"),
+        axis.text.y = element_text(size = 8),
+        plot.title = element_text(hjust = 0.5),
+        legend.position = "right"
+        
+      ) + 
+     coord_fixed((ratio=2))
+
+ggsave("heatmap_caco2.png", width=16,height = 10,dpi=700)
+
+ggsave(
+  filename  = paste0(setwd("C:/Users/stabatab/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ExpoCast_Projec/Project_Pred_Caco2_Clint_Fup/invitroTKstats/CyprotexTO1"),"heatmap_caco2.png"),
+  plot = heatmap_fup,
+  height = 7, width = 7, units = "in", dpi = 300
+)
+
+```
+
+#Normalize the descriptors in the new test set:
+````{r}
+for (this.col in colnames(train_msd))
+{
+  if (is.numeric(Newtest.set[,this.col])){
+    Newtest.set[,this.col]=(Newtest.set[,this.col]-train_msd[1,this.col])/train_msd[2,this.col]
+  }
+}
+
+
+```
+
+###Evaluate the optimized classification model with the New Testset: 
+
+Divide Pab into Bins for New Test Set: 
+
+For the new data from Cyprotex (according to the paper Honda 2024): 
+
+(0.23 cm/s/106  (0.032 - 3.3)) is “Low” (bin 1)
+ 
+ (2.1 cm/s/106 (0.1 - 26)) is  “Medium”  (bin 2)
+ 
+ (20 cm/s/106 (0.24 - 72)) is "High" (bin 3)
+
+```{r}
+
+
+#Methoda 1: Apply the same bining thresholds from the training set to the new test set
+
+testcaco2=(as.numeric(Newtest.set$Papp_A2B))
+
+testcaco2bins=ifelse(testcaco2< 0.1,1,
+             ifelse(testcaco2< 26,2,3))
+
+testcaco2bins=factor(testcaco2bins, levels=c(1,2,3))
+
+Newtest.set[,paste0("LogPab",3,"Bin")]=testcaco2bins
+
+opt.testsetpred <- predict(classmodopt,Newtest.set[,opt.desc])
+
+confusion <- confusionMatrix(data = opt.testsetpred,reference = testcaco2bins)
+testsummary <- postResample(pred = opt.testsetpred,obs = testcaco2bins)
+
+print(confusion)
+print(testsummary)
+
+
+
+#Method 2: k-means clustering on PappAB
+
+Newtest.set[,paste0("Pab",3,"Bin")] <-bin(Newtest.set$Papp_A2B, nbins=3, labels=c(1,2,3), method="content")
+nozeros <- Newtest.set$Papp_A2B
+nozeros=as.numeric(nozeros)
+nozeros[nozeros==0] <- 10^-6
+Newtest.set[,paste0("LogPab",3,"Bin")] <-bin(log10(nozeros), nbins=3, labels=1:3, method="clusters")
+  
+opt.testsetpred <- predict(classmodopt,
+                     Newtest.set[,opt.desc])
+Newtest.set$Pab.ClassPredBin <- opt.testsetpred
+Newtest.set$Pab.Pred.Class <- as.numeric(lapply(strsplit(opt_qspr_summary[,chosen.model]," \\("),function(x) x[[1]])[2+as.numeric(opt.testsetpred)])
+
+
+
+```
+
+```{r qspr_confusionmatrix}
+
+opt.confusion <- confusionMatrix(data = opt.testsetpred,
+                                 reference = Newtest.set[,chosen.model])
+opt.testsummary <- postResample(pred = opt.testsetpred,
+                                obs = Newtest.set[,chosen.model])
+print(opt.confusion)
+print(opt.testsummary)
+
+save(opt.testsetpred, opt.confusion, opt.testsummary, Newtest.set, chosen.model,
+     file=paste0(loc.wd,"/r_data/QSPR/optimal_model_127Newtest_set_performance.RData"))  
+```
+
+### graph
+```{r caco2_qspr_pab_eval_testonly_fig}
+      FigQSPRPredPabTest <- ggplot(Newtest.set)+
+      geom_point(aes(x =as.numeric(Newtest.set$Papp_A2B), 
+                       y =Newtest.set$Pab.Pred,
+                     color="Cyprotex"), 
+                   alpha = 0.8,
+                   position = position_jitter(w = 0.0, h = 0.1),
+                   size=3)+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(y = expression(bold("QSPR Predicted ")~bolditalic("P"["app"]^"AB")~bold('(10'^'-6'~'cm/s)')),
+             x = expression(bold("Measured ")~bolditalic("P"["app"]^"AB")~bold('(10'^'-6'~'cm/s)')),
+             color = "Data Source",
+             shape = "Data Source")+
+  coord_cartesian(xlim=c(1e-4,1e5),ylim=c(1e-1,1e2))+
+       # lims(x = c(-5,3), y = c(-5,3)) +
+        scale_x_log10(labels=scientific_10)+
+         scale_y_log10(labels=scientific_10)+
+         scale_colour_viridis_d()+
+        gtheme
+  print(FigQSPRPredPabTest)
+    ggsave(FigQSPRPredPabTest, 
+           file = paste0(loc.wd, 
+                         "/results_for_paper/Poster_8.Oct_Class_Fig_QSPRPredPabTestOnly.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+    
+
+    
+    
+    
+```
+###Evaluate the optimal regression model with the test set
+
+```{r qspr_testset2_reg}
+load(file=paste0(loc.wd,"/r_data/QSPR/optimal_model_reg_check.RData"))
+load(file=paste0(loc.wd,"/r_data/QSPR/testset.RData"))
+load(file=paste0(loc.wd,"/r_data/QSPR/trainingdata-meansd.RData"))
+load(file=paste0(loc.wd,"/r_data/QSPR/qsprbinnumbersummary.RData"))
+load(paste0(loc.wd,"/r_data/QSPR/op_qsprbinnumbersummary_check.RData"))
+
+
+PA2B_57=read.xlsx("C:\\Users\\stabatab\\OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\ExpoCast_Projec\\Project_Pred_Caco2_Clint_Fup\\invitroTKstats\\CyprotexTO1\\57Pab_v0.10.9.30.xlsx",na.strings = "#NUM!")
+
+
+padel=read.csv(paste0(loc.wd,"/r_data/QSPR/Sahar/padel-caco2.csv"),check.names=FALSE)
+opera=read.csv(paste0(loc.wd,"/r_data/QSPR/Sahar/127Caco2_Chem_SMILES2-smi_OPERA2.9Pred.csv"), check.names=FALSE)
+
+
+opera=unique(opera[which(opera$MoleculeID %in%PA2B_57$DTXSID),])
+padel=unique(padel[which(padel$Name %in%PA2B_57$DTXSID),])
+padel=padel[,!names(padel) %in% names(opera)]
+chems57_desc=merge(opera,padel, by.x="MoleculeID", by.y="Name", all.x=TRUE)
+
+Newtest.set=merge(PA2B_57,chems57_desc, by.x="DTXSID", by.y="MoleculeID", all.x=TRUE)
+Newtest.set=Newtest.set[order(match(Newtest.set$DTXSID,PA2B_57$DTXSID)),]
+dim(Newtest.set)
+Newtest.set=Newtest.set[!is.na(Newtest.set$Papp_A2B),]
+dim(Newtest.set)
+
+
+desc.cols <- rep(TRUE, dim(Newtest.set)[2])
+colnames(Newtest.set)[1] <- "dtxsid"
+desc.cols[regexpr("AD_",colnames(Newtest.set))!=-1] <- FALSE
+desc.cols[regexpr("_predRange",colnames(Newtest.set))!=-1] <- FALSE
+desc.cols[regexpr("Conf_index",colnames(Newtest.set))!=-1] <- FALSE
+Newtest.set <- subset(Newtest.set,!duplicated(Newtest.set))
+
+### Ionization fractions:
+
+for (i in 1:dim(Newtest.set)[1])
+{
+  out <- calc_ionization(pH=7.4, 
+                         pKa_Donor=Newtest.set[i,"pKa_a_pred"],
+                         pKa_Accept=Newtest.set[i,"pKa_b_pred"])
+  for (this.col in names(out)) Newtest.set[i,this.col] <- out[[this.col]]
+}
+
+dim(Newtest.set)
+Newtest.set.ids <- Newtest.set[,"dtxsid"]
+Newtest.set.desc.reg <- Newtest.set[,opt.desc.reg]
+dim(Newtest.set.desc)
+
+
+# Replace NA's with mean of training set:
+for (this.col in colnames(train_msd))
+{
+  if (is.numeric(train_msd[1,this.col]))
+  {
+    Newtest.set[is.na(Newtest.set[,this.col]),this.col] <- train_msd[1,this.col]
+  }
+}
+
+dim(Newtest.set.desc.reg)
+
+#Normalize the descriptors in the new test set:
+
+for (this.col in colnames(train_msd))
+{
+  if (is.numeric(Newtest.set[,this.col])){
+    Newtest.set[,this.col]=(Newtest.set[,this.col]-train_msd[1,this.col])/train_msd[2,this.col]
+  }
+}
+
+```
+###confusionmatrix_reg
+
+```{r qspr_confusionmatrix_reg}
+
+
+opt.testsetpred.reg <- 10^as.numeric(unlis(predict(regmodopt,Newtest.set[,opt.desc.reg])))
+
+Newtest.set$Pab.Pred.Reg <- opt.testsetpred.reg 
+
+
+opt.testsummary.reg <- postResample(pred = opt.testsetpred.reg,
+                                obs =(as.numeric(as.character(Newtest.set$Papp_A2B))))
+print(opt.testsummary.reg)
+
+
+
+
+```
+
+```{r qspr_confusionmatrix_reg}
+
+opt.confusion.reg <- confusionMatrix(data = opt.testsetpred.reg,
+                                 reference = as.numeric(as.character(Newtest.set$Papp_A2B)))
+opt.testsummary.reg <- postResample(pred = opt.testsetpred.reg,
+                                obs = Newtest.set$Papp_A2B)
+print(opt.confusion.reg)
+
+save(opt.testsetpred.reg, opt.confusion.reg, opt.testsummary.reg, test.set, chosen.model,
+     file=paste0(loc.wd,"/r_data/QSPR/optimal_model_test_set_performance_reg.RData"))  
+
+
+Newtest.set=data.frame(Newtest.set)
+Newtest.set.desc=data.frame(Newtest.set.desc)
+Newtest.set.desc.reg=data.frame(Newtest.set.desc.reg)
+
+FilePath=("C:\\Users\\stabatab\\OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson\\invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\57Newtest.set.xlsx")
+write.xlsx(Newtest.set,file=FilePath,rowNames=FALSE)
+
+FilePath=("C:\\Users\\stabatab\\OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson\\invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\57Newtest.set.desc.xlsx")
+write.xlsx(Newtest.set.desc,file=FilePath,rowNames=FALSE)
+
+
+
+
+FilePath=("C:\\Users\\stabatab\\OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson\\invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\57Newtest.set.desc.reg.xlsx")
+write.xlsx(Newtest.set.desc.,file=FilePath,rowNames=FALSE)
+
+
+
+
+
+
+```
+
+```{r caco2_qspr_pab_eval_testonly_fig_reg}
+        FigQSPRPredPabTest <- ggplot(Newtest.set)+
+      geom_point(aes(x =as.numeric(Newtest.set$Papp_A2B), 
+                       y =Newtest.set$Pab.Pred ,
+                     color="Cyprotex"), 
+                   alpha = 0.8,
+                   position = position_jitter(w = 0.0, h = 0.1),
+                   size=3)+
+        geom_abline(slope = 1, linetype = "dashed")+
+        labs(y = expression(bold("QSPR Predicted ")~bolditalic("P"["app"]^"AB")~bold('(10'^'-6'~'cm/s)')),
+             x = expression(bold("Measured ")~bolditalic("P"["app"]^"AB")~bold('(10'^'-6'~'cm/s)')),
+             color = "Data Source",
+             shape = "Data Source")+
+  coord_cartesian(xlim=c(1e-4,1e5),ylim=c(1e-1,1e2))+
+       # lims(x = c(-5,3), y = c(-5,3)) +
+        scale_x_log10(labels=scientific_10)+
+         scale_y_log10(labels=scientific_10)+
+         scale_colour_viridis_d()+
+        gtheme
+  print(FigQSPRPredPabTest)
+    ggsave(FigQSPRPredPabTest, 
+           file = paste0(loc.wd, 
+                         "/results_for_paper/Poster_8.oct_reg_Fig_QSPRPredPabTestOnly_reg.tiff"),
+         height = 3, width = 3, dpi = 600, compression = "lzw")
+
+    
+    
+    
+      
+```
+### SMOTE
+``` {r SMOTE}
+
+tset: 
+library(openxlsx)
+Succeed_Fail=read.xlsx("C:\\Users\\stabatab\\OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson\\invitroTKstats\\CyprotexTO1\\127Pab_v0.0.10.xlsx",na.strings = "#NUM!")
+
+failed=Succeed_Fail[is.na(Succeed_Fail$Papp_A2B),]
+successful=Succeed_Fail[!is.na(Succeed_Fail$Papp_A2B),]
+chem_failed=data.frame("Chemical with Failed Measurements"=failed$DTXSID)
+chem_successful=data.frame("Chemical with Successful Measurements"=successful$DTXSID)
+
+FilePath="C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\ISES_127Caco2_QSPR\\Chems_Failed.xlsx"
+
+FilePath1="C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\ISES_127Caco2_QSPR\\Chems_successful.xlsx"
+
+write.xlsx(chem_failed,file=FilePath,rowNames=FALSE)
+write.xlsx(chem_successful,file=FilePath1,rowNames=FALSE)
+
+
+```
+### Aplicability Domain
+```{r qspr_royapplicabilitydomain}
+#Use the Roy et al. (2015) method to determine applicability domain:
+
+
+Newtest.set.Ski <- Newtest.set.desc
+Newtest.set.Ski[] <- NA
+
+# Roy et al. Algorithm Step a:
+for (this.col in opt.desc)
+{
+  Newtest.set.Ski[,this.col] <- abs(Newtest.set.desc[this.col] - train_msd[1,this.col]) /
+    train_msd[2,this.col]
+}
+# Roy et al. Algorithm Step b (no extreme descriptors):
+Newtest.set.Si.max.k <- apply(Newtest.set.Ski, 1, max)
+Newtest.set.AD <- rep(NA,length(Newtest.set.Si.max.k))
+Newtest.set.AD[Newtest.set.Si.max.k <= 3] <- 1 # Inside applicability domain
+# Roy et al. Algorithm Step c (all extreme descriptors:
+Newtest.set.Si.min.k <- apply(Newtest.set.Ski,1,min)
+Newtest.set.AD[Newtest.set.Si.max.k > 3 &
+        Newtest.set.Si.min.k > 3] <- 0 # Outside applicability domain
+# Roy et al. Algorithm Step d (some extreme descriptors):
+Newtest.set.S.new.k <- apply(Newtest.set.Ski, 1, mean) + 1.28*apply(Newtest.set.Ski, 1, sd)
+Newtest.set.AD[Newtest.set.Si.max.k > 3 &
+        Newtest.set.Si.min.k <= 3 &
+        Newtest.set.S.new.k <= 3] <- 1 # Inside applicability domain
+Newtest.set.AD[Newtest.set.Si.max.k > 3 &
+        Newtest.set.Si.min.k <= 3 &
+        Newtest.set.S.new.k > 3] <- 0 # Outside applicability domain
+print(paste0(sum(Newtest.set.AD),"  chemicals (",
+             signif(sum(Newtest.set.AD)/length(Newtest.set.AD),3)*100,
+             "%) are in the Roy et al. (2015) estimated domain of applicability"))
+```
+### Use optimal model
+
+```{r } 
+
+load(file=paste0(loc.wd,"/r_data/QSPR/op_qsprbinnumbersummary.RData"))
+
+testset.pred <- predict(classmodopt, Newtest.set.desc)
+testset.caco2.qspr <- data.frame(DTXSID=Newtest.set.ids, 
+                              Pab.Class.Pred=testset.pred,
+                              Pab.Pred.AD = Newtest.set.AD)
+
+
+for (this.bin in sort(as.character(unique(testset.caco2.qspr$Pab.Class.Pred))))
+{
+  bin.value <- opt_qspr_summary[paste0("Bin",this.bin),chosen.model]
+  bin.value <- gsub(" \\(",",",bin.value)
+  bin.value <- gsub(" - ",",",bin.value)
+  bin.value <- gsub("\\)","",bin.value)
+  testset.caco2.qspr[as.character(testset.caco2.qspr$Pab.Class.Pred)==this.bin,
+                  "Pab.Quant.Pred"] <- bin.value
+}
+
+Caco2_qspr_preds=data.frame(testset.caco2.qspr)
+FilePath="C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\op_57Caco2_qspr_preds.xlsx"
+
+write.xlsx(Caco2_qspr_preds,file=FilePath,rowNames=FALSE)
+
+Summary=data.frame(Domain=c("Inside AD","Outside AD"),
+                   Count=c(sum(Caco2_qspr_preds$Pab.Pred.AD),length(Caco2_qspr_preds$Pab.Pred.AD)-sum(Caco2_qspr_preds$Pab.Pred.AD)))
+
+
+
+# Plot applicability domain summary
+applicability_domain_plot <- ggplot(Summary, aes(x = "", y = Count, fill = Domain)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y") +
+  ggtitle("Applicability Domain") +
+  theme_void() +
+  scale_fill_manual(values=c("Inside AD"="steelblue", "Outside AD"="lightcoral"))+
+  theme(plot.title = element_text(size = 14,face="bold",hjust = 0.5))
+
+
+ggsave("C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\57applicability_domain_pie_plot.jpg", plot = applicability_domain_plot, width = 6, height = 4, units = "in", dpi = 300)
+
+print(applicability_domain_plot)
+
+
+
+# Plot applicability domain summary as a bar plot
+applicability_domain_bar_plot <- ggplot(Summary, aes(x = Domain, y = Count, fill = Domain)) +
+  geom_bar(stat = "identity") +
+  ggtitle("Applicability Domain Summay") +
+  xlab("Applicability Domain") +
+  ylab("Number of Chemicals") +
+  scale_fill_manual(values=c("Inside AD"="steelblue", "Outside AD"="lightcoral"))+
+  theme(plot.title = element_text(hjust=0.5,face="bold",size=14),
+        axis.title.x =element_text(size=12,face = "bold"),
+        axis.title.y =element_text(size=12,face = "bold"),
+        axis.text = element_text(size=10))
+
+
+# Save applicability domain bar plot as JPEG
+ggsave("C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\57applicability_domain_bar_plot.jpg", plot = applicability_domain_bar_plot, width = 6, height = 4, units = "in", dpi = 300)
+
+# Print applicability domain bar plot
+print(applicability_domain_bar_plot)
+
+```
+### Chemicals out of AD
+```{r}
+
+Pab_Quant=read.xlsx("C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\op_57Caco2_qspr_preds.xlsx")
+
+Pab_Quant=Pab_Quant %>% mutate(Pab.Quant.Pred=sapply(strsplit(as.character(Pab.Quant.Pred),","),function(x)as.numeric(x[1])))
+filter=Pab_Quant %>% filter(Pab.Pred.AD==0)
+Chem_ou_AD=data.frame("Chemicals out of AD"=filter$DTXSID)
+
+chems_in_AD=data.frame(Pab_Quant[Pab_Quant$Pab.Pred.AD==1,"DTXSID"])
+
+FilePath="C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\50Chems_in_AD.xlsx"
+
+write.xlsx(chems_in_AD,file=FilePath,rowNames=FALSE)
+
+FilePath="C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\7Chems_out_AD.xlsx"
+
+write.xlsx(Chem_ou_AD,file=FilePath,rowNames=FALSE)
+
+
+```
+### Succeeded and Failed
+```{r}
+
+Succeed_Fail=read.xlsx("C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\Pab_Invtk.xlsx",na.strings = "#NUM!")
+
+failed=Succeed_Fail[is.na(Succeed_Fail$`Log.10.(.Papp_A2B.)`),]
+successful=Succeed_Fail[!is.na(Succeed_Fail$`Log.10.(.Papp_A2B.)`),]
+chem_failed=data.frame("Chemical with Failed Measurements"=failed$DTXSID)
+chem_successful=data.frame("Chemical with Successful Measurements"=successful$DTXSID)
+
+FilePath="C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\Chems_Failed.xlsx"
+
+FilePath1="C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\Chems_successful.xlsx"
+
+write.xlsx(chem_failed,file=FilePath,rowNames=FALSE)
+write.xlsx(chem_successful,file=FilePath1,rowNames=FALSE)
+
+
+measurement_summary <- data.frame(
+  Status = c("Succeeded", "Failed"),
+  Count = c(nrow(successful), nrow(failed))
+)
+
+# Plot measurement summary as a bar plot
+measurement_summary_plot <- ggplot(measurement_summary, aes(x = Status, y = Count, fill = Status)) +
+  geom_bar(stat = "identity") +
+  ggtitle("Measurement Success vs Failure") +
+  xlab("Measurement Status") +
+  ylab("Number of Chemicals") +
+  scale_fill_manual(values=c("Succeeded"="steelblue", "Failed"="lightcoral"))+
+  theme(plot.title = element_text(hjust=0.5,face="bold",size=14),
+        axis.title.x =element_text(size=12,face = "bold"),
+        axis.title.y =element_text(size=12,face = "bold"),
+        axis.text = element_text(size=10))
+
+# Save measurement summary plot as JPEG
+ggsave("C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\Failed_Succeed_summary_plot.jpg", plot = measurement_summary_plot, width = 6, height = 4, units = "in", dpi = 300)
+
+# Print measurement summary plot
+print(measurement_summary_plot)
+
+
+```
+
+
+# Create the pie chart
+```{r}
+measurement_summary_pie <- ggplot(measurement_summary, aes(x = "", y = Count, fill = Status)) +
+    geom_bar(width = 1, stat = "identity") +
+    coord_polar("y", start = 0) +
+    ggtitle("Measurement Success vs Failure") +
+    scale_fill_manual(values = c("Succeeded" = "steelblue", "Failed" = "lightcoral")) +
+    theme_void() +  # Ensure theme_void() is applied to remove all axes, labels, and ticks
+    theme(
+        plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
+        legend.title = element_text(size = 10), # Adjust legend title size if needed
+        legend.text = element_text(size = 10)   # Adjust legend text size if needed
+    )
+
+
+# Display the pie chart
+print(measurement_summary_pie)
+
+# Save the pie chart as JPEG
+output_path <- "C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\Failed_Succeed_Summary_Pie.jpg"
+ggsave(output_path, plot = measurement_summary_pie, width = 6, height = 6, units = "in", dpi = 300)
+
+
+
+
+opt_qspr_sum_3clusters=data.frame(opt_qspr_summary)
+colnames(opt_qspr_sum_3clusters)[colnames(opt_qspr_sum_3clusters)=="LogPab3Bin"]="Three Clusters"
+
+FilePath="C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\57Caco2_opt_qspr_summary.xlsx"
+write.xlsx(opt_qspr_sum_3clusters,file=FilePath,rowNames=TRUE)
+
+
+
+
+qspr_summary=data.frame(qspr.summary)
+colnames(qspr_summary)[colnames(qspr_summary)=="LogPab2Bin"]="Two Clusters"
+colnames(qspr_summary)[colnames(qspr_summary)=="LogPab3Bin"]="Three Clusters"
+colnames(qspr_summary)[colnames(qspr_summary)=="LogPab4Bin"]="Four Clusters"
+colnames(qspr_summary)[colnames(qspr_summary)=="LogPab5Bin"]="Five Clusters"
+
+FilePath="C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\57Caco2_qspr_summary.xlsx"
+write.xlsx(qspr_summary,file=FilePath,rowNames=TRUE)
+
+save(testset.caco2.qspr,
+     file="Caco2_qspr_preds.RData")
+
+
+```
+
+### Classification and Regression Error
+
+# Load necessary libraries
+```{r}
+library(ggplot2)
+
+# Ensure the RMSE data is in a data frame
+RMSE_data <- data.frame(RMSE = regmodopt[[this.model]]$resample$RMSE)
+
+# Create the ggplot2 histogram
+hist_plot <- ggplot(RMSE_data, aes(x = RMSE)) +
+  geom_histogram(binwidth = 0.01, fill = "grey", color = "black") +
+  ggtitle("Histogram of regmodopt RMSE") +
+  xlab(" Resample RMSE") +
+  ylab("Frequency") +
+  theme(plot.title = element_text(hjust=0.5,face="bold",size=14),
+        axis.title.x =element_text(size=12,face = "bold"),
+        axis.title.y =element_text(size=12,face = "bold"),
+        axis.text = element_text(size=10))
+                                    
+ print(hist_plot)                                                
+
+# Define file path
+output_path <- "C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\Hist_RMSE_Regmodopt_plot.jpg"
+
+
+# Save the plot using ggsave
+ggsave(output_path, plot = hist_plot, width = 8, height = 6, units = "in", dpi = 300)
+
+
+```
+### Reg Error vs Class Error
+
+```{r Reg Error vs class Error}
+load(paste0(loc.wd,"/r_data/QSPR/optregmodel.RData"))
+load(paste0(loc.wd,"/r_data/QSPR/regmodel.RData"))
+
+
+
+opt.testsetpred.reg <- 10^predict(regmodopt,
+                       Newtest.set[,opt.desc])
+Newtest.set$Pab.Pred <- opt.testsetpred.reg 
+# Convert regressions predictions to bins:
+bin1max <- max(subset(Newtest.set,LogPab3Bin=="1")$Pab)
+bin2max <- max(subset(Newtest.set,LogPab3Bin=="2")$Pab)
+Newtest.set$Pab.RegPredBin <- 3
+Newtest.set[Newtest.set$Pab.Pred < bin2max,"Pab.RegPredBin"] <- 2
+Newtest.sett[Newtest.set$Pab.Pred < bin1max,"Pab.RegPredBin"] <- 1
+Newtest.set$Pab.RegPredBin <- as.factor(test.set$Pab.RegPredBin )
+opt.testsetpred.reg <- Newtest.set$Pab.RegPredBin
+```
+###
+```{r qspr_confusionmatrix_reg}
+opt.confusion.reg <- confusionMatrix(data = opt.testsetpred.reg,
+                                 reference = test.set[,chosen.model])
+opt.testsummary.reg <- postResample(pred = opt.testsetpred.reg,
+                                obs = test.set[,chosen.model])
+print(opt.confusion.reg)
+
+
+
+
+
+
+
+
+
+#Regression Error
+
+opt_regmod_pred1 <- 10^predict(regmodopt,Newtest.set.desc)
+opt_regmod_pred <- predict(regmodopt,Newtest.set.desc)
+opt_reg_error=(Newtest.set[,"LogP_pred"])-opt_regmod_pred
+opt_reg_results=data.frame(Actual=Newtest.set[,"LogP_pred"],
+                       Predicted=opt_regmod_pred,
+                       Residualreg=opt_reg_error)
+
+
+
+
+
+
+
+
+opt.confusion.reg <- confusionMatrix(data = opt_regmod_pred,
+                                 reference = Newtest.set[,chosen.model])
+opt.testsummary.reg <- postResample(pred = opt_regmod_pred,
+                                obs = test.set[,chosen.model])
+print(opt.confusion.reg)
+
+
+FilePath="C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\127Opt_Reg_Error_Results.xlsx"
+
+write.xlsx(opt_reg_results,file=FilePath,rowNames=FALSE)
+
+
+library(ggplot2)
+
+# Regression Error Plot
+opt_reg_error_plot <- ggplot(opt_reg_results, aes(x = Residualreg)) +
+    geom_histogram(binwidth = 0.13, fill = "peachpuff", color = "black") +
+    ggtitle("Distribution of Regression Errors (Optimized)") +
+    xlab("Residual Error") +
+    ylab("Frequency") +
+    xlim(min(opt_reg_results$Residualreg)-1 , max(opt_reg_results$Residualreg) +1) +  # Adjusted limits
+    theme_minimal() +
+    theme(plot.title = element_text(size = 10, hjust = 0.5))
+
+print(opt_reg_error_plot)
+
+
+
+#Classification Error
+
+opt.testsetpred <- predict(classmodopt,Newtest.set[,opt.desc])
+Newtest.set$Pab.PredBin <- opt.testsetpred
+Newtest.set$Pab.Pred <- as.numeric(lapply(strsplit(opt_qspr_summary[,chosen.model],
+                                                " \\("),
+                                       function(x) x[[1]])[2+as.numeric(opt.testsetpred)])
+
+classopt_error=(Newtest.set[,"LogP_pred"])-log10(Newtest.set$Pab.Pred)
+classopt_results=data.frame(Actual=(Newtest.set[,"LogP_pred"]),
+                       Predicted=log10(Newtest.set$Pab.Pred),
+                       Residualclop=classopt_error)
+
+
+
+FilePath="C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\Opt_Class_Error_Results.xlsx"
+
+write.xlsx(classopt_results,file=FilePath,rowNames=FALSE)
+
+
+classopt_error_plot <- ggplot(classopt_results, aes(x = Residualclop)) +
+    geom_histogram(binwidth = 0.1, fill = "lightblue", color = "black") +
+    ggtitle("Distribution of Classification Errors (Optimized)") +
+    xlab("Classification Error") +
+    ylab("Frequency") +
+    xlim(min(classopt_results$Residualclop) - 1, 
+         max(classopt_results$Residualclop, na.rm = TRU) + 1) +  # Adjusted limits
+    theme_minimal() +
+    theme(plot.title = element_text(size = 10, hjust = 0.5))
+print(classopt_error_plot)
+
+
+library(gridExtra)
+
+
+grid.arrange(op_reg_error_plot,classopt_error_plot,nrow=2, ncol = 1)
+
+ggsave("C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\Reg_Error_plot.jpg",plot=op_reg_error_plot, width=6, height=4,units="in",dpi=300)
+
+
+ggsave("C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\Class_Error_plot.jpg",plot=classopt_error_plot, width=6, height=4,units="in",dpi=300)
+  
+
+
+
+
+
+            
+```
+
+### qspr
+```{r }
+
+
+# Calculate mean and standard deviation of residuals
+mean_residual_reg <- mean(opt_reg_results$Residualreg)
+sd_residual_reg <- sd(opt_reg_results$Residualreg)
+
+
+mean_residual_classop <- mean(classopt_results$Residualclop)
+sd_residual_classop <- sd(classopt_results$Residualclop)
+
+# Print results
+print(paste("Mean residual error for Regression:", mean_residual_reg))
+print(paste("SD residual error for Regression:", sd_residual_reg))
+
+
+print(paste("Mean classification error for Optimized Classification:", mean_residual_classop))
+print(paste("SD classification error for Optimized Classification:", sd_residual_classop))
+
+
+
+```
+###Classification and Regression Errors for outliers:
+```{r Reg Error vs class Error}
+
+
+load(paste0(loc.wd,"/r_data/QSPR/optregmodel.RData"))
+load(paste0(loc.wd,"/r_data/QSPR/regmodel.RData"))
+
+
+Pab_Quant=Pab_Quant %>% mutate(Pab.Quant.Pred=sapply(strsplit(as.character(Pab.Quant.Pred),","),function(x)as.numeric(x[1])))
+filter=Pab_Quant %>% filter(Pab.Pred.AD==0)
+Chem_out_AD=data.frame("Chemicals out of AD"=filter$DTXSID)
+
+
+out_Newtest.set=Newtest.set[Newtest.set$dtxsid %in% Chem_out_AD$Chemicals.out.of.AD,]
+out_Newtest.set.desc=out_Newtest.set[,opt.desc]
+dim(out_Newtest.set.desc)
+
+
+#Regression Error
+
+out_opt_regmod_pred <- predict(regmodopt,out_Newtest.set.desc)
+out_opt_reg_error=(out_Newtest.set[,"LogP_pred"])-out_opt_regmod_pred
+out_opt_reg_results=data.frame(Actual=out_Newtest.set[,"LogP_pred"],
+                       Predicted=out_opt_regmod_pred,
+                       Residualreg=out_opt_reg_error)
+
+FilePath="C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\127out_Opt_Reg_Error_Results.xlsx"
+
+write.xlsx(out_opt_reg_results,file=FilePath,rowNames=FALSE)
+
+
+library(ggplot2)
+
+# Regression Error Plot
+out_opt_reg_error_plot <- ggplot(out_opt_reg_results, aes(x = Residualreg)) +
+    geom_histogram(binwidth = 0.13, fill = "peachpuff", color = "black") +
+    ggtitle("Distribution of Regression Errors (Optimized)") +
+    xlab("Residual Error") +
+    ylab("Frequency") +
+    xlim(min(out_opt_reg_results$Residualreg)-1 , max(out_opt_reg_results$Residualreg) +1) +  # Adjusted limits
+    ylim(0,2)+
+  theme_minimal() +
+    theme(plot.title = element_text(size = 10, hjust = 0.5))
+
+print(out_opt_reg_error_plot)
+
+
+
+#Classification Error
+
+out_opt.testsetpred <- predict(classmodopt,out_Newtest.set[,opt.desc])
+out_Newtest.set$Pab.PredBin <- out_opt.testsetpred
+out_Newtest.set$Pab.Pred <- as.numeric(lapply(strsplit(opt_qspr_summary[,chosen.model],
+                                                " \\("),
+                                       function(x) x[[1]])[2+as.numeric(out_opt.testsetpred)])
+
+out_classopt_error=(out_Newtest.set[,"LogP_pred"])-log10(out_Newtest.set$Pab.Pred)
+out_classopt_results=data.frame(Actual=(out_Newtest.set[,"LogP_pred"]),
+                       Predicted=log10(out_Newtest.set$Pab.Pred),
+                       Residualclop=out_classopt_error)
+
+
+
+FilePath="C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\out_Opt_Class_Error_Results.xlsx"
+
+write.xlsx(out_classopt_results,file=FilePath,rowNames=FALSE)
+
+
+out_classopt_error_plot <- ggplot(out_classopt_results, aes(x = Residualclop)) +
+    geom_histogram(binwidth = 0.1, fill = "lightblue", color = "black") +
+    ggtitle("Distribution of Classification Errors (Optimized)") +
+    xlab("Classification Error") +
+    ylab("Frequency") +
+    xlim(min(out_classopt_results$Residualclop, na.rm = TRUE) - 1, 
+         max(out_classopt_results$Residualclop, na.rm = TRUE) + 1) +  # Adjusted limits
+    theme_minimal() +
+    theme(plot.title = element_text(size = 10, hjust = 0.5))
+print(out_classopt_error_plot)
+
+
+library(gridExtra)
+
+
+grid.arrange(out_opt_reg_error_plot,out_classopt_error_plot,nrow=2, ncol = )
+
+ggsave("C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\out_Reg_Error_plot.jpg",plot=op_reg_error_plot, width=6, height=4,units="in",dpi=300)
+
+
+ggsave("C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\out_Class_Error_plot.jpg",plot=classopt_error_plot, width=6, height=4,units="in",dpi=300)
+  
+
+
+
+
+
+# Calculate mean and standard deviation of residuals
+out_mean_residual_reg <- mean(out_opt_reg_results$Residualreg)
+out_sd_residual_reg <- sd(out_opt_reg_results$Residualreg)
+
+
+out_mean_residual_classop <- mean(out_classopt_results$Residualclop)
+out_sd_residual_classop <- sd(out_classopt_results$Residualclop)
+
+# Print results
+print(paste("Mean residual error for Regression:", out_mean_residual_reg))
+print(paste("SD residual error for Regression:", out_sd_residual_reg))
+
+
+print(paste("Mean classification error for Optimized Classification:", out_mean_residual_classop))
+print(paste("SD classification error for Optimized Classification:", out_sd_residual_classop))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ conf_matrix <- classmodopt$confusion # Adjust this based on how you stored the confusion matrix
+
+# Extract misclassification data
+misclassification <- conf_matrix$table - diag(conf_matrix$table)
+
+# Plot misclassification
+misclass_data <- as.data.frame(misclassification)
+colnames(misclass_data) <- c("Actual", "Predicted", "Frequency")
+
+misclass_plot <- ggplot(misclass_data, aes(x = Actual, y = Predicted, fill = Frequency)) +
+  geom_tile() +
+  scale_fill_gradient(low = "white", high = "red") +
+  ggtitle("Confusion Matrix: Misclassification") +
+  xlab("Actual Class") +
+  ylab("Predicted Class") +
+  theme_minimal()
+
+# Display plot
+print(misclass_plot)
+
+```
+### Use optimal model
+```{r qspr_makehttkprediction}
+
+load("qsprbinnumbersummary.RData")
+
+opera.pred <- predict(classmodopt, opera.desc)
+opera.caco2.qspr <- data.frame(DTXSID=opera.ids, 
+                              Pab.Class.Pred=opera.pred,
+                              Pab.Pred.AD = opera.AD)
+
+
+for (this.bin in sort(as.character(unique(opera.caco2.qspr$Pab.Class.Pred))))
+{
+  bin.value <- qspr.summary[paste0("Bin",this.bin),chosen.model]
+  bin.value <- gsub(" \\(",",",bin.value)
+  bin.value <- gsub(" - ",",",bin.value)
+  bin.value <- gsub("\\)","",bin.value)
+  opera.caco2.qspr[as.character(opera.caco2.qspr$Pab.Class.Pred)==this.bin,
+                  "Pab.Quant.Pred"] <- bin.value
+}
+
+Caco2_qspr_preds=data.frame(opera.caco2.qspr)
+FilePath="C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\127Caco2_qspr_preds.xlsx"
+
+write.xlsx(Caco2_qspr_preds,file=FilePath,rowNames=FALSE)
+
+
+```
+###R
+```{DDD}
+
+load("qsprbinnumbersummary.RData")
+
+opera.pred <- predict(classmodopt, opera.desc)
+op_opera.caco2.qspr <- data.frame(DTXSID=opera.ids, 
+                              Pab.Class.Pred=opera.pred,
+                              Pab.Pred.AD = opera.AD)
+
+colnames(opt_qspr_summary)[colnames(opt_qspr_summary)== "Three Clusters"]="LogPab3Bin"
+for (this.bin in sort(as.character(unique(op_opera.caco2.qspr$Pab.Class.Pred))))
+{
+  bin.value <- opt_qspr_summary[paste0("Bin",this.bin),chosen.model]
+  bin.value <- gsub(" \\(",",",bin.value)
+  bin.value <- gsub(" - ",",",bin.value)
+  bin.value <- gsub("\\)","",bin.value)
+  op_opera.caco2.qspr[as.character(op_opera.caco2.qspr$Pab.Class.Pred)==this.bin,
+                  "Pab.Quant.Pred"] <- bin.value
+}
+
+op_Caco2_qspr_preds=data.frame(op_opera.caco2.qspr)
+FilePath="C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\op_127Caco2_qspr_preds.xlsx"
+
+write.xlsx(op_Caco2_qspr_preds,file=FilePath,rowNames=FALSE)
+ 
+Summary=data.frame(Domain=c("Inside AD","Outside AD"),
+                   Count=c(sum(op_Caco2_qspr_preds$Pab.Pred.AD),length(op_Caco2_qspr_preds$Pab.Pred.AD)-sum(op_Caco2_qspr_preds$Pab.Pred.AD)))
+
+
+# Plot applicability domain summary
+applicability_domain_plot <- ggplot(Summary, aes(x = "", y = Count, fill = Domain)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar("y") +
+  ggtitle("Applicability Domain") +
+  theme_void() +
+  scale_fill_manual(values=c("Inside AD"="steelblue", "Outside AD"="lightcoral"))+
+  theme(plot.title = element_text(size = 14,face="bold",hjust = 0.5))
+
+
+ggsave("C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\applicability_domain_pie_plot.jpg", plot = applicability_domain_plot, width = 6, height = 4, units = "in", dpi = 300)
+
+print(applicability_domain_plot)
+
+
+
+# Plot applicability domain summary as a bar plot
+applicability_domain_bar_plot <- ggplot(Summary, aes(x = Domain, y = Count, fill = Domain)) +
+  geom_bar(stat = "identity") +
+  ggtitle("Applicability Domain Summay") +
+  xlab("Applicability Domain") +
+  ylab("Number of Chemicals") +
+  scale_fill_manual(values=c("Inside AD"="steelblue", "Outside AD"="lightcoral"))+
+  theme(plot.title = element_text(hjust=0.5,face="bold",size=14),
+        axis.title.x =element_text(size=12,face = "bold"),
+        axis.title.y =element_text(size=12,face = "bold"),
+        axis.text = element_text(size=10))
+
+
+# Save applicability domain bar plot as JPEG
+ggsave("C:\\Users/stabatab/OneDrive - Environmental Protection Agency (EPA)\\Profile\\Desktop\\John-Project\\Project_Pred_Clint_Fup_Dawson/invitroTKstats\\CyprotexTO1\\Presentation_127Caco2_QSPR\\applicability_domain_bar_plot.jpg", plot = applicability_domain_bar_plot, width = 6, height = 4, units = "in", dpi = 300)
+
+# Print applicability domain bar plot
+print(applicability_domain_bar_plot)
+
+
+``
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+```

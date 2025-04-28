@@ -15,8 +15,8 @@ A data.frame containing 9411 rows and 54 columns.
 (\url{https://comptox.epa.gov/dashboard}) \tab none \cr                  
  Formula \tab The proportions of atoms within the chemical compound  \tab none \cr                   
  All.Compound.Names \tab All names of the chemical as they occured in the
-data \tab none \cr              
- logHenry \tab The log10 Henry's law constant \tab 
+data \tab none \cr                                           
+ logHenry \tab The log10 Henry's law constant (Conc_air = 10^logH * Conc_liquid)\tab 
 log10(atmosphers*m^3/mole) \cr                 
  logHenry.Reference \tab Reference for Henry's law constant \tab \cr           
  logP \tab The log10 octanol:water partition coefficient (PC)\tab log10 unitless ratio \cr                 
@@ -136,14 +136,9 @@ Hilal, S., Karickhoff, S. and Carreira, L. (1995). A rigorous test for
 SPARC's chemical reactivity models: Estimation of more than 4300 ionization
 pKas. Quantitative Structure-Activity Relationships 14(4), 348-355.
 
-Honda, G. S., Pearce, R. G., Pham, L. L., Setzer, R. W., Wetmore, B. A., 
-Sipes, N. S., ... & Wambaugh, J. F. (2019). Using the concordance of in 
-vitro and in vivo data to evaluate extrapolation assumptions. PloS one, 
-14(5), e0217564.
+\insertRef{honda2019using}{httk}
 
-Ito, K. and Houston, J. B. (2004). Comparison of the use of liver models for
-predicting drug clearance using in vitro kinetic data from hepatic
-microsomes and isolated hepatocytes. Pharm Res 21(5), 785-92.
+\insertRef{ito2004comparison}{httk}
 
 Jones, O. A., Voulvoulis, N. and Lester, J. N. (2002). Aquatic environmental
 assessment of the top 25 English prescription pharmaceuticals. Water
@@ -158,10 +153,7 @@ Development of a novel in vitro model to predict hepatic clearance using
 fresh, cryopreserved, and sandwich-cultured hepatocytes. Drug Metabolism and
 Disposition 30(12), 1446-54.
 
-Linakis, M. W., Sayre, R. R., Pearce, R. G., Sfeir, M. A., Sipes, N. S., 
-Pangburn, H. A., ... & Wambaugh, J. F. (2020). Development and evaluation of 
-a high-throughput inhalation model for organic chemicals. Journal of 
-Exposure Science & Environmental Epidemiology, 1-12.
+\insertRef{linakis2020development}{httk}
 
 Lombardo, F., Berellini, G., & Obach, R. S. (2018). Trend analysis of a 
 database of intravenous pharmacokinetic parameters in humans for 1352 drug 
@@ -202,10 +194,7 @@ model for predicting human hepatic, metabolic clearance from in vitro
 intrinsic clearance data in hepatocytes and microsomes." Drug Metabolism and 
 Disposition 33.9 (2005): 1304-1311.
 
-Schmitt, W. (2008). General approach for the calculation of tissue to plasma
-partition coefficients. Toxicology in vitro : an international journal
-published in association with BIBRA 22(2), 457-67,
-10.1016/j.tiv.2007.09.010.
+\insertRef{schmitt2008general}{httk}
 
 Shibata, Y., Takahashi, H., Chiba, M. and Ishii, Y. (2002). Prediction of
 Hepatic Clearance and Availability by Cryopreserved Human Hepatocytes: An
@@ -225,25 +214,11 @@ Uchimura, Takahide, et al. "Prediction of human blood-to-plasma drug
 concentration ratio." Biopharmaceutics & drug disposition 31.5-6 (2010):
 286-297.
 
-Wambaugh, J. F., Wetmore, B. A., Ring, C. L., Nicolas, C. I., Pearce, R. G., 
-Honda, G. S., ... & Badrinarayanan, A. (2019). Assessing Toxicokinetic 
-Uncertainty and Variability in Risk Prioritization. Toxicological Sciences, 
-172(2), 235-251.
+\insertRef{wambaugh2019assessing}{httk}
 
-Wetmore, B. A., Wambaugh, J. F., Ferguson, S. S., Sochaski, M. A., Rotroff,
-D. M., Freeman, K., Clewell, H. J., 3rd, Dix, D. J., Andersen, M. E., Houck,
-K. A., Allen, B., Judson, R. S., Singh, R., Kavlock, R. J., Richard, A. M.
-and Thomas, R. S. (2012). Integration of dosimetry, exposure, and
-high-throughput screening data in chemical toxicity assessment.
-Toxicological sciences : an official journal of the Society of Toxicology
-125(1), 157-74, 10.1093/toxsci/kfr254.
+\insertRef{wetmore2012integration}{httk}
 
-Wetmore, B. A., Wambaugh, J. F., Ferguson, S. S., Li, L., Clewell, H. J.,
-Judson, R. S., Freeman, K., Bao, W., Sochaski, M. A., Chu, T.-M., Black, M.
-B., Healy, E., Allen, B., Andersen, M. E., Wolfinger, R. D. and Thomas, R.
-S. (2013). Relative Impact of Incorporating Pharmacokinetics on Predicting
-In Vivo Hazard and Mode of Action from High-Throughput In Vitro Toxicity
-Assays. Toxicological Sciences 132(2), 327-346, 10.1093/toxsci/kft012.
+\insertRef{wetmore2013relative}{httk}
 
 \insertRef{wetmore2015incorporating}{httk}
 

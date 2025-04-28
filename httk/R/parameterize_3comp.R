@@ -122,7 +122,9 @@
 #'
 #' \insertRef{kilford2008hepatocellular}{httk}
 #'
-#' @keywords Parameter 3compartment2
+#' \insertRef{wambaugh2025simple}{httk}
+#'
+#' @keywords Parameter 3compartment
 #'
 #' @seealso \code{\link{solve_3comp}}
 #'
@@ -139,6 +141,7 @@
 #' @examples
 #' 
 #' parameters1 <- parameterize_3comp(chem.name='Bisphenol-A',species='Rat')
+#' \donttest{
 #' parameters2 <- parameterize_3comp(chem.cas='80-05-7',
 #'                                   species='rabbit',default.to.human=TRUE)
 #' # The following will not work because Diquat dibromide monohydrate's 
@@ -148,7 +151,6 @@
 #' # that  Diquat dibromide monohydrate is not too volatile:
 #' parameters3 <- parameterize_3comp(chem.cas = "6385-62-2",
 #'                                   physchem.exclude = FALSE)
-#' \donttest{
 #' out <- solve_3comp(parameters=parameters1, plots=TRUE)
 #' }
 #' 

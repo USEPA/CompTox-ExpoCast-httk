@@ -1,6 +1,10 @@
-<img src="../httk/man/figures/httk-logo.png" align="right" width="50%"/>
+<img src="../httk/man/figures/httk.png" align="right" width="50%"/>
 
 #  MCSim and C Models for HTTK
+
+The procedure for adding high-throughput toxicokinetic models to R package "httk" is described in:
+
+[Davidson-Fritz et al. (2025) "Enabling transparent toxicokinetic modeling for public health risk assessment"](https://doi.org/10.1371/journal.pone.0321321)
 
 # Organization
 
