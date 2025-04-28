@@ -1,4 +1,4 @@
-# httk 2.6.1 (2025-04-21)
+# httk 2.6.1 (2025-04-28)
 
 ## Bug fixes
 * Blank values for human Clint in [Woods et al. 2017](https://doi.org/10.1124/dmd.117.077040) were incorrectly being recorded as 0 -- these have been removed, causing eight chemicals to no longer have Css and other predictions
@@ -9,6 +9,8 @@
 * pKa values are now predicted by ChemAxon
 * Refactored Henderson-Hasselbach calculations within `calc_ionization` to be clearer. Expanded documentation for `calc_ionization`. No known change to previously calculated values by that function. Introduced new argument return_charge_matrix which gives a table listing each ionization state to explain how the values in `calc_ionization` are derived.
 * When models (either OPERA or ChemAxon) predict that a chemical does not ionize, that prediction is now stored as a blank space (that is, " ") rather than an "NA". "NA" is intended to indicate that no prediction was available. This change should not impact the function of the code or any predictions, but hopefully clarifies the chemical descriptors.
+* Added "1comp_lifestage" and "3comp_lifestage" models. Eliminated `gen_input_params` and the need to generate additional files and directories; now the user supplies the reference population parameters to `solve_<model>_lifestage` directly.
+* Removed `gen_input_params`.
 
 # httk 2.6.0 (2025-04-18)
 This release accompanies the publication of [Truong et al. (2025) manuscript "Interpretation of thyroid-relevant bioactivity data for comparison to in vivo exposures: A prioritization approach for putative chemical inhibitors of in vitro deiodinase activity"](https://doi.org/10.1016/j.tox.2025.154157) and includes a new model describing human gestation in the first trimester (model "1tri_pbtk") which links to model "fetal_pbtk" and is accessed through new function `solve_full_pregnancy`.
