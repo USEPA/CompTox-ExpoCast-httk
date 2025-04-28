@@ -130,6 +130,10 @@ See \code{\link{get_fbio}} for further details.}
 Defaults value of NULL provides "Cliver", "Csyscomp", "Atubules", 
 "Ametabolized", "AUC"}
 
+\item{time.varying.params}{Whether or not to allow parameters to vary in time 
+according to the nonparametric regression determined by \code{\link{get_input_param_timeseries}}. 
+Default is TRUE.}
+
 \item{start.age}{The age of the individual in months at the beginning of the
 simulation. Default 360.}
 
@@ -231,6 +235,6 @@ out <- solve_3comp_lifestage(chem.name = 'Bisphenol A',
 \author{
 Colin Thomson
 }
-\keyword{3compartment,}
+\keyword{3compartment}
 \keyword{Solve}
 \keyword{lifestage}
