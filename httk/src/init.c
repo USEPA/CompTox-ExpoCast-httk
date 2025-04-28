@@ -16,7 +16,6 @@ extern void eventpbtk(int *, double *, double *);
 extern void rootpbtk(int *, double *, double *, int *, double *, double *, int *);
 extern void initforcpbtk(void *);
 
-//extern void rootpbtk (int *, double *, double *, int *, double *, double *, int *);
 extern void getParmspbtk_lifestage(double *, double *, int *);
 extern void initmodpbtk_lifestage(void *);
 extern void initforcpbtk_lifestage(void *);
