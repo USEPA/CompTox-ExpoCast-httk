@@ -85,9 +85,7 @@ extern void initmodfetal_pbtk(void *);
 extern void derivsfetal_pbtk(int *, double *, double *, double *, double *, int *);
 extern void jacfetal_pbtk(int *, double *, double *, int *, int *, double *, int *, double *, int *);
 extern void eventfetal_pbtk(int *, double *, double *);
-
 extern void rootfetal_pbtk(int *, double *, double *, int *, double *, double *, int *);
-extern void initfetal_pbtk(void *);
 extern void initforcfetal_pbtk(void *);
 
 extern void rootpbtk_lifestage(int *, double *, double *, int *, double *, double *, int *);
