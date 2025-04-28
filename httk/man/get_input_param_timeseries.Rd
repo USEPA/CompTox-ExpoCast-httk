@@ -91,7 +91,7 @@ ref.params <- cbind(pop.params,
 ts <- get_input_param_timeseries(model = 'pbtk_lifestage',
                                   chem.name = 'Bisphenol A',
                                   initial.params = params,
-                                  start.age = 600 # age fifty,
+                                  start.age = 600, # age fifty
                                   days = 365,
                                   ref.params = ref.params)
 
