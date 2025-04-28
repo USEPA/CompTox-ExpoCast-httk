@@ -72,13 +72,6 @@ extern void event_gas_pbtk(int *, double *, double *);
 extern void root_gas_pbtk(int *, double *, double *, int *, double *, double *, int *);
 extern void initforc_gas_pbtk(void *);
 
-extern void getParms_firsttrimester(double *, double *, int *);
-extern void initmod_firsttrimester(void *);
-extern void derivs_firsttrimester(int *, double *, double *, double *, double *, int *);
-extern void jac_firsttrimester(int *, double *, double *, int *, int *, double *, int *, double *, int *);
-extern void event_firsttrimester(int *, double *, double *);
-extern void root_firsttrimester(int *, double *, double *, int *, double *, double *, int *);
-
 extern void getParmsfetal_pbtk(double *, double *, int *);
 extern void initmodfetal_pbtk(void *);
 extern void derivsfetal_pbtk(int *, double *, double *, double *, double *, int *);
@@ -86,6 +79,14 @@ extern void jacfetal_pbtk(int *, double *, double *, int *, int *, double *, int
 extern void eventfetal_pbtk(int *, double *, double *);
 extern void rootfetal_pbtk(int *, double *, double *, int *, double *, double *, int *);
 extern void initforcfetal_pbtk(void *);
+
+extern void getParms_firsttrimester(double *, double *, int *);
+extern void initmod_firsttrimester(void *);
+extern void derivs_firsttrimester(int *, double *, double *, double *, double *, int *);
+extern void jac_firsttrimester(int *, double *, double *, int *, int *, double *, int *, double *, int *);
+extern void event_firsttrimester(int *, double *, double *);
+extern void root_firsttrimester(int *, double *, double *, int *, double *, double *, int *);
+extern void initforc_firsttrimester(void *);
 
 extern void rootpbtk_lifestage(int *, double *, double *, int *, double *, double *, int *);
 extern void getParmspbtk_lifestage(double *, double *, int *);
