@@ -78,12 +78,22 @@ The resulting value are used to form the non-parametric regression curve.
 \donttest{
 
 params <- parameterize_pbtk(chem.name = 'Bisphenol A')
-ts <- get_input_param_timeseries("pbtk_lifestage",
-                                 chem.name = 'Bisphenol A',
-                                 initial.params = params,
-                                 start.age = 600, # age fifty
-                                 days = 365
-                                 )
+
+pop.phys <- httkpop_generate(method = 'virtual individuals',
+                              nsamp = 25000,
+                              agelim_years = c(18, 79),
+                              weight_category = c("Normal"))
+pop.params <- create_mc_samples(chem.name = 'Bisphenol A',
+                                model = 'pbtk',
+                                httkpop.dt = pop.phys)
+ref.params <- cbind(pop.params,
+                    age_months = pop.phys$age_months)
+ts <- get_input_param_timeseries(model = 'pbtk_lifestage',
+                                  chem.name = 'Bisphenol A',
+                                  initial.params = params,
+                                  start.age = 600 # age fifty,
+                                  days = 365,
+                                  ref.params = ref.params)
 
 }
 
