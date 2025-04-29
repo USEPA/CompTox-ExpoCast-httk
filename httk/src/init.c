@@ -16,6 +16,14 @@ extern void eventpbtk(int *, double *, double *);
 extern void rootpbtk(int *, double *, double *, int *, double *, double *, int *);
 extern void initforcpbtk(void *);
 
+extern void getParmspbtk_lifestage(double *, double *, int *);
+extern void initmodpbtk_lifestage(void *);
+extern void initforcpbtk_lifestage(void *);
+extern void derivspbtk_lifestage(int *, double *, double *, double *, double *, int *);
+extern void jacpbtk_lifestage(int *, double *, double *, int *, int *, double *, int *, double *, int *);
+extern void eventpbtk_lifestage(int *, double *, double *);
+extern void rootpbtk_lifestage(int *, double *, double *, int *, double *, double *, int *);
+
 extern void getParms1comp(double *, double *, int *);
 extern void initmod1comp(void *);
 extern void derivs1comp(int *, double *, double *, double *, double *, int *);
@@ -24,6 +32,14 @@ extern void event1comp(int *, double *, double *);
 extern void root1comp(int *, double *, double *, int *, double *, double *, int *);
 extern void initforc1comp(void *);
 
+extern void getParms1comp_lifestage(double *, double *, int *);
+extern void initmod1comp_lifestage(void *);
+extern void initforc1comp_lifestage(void *);
+extern void derivs1comp_lifestage(int *, double *, double *, double *, double *, int *);
+extern void jac1comp_lifestage(int *, double *, double *, int *, int *, double *, int *, double *, int *);
+extern void event1comp_lifestage(int *, double *, double *);
+extern void root1comp_lifestage(int *, double *, double *, int *, double *, double *, int *);
+
 extern void getParms3comp(double *, double *, int *);
 extern void initmod3comp(void *);
 extern void derivs3comp(int *, double *, double *, double *, double *, int *);
@@ -31,6 +47,14 @@ extern void jac3comp(int *, double *, double *, int *, int *, double *, int *, d
 extern void event3comp(int *, double *, double *);
 extern void root3comp(int *, double *, double *, int *, double *, double *, int *);
 extern void initforc3comp(void *);
+
+extern void getParms3comp_lifestage(double *, double *, int *);
+extern void initmod3comp_lifestage(void *);
+extern void initforc3comp_lifestage(void *);
+extern void derivs3comp_lifestage(int *, double *, double *, double *, double *, int *);
+extern void jac3comp_lifestage(int *, double *, double *, int *, int *, double *, int *, double *, int *);
+extern void event3comp_lifestage(int *, double *, double *);
+extern void root3comp_lifestage(int *, double *, double *, int *, double *, double *, int *);
 
 extern void getParms3comp2(double *, double *, int *);
 extern void initmod3comp2(void *);
@@ -54,8 +78,24 @@ extern void derivsfetal_pbtk(int *, double *, double *, double *, double *, int 
 extern void jacfetal_pbtk(int *, double *, double *, int *, int *, double *, int *, double *, int *);
 extern void eventfetal_pbtk(int *, double *, double *);
 extern void rootfetal_pbtk(int *, double *, double *, int *, double *, double *, int *);
-extern void initfetal_pbtk(void *);
 extern void initforcfetal_pbtk(void *);
+
+extern void getParms_firsttrimester(double *, double *, int *);
+extern void initmod_firsttrimester(void *);
+extern void derivs_firsttrimester(int *, double *, double *, double *, double *, int *);
+extern void jac_firsttrimester(int *, double *, double *, int *, int *, double *, int *, double *, int *);
+extern void event_firsttrimester(int *, double *, double *);
+extern void root_firsttrimester(int *, double *, double *, int *, double *, double *, int *);
+extern void initforc_firsttrimester(void *);
+
+extern void rootpbtk_lifestage(int *, double *, double *, int *, double *, double *, int *);
+extern void getParmspbtk_lifestage(double *, double *, int *);
+extern void initmodpbtk_lifestage(void *);
+extern void initforcpbtk_lifestage(void *);
+extern void derivspbtk_lifestage(int *, double *, double *, double *, double *, int *);
+extern void jacpbtk_lifestage(int *, double *, double *, int *, int *, double *, int *, double *, int *);
+extern void eventpbtk_lifestage(int *, double *, double *);
+extern void rootpbtk_lifestage(int *, double *, double *, int *, double *, double *, int *);
 
 static const R_CMethodDef CEntries[] = {
     {"getParmspbtk",       (DL_FUNC) &getParmspbtk,       3},
@@ -105,6 +145,37 @@ static const R_CMethodDef CEntries[] = {
     {"eventfetal_pbtk", (DL_FUNC) &eventfetal_pbtk, 3},
     {"rootfetal_pbtk", (DL_FUNC) &rootfetal_pbtk, 7},
     {"initforcfetal_pbtk", (DL_FUNC) &initforcfetal_pbtk, 1},
+      
+    {"getParms_firsttrimester", (DL_FUNC) &getParms_firsttrimester, 3},
+    {"initmod_firsttrimester", (DL_FUNC) &initmod_firsttrimester, 1}, 	
+    {"derivs_firsttrimester", (DL_FUNC) &derivs_firsttrimester, 6},
+    {"jac_firsttrimester", (DL_FUNC) &jac_firsttrimester, 9},
+    {"event_firsttrimester", (DL_FUNC) &event_firsttrimester, 3},
+    {"root_firsttrimester", (DL_FUNC) &root_firsttrimester, 7},
+
+    {"getParms1comp_lifestage", (DL_FUNC) &getParms1comp_lifestage, 3},
+    {"initmod1comp_lifestage", (DL_FUNC) &initmod1comp_lifestage, 1},
+    {"initforc1comp_lifestage", (DL_FUNC) &initforc1comp_lifestage, 1},
+    {"derivs1comp_lifestage", (DL_FUNC) &derivs1comp_lifestage, 6},
+    {"jac1comp_lifestage", (DL_FUNC) &jac1comp_lifestage, 9},
+    {"event1comp_lifestage", (DL_FUNC) &event1comp_lifestage, 3},
+    {"root1comp_lifestage", (DL_FUNC) &root1comp_lifestage, 7},
+    
+    {"getParms3comp_lifestage", (DL_FUNC) &getParms3comp_lifestage, 3},
+    {"initmod3comp_lifestage", (DL_FUNC) &initmod3comp_lifestage, 1},
+    {"initforc3comp_lifestage", (DL_FUNC) &initforc3comp_lifestage, 1},
+    {"derivs3comp_lifestage", (DL_FUNC) &derivs3comp_lifestage, 6},
+    {"jac3comp_lifestage", (DL_FUNC) &jac3comp_lifestage, 9},
+    {"event3comp_lifestage", (DL_FUNC) &event3comp_lifestage, 3},
+    {"root3comp_lifestage", (DL_FUNC) &root3comp_lifestage, 7},
+    
+    {"getParmspbtk_lifestage", (DL_FUNC) &getParmspbtk_lifestage, 3},
+    {"initmodpbtk_lifestage", (DL_FUNC) &initmodpbtk_lifestage, 1},
+    {"initforcpbtk_lifestage", (DL_FUNC) &initforcpbtk_lifestage, 1},
+    {"derivspbtk_lifestage", (DL_FUNC) &derivspbtk_lifestage, 6},
+    {"jacpbtk_lifestage", (DL_FUNC) &jacpbtk_lifestage, 9},
+    {"eventpbtk_lifestage", (DL_FUNC) &eventpbtk_lifestage, 3},
+    {"rootpbtk_lifestage", (DL_FUNC) &rootpbtk_lifestage, 7},
 
     {NULL, NULL, 0}
 };

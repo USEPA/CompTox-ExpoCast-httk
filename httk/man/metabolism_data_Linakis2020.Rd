@@ -16,6 +16,9 @@ metabolism_data_Linakis2020
 \description{
 Metabolism data involved in Linakis 2020 vignette analysis.
 }
+\references{
+\insertRef{linakis2020development}{httk}
+}
 \author{
 Matt Linakis
 }

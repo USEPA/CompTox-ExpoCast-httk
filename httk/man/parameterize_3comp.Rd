@@ -140,6 +140,7 @@ model. However, PFAS chemicals can be included with the argument
 \examples{
 
 parameters1 <- parameterize_3comp(chem.name='Bisphenol-A',species='Rat')
+\donttest{
 parameters2 <- parameterize_3comp(chem.cas='80-05-7',
                                   species='rabbit',default.to.human=TRUE)
 # The following will not work because Diquat dibromide monohydrate's 
@@ -149,7 +150,6 @@ try(parameters3 <- parameterize_3comp(chem.cas = "6385-62-2"))
 # that  Diquat dibromide monohydrate is not too volatile:
 parameters3 <- parameterize_3comp(chem.cas = "6385-62-2",
                                   physchem.exclude = FALSE)
-\donttest{
 out <- solve_3comp(parameters=parameters1, plots=TRUE)
 }
 
@@ -162,6 +162,8 @@ out <- solve_3comp(parameters=parameters1, plots=TRUE)
 \insertRef{pearce2017evaluation}{httk}
 
 \insertRef{kilford2008hepatocellular}{httk}
+
+\insertRef{wambaugh2025simple}{httk}
 }
 \seealso{
 \code{\link{solve_3comp}}
@@ -179,5 +181,5 @@ out <- solve_3comp(parameters=parameters1, plots=TRUE)
 \author{
 Robert Pearce and John Wambaugh
 }
-\keyword{3compartment2}
+\keyword{3compartment}
 \keyword{Parameter}

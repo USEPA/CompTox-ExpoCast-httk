@@ -263,8 +263,9 @@
 #'
 #' @author Greg Honda
 #'
-#' @references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
-#'2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
+#' @references 
+#' \insertRef{armitage2014application}{httk} 
+#'
 #' \insertRef{honda2019using}{httk}
 "well_param"
 
@@ -285,8 +286,9 @@
 #'@keywords data
 #'
 #'@author Greg Honda
-#'@references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol.
-#'2014, 48, 9770-9779. dx.doi.org/10.1021/es501955g
+#' @references 
+#' \insertRef{armitage2014application}{httk} 
+#'
 #' \insertRef{honda2019using}{httk}
 "armitage_input"
 
@@ -301,8 +303,8 @@
 #'@source \url{https://comptox.epa.gov/dashboard/chemical_lists/swisspharma}
 #'@keywords data
 #'
-#'@references Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and
-#'Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
+#' @references 
+#' \insertRef{wambaugh2019assessing}{httk}
 "pharma"
 
 #' in vitro Toxicokinetic Data from Wambaugh et al. (2019)
@@ -352,8 +354,8 @@
 #'
 #'@author John Wambaugh
 #'
-#'@references Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and
-#'Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
+#' @references 
+#' \insertRef{wambaugh2019assessing}{httk}
 "wambaugh2019"
 
 
@@ -763,7 +765,9 @@
 #' @docType data
 #' @format data.frame
 #' @author John Wambaugh
-#' @source Wambaugh et al. 2018 Toxicological Sciences, in press
+#' @source Wambaugh et al. 2018 
+#' @references
+#' \insertRef{wambaugh2018evaluating}{httk}
 #' @keywords data
 "chem.invivo.PK.aggregate.data"
 
@@ -853,8 +857,8 @@
 #'
 #'@author John Wambaugh
 #'
-#'@references Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and
-#'Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
+#' @references 
+#' \insertRef{wambaugh2019assessing}{httk}
 "wambaugh2019.raw"
 
 #' NHANES Chemical Intake Rates for chemicals in Wambaugh et al. (2019)
@@ -882,9 +886,8 @@
 #'
 #' @references 
 #' \insertRef{ring2017identifying}{httk}
-#'
-#'@references Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and
-#'Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
+#' 
+#' \insertRef{wambaugh2019assessing}{httk}
 "wambaugh2019.nhanes"
 
 #' ExpoCast SEEM3 Consensus Exposure Model Predictions for Chemical Intake Rates
@@ -903,12 +906,10 @@
 #'
 #'@author John Wambaugh
 #'
-#'@references Ring, Caroline L., et al. "Consensus modeling of median chemical
-#' intake for the US population based on predictions of exposure pathways."
-#' Environmental science & technology 53.2 (2018): 719-732.
+#' @references 
+#' \insertRef{Ring2017SEEM}{httk}
 #'
-#'@references Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and
-#'Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
+#' \insertRef{wambaugh2019assessing}{httk}
 "wambaugh2019.seem3"
 
 
@@ -963,8 +964,8 @@
 #' (\url{https://comptox.epa.gov/dashboard}) \tab none \cr                  
 #'  Formula \tab The proportions of atoms within the chemical compound  \tab none \cr                   
 #'  All.Compound.Names \tab All names of the chemical as they occured in the
-#' data \tab none \cr              
-#'  logHenry \tab The log10 Henry's law constant \tab 
+#' data \tab none \cr                                           
+#'  logHenry \tab The log10 Henry's law constant (Conc_air = 10^logH * Conc_liquid)\tab 
 #' log10(atmosphers*m^3/mole) \cr                 
 #'  logHenry.Reference \tab Reference for Henry's law constant \tab \cr           
 #'  logP \tab The log10 octanol:water partition coefficient (PC)\tab log10 unitless ratio \cr                 
@@ -1042,14 +1043,9 @@
 #' SPARC's chemical reactivity models: Estimation of more than 4300 ionization
 #' pKas. Quantitative Structure-Activity Relationships 14(4), 348-355.
 #' 
-#' Honda, G. S., Pearce, R. G., Pham, L. L., Setzer, R. W., Wetmore, B. A., 
-#' Sipes, N. S., ... & Wambaugh, J. F. (2019). Using the concordance of in 
-#' vitro and in vivo data to evaluate extrapolation assumptions. PloS one, 
-#' 14(5), e0217564.
+#' \insertRef{honda2019using}{httk}
 #'
-#' Ito, K. and Houston, J. B. (2004). Comparison of the use of liver models for
-#' predicting drug clearance using in vitro kinetic data from hepatic
-#' microsomes and isolated hepatocytes. Pharm Res 21(5), 785-92.
+#' \insertRef{ito2004comparison}{httk}
 #'
 #' Jones, O. A., Voulvoulis, N. and Lester, J. N. (2002). Aquatic environmental
 #' assessment of the top 25 English prescription pharmaceuticals. Water
@@ -1064,10 +1060,7 @@
 #' fresh, cryopreserved, and sandwich-cultured hepatocytes. Drug Metabolism and
 #' Disposition 30(12), 1446-54.
 #'
-#' Linakis, M. W., Sayre, R. R., Pearce, R. G., Sfeir, M. A., Sipes, N. S., 
-#' Pangburn, H. A., ... & Wambaugh, J. F. (2020). Development and evaluation of 
-#' a high-throughput inhalation model for organic chemicals. Journal of 
-#' Exposure Science & Environmental Epidemiology, 1-12.
+#' \insertRef{linakis2020development}{httk}
 #' 
 #' Lombardo, F., Berellini, G., & Obach, R. S. (2018). Trend analysis of a 
 #' database of intravenous pharmacokinetic parameters in humans for 1352 drug 
@@ -1108,10 +1101,7 @@
 #' intrinsic clearance data in hepatocytes and microsomes." Drug Metabolism and 
 #' Disposition 33.9 (2005): 1304-1311.
 #'
-#' Schmitt, W. (2008). General approach for the calculation of tissue to plasma
-#' partition coefficients. Toxicology in vitro : an international journal
-#' published in association with BIBRA 22(2), 457-67,
-#' 10.1016/j.tiv.2007.09.010.
+#' \insertRef{schmitt2008general}{httk}
 #'
 #' Shibata, Y., Takahashi, H., Chiba, M. and Ishii, Y. (2002). Prediction of
 #' Hepatic Clearance and Availability by Cryopreserved Human Hepatocytes: An
@@ -1131,25 +1121,11 @@
 #' concentration ratio." Biopharmaceutics & drug disposition 31.5-6 (2010):
 #' 286-297.
 #'
-#' Wambaugh, J. F., Wetmore, B. A., Ring, C. L., Nicolas, C. I., Pearce, R. G., 
-#' Honda, G. S., ... & Badrinarayanan, A. (2019). Assessing Toxicokinetic 
-#' Uncertainty and Variability in Risk Prioritization. Toxicological Sciences, 
-#' 172(2), 235-251.
+#' \insertRef{wambaugh2019assessing}{httk}
 #' 
-#' Wetmore, B. A., Wambaugh, J. F., Ferguson, S. S., Sochaski, M. A., Rotroff,
-#' D. M., Freeman, K., Clewell, H. J., 3rd, Dix, D. J., Andersen, M. E., Houck,
-#' K. A., Allen, B., Judson, R. S., Singh, R., Kavlock, R. J., Richard, A. M.
-#' and Thomas, R. S. (2012). Integration of dosimetry, exposure, and
-#' high-throughput screening data in chemical toxicity assessment.
-#' Toxicological sciences : an official journal of the Society of Toxicology
-#' 125(1), 157-74, 10.1093/toxsci/kfr254.
+#' \insertRef{wetmore2012integration}{httk}
 #'
-#' Wetmore, B. A., Wambaugh, J. F., Ferguson, S. S., Li, L., Clewell, H. J.,
-#' Judson, R. S., Freeman, K., Bao, W., Sochaski, M. A., Chu, T.-M., Black, M.
-#' B., Healy, E., Allen, B., Andersen, M. E., Wolfinger, R. D. and Thomas, R.
-#' S. (2013). Relative Impact of Incorporating Pharmacokinetics on Predicting
-#' In Vivo Hazard and Mode of Action from High-Throughput In Vitro Toxicity
-#' Assays. Toxicological Sciences 132(2), 327-346, 10.1093/toxsci/kft012.
+#' \insertRef{wetmore2013relative}{httk}
 #'
 #' \insertRef{wetmore2015incorporating}{httk}
 #'
@@ -1282,12 +1258,10 @@
 #' @docType data
 #' @format A data.frame.
 #' @author Jimena Davis and Robert Pearce
-#' @references Schmitt, W., General approach for the calculation of tissue to
-#' plasma partition coefficients. Toxicology in Vitro, 2008. 22(2): p. 457-467.
+#' @references
+#' \insertRef{schmitt2008general}{httk}
 #'
-#' Schmitt, W., Corrigendum to:"General approach for the calculation of tissue
-#' to plasma partition coefficients"[Toxicology in Vitro 22 (2008) 457-467].
-#' Toxicology in Vitro, 2008. 22(6): p. 1666.
+#' \insertRef{schmitt2008corrigendum}{httk}
 #'
 #' Poulin, P. and F.P. Theil, A priori prediction of tissue: plasma partition
 #' coefficients of drugs to facilitate the use of physiologically based
@@ -1321,9 +1295,7 @@
 #' tissue-plasma partition coefficients are needed? Journal of pharmacy and
 #' pharmacology, 2002. 54(9): p. 1237-1245.
 #'
-#' Yun, Y. and A. Edginton, Correlation-based prediction of tissue-to-plasma
-#' partition coefficients using readily available input parameters.
-#' Xenobiotica, 2013. 43(10): p. 839-852.
+#' \insertRef{yun2013correlation}{httk}
 #'
 #' Uchimura, T., et al., Prediction of human blood-to-plasma drug concentration
 #' ratio. Biopharmaceutics & drug disposition, 2010. 31(5-6): p. 286-297.
@@ -1520,12 +1492,8 @@
 #'
 #' @docType data
 #' @format A data.frame containing 13 rows and 15 columns.
-#' @references Wetmore, B.A., Wambaugh, J.F., Ferguson, S.S., Sochaski, M.A.,
-#' Rotroff, D.M., Freeman, K., Clewell, H.J., Dix, D.H., Andersen, M.E., Houck,
-#' K.A., Allen, B., Judson, R.S., Sing, R., Kavlock, R.J., Richard, A.M., and
-#' Thomas, R.S., "Integration of Dosimetry, Exposure and High-Throughput
-#' Screening Data in Chemical Toxicity Assessment," Toxicological Sciences 125
-#' 157-174 (2012)
+#' @references 
+#' \insertRef{wetmore2012integration}{httk}
 #' @keywords data
 "Wetmore2012"
 
@@ -1537,6 +1505,8 @@
 #' @author Matt Linakis
 #'
 #' @source Matt Linakis
+#' @references
+#' \insertRef{linakis2020development}{httk}
 #' @keywords data
 "metabolism_data_Linakis2020"
 
@@ -1589,8 +1559,8 @@
 #' @docType data
 #' @format A data.frame containing x rows and y columns.
 #' @author Matt Linakis
-#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
-#'
+#' @references 
+#' \insertRef{linakis2020development}{httk}
 #' @source Matt Linakis
 #' @keywords data
 "supptab1_Linakis2020"
@@ -1601,8 +1571,8 @@
 #' @docType data
 #' @format A data.frame containing x rows and y columns.
 #' @author Matt Linakis
-#' @references DSStox database (https:// www.epa.gov/ncct/dsstox
-#'
+#' @references 
+#' \insertRef{linakis2020development}{httk}
 #' @source Matt Linakis
 #' @keywords data
 "supptab2_Linakis2020"
@@ -1647,9 +1617,8 @@
 #' @docType data
 #' @format data.frame
 #' @author Robert G. Pearce
-#' @references Pearce, Robert G., et al. "Evaluation and calibration of 
-#' high-throughput predictions of chemical distribution to tissues."
-#' Journal of pharmacokinetics and pharmacodynamics 44.6 (2017): 549-565.
+#' @references
+#' \insertRef{pearce2017evaluation}{httk}
 #' @seealso \code{\link{predict_partitioning_schmitt}} 
 #' @source Pearce et al. 2017 Regression Models
 #' @keywords data
@@ -1876,7 +1845,7 @@
 #' 
 #' \insertRef{gaulton2012chembl}{httk}
 #' 
-#' \insertRef{HondaUnpublishedCaco2}{httk}
+#' \insertRef{honda2025impact}{httk}
 #' @name honda2023.data
 "honda2023.data"
 
@@ -1896,7 +1865,7 @@
 #' Pab.Quant.Pred \tab Median and 95-percent interval for values within the predicted class's training data  moderate (2), or fast (3) \tab 10^-6 cm/s \cr
 #' }
 #' @references
-#' \insertRef{HondaUnpublishedCaco2}{httk}
+#' \insertRef{honda2025impact}{httk}
 #' @seealso \code{\link{load_honda2023}} 
 #' @name honda2023.qspr
 "honda2023.qspr"
@@ -1934,7 +1903,7 @@
 #'
 #' @seealso \code{\link{benchmark_httk}} 
 #' @references
-#' \insertRef{DavidsonFritzUnpublishedModelAdding}{httk}
+#' \insertRef{davidson2025enabling}{httk}
 #' @name httk.performance
 "httk.performance"
 
@@ -1958,3 +1927,40 @@
 #' @seealso \code{\link{load_sipes2017}} 
 #' @keywords data
 "sipes2017"
+
+#' ToxCast thyroid-related bioactivity data 
+#'
+#' Truong et al. 2025 uses ToxCast data for 4 thyroid-related assay endpoints
+#' concerning inhibition of deiodinases ("DIO1", "DIO2", "DIO3", and "IYD") and 
+#' identified 120 priority chemicals with activity for at least one deiodinase. 
+#' These 120 chemicals were curated after assessment for target selectivity and 
+#' assay interference. 
+#'
+#' The AC50s (in uM) for each of the 120 chemicals were retrieved from ToxCast 
+#' invitrodb v3.5 and are used in the "Full Human Gestational IVIVE" vignette.
+#' 
+#' @name thyroid.ac50s
+#' @docType data
+#' @format data.table and data.frame
+#' @keywords data
+#' @references 
+#' \insertRef{truong2025fullpregnancy}{httk}
+"thyroid.ac50s"
+
+#' SEEM3 Example Data for Truong et al. 2025 
+#' 
+#' We can grab SEEM daily intake rate predictions already in RData format from
+#' https://github.com/HumanExposure/SEEM3RPackage/blob/main/scripts/
+#' Download the file chem.preds-2018-11-28.RData
+#' 
+#' We do not have the space to distribute all the SEEM predictions within
+#' this R package, but we can give you our "Full Human Gestational IVIVE" example chemicals.
+#' @name truong25.seem3
+#' @docType data
+#' @format data.table and data.frame
+#' @keywords data
+#' @references 
+#' \insertRef{truong2025fullpregnancy}{httk}
+#'
+#' \insertRef{Ring2017SEEM}{httk}
+"truong25.seem3"

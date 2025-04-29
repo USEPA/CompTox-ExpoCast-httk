@@ -249,7 +249,7 @@ calc_analytic_css <- function(chem.name=NULL,
   if (!is.null(IVIVE)) 
   {
     out <- honda.ivive(method=IVIVE, tissue=tissue)
-    parameterize.args[["restrictive.clearance"]] <- out[["restrictive.clearance"]]
+    restrictive.clearance <- out[["restrictive.clearance"]]
     tissue <- out[["tissue"]]
     bioactive.free.invivo <- out[["bioactive.free.invivo"]]
     concentration <- out[["concentration"]]

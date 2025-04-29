@@ -43,16 +43,11 @@
 #' @author Robert Pearce and John Wambaugh
 #'
 #' @references 
-#' Schmitt, Walter. "General approach for the calculation of tissue to plasma 
-#' partition coefficients." Toxicology in vitro 22.2 (2008): 457-467.
+#' \insertRef{schmitt2008general}{httk}
 #'
-#' Pearce, Robert G., et al. "Evaluation and calibration of
-#' high-throughput predictions of chemical distribution to tissues." Journal of
-#' Pharmacokinetics and Pharmacodynamics 44.6 (2017): 549-565.
+#' \insertRef{pearce2017evaluation}{httk}
 #'
-#' Strope, Cory L., et al. "High-throughput in-silico prediction of ionization 
-#' equilibria for pharmacokinetic modeling." Science of The Total Environment 
-#' 615 (2018): 150-160.
+#' \insertRef{strope2018high}{httk}
 #'
 #' @keywords Parameter
 #' 
@@ -257,13 +252,9 @@ calc_dow <- function(Pow=NULL,
 #' @author Robert Pearce and John Wambaugh
 #'
 #' @references 
-#' Pearce, Robert G., et al. "Evaluation and calibration of
-#' high-throughput predictions of chemical distribution to tissues." Journal of
-#' Pharmacokinetics and Pharmacodynamics 44.6 (2017): 549-565.
+#' \insertRef{pearce2017evaluation}{httk}
 #'
-#' Strope, Cory L., et al. "High-throughput in-silico prediction of ionization 
-#' equilibria for pharmacokinetic modeling." Science of The Total Environment 
-#' 615 (2018): 150-160.
+#' \insertRef{strope2018high}{httk}
 #'
 #' @keywords Parameter
 #' 
@@ -334,11 +325,10 @@ calc_ionization <- function(
   if (all(c("pKa_Donor","pKa_Accept") %in% names(parameters)))
   {
     pKa_Donor <- parameters$pKa_Donor
-    pKa_Accept <- parameters$pKa_Accept
-  } else if(!is.null(pKa_Donor) | !is.null(pKa_Accept))
+    pKa_Accept <- parameters$pKa_Accept  
+  } else if (!is.null(pKa_Donor) | !is.null(pKa_Accept))
   {
-# If one of pKa_Donor/Accept is specified but not the other, we assume the other
-# is not present:
+    # If one equilibrium is givenm, assume the other isn't present:
     if (is.null(pKa_Donor)) pKa_Donor <- " "
     if (is.null(pKa_Accept)) pKa_Accept <- " "
   } else {
@@ -346,6 +336,13 @@ calc_ionization <- function(
 "Either pKa_Donor and pKa_Accept must be in input parameters or chemical identifier must be supplied.")
   }
   
+  # Assume missing values are not ionized:
+  if (any(is.na(pKa_Donor)) | any(is.na(pKa_Accept)))
+  {
+    pKa_Donor[is.na(pKa_Donor)] <- " "
+    pKa_Accept[is.na(pKa_Accept)] <- " "
+  } 
+    
   # Check if any of these arguments are vectors:
   if (length(pKa_Donor) < 2 & length(pKa_Accept) < 2 & length(pH) < 2)
   {
@@ -510,9 +507,9 @@ calc_ionization <- function(
     if (!is.na(charge_matrix[this.row,"Type"]))
     {
       if (charge_matrix[this.row, "Type"] == "Donate")
-         charge_matrix[this.row, "Ratio"] <- pH - charge_matrix[this.row,"pKa"]
+         charge_matrix[this.row, "Ratio"] <- this.pH - charge_matrix[this.row,"pKa"]
       if (charge_matrix[this.row, "Type"] == "Accept")
-         charge_matrix[this.row, "Ratio"] <- pH - charge_matrix[this.row,"pKa"]
+         charge_matrix[this.row, "Ratio"] <- this.pH - charge_matrix[this.row,"pKa"]
  # Folllowing is for pKb's, which we don't have:
  #        charge_matrix[this.row, "Ratio"] <- 14 - pH - charge_matrix[this.row,"pKa"]
     }          
