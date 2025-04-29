@@ -33,17 +33,11 @@
 #' @author John Wambaugh 
 #'
 #' @references 
-#' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-#' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
-#' and pharmacodynamics 44.6 (2017): 549-565.
+#' \insertRef{pearce2017evaluation}{httk}
 #' 
-#' Yun, Y. E., and A. N. Edginton. "Correlation-based prediction of 
-#' tissue-to-plasma partition coefficients using readily available input 
-#' parameters." Xenobiotica 43.10 (2013): 839-852.
+#' \insertRef{yun2013correlation}{httk}
 #'
-#' Droge, Steven TJ. "Membrane–water partition coefficients to aid risk 
-#' assessment of perfluoroalkyl anions and alkyl sulfates." Environmental 
-#' Science & Technology 53.2 (2018): 760-770.
+#' \insertRef{droge2019pfasmembraneaffinity}{httk}
 #' 
 #' @keywords parameters
 #'

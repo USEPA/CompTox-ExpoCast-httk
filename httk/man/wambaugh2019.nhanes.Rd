@@ -31,8 +31,7 @@ populaton median intake rate (mg/kg body weight/day), with uncertainty.
 \references{
 \insertRef{ring2017identifying}{httk}
 
-Wambaugh et al. (2019) "Assessing Toxicokinetic Uncertainty and
-Variability in Risk Prioritization", Toxicological Sciences, 172(2), 235-251.
+\insertRef{wambaugh2019assessing}{httk}
 }
 \author{
 John Wambaugh

@@ -67,6 +67,7 @@ For model 3compartmentss each chemical must have non-NA values for:Human.Clint, 
 +   reference="Fake")
 > 
 > calc_css(chem.name="Tester")
+Extending simulation...
 $avg
 [1] 32.74
 

@@ -9,6 +9,7 @@ export_pbtk_jarnac(
   chem.name = NULL,
   species = "Human",
   initial.amounts = list(Agutlumen = 0),
+  folder = tempdir(),
   filename = "default.jan",
   digits = 4
 )
@@ -22,6 +23,8 @@ export_pbtk_jarnac(
 "Human").}
 
 \item{initial.amounts}{Must specify initial amounts in units of choice.}
+
+\item{folder}{The folder on the file system containing the output file. Defaults to \code{\link{tempdir}}.}
 
 \item{filename}{The name of the jarnac file containing the model.}
 

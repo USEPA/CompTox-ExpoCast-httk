@@ -42,7 +42,7 @@ to help identify unintended degradtion of package capabilities.
 }
 }
 \references{
-\insertRef{DavidsonFritzUnpublishedModelAdding}{httk}
+\insertRef{davidson2025enabling}{httk}
 }
 \seealso{
 \code{\link{benchmark_httk}}

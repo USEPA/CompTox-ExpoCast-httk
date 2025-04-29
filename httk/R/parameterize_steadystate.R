@@ -129,6 +129,14 @@
 #'
 #' \insertRef{kilford2008hepatocellular}{httk}
 #'
+#' \insertRef{wambaugh2025simple}{httk}
+#'
+#' \insertRef{rotroff2010incorporating}{httk}
+#'
+#' \insertRef{wetmore2012integration}{httk}
+#'
+#' \insertRef{wetmore2015incorporating}{httk}
+#'
 #' @seealso \code{\link{calc_analytic_css_3compss}}
 #'
 #' @seealso \code{\link{apply_clint_adjustment}}

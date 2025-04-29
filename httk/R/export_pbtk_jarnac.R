@@ -14,11 +14,18 @@
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #' 
 #' @param chem.cas Either the chemical name or CAS number must be specified.
+#' 
 #' @param chem.name Either the chemical name or CAS number must be specified.
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", or default
 #' "Human").
+#' 
 #' @param initial.amounts Must specify initial amounts in units of choice.
+#' 
 #' @param filename The name of the jarnac file containing the model.
+#' 
+#' @param folder The folder on the file system containing the output file. Defaults to \code{\link{tempdir}}.
+#' 
 #' @param digits Desired number of decimal places to round the parameters.
 #' 
 #' @return
@@ -39,6 +46,7 @@ export_pbtk_jarnac <- function(chem.cas=NULL,
                                chem.name=NULL,
                                species="Human",
                                initial.amounts=list(Agutlumen=0),
+                               folder=tempdir(),
                                filename="default.jan", 
                                digits = 4)
 {
@@ -170,5 +178,6 @@ m = p.sim.eval (0, 10, 100,[<p.Time>,<p.Aart/p.Vart>,<p.Aven/p.Vven>,<p.Agut/p.V
 <p.Aliver/p.Vliver>,<p.Alung/p.Vlung>,<p.Arest/p.Vrest>,<p.Akidney/p.Vkidney>]);
 //J1 and J2 show flow through that equation
 
-graph(m);",file=filename)
+graph(m);", file=paste(folder,filename,sep="/"))
+  cat(filename,"written to folder",folder,"\n")
 }

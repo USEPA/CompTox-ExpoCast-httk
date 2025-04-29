@@ -133,6 +133,10 @@ We use a table called "charge_matrix" to keep track of all N + 1 ionization
 states and the ratio of each state to the next. We use these ratios to calculate
 }
 \examples{
+
+# Neutral compound:
+calc_ionization(chem.name="Acetochlor",pH=7.4)
+
 # Donor pKa's 9.78,10.39 -- Should be almost all neutral at plasma pH:
 out <- calc_ionization(chem.name='bisphenola',pH=7.4)
 print(out)
@@ -165,13 +169,9 @@ out[["fraction_zwitter"]]==max(unlist(out))
 
 }
 \references{
-Pearce, Robert G., et al. "Evaluation and calibration of
-high-throughput predictions of chemical distribution to tissues." Journal of
-Pharmacokinetics and Pharmacodynamics 44.6 (2017): 549-565.
+\insertRef{pearce2017evaluation}{httk}
 
-Strope, Cory L., et al. "High-throughput in-silico prediction of ionization 
-equilibria for pharmacokinetic modeling." Science of The Total Environment 
-615 (2018): 150-160.
+\insertRef{strope2018high}{httk}
 }
 \author{
 Robert Pearce and John Wambaugh
