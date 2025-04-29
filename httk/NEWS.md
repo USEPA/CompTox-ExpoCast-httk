@@ -20,7 +20,8 @@ This version accompanies the submission of the Meade et al. manuscript
 * Added "1comp_lifestage" and "3comp_lifestage" models. Eliminated `gen_input_params` and the need to generate additional files and directories; now the user supplies the reference population parameters to `solve_<model>_lifestage` directly.
 * Removed `gen_input_params`.
 * Not so much an enhancement, but CRAN check time has been decreased by removing three older vignettes associated with the [Wambaugh et al., 2018](https://doi.org/10.1093/toxsci/kfy020), [Honda et al., 2019](https://doi.org/10.1371/journal.pone.0217564), and [Wambaugh et al., 2019](https://doi.org/10.1093/toxsci/kfz205) papers. The vignettes are still available on [Github](https://github.com/USEPA/CompTox-ExpoCast-httk/tree/main/old/vignettes) 
-
+* `export_pbtk_sbml` and `export_pbtk_jarnac` now write to `tempdir` by default.
+    
 # httk 2.6.0 (2025-04-18)
 This release accompanies the publication of [Truong et al. (2025) manuscript "Interpretation of thyroid-relevant bioactivity data for comparison to in vivo exposures: A prioritization approach for putative chemical inhibitors of in vitro deiodinase activity"](https://doi.org/10.1016/j.tox.2025.154157) and includes a new model describing human gestation in the first trimester (model "1tri_pbtk") which links to model "fetal_pbtk" and is accessed through new function `solve_full_pregnancy`.
 
