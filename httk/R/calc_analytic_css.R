@@ -114,6 +114,12 @@ model.list <- list()
 #'                  model='3compartment',concentration='blood')
 #' 
 #' \donttest{
+#' # Test that the underlying PK models give the same answers:
+#' calc_analytic_css(chem.cas="15972-60-8")
+#' calc_analytic_css(chem.cas="15972-60-8",model="1compartment")
+#' calc_analytic_css(chem.cas="15972-60-8",model="pbtk")
+#' calc_analytic_css(chem.cas="15972-60-8",model="3compartment")
+#' 
 #'calc_analytic_css(chem.name='Bisphenol-A',tissue='liver',species='rabbit',
 #'                  parameterize.args.list = list(
 #'                                 default.to.human=TRUE,
@@ -135,13 +141,61 @@ model.list <- list()
 #' calc_analytic_css(chem.name="Dicofol",model="1compartment")
 #' calc_analytic_css(chem.name="Diflubenzuron",model="3compartment")
 #' calc_analytic_css(chem.name="Theobromine",model="3compartmentss")
-#'}
+#'
+#' # permutations on steady-state for the 1compartment model
+#' calc_analytic_css(chem.name="bisphenol a",
+#'                   model="1compartment")
+#' calc_analytic_css(chem.cas="80-05-7",
+#'                   model="1compartment")
+#' calc_analytic_css(parameters=parameterize_1comp(chem.cas="80-05-7"),
+#'                   model="1compartment")
+#' calc_analytic_css(chem.cas="80-05-7",
+#'                   model="1compartment",
+#'                   tissue="liver")
+#' calc_analytic_css(chem.cas="80-05-7",
+#'                   model="1compartment",
+#'                   tissue="brain")
+#'
+#' # permutations on steady-state for the 3compartment model
+#' calc_analytic_css(chem.cas="80-05-7",
+#'                   model="3compartment")
+#' calc_analytic_css(parameters=parameterize_3comp(chem.cas="80-05-7"),
+#'                   model="3compartment")
+#' calc_analytic_css(chem.name="bisphenol a",
+#'                   model="3compartment",
+#'                   tissue="liver")
+#' calc_analytic_css(chem.name="bisphenol a",
+#'                   model="3compartment",
+#'                   tissue="brain")
+#'
+#' # permurtations on steady-state for the pbtk model:
+#' calc_analytic_css(chem.cas="80-05-7",
+#'                   model="pbtk")
+#' calc_analytic_css(parameters=parameterize_pbtk(chem.cas="80-05-7"),
+#'                   model="pbtk")
+#' calc_analytic_css(chem.name="bisphenol a",
+#'                   model="pbtk",
+#'                   tissue="liver")
+#' calc_analytic_css(chem.name="bisphenol a",
+#'                   model="pbtk",
+#'                   tissue="brain")
+#'
+#' # Test oral absorption functionality:
+#' # By default we now include calculation of Fabs and Fgut (always had Fhep):
+#' calc_analytic_css(chem.name="bisphenol a",
+#'                   model="pbtk")
+#' # Therefore if we set Fabs = Fgut = 1 with keetit100=TRUE, we should get a
+#' # higher predicted plasma steady-state concentration:
+#' calc_analytic_css(chem.name="bisphenol a",
+#'                   model="pbtk",
+#'                   Caco2.options=list(keepit100=TRUE))
+#' }
 #'
 #' @seealso \code{\link{calc_css}}
 #'
-#'@author Robert Pearce, John Wambaugh, Greg Honda, Miyuki Breen
+#' @author Robert Pearce, John Wambaugh, Greg Honda, Miyuki Breen
 #'
-#'@keywords Solve
+#' @keywords Solve steady-state
 #'
 #' @references 
 #' \insertRef{honda2019using}{httk}

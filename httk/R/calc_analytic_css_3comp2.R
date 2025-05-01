@@ -79,7 +79,7 @@
 #' @references 
 #' \insertAllCited{}
 #'
-#' @keywords 3compartment2 analyticCss
+#' @keywords 3compartment2 steady-state
 #'
 #' @export calc_analytic_css_3comp2
 calc_analytic_css_3comp2 <- function(chem.name=NULL,

@@ -6,14 +6,6 @@ rm(list=ls())
 library(httk)
 
 calc_analytic_css(chem.name="bisphenol a",model="3compartment")
-calc_analytic_css(chem.cas="80-05-7",model="3compartment")
-calc_analytic_css(parameters=parameterize_3comp(chem.cas="80-05-7"),model="3compartment")
-calc_analytic_css(chem.name="bisphenol a",model="3compartment",tissue="liver")
-calc_analytic_css(chem.name="bisphenol a",model="3compartment",tissue="brain")
-
-head(solve_3comp(chem.name="bisphenol a",days=1))
-head(solve_3comp(chem.cas="80-05-7",days=1))
-head(solve_3comp(parameters=parameterize_3comp(chem.cas="80-05-7"),days=1))
 
 #Test that the input daily.dose and doses.per.day are all that goes through, 
 #excluding any default dosing. We want any specified dosing to take the place
@@ -52,7 +44,8 @@ head(initial_nondefault_dose)
 initial_nondefault_dose_intestine = out_nondefault_dosing[2,"Aintestine"]
 head(initial_nondefault_dose_intestine)
 
-p <- parameterize_3comp(chem.name="Aminopterin")[sort(names(parameterize_3comp(chem.name="Aminopterin")))]
+p <- parameterize_3comp(chem.name="Aminopterin")
+p <- p[sort(names(p))]
 # Try to standardize order of variable names
 for (this.param in names(p)[order(toupper(names(p)))]) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
 

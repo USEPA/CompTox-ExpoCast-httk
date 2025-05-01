@@ -40,70 +40,6 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
-> calc_analytic_css(chem.cas="80-05-7",model="pbtk")
-Plasma concentration returned in uM units.
-[1] 0.9432
-Warning messages:
-1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Clint is provided as a distribution.
-2: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
-  Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
-3: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Fraction unbound is provided as a distribution.
-4: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
-  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human in vivo measured Rblood2plasma used.
-6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Default value of 1.6 used for Caco2 permeability.
-> calc_analytic_css(parameters=parameterize_pbtk(chem.cas="80-05-7"),model="pbtk")
-Plasma concentration returned in uM units.
-[1] 0.9432
-Warning messages:
-1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Clint is provided as a distribution.
-2: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
-  Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
-3: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Fraction unbound is provided as a distribution.
-4: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
-  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human in vivo measured Rblood2plasma used.
-6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Default value of 1.6 used for Caco2 permeability.
-> calc_analytic_css(chem.name="bisphenol a",model="pbtk",tissue="liver")
-Plasma concentration for liver returned in uM units.
-[1] 20.61
-Warning messages:
-1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Clint is provided as a distribution.
-2: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
-  Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
-3: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Fraction unbound is provided as a distribution.
-4: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
-  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human in vivo measured Rblood2plasma used.
-6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Default value of 1.6 used for Caco2 permeability.
-> calc_analytic_css(chem.name="bisphenol a",model="pbtk",tissue="brain")
-Plasma concentration for brain returned in uM units.
-[1] 5.508
-Warning messages:
-1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Clint is provided as a distribution.
-2: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
-  Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
-3: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Fraction unbound is provided as a distribution.
-4: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
-  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human in vivo measured Rblood2plasma used.
-6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Default value of 1.6 used for Caco2 permeability.
 > 
 > head(solve_pbtk(chem.name="bisphenol a",days=1))
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
@@ -141,87 +77,26 @@ Warning messages:
   Human in vivo measured Rblood2plasma used.
 6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
-> head(solve_pbtk(chem.cas="80-05-7",days=1))
-None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
-
-AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
-The model outputs are provided in the following units:
-	umol: Agutlumen, Atubules, Ametabolized
-	uM: Cgut, Cliver, Cven, Clung, Cart, Crest, Ckidney, Cplasma
-	uM*days: AUC
-
-       time Agutlumen    Cgut    Cliver     Cven  Clung    Cart    Crest
-[1,] 0.0000     197.5  0.0000  0.000000 0.000000 0.0000 0.00000 0.000000
-[2,] 0.0001     197.3  0.1582  0.000479 0.000001 0.0000 0.00000 0.000000
-[3,] 0.0104     180.0 10.1400  3.061000 0.036370 0.2969 0.03128 0.007969
-[4,] 0.0208     164.1 13.6300  7.594000 0.102400 0.8854 0.09674 0.056180
-[5,] 0.0312     149.6 14.7700 11.110000 0.161900 1.4240 0.15730 0.149500
-[6,] 0.0416     136.3 14.9900 13.380000 0.206900 1.8340 0.20350 0.275400
-     Ckidney  Cplasma Atubules Ametabolized      AUC
-[1,]  0.0000 0.000000 0.000000       0.0000 0.000000
-[2,]  0.0000 0.000001 0.000000       0.0000 0.000000
-[3,]  0.3828 0.045750 0.000581       0.1353 0.000170
-[4,]  1.7520 0.128900 0.004210       0.7581 0.001073
-[5,]  3.2890 0.203700 0.011540       1.8560 0.002817
-[6,]  4.5500 0.260300 0.021930       3.2870 0.005245
-Warning messages:
-1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Clint is provided as a distribution.
-2: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
-  Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
-3: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Fraction unbound is provided as a distribution.
-4: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
-  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human in vivo measured Rblood2plasma used.
-6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Default value of 1.6 used for Caco2 permeability.
-> head(solve_pbtk(parameters=parameterize_pbtk(chem.cas="80-05-7"),days=1))
-None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
-
-AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
-The model outputs are provided in the following units:
-	umol: Agutlumen, Atubules, Ametabolized
-	uM: Cgut, Cliver, Cven, Clung, Cart, Crest, Ckidney, Cplasma
-	uM*days: AUC
-
-       time Agutlumen    Cgut    Cliver     Cven  Clung    Cart    Crest
-[1,] 0.0000     197.5  0.0000  0.000000 0.000000 0.0000 0.00000 0.000000
-[2,] 0.0001     197.3  0.1582  0.000479 0.000001 0.0000 0.00000 0.000000
-[3,] 0.0104     180.0 10.1400  3.061000 0.036370 0.2969 0.03128 0.007969
-[4,] 0.0208     164.1 13.6300  7.594000 0.102400 0.8854 0.09674 0.056180
-[5,] 0.0312     149.6 14.7700 11.110000 0.161900 1.4240 0.15730 0.149500
-[6,] 0.0416     136.3 14.9900 13.380000 0.206900 1.8340 0.20350 0.275400
-     Ckidney  Cplasma Atubules Ametabolized      AUC
-[1,]  0.0000 0.000000 0.000000       0.0000 0.000000
-[2,]  0.0000 0.000001 0.000000       0.0000 0.000000
-[3,]  0.3828 0.045750 0.000581       0.1353 0.000170
-[4,]  1.7520 0.128900 0.004210       0.7581 0.001073
-[5,]  3.2890 0.203700 0.011540       1.8560 0.002817
-[6,]  4.5500 0.260300 0.021930       3.2870 0.005245
-Warning messages:
-1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Clint is provided as a distribution.
-2: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
-  Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
-3: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Fraction unbound is provided as a distribution.
-4: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
-  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-5: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human in vivo measured Rblood2plasma used.
-6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Default value of 1.6 used for Caco2 permeability.
-7: In solve_model(chem.name = chem.name, chem.cas = chem.cas, dtxsid = dtxsid,  :
-  Rblood2plasma not recalculated. 
-Set recalc.blood2plasma to TRUE if desired.
-8: In solve_model(chem.name = chem.name, chem.cas = chem.cas, dtxsid = dtxsid,  :
-  Clearance not recalculated. 
-Set recalc.clearance to TRUE if desired.
 > 
-> p <- parameterize_pbtk(chem.name="Aminopterin")[sort(names(parameterize_pbtk(chem.name="Aminopterin")))]
-There were 16 warnings (use warnings() to see them)
+> p <- parameterize_pbtk(chem.name="Aminopterin")
+Warning messages:
+1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
+  Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
+2: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+  Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
+3: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
+  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
+4: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+  Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
+5: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
+  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
+6: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+  Rblood2plasma has been recalculated.
+7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human Rblood2plasma calculated with calc_rblood2plasma.
+8: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+  Default value of 1.6 used for Caco2 permeability.
+> p <- p[sort(names(p))]
 > # Try to standardize order of variable names
 > for (this.param in names(p)[order(toupper(names(p)))]) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
 BW: 70

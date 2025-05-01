@@ -123,3 +123,4 @@ and dose rate has  units of mg/kg/day.
 Robert Pearce and John Wambaugh
 }
 \keyword{pbtk}
+\keyword{steady-state}

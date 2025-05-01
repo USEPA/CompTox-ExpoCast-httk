@@ -75,7 +75,7 @@
 #'
 #'@author Robert Pearce, John Wambaugh
 #'
-#'@keywords Steady-State
+#'@keywords steady-state
 #'
 #' @examples
 #'
@@ -101,6 +101,13 @@
 #' ggtitle("Bisphenol A")
 #'
 #' print(c.vs.t)
+#'
+#'
+#' calc_css(chem.name='nicotine', model="1compartment")
+#' 
+#' calc_css(chem.name='nicotine', model="3compartment")
+#' 
+#' calc_css(chem.name="endrin")
 #'}
 #'
 #'@importFrom purrr compact

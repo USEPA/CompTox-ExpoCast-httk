@@ -66,7 +66,7 @@
 #'
 #' @author Robert Pearce and John Wambaugh
 #'
-#' @keywords 1compartment
+#' @keywords 1compartment steady-state
 calc_analytic_css_1comp <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid = NULL,

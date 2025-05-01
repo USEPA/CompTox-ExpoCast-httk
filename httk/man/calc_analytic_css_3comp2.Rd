@@ -119,4 +119,4 @@ chemical specific ratio of concentrations in blood:plasma.
 Robert Pearce and John Wambaugh
 }
 \keyword{3compartment2}
-\keyword{analyticCss}
+\keyword{steady-state}
