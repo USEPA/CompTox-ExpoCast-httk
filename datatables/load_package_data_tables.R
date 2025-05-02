@@ -1958,6 +1958,8 @@ chem.physical_and_invitro.data <- add_chemtable(
 # Identify PFAS chemical class using CCD master list:
 cat("PFAS identification from PFAS8a7v3-2025-04-29.csv\n")
 PFAS <- read.csv("PFAS8a7v3-2025-04-29.csv")
+# Remove URLs:
+PFAS$DTXSID <- gsub("https://comptox.epa.gov/dashboard/chemical/details/","",PFAS$DTXSID)
 
 cat("Loading PFAS HTTK data from Smeltz 2023\n")
 Smeltz2023PPBBayes <- read.csv("Smeltz2023/SmeltzPFAS-PPB-UC-Level4.tsv",
@@ -2689,9 +2691,6 @@ cat(" use that file to generate phys-chem properties including pKa.\n")
 #
 #
 chem.physical_and_invitro.data[,"Chemical.Class"] <- ""
-
-# Remove URLs:
-PFAS$DTXSID <- gsub("https://comptox.epa.gov/dashboard/chemical/details/","",PFAS$DTXSID)
 
 chem.physical_and_invitro.data[
   chem.physical_and_invitro.data[,"DTXSID"] %in% PFAS[,"DTXSID"],
