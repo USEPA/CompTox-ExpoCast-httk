@@ -5,21 +5,9 @@ rm(list=ls())
 
 library(httk)
 
-#calc_css(chem.name='nicotine')
-
-calc_css(chem.name='nicotine', model="1compartment")
-
-calc_css(chem.name='nicotine', model="3compartment")
-
-calc_css(chem.name="endrin")
+calc_css(chem.name='nicotine')
 
 calc_tkstats(chem.name='nicotine',days=10)
-
-calc_tkstats(dtxsid="DTXSID0020442",days=1)
-
-calc_tkstats(dtxsid="DTXSID0020442",days=10)
-
-calc_tkstats(dtxsid="DTXSID0020442",days=100)
 
 calc_analytic_css(
   chem.name='Bisphenol-A',

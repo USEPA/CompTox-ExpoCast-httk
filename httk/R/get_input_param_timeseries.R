@@ -8,7 +8,7 @@
 #' preserve the percentile score of the given starting values. 
 #' 
 #' @details
-#' For each time-dependent model, there should be a function (such as \code{\link{gen_input_params}})
+#' For each time-dependent model, there should be a function 
 #' that determines the model parameter values for each individual in the NHANES dataset.
 #' The resulting value are used to form the non-parametric regression curve. 
 #'
@@ -40,34 +40,15 @@
 #' @param days The length of the simulation in days. Equivalent to the \code{days}
 #' parameter in \code{\link{solve_model}}.
 #' 
-#' The next four parameters play the same role here as in \code{\link{httkpop_generate}}:
-#' the user may restrict the data available to the non-parametric regression by 
-#' specifying demographics.
-#' 
-#' @param gender Optional: The gender categories to include in the popualtion; 
-#'  default \code{c("Female", "Male")}.
-#' @param weight_category Optional: The weight categories to include in the
-#'   population. Default is \code{c('Underweight', 'Normal', 'Overweight',
-#'   'Obese')}. User-supplied vector must contain one or more of these strings.
-#' @param gfr_category The kidney function categories to include in the
-#'   population. Default is \code{c('Normal','Kidney Disease', 'Kidney
-#'   Failure')} to include all kidney function levels.
-#' @param reths Optional: a character vector giving the races/ethnicities to
-#'   include in the population. Default is \code{c('Mexican American','Other
-#'   Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include
-#'   all races and ethnicities in their proportions in the NHANES data.
-#'   User-supplied vector must contain one or more of these strings.
+#' @param ref.params Model parameters of a reference population used in determining
+#' timeseries. Recommended column binding ages in months (as \code{age_months}) to
+#' the output of \code{\link{create_mc_samples}}.
 #' 
 #' @param bandwidth Dictates the length of time centered around the present to use
 #' when calculating non-parametric regressions. 
 #' 
 #' @param get.median.param.vals Return, instead of the timeseries, the median values
 #' for the dynamic model parameters at the given start age.
-#' 
-#' @param input.param.dir The path to the \code{input_params_data_files} directory,
-#' which is used to store all \code{input_param} data files. If \code{input_params_data_files}
-#' does not exist, this function will create it in the specified path. Default \code{NULL}, 
-#' in which case the present working directory is used as default.
 #'
 #' @return A list of two-column matrices indexed by names of compiled parameters for
 #' the designated model. The first column contains a list of times (in days) and the 
@@ -77,22 +58,28 @@
 #'
 #' @seealso \code{\link{solve_pbtk_lifestage}}
 #'
-#' @seealso \code{\link{gen_input_params}}
-#'
 #' @keywords lifestage 
 #'
 #' @examples
 #' \donttest{
 #' 
 #' params <- parameterize_pbtk(chem.name = 'Bisphenol A')
-#' ts <- get_input_param_timeseries("pbtk_lifestage",
-#'                                  chem.name = 'Bisphenol A',
-#'                                  initial.params = params,
-#'                                  start.age = 600, # age fifty
-#'                                  days = 365,
-#'                                  weight_category=c('Underweight',
-#'                                                    'Normal',
-#'                                                    'Overweight'))
+#' 
+#' pop.phys <- httkpop_generate(method = 'virtual individuals',
+#'                               nsamp = 25000,
+#'                               agelim_years = c(18, 79),
+#'                               weight_category = c("Normal"))
+#' pop.params <- create_mc_samples(chem.name = 'Bisphenol A',
+#'                                 model = 'pbtk',
+#'                                 httkpop.dt = pop.phys)
+#' ref.params <- cbind(pop.params,
+#'                     age_months = pop.phys$age_months)
+#' ts <- get_input_param_timeseries(model = 'pbtk_lifestage',
+#'                                   chem.name = 'Bisphenol A',
+#'                                   initial.params = params,
+#'                                   start.age = 600, # age fifty
+#'                                   days = 365,
+#'                                   ref.params = ref.params)
 #' 
 #' }
 #' 
@@ -108,28 +95,18 @@ get_input_param_timeseries <- function(model,
                                        initial.percentiles = NULL,
                                        start.age = 360, # months
                                        days = 10, # days
-                                       gender=c('Male',
-                                                'Female'),
-                                       weight_category=c('Underweight',
-                                                         'Normal',
-                                                         'Overweight',
-                                                         'Obese'), 
-                                       gfr_category=c('Normal',
-                                                      'Kidney Disease', 
-                                                      'Kidney Failure'),
-                                       reths=c('Mexican American',
-                                               'Other Hispanic',
-                                               'Non-Hispanic White',
-                                               'Non-Hispanic Black',
-                                               'Other'),
+                                       ref.params = NULL,
                                        bandwidth = 12,
-                                       get.median.param.vals = FALSE,
-                                       input.param.dir = NULL) 
+                                       get.median.param.vals = FALSE) 
   {
-  ## Defining data.table arguments mistaken by check for global variables ##
-  weight_class <- gfr_class <- reth <- param.gen.function <- NULL
-  ####
-    
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
+  ..param <- NULL
+  #End R CMD CHECK appeasement.
+      
   # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
@@ -149,41 +126,28 @@ get_input_param_timeseries <- function(model,
   #   which have the form d_<param>, where <param> is the solver name. 
   param.names <- substring(model.list[[model]]$input.var.names, 3)
   
-  # # Set httk directory
-  # this.func.dir <- utils::getSrcDirectory(get_input_param_timeseries)
-  # httk.dir <- substr(this.func.dir, 1, nchar(this.func.dir)-2)
-  
-  # param.data.file stores the parameter values for the generated population
-  if (is.null(input.param.dir)) {
-    input.param.dir <- getwd()
-  } else if (!file.exists(input.param.dir)) {
-    stop("Specified directory for storing input parameters does not exist.")
+  if (is.null(ref.params)) {
+    stop(paste("Reference parameters (the output of create_mc_samples)",
+               "must be included as input with argument name ref.params."))
   }
   
-  storage.dir <- file.path(input.param.dir, "input_param_data_files")
-  if (!file.exists(storage.dir)) {
-    dir.create(storage.dir)
+  if (!("age_months" %in% names(ref.params))) {
+    stop("Ages (age_months) must be included in reference parameters.")
   }
-  param.data.file <- file.path(storage.dir, paste("input_params_",
-                                                  model,
-                                                  "_",
-                                                  chem.cas,
-                                                  ".Rds",
-                                                  sep = ""))
   
-  # param.data.file <- paste(httk.dir,"/data/input_params_", model, "_", chem.cas,
-  #                          ".Rds", sep="")
-  if (!file.exists(param.data.file)){
-    do.call(gen_input_params, list(model = model, 
-                                   chem.cas = chem.cas,
-                                   input.param.dir = input.param.dir))
+  pop.data <- data.frame(age_months = ref.params$age_months)
+  
+  for (input.param in param.names) {
+    # Remove prepended 'd_' and get R name for parameter
+    param <- model.list[[model]]$Rtosolvermap[[input.param]]
+    if (param %in% names(ref.params)) {
+      pop.data[,input.param] <- ref.params[,..param]
+    } else {
+      stop(paste("Input parameter", param, "is not included in ref.params."))
+    }
   }
-  pop.data <- readRDS(param.data.file)
-  # Restrict based on user-supplied demographics
-  pop.data <- pop.data[gender %in% gender &
-                         weight_class %in% weight_category &
-                         gfr_class %in% gfr_category &
-                         reth %in% reths,]
+  
+  pop.data <- as.data.table(pop.data)
   pop.age <- pop.data[["age_months"]] 
   
   timeseries.list <- list() # The list of two-column matrices to be passed to 
@@ -197,18 +161,8 @@ get_input_param_timeseries <- function(model,
   time.vals <- seq(start.age+1, ceiling(start.age+days*12/365))
   
   for (param in param.names) {
-    if (param %in% names(pop.data)) {
-      pop.param <- pop.data[[param]]
-    } else {
-      do.call(param.gen.function, list(chem.cas.list=c(chem.cas)))
-      pop.data <- readRDS(param.data.file)
-      if (param %in% names(pop.data)) {
-        pop.param <- pop.data[[param]]
-      } else { # There is a problem generating the data for this compound
-        stop(paste("Data for", param, "is not available.",
-                   "Check", param.data.file, "data file."))
-      }
-    }
+    
+    pop.param <- pop.data[[param]]
     
     # The non-parametric regression works as follows:
     #   First, the population values of the parameter of interest are ordered
@@ -220,7 +174,6 @@ get_input_param_timeseries <- function(model,
     
     # Relevant indices: indices of individuals that fall within bandwidth window
     rel.inds <- abs(pop.age - start.age) < bandwidth/2
-    
     
     param.timeseries <- c()
     order.param <- order(pop.param[rel.inds])
@@ -265,6 +218,7 @@ get_input_param_timeseries <- function(model,
       message(paste("Initial value of", param, "taken to be", initial.param))
     }
     
+
     for (time in time.vals) {
       rel.inds <- abs(pop.age - time) < bandwidth/2
       order.param <- order(pop.param[rel.inds])

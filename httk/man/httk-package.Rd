@@ -34,10 +34,10 @@ Authors:
 
 Other contributors:
 \itemize{
+  \item Todor Antonijevic \email{tantonijevic@toxstrategies.com} (\href{https://orcid.org/0000-0002-0248-8412}{ORCID}) [contributor]
   \item Miyuki Breen \email{breen.miyuki@epa.gov} (\href{https://orcid.org/0000-0001-8511-4653}{ORCID}) [contributor]
   \item Shannon Bell \email{Shannon.bell@inotivco.com} (\href{https://orcid.org/0000-0002-5754-6085}{ORCID}) [contributor]
   \item Xiaoqing Chang \email{Xiaoqing.chang@inotivco.com} (\href{https://orcid.org/0000-0003-0752-1848}{ORCID}) [contributor]
-  \item Todor Antonijevic \email{tantonijevic@toxstrategies.com} (\href{https://orcid.org/0000-0002-0248-8412}{ORCID}) [contributor]
   \item Jimena Davis [contributor]
   \item Elaina Kenyon \email{kenyon.elaina@epa.gov} (\href{https://orcid.org/0000-0001-8781-2391}{ORCID}) [contributor]
   \item Gilberto Padilla Mercado \email{PadillaMercado.Gilberto@epa.gov} (\href{https://orcid.org/0000-0001-5423-1646}{ORCID}) [contributor]
@@ -45,9 +45,10 @@ Other contributors:
   \item Nathan Pollesch \email{pollesch.nathan@epa.gov} (\href{https://orcid.org/0000-0001-8992-9294}{ORCID}) [contributor]
   \item Celia Schacht \email{Schacht.Celia@epa.gov} (\href{https://orcid.org/0000-0002-8131-513X}{ORCID}) [contributor]
   \item Meredith Scherer \email{Scherer.Meredith@epa.gov} (\href{https://orcid.org/0000-0002-9785-7363}{ORCID}) [contributor]
-  \item James Sluka \email{jsluka@indiana.edu} (\href{https://orcid.org/0000-0002-5901-1404}{ORCID}) [contributor]
   \item Noelle Sinski \email{Noelle.Sinski@icf.com} [contributor]
   \item Nisha Sipes \email{sipes.nisha@epa.gov} (\href{https://orcid.org/0000-0003-4203-6426}{ORCID}) [contributor]
+  \item James Sluka \email{jsluka@indiana.edu} (\href{https://orcid.org/0000-0002-5901-1404}{ORCID}) [contributor]
+  \item Caroline Stevens \email{stevens.caroline@epa.gov} (\href{https://orcid.org/0000-0001-7780-2691}{ORCID}) [contributor]
   \item Barbara Wetmore \email{wetmore.barbara@epa.gov} (\href{https://orcid.org/0000-0002-6878-5348}{ORCID}) [contributor]
   \item Lily Whipple [contributor]
   \item Woodrow Setzer (\href{https://orcid.org/0000-0002-6709-9186}{ORCID}) [contributor]

@@ -1,6 +1,6 @@
 
-R Under development (unstable) (2024-08-07 r86984 ucrt) -- "Unsuffered Consequences"
-Copyright (C) 2024 The R Foundation for Statistical Computing
+R Under development (unstable) (2025-04-18 r88159 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2025 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -26,7 +26,7 @@ Type 'q()' to quit R.
 > 
 > calc_analytic_css(chem.name="bisphenol a",model="3compartmentss")
 Plasma concentration returned in uM units.
-[1] 0.9418
+[1] 0.9437
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -40,7 +40,7 @@ Warning messages:
   Default value of 1.6 used for Caco2 permeability.
 > calc_analytic_css(chem.cas="80-05-7",model="3compartmentss")
 Plasma concentration returned in uM units.
-[1] 0.9418
+[1] 0.9437
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -54,7 +54,7 @@ Warning messages:
   Default value of 1.6 used for Caco2 permeability.
 > calc_analytic_css(parameters=parameterize_steadystate(chem.cas="80-05-7"),model="3compartmentss")
 Plasma concentration returned in uM units.
-[1] 0.9418
+[1] 0.9437
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.
@@ -88,11 +88,11 @@ Caco2.Pab: 1.6
 Caco2.Pab.dist: NA
 Clint: 0
 Clint.dist: NA
-Dow74: 0.7395
+Dow74: 0.0008903
 Fabsgut: 0.6448
-Fhep.assay.correction: 0.9561
-Funbound.plasma: 0.747
-Funbound.plasma.adjustment: 0.996
+Fhep.assay.correction: 0.8798
+Funbound.plasma: 0.75
+Funbound.plasma.adjustment: 1
 Funbound.plasma.dist: NA
 hepatic.bioavailability: 1
 liver.density: 1.05
@@ -100,7 +100,7 @@ million.cells.per.gliver: 110
 MW: 440.4
 Qgfrc: 0.3099
 Qtotal.liverc: 3.595
-Rblood2plasma: 0.8419
+Rblood2plasma: 0.8587
 Vliverc: 0.02448
 > 
 > quit("no")

@@ -94,3 +94,4 @@ concentrations as a result of infusion dosing.
 Robert Pearce and John Wambaugh
 }
 \keyword{1compartment}
+\keyword{steady-state}

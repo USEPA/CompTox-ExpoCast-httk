@@ -140,28 +140,17 @@
 #' @param start.age The age of the individual in months at the beginning of the
 #' simulation. Default 360.
 #'
-#'The next four parameters play the same role here as in \code{\link{httkpop_generate}}:
-#' the user may restrict the data available to generate parameter evolution by
-#' specifying demographics. 
+#' @param ref.pop.dt The output of \code{\link{httkpop_generate}} containing physiology
+#' of the population used in determining timeseries of parameters. Ignored if \code{ref.params}
+#' is given.
 #' 
-#' @param gender Optional: The gender categories to include in the popualtion; 
-#'  default \code{c("Female", "Male")}.
-#' @param weight_category Optional: The weight categories to include in the
-#'   population. Default is \code{c('Underweight', 'Normal', 'Overweight',
-#'   'Obese')}. User-supplied vector must contain one or more of these strings.
-#' @param gfr_category The kidney function categories to include in the
-#'   population. Default is \code{c('Normal','Kidney Disease', 'Kidney
-#'   Failure')} to include all kidney function levels.
-#' @param reths Optional: a character vector giving the races/ethnicities to
-#'   include in the population. Default is \code{c('Mexican American','Other
-#'   Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include
-#'   all races and ethnicities in their proportions in the NHANES data.
-#'   User-supplied vector must contain one or more of these strings.
-#'
-#' @param input.param.dir The path to the \code{input_params_data_files} directory,
-#' which is used to store all \code{input_param} data files. If \code{input_params_data_files}
-#' does not exist, this function will create it in the specified path. Default \code{NULL}, 
-#' in which case the present working directory is used as default.
+#' @param httkpop.generate.arg.list If \code{ref.pop.dt} is \code{NULL}, these arguments
+#' are used as input to \code{\link{httkpop_generate}} for generating physiology of 
+#' a reference population. 
+#' 
+#' @param ref.params Model parameters of a reference population used in determining
+#' timeseries. Recommended column binding ages in months (as \code{age_months}) to
+#' the output of \code{\link{create_mc_samples}}.
 #'
 #' @param ... Additional arguments passed to the integrator (deSolve).
 #'
@@ -183,13 +172,21 @@
 #' \donttest{
 #' 
 #' params <- parameterize_pbtk(chem.name = 'Bisphenol A')
+#' 
+#' pop.phys <- httkpop_generate(method = 'virtual individuals',
+#'                               nsamp = 25000,
+#'                               agelim_years = c(18, 79),
+#'                               weight_category = c("Normal"))
+#' pop.params <- create_mc_samples(chem.name = 'Bisphenol A',
+#'                                 model = 'pbtk',
+#'                                 httkpop.dt = pop.phys)
+#' ref.params <- cbind(pop.params,
+#'                     age_months = pop.phys$age_months)
 #' out <- solve_pbtk_lifestage(chem.name = 'Bisphenol A',
 #'                             parameters = params,
 #'                             days = 365,
 #'                             start.age = 600, # age fifty
-#'                             weight_category=c('Underweight',
-#'                                               'Normal',
-#'                                               'Overweight'),
+#'                             ref.params = ref.params,
 #'                             doses.per.day = 3,
 #'                             daily.dose = 1)
 #' 
@@ -229,21 +226,11 @@ solve_pbtk_lifestage <- function(chem.name = NULL,
                     monitor.vars=NULL,
                     time.varying.params=TRUE,
                     start.age = 360,
-                    gender=c('Male',
-                             'Female'),
-                    weight_category=c('Underweight',
-                                      'Normal',
-                                      'Overweight',
-                                      'Obese'), 
-                    gfr_category=c('Normal',
-                                   'Kidney Disease', 
-                                   'Kidney Failure'),
-                    reths=c('Mexican American',
-                            'Other Hispanic',
-                            'Non-Hispanic White',
-                            'Non-Hispanic Black',
-                            'Other'),
-                    input.param.dir = NULL,
+                    ref.pop.dt = NULL,
+                    httkpop.generate.arg.list = list(
+                      method = 'virtual individuals',
+                      nsamp = 25000),
+                    ref.params = NULL,
                     ...)
 {
   
@@ -267,6 +254,23 @@ solve_pbtk_lifestage <- function(chem.name = NULL,
       start.age <- 360
     }
     
+    if (is.null(ref.params)) {
+      if (is.null(ref.pop.dt)) {
+        ref.pop.dt <- do.call(httkpop_generate, httkpop.generate.arg.list)
+      }
+      ref.params <- create_mc_samples(chem.cas = chem.cas,
+                                      chem.name = chem.name,
+                                      dtxsid = dtxsid,
+                                      model = "pbtk",
+                                      httkpop.dt = ref.pop.dt,
+                                      samples = dim(ref.pop.dt)[1],
+                                      suppress.messages = TRUE)
+      
+      ref.params <- cbind(ref.params,
+                          age_years = ref.pop.dt$age_years, 
+                          age_months = ref.pop.dt$age_months)
+    }
+    
     timeseries.list <- get_input_param_timeseries(model = "pbtk_lifestage",
                                                   chem.name = chem.name,
                                                   chem.cas = chem.cas,
@@ -274,13 +278,7 @@ solve_pbtk_lifestage <- function(chem.name = NULL,
                                                   initial.params = parameters,
                                                   start.age = start.age,
                                                   days = days,
-                                                  gender = gender,
-                                                  weight_category =
-                                                    weight_category,
-                                                  gfr_category = gfr_category,
-                                                  reths=reths,
-                                                  input.param.dir = 
-                                                    input.param.dir)
+                                                  ref.params = ref.params)
 
   } else { # forcing is repeated zero
     for (param in model.list[["pbtk_lifestage"]]$input.var.names) {

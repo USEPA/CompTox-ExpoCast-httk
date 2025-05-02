@@ -35,12 +35,9 @@ solve_pbtk_lifestage(
   monitor.vars = NULL,
   time.varying.params = TRUE,
   start.age = 360,
-  gender = c("Male", "Female"),
-  weight_category = c("Underweight", "Normal", "Overweight", "Obese"),
-  gfr_category = c("Normal", "Kidney Disease", "Kidney Failure"),
-  reths = c("Mexican American", "Other Hispanic", "Non-Hispanic White",
-    "Non-Hispanic Black", "Other"),
-  input.param.dir = NULL,
+  ref.pop.dt = NULL,
+  httkpop.generate.arg.list = list(method = "virtual individuals", nsamp = 25000),
+  ref.params = NULL,
   ...
 )
 }
@@ -138,33 +135,19 @@ according to the nonparametric regression determined by \code{\link{get_input_pa
 Default is TRUE.}
 
 \item{start.age}{The age of the individual in months at the beginning of the
-simulation. Default 360.
+simulation. Default 360.}
 
-The next four parameters play the same role here as in \code{\link{httkpop_generate}}:
-the user may restrict the data available to generate parameter evolution by
-specifying demographics.}
+\item{ref.pop.dt}{The output of \code{\link{httkpop_generate}} containing physiology
+of the population used in determining timeseries of parameters. Ignored if \code{ref.params}
+is given.}
 
-\item{gender}{Optional: The gender categories to include in the popualtion; 
-default \code{c("Female", "Male")}.}
+\item{httkpop.generate.arg.list}{If \code{ref.pop.dt} is \code{NULL}, these arguments
+are used as input to \code{\link{httkpop_generate}} for generating physiology of 
+a reference population.}
 
-\item{weight_category}{Optional: The weight categories to include in the
-population. Default is \code{c('Underweight', 'Normal', 'Overweight',
-'Obese')}. User-supplied vector must contain one or more of these strings.}
-
-\item{gfr_category}{The kidney function categories to include in the
-population. Default is \code{c('Normal','Kidney Disease', 'Kidney
-Failure')} to include all kidney function levels.}
-
-\item{reths}{Optional: a character vector giving the races/ethnicities to
-include in the population. Default is \code{c('Mexican American','Other
-Hispanic','Non-Hispanic White','Non-Hispanic Black','Other')}, to include
-all races and ethnicities in their proportions in the NHANES data.
-User-supplied vector must contain one or more of these strings.}
-
-\item{input.param.dir}{The path to the \code{input_params_data_files} directory,
-which is used to store all \code{input_param} data files. If \code{input_params_data_files}
-does not exist, this function will create it in the specified path. Default \code{NULL}, 
-in which case the present working directory is used as default.}
+\item{ref.params}{Model parameters of a reference population used in determining
+timeseries. Recommended column binding ages in months (as \code{age_months}) to
+the output of \code{\link{create_mc_samples}}.}
 
 \item{...}{Additional arguments passed to the integrator (deSolve).}
 }
@@ -222,13 +205,21 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 \donttest{
 
 params <- parameterize_pbtk(chem.name = 'Bisphenol A')
+
+pop.phys <- httkpop_generate(method = 'virtual individuals',
+                              nsamp = 25000,
+                              agelim_years = c(18, 79),
+                              weight_category = c("Normal"))
+pop.params <- create_mc_samples(chem.name = 'Bisphenol A',
+                                model = 'pbtk',
+                                httkpop.dt = pop.phys)
+ref.params <- cbind(pop.params,
+                    age_months = pop.phys$age_months)
 out <- solve_pbtk_lifestage(chem.name = 'Bisphenol A',
                             parameters = params,
                             days = 365,
                             start.age = 600, # age fifty
-                            weight_category=c('Underweight',
-                                              'Normal',
-                                              'Overweight'),
+                            ref.params = ref.params,
                             doses.per.day = 3,
                             daily.dose = 1)
 

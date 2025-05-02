@@ -84,7 +84,7 @@
 #' @references 
 #' \insertAllCited{}
 #'
-#' @keywords 3compartment analyticCss
+#' @keywords 3compartment steady-state
 calc_analytic_css_3comp <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid=NULL,

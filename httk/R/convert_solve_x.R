@@ -53,12 +53,13 @@
 #' @author Sarah E. Davidson
 #' 
 #' @examples 
+#' \donttest{
 #' output.mat <- solve_1comp(dtxsid = "DTXSID0020573",days=1)
 #' new.output.mat <- convert_solve_x(output.units = "mg",
 #'                                   model.output.mat = output.mat,
 #'                                   model = "1compartment",
 #'                                   dtxsid = "DTXSID0020573")
-#' 
+#' }
 #' @seealso convert_units
 #' @export convert_solve_x
 convert_solve_x <- function(model.output.mat,

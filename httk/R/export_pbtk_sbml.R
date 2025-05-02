@@ -16,11 +16,18 @@
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #' 
 #' @param chem.cas Either the chemical name or CAS number must be specified.
+#' 
 #' @param chem.name Either the chemical name or CAS number must be specified.
+#' 
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", or default
 #' "Human").
+#' 
 #' @param initial.amounts Must specify initial amounts in units of choice.
+#' 
 #' @param filename The name of the jarnac file containing the model.
+#' 
+#' @param folder The folder on the file system containing the output file. Defaults to \code{\link{tempdir}}.
+#' 
 #' @param digits Desired number of decimal places to round the parameters.
 #' 
 #' @author Robert Pearce
@@ -41,7 +48,8 @@ export_pbtk_sbml <- function(chem.cas=NULL,
                              chem.name=NULL,
                              species="Human",
                              initial.amounts=list(Agutlumen=0),
-                             filename="default.xml", 
+                             filename="default.xml",
+                             folder=tempdir(), 
                              digits = 4)
 {
   Agutlumen <- Aart <- Aven <- Alung <- Agut <- Aliver <- Akidney <- Arest <- Atubules <- Ametabolized <- NULL
@@ -559,5 +567,6 @@ export_pbtk_sbml <- function(chem.cas=NULL,
          </reaction>
       </listOfReactions>
    </model>
-</sbml>",file=filename)
+</sbml>",file=paste(folder,filename,sep="/"))
+  cat(filename,"written to folder",folder,"\n")
 }

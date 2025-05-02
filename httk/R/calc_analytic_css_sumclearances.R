@@ -69,7 +69,7 @@
 #'
 #' @author John Wambaugh
 #'
-#' @keywords sumclearances
+#' @keywords sumclearances steady-state
 #'
 #' @export calc_analytic_css_sumclearances
 calc_analytic_css_sumclearances <- function(chem.name=NULL,
