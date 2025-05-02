@@ -3,7 +3,9 @@
 library(httk)
 library(parallel)
 library(data.table)
-
+library(ggplot2)
+library(scales)
+                                       
 # Clear the memory:
 rm(list=ls())
 
@@ -31,8 +33,8 @@ write.table(
   prev.table,
   file=paste(
     "Dashboard-HTTK-CssunitsmgpL-previous.txt",sep=""),
-  row.names=F,
-  quote=F,
+  row.names=FALSE,
+  quote=FALSE,
   sep="\t")
   
 #setwd("L:/Lab/NCCT_ExpoCast/ExpoCast2019/HTTKDataTable/")
@@ -46,14 +48,14 @@ RANDOM.SEED <- 123456
 WHICH.QUANTILES <- c(0.5,0.95)          
  
 # For which species do we want predictions:
-SPECIES.LIST <- c("Human","Rat")
+SPECIES.LIST <- c("human","rat")
 
 # For which TK models do we want Css predictions:
 MODELS.LIST <- c("3compartmentss","PBTK")
 
 # How many processors are available for parallel computing:
-NUM.CPU <- 6
- 
+NUM.CPU <- 14
+             
 # Add the in silico predictions:
 # Categorical QSPR:
 load_dawson2021()
@@ -115,7 +117,7 @@ length(dup.chems) == 0
 # Organize HTTK data by species:
 HTTK.data.list <- list()
 all.ids <- NULL
-for (this.species in SPECIES.LIST)
+for (this.species in tolower(SPECIES.LIST))
 {
   HTTK.data.list[[this.species]] <- get_cheminfo(
     info=c(
@@ -133,8 +135,8 @@ for (this.species in SPECIES.LIST)
 
 # temporilay make it run fast:
 ivpkfit <- read.csv("invivoPKfit-params.for.dashboard.txt")
-short.list <- ivpkfit$Chemical[1:25]
-all.ids <- all.ids[all.ids %in% short.list]
+#short.list <- ivpkfit$Chemical[1:25]
+#all.ids <- all.ids[all.ids %in% short.list]
 
 
 # We want one parameter per line, but the code is pretty different wrt how we
@@ -170,13 +172,13 @@ make.ccd.table <- function(
   dashboard.table <- NULL
   
   print(paste(this.id,"-",which(this.id==all.ids),"of",num.chems))
-  for (this.species in species.list) {
+  for (this.species in tolower(species.list)) {
   print(this.species)
     if (this.id %in% HTTK.data.list[[this.species]]$DTXSID) {
       HTTK.data <- HTTK.data.list[[this.species]]
       default.to.human=FALSE
     } else {
-      HTTK.data <- HTTK.data.list[["Human"]]
+      HTTK.data <- HTTK.data.list[["human"]]
       default.to.human=TRUE
     }
     HTTK.index <- which(HTTK.data$DTXSID==this.id)
@@ -193,17 +195,17 @@ make.ccd.table <- function(
           Reference=NA,
           Percentile=NA,
           Species=this.species,
-          Data.Source.Species=ifelse(this.species=="Human" |
-                                     default.to.human,"Human","Rat"))
+          Data.Source.Species=ifelse(tolower(this.species)=="human" |
+                                     default.to.human,"human","rat"))
   # Clint:
         if (this.param == "Clint") {
           clint.ref <- subset(chem.physical_and_invitro.data,DTXSID==this.id)[,
-            paste(this.row["Data.Source.Species"],"Clint.Reference",sep=".")]
+            paste(stringr::str_to_title(this.row["Data.Source.Species"]),"Clint.Reference",sep=".")]
           if (is.na(clint.ref))
           {
-            this.row$Measured <- HTTK.data.list[["Human"]][
-              HTTK.data.list[["Human"]]$DTXSID==this.id,4]
-            this.row$Data.Source.Species <- "Human"
+            this.row$Measured <- HTTK.data.list[["human"]][
+              HTTK.data.list[["human"]]$DTXSID==this.id,4]
+            this.row$Data.Source.Species <- "human"
           } else if (clint.ref == "Sipes 2017") {
             this.row$Predicted <- HTTK.data[HTTK.index,4]
             this.row$Model <- "ADMet"
@@ -215,11 +217,11 @@ make.ccd.table <- function(
   # Fup:
         } else if (this.param == "Fup") {
           fup.ref <- subset(chem.physical_and_invitro.data,DTXSID==this.id)[,
-            paste(this.row["Data.Source.Species"],"Funbound.plasma.Reference",sep=".")]
+            paste(stringr::str_to_title(this.row["Data.Source.Species"]),"Funbound.plasma.Reference",sep=".")]
           if (is.na(fup.ref)) {
-            this.row$Measured <- HTTK.data.list[["Human"]][
-              HTTK.data.list[["Human"]]$DTXSID==this.id,5]
-            this.row$Data.Source.Species <- "Human"        
+            this.row$Measured <- HTTK.data.list[["human"]][
+              HTTK.data.list[["human"]]$DTXSID==this.id,5]
+            this.row$Data.Source.Species <- "human"        
           } else if (fup.ref == "Sipes 2017") {
             this.row$Predicted <- HTTK.data[HTTK.index,5]
             this.row$Model <- "ADMet"
@@ -276,7 +278,7 @@ make.ccd.table <- function(
           {
             if (HTTK.data[HTTK.index,5] > 0 | this.model=="3compartmentss") {
               this.row$Model <- this.model
-              parameterize.arg.list = list(
+              parameterize.args.list = list(
                 default.to.human = default.to.human, 
                 clint.pvalue.threshold = 0.05,
                 restrictive.clearance = TRUE, 
@@ -289,7 +291,7 @@ make.ccd.table <- function(
                 output.units="mg/L",
                 species=this.species,
                 model=this.model,
-                parameterize.arg.list=parameterize.arg.list))
+                parameterize.args.list=parameterize.args.list))
               if (!inherits(this.css, "try-error")) {
                 for (this.quantile in names(this.css))
                 {
@@ -371,59 +373,61 @@ for (this.parameter in c(
                           "kgutabs",
                           "Thalf",
                           "Css"))
+{
+  this.param.data <- subset(ivpkfit, !is.na(this.parameter))
+  for (this.chem in unique(this.param.data$Chemical))
   {
-    this.param.data <- subset(ivpkfit, !is.na(this.parameter))
-    for (this.chem in unique(this.param.data$Chemical))
+    if (this.parameter == "Vdist") param.name <- "Vd"
+    else if (this.parameter == "Thalf") param.name <- "TK.Half.Life"
+    else if (this.parameter == "Fgutabs") param.name <- "Fsysbio"
+    else param.name <- this.parameter
+    
+    for (this.species in tolower(subset(this.param.data, Chemical==this.chem)$Species))
     {
-      if (this.parameter == "Vdist") param.name <- "Vd"
-      else if (this.parameter == "Thalf") param.name <- "TK.Half.Life"
-      else if (this.parameter == "Fgutabs") param.name <- "Fsysbio"
-      else param.name <- this.parameter
-      
-      for (this.species in subset(this.param.data, Chemical==this.chem)$Species)
+      ivpkfit.row <- which(ivpkfit$Chemical==this.chem &
+                           tolower(ivpkfit$Species) == tolower(this.species))
+      if (!is.na(ivpkfit[ivpkfit.row, this.parameter]))
       {
-        ivpkfit.row <- which(ivpkfit$Chemical==this.chem &
-                             tolower(ivpkfit$Species) == tolower(this.species))
-        if (!is.na(ivpkfit[ivpkfit.row, this.parameter]))
+        dashboard.row <- dashboard.table$DTXSID==this.chem &
+                    tolower(dashboard.table$Species) == tolower(this.species) &
+                    tolower(dashboard.table$Parameter) == tolower(param.name)
+        if (any(dashboard.row)) 
         {
-          dashboard.row <- dashboard.table$DTXSID==this.chem &
-                      tolower(dashboard.table$Species) == tolower(this.species) &
-                      tolower(dashboard.table$Parameter) == tolower(param.name)
-          if (any(dashboard.row)) {
-            dashboard.row <- which(dashboard.row)
-          } else {
-            dashboard.row <- dim(dashboard.table)[1]+1
-            dashboard.table[dashboard.row,"DTXSID"] <- this.chem
-            dashboard.table[dashboard.row,"Species"] <- this.species
-            dashboard.table[dashboard.row,"Parameter"] <- param.name
-            if (param.name == "Vd") {
-              dashboard.table[dashboard.row, "Units"] <- "L/kg"
-            } else if (param.name == "TK.Half.Life") {
-              dashboard.table[dashboard.row, "Units"] <- "hours"
-            } else if (param.name == "Css") {
-              dashboard.table[dashboard.row, "Units"] <- "mg/L"
-            } else if (param.name == "kgutabs") {
-              dashboard.table[dashboard.row, "Units"] <- "1/h"
-            } else if (param.name == "Fsysbio") {
-              dashboard.table[dashboard.row, "Units"] <- "fraction"
-            }
+          dashboard.row <- which(dashboard.row)
+        } else {
+          dashboard.row <- dim(dashboard.table)[1]+1
+          dashboard.table[dashboard.row,"DTXSID"] <- this.chem
+          dashboard.table[dashboard.row,"Species"] <- this.species
+          dashboard.table[dashboard.row,"Parameter"] <- param.name
+          if (param.name == "Vd") {
+            dashboard.table[dashboard.row, "Units"] <- "L/kg"
+          } else if (param.name == "TK.Half.Life") {
+            dashboard.table[dashboard.row, "Units"] <- "hours"
+          } else if (param.name == "Css") {
+            dashboard.table[dashboard.row, "Units"] <- "mg/L"
+          } else if (param.name == "kgutabs") {
+            dashboard.table[dashboard.row, "Units"] <- "1/h"
+          } else if (param.name == "Fsysbio") {
+            dashboard.table[dashboard.row, "Units"] <- "fraction"
           }
-          for (this.ref in unique(dashboard.table[dashboard.row,"Reference"]))
-          {
-            if (!is.na(this.ref))
-            {
-              dashboard.row.ref <- dashboard.table$DTXSID==this.chem &
-                tolower(dashboard.table$Species) == tolower(this.species) &
-                tolower(dashboard.table$Parameter) == tolower(param.name)
-                dashboard.table$Reference == this.ref
-              dashboard.table[dashboard.row.ref,"Reference"] <- paste(
-                this.ref,
-                ivpkfit[ivpkfit.row,"Ref"])                                             
-            } else dashboard.table[dashboard.row,"Reference"] <-
-              ivpkfit[ivpkfit.row,"Ref"]
-            dashboard.table[dashboard.row,"Measured"] <- ivpkfit[ivpkfit.row,
-                            this.parameter]
         }
+        for (this.ref in unique(dashboard.table[dashboard.row,"Reference"]))
+        {
+          if (!is.na(this.ref))
+          {
+            dashboard.row.ref <- dashboard.table$DTXSID==this.chem &
+              tolower(dashboard.table$Species) == tolower(this.species) &
+              tolower(dashboard.table$Parameter) == tolower(param.name)
+              dashboard.table$Reference == this.ref
+            dashboard.table[dashboard.row.ref,"Reference"] <- paste(
+              this.ref,
+              ivpkfit[ivpkfit.row,"Ref"])                                             
+          } else dashboard.table[dashboard.row,"Reference"] <-
+            ivpkfit[ivpkfit.row,"Ref"]
+          dashboard.table[dashboard.row,"Measured"] <- ivpkfit[ivpkfit.row,
+                          this.parameter]
+        }
+      }
     }  
   }
 }  
@@ -499,8 +503,8 @@ write.table(
   dashboard.table,
   file=paste(
     "Dashboard-HTTK-CssunitsmgpL.txt",sep=""),
-  row.names=F,
-  quote=F,
+  row.names=FALSE,
+  quote=FALSE,
   sep="\t")
 
 
@@ -528,18 +532,16 @@ write.table(
 
 tmp <- merge(subset(dashboard.table, Parameter=="Css" & 
                     Model=="3compartmentss" & 
-                    Species=="Human" & 
+                    Species=="human" & 
                     Percentile=="95%"),
              subset(prev.table, Parameter=="Css" & 
                     Model=="3compartmentss" & 
-                    Species=="Human" & 
+                    Species=="human" & 
                     Percentile=="95%"),
              all.x=TRUE, 
              by=c("DTXSID","Parameter","Model","Species","Percentile"))
 tmp$Change <- tmp$Predicted.x/tmp$Predicted.y
 
-library(ggplot2)
-library(scales)
 scientific_10 <- function(x) {                                  
   out <- gsub("1e", "10^", scientific_format()(x))              
   out <- gsub("\\+","",out)                                     
@@ -570,13 +572,6 @@ write.table(
   tmp,
   file=paste(
     "Dashboard-HTTK-CssunitsmgpL-change.txt",sep=""),
-  row.names=F,
-  quote=F,
+  row.names=FALSE,
+  quote=FALSE,
   sep="\t")
-
-
-
-
-
-
-
