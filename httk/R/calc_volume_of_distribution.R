@@ -74,6 +74,16 @@
 #' # Should be the same as chemical by name:
 #' calc_vdist(chem.name="propranolol")
 #'
+#' # Different ways to give the arguments:
+#' calc_vdist(chem.cas="80-05-7")
+#' params <- parameterize_schmitt(chem.name="triclosan")
+#' params <- c(params, predict_partitioning_schmitt(parameters = params))
+#' calc_vdist(parameters=params)
+#' params <- parameterize_3comp(chem.name="triclosan")
+#' calc_vdist(parameters=params)
+#' params <- parameterize_pbtk(chem.name="triclosan")
+#' calc_vdist(parameters=params)
+#'
 #' @export calc_vdist
 calc_vdist<- function(chem.cas=NULL,
                       chem.name=NULL,

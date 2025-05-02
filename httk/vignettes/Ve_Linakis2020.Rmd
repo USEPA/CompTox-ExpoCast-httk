@@ -4,7 +4,7 @@ author: "Matt Linakis"
 date: "January 30, 2020"
 output: rmarkdown::html_vignette
 vignette: >
- %\VignetteIndexEntry{g) Linakis (2020): High Throughput Inhalation Model}
+ %\VignetteIndexEntry{e) Linakis (2020): High Throughput Inhalation Model}
  %\VignetteEngine{knitr::rmarkdown}
  %\VignetteEncoding{UTF-8}
 ---

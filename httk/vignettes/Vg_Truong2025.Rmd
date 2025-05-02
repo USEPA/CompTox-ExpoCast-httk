@@ -4,7 +4,7 @@ author: "Kimberly T.Truong, John F. Wambaugh, Dustin F. Kapraun, Sarah E. Davids
 date:  "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: > 
-  %\VignetteIndexEntry{Truong (2025) Full Human Gestational IVIVE}
+  %\VignetteIndexEntry{g) Truong (2025) Full Human Gestational IVIVE}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

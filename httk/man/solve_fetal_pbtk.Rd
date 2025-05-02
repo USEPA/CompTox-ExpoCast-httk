@@ -12,7 +12,7 @@ solve_fetal_pbtk(
   parameters = NULL,
   days = NULL,
   species = "human",
-  tsteps = 4,
+  tsteps = 1,
   dose = NULL,
   dosing.matrix = NULL,
   daily.dose = NULL,
@@ -33,8 +33,8 @@ solve_fetal_pbtk(
   minimum.Funbound.plasma = 1e-04,
   monitor.vars = NULL,
   Caco2.options = list(),
-  atol = 1e-08,
-  rtol = 1e-08,
+  atol = 1e-06,
+  rtol = 1e-06,
   ...
 )
 }
@@ -209,6 +209,10 @@ try(head(solve_fetal_pbtk(chem.cas = "6385-62-2")))
 # However, we can turn off checking for phys-chem properties, since we know
 # that  Diquat dibromide monohydrate is not too volatile:
 head(solve_fetal_pbtk(chem.cas = "6385-62-2", physchem.exclude = FALSE))
+
+# Try different ways to call the function:
+head(solve_fetal_pbtk(chem.cas="80-05-7"))
+head(solve_fetal_pbtk(parameters=parameterize_fetal_pbtk(chem.cas="80-05-7")))
 }
 
 }

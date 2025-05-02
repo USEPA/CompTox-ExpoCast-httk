@@ -11,7 +11,8 @@ calc_ionization(
   parameters = NULL,
   pH = NULL,
   pKa_Donor = NULL,
-  pKa_Accept = NULL
+  pKa_Accept = NULL,
+  return_charge_matrix = FALSE
 )
 }
 \arguments{
@@ -34,6 +35,10 @@ Overwrites chem.name and chem.cas.}
 
 \item{pKa_Accept}{Compound H association equilibirum constant(s).
 Overwrites chem.name and chem.cas.}
+
+\item{return_charge_matrix}{If TRUE, the function returns a table describing
+each ionization state considered by the calculations in this function
+(defaults to FALSE)}
 }
 \value{
 \item{fraction_neutral}{fraction of compound neutral}
@@ -41,6 +46,7 @@ Overwrites chem.name and chem.cas.}
 \item{fraction_negative}{fraction of compound negative}
 \item{fraction_positive}{fraction of compound positive}
 \item{fraction_zwitter}{fraction of compound zwitterionic}
+\item{charge_matrix}{Description of each ionization state if argument return_charge_matrix==TRUE}
 }
 \description{
 This function calculates the ionization of a compound at a given pH. The 
@@ -51,24 +57,86 @@ predicted values and all those values can be included by concatenating with
 commas (for example, pKa_Donor = "8.1,8.6". Finally, pka_Donor and pKa_Accept 
 may be vectors of characters representing different chemicals or instances of
 chemical parameters to allow for uncertainty analysis. A null value for
-pKa_Donor or pKa_Accept is interpretted as no argument provided, while NA 
-is taken as no equlibria
+pKa_Donor or pKa_Accept is interpretted as no argument provided, while " " 
+is taken as a prediction of no ionization possible at any pH.
 }
 \details{
-The fractions are calculated by determining the coefficients for each
-species and dividing the particular species by the sum of all three.  The
-positive, negative and zwitterionic/neutral coefficients are given by:
-\deqn{zwitter/netural = 1} \deqn{for(i in 1:pkabove) negative = negative +
-10^(i * pH - pKa1 - ... - pKai)} \deqn{for(i in 1:pkbelow) positive =
-positive + 10^(pKa1 + ... + pKai - i * pH)} where i begins at 1 and ends at
-the number of points above(for negative) or below(for positive) the
-neutral/zwitterionic range.  The neutral/zwitterionic range is either the pH
-range between 2 pKa's where the number of acceptors above is equal to the
-number of donors below, everything above the pKa acceptors if there are no
-donors, or everything below the pKa donors if there are no acceptors.  Each
-of the terms in the sums represent a different ionization.
+It is very important to note that pKb = 14 - pKa. But if a predictor gives us
+a doinor pKa, we just accept it as a pKa.
+
+For hydrogen donor sites, a hydrogen is present in the molecule that can be 
+donated to the solution if the concentration of hydrogens gets low enough. 
+This causes the molecule to become more negatively charged. This is an acid. 
+For hydrogen acceptor suits a location exist in the molecule that can accept 
+an additional history if the concentration of hydrogens gets sufficiently 
+high. This causes the molecule to become more positively charged. This is a 
+base.
+
+We make several assumptions about ionization in order to make our calculations.
+First, we assume ionization is either due to either "donating" (losing) a
+hydrogen ion (a positively charge proton) to the solution or by "accepting"
+(gaining) a hydrogen ion from the solution. Generally, acids are hydrogen 
+donors
+and bases are hydrogen acceptors. Second, pH is the negative log10 
+concentration
+of hydrogen atoms. The lower the pH, the more hydrogen atoms. So, acids 
+donate
+their hydrogen atoms as pH of the solution increases. Bases accept their 
+hydrogen
+atoms as pH decreases. Third, each predicted pKa is a prediction that a 
+specific
+location (or site) on molecule X can either donate or accept a hydrogen. 
+Fourth, the pKa
+value indicates the pH at which half of the molecules of X have ionized at
+the site, and half have not. The concentration of the two forms are equal.
+Fifth, if there are N pKa's for molecule X, then there are N sites that can
+ionize. Technically this means that there are 2^N different ionization states
+for molecule X (where each site is or is not ionized). However, pKa 
+predictors
+give the equlibrium only for pairs of ionization states. So, we only consider
+N + 1 ionizations states for X -- the state immediately above and below each
+pKa.
+
+To understand the different charge states we annotate the nonionizable 
+backbone
+of a molecule as "X". For each site on X that is capable of donating a 
+hydrogen
+we add a "D" to the right of "X". For each site on X that has accepted a 
+hydrogen,
+we add a "A" to the right of "X". We read the A's and D's from left to right,
+with the one occuring at the lowest pH first. So a typical acid ionization 
+would be:
+XD -> X- and a typical base ionization would be XA+ -> X. Where things get 
+complicated
+is if there are multiple donor and acceptor states. In particular, it is 
+possible 
+for a compound to have a net zero charge, but be simultaneously positively 
+and
+negatively charged. Such a state is called a Zwitter ion. For example:
+XDAA+ -> XAA++ -> XA+ -> XA -> X- . The state XA is technically neutral 
+because
+X has donated one hydrogen, but also accepted one hydrogen. XA is a Zwitter 
+ion.
+
+Each pKa gives the equlibrium ratio of two states pH - pKa = log10[X/XD] for
+donation or pOH - pka = log10[X/XA] for accepting. pOH = 14 - pH. Separating the
+logarithm into log10[X] - log10[XD] lets us see that Cn = Xn - Xn-1 where
+Cn = pH -pKa for donor pKa's and Cn = 14 - pH - pKa for acceptor pKa's.
+We can rewrite log10Xn = Sum_i=1:n Ci + log10X1.  So we can calculate each Xn
+by summing all the ratios between Xn and the lowest state (X1). 
+Then, by requiring that all Xi sum to 1, we have:
+1 = Sum_i=1:N 10^Xi = Sum_i=1:N 10^(Sum_j=1:i (Cj + log10X1)) = X1 * Sum_i=1:N 10^(Sum_j=1:i Cj)
+so that X1 = 1 / Sum_i=1:N 10^(Sum_j=1:i Cj)
+
+The sum im the denominator is the ratio from X1 to each state (including X1).
+We use a table called "charge_matrix" to keep track of all N + 1 ionization
+states and the ratio of each state to the next. We use these ratios to calculate
 }
 \examples{
+
+# Neutral compound:
+calc_ionization(chem.name="Acetochlor",pH=7.4)
+
 # Donor pKa's 9.78,10.39 -- Should be almost all neutral at plasma pH:
 out <- calc_ionization(chem.name='bisphenola',pH=7.4)
 print(out)
@@ -79,7 +147,7 @@ out <- calc_ionization(chem.name='bisphenola',pH=11)
 print(out)
 out[["fraction_negative"]]==max(unlist(out))
 
-# Fictitious compound, should be almost all all negative (anion):
+# Ficticious compound, should be almost all all negative (anion):
 out <- calc_ionization(pKa_Donor=8,pKa_Accept="1,4",pH=9)
 print(out)
 out[["fraction_negative"]]>0.9
@@ -94,7 +162,7 @@ out <- calc_ionization(chem.cas="145742-28-5",pH=7.4)
 print(out)
 out[["fraction_positive"]]==max(unlist(out))
 
-#Fictious Zwitteron:
+#Ficticious Zwitteron:
 out <- calc_ionization(pKa_Donor=6,pKa_Accept="8",pH=7.4)
 print(out)
 out[["fraction_zwitter"]]==max(unlist(out))

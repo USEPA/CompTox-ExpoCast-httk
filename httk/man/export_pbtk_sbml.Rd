@@ -10,6 +10,7 @@ export_pbtk_sbml(
   species = "Human",
   initial.amounts = list(Agutlumen = 0),
   filename = "default.xml",
+  folder = tempdir(),
   digits = 4
 )
 }
@@ -24,6 +25,8 @@ export_pbtk_sbml(
 \item{initial.amounts}{Must specify initial amounts in units of choice.}
 
 \item{filename}{The name of the jarnac file containing the model.}
+
+\item{folder}{The folder on the file system containing the output file. Defaults to \code{\link{tempdir}}.}
 
 \item{digits}{Desired number of decimal places to round the parameters.}
 }

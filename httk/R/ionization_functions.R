@@ -143,21 +143,79 @@ calc_dow <- function(Pow=NULL,
 #' commas (for example, pKa_Donor = "8.1,8.6". Finally, pka_Donor and pKa_Accept 
 #' may be vectors of characters representing different chemicals or instances of
 #' chemical parameters to allow for uncertainty analysis. A null value for
-#' pKa_Donor or pKa_Accept is interpretted as no argument provided, while NA 
-#' is taken as no equlibria
+#' pKa_Donor or pKa_Accept is interpretted as no argument provided, while " " 
+#' is taken as a prediction of no ionization possible at any pH.
+#'
+#' It is very important to note that pKb = 14 - pKa. But if a predictor gives us
+#' a doinor pKa, we just accept it as a pKa.
 #' 
-#' The fractions are calculated by determining the coefficients for each
-#' species and dividing the particular species by the sum of all three.  The
-#' positive, negative and zwitterionic/neutral coefficients are given by:
-#' \deqn{zwitter/netural = 1} \deqn{for(i in 1:pkabove) negative = negative +
-#' 10^(i * pH - pKa1 - ... - pKai)} \deqn{for(i in 1:pkbelow) positive =
-#' positive + 10^(pKa1 + ... + pKai - i * pH)} where i begins at 1 and ends at
-#' the number of points above(for negative) or below(for positive) the
-#' neutral/zwitterionic range.  The neutral/zwitterionic range is either the pH
-#' range between 2 pKa's where the number of acceptors above is equal to the
-#' number of donors below, everything above the pKa acceptors if there are no
-#' donors, or everything below the pKa donors if there are no acceptors.  Each
-#' of the terms in the sums represent a different ionization.
+#' For hydrogen donor sites, a hydrogen is present in the molecule that can be 
+#' donated to the solution if the concentration of hydrogens gets low enough. 
+#' This causes the molecule to become more negatively charged. This is an acid. 
+#' For hydrogen acceptor suits a location exist in the molecule that can accept 
+#' an additional history if the concentration of hydrogens gets sufficiently 
+#' high. This causes the molecule to become more positively charged. This is a 
+#' base.
+#'
+#' We make several assumptions about ionization in order to make our calculations.
+#' First, we assume ionization is either due to either "donating" (losing) a
+#' hydrogen ion (a positively charge proton) to the solution or by "accepting"
+#' (gaining) a hydrogen ion from the solution. Generally, acids are hydrogen 
+#' donors
+#' and bases are hydrogen acceptors. Second, pH is the negative log10 
+#' concentration
+#' of hydrogen atoms. The lower the pH, the more hydrogen atoms. So, acids 
+#' donate
+#' their hydrogen atoms as pH of the solution increases. Bases accept their 
+#' hydrogen
+#' atoms as pH decreases. Third, each predicted pKa is a prediction that a 
+#' specific
+#' location (or site) on molecule X can either donate or accept a hydrogen. 
+#' Fourth, the pKa
+#' value indicates the pH at which half of the molecules of X have ionized at
+#' the site, and half have not. The concentration of the two forms are equal.
+#' Fifth, if there are N pKa's for molecule X, then there are N sites that can
+#' ionize. Technically this means that there are 2^N different ionization states
+#' for molecule X (where each site is or is not ionized). However, pKa 
+#'predictors
+#' give the equlibrium only for pairs of ionization states. So, we only consider
+#' N + 1 ionizations states for X -- the state immediately above and below each
+#' pKa.
+#'
+#' To understand the different charge states we annotate the nonionizable 
+#' backbone
+#' of a molecule as "X". For each site on X that is capable of donating a 
+#' hydrogen
+#' we add a "D" to the right of "X". For each site on X that has accepted a 
+#' hydrogen,
+#' we add a "A" to the right of "X". We read the A's and D's from left to right,
+#' with the one occuring at the lowest pH first. So a typical acid ionization 
+#' would be:
+#' XD -> X- and a typical base ionization would be XA+ -> X. Where things get 
+#' complicated
+#' is if there are multiple donor and acceptor states. In particular, it is 
+#' possible 
+#' for a compound to have a net zero charge, but be simultaneously positively 
+#' and
+#' negatively charged. Such a state is called a Zwitter ion. For example:
+#' XDAA+ -> XAA++ -> XA+ -> XA -> X- . The state XA is technically neutral 
+#' because
+#' X has donated one hydrogen, but also accepted one hydrogen. XA is a Zwitter 
+#' ion.
+#'
+#' Each pKa gives the equlibrium ratio of two states pH - pKa = log10[X/XD] for
+#' donation or pOH - pka = log10[X/XA] for accepting. pOH = 14 - pH. Separating the
+#' logarithm into log10[X] - log10[XD] lets us see that Cn = Xn - Xn-1 where
+#' Cn = pH -pKa for donor pKa's and Cn = 14 - pH - pKa for acceptor pKa's.
+#' We can rewrite log10Xn = Sum_i=1:n Ci + log10X1.  So we can calculate each Xn
+#' by summing all the ratios between Xn and the lowest state (X1). 
+#' Then, by requiring that all Xi sum to 1, we have:
+#' 1 = Sum_i=1:N 10^Xi = Sum_i=1:N 10^(Sum_j=1:i (Cj + log10X1)) = X1 * Sum_i=1:N 10^(Sum_j=1:i Cj)
+#' so that X1 = 1 / Sum_i=1:N 10^(Sum_j=1:i Cj)
+#'
+#' The sum im the denominator is the ratio from X1 to each state (including X1).
+#' We use a table called "charge_matrix" to keep track of all N + 1 ionization
+#' states and the ratio of each state to the next. We use these ratios to calculate
 #' 
 #' @param chem.name Either the chemical name or the CAS number must be
 #' specified. 
@@ -179,12 +237,17 @@ calc_dow <- function(Pow=NULL,
 #' @param pKa_Accept Compound H association equilibirum constant(s).
 #' Overwrites chem.name and chem.cas.
 #' 
+#' @param return_charge_matrix If TRUE, the function returns a table describing
+#' each ionization state considered by the calculations in this function
+#' (defaults to FALSE)
+#' 
 #' @return
 #' \item{fraction_neutral}{fraction of compound neutral}
 #' \item{fraction_charged}{fraction of compound charged}
 #' \item{fraction_negative}{fraction of compound negative}
 #' \item{fraction_positive}{fraction of compound positive}
 #' \item{fraction_zwitter}{fraction of compound zwitterionic}
+#' \item{charge_matrix}{Description of each ionization state if argument return_charge_matrix==TRUE}
 #' 
 #' @author Robert Pearce and John Wambaugh
 #'
@@ -196,7 +259,11 @@ calc_dow <- function(Pow=NULL,
 #' @keywords Parameter
 #' 
 #' @examples
-#' # Donor pKa's 9.78,10.39 -- Should be almost all neutral at plasma pH:
+#'
+#' # Neutral compound:
+#' calc_ionization(chem.name="Acetochlor",pH=7.4)
+#'
+  #' # Donor pKa's 9.78,10.39 -- Should be almost all neutral at plasma pH:
 #' out <- calc_ionization(chem.name='bisphenola',pH=7.4)
 #' print(out)
 #' out[["fraction_neutral"]]==max(unlist(out))
@@ -206,7 +273,7 @@ calc_dow <- function(Pow=NULL,
 #' print(out)
 #' out[["fraction_negative"]]==max(unlist(out))
 #'
-#' # Fictitious compound, should be almost all all negative (anion):
+#' # Ficticious compound, should be almost all all negative (anion):
 #' out <- calc_ionization(pKa_Donor=8,pKa_Accept="1,4",pH=9)
 #' print(out)
 #' out[["fraction_negative"]]>0.9
@@ -221,7 +288,7 @@ calc_dow <- function(Pow=NULL,
 #' print(out)
 #' out[["fraction_positive"]]==max(unlist(out))
 #'
-#' #Fictious Zwitteron:
+#' #Ficticious Zwitteron:
 #' out <- calc_ionization(pKa_Donor=6,pKa_Accept="8",pH=7.4)
 #' print(out)
 #' out[["fraction_zwitter"]]==max(unlist(out))
@@ -234,7 +301,8 @@ calc_ionization <- function(
                      parameters=NULL,
                      pH=NULL,
                      pKa_Donor=NULL,
-                     pKa_Accept=NULL)
+                     pKa_Accept=NULL,
+                     return_charge_matrix = FALSE)
 {
   if (is.null(pH)) stop("pH is required to calculate the ionization.")
 
@@ -257,18 +325,24 @@ calc_ionization <- function(
   if (all(c("pKa_Donor","pKa_Accept") %in% names(parameters)))
   {
     pKa_Donor <- parameters$pKa_Donor
-    pKa_Accept <- parameters$pKa_Accept
-  } else if(!is.null(pKa_Donor) | !is.null(pKa_Accept))
+    pKa_Accept <- parameters$pKa_Accept  
+  } else if (!is.null(pKa_Donor) | !is.null(pKa_Accept))
   {
-# If one of pKa_Donor/Accept is specified but not the other, we assume the other
-# is not present:
-    if (is.null(pKa_Donor)) pKa_Donor <- NA
-    if (is.null(pKa_Accept)) pKa_Accept <- NA
+    # If one equilibrium is givenm, assume the other isn't present:
+    if (is.null(pKa_Donor)) pKa_Donor <- " "
+    if (is.null(pKa_Accept)) pKa_Accept <- " "
   } else {
     stop(
 "Either pKa_Donor and pKa_Accept must be in input parameters or chemical identifier must be supplied.")
   }
   
+  # Assume missing values are not ionized:
+  if (any(is.na(pKa_Donor)) | any(is.na(pKa_Accept)))
+  {
+    pKa_Donor[is.na(pKa_Donor)] <- " "
+    pKa_Accept[is.na(pKa_Accept)] <- " "
+  } 
+    
   # Check if any of these arguments are vectors:
   if (length(pKa_Donor) < 2 & length(pKa_Accept) < 2 & length(pH) < 2)
   {
@@ -295,11 +369,15 @@ calc_ionization <- function(
     length(unique(pH))))
   }
   
+  # Define NULL vectors to hold multiple values if multiple sets of pKa's are
+  # given (calculations > 1):
   fraction_neutral <- NULL
   fraction_charged <- NULL
   fraction_negative <- NULL
   fraction_positive <- NULL
   fraction_zwitter <- NULL
+  # charge_matrix is a data.frame so need to use a list:
+  charge_matrix_list <- list()
   
   for (index in 1:calculations)
   {
@@ -313,9 +391,9 @@ calc_ionization <- function(
       this.pKa_Accept <- pKa_Accept[[1]]
       this.pH <- pH[[1]]
     }
-    if (is.null(this.pKa_Donor)) this.pKa_Donor <- NA
-    if (is.null(this.pKa_Accept)) this.pKa_Accept <- NA
-    if (!is.na(this.pKa_Donor))
+    if (is.null(this.pKa_Donor)) this.pKa_Donor <- " "
+    if (is.null(this.pKa_Accept)) this.pKa_Accept <- " "
+    if (this.pKa_Donor != " ")
     {
       if (is.character(this.pKa_Donor)) this.pKa_Donor <- 
       {
@@ -326,7 +404,7 @@ calc_ionization <- function(
       }
     }
 
-    if (!is.na(this.pKa_Accept))
+    if (this.pKa_Accept != " ")
     {
       if (is.character(this.pKa_Accept)) this.pKa_Accept <- 
       {
@@ -341,82 +419,140 @@ calc_ionization <- function(
 
   # Multiple equilibirum points may still be separated by commas, split them into vectors here:
      
-    if(all(is.na(this.pKa_Donor))) this.pKa_Donor <- NULL
-    if(all(is.na(this.pKa_Accept))) this.pKa_Accept <- NULL
+    if (all(this.pKa_Donor == " ")) this.pKa_Donor <- NULL
+    if (all(this.pKa_Accept == " ")) this.pKa_Accept <- NULL
   
   # Make a vector of all equilibirum points:
-    eq.points <- c(this.pKa_Donor,this.pKa_Accept)
-    if (all(!is.null(eq.points)))
+    eq.points <- unique(c(this.pKa_Donor,this.pKa_Accept))
+    if (!is.null(eq.points))
     {
   # Annotate whether each equilibirum point is a H-donation or acceptance:
       eq.point.types <- c(rep("Donate",length(this.pKa_Donor)),
         rep("Accept",length(this.pKa_Accept)))
       eq.point.types <- eq.point.types[order(eq.points)]    #label each point
       eq.points <- eq.points[order(eq.points)]     #order points
-    }
-  
-    neutral <- 0
-    negative <- 0
-    positive <- 0
-    zwitter <- 0
-    denom <- 1
-      
-    if(is.null(this.pKa_Donor) & is.null(this.pKa_Accept)){
-      neutral <- 1
-    }else{
-      nz <- NULL;
-    #Find where charge is neutral or zwitter
-      if(all(eq.point.types == "Donate") | all(eq.point.types == "Accept")){
-        neutral <- 1
-        if(all(eq.point.types == "Donate")){
-          nz <- 0
-        }else  nz <- length(eq.points)
-      }else{ 
-        for(i in 1:(length(eq.points) - 1)){
-          charge <- 
-            sum(eq.point.types[(i+1):length(eq.point.types)]=="Accept") - 
-            sum(eq.point.types[1:i]=="Donate")
-          if (charge == 0)
-          {
-            nz <- i
-            if(sum(eq.point.types[(i+1):length(eq.point.types)]=="Accept") == 0)
-            {
-              neutral <- 1
-            } else zwitter <- 1
-          }  
-        }   
-      }    
-      if (nz == 0) {
-        for (i in 1:length(eq.points))
-        {
-          negative <- negative + 10^(i * this.pH - sum(eq.points[1:i]))
-        }
-      } else if (nz == length(eq.points))
-        {
-        for (i in 1:length(eq.points)) 
-        {
-          positive <- positive + 
-            10^(sum(eq.points[(length(eq.points) + 1 - i):
-              length(eq.points)])- i * this.pH)
-        }
-      } else {
-        for (i in 1:nz) 
-        {
-          positive <- positive + 10^(sum(eq.points[(nz + 1 - i):nz])- i * this.pH)
-        }
-        for (i in 1:(length(eq.points)-nz)) 
-        {
-          negative <- negative + 10^(i * this.pH - sum(eq.points[(nz+1):(nz+i)])) 
-        }
+    } else eq.point.types <- NULL
+    
+    # There are one more charged species that eq.points:
+    NUM.SPECIES <- 1 + length(eq.points)
+    
+    # Figure out the charge of each species of ions for the equilbria: 
+    charge_matrix <- data.frame(pKa = c(NA,eq.points),
+                                Type = c(NA,eq.point.types),
+                                Donated = 0,
+                                Accepted = 0,
+                                Ratio = NA)
+                                
+    #Denote the parts of the molecule that don't ionize as "X":
+    # Now, in order of pKa's from lowest to highest, indicate acceptor sites
+    # with "A" and donor sites with "D":
+    lowest.state <- "X"
+    if (!is.null(eq.points))
+    {
+      for (this.type in eq.point.types)
+      {
+        if (this.type == "Donate") lowest.state <- paste(lowest.state, 
+                                                        "D", 
+                                                        sep ="")
+        else if (this.type == "Accept") lowest.state <- paste(lowest.state,
+                                                              "A",
+                                                              sep="")
       }
-      denom <- denom + positive + negative      
+      charge_matrix[1,"Notation"] <- lowest.state
+      # Now strip off ionization sites in order:
+      for (this.row in 2:NUM.SPECIES)
+      {
+        prev.notation <- charge_matrix[this.row-1, "Notation"]
+        charge_matrix[this.row, "Notation"] <- paste("X",
+          substr(prev.notation, 3, nchar(prev.notation)),
+          sep="")
+      }                                                        
+                                 
+      for (this.eq in 1:length(eq.points))
+      {
+        this.index <- which(charge_matrix[,"pKa"]==eq.points[this.eq])
+        if (eq.point.types[this.eq] == "Donate")
+        {
+          # If it is an acid, (donates a hydrogen), then all species after this
+          # equilibrium (including this one) have donated a hydrogen
+          charge_matrix[this.index:NUM.SPECIES,"Donated"] <- 
+            charge_matrix[this.index:NUM.SPECIES,"Donated"] + 1
+        } else {
+          # If it is an base, (accepts a hydrogen), then all species before this
+          # equilibrium have donated a hydrogen
+          charge_matrix[1:(this.index-1),"Accepted"] <- 
+            charge_matrix[1:(this.index-1),"Accepted"] + 1
+        }
+      }  
+    } else {
+      charge_matrix[1,"Notation"] <- lowest.state
+      charge_matrix[1,"Donated"] <- 0
+      charge_matrix[1,"Accepted"] <- 0
     }
-    if (length(neutral)>1) browser()
-    fraction_neutral[index] <- neutral/denom
-    fraction_charged[index] <- (negative+positive)/denom
-    fraction_negative[index] <- negative/denom
-    fraction_positive[index] <- positive/denom
-    fraction_zwitter[index] <- zwitter/denom
+    charge_matrix <- as.data.frame(charge_matrix)
+
+    # Calculate the charge of each species:
+    charge_matrix[,"Charge"] <- charge_matrix[,"Accepted"] - 
+                                  charge_matrix[,"Donated"]
+    # Indicate the true neutral and zwitterions (net neutral):
+    charge_matrix[,"Neutral"] <- "No"
+    charge_matrix[charge_matrix["Charge"] == 0, "Neutral"] <- "Zwitter"
+    charge_matrix[charge_matrix["Charge"] == 0 &
+                  charge_matrix[,"Accepted"] == 0 &
+                  charge_matrix[,"Donated"] == 0, "Neutral"] <- "Neutral"
+    
+    # Determine the ratio of each state to the previous state using the pKa's:
+    charge_matrix[1,"Ratio"] <- 0
+    for (this.row in 2:NUM.SPECIES)
+    if (!is.na(charge_matrix[this.row,"Type"]))
+    {
+      if (charge_matrix[this.row, "Type"] == "Donate")
+         charge_matrix[this.row, "Ratio"] <- this.pH - charge_matrix[this.row,"pKa"]
+      if (charge_matrix[this.row, "Type"] == "Accept")
+         charge_matrix[this.row, "Ratio"] <- this.pH - charge_matrix[this.row,"pKa"]
+ # Folllowing is for pKb's, which we don't have:
+ #        charge_matrix[this.row, "Ratio"] <- 14 - pH - charge_matrix[this.row,"pKa"]
+    }          
+    
+    # Calculate the ratio of each state to the lowest state: 
+    # x1
+    charge_matrix[1,"RatioToLowest"] <- 0
+    # Calculate cumulative constant:
+    if (NUM.SPECIES > 1)
+      for (this.row in 2:NUM.SPECIES)
+    {
+      charge_matrix[this.row,"RatioToLowest"] <- 
+        charge_matrix[this.row-1,"RatioToLowest"] + 
+        charge_matrix[this.row,"Ratio"]
+    }
+    # So the concentration x_n can be written as a function of the
+    # concentration of the lowest state (x_1) and the ratios:
+    # 
+    # log10(x_n) = log10(x_1)+RatioToLowest
+  
+    # Find concentration of lowest state by requiring all state sum to 1:
+    sum.constants <- sum(10^charge_matrix[,"RatioToLowest"])
+    logx1 <- log10(1/sum.constants)
+    
+    # Use above expression for log10(x_n) to calculate fraction in each state:
+    charge_matrix[,"Fraction"] <- 10^(logx1 + charge_matrix[,"RatioToLowest"])
+    
+    neutral.row <- which(charge_matrix[,"Neutral"] == "Neutral")
+    negative.rows <- which(charge_matrix[,"Charge"] < 0)
+    positive.rows <- which(charge_matrix[,"Charge"] > 0)
+    zwitter.rows <- which(charge_matrix[,"Neutral"] == "Zwitter")
+        
+    fraction_neutral[index] <- sum(charge_matrix[neutral.row,"Fraction"])
+    fraction_negative[index] <- sum(charge_matrix[negative.rows, "Fraction"])
+    fraction_positive[index] <- sum(charge_matrix[positive.rows, "Fraction"])
+    fraction_charged[index] <- fraction_negative[index] + fraction_positive[index] 
+    fraction_zwitter[index] <- sum(charge_matrix[zwitter.rows, "Fraction"]) 
+  }
+  
+  if (return_charge_matrix) 
+  {
+    charge_matrix[,"Fraction"] <- set_httk_precision(charge_matrix[,"Fraction"])
+    charge_matrix_list[[index]] <- charge_matrix
   }
   
   # If pKa's aren't actually varying let's not waste computing time:  
@@ -429,14 +565,20 @@ calc_ionization <- function(
       fraction_negative <- rep(fraction_negative,length(parameters$Pow))
       fraction_positive <- rep(fraction_positive,length(parameters$Pow))
       fraction_zwitter <- rep(fraction_zwitter,length(parameters$Pow))
+      if (return_charge_matrix) charge_matrix_list <- list(charge_matrix)
     }
   }  
   
-  return(lapply(list(fraction_neutral = fraction_neutral,
+  out <- lapply(list(fraction_neutral = fraction_neutral,
     fraction_charged = fraction_charged,
     fraction_negative = fraction_negative,
     fraction_positive = fraction_positive,
-    fraction_zwitter = fraction_zwitter),set_httk_precision))
+    fraction_zwitter = fraction_zwitter), set_httk_precision)
+  
+  if (return_charge_matrix) out <- c(out, 
+                                     list(charge_matrix = charge_matrix_list))
+                                     
+  return(out)
 }
 
 is_acid <- function(pH=7,pKa_Donor=NA,pKa_Accept=NA,fraction_negative=NULL)

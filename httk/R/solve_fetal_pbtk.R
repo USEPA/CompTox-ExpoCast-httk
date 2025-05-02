@@ -178,6 +178,10 @@
 #' # However, we can turn off checking for phys-chem properties, since we know
 #' # that  Diquat dibromide monohydrate is not too volatile:
 #' head(solve_fetal_pbtk(chem.cas = "6385-62-2", physchem.exclude = FALSE))
+#'
+#' # Try different ways to call the function:
+#' head(solve_fetal_pbtk(chem.cas="80-05-7"))
+#' head(solve_fetal_pbtk(parameters=parameterize_fetal_pbtk(chem.cas="80-05-7")))
 #' }
 #'
 #' @export solve_fetal_pbtk
@@ -190,7 +194,7 @@ solve_fetal_pbtk <- function(chem.name = NULL,
                              parameters=NULL,
                              days=NULL,
                              species="human",
-                             tsteps = 4, # tsteps is number of steps per hour
+                             tsteps = 1, # tsteps is number of steps per hour
                              dose = NULL, 
                              dosing.matrix=NULL,
                              daily.dose = NULL,
@@ -211,8 +215,8 @@ solve_fetal_pbtk <- function(chem.name = NULL,
                              minimum.Funbound.plasma = 0.0001,
                              monitor.vars = NULL,
                              Caco2.options = list(),
-                             atol=1e-8,
-                             rtol=1e-8,
+                             atol=1e-6,
+                             rtol=1e-6,
                              ...)
 {
   #Screen any 'times' input

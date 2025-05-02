@@ -5,7 +5,7 @@
 # Reproductive Toxicology 113 (2022): 172-188.
 
 # Model identifier for the model.list:
-THIS.MODEL <- "fetal_pbtk"
+THIS.MODEL <- "fetal_pbtk" 
 
 # Dose this model work with Monte Carlo parameter sampling?
 model.list[[THIS.MODEL]]$monte.carlo <- FALSE
@@ -766,3 +766,6 @@ model.list[[THIS.MODEL]]$log.henry.threshold <- c(-4.5)
 
 # Filter out compounds belonging to select chemical classes
 model.list[[THIS.MODEL]]$chem.class.filt <- c("PFAS")
+
+# Different systems of equations are better suited to different ODE solvers:
+model.list[[THIS.MODEL]]$default.solver.method <- "lsode"
