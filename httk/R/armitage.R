@@ -142,6 +142,8 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' 
 #' @param this.option.swat2 Use alternative water solubility correction
 #' 
+#' @param this.option.kpl2 Use alternative plastic-water partitioning model
+#' 
 #' @param this.pseudooct Pseudo-octanol cell storage lipid content
 #' 
 #' @param this.memblip Membrane lipid content of cells
@@ -206,6 +208,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' Tref \tab Reference temperature\tab degrees K \cr          
 #' option.kbsa2 \tab Use alternative bovine-serum-albumin partitioning model \tab logical \cr  
 #' option.swat2 \tab Use alternative water solubility correction \tab logical \cr  
+#' option.kpl2 \tab Use alternative plastic-water partitioning model \tab logical \cr 
 #' FBSf \tab Fraction fetal bovine serum \tab unitless \cr          
 #' pseudooct \tab Pseudo-octanol cell storage lipid content \tab \cr     
 #' memblip \tab Membrane lipid content of cells \tab unitless \cr       
@@ -357,6 +360,7 @@ armitage_eval <- function(chem.cas=NULL,
                           this.Tref = 298.15,
                           this.option.kbsa2 = FALSE,
                           this.option.swat2 = FALSE,
+                          this.option.kpl2 = FALSE,
                           this.pseudooct = 0.01, # storage lipid content of cells
                           this.memblip = 0.04, # membrane lipid content of cells
                           this.nlom = 0.05, # structural protein content of cells
@@ -416,9 +420,9 @@ armitage_eval <- function(chem.cas=NULL,
   ### User Entered Parameter Checks ###
   
   # Check CAS and AC50 supplied
-  if(any(is.na(tcdata[,.(casrn,nomconc)]))){
-    stop("casrn or nomconc undefined")
-  }  
+  #if(any(is.na(tcdata[,.(casrn,nomconc)]))){
+  #  stop("casrn or nomconc undefined")
+  #}  
   
   if(any(is.na(this.FBSf)) & !"FBSf" %in% names(tcdata)){
     stop("this.FBSf must be defined or FBSf must be a column in tcdata")
@@ -428,6 +432,7 @@ armitage_eval <- function(chem.cas=NULL,
   manual.input.list <- list(Tsys=this.Tsys, Tref=this.Tref,
                             option.kbsa2=this.option.kbsa2, 
                             option.swat2=this.option.swat2,
+                            option.kpl2=this.option.kpl2,
                             FBSf=this.FBSf, pseudooct=this.pseudooct, 
                             memblip=this.memblip,
                             nlom=this.nlom, P_nlom=this.P_nlom, 
@@ -445,7 +450,7 @@ armitage_eval <- function(chem.cas=NULL,
   check.list <- c("duow","duaw", "SFkow", "SFmw", "SFbsa_acidic", "SFbsa_basic", "SFplw",
                   "gkmw_n","gkbsa_n","gkpl_n","ksalt")
   
-  req.list <- c("Tsys","Tref","option.kbsa2","option.swat2",
+  req.list <- c("Tsys","Tref","option.kbsa2","option.swat2", "option.kpl2",
                 "FBSf","pseudooct","memblip","nlom","P_nlom","P_dom","P_cells",
                 "Anionic_VF", "A_Prop_acid", "A_Prop_base", "Lyso_VF", 
                 "Lyso_Diam", "Lyso_pH", "csalt","celldensity",
@@ -529,8 +534,9 @@ armitage_eval <- function(chem.cas=NULL,
     .[option.kbsa2==TRUE & is.na(gkbsa_n) & gkow_n>=4.5, gkbsa_n:=(0.37*gkow_n+2.56)] %>% 
     .[option.kbsa2==FALSE & is.na(gkbsa_n),gkbsa_n:=(0.71*gkow_n+0.42)] # option 2 for kbsa calc
   
-  # kpl (plastic-water PC) spLFER from Kramer 2012
-  tcdata[is.na(gkpl_n),gkpl_n:=0.97*gkow_n-6.94] 
+  # kpl (plastic-water PC) spLFER 
+  tcdata[option.kpl2==FALSE & is.na(gkpl_n),gkpl_n:=0.97*gkow_n-6.94] %>% #from Kramer 2012
+    .[option.kpl2==TRUE & is.na(gkpl_n),gkpl_n:=0.56*gkow_n-4.635 #from Fischer {{CITATION HERE}}
   
   ### Calculating Ionized Partition Coefficients ###
   # set up scaling factors (used to calculate PCs for the charged portion of the chemical)
