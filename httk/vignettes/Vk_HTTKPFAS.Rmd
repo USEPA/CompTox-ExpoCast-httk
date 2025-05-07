@@ -1,22 +1,22 @@
 ---
-title: "Crizer et al. (2024): Analysis of PFAS Hepatic Clearance Data"
-author: "David Crizer, Marci G. Smeltz, John F. Wambaugh, and Barbara A. Wetmore"
+title: "Wambaugh et al. (2025): HTTK for PFAS"
+author: "John F. Wambaugh, Rogelio Tornero Velez, Christopher Lau, Barbara A. Wetmore, Michael Devito, and Russell Thomas"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Crizer (2024): PFAS Clearance}
+  %\VignetteIndexEntry{Wambaugh et al. (2025): HTTK for PFAS}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
   *Please send questions to wambaugh.john@epa.gov*
   
-  from "Category-Based Toxicokinetic Evaluations of Data-Poor Per and Polyfluoroalkyl Substances (PFAS) by Gas Chromatography Coupled with Mass Spectrometry"
+Applying High Throughput Toxicokinetics (HTTK) to Per- and Polyfluoro Alkyl Substances (PFAS)
 
-Anna Kreutz, Matthew Scott Clifton, W. Matthew Henderson, Marci G. Smeltz, John F. Wambaugh, and Barbara A. Wetmore
+John F. Wambaugh, Rogelio Tornero Velez, Christopher Lau, Barbara A. Wetmore, Michael Devito, and Russell Thomas
 
 ## Abstract
 
-Concern over per- and polyfluoroalkyl substances (PFAS) has increased significantly as more is learned about their widespread environmental presence, persistence, and bioaccumulative potential. The limited measurement, monitoring, toxicokinetic (TK), and toxicologic data currently available is inadequate to inform risk evaluations across this diverse domain. In this study, 73 PFAS were selected for *in vitro* TK evaluation to expand our knowledge across lesser studied PFAS that include alcohol, amide, and acrylate functional groups. Targeted analytical methods were developed using gas chromatography coupled with tandem mass spectrometry (GC-MS/MS); ultracentrifugation was used to measure human plasma protein binding and human hepatocyte suspensions were used in a substrate depletion approach to measure in vitro clearance (Clint). Method development was successful in plasma for 43 PFAS, with fraction unbound in plasma ($f_{up}$) values ranging from 0.004 for 1,6-dibromododecafluorohexane and 1 for 2-aminohexafluoropropan-2-ol, With a median $f_{up}$ of 0.09 (i.e., 91% bound), these PFAS are highly bound, but exhibit 10-fold lower binding than that recently reported for legacy perfluoroalkyl acids (Smeltz et al., 2022). Physico-chemical property trends analyses revealed that increased binding was associated with increases in mass, van der Waals volumes, and values of Log Pow and Log D at pH 7.4. Thirty of the PFAS evaluated in the hepatocyte assay showed abiotic loss, with many exceeding 60% loss within 60 min of media addition. Metabolic clearance was noted for 11 of the 13 successfully evaluated, with rates up to 49.9 l/min/million cells for 1H,1H,10H,10H-Perfluorodecane-1,10-diol. The Chemical Transformation Simulator revealed potential metabolites and other transformation products to consider during *in vitro* assay data interpretation. This integration of quantitative analytic methods with *in vitro* toxicokinetics has provided critical learnings as New Approach Methods are considered to evaluate PFAS for which volatility, metabolism, and other routes of transformation are likely to modulate their environmental fate. 
+Interspecies toxicokinetic (TK) scaling factors are needed to relate toxicological data generated in model animal species to humans. Per- and polyfluoroalkyl substances (PFAS) are a large and diverse class of organic chemicals that contain at a minimum a carbon-fluorine backbone. Some PFAS have been noted as having long toxicokinetic (TK) half-lives (up to several years in humans) while having comparatively short TK half-lives in laboratory animal models. At present, there are roughly a dozen PFAS with human half-life estimates available. Typical allometric extrapolation methods for TK parameters of PFAS are unreliable between species and chemicals. Interspecies variation in expression level and affinity of organic anion transporters for some PFAS are suspected to complicate interspecies extrapolation. Higher throughput TK (HTTK) approaches use in vitro measures of toxicokinetics (intrinsic hepatocyte clearance - Clint - and fraction unbound in plasma - fup) for in vitro-in vivo extrapolation (IVIVE) and interspecies extrapolation. For typical organic chemicals HTTK in vitro data combined with species-specific physiological parameters predicts the Rat:Human clearance ratio with an RMSLE of 0.96. HTTK tools were largely developed for typical organic chemicals. PFAS have both hydrophobic and lipophobic properties which complicates many typical TK methods that rely upon octanol:water chemical concentration ratios. We have used machine learning model predictions to approximate the influence of active transporters on PFAS renal clearance (potentially through resorption and secretion). With this and other modifications, HTTK for PFAS can predict interspecies clearance ratios with RMSLE 0.94. 
 
 ## HTTK Version
 
@@ -262,7 +262,7 @@ fig.clhttk.invivo  <- ggplot(data=cl.table) +
 #  geom_line(aes(x=logP,y=logPfit1),color="black") + 
 #  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
   ylab("In Vivo Clearance (L/h/kg bw)") + 
-  xlab("HTTK Clearance (L/h/kg bw)") +
+  xlab("Mechanistic Clearance (L/h/kg bw)") +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
   theme_bw()  +
@@ -314,7 +314,7 @@ fig.clspecies.httk  <- ggplot(data=cl.table) +
 geom_line(aes(x=Species,
               y=HTTK.Cltot.Lphpkgbw,
               group = DTXSID)) +
-ylab("HTTK Clearance (L/h/kg bw)") +
+ylab("Mechanistic Clearance (L/h/kg bw)") +
   xlab("Species") +
   scale_y_log10(label=scientific_10)+
   theme_bw()  +
@@ -356,7 +356,7 @@ fig.clml.invivo  <- ggplot(data=cl.table) +
 #  geom_line(aes(x=logP,y=logPfit1),color="black") + 
 #  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
   ylab("In Vivo Clearance (L/h/kg bw)") + 
-  xlab("Machine Learning Clearance (L/h/kg bw)") +
+  xlab("Pure Machine Learning Clearance (L/h/kg bw)") +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
   theme_bw()  +
@@ -510,7 +510,7 @@ fig.ratio.ml  <- ggplot(data=subset(cl.table, Species!="Human")) +
 #  geom_line(aes(x=logP,y=logPfit1),color="black") + 
 #  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
   ylab("In Vivo Observed Clearance Ratio") + 
-  xlab("Machine Learning Predicted Clearance Ratio") +
+  xlab("Pure Machine Learning Predicted Clearance Ratio") +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
   theme_bw()  +
@@ -527,13 +527,13 @@ print(fig.ratio.ml)
 ggarrange(fig.ratio.httk, fig.ratio.ml, 
           labels = c("A", "B"),
           ncol = 2, nrow = 1,
-          common.legend = TRUE, legend = "bottom")
+          common.legend = FALSE, legend = "bottom")
 tiff(file = paste0(LOC.WD,"Fig_PFASRatioEval.tiff"),
          height = 3*200, width = 5*200, compression = "lzw")
 ggarrange(fig.ratio.httk, fig.ratio.ml, 
           labels = c("A", "B"),
           ncol = 2, nrow = 1,
-          common.legend = TRUE, legend = "top")
+          common.legend = FALSE, legend = "top")
 dev.off()
 ```
 
@@ -825,7 +825,7 @@ human.invivo.hl.fig <- ggplot(data=human.invivo.hl) +
     colour=Status),
     size=2) +
     geom_abline(slope=1,intercept=0,linetype="dashed")+
-  xlab("Machine Learning Half-Life Prediction") +
+  xlab("Pure Machine Learning Half-Life Prediction") +
   ylab("In Vivo Measurment") +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
@@ -928,26 +928,26 @@ dev.off()
 
 ```{r clearance_fraction}
 FigClearanceFrac1<- ggplot(data=pfas.httk.table)+
-   geom_histogram(binwidth = 0.1,alpha=1,fill="Red",aes(Frac.Metabolism))+ 
+   geom_histogram(binwidth = 0.05,alpha=1,fill="Red",aes(Frac.Metabolism))+ 
   xlab(" ") +
   ylab(" ")+
   ggtitle("Hepatic Metabolism")+
   scale_x_continuous(limits=c(-.05,1.05))+
-  scale_y_continuous(limits=c(0,100))
+  scale_y_log10(limits=c(0.1,100))
 FigClearanceFrac2<- ggplot(data=pfas.httk.table)+
-   geom_histogram(binwidth = 0.1,alpha=1,fill="Blue",aes(Frac.Glomerular))+
+   geom_histogram(binwidth = 0.05,alpha=1,fill="Blue",aes(Frac.Glomerular))+
   xlab(" ") +
   ylab("Number of chemicals")+
   ggtitle("Glomerular Filtration")+
   scale_x_continuous(limits=c(-.05,1.05))+
-  scale_y_continuous(limits=c(0,100))
+  scale_y_log10(limits=c(0.1,100))
 FigClearanceFrac3<- ggplot(data=pfas.httk.table)+
-   geom_histogram(binwidth = 0.1,alpha=1,fill="Green",aes(Frac.Exhalation))+
+   geom_histogram(binwidth = 0.05,alpha=1,fill="Green",aes(Frac.Exhalation))+
   xlab("Fraction of Total Clearance") +
   ylab(" ")+
   ggtitle("Exhalation")+
   scale_x_continuous(limits=c(-.05,1.05))+
-  scale_y_continuous(limits=c(0,100))
+  scale_y_log10(limits=c(0.1,100))
 ggarrange(FigClearanceFrac1, FigClearanceFrac2, FigClearanceFrac3,
           ncol = 1, nrow = 3,
           common.legend = TRUE, legend = "right")
