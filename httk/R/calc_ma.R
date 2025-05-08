@@ -30,13 +30,9 @@
 #' @author John Wambaugh 
 #'
 #' @references 
-#' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-#' predictions of chemical distribution to tissues." Journal of pharmacokinetics 
-#' and pharmacodynamics 44.6 (2017): 549-565.
+#' \insertRef{pearce2017evaluation}{httk}
 #' 
-#' Yun, Y. E., and A. N. Edginton. "Correlation-based prediction of 
-#' tissue-to-plasma partition coefficients using readily available input 
-#' parameters." Xenobiotica 43.10 (2013): 839-852.
+#' \insertRef{yun2013correlation}{httk}
 #'
 #' @keywords in-vitro
 #'

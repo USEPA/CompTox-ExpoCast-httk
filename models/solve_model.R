@@ -39,7 +39,7 @@
 #' flows) but default.to.human = TRUE must be used to substitute human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 #' (NOTE: The 'default.to.human' specification should be included as part of the
-#' arguments listed in 'parameterize.arg.list'.)
+#' arguments listed in 'parameterize.args.list'.)
 #'  
 #' For both plotting purposes and helping the numerical equation solver, it is
 #' helpful to specify that time points shortly before and after dosing are 
@@ -121,27 +121,24 @@
 #' @param recalc.clearance Recalculates the the hepatic clearance
 #' (Clmetabolism) with new million.cells.per.gliver parameter.
 #' 
-#' @param adjusted.Funbound.plasma Uses adjusted Funbound.plasma when set to
-#' TRUE along with partition coefficients calculated with this value.
-#' 
-#' @param restrictive.clearance Protein binding not taken into account (set to
-#' 1) in liver clearance if FALSE.
-#' 
 #' @param ... Additional arguments passed to the integrator.
 #' 
 #' @param monitor.vars Which variables are returned as a function of time. 
 #' Default values of NULL looks up variables specified in modelinfo_MODEL.R
 #' 
-#' @param minimum.Funbound.plasma Monte Carlo draws less than this value are set 
-#' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
-#' dataset)
+#' @param parameterize.args.list Additional parameters passed to the model
+#'   parameterization function (other than chemical identifier, `species`,
+#'   `suppress.messages`, `restrictive.clearance`, `adjusted.Funbound.plasma`,
+#'   and `minimum.Funbound.plasma`)
 #' 
-#' @param parameterize.arg.list Additional parameterized passed to the model
-#' parameterization function.
-#'
 #' @param small.time A tiny amount of time used to provide predictions on either
-#' side of an instaneous event (like an iv injection). This helps ensure that
+#' side of an instantaneous event (like an iv injection). This helps ensure that
 #' abrupt changes plot well. Defaults to 1e-4.
+#' 
+#' @param forcings A way of passing time-dependent quantities to the ODE solver.
+#' Should take the form of a list of two-column matrices with the first column
+#' containing time values and the second column the value of quantity at those
+#' times. Default NULL.
 #' 
 #' @return A matrix of class deSolve with a column for time(in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
@@ -152,6 +149,7 @@
 #' 
 #' @references
 #' \insertRef{pearce2017httk}{httk}
+#' \insertRef{davidson2025enabling}{httk}
 #' 
 #' @keywords Solve
 #'
@@ -167,6 +165,7 @@
 #'                    dosing.matrix = NULL,
 #'                    daily.dose = NULL)))
 #'
+#' \donttest{
 #' # A dose matrix specifies times and magnitudes of doses:
 #' dm <- matrix(c(0,1,2,5,5,5),nrow=3)
 #' colnames(dm) <- c("time","dose")
@@ -200,6 +199,7 @@
 #'            dose=NULL,
 #'            doses.per.day=4,
 #'            days=2.5)
+#' } 
 #' 
 #' @export solve_model
 #'
@@ -230,11 +230,9 @@ solve_model <- function(chem.name = NULL,
                     atol=1e-6,
                     recalc.blood2plasma=FALSE,
                     recalc.clearance=FALSE,
-                    restrictive.clearance=TRUE,
-                    adjusted.Funbound.plasma=TRUE,
-                    minimum.Funbound.plasma=0.0001,
-                    parameterize.arg.list=list(),
+                    parameterize.args.list =list(),
                     small.time = 1e-4, 
+                    forcings = NULL,
                     ...)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -411,14 +409,15 @@ specification in compartment_units for model ", model)
 # necessarily need all parameters associated with a given model to do this:)
   if (is.null(parameters))
   {
-    parameters <- do.call(parameterize_function, args=purrr::compact(c(list(
-      chem.cas=chem.cas,
-      chem.name=chem.name,
-      dtxsid=dtxsid,
-      species=species,
-      suppress.messages=suppress.messages,
-      adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-      minimum.Funbound.plasma=minimum.Funbound.plasma),parameterize.arg.list))) 
+    parameters <- do.call(parameterize_function, args=purrr::compact(c(
+      list(
+        chem.cas=chem.cas,
+        chem.name=chem.name,
+        dtxsid=dtxsid,
+        species=species,
+        suppress.messages=suppress.messages
+        ),
+      parameterize.args.list))) 
   } else {
     if (!all(param_names %in% names(parameters)))
     {
@@ -457,22 +456,21 @@ specification in compartment_units for model ", model)
     {
       if (is.null(chem.name) & is.null(chem.cas)) 
         stop('Chemical name or CAS must be specified to recalculate hepatic clearance.')
-      ss.params <- parameterize_steadystate(chem.name=chem.name,chem.cas=chem.cas)
+      ss.params <- parameterize_steadystate(chem.name=chem.name,
+                                            chem.cas=chem.cas)
     }
     ss.params[[names(ss.params) %in% names(parameters)]] <- 
       parameters[[names(ss.params) %in% names(parameters)]]
-    parameters[['Clmetabolismc']] <- calc_hep_clearance(parameters=ss.params,
-      hepatic.model='unscaled',
-      restrictive.clearance = restrictive.clearance,
-      suppress.messages=TRUE)
+    parameters[['Clmetabolismc']] <- do.call(calc_hep_clearance, 
+                                             args=purrr::compact(c(
+                                               parameters=ss.params,
+                                               species = species,
+                                               hepatic.model='unscaled',
+                                               restrictive.clearance = 
+                                                 parameterize.args.list[["restrictive.clearance"]],
+                                               suppress.messages=TRUE)))
   }
-  
-  # If the hepatic metabolism is not slowed by plasma protein binding (non-
-  # restrictive clearance)  
-# This should be handled in calc_hep_clearance above
-#  if (!restrictive.clearance) parameters$Clmetabolismc <- 
-#    parameters$Clmetabolismc / parameters$Funbound.plasma
-  
+    
   # If there is not an explicit liver we need to include a factor for first-
   # pass metabolism:
   if (!is.null(model.list[[model]]$do.first.pass))
@@ -669,19 +667,36 @@ specification in compartment_units for model ", model)
   
 ### SIMULATION TIME
 
+  # We need to let the solver know which time points we want:
+  if (is.null(times)) 
+  {
+      # intermediate time points to smooth out solver:
+      times <- seq(0, days, signif(1/(24*tsteps),
+                                   round(-log10(small.time)-1)))
+      # integer days:
+      times <- sort(unique(c(times, seq(0, days, 1))))
+  }
+  
   # Save the requested times so that we only return those:
   requested.times <- times
 
-  # We need to let the solver know which time points we want:
-  if (is.null(times)) times <- seq(0, days, 1/(24*tsteps))
-  times <- sort(times)
+  # Identify first and last time:
   start.time <- times[1]
   end.time <- times[length(times)]
+  
+  # Make sure we solve at intermediate times as specified by tsteps:
+  intermediate.times <- seq(start.time, end.time, signif(1/(24*tsteps),
+                            round(-log10(small.time)-1)))
+  times <- sort(unique(c(times,intermediate.times)))
+
+
 
   # We add a time point 1e-4 later than the beginning to make the plots look
   # better. Use 'unique' function to remove redundant times that may have
   # been generated using 'round'
   times <- sort(unique(c(times,start.time+small.time)))
+  # Also add the times of the doses to those returned by the function:
+  requested.times <- sort(unique(c(requested.times,start.time+small.time)))
 
 ### DOSING
 
@@ -745,11 +760,11 @@ specification in compartment_units for model ", model)
   #     yes then get the provided parameter
   #     no then return null value
   #   (a) Check if the length of tissues with a volume in the parameter names is 0.
-  if(length(all.tissue.vols)==0){
+  if (length(all.tissue.vols)==0) {
     entry.tissue.vol <- NULL
-  }else if(entry.tissue.string%in%all.tissue.vols){
+  } else if (entry.tissue.string%in%all.tissue.vols) {
     entry.tissue.vol <- parameters[[entry.tissue.string]]*parameters[["BW"]]
-  }else{
+  } else {
     entry.tissue.vol <- NULL
   }
   
@@ -774,7 +789,7 @@ specification in compartment_units for model ", model)
   dosing.matrix <- dosing$dosing.matrix
   daily.dose <- dosing$daily.dose
   doses.per.day <- dosing$doses.per.day
-  forcings <- dosing$forcings
+  forcings <- rbind(forcings, dosing$forcings)
 
 # Add the first dose:
   if (!is.null(initial.dose))
@@ -806,7 +821,7 @@ specification in compartment_units for model ", model)
       }
       
       dose.times <- seq(start.time,
-                        end.time-1/doses.per.day,
+                        max(start.time, end.time - 1/doses.per.day),
                         1/doses.per.day)
       dose.vec <- rep(daily.dose/doses.per.day, length(dose.times))
 # Or a matrix of doses (first col time, second col dose) has been specified:
@@ -824,12 +839,18 @@ specification in compartment_units for model ", model)
       time = round(dose.times,8),
       value = dose.vec, 
       method = rep(dose.type,num.doses))
-    #Update our times vector to include times of provided dosing events, as well as
-    #the times of dosing events incremented by small.time for visualization.
-    times <- sort(unique(c(times,
-      sapply(eventdata$time-small.time, function(x) max(x,0)),
+    # Update our times vector to include times of provided dosing events, as 
+    # well as the times of dosing events incremented by small.time for 
+    # visualization.
+    dose.times <- c(sapply(eventdata$time-small.time, function(x) max(x,0)),
       eventdata$time,
-      eventdata$time+small.time)))
+      eventdata$time+small.time)
+    # Only include dose.times after requested start time:
+    dose.times <- dose.times[dose.times >= start.time]
+    # Ensure times is sorted and unique:
+    times <- sort(unique(c(times, dose.times)))
+    # Also add the times of the doses to those returned by the function:
+    requested.times <- sort(unique(c(requested.times, dose.times)))
   }  
  
 ### MODEL PARAMETERS FOR DESOLVE
@@ -924,6 +945,8 @@ specification in compartment_units for model ", model)
 
 # Cannot guarantee arbitrary precision for deSolve:
   out[,colnames(out)!="time"] <- set_httk_precision(out[,colnames(out)!="time"])
+# atol is the absolute tolerance of the solver:
+  out[,colnames(out)!="time"] <- round(out[,colnames(out)!="time"]/atol)*atol
   
 # Make a plot if asked for it (not the default behavior):
   if (plots==TRUE)

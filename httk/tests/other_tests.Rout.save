@@ -1,6 +1,6 @@
 
-R Under development (unstable) (2024-08-07 r86984 ucrt) -- "Unsuffered Consequences"
-Copyright (C) 2024 The R Foundation for Statistical Computing
+R Under development (unstable) (2025-04-18 r88159 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2025 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
 R is free software and comes with ABSOLUTELY NO WARRANTY.
@@ -29,16 +29,16 @@ Type 'q()' to quit R.
 > calc_css(chem.name='nicotine', model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 $avg
-[1] 0.7859
+[1] 0.3883
 
 $frac
-[1] 0.9408
+[1] 0.9287
 
 $max
-[1] 1.585
+[1] 0.8287
 
 $the.day
-[1] 5
+[1] 6
 
 Warning messages:
 1: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
@@ -50,16 +50,16 @@ Warning messages:
 > 
 > calc_css(chem.name='nicotine', model="3compartment")
 $avg
-[1] 0.5734
+[1] 0.3972
 
 $frac
-[1] 0.9537
+[1] 0.9599
 
 $max
-[1] 0.8511
+[1] 0.5511
 
 $the.day
-[1] 1
+[1] 3
 
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
@@ -76,6 +76,9 @@ Warning messages:
   Default value of 1.6 used for Caco2 permeability.
 > 
 > calc_css(chem.name="endrin")
+Extending simulation...
+Extending simulation...
+Extending simulation...
 $avg
 [1] 681.8
 
@@ -110,52 +113,52 @@ Warning messages:
 Human plasma concentrations returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.8238 .
 $AUC
-[1] 5.981
+[1] 4.117
 
 $peak
-[1] 1.981
+[1] 1.217
 
 $mean
-[1] 0.5981
+[1] 0.4117
 
 > 
 > calc_tkstats(dtxsid="DTXSID0020442",days=1)
 Plasma values returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
 $AUC
-[1] 8.599
+[1] 8.644
 
 $peak
-[1] 9.607
+[1] 9.663
 
 $mean
-[1] 8.599
+[1] 8.644
 
 > 
 > calc_tkstats(dtxsid="DTXSID0020442",days=10)
 Plasma values returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
 $AUC
-[1] 272.2
+[1] 272.9
 
 $peak
-[1] 40.64
+[1] 40.72
 
 $mean
-[1] 27.22
+[1] 27.29
 
 > 
 > calc_tkstats(dtxsid="DTXSID0020442",days=100)
 Plasma values returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
 $AUC
-[1] 3909
+[1] 3910
 
 $peak
-[1] 44.4
+[1] 44.42
 
 $mean
-[1] 39.09
+[1] 39.1
 
 > 
 > calc_analytic_css(
@@ -169,48 +172,48 @@ $mean
 +     minimum.Funbound.plasma=1e-4),
 +   daily.dose=2)
 Plasma concentration for liver returned in uM units.
-[1] 30.96
+[1] 31
 There were 14 warnings (use warnings() to see them)
 > 
 > predict_partitioning_schmitt(chem.name='nicotine')
 $Kadipose2pu
-[1] 2.89
+[1] 1.194
 
 $Kbone2pu
-[1] 0.9906
+[1] 1.355
 
 $Kbrain2pu
-[1] 1.451
+[1] 2.616
 
 $Kgut2pu
-[1] 2.537
+[1] 3.846
 
 $Kheart2pu
-[1] 3.165
+[1] 2.97
 
 $Kkidney2pu
-[1] 5.149
+[1] 5.886
 
 $Kliver2pu
-[1] 6.176
+[1] 6.19
 
 $Klung2pu
-[1] 1.502
+[1] 5.62
 
 $Kmuscle2pu
-[1] 1.458
+[1] 2.952
 
 $Kskin2pu
-[1] 1.87
+[1] 3.226
 
 $Kspleen2pu
-[1] 1.662
+[1] 2.677
 
 $Krbc2pu
-[1] 0.802
+[1] 1.254
 
 $Krest2pu
-[1] 2.153
+[1] 3.496
 
 Warning messages:
 1: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :

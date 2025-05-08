@@ -116,6 +116,8 @@
 #'
 #' \insertRef{kilford2008hepatocellular}{httk}
 #'
+#' \insertRef{wambaugh2025simple}{httk}
+#'
 #' @keywords Parameter 3compartment2
 #'
 #' @seealso \code{\link{solve_3comp}}
@@ -133,9 +135,11 @@
 #' @examples
 #' 
 #'  parameters <- parameterize_3comp2(chem.name='Bisphenol-A',species='Rat')
+#' \donttest{
 #'  parameters <- parameterize_3comp2(chem.cas='80-05-7',
 #'                                   species='rabbit',default.to.human=TRUE)
 #'  out <- solve_3comp2(parameters=parameters,plots=TRUE)
+#' }
 #' 
 #' @export parameterize_3comp2
 parameterize_3comp2 <- function(

@@ -207,7 +207,7 @@ solve_3comp2(dtxsid="DTXSID0020573",route="inhalation",dose=1,input.units="ppmv"
 
 }
 \references{
-\insertRef{pearce2017httk}{httk}
+\insertRef{wambaugh2025simple}{httk}
 }
 \seealso{
 \code{\link{solve_model}}

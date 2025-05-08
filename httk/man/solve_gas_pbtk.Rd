@@ -307,8 +307,6 @@ head(solve_gas_pbtk(chem.name="lindane", days=2.5,
 }
 \references{
 \insertRef{linakis2020development}{httk}
-
-\insertRef{pearce2017httk}{httk}
 }
 \seealso{
 \code{\link{solve_model}}
