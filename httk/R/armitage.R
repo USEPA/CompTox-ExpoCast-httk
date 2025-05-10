@@ -536,7 +536,7 @@ armitage_eval <- function(chem.cas=NULL,
   
   # kpl (plastic-water PC) spLFER 
   tcdata[option.kpl2==FALSE & is.na(gkpl_n),gkpl_n:=0.97*gkow_n-6.94] %>% #from Kramer 2012
-    .[option.kpl2==TRUE & is.na(gkpl_n),gkpl_n:=0.56*gkow_n-4.635 #from Fischer {{CITATION HERE}}
+    .[option.kpl2==TRUE & is.na(gkpl_n),gkpl_n:=0.56*gkow_n-4.635] #from Fischer {{CITATION HERE}}
   
   ### Calculating Ionized Partition Coefficients ###
   # set up scaling factors (used to calculate PCs for the charged portion of the chemical)
