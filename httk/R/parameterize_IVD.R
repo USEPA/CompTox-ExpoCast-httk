@@ -39,6 +39,7 @@
 #' gswat \tab The log10 water solubility at 25C (logWSol) \tab log10 mol/L \cr
 #' MP \tab The chemical compound's melting point \tab degrees C \cr           
 #' MW \tab The chemical compound's molecular weight \tab g/mol \cr            
+#' }
 #' 
 #' @author Meredith Scherer
 #' 

@@ -8,6 +8,7 @@
 #' \strong{Column Name} \tab \strong{Description} \cr
 #' compartment \tab Compartment or location of chemical \cr
 #' fraction \tab Fraction of chemical in the given compartment \cr
+#' }
 #'
 #' @return A pie chart created in ggplot.
 #'

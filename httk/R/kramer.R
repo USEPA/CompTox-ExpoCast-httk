@@ -48,6 +48,7 @@
 #' concentration_medium \tab Concentration in medium \tab uM \cr 
 #' concentration_plastic \tab Concentration in plastic \tab umol/m^2 \cr 
 #' concentration_air \tab Concentration in headspace \tab uM \cr 
+#' }
 #' 
 #' @author Meredith Scherer, adapted from code written by L.S Lautz for A. Punt, N. Kramer
 #'

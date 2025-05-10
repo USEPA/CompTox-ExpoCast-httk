@@ -30,6 +30,7 @@ Authors:
   \item Dustin Kapraun \email{kapraun.dustin@epa.gov} (\href{https://orcid.org/0000-0001-5570-6383}{ORCID})
   \item Kimberly Truong \email{truong.kimberly@epa.gov} (\href{https://orcid.org/0000-0003-1716-1006}{ORCID})
   \item Colin Thomson \email{thomson.colin@epa.gov} (\href{https://orcid.org/0000-0001-5303-6646}{ORCID})
+  \item Meredith Scherer \email{Scherer.Meredith@epa.gov} (\href{https://orcid.org/0000-0002-9785-7363}{ORCID})
 }
 
 Other contributors:
@@ -44,7 +45,7 @@ Other contributors:
   \item Katie Paul Friedman \email{Paul-Friedman.Katie@epa.gov} (\href{https://orcid.org/0000-0002-2710-1691}{ORCID}) [contributor]
   \item Nathan Pollesch \email{pollesch.nathan@epa.gov} (\href{https://orcid.org/0000-0001-8992-9294}{ORCID}) [contributor]
   \item Celia Schacht \email{Schacht.Celia@epa.gov} (\href{https://orcid.org/0000-0002-8131-513X}{ORCID}) [contributor]
-  \item Meredith Scherer \email{Scherer.Meredith@epa.gov} (\href{https://orcid.org/0000-0002-9785-7363}{ORCID}) [contributor]
+  \item James Sluka \email{jsluka@indiana.edu} (\href{https://orcid.org/0000-0002-5901-1404}{ORCID}) [contributor]
   \item Noelle Sinski \email{Noelle.Sinski@icf.com} [contributor]
   \item Nisha Sipes \email{sipes.nisha@epa.gov} (\href{https://orcid.org/0000-0003-4203-6426}{ORCID}) [contributor]
   \item James Sluka \email{jsluka@indiana.edu} (\href{https://orcid.org/0000-0002-5901-1404}{ORCID}) [contributor]

@@ -2,7 +2,7 @@
 % Please edit documentation in R/armitage.R
 \name{armitage_eval}
 \alias{armitage_eval}
-\title{Evaluate the updated Armitage model}
+\title{Armitage In Vitro Distribution Model}
 \usage{
 armitage_eval(
   chem.cas = NULL,
@@ -21,12 +21,20 @@ armitage_eval(
   this.Tref = 298.15,
   this.option.kbsa2 = FALSE,
   this.option.swat2 = FALSE,
+  this.option.kpl2 = FALSE,
   this.pseudooct = 0.01,
   this.memblip = 0.04,
-  this.nlom = 0.2,
+  this.nlom = 0.05,
   this.P_nlom = 0.035,
   this.P_dom = 0.05,
   this.P_cells = 1,
+  this.cell_pH = 7.4,
+  this.Anionic_VF = 0.175,
+  this.A_Prop_acid = 0.05,
+  this.A_Prop_base = 20,
+  this.Lyso_VF = 0.0068,
+  this.Lyso_Diam = 500,
+  this.Lyso_pH = 5.1,
   this.csalt = 0.15,
   this.celldensity = 1,
   this.cellmass = 3,
@@ -35,7 +43,8 @@ armitage_eval(
   this.conc_ser_lip = 1.9,
   this.Vdom = 0,
   this.pH = 7,
-  restrict.ion.partitioning = FALSE
+  restrict.ion.partitioning = FALSE,
+  surface.area.switch = TRUE
 )
 }
 \arguments{
@@ -51,12 +60,12 @@ Number(s) (CAS-RN) of desired chemical(s).}
 Chemical Abstracts Service Registry 
 Number(s) (CAS-RN) of desired chemical(s).}
 
-\item{nomconc.vector}{For vector or single value, micromolar (uM = umol/L) nominal 
+\item{nomconc.vector}{For vector or single value, micromolar (uM = mol/L) nominal 
 concentration (e.g. AC50 value)}
 
 \item{this.well_number}{For single value, plate format default is 384, used
 if is.na(tcdata)==TRUE. This value chooses default surface area settings for
-\code{\link{armitage_estimate_sarea}} based on the number of plates per well.}
+\code{\link{armitage_estimate_sarea}} based on the number of wells per plate.}
 
 \item{this.FBSf}{Fraction fetal bovine serum, must be entered by user.}
 
@@ -82,6 +91,8 @@ model}
 
 \item{this.option.swat2}{Use alternative water solubility correction}
 
+\item{this.option.kpl2}{Use alternative plastic-water partitioning model}
+
 \item{this.pseudooct}{Pseudo-octanol cell storage lipid content}
 
 \item{this.memblip}{Membrane lipid content of cells}
@@ -93,6 +104,8 @@ model}
 \item{this.P_dom}{Proportionality constant to dissolve organic material}
 
 \item{this.P_cells}{Proportionality constant to octanol storage lipid}
+
+\item{this.cell_pH}{7.4, pH of cell}
 
 \item{this.csalt}{Ionic strength of buffer (M = mol/L)}
 
@@ -108,9 +121,11 @@ model}
 
 \item{this.Vdom}{0 ml, the volume of dissolved organic matter (DOM)}
 
-\item{this.pH}{7.0, pH of cell culture}
+\item{this.pH}{pH of cell culture}
 
 \item{restrict.ion.partitioning}{FALSE, Should we restrict the chemical available to partition to only the neutral fraction?}
+
+\item{surface.area.switch}{TRUE, automatically calculates surface area, switch to FALSE if user provided}
 }
 \value{
 \tabular{lll}{
@@ -125,35 +140,41 @@ cell_yield \tab Number of cells \tab cells \cr
 gkow \tab The log10 octanol to water (PC) (logP)\tab log10 unitless ratio \cr          
 logHenry \tab The log10 Henry's law constant '\tab log10 unitless ratio \cr      
 gswat \tab The log10 water solubility (logWSol) \tab log10 mg/L \cr         
-MP \tab The chemical compound melting point \tab degrees Kelvin \cr           
+MP_C \tab The chemical compound melting point \tab degrees Celcius \cr  
+MP_K \tab The chemical compound melting point \tab degrees Kelvin \cr        
 MW \tab The chemical compound molecular weight \tab g/mol \cr            
 gkaw \tab The air to water PC \tab unitless ratio \cr          
-dsm \tab \tab \cr           
-duow \tab \tab \cr          
-duaw \tab \tab \cr          
-dumw \tab \tab \cr          
-gkmw \tab log10 \tab \cr          
+duow \tab internal energy of phase change for octanol-water \tab J/mol \cr          
+duaw \tab internal energy of phase change for air-water \tab J/mol \cr          
+gkmw \tab The log10 membrane to water PC \tab log10 unitless ratio \tab \cr          
 gkcw \tab The log10 cell/tissue to water PC \tab log10 unitless ratio\cr          
-gkbsa \tab The log10 bovine serum albumin to water partitiion coefficient \tab unitless \cr         
-gkpl \tab log10\tab \cr          
+gkbsa \tab The log10 bovine serum albumin to water PC \tab log10 unitless ratio \cr         
+gkpl \tab The log10 plastic to water PC \tab log10 m2/m2 \cr   
 ksalt \tab Setschenow constant \tab L/mol \cr        
 Tsys \tab System temperature \tab degrees C \cr          
 Tref \tab Reference temperature\tab degrees K \cr          
 option.kbsa2 \tab Use alternative bovine-serum-albumin partitioning model \tab logical \cr  
 option.swat2 \tab Use alternative water solubility correction \tab logical \cr  
+option.kpl2 \tab Use alternative plastic-water partitioning model \tab logical \cr 
 FBSf \tab Fraction fetal bovine serum \tab unitless \cr          
 pseudooct \tab Pseudo-octanol cell storage lipid content \tab \cr     
-memblip \tab Membrane lipid content of cells \tab  \cr       
-nlom \tab Structural protein content of cells \tab \cr
+memblip \tab Membrane lipid content of cells \tab unitless \cr       
+nlom \tab Structural protein content of cells \tab unitless \cr
 P_nlom \tab Proportionality constant to octanol structural protein \tab unitless \cr   
 P_dom \tab Proportionality constant to dissolved organic material (DOM) \tab unitless \cr         
 P_cells \tab Proportionality constant to octanol storage lipid \tab unitless \cr      
+Anionic_VF \tab Anionic phospholipid fraction \tab unitless \cr
+A_Prop_acid \tab Sorption to anionic lipids - acidic chemicals \tab unitless \cr
+A_Prop_base \tab Sorption to anionic lipids - basic chemicals \tab unitless \cr
+Lyso_VF \tab Lysosome volume fraction \tab unitless \cr
+Lyso_Diam \tab Diameter of lysosome \tab nm \cr
+Lyso_pH \tab pH of lysosome \tab unitless \cr
 csalt \tab Ionic strength of buffer \tab M=mol/L \cr
 celldensity \tab Cell density \tab kg/L, g/mL \cr   
 cellmass \tab Mass per cell \tab ng/cell \cr      
-f_oc \tab \tab \cr
-cellwat \tab \tab \cr       
-Tcor \tab \tab \cr          
+f_oc \tab Indicates fraction of dissolved organic matter to be treated like proteins \tab unitless \cr
+cellwat \tab Fraction of the cell made up of water \tab unitless \cr       
+Tcor \tab Temperature correction \tab \cr          
 Vm \tab Volume of media \tab L \cr            
 Vwell \tab Volume of medium (aqueous phase only) \tab L \cr         
 Vair \tab Volume of head space \tab L \cr          
@@ -161,27 +182,24 @@ Vcells \tab Volume of cells/tissue\tab L \cr
 Valb \tab Volume of serum albumin \tab L \cr         
 Vslip \tab Volume of serum lipids \tab L \cr         
 Vdom \tab Volume of dissolved organic matter\tab L \cr          
-F_ratio \tab \tab \cr       
+F_ratio \tab Fugacity ratio \tab unitless \cr       
 gs1.GSE \tab \tab \cr       
 s1.GSE \tab \tab \cr        
 gss.GSE \tab \tab \cr       
 ss.GSE \tab \tab \cr        
-kmw \tab \tab \cr           
+kmw \tab The membrane to water PC (i.e., 10^gkmow \tab unitless \cr           
 kow \tab The octanol to water PC (i.e., 10^gkow) \tab unitless \cr           
 kaw \tab The air to water PC (i.e., 10^gkaw) \tab unitless \cr           
 swat \tab The water solubility (i.e., 10^gswat) \tab mg/L \cr         
-kpl \tab \tab \cr           
+kpl \tab The plastic to water PC (i.e., 10^gkpl) \tab m3/m2 \cr           
 kcw \tab The cell/tissue to water PC (i.e., 10^gkcw) \tab unitless \cr           
 kbsa \tab The bovine serum albumin to water PC \tab unitless \cr          
-swat_L \tab \tab \cr        
-soct_L \tab \tab \cr        
-scell_L \tab \tab \cr       
-cinit \tab Initial concentration \tab uM=umol/L \cr         
+swat_L \tab Water solubility limit used for Fugacity ratio calculation \tab \cr        
 mtot \tab Total micromoles \tab umol \cr          
 cwat \tab Total concentration in water \tab uM=umol/L \cr          
 cwat_s \tab Dissolved concentration in water \tab uM=umol/L \cr        
 csat \tab Is the solution saturated (1/0) \tab logical \cr         
-activity \tab \tab \cr      
+activity \tab Chemical activity \tab \cr      
 cair \tab Concentration in head space\tab uM=umol/L \cr          
 calb \tab Concentration in serum albumin\tab uM=umol/L \cr          
 cslip \tab Concentration in serum lipids\tab uM=umol/L \cr         
@@ -268,7 +286,8 @@ print(out)
 
 }
 \references{
-\insertRef{armitage2014application}{httk}
+Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 
+2014, 48, 9770-9779. https://doi.org/10.1021/es501955g
 
 \insertRef{honda2019using}{httk}
 }

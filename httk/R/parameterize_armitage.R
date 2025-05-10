@@ -6,9 +6,9 @@
 #' gkaw \tab The air to water PC \tab unitless ratio \cr  
 #' logHenry \tab The log10 Henry's law constant \tab atm*m^3/mol \cr  
 #' gswat \tab The log10 water solubility at 25C (logWSol) \tab log10 mg/L \cr
+#' }
 #' 
-#' 
-#' @author 
+#' @author Meredith Scherer
 #' 
 #' @import magrittr, measurements
 #'
