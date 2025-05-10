@@ -10,7 +10,7 @@
 #' 
 #' @author Meredith Scherer
 #' 
-#' @import magrittr, measurements
+#' @import magrittr measurements
 #'
 #' @export parameterize_armitage
 
