@@ -33,7 +33,7 @@
 #' @author Greg Honda
 #'
 #' @references 
-#' \insertRef{armitage2013development}{httk} 
+#' \insertRef{armitage2014application}{httk} 
 #'
 #' @import magrittr
 #'

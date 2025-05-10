@@ -44,7 +44,7 @@ surface area of the bottom of the well in determining sarea.  Optionally
 include user values for working volume (v_working, m^3) and surface area.
 }
 \references{
-\insertRef{armitage2013development}{httk}
+\insertRef{armitage2014application}{httk}
 }
 \author{
 Greg Honda
