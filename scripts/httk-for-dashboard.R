@@ -530,6 +530,7 @@ write.table(
 # MW, not currently used, Molecular Weght, g/mol
 #
 
+prev.table$Species <- tolower(prev.table$Species)
 tmp <- merge(subset(dashboard.table, Parameter=="Css" & 
                     Model=="3compartmentss" & 
                     Species=="human" & 
