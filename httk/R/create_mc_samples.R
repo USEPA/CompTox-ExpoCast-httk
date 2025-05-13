@@ -420,23 +420,27 @@ Set species=\"Human\" to run httkpop model.')
 # Just cbind them together for now
   if (invitrouv) 
   {
+    
+    arglist <- c(
+      list(
+        parameters.dt=parameters.dt,
+        samples=samples,
+        adjusted.Clint = adjusted.Clint,
+        adjusted.Funbound.plasma = adjusted.Funbound.plasma),
+      Caco2.options[names(Caco2.options)[
+        !names(Caco2.options) %in%
+          # invitro_mc doesn't make use of these arguments because we've already called
+          # parameterize_[MODEL]:
+          c("Caco2.Pab.default", "overwrite.invivo")]],
+      invitro.mc.arg.list
+    )
+    
+    arglist <- arglist[!duplicated(arglist)]
     parameters.dt <- do.call(invitro_mc,
                        args=purrr::compact(
-                         unique(c(
-                           list(
-                             parameters.dt=parameters.dt,
-                             samples=samples,
-                             adjusted.Clint = adjusted.Clint,
-                             adjusted.Funbound.plasma = adjusted.Funbound.plasma),
-                             Caco2.options[names(Caco2.options)[
-                               !names(Caco2.options) %in%
-# invitro_mc doesn't make use of these arguments because we've already called
-# parameterize_[MODEL]:
-                               c("Caco2.Pab.default", "overwrite.invivo")]],
-                             invitro.mc.arg.list
-                           )
-                         ))
+                         arglist
                        )
+    )
   } else {
   # Clint and fup are adjusted within invitro_mc, if not called we need to adjust them here:
   #
