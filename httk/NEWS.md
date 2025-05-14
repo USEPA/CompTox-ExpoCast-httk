@@ -1,4 +1,5 @@
 ## Bug fixes
+* A bug has been fixed `create_mc_samples` caused arguments to get shuffled when the order of arguments changed. Arguments supplied by user in named list invitro.mc.arg.list should now retain their names. (thanks to Tyler LaLonde and Lisa Sweeney)
 * Intrinsic clearance based on microsomes mistakenly labeled as hepatocyte data were removed for four chemicals: Hexobarbital(DTXSID9023122), Nicardipine (DTXSID6023363), Nilvadipine (DTXSID2046624), and 4-Hydroxydiclofenac (DTXSID40214326)
 
 # httk 2.6.1 (2025-04-28)
