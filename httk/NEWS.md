@@ -1,3 +1,6 @@
+## Bug fixes
+* Intrinsic clearance based on micrsomes mistakenly labeled as hepatocyte data wer  e removed for eight chemicals
+
 # httk 2.6.1 (2025-04-28)
 
 ## Bug fixes
