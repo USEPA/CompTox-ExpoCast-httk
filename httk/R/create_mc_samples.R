@@ -435,7 +435,6 @@ Set species=\"Human\" to run httkpop model.')
       invitro.mc.arg.list
     )
     
-    arglist <- arglist[!duplicated(arglist)]
     parameters.dt <- do.call(invitro_mc,
                        args=purrr::compact(
                          arglist
