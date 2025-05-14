@@ -1,5 +1,5 @@
 ## Bug fixes
-* Intrinsic clearance based on micrsomes mistakenly labeled as hepatocyte data wer  e removed for eight chemicals
+* Intrinsic clearance based on microsomes mistakenly labeled as hepatocyte data were removed for four chemicals: Hexobarbital(DTXSID9023122), Nicardipine (DTXSID6023363), Nilvadipine (DTXSID2046624), and 4-Hydroxydiclofenac (DTXSID40214326)
 
 # httk 2.6.1 (2025-04-28)
 
