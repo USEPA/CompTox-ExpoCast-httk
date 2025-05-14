@@ -125,13 +125,9 @@
 #' functions.
 #' See \code{\link{get_fbio}} for further details.
 #'
-#' @param adjusted.Funbound.plasma Uses 
-#' \insertCite{pearce2017evaluation;textual}{httk} lipid binding adjustment
-#' for Funbound.plasma when set to TRUE (Default).
+#' @param adjusted.Funbound.plasma Deprecated argument -- use parameterize.args.list
 #' 
-#' @param adjusted.Clint Uses 
-#' \insertCite{kilford2008hepatocellular;textual}{httk} hepatocyte incubation
-#' binding adjustment for Clint when set to TRUE (Default).
+#' @param adjusted.Clint Deprecated argument -- use parameterize.args.list
 #'
 #' @return
 #' A data table where each column corresponds to parameters needed for the 
@@ -215,8 +211,8 @@ create_mc_samples <- function(chem.cas=NULL,
                         tissue=NULL,
                         httkpop.dt=NULL,
                         invitro.mc.arg.list=NULL,
-                        adjusted.Funbound.plasma=TRUE,
-                        adjusted.Clint=TRUE,
+                        adjusted.Funbound.plasma=NA,
+                        adjusted.Clint=NA,
                         httkpop.generate.arg.list=
                           list(method = "direct resampling"),
                         convert.httkpop.arg.list=NULL,
@@ -237,6 +233,22 @@ create_mc_samples <- function(chem.cas=NULL,
 #
 #
 
+  # These arguments are deprecated, provide warning for now:
+  if (!is.na(adjusted.Funbound.plasma))
+  {
+    warning("Argument adjusted.Funbound.plasma to calc_mc_samples is deprecated. Set this using parameterize.args.list")
+    parameterize.args.list[["adjusted.Funbound.plasma"]] <- adjusted.Funbound.plasma 
+  }
+  if (is.null(parameterize.args.list[["adjusted.Funbound.plasma"]]))
+    parameterize.args.list[["adjusted.Funbound.plasma"]] <- TRUE
+  if (!is.na(adjusted.Clint))
+  {
+    warning("Argument adjusted.Clint to calc_mc_samples is deprecated. Set this using parameterize.args.list")
+    parameterize.args.list[["adjusted.Clint"]] <- adjusted.Funbound.plasma 
+  }
+  if (is.null(parameterize.args.list[["adjusted.Clint"]]))
+    parameterize.args.list[["adjusted.Clint"]] <- TRUE
+    
  # If user supplied httkpot.dt make sure our MC simulation matches:
  if (!is.null(httkpop.dt))
  {
@@ -289,8 +301,6 @@ create_mc_samples <- function(chem.cas=NULL,
                                              dtxsid=dtxsid,
                                              species=species,
                                         parameters=parameters,
-                                        adjusted.Funbound.plasma=FALSE, # We want the unadjusted in vitro measured value
-                                        adjusted.Clint=FALSE, # We want the unadjusted in vitro measured value
                                         suppress.messages=suppress.messages),
                                         parameterize.args.list))
   if (!is.null(Caco2.options)) parameterize.args.list[["Caco2.options"]] <- Caco2.options
@@ -298,11 +308,15 @@ create_mc_samples <- function(chem.cas=NULL,
   # Check to see if we need to call the parameterize_MODEL function:
   if (is.null(parameters))
   {
+    mean.args.list <- parameterize.args.list
+    mean.args.list[["adjusted.Funbound.plasma"]] <- FALSE # We want the unadjusted in vitro measured value for the mean
+    mean.args.list[["adjusted.Clint"]] <- FALSE # We want the unadjusted in vitro measured value for the mean
+
     # Make sure all the arguments are used by the parameterization function:
 #    parameterize.args.list<- parameterize.args[names(parameterize.args) %in% 
 #                                             methods::formalArgs(paramfun)]
     parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
-                         args=purrr::compact(parameterize.args.list))
+                         args=purrr::compact(mean.args.list))
   } else {
     if (!is.list(parameters)) stop(
 "Argument \"parameters\" to create_mc_samples should be a list of model parameters.")
@@ -424,9 +438,10 @@ Set species=\"Human\" to run httkpop model.')
     arglist <- c(
       list(
         parameters.dt=parameters.dt,
-        samples=samples,
-        adjusted.Clint = adjusted.Clint,
-        adjusted.Funbound.plasma = adjusted.Funbound.plasma),
+        samples=samples
+        ),
+#        adjusted.Clint = adjusted.Clint,
+#        adjusted.Funbound.plasma = adjusted.Funbound.plasma),
       Caco2.options[names(Caco2.options)[
         !names(Caco2.options) %in%
           # invitro_mc doesn't make use of these arguments because we've already called
@@ -445,7 +460,7 @@ Set species=\"Human\" to run httkpop model.')
   #
   # Check to see if we are adjusting for differences between in vitro and 
   # physiological lipid partitioning (Pearce, 2017):
-    if (adjusted.Funbound.plasma)
+    if (parameterize.args.list[["adjusted.Funbound.plasma"]])
     {
       if (!"unadjusted.Funbound.plasma" %in% colnames(parameters.dt))
       {
@@ -468,7 +483,7 @@ Set species=\"Human\" to run httkpop model.')
     }
   
   # Correct for fraction of chemical unbound in in vitro hepatocyte assay:
-    if (adjusted.Clint)
+    if (parameterize.args.list[["adjusted.Clint"]])
     {
       parameters.dt[, Clint := apply_clint_adjustment(
                                  Clint,

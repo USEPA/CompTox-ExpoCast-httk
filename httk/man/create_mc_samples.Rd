@@ -22,8 +22,8 @@ create_mc_samples(
   tissue = NULL,
   httkpop.dt = NULL,
   invitro.mc.arg.list = NULL,
-  adjusted.Funbound.plasma = TRUE,
-  adjusted.Clint = TRUE,
+  adjusted.Funbound.plasma = NA,
+  adjusted.Clint = NA,
   httkpop.generate.arg.list = list(method = "direct resampling"),
   convert.httkpop.arg.list = NULL,
   propagate.invitrouv.arg.list = NULL,
@@ -101,13 +101,9 @@ called to generate this table.}
 \item{invitro.mc.arg.list}{Additional parameters passed to 
 \code{\link{invitro_mc}}.}
 
-\item{adjusted.Funbound.plasma}{Uses 
-\insertCite{pearce2017evaluation;textual}{httk} lipid binding adjustment
-for Funbound.plasma when set to TRUE (Default).}
+\item{adjusted.Funbound.plasma}{Deprecated argument -- use parameterize.args.list}
 
-\item{adjusted.Clint}{Uses 
-\insertCite{kilford2008hepatocellular;textual}{httk} hepatocyte incubation
-binding adjustment for Clint when set to TRUE (Default).}
+\item{adjusted.Clint}{Deprecated argument -- use parameterize.args.list}
 
 \item{httkpop.generate.arg.list}{Additional parameters passed to 
 \code{\link{httkpop_generate}}.}
