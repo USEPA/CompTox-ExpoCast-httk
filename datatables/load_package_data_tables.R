@@ -569,226 +569,34 @@ sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
 
 cat("Loading HTTK data from TNO\n")
 
-cat("Loading HTTK data from TNO\n")
-
 #Table CLint units are L/h/10^6 hepatocytes
 TNO.table <- as.data.frame(read_excel("HT-PBPK compounds-122216.xlsx"))
 TNO.table <- subset(TNO.table,TNO.table$Source!="")
-
-for (this.row in 1:dim(TNO.table)[1])
-{
-  this.CAS <- TNO.table[this.row,"CAS #"]
-  this.compound <- TNO.table[this.row,"Compound name"]
-  this.reference <- TNO.table[this.row,"Source"]
-  if (this.reference != "EPA/Hamner")
-  {
-    if (!is.na(as.numeric(TNO.table[this.row,"CLint,h"]))) chem.prop <- 
-      augment.table(
-        chem.prop,
-        this.CAS,
-        this.compound,
-        "Clint",
-        TNO.table[this.row,"CLint,h"],
-        species="Human",
-        reference=this.reference)
-    if (!is.na(as.numeric(TNO.table[this.row,"fup"]))) chem.prop <- 
-      augment.table(
-      chem.prop,
-      this.CAS,
-      this.compound,
-      "Funbound.plasma",
-      TNO.table[this.row,"fup"],
-      species="Human",
-      reference=this.reference)
-  }
-  this.reference <- "TNO"
-  chem.prop <- augment.table(
-    chem.prop,
-    this.CAS,
-    this.compound,
-    "logP",
-    log10(TNO.table[this.row,"logP"]),
-    reference=this.reference)
-  chem.prop <- augment.table(
-    chem.prop,
-    this.CAS,
-    this.compound,
-    "MW",
-    TNO.table[this.row,"MW"],
-    reference=this.reference)
-  chem.prop <- augment.table(
-    chem.prop,
-    this.CAS,
-    this.compound,
-    "Rblood2plasma",
-    TNO.table[this.row,"Rbp"],
-    species="Human",
-    reference=this.reference)
-  if (!is.na(TNO.table[this.row,"ion"]))
-  {
-    if (TNO.table[this.row,"ion"] == "mpa")
-    {
-      chem.prop <- augment.table(
-        chem.prop,
-        this.CAS,
-        this.compound,
-        "pKa_Donor",
-        as.numeric(TNO.table[this.row,"pKa1"]),
-        reference=this.reference)
-      chem.prop <- augment.table(
-        chem.prop,
-        this.CAS,
-        this.compound,
-        "pKa_Accept",
-        " ",
-        reference=this.reference)
-    }
-    else if (TNO.table[this.row,"ion"] == "dpa")
-    {
-      chem.prop <- augment.table(
-        chem.prop,
-        this.CAS,
-        this.compound,
-        "pKa_Donor",
-        paste(as.numeric(TNO.table[this.row,"pKa1"]),
-        as.numeric(TNO.table[this.row,"pKa2"]),sep=","),
-        reference=this.reference)
-      chem.prop <- augment.table(
-        chem.prop,
-        this.CAS,
-        this.compound,
-        "pKa_Accept",
-        " ",
-        reference=this.reference)
-    }
-    else if (TNO.table[this.row,"ion"] == "mpb")
-    {
-      chem.prop <- augment.table(
-        chem.prop,
-        this.CAS,
-        this.compound,
-        "pKa_Accept",
-        as.numeric(TNO.table[this.row,"pKa1"]),
-        reference=this.reference)
-      chem.prop <- augment.table(
-        chem.prop,
-        this.CAS,
-        this.compound,
-        "pKa_Donor",
-        " ",
-        reference=this.reference)
-    }
-    else if (TNO.table[this.row,"ion"] == "dpb")
-    {
-      chem.prop <- augment.table(
-        chem.prop,
-        this.CAS,
-        this.compound,
-        "pKa_Accept",
-        paste(as.numeric(TNO.table[this.row,"pKa1"]),
-        as.numeric(TNO.table[this.row,"pKa2"]),sep=","),
-        reference=this.reference)
-      chem.prop <- augment.table(
-        chem.prop,
-        this.CAS,
-        this.compound,"pKa_Donor",
-        " ",
-        reference=this.reference)
-    }
-    else if (TNO.table[this.row,"ion"] == "zwi")
-    {
-      if (regexpr("acid",TNO.table[this.row,"pKa1"])!=-1)
-      {
-        chem.prop <- augment.table(
-          chem.prop,
-          this.CAS,
-          this.compound,
-          "pKa_Donor",
-          as.numeric(strsplit(TNO.table[this.row,"pKa1"]," ")[[1]][1]),
-          reference=this.reference)
-        chem.prop <- augment.table(
-          chem.prop,
-          this.CAS,
-          this.compound,
-          "pKa_Accept",
-          as.numeric(strsplit(TNO.table[this.row,"pKa2"]," ")[[1]][1]),
-          reference=this.reference)
-      } else {
-        chem.prop <- augment.table(
-          chem.prop,
-          this.CAS,
-          this.compound,
-          "pKa_Accept",
-          as.numeric(strsplit(TNO.table[this.row,"pKa1"]," ")[[1]][1]),
-          reference=this.reference)
-        chem.prop <- augment.table(
-          chem.prop,
-          this.CAS,
-          this.compound,
-          "pKa_Donor",
-          as.numeric(strsplit(TNO.table[this.row,"pKa2"]," ")[[1]][1]),
-          reference=this.reference)
-      }
-    } else {
-      chem.prop <- augment.table(
-        chem.prop,
-        this.CAS,
-        this.compound,
-        "pKa_Donor",
-        " ",
-        reference=this.reference)
-      chem.prop <- augment.table(
-        chem.prop,
-        this.CAS,
-        this.compound,
-        "pKa_Accept",
-        " ",
-        reference=this.reference)
-    }
-  }
-}
+# Remove microsome clearances:
+TNO.table[TNO.table[,"...14"] %in% "mic", "CLint,h"] <- NA
+# Convert to uL/min/10^6 hepatocyutes
+TNO.table[TNO.table[,"...14"] %in% "hep", "CLint,h"] <-
+  as.numeric(as.numeric(TNO.table[TNO.table[,"...14"] %in% "hep", "CLint,h"]))*1000000/60
+# Set source to reference where available:
+TNO.table[!is.na(TNO.table[,"References"]),"Source"] <-
+  TNO.table[!is.na(TNO.table[,"References"]),"References"]
+chem.prop <- add_chemtable(TNO.table,
+               species="Human",
+               current.table=chem.prop,
+               data.list=list(
+                 CAS="CAS #",
+                 Reference="Source",
+                 Compound="Compound name",
+                 Funbound.plasma="fup",
+                 Rblood2plasma="Rbp",
+                 Clint="CLint,h"
+                 ))
 
 if ("pKa_Accept" %in% colnames(chem.prop)) 
   chem.prop[chem.prop$Compound=="Carvedilol",c("pKa_Accept","pKa_Accept.Reference")]
 chem.prop[chem.prop$Compound=="Diazepam",]
 chem.prop[chem.prop$Compound=="Bensulide",]
 sum(chem.prop$Compound=="dibutyl benzene-1,2-dicarboxylate")
-
-
-## Not sure how find the right parameters to do all the needed conversions to
-##  get back to uL/min/million cells, so skipping this data for now. We lose 10
-##  chemicals, including 6 with Obach 2008 in vivo data
-## Must convert CLint using fub,  fuinc from Naritomi 2003,
-##  and RB from Shibata 2002, Naritomi 2003, and Ito and Houston 2004
-#Naritomi.table2 <- read_excel("Naritomi2003.xlsx",,sheet=2)[-1,]
-## Original CLint units are ml/min/kg BW
-## Page 1306: 120 * 10^6 cells/g liver
-## Page 1306: 1500-1800 g liver/70 kg -- 23.6 g liver/kg BW
-## Conversion factor: *1000/23.6/120/10^6             (ml->uL,1/kgBW->1/g liver,1/g liver->1/10^6 cells)->uL/min/10^6 cells)
-#Riley.table <- read_excel("Riley2005.xlsx",sheet=1)
-#for (this.row in 1:dim(Riley.table)[1])
-#{
-#  this.CAS <- Riley.table[this.row,"CAS"]
-#  this.compound <- Riley.table[this.row,"Compound"]
-#  this.reference <- "Riley 2005"
-#  chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"Human.Fub",Riley.table[this.row,"Fub"],reference=this.reference)
-#  Fub <- Riley.table[this.row,"Fub"]
-#  if (this.CAS %in% Shibata2002.table$CASRN) Rbp <- Shibata2002.table[Shibata2002.table$CASRN==this.CAS,"RB"]
-#  else if (this.CAS %in% Naritomi.table$CAS) Rbp <- Naritomi.table[Naritomi.table$CAS==this.CAS,"RB"]
-#  else {
-#    Rbp <- chem.prop
-#  }
-#  if (this.CAS %in% Naritomi.table2$CAS) Fuinc <- Naritomi.table[Naritomi.table2$CAS==this.CAS,"fu.hepatocytes"]
-#  else {
-#    Fuinc <=
-#  }
-#  chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"Human.Clint",as.numeric(Riley.table[this.row,"Clint.Predicted"])*1000/23.6/120/10^6,reference=this.reference)
-#  if (Riley.table[this.row,"Chemical.Class"]=="N")
-#  {
-#    chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"pKa_Donor",NA,reference=this.reference)
-#    chem.prop <- augment.table(chem.prop,this.CAS,this.compound,"pKb",NA,reference=this.reference)
-#  }
-#}
 
 cat("Loading HTTK data from Tonnelier 2012\n")
 
@@ -2808,7 +2616,7 @@ save(chem.physical_and_invitro.data,
      version=2)
 
 cat("Move the Tables.RData to the httk/data directory.\n")
-cat("Move the sysdata.rdaa to the httk/R directory.\n")
+cat("Move the sysdata.rda to the httk/R directory.\n")
 
 sysdata.rda.stamp <- paste("This sysdata.rdata file was created on",Sys.Date(),"by script version",SCRIPT.VERSION)
  
