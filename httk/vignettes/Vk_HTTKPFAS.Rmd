@@ -1,22 +1,22 @@
 ---
-title: "Wambaugh et al. (2025): HTTK for PFAS"
-author: "John F. Wambaugh, Rogelio Tornero Velez, Christopher Lau, Barbara A. Wetmore, Michael Devito, and Russell Thomas"
+title: "Crizer et al. (2024): Analysis of PFAS Hepatic Clearance Data"
+author: "David Crizer, Marci G. Smeltz, John F. Wambaugh, and Barbara A. Wetmore"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Wambaugh et al. (2025): HTTK for PFAS}
+  %\VignetteIndexEntry{Crizer (2024): PFAS Clearance}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
   *Please send questions to wambaugh.john@epa.gov*
   
-Applying High Throughput Toxicokinetics (HTTK) to Per- and Polyfluoro Alkyl Substances (PFAS)
+  from "Category-Based Toxicokinetic Evaluations of Data-Poor Per and Polyfluoroalkyl Substances (PFAS) by Gas Chromatography Coupled with Mass Spectrometry"
 
-John F. Wambaugh, Rogelio Tornero Velez, Christopher Lau, Barbara A. Wetmore, Michael Devito, and Russell Thomas
+Anna Kreutz, Matthew Scott Clifton, W. Matthew Henderson, Marci G. Smeltz, John F. Wambaugh, and Barbara A. Wetmore
 
 ## Abstract
 
-Interspecies toxicokinetic (TK) scaling factors are needed to relate toxicological data generated in model animal species to humans. Per- and polyfluoroalkyl substances (PFAS) are a large and diverse class of organic chemicals that contain at a minimum a carbon-fluorine backbone. Some PFAS have been noted as having long toxicokinetic (TK) half-lives (up to several years in humans) while having comparatively short TK half-lives in laboratory animal models. At present, there are roughly a dozen PFAS with human half-life estimates available. Typical allometric extrapolation methods for TK parameters of PFAS are unreliable between species and chemicals. Interspecies variation in expression level and affinity of organic anion transporters for some PFAS are suspected to complicate interspecies extrapolation. Higher throughput TK (HTTK) approaches use in vitro measures of toxicokinetics (intrinsic hepatocyte clearance - Clint - and fraction unbound in plasma - fup) for in vitro-in vivo extrapolation (IVIVE) and interspecies extrapolation. For typical organic chemicals HTTK in vitro data combined with species-specific physiological parameters predicts the Rat:Human clearance ratio with an RMSLE of 0.96. HTTK tools were largely developed for typical organic chemicals. PFAS have both hydrophobic and lipophobic properties which complicates many typical TK methods that rely upon octanol:water chemical concentration ratios. We have used machine learning model predictions to approximate the influence of active transporters on PFAS renal clearance (potentially through resorption and secretion). With this and other modifications, HTTK for PFAS can predict interspecies clearance ratios with RMSLE 0.94. 
+Concern over per- and polyfluoroalkyl substances (PFAS) has increased significantly as more is learned about their widespread environmental presence, persistence, and bioaccumulative potential. The limited measurement, monitoring, toxicokinetic (TK), and toxicologic data currently available is inadequate to inform risk evaluations across this diverse domain. In this study, 73 PFAS were selected for *in vitro* TK evaluation to expand our knowledge across lesser studied PFAS that include alcohol, amide, and acrylate functional groups. Targeted analytical methods were developed using gas chromatography coupled with tandem mass spectrometry (GC-MS/MS); ultracentrifugation was used to measure human plasma protein binding and human hepatocyte suspensions were used in a substrate depletion approach to measure in vitro clearance (Clint). Method development was successful in plasma for 43 PFAS, with fraction unbound in plasma ($f_{up}$) values ranging from 0.004 for 1,6-dibromododecafluorohexane and 1 for 2-aminohexafluoropropan-2-ol, With a median $f_{up}$ of 0.09 (i.e., 91% bound), these PFAS are highly bound, but exhibit 10-fold lower binding than that recently reported for legacy perfluoroalkyl acids (Smeltz et al., 2022). Physico-chemical property trends analyses revealed that increased binding was associated with increases in mass, van der Waals volumes, and values of Log Pow and Log D at pH 7.4. Thirty of the PFAS evaluated in the hepatocyte assay showed abiotic loss, with many exceeding 60% loss within 60 min of media addition. Metabolic clearance was noted for 11 of the 13 successfully evaluated, with rates up to 49.9 l/min/million cells for 1H,1H,10H,10H-Perfluorodecane-1,10-diol. The Chemical Transformation Simulator revealed potential metabolites and other transformation products to consider during *in vitro* assay data interpretation. This integration of quantitative analytic methods with *in vitro* toxicokinetics has provided critical learnings as New Approach Methods are considered to evaluate PFAS for which volatility, metabolism, and other routes of transformation are likely to modulate their environmental fate. 
 
 ## HTTK Version
 
@@ -31,6 +31,8 @@ available from: https://cran.r-project.org/src/contrib/Archive/httk/
 knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
 options(rmarkdown.html_vignette.check_title = FALSE)
 ```
+
+## Session Preparation
 
 ### Clear the memory
 It is a bad idea to let variables and other information from previous R
@@ -78,8 +80,9 @@ library(scales)
 library(viridis)
 library(ggpubr)
 library(readxl)
+library(knitr)
 
-LOC.WD <- "c:/users/jwambaug/"
+LOC.WD <- "c:/users/jwambaug/git/httk-dev/work/HTTKPFAS/"
 PFAS.MODEL.USED <- "sumclearancespfas"
 NONPFAS.MODEL.USED <- "sumclearances"
 ```
@@ -100,18 +103,111 @@ scientific_10 <- function(x) {
   out <- parse(text=gsub("10\\^00","1",out))                    
 }  
 ```
+
+### Function to calculate root mean squared log10 error
+```{r RMSLE_function, eval = TRUE}
+RMSLE <- function(tab,colx,coly) 
+{ 
+    return(signif(mean(log10(tab[,colx]/tab[,coly])^2,na.rm=TRUE)^(1/2),3))
+}
+```
+
 # Analysis of Crizer et al. (2023) $Cl_{int}$ data
 
-## Remove Rat-specific HTTK data:
-```{r removeoldhttk}
-chem.physical_and_invitro.data$Rat.Clint <- NA
-chem.physical_and_invitro.data$Rat.Funbound.plasma <- NA
+## Methods
+
+### Evaluate Ratio Blood:Plasma Predictions
+```{r rb2peval, eval=TRUE}
+rb2p.table <- subset(chem.physical_and_invitro.data,
+                     Human.Rblood2plasma.Reference %in% "Poothong 2017")
+rb2p.table <- rb2p.table[,colnames(rb2p.table) %in%
+                                     c("Compound","DTXSID",
+                                       "Human.Rblood2plasma"
+                                     )]
+for (this.chem in rb2p.table$DTXSID)
+{
+  if (this.chem %in% get_2023pfasinfo(info="dtxsid", suppress.messages=TRUE,
+                                   model=PFAS.MODEL.USED))
+  {
+    rb2p.table[rb2p.table$DTXSID==this.chem,"HTTK.Rb2p"] <- 
+      calc_rblood2plasma(dtxsid=this.chem,
+                         class.exclude=FALSE)
+  }
+  p <- try(parameterize_pfas1comp(dtxsid=this.chem))
+  if(!is(p, "try-error")) 
+    rb2p.table[rb2p.table$DTXSID==this.chem,"ML.Rb2p"] <- 
+    p$Rblood2plasma
+}
+kable(rb2p.table)
 ```
+
+### Evaluate Membrane Affinity Predictions
+```{r MAeval, eval=TRUE}
+logma.table <- subset(chem.physical_and_invitro.data,
+                     logMA.Reference %in% "Droge 2019")
+logma.table <- logma.table[,colnames(logma.table) %in%
+                                     c("Compound","DTXSID",
+                                       "logMA"
+                                     )]
+for (this.chem in logma.table$DTXSID)
+{
+  logma.table[logma.table$DTXSID==this.chem,"HTTK.logMA"] <- 
+      signif(log10(calc_ma(dtxsid=this.chem,
+                           pfas.calibration=FALSE,
+                           suppress.messages=TRUE)),3)
+}
+kable(logma.table)
+```
+
+```{r fit_logma, eval = TRUE}
+fit.logma <- lm(logMA~HTTK.logMA,data=logma.table)
+summary(fit.logma)
+
+logma.table$Fit.logMA <- signif(fit.logma$coefficients[1] +
+  fit.logma$coefficients[2]*logma.table$HTTK.logMA,3)
+```
+
+```{r fig_logma, eval = TRUE}
+fig.logma  <- ggplot(data=logma.table) +
+  geom_point(aes(
+    x=HTTK.logMA,
+    y=logMA
+    ),
+    size=POINT.SIZE) +
+  geom_abline(slope=1,intercept=0,linetype="dashed")+
+  geom_line(aes(x=HTTK.logMA,
+    y=Fit.logMA), color="red")+
+  ylab("Droge (2019) logMA") + 
+  xlab("HTTK log Membrane Affinity") +
+  scale_x_log10(label=scientific_10)+
+  scale_y_log10(label=scientific_10)+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))
+
+print(fig.logma)
+```
+
+
+## New In Vitro TK Parameters
 
 ```{r plot_clint_fup}
 new.pfas <- get_2023pfasinfo(info="dtxsid",
                                       model=PFAS.MODEL.USED,
                                       suppress.messages=TRUE)
+# What chems does sumclearances model work for overall?
+good.chems <- get_cheminfo(info="dtxsid", model = PFAS.MODEL.USED)
+cat(paste("were incorporated from the scientific literature into R package \\“httk\\” for",
+          sum(new.pfas %in% good.chems),
+          "PFAS\n"))
+cat(paste("Out of",
+          length(new.pfas),
+          "PFAS with new in vitro TK data reported,",
+          sum(new.pfas %in% good.chems),
+          "had the Clint, fup, and physicochemical",
+          "property predictions needed to make HTTK predictions.\n"))
+
+  
+
 clint.fup <- subset(chem.physical_and_invitro.data,
                     !is.na(Human.Funbound.plasma) &
                     !is.na(Human.Clint) &
@@ -201,8 +297,48 @@ ggarrange(fig.clint.fup, fig.clint.hist, fig.fup.hist, fig.henry.hist,
           common.legend = TRUE, legend = "bottom")
 dev.off()
 ```
+## Examine Kbloodair
+```{r calc_Kbloodair, eval=TRUE}
+pfas.data <- subset(clint.fup,Chemical.Class=="Newly Measured PFAS")
+pfas.data[,"logKblood2air"] <- apply(pfas.data,
+                                     1,
+                                     function(x) try(log10(calc_kair(
+                                       dtxsid=x["DTXSID"],
+                                       suppress.messages=TRUE)$Kblood2air)))
+```
 
-## Compare against in vivo clearance data:
+```{r kblood2air_results, eval=TRUE}
+good.Kblood2air <- pfas.data$logKblood2air
+good.logHenry <- pfas.data$logHenry
+good.logHenry <- good.logHenry[!is.na(good.Kblood2air)]
+good.Kblood2air <- good.Kblood2air[!is.na(good.Kblood2air)]
+cat(paste("Out of",
+          length(good.logHenry),
+          "PFAS for which the Henry's Law Constant could be predicted,",
+          signif(sum(good.logHenry >
+                       -4.5)/length(good.logHenry)*100,2),
+          "% were more volatile than acetone.\n"))
+most.volatile <- pfas.data[pfas.data$logKblood2air %in% min(good.Kblood2air), 
+                           "Compound"]
+cat(paste("The most volatile chemical was",most.volatile,
+          "with a predicted logKblood2air of", signif(min(good.Kblood2air),3),
+          ".\n"))
+```
+
+# HTTK Interspecies Clearance Differences
+
+## Remove Rat-specific HTTK data:
+```{r removeoldhttk}
+chem.physical_and_invitro.data$Rat.Clint <- NA
+chem.physical_and_invitro.data$Rat.Funbound.plasma <- NA
+```
+
+## Add bioavailability predictions
+```{r load_bioavailability_preds}
+load_honda2023()
+```
+
+## Compare default httk against in vivo clearance data:
 ```{r invivoeval, eval=TRUE}
 cl.table <- httk::pfas.clearance
 
@@ -215,10 +351,9 @@ for (this.chem in unique(cl.table$DTXSID))
     for (this.species in unique(cl.table$Species))
     {
       # Css in units of mg/L for 1 mg/kg/day
-      out <- calc_analytic_css(dtxsid=this.chem,
+      out <- calc_total_clearance(dtxsid=this.chem,
                                species=this.species,
-                               model=PFAS.MODEL.USED,
-                               output.units="mg/L",
+                               model=NONPFAS.MODEL.USED,
                                default.to.human=TRUE,
                                class.exclude=FALSE,
                                physchem.exclude=FALSE,
@@ -227,8 +362,7 @@ for (this.chem in unique(cl.table$DTXSID))
                cl.table$Species==this.species))
         cl.table[cl.table$DTXSID==this.chem &
                cl.table$Species==this.species,
-               "HTTK.Cltot.Lphpkgbw"] <-
-        1/out/24
+               "HTTK.Cltot.Lphpkgbw"] <- out
       else {
         new.row <- cl.table[1,]
         new.row[] <- NA
@@ -236,7 +370,7 @@ for (this.chem in unique(cl.table$DTXSID))
         new.row[,"Species"] <- this.species
         new.row[,"Sex"] <- "Female"
         new.row[,"HTTK.Cltot.Lphpkgbw"] <-
-        1/out/24
+        out
         cl.table <- rbind(cl.table,new.row)
         new.row[,"Sex"] <- "Male"
         cl.table <- rbind(cl.table,new.row)
@@ -245,86 +379,7 @@ for (this.chem in unique(cl.table$DTXSID))
   }
 ```
 
-```{r fig_clhttk, eval = TRUE}
-RMSLE <- function(tab,colx,coly) 
-{ 
-    return(signif(mean(log10(tab[,colx]/tab[,coly])^2,na.rm=TRUE)^(1/2),3))
-}
-
-fig.clhttk.invivo  <- ggplot(data=cl.table) +
-  geom_point(aes(
-    x=HTTK.Cltot.Lphpkgbw,
-    y=ClLphpkgbw,
-    color=Species,
-    shape=Sex),
-    size=POINT.SIZE) +
-  geom_abline(slope=1,intercept=0,linetype="dashed")+
-#  geom_line(aes(x=logP,y=logPfit1),color="black") + 
-#  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
-  ylab("In Vivo Clearance (L/h/kg bw)") + 
-  xlab("Mechanistic Clearance (L/h/kg bw)") +
-  scale_x_log10(label=scientific_10)+
-  scale_y_log10(label=scientific_10)+
-  theme_bw()  +
-  theme( text  = element_text(size=FONT.SIZE))+
-  annotate("text", x = 10^-6, y = 10^-1, 
-           label = paste("RMSLE:",
-                         RMSLE(cl.table,"HTTK.Cltot.Lphpkgbw","ClLphpkgbw")))
-
-print(fig.clhttk.invivo)
-
-```
-```{r fig_clspecies_invivo, eval = TRUE}
-fig.clspecies.invivo  <- ggplot(data=cl.table) +
-  geom_point(aes(
-    x=Species,
-    y=ClLphpkgbw,
-    color=Species,
-    shape=Sex),
-    size=POINT.SIZE) +
-  geom_line(aes(x=Species,
-              y=ClLphpkgbw,
-              group = DTXSID)) +
-#  geom_line(aes(x=logP,y=logPfit1),color="black") + 
-#  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
-  ylab("In Vivo Clearance (L/h/kg bw)") + 
-  xlab("Species") +
-  scale_y_log10(label=scientific_10)+
-  theme_bw()  +
-  theme( text  = element_text(size=FONT.SIZE))
-
-print(fig.clspecies.invivo)
-```
-
-```{r fig_clspecies_httk, eval = TRUE}
-fig.clspecies.httk  <- ggplot(data=cl.table) +
-  geom_point(aes(
-    x=Species,
-    y=HTTK.Cltot.Lphpkgbw,
-    color=Species,
-    shape=Sex),
-    size=POINT.SIZE) +
-#  geom_segment(color="#69b3a2", 
-#                  aes(
-#                    x=Species,
-#                    y=HTTK.Cltot.Lphpkgbw,
-#                    xend = c(tail(Species, n = -1), NA), 
-#                    yend = c(tail(HTTK.Cltot.Lphpkgbw, n = -1), NA)
-#                  ))+
-geom_line(aes(x=Species,
-              y=HTTK.Cltot.Lphpkgbw,
-              group = DTXSID)) +
-ylab("Mechanistic Clearance (L/h/kg bw)") +
-  xlab("Species") +
-  scale_y_log10(label=scientific_10)+
-  theme_bw()  +
-  theme( text  = element_text(size=FONT.SIZE))
-
-print(fig.clspecies.httk)
-```
-
-
-
+## Add in Dawson 2023 predictions for later
 ```{r invivoeval2, eval=TRUE}
 for (this.chem in unique(cl.table$DTXSID))
   {
@@ -343,47 +398,7 @@ for (this.chem in unique(cl.table$DTXSID))
   }
 ```
 
-```{r fig_clml, eval = TRUE}
-fig.clml.invivo  <- ggplot(data=cl.table) +
-  geom_jitter(aes(
-    x=MachineLearning.Cltot.Lphpkgbw,
-    y=ClLphpkgbw,
-    color=Species,
-    shape=Sex),
-    size=POINT.SIZE,
-    height=0,width=0.1) +
-  geom_abline(slope=1,intercept=0,linetype="dashed")+
-#  geom_line(aes(x=logP,y=logPfit1),color="black") + 
-#  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
-  ylab("In Vivo Clearance (L/h/kg bw)") + 
-  xlab("Pure Machine Learning Clearance (L/h/kg bw)") +
-  scale_x_log10(label=scientific_10)+
-  scale_y_log10(label=scientific_10)+
-  theme_bw()  +
-  theme( text  = element_text(size=FONT.SIZE))+
-  annotate("text", x = 10^-5, y = 10^-1, 
-           label = paste("RMSLE:",
-                         RMSLE(cl.table,
-                               "MachineLearning.Cltot.Lphpkgbw",
-                               "ClLphpkgbw")))
-
-print(fig.clml.invivo)
-```
-
-```{r multipanelrefchemdatafigureforpaper}
-ggarrange(fig.clhttk.invivo, fig.clml.invivo, 
-          labels = c("A", "B"),
-          ncol = 1, nrow = 2,
-          common.legend = TRUE, legend = "bottom")
-tiff(file = paste0(LOC.WD,"Fig_PFASClearanceEval.tiff"),
-         height = 5*200, width = 3*200, compression = "lzw")
-ggarrange(fig.clhttk.invivo, fig.clml.invivo, 
-          labels = c("A", "B"),
-          ncol = 1, nrow = 2,
-          common.legend = TRUE, legend = "top")
-dev.off()
-```
-
+### Calculate human:species clearance ratios
 ```{r invivo_interspecies_eval_scaling, eval=TRUE}
 cl.table <- as.data.frame(cl.table)
 for (this.sex in c("Female","Male"))
@@ -423,12 +438,19 @@ for (this.sex in c("Female","Male"))
 }  
 ```
 
+## Add non-PFAS clearances from literature
 ```{r cl_lit_Data}
-huh.data <- as.data.frame(read_excel(paste0(LOC.WD,"Huh-2011-HumanCL.xlsx")))
-huh.data$Human.CL.Lphpkg <- as.numeric(huh.data[,4])*60/1000
-huh.data$Rat.CL.Lphpkg <- as.numeric(huh.data$a)*(0.25)^as.numeric(huh.data$b)*60/1000
+huh.data <- as.data.frame(read_excel(paste0(
+  LOC.WD,"Huh-2011-HumanCL.xlsx")))
+# Huh Data is in ml/min/kg:
+Human.CL.mLpminpkg <- sapply(huh.data[,4],function(x) signif(as.numeric(strsplit(x," ")[[1]][1]),3))
+huh.data$Human.CL.Lphpkg <- signif(Human.CL.mLpminpkg/1000*60, 3)
+huh.data$Rat.CL.Lphpkg <- signif(
+  as.numeric(huh.data$a)*(0.25)^as.numeric(huh.data$b)*60/1000, 3)
 
-httk.chem.list <- get_cheminfo(model=PFAS.MODEL.USED, info="DTXSID")
+httk.chem.list <- get_cheminfo(model=PFAS.MODEL.USED, 
+                               info="DTXSID",
+                               suppress.messages = TRUE)
 for (this.chem in huh.data[,"DTXSID"])
   if (!is.na(this.chem))
   {
@@ -440,37 +462,49 @@ for (this.chem in huh.data[,"DTXSID"])
   new.row[1, "Sex"] <- "Female"
   new.row[1, "ClLphpkgbw"] <- huh.data[this.row, "Human.CL.Lphpkg"]
 
-  new.row[1, "TK.Ratio.InVivo"] <- huh.data[this.row, "Rat.CL.Lphpkg"] /
+  new.row[1, "TK.Ratio.InVivo"] <- 
+    huh.data[this.row, "Rat.CL.Lphpkg"] /
     huh.data[this.row, "Human.CL.Lphpkg"]
   if (this.chem %in% httk.chem.list)
     if (!(this.chem %in% new.pfas) |
         this.chem %in% dawson2023$DTXSID)
   {
     print(this.chem)
-    human.css <- calc_analytic_css(dtxsid = this.chem,
-                               model=ifelse(this.chem %in% new.pfas,
-                                            PFAS.MODEL.USED,
-                                            NONPFAS.MODEL.USED),
-                               output.units="mg/L",
-                               species="Human",
-                               suppress.messages=TRUE)
-    new.row[1, "HTTK.Cltot.Lphpkgbw"] <-
-        1/human.css/24
-    rat.css <- calc_analytic_css(dtxsid = this.chem,
-                               model=ifelse(this.chem %in% new.pfas,
-                                            PFAS.MODEL.USED,
-                                            NONPFAS.MODEL.USED),
-                               output.units="mg/L",
-                               species="Rat",
-                               default.to.human=TRUE,
-                               suppress.messages=TRUE)
-    new.row[1, "TK.Ratio.HTTK"] <- signif(human.css/rat.css,4)
+    # Calculate human clearance:
+    HTTK.Human.Cltot.Lphpkgbw <-
+      calc_total_clearance(dtxsid = this.chem,
+                           model=NONPFAS.MODEL.USED,
+                           species="Human",
+                           suppress.messages=TRUE)
+    # Add human row (with NA ratio):
+    new.row[1, "HTTK.Cltot.Lphpkgbw"] <- HTTK.Human.Cltot.Lphpkgbw 
+    cl.table <- rbind(cl.table,new.row)
+    # Make a row for rat:
+    new.row[1, "ClLphpkgbw"] <- huh.data[this.row, "Rat.CL.Lphpkg"]
+    HTTK.Rat.Cltot.Lphpkgbw <- 
+      calc_total_clearance(dtxsid = this.chem,
+                           model=NONPFAS.MODEL.USED,
+                           species="Rat",
+                           default.to.human=TRUE,
+                           suppress.messages=TRUE)
+    new.row[1, "HTTK.Cltot.Lphpkgbw"] <- HTTK.Rat.Cltot.Lphpkgbw
+    new.row[1, "TK.Ratio.HTTK"] <- signif(HTTK.Rat.Cltot.Lphpkgbw /
+                                          HTTK.Human.Cltot.Lphpkgbw, 4)
+    # Add rat row:
     cl.table <- rbind(cl.table,new.row)
   }
   }
+```
+
+```{r annotate_chemical_class, eval=TRUE}
 cl.table$Class <- "PFAS"
 cl.table[!(cl.table$DTXSID %in% new.pfas), "Class"] <- "Non-PFAS"
 cl.table$Class <- factor(cl.table$Class, levels=c("PFAS","Non-PFAS"))
+```
+```{r fit_non_pfas_trend, eval=TRUE}
+nonpfasratiotrend <- lm(log10(TK.Ratio.InVivo)~log10(TK.Ratio.HTTK),
+                        data=subset(cl.table, Species=="Rat" & Class!="PFAS"))
+summary(nonpfasratiotrend)
 ```
 
 ```{r fig_ratio_httk, eval = TRUE}
@@ -498,153 +532,51 @@ print(fig.ratio.httk)
          height =11, width =12, dpi = 300)
 ```
 
-```{r fig_ratio_ml, eval = TRUE}
-fig.ratio.ml  <- ggplot(data=subset(cl.table, Species!="Human")) +
+
+
+```{r fig_clhttk, eval = TRUE}
+fig.clhttk.invivo  <- ggplot(data=cl.table) +
   geom_point(aes(
-    x=TK.Ratio.ML,
-    y=TK.Ratio.InVivo,
+    x=HTTK.Cltot.Lphpkgbw,
+    y=ClLphpkgbw,
     color=Species,
     shape=Sex),
     size=POINT.SIZE) +
   geom_abline(slope=1,intercept=0,linetype="dashed")+
 #  geom_line(aes(x=logP,y=logPfit1),color="black") + 
 #  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
-  ylab("In Vivo Observed Clearance Ratio") + 
-  xlab("Pure Machine Learning Predicted Clearance Ratio") +
+  ylab("In Vivo Clearance (L/h/kg bw)") + 
+  xlab("HTTK Clearance (L/h/kg bw)") +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
   theme_bw()  +
-  theme( text  = element_text(size=FONT.SIZE))
+  theme( text  = element_text(size=FONT.SIZE))+
+  annotate("text", x = 10^-6, y = 10^-1, 
+           label = paste("RMSLE:",
+                         RMSLE(cl.table,"HTTK.Cltot.Lphpkgbw","ClLphpkgbw")))
 
-print(fig.ratio.ml)
-  ggsave(paste0(LOC.WD,
-    "Fig_ml_cl_ratio.tiff"),
-         height = 11, width = 12, dpi = 300)
+print(fig.clhttk.invivo)
+
 ```
+
+
 
 
 ```{r multipanelrefchemdatafigureforpaper2}
 ggarrange(fig.ratio.httk, fig.ratio.ml, 
           labels = c("A", "B"),
           ncol = 2, nrow = 1,
-          common.legend = FALSE, legend = "bottom")
+          common.legend = TRUE, legend = "bottom")
 tiff(file = paste0(LOC.WD,"Fig_PFASRatioEval.tiff"),
          height = 3*200, width = 5*200, compression = "lzw")
 ggarrange(fig.ratio.httk, fig.ratio.ml, 
           labels = c("A", "B"),
           ncol = 2, nrow = 1,
-          common.legend = FALSE, legend = "top")
+          common.legend = TRUE, legend = "top")
 dev.off()
 ```
 
-```{r firstpass, eval=TRUE}
-firstpass.table <- NULL
-for (this.chem in get_2023pfasinfo(info="dtxsid", suppress.messages=TRUE,
-                                   model=PFAS.MODEL.USED))
-{
-      params <- parameterize_sumclearances(dtxsid=this.chem,
-                                         suppress.messages=TRUE,
-                                         class.exclude=FALSE)
-      params2 <- parameterize_schmitt(dtxsid=this.chem,
-                                      suppress.messages=TRUE,
-                                      class.exclude=FALSE)                           
-      ion <- calc_ionization(
-        pH=7.4,
-        pKa_Donor=params2[["pKa_Donor"]],
-        pKa_Accept=params2[["pKa_Accept"]])
-      fraction_neutral <- ion$fraction_neutral
-      if (fraction_neutral < 0.5) params[['Rblood2plasma']] <- 0.5
-      else params[['Rblood2plasma']] <- 20
-  params[["Clmetabolismc"]] <- calc_hep_clearance(parameters=params,
-          hepatic.model='unscaled',
-          suppress.messages=TRUE)#L/h/kg body weight
-  this.row <- data.frame(DTXSID=this.chem,
-                         Fsystemic=calc_hep_bioavailability(
-                           parameters=params)
-  )
-  firstpass.table <- rbind(firstpass.table, this.row)
-}
-```
 
-```{r firstpass_fig, eval=TRUE}
-fig.firstpass  <- ggplot(data=firstpass.table) +
-  geom_histogram(aes(
-    x=Fsystemic),bins=10) +
-  ylab("Number of Chemicals") + 
-  xlab("Fraction Systemically Available") +
-  theme_bw()  +
-  theme( text  = element_text(size=FONT.SIZE))
-
-print(fig.firstpass)
-```
-
-# Evaluate Ratio Blood:Plasma Predictions
-```{r rb2peval, eval=TRUE}
-rb2p.table <- subset(chem.physical_and_invitro.data,
-                     Human.Rblood2plasma.Reference %in% "Poothong 2017")
-rb2p.table <- rb2p.table[,colnames(rb2p.table) %in%
-                                     c("Compound","DTXSID",
-                                       "Human.Rblood2plasma"
-                                     )]
-for (this.chem in rb2p.table$DTXSID)
-{
-  if (this.chem %in% get_2023pfasinfo(info="dtxsid", suppress.messages=TRUE,
-                                   model=PFAS.MODEL.USED))
-  {
-    rb2p.table[rb2p.table$DTXSID==this.chem,"HTTK.Rb2p"] <- 
-      calc_rblood2plasma(dtxsid=this.chem,
-                         class.exclude=FALSE)
-  }
-  p <- try(parameterize_pfas1comp(dtxsid=this.chem))
-  if(!is(p, "try-error")) 
-    rb2p.table[rb2p.table$DTXSID==this.chem,"ML.Rb2p"] <- 
-    p$Rblood2plasma
-}
-```
-
-# Evaluate Membrane Affinity Predictions
-```{r MAeval, eval=TRUE}
-logma.table <- subset(chem.physical_and_invitro.data,
-                     logMA.Reference %in% "Droge 2019")
-logma.table <- logma.table[,colnames(logma.table) %in%
-                                     c("Compound","DTXSID",
-                                       "logMA"
-                                     )]
-for (this.chem in logma.table$DTXSID)
-{
-  logma.table[logma.table$DTXSID==this.chem,"HTTK.logMA"] <- 
-      signif(log10(calc_ma(dtxsid=this.chem,
-                           pfas.calibration=FALSE)),3)
-}
-```
-
-```{r fit_logma, eval = TRUE}
-fit.logma <- lm(logMA~HTTK.logMA,data=logma.table)
-summary(fit.logma)
-
-logma.table$Fit.logMA <- signif(fit.logma$coefficients[1] +
-  fit.logma$coefficients[2]*logma.table$HTTK.logMA,3)
-```
-
-```{r fig_logma, eval = TRUE}
-fig.logma  <- ggplot(data=logma.table) +
-  geom_point(aes(
-    x=HTTK.logMA,
-    y=logMA
-    ),
-    size=POINT.SIZE) +
-  geom_abline(slope=1,intercept=0,linetype="dashed")+
-  geom_line(aes(x=HTTK.logMA,
-    y=Fit.logMA), color="red")+
-  ylab("Droge (2019) logMA") + 
-  xlab("HTTK log Membrane Affinity") +
-  scale_x_log10(label=scientific_10)+
-  scale_y_log10(label=scientific_10)+
-  theme_bw()  +
-  theme( text  = element_text(size=FONT.SIZE))
-
-print(fig.logma)
-```
 
 ```{r rat_human_scaling}
 half.lives <- NULL
@@ -701,6 +633,8 @@ fig.species.scaling <- ggplot(data=half.lives) +
 
 print(fig.species.scaling)
 ```
+
+## Evaluating Machine Learning Model for PFAS TK
 
 ```{r wallis_2023_halflives}
 Dawson.known.human.HLs <- c(
@@ -825,7 +759,7 @@ human.invivo.hl.fig <- ggplot(data=human.invivo.hl) +
     colour=Status),
     size=2) +
     geom_abline(slope=1,intercept=0,linetype="dashed")+
-  xlab("Pure Machine Learning Half-Life Prediction") +
+  xlab("Machine Learning Half-Life Prediction") +
   ylab("In Vivo Measurment") +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
@@ -856,9 +790,117 @@ dev.off()
 
 subset(human.invivo.hl, is.na(HL.ML))
 ```
-```{r load_bioavailability_preds}
-load_honda2023()
+
+
+
+```{r invivo_interspecies_eval_scaling, eval=TRUE}
+cl.table <- as.data.frame(cl.table)
+for (this.sex in c("Female","Male"))
+{
+  human.data <- subset(cl.table, Species=="Human" &
+                            Sex==this.sex)
+  for (this.species in unique(cl.table$Species))
+  if (this.species != "Human")
+  {
+    species.data <- subset(cl.table, Species==this.species &
+                                     Sex==this.sex)
+    for (this.chem in union(human.data$DTXSID, species.data$DTXSID))
+    {
+      cl.table.index <- cl.table$Sex==this.sex &
+               cl.table$Species==this.species &
+               cl.table$DTXSID==this.chem
+      human.table.index <- human.data$Sex==this.sex &
+               human.data$DTXSID==this.chem
+      species.table.index <- species.data$Sex==this.sex &
+               species.data$DTXSID==this.chem
+      if (any(human.table.index) & any(species.table.index))
+      {
+        cl.table[cl.table.index, "TK.Ratio.InVivo"] <- 
+        signif(species.data[species.table.index, "ClLphpkgbw"] /
+        human.data[human.table.index, "ClLphpkgbw"], 4)
+        
+        cl.table[cl.table.index, "TK.Ratio.HTTK"] <- 
+        signif(species.data[species.table.index, "HTTK.Cltot.Lphpkgbw"] /
+        human.data[human.table.index, "HTTK.Cltot.Lphpkgbw"], 4) 
+        
+        cl.table[cl.table.index, "TK.Ratio.ML"] <- 
+        signif(species.data[species.table.index, "MachineLearning.Cltot.Lphpkgbw"] /
+        human.data[human.table.index, "MachineLearning.Cltot.Lphpkgbw"], 4) 
+      }
+    }
+  }
+}  
 ```
+
+```{r fig_ratio_ml, eval = TRUE}
+fig.ratio.ml  <- ggplot(data=subset(cl.table, Species!="Human")) +
+  geom_point(aes(
+    x=TK.Ratio.ML,
+    y=TK.Ratio.InVivo,
+    color=Species,
+    shape=Sex),
+    size=POINT.SIZE) +
+  geom_abline(slope=1,intercept=0,linetype="dashed")+
+#  geom_line(aes(x=logP,y=logPfit1),color="black") + 
+#  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
+  ylab("In Vivo Observed Clearance Ratio") + 
+  xlab("Machine Learning Predicted Clearance Ratio") +
+  scale_x_log10(label=scientific_10)+
+  scale_y_log10(label=scientific_10)+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))
+
+print(fig.ratio.ml)
+  ggsave(paste0(LOC.WD,
+    "Fig_ml_cl_ratio.tiff"),
+         height = 11, width = 12, dpi = 300)
+```
+
+## New HTTK Model for PFAS
+
+
+```{r fig_clml, eval = TRUE}
+fig.clml.invivo  <- ggplot(data=cl.table) +
+  geom_jitter(aes(
+    x=MachineLearning.Cltot.Lphpkgbw,
+    y=ClLphpkgbw,
+    color=Species,
+    shape=Sex),
+    size=POINT.SIZE,
+    height=0,width=0.1) +
+  geom_abline(slope=1,intercept=0,linetype="dashed")+
+#  geom_line(aes(x=logP,y=logPfit1),color="black") + 
+#  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
+  ylab("In Vivo Clearance (L/h/kg bw)") + 
+  xlab("Machine Learning Clearance (L/h/kg bw)") +
+  scale_x_log10(label=scientific_10)+
+  scale_y_log10(label=scientific_10)+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))+
+  annotate("text", x = 10^-5, y = 10^-1, 
+           label = paste("RMSLE:",
+                         RMSLE(cl.table,
+                               "MachineLearning.Cltot.Lphpkgbw",
+                               "ClLphpkgbw")))
+
+print(fig.clml.invivo)
+```
+
+```{r multipanelrefchemdatafigureforpaper}
+ggarrange(fig.clhttk.invivo, fig.clml.invivo, 
+          labels = c("A", "B"),
+          ncol = 1, nrow = 2,
+          common.legend = TRUE, legend = "bottom")
+tiff(file = paste0(LOC.WD,"Fig_PFASClearanceEval.tiff"),
+         height = 5*200, width = 3*200, compression = "lzw")
+ggarrange(fig.clhttk.invivo, fig.clml.invivo, 
+          labels = c("A", "B"),
+          ncol = 1, nrow = 2,
+          common.legend = TRUE, legend = "top")
+dev.off()
+```
+
+
 
 ```{r MakeSupTableChange}
 pfas.httk.table <- get_2023pfasinfo(info="all")
@@ -926,28 +968,120 @@ ggarrange(Fig.Cssa, Fig.Cssb,
 dev.off()
 ```
 
+## Other Analyses
+```{r firstpass, eval=TRUE}
+firstpass.table <- NULL
+for (this.chem in get_2023pfasinfo(info="dtxsid", suppress.messages=TRUE,
+                                   model=PFAS.MODEL.USED))
+{
+      params <- parameterize_sumclearances(dtxsid=this.chem,
+                                         suppress.messages=TRUE,
+                                         class.exclude=FALSE)
+      params2 <- parameterize_schmitt(dtxsid=this.chem,
+                                      suppress.messages=TRUE,
+                                      class.exclude=FALSE)                           
+      ion <- calc_ionization(
+        pH=7.4,
+        pKa_Donor=params2[["pKa_Donor"]],
+        pKa_Accept=params2[["pKa_Accept"]])
+      fraction_neutral <- ion$fraction_neutral
+      if (fraction_neutral < 0.5) params[['Rblood2plasma']] <- 0.5
+      else params[['Rblood2plasma']] <- 20
+  params[["Clmetabolismc"]] <- calc_hep_clearance(parameters=params,
+          hepatic.model='unscaled',
+          suppress.messages=TRUE)#L/h/kg body weight
+  this.row <- data.frame(DTXSID=this.chem,
+                         Fsystemic=calc_hep_bioavailability(
+                           parameters=params)
+  )
+  firstpass.table <- rbind(firstpass.table, this.row)
+}
+```
+
+```{r firstpass_fig, eval=TRUE}
+fig.firstpass  <- ggplot(data=firstpass.table) +
+  geom_histogram(aes(
+    x=Fsystemic),bins=10) +
+  ylab("Number of Chemicals") + 
+  xlab("Fraction Systemically Available") +
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))
+
+print(fig.firstpass)
+```
+
+```{r fig_clspecies_invivo, eval = TRUE}
+fig.clspecies.invivo  <- ggplot(data=cl.table) +
+  geom_point(aes(
+    x=Species,
+    y=ClLphpkgbw,
+    color=Species,
+    shape=Sex),
+    size=POINT.SIZE) +
+  geom_line(aes(x=Species,
+              y=ClLphpkgbw,
+              group = DTXSID)) +
+#  geom_line(aes(x=logP,y=logPfit1),color="black") + 
+#  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
+  ylab("In Vivo Clearance (L/h/kg bw)") + 
+  xlab("Species") +
+  scale_y_log10(label=scientific_10)+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))
+
+print(fig.clspecies.invivo)
+```
+
+```{r fig_clspecies_httk, eval = TRUE}
+fig.clspecies.httk  <- ggplot(data=cl.table) +
+  geom_point(aes(
+    x=Species,
+    y=HTTK.Cltot.Lphpkgbw,
+    color=Species,
+    shape=Sex),
+    size=POINT.SIZE) +
+#  geom_segment(color="#69b3a2", 
+#                  aes(
+#                    x=Species,
+#                    y=HTTK.Cltot.Lphpkgbw,
+#                    xend = c(tail(Species, n = -1), NA), 
+#                    yend = c(tail(HTTK.Cltot.Lphpkgbw, n = -1), NA)
+#                  ))+
+geom_line(aes(x=Species,
+              y=HTTK.Cltot.Lphpkgbw,
+              group = DTXSID)) +
+ylab("HTTK Clearance (L/h/kg bw)") +
+  xlab("Species") +
+  scale_y_log10(label=scientific_10)+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))
+
+print(fig.clspecies.httk)
+```
+
+
 ```{r clearance_fraction}
 FigClearanceFrac1<- ggplot(data=pfas.httk.table)+
-   geom_histogram(binwidth = 0.05,alpha=1,fill="Red",aes(Frac.Metabolism))+ 
+   geom_histogram(binwidth = 0.1,alpha=1,fill="Red",aes(Frac.Metabolism))+ 
   xlab(" ") +
   ylab(" ")+
   ggtitle("Hepatic Metabolism")+
   scale_x_continuous(limits=c(-.05,1.05))+
-  scale_y_log10(limits=c(0.1,100))
+  scale_y_continuous(limits=c(0,100))
 FigClearanceFrac2<- ggplot(data=pfas.httk.table)+
-   geom_histogram(binwidth = 0.05,alpha=1,fill="Blue",aes(Frac.Glomerular))+
+   geom_histogram(binwidth = 0.1,alpha=1,fill="Blue",aes(Frac.Glomerular))+
   xlab(" ") +
   ylab("Number of chemicals")+
   ggtitle("Glomerular Filtration")+
   scale_x_continuous(limits=c(-.05,1.05))+
-  scale_y_log10(limits=c(0.1,100))
+  scale_y_continuous(limits=c(0,100))
 FigClearanceFrac3<- ggplot(data=pfas.httk.table)+
-   geom_histogram(binwidth = 0.05,alpha=1,fill="Green",aes(Frac.Exhalation))+
+   geom_histogram(binwidth = 0.1,alpha=1,fill="Green",aes(Frac.Exhalation))+
   xlab("Fraction of Total Clearance") +
   ylab(" ")+
   ggtitle("Exhalation")+
   scale_x_continuous(limits=c(-.05,1.05))+
-  scale_y_log10(limits=c(0.1,100))
+  scale_y_continuous(limits=c(0,100))
 ggarrange(FigClearanceFrac1, FigClearanceFrac2, FigClearanceFrac3,
           ncol = 1, nrow = 3,
           common.legend = TRUE, legend = "right")
@@ -958,3 +1092,4 @@ ggarrange(FigClearanceFrac1, FigClearanceFrac2, FigClearanceFrac3,
           common.legend = TRUE, legend = "right")
 dev.off()
 ```
+
