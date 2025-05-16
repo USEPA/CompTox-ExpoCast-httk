@@ -469,7 +469,6 @@ for (this.chem in huh.data[,"DTXSID"])
     if (!(this.chem %in% new.pfas) |
         this.chem %in% dawson2023$DTXSID)
   {
-    print(this.chem)
     # Calculate human clearance:
     HTTK.Human.Cltot.Lphpkgbw <-
       calc_total_clearance(dtxsid = this.chem,
@@ -500,11 +499,41 @@ for (this.chem in huh.data[,"DTXSID"])
 cl.table$Class <- "PFAS"
 cl.table[!(cl.table$DTXSID %in% new.pfas), "Class"] <- "Non-PFAS"
 cl.table$Class <- factor(cl.table$Class, levels=c("PFAS","Non-PFAS"))
+cat(paste("Also in Figure 2 Panel B are clearances based upon",
+  sum(cl.table$Class!="PFAS")/2,
+  "non-PFAS chemicals\n"))
 ```
+
 ```{r fit_non_pfas_trend, eval=TRUE}
 nonpfasratiotrend <- lm(log10(TK.Ratio.InVivo)~log10(TK.Ratio.HTTK),
                         data=subset(cl.table, Species=="Rat" & Class!="PFAS"))
 summary(nonpfasratiotrend)
+```
+```{r fig_clhttk, eval = TRUE}
+fig.clhttk.invivo  <- ggplot(data=subset(cl.table, Class=="PFAS")) +
+  geom_point(aes(
+    x=HTTK.Cltot.Lphpkgbw,
+    y=ClLphpkgbw,
+    color=Species,
+    shape=Sex),
+    size=POINT.SIZE) +
+  geom_abline(slope=1,intercept=0,linetype="dashed")+
+#  geom_line(aes(x=logP,y=logPfit1),color="black") + 
+#  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
+  ylab("PFAS In Vivo Clearance (L/h/kg bw)") + 
+  xlab("HTTK Clearance (L/h/kg bw)") +
+  scale_x_log10(label=scientific_10)+
+  scale_y_log10(label=scientific_10)+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))+
+  annotate("text", size=FONT.SIZE/3, x = 10^-4, y = 10^-1, 
+           label = paste("RMSLE:",
+                         RMSLE(cl.table,"HTTK.Cltot.Lphpkgbw","ClLphpkgbw")))+
+  theme(legend.title = element_text(size = FONT.SIZE/3), 
+               legend.text = element_text(size = FONT.SIZE/2))
+
+print(fig.clhttk.invivo)
+
 ```
 
 ```{r fig_ratio_httk, eval = TRUE}
@@ -518,7 +547,7 @@ fig.ratio.httk  <- ggplot(data=subset(cl.table, Species=="Rat")) +
   geom_abline(slope=1,intercept=0,linetype="dashed")+
 #  geom_line(aes(x=logP,y=logPfit1),color="black") + 
 #  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
-  ylab("In Vivo Observed Human:Rat Clearance Ratio") + 
+  ylab("In Vivo Derived Human:Rat Clearance Ratio") + 
   xlab("HTTK Predicted Clearance Ratio") +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
@@ -534,49 +563,70 @@ print(fig.ratio.httk)
 
 
 
-```{r fig_clhttk, eval = TRUE}
-fig.clhttk.invivo  <- ggplot(data=cl.table) +
-  geom_point(aes(
-    x=HTTK.Cltot.Lphpkgbw,
-    y=ClLphpkgbw,
-    color=Species,
-    shape=Sex),
-    size=POINT.SIZE) +
-  geom_abline(slope=1,intercept=0,linetype="dashed")+
-#  geom_line(aes(x=logP,y=logPfit1),color="black") + 
-#  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
-  ylab("In Vivo Clearance (L/h/kg bw)") + 
-  xlab("HTTK Clearance (L/h/kg bw)") +
-  scale_x_log10(label=scientific_10)+
-  scale_y_log10(label=scientific_10)+
-  theme_bw()  +
-  theme( text  = element_text(size=FONT.SIZE))+
-  annotate("text", x = 10^-6, y = 10^-1, 
-           label = paste("RMSLE:",
-                         RMSLE(cl.table,"HTTK.Cltot.Lphpkgbw","ClLphpkgbw")))
-
-print(fig.clhttk.invivo)
-
-```
 
 
 
 
-```{r multipanelrefchemdatafigureforpaper2}
-ggarrange(fig.ratio.httk, fig.ratio.ml, 
+
+```{r multipanelclearancefigureforpaper}
+ggarrange(fig.clhttk.invivo, fig.ratio.httk,
           labels = c("A", "B"),
           ncol = 2, nrow = 1,
-          common.legend = TRUE, legend = "bottom")
+          common.legend = FALSE, legend = "bottom")
 tiff(file = paste0(LOC.WD,"Fig_PFASRatioEval.tiff"),
-         height = 3*200, width = 5*200, compression = "lzw")
-ggarrange(fig.ratio.httk, fig.ratio.ml, 
+         height = 2.5*200, width = 5*200, compression = "lzw")
+ggarrange(fig.clhttk.invivo, fig.ratio.httk, 
           labels = c("A", "B"),
           ncol = 2, nrow = 1,
-          common.legend = TRUE, legend = "top")
+          hjust=-2.5,
+          common.legend = FALSE, legend = "top",
+          font.label=list(size=20))
 dev.off()
 ```
 
+```{r summary_table}
+ratio.table <- data.frame()
+ratio.table["Non-PFAS In Vivo Clearance Ratio","Median"] <- 
+  median(subset(cl.table, 
+                Species=="Rat" &
+                  Class != "PFAS")$TK.Ratio.InVivo,na.rm=TRUE)
+ratio.table["Non-PFAS In Vivo Clearance Ratio","Min"] <- 
+  min(subset(cl.table, 
+                Species=="Rat" &
+                  Class != "PFAS")$TK.Ratio.InVivo,na.rm=TRUE)
+ratio.table["Non-PFAS In Vivo Clearance Ratio","Max"] <- 
+  max(subset(cl.table, 
+                Species=="Rat" &
+                  Class != "PFAS")$TK.Ratio.InVivo,na.rm=TRUE)
+ratio.table["PFAS In Vivo Clearance Ratio","Median"] <- 
+  median(subset(cl.table, 
+                Species=="Rat" &
+                  Class == "PFAS")$TK.Ratio.InVivo,na.rm=TRUE)
+ratio.table["PFAS In Vivo Clearance Ratio","Min"] <- 
+  min(subset(cl.table, 
+                Species=="Rat" &
+                  Class == "PFAS")$TK.Ratio.InVivo,na.rm=TRUE)
+ratio.table["PFAS In Vivo Clearance Ratio","Max"] <- 
+  max(subset(cl.table, 
+                Species=="Rat" &
+                  Class == "PFAS")$TK.Ratio.InVivo,na.rm=TRUE)
+ratio.table["PFAS Default HTTK Clearance Ratio","Median"] <- 
+  median(subset(cl.table, 
+                Species=="Rat" &
+                  Class == "PFAS")$TK.Ratio.HTTK)
+ratio.table["PFAS Default HTTK Clearance Ratio","Min"] <- 
+  min(subset(cl.table, 
+                Species=="Rat" &
+                  Class == "PFAS")$TK.Ratio.HTTK)
+ratio.table["PFAS Default HTTK Clearance Ratio","Max"] <- 
+  max(subset(cl.table, 
+                Species=="Rat" &
+                  Class == "PFAS")$TK.Ratio.HTTK)
+ratio.table <- signif(ratio.table, 2)
+kable(ratio.table)
+```
 
+## Evaluating Machine Learning Model for PFAS TK
 
 ```{r rat_human_scaling}
 half.lives <- NULL
@@ -633,8 +683,6 @@ fig.species.scaling <- ggplot(data=half.lives) +
 
 print(fig.species.scaling)
 ```
-
-## Evaluating Machine Learning Model for PFAS TK
 
 ```{r wallis_2023_halflives}
 Dawson.known.human.HLs <- c(
@@ -768,13 +816,12 @@ human.invivo.hl.fig <- ggplot(data=human.invivo.hl) +
            label = paste("RMSLE for ",
                          num.novel.pfas.hl, 
                          " novel PFAS: ",
-                         signif(RMSLE.novel,2),"\n",
-                         agree.count.novel,
-                         " agree\n",
-                         under.count.novel,
-                         " underestimated",
-                         sep="")) +
-                                                
+                         signif(RMSLE.novel,2),"\n"#,
+                         #agree.count.novel,
+                         #" agree\n",
+                         #under.count.novel,
+                         #" underestimated",
+                         sep=""))+
   theme( text  = element_text(size=FONT.SIZE))+
         scale_color_viridis(discrete=2)
 
