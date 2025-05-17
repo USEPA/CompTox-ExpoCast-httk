@@ -1,0 +1,5 @@
+"Description"	"Half-Life"	"Number Crizer (2024) Chemicals"	"Number Non-Zero Clint"
+"Class 1"	"Rapidly Cleared"	"< 12 h"	24	0
+"Class 2"	"Moderate"	"< 1 week"	24	0
+"Class 3"	"Slow"	"< 2 months"	24	2
+"Class 4"	"Very Slow"	"> 2 months"	18	0
