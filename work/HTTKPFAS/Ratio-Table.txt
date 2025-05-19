@@ -1,4 +1,4 @@
 "Median"	"Min"	"Max"
 "Non-PFAS In Vivo Clearance Ratio"	1.9	0.16	42
 "PFAS In Vivo Clearance Ratio"	180	1.5	6400
-"PFAS Default HTTK Clearance Ratio"	2.9	1.5	3
+"PFAS Default HTTK Clearance Ratio"	NA	NA	NA

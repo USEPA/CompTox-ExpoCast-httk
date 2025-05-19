@@ -252,23 +252,51 @@ parameterize_pfas1comp <- function(
   params[["Funbound.plasma.adjustment"]] <- NA
   params[["Fhep.assay.correction"]] <- NA
   params[["Funbound.plasma.dist"]] <- NA
-  params[["Caco2.Pab"]] <- NA
-  params[["Caco2.Pab.dist"]] <- NA
   
+  params <- c(params, get_caco2(chem.cas=chem.cas,
+                              chem.name=chem.name,
+                              dtxsid=dtxsid,
+                              Caco2.Pab.default = 30, # More rapid default for PFAS
+                              suppress.messages = suppress.messages))
+ 
 # Phys-chem properties:
-  phys.params <-  suppressWarnings(parameterize_schmitt(chem.name=chem.name,
-                    chem.cas=chem.cas,
-                    species=species,
-                    default.to.human=TRUE,
-                    class.exclude=FALSE,
-                    minimum.Funbound.plasma=1e-4)) 
-  params[["Pow"]] <- phys.params[["Pow"]]
-  params[["pKa_Donor"]] <- phys.params[["pKa_Donor"]] 
-  params[["pKa_Accept"]] <- phys.params[["pKa_Accept"]]
-  params[["MA"]] <- phys.params[["MA"]]
+  Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas)
+  names(Pow) <- NULL
 
-# Average kgutabs value across 44 chemicals in Wambaugh et al. (2018):
-  params[['kgutabs']] <- 2.18
+  pKa_Donor <- suppressWarnings(get_physchem_param(
+                                    "pKa_Donor",
+                                    chem.cas=chem.cas,
+                                    chem.name=chem.name,
+                                    dtxsid=dtxsid))
+ 
+  pKa_Accept <- suppressWarnings(get_physchem_param(
+                                     "pKa_Accept",
+                                     chem.cas=chem.cas,
+                                     chem.name=chem.name,
+                                     dtxsid=dtxsid))
+
+  MA <- NA
+    if (any(!is.null(chem.cas),!is.null(chem.name),!is.null(dtxsid)))
+      MA <- suppressWarnings(10^(get_physchem_param("logMA",
+            chem.cas=chem.cas,
+            chem.name=chem.name,
+            dtxsid=dtxsid))) 
+
+    # If we don't have a measured value for membrane affintity, 
+    # use Yun & Edgington (2013):
+    if (is.na(MA))
+    {
+      MA <- calc_ma( chem.cas=chem.cas,
+            chem.name=chem.name,
+            dtxsid=dtxsid,
+            suppress.messages=suppress.messages,
+            pfas.calibration=TRUE)
+    }
+
+  params[["Pow"]] <- Pow
+  params[["pKa_Donor"]] <- pKa_Donor 
+  params[["pKa_Accept"]] <- pKa_Accept
+  params[["MA"]] <- MA
 
   # Now let's use calc_ionization to estimate the chemical's charge profile:
   ion <- calc_ionization(
@@ -305,13 +333,13 @@ parameterize_pfas1comp <- function(
   params[['MW']] <- get_physchem_param("MW",chem.cas=chem.cas)
 
 # Assume well absobred:
-  params[["fbio.oral"]] <- 1
-  params[["fabs.oral"]] <- 1
-  params[["fgut.oral"]] <- 1
-  params[["fhep.oral"]] <- 1
-  params[["kgutabs"]] <- 10
-  params[["Fabsgut"]] <- 1
-  params[["hepatic.bioavailability"]] <- 1
+  params[["fbio.oral"]] <- 1 # No Clint
+  params[["fabs.oral"]] <- calc_fabs.oral(parameters=params)
+  params[["fgut.oral"]] <- 1 # No Clint
+  params[["fhep.oral"]] <- 1 # No Clint                                                                                                   
+  params[["kgutabs"]] <- calc_kgutabs(parameters=params)
+  params[["Fabsgut"]] <- params[["fabs.oral"]]
+  params[["hepatic.bioavailability"]] <- 1 # No Clint
 
   return(lapply(params[model.list[["pfas1compartment"]]$param.names],
                 set_httk_precision))

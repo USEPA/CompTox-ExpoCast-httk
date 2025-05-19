@@ -1,22 +1,22 @@
 ---
-title: "Crizer et al. (2024): Analysis of PFAS Hepatic Clearance Data"
-author: "David Crizer, Marci G. Smeltz, John F. Wambaugh, and Barbara A. Wetmore"
+title: "Wambaugh et al. (2025): HTTK for PFAS"
+author: "John F. Wambaugh"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Crizer (2024): PFAS Clearance}
+  %\VignetteIndexEntry{Wambaugh et al. (2025): HTTK for PFAS}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
   *Please send questions to wambaugh.john@epa.gov*
   
-  from "Category-Based Toxicokinetic Evaluations of Data-Poor Per and Polyfluoroalkyl Substances (PFAS) by Gas Chromatography Coupled with Mass Spectrometry"
+  from "Applying High Throughput Toxicokinetics (HTTK) to Per- and Polyfluoro Alkyl Substances (PFAS)"
 
-Anna Kreutz, Matthew Scott Clifton, W. Matthew Henderson, Marci G. Smeltz, John F. Wambaugh, and Barbara A. Wetmore
+John F. Wambaugh, Rogelio Tornero-Velez, Rachael Cogbill, Michael Devito,  and Barbara Wetmore1
 
 ## Abstract
 
-Concern over per- and polyfluoroalkyl substances (PFAS) has increased significantly as more is learned about their widespread environmental presence, persistence, and bioaccumulative potential. The limited measurement, monitoring, toxicokinetic (TK), and toxicologic data currently available is inadequate to inform risk evaluations across this diverse domain. In this study, 73 PFAS were selected for *in vitro* TK evaluation to expand our knowledge across lesser studied PFAS that include alcohol, amide, and acrylate functional groups. Targeted analytical methods were developed using gas chromatography coupled with tandem mass spectrometry (GC-MS/MS); ultracentrifugation was used to measure human plasma protein binding and human hepatocyte suspensions were used in a substrate depletion approach to measure in vitro clearance (Clint). Method development was successful in plasma for 43 PFAS, with fraction unbound in plasma ($f_{up}$) values ranging from 0.004 for 1,6-dibromododecafluorohexane and 1 for 2-aminohexafluoropropan-2-ol, With a median $f_{up}$ of 0.09 (i.e., 91% bound), these PFAS are highly bound, but exhibit 10-fold lower binding than that recently reported for legacy perfluoroalkyl acids (Smeltz et al., 2022). Physico-chemical property trends analyses revealed that increased binding was associated with increases in mass, van der Waals volumes, and values of Log Pow and Log D at pH 7.4. Thirty of the PFAS evaluated in the hepatocyte assay showed abiotic loss, with many exceeding 60% loss within 60 min of media addition. Metabolic clearance was noted for 11 of the 13 successfully evaluated, with rates up to 49.9 l/min/million cells for 1H,1H,10H,10H-Perfluorodecane-1,10-diol. The Chemical Transformation Simulator revealed potential metabolites and other transformation products to consider during *in vitro* assay data interpretation. This integration of quantitative analytic methods with *in vitro* toxicokinetics has provided critical learnings as New Approach Methods are considered to evaluate PFAS for which volatility, metabolism, and other routes of transformation are likely to modulate their environmental fate. 
+Interspecies toxicokinetic (TK) scaling factors are needed to relate toxicological data generated in model animal species to humans. Per- and polyfluoroalkyl substances (PFAS) are a large and diverse class of organic chemicals that contain at a minimum a carbon-fluorine backbone. Some PFAS have been noted as having long toxicokinetic (TK) half-lives (up to several years in humans) while having comparatively short TK half-lives in laboratory animal models. At present, there are roughly a dozen PFAS with human half-life estimates available. Typical allometric extrapolation methods for TK parameters of PFAS are unreliable between species and chemicals. Interspecies variation in expression level and affinity of organic anion transporters for some PFAS are suspected to complicate interspecies extrapolation. Higher throughput TK (HTTK) approaches use in vitro measures of toxicokinetics (intrinsic hepatocyte clearance - Clint - and fraction unbound in plasma - fup) for in vitro-in vivo extrapolation (IVIVE) and interspecies extrapolation. For typical organic chemicals HTTK in vitro data combined with species-specific physiological parameters predicts the Rat:Human clearance ratio with an RMSLE of 0.96. HTTK tools were largely developed for typical organic chemicals. PFAS have both hydrophobic and lipophobic properties which complicates many typical TK methods that rely upon octanol:water chemical concentration ratios. We have used machine learning model predictions to approximate the influence of active transporters on PFAS renal clearance (potentially through resorption and secretion). With this and other modifications, HTTK for PFAS can predict interspecies clearance ratios with RMSLE 0.94.
 
 ## HTTK Version
 
@@ -407,6 +407,7 @@ for (this.chem in unique(cl.table$DTXSID))
       }
     }
   }
+cat(paste0(dim(cl.table)[1],"rows of in vivo clearance data.\n"))
 ```
 
 ## Add in Dawson 2023 predictions for later
@@ -477,7 +478,8 @@ for (this.sex in c("Female","Male"))
       }
     }
   }
-}  
+}
+cat(paste0(dim(cl.table)[1],"rows of in vivo clearance data.\n"))
 ```
 
 ## Add non-PFAS clearances from literature
@@ -490,74 +492,86 @@ huh.data$Human.CL.Lphpkg <- signif(Human.CL.mLpminpkg/1000*60, 3)
 huh.data$Rat.CL.Lphpkg <- signif(
   as.numeric(huh.data$a)*(0.25)^as.numeric(huh.data$b)*60/1000, 3)
 
-httk.chem.list <- get_cheminfo(model=PFAS.MODEL.USED, 
+# List of chemicals where we have HTTK data:
+httk.chem.list <- get_cheminfo(model=NONPFAS.MODEL.USED, 
                                info="DTXSID",
                                suppress.messages = TRUE)
-for (this.chem in huh.data[,"DTXSID"])
+for (this.chem in sort(unique(huh.data[,"DTXSID"])))
   if (!is.na(this.chem))
   {
-  this.row <- which(huh.data[,"DTXSID"]==this.chem)
-  new.row <- cl.table[1,]
-  new.row[1,] <- NA
-  new.row[1, "DTXSID"] <- huh.data[this.row, "DTXSID"]
-  new.row[1, "Species"] <- "Rat"
-  new.row[1, "Sex"] <- "Female"
-  new.row[1, "ClLphpkgbw"] <- huh.data[this.row, "Human.CL.Lphpkg"]
-
-  new.row[1, "TK.Ratio.InVivo"] <- 
-    huh.data[this.row, "Rat.CL.Lphpkg"] /
-    huh.data[this.row, "Human.CL.Lphpkg"]
-  if (this.chem %in% httk.chem.list)
-    if (!(this.chem %in% new.pfas) |
-        this.chem %in% dawson2023$DTXSID)
-  {
-    # Calculate human clearance:
-    HTTK.Human.Cltot.Lphpkgbw <-
-      calc_total_clearance(dtxsid = this.chem,
-                           model=NONPFAS.MODEL.USED,
-                           species="Human",
-                           suppress.messages=TRUE)
-    # Add human row (with NA ratio):
-    new.row[1, "HTTK.Cltot.Lphpkgbw"] <- HTTK.Human.Cltot.Lphpkgbw 
-    cl.table <- rbind(cl.table,new.row)
-    # Make a row for rat:
-    new.row[1, "ClLphpkgbw"] <- huh.data[this.row, "Rat.CL.Lphpkg"]
-    HTTK.Rat.Cltot.Lphpkgbw <- 
-      calc_total_clearance(dtxsid = this.chem,
-                           model=NONPFAS.MODEL.USED,
-                           species="Rat",
-                           default.to.human=TRUE,
-                           suppress.messages=TRUE)
-    new.row[1, "HTTK.Cltot.Lphpkgbw"] <- HTTK.Rat.Cltot.Lphpkgbw
-    new.row[1, "TK.Ratio.HTTK"] <- signif(HTTK.Rat.Cltot.Lphpkgbw /
-                                          HTTK.Human.Cltot.Lphpkgbw, 4)
-    # Add rat row:
-    cl.table <- rbind(cl.table,new.row)
+    print(this.chem)
+    this.row <- which(huh.data[,"DTXSID"]==this.chem)
+    new.row <- cl.table[1,]
+    new.row[1,] <- NA
+    new.row[1, "DTXSID"] <- huh.data[this.row, "DTXSID"]
+    new.row[1, "Sex"] <- "Female"
+    new.row[1, "ClLphpkgbw"] <- huh.data[this.row, "Human.CL.Lphpkg"]
+    
+    new.row[1, "TK.Ratio.InVivo"] <- 
+      huh.data[this.row, "Rat.CL.Lphpkg"] /
+      huh.data[this.row, "Human.CL.Lphpkg"]
+    if (this.chem %in% httk.chem.list)
+    {
+      print("found HTTK data")
+      # Calculate human clearance:
+      HTTK.Human.Cltot.Lphpkgbw <-
+        calc_total_clearance(dtxsid = this.chem,
+                             model=NONPFAS.MODEL.USED,
+                             species="Human",
+                             suppress.messages=TRUE)
+      # Add human row (with NA ratio):
+      new.row[1, "Species"] <- "Human"
+      new.row[1, "HTTK.Cltot.Lphpkgbw"] <- HTTK.Human.Cltot.Lphpkgbw 
+      print("added human row")
+      cl.table <- rbind(cl.table,new.row)
+      # Make a row for rat:
+      new.row[1, "Species"] <- "Rat"
+      new.row[1, "ClLphpkgbw"] <- huh.data[this.row, "Rat.CL.Lphpkg"]
+      HTTK.Rat.Cltot.Lphpkgbw <- 
+        calc_total_clearance(dtxsid = this.chem,
+                             model=NONPFAS.MODEL.USED,
+                             species="Rat",
+                             default.to.human=TRUE,
+                             suppress.messages=TRUE)
+      new.row[1, "HTTK.Cltot.Lphpkgbw"] <- HTTK.Rat.Cltot.Lphpkgbw
+      new.row[1, "TK.Ratio.HTTK"] <- signif(HTTK.Rat.Cltot.Lphpkgbw /
+                                              HTTK.Human.Cltot.Lphpkgbw, 4)
+      # Add rat row:
+      cl.table <- rbind(cl.table,new.row)
+      print("added rat row")
+    }
   }
-  }
+cat(paste0(dim(cl.table)[1],"rows of in vivo clearance data.\n"))
 ```
 
 ```{r annotate_chemical_class, eval=TRUE}
+cat(paste0(dim(cl.table)[1],"rows of in vivo clearance data.\n"))
 cl.table$Class <- "PFAS"
-cl.table[!(cl.table$DTXSID %in% new.pfas), "Class"] <- "Non-PFAS"
+cl.table[!(cl.table$DTXSID %in% 
+             subset(chem.physical_and_invitro.data,Chemical.Class=="PFAS")$DTXSID), 
+         "Class"] <- "Non-PFAS"
 cl.table$Class <- factor(cl.table$Class, levels=c("PFAS","Non-PFAS"))
 cat(paste("Also in Figure 2 Panel B are clearances based upon",
   sum(cl.table$Class!="PFAS")/2,
   "non-PFAS chemicals\n"))
-cl.table <- merge(cl.table,subset(httk::dawson2023,DosingAdj=="Oral")[,c("DTXSID","Species","Sex","ClassPredFull")],by=c("DTXSID","Species","Sex"))
+cl.table <- merge(cl.table,subset(httk::dawson2023,DosingAdj=="Oral")[,
+                    c("DTXSID","Species","Sex","ClassPredFull","ClassModDomain")],
+                  by=c("DTXSID","Species","Sex"),
+                  all.x=TRUE)
 colnames(cl.table)[colnames(cl.table)=="ClassPredFull"] <- "ML.Class"
-save(cl.table, file=paste0(LOC.WD,"CL-Table.RData"))
-write.table(cl.table, file=paste0(LOC.WD,"CL-Table.txt"),sep="\t",row.names=FALSE,quote = FALSE)
+save(cl.table, file=paste0(LOC.WD,"InVivo-CL-Table.RData"))
+write.table(cl.table, file=paste0(LOC.WD,"InVivo-CL-Table.txt"),sep="\t",row.names=FALSE,quote = FALSE)
+cat(paste0(dim(cl.table)[1],"rows of in vivo clearance data.\n"))
 ```
 
 ```{r fit_non_pfas_trend, eval=TRUE}
-load(paste0(LOC.WD,"CL-Table.RData"))
+load(paste0(LOC.WD,"InVivo-CL-Table.RData"))
 nonpfasratiotrend <- lm(log10(TK.Ratio.InVivo)~log10(TK.Ratio.HTTK),
                         data=subset(cl.table, Species=="Rat" & Class!="PFAS"))
 summary(nonpfasratiotrend)
 ```
 ```{r fig_clhttk, eval = TRUE}
-load(paste0(LOC.WD,"CL-Table.RData"))
+load(paste0(LOC.WD,"InVivo-CL-Table.RData"))
 fig.clhttk.invivo  <- ggplot(data=subset(cl.table, Class=="PFAS")) +
   geom_point(aes(
     x=HTTK.Cltot.Lphpkgbw,
@@ -569,7 +583,7 @@ fig.clhttk.invivo  <- ggplot(data=subset(cl.table, Class=="PFAS")) +
 #  geom_line(aes(x=logP,y=logPfit1),color="black") + 
 #  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
   ylab("PFAS In Vivo Clearance (L/h/kg bw)") + 
-  xlab("HTTK Clearance (L/h/kg bw)") +
+  xlab("Default HTTK Clearance (L/h/kg bw)") +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
    scale_color_viridis(discrete=4)+
@@ -587,7 +601,7 @@ print(fig.clhttk.invivo)
 ```
 
 ```{r fig_ratio_httk, eval = TRUE}
-load(paste0(LOC.WD,"CL-Table.RData"))
+load(paste0(LOC.WD,"InVivo-CL-Table.RData"))
 fig.ratio.httk  <- ggplot(data=subset(cl.table, Species=="Rat")) +
   geom_point(aes(
     x=TK.Ratio.HTTK,
@@ -599,7 +613,7 @@ fig.ratio.httk  <- ggplot(data=subset(cl.table, Species=="Rat")) +
 #  geom_line(aes(x=logP,y=logPfit1),color="black") + 
 #  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
   ylab("In Vivo Derived Human:Rat Clearance Ratio") + 
-  xlab("HTTK Predicted Clearance Ratio") +
+  xlab("Default HTTK Clearance Ratio") +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
   theme_bw()  +
@@ -968,7 +982,7 @@ dev.off()
 ```
 
 ```{r fig_clml, eval = TRUE}
-load(paste0(LOC.WD,"CL-Table.RData"))
+load(paste0(LOC.WD,"InVivo-CL-Table.RData"))
 fig.clml.invivo  <- ggplot(data=subset(cl.table, Class=="PFAS")) +
   geom_jitter(aes(
     x=MachineLearning.Cltot.Lphpkgbw,
@@ -997,7 +1011,7 @@ print(fig.clml.invivo)
 ```
 
 ```{r fig_ratio_ml, eval = TRUE}
-load(paste0(LOC.WD,"CL-Table.RData"))
+load(paste0(LOC.WD,"InVivo-CL-Table.RData"))
 fig.ratio.ml  <- ggplot(data=subset(cl.table, Species!="Human" & Class=="PFAS")) +
   geom_point(aes(
     x=TK.Ratio.ML,
@@ -1024,7 +1038,7 @@ print(fig.ratio.ml)
 
 ## New HTTK Model for PFAS
 ```{r fig_clhttkpfas, eval = TRUE}
-load(paste0(LOC.WD,"CL-Table.RData"))
+load(paste0(LOC.WD,"InVivo-CL-Table.RData"))
 fig.clhttkpfas.invivo  <- ggplot(data=subset(cl.table, Class=="PFAS")) +
   geom_point(aes(
     x=HTTKPFAS.Cltot.Lphpkgbw,
@@ -1074,7 +1088,7 @@ dev.off()
 ```
 
 ```{r fig_ratio_httkpfas, eval = TRUE}
-load(paste0(LOC.WD,"CL-Table.RData"))
+load(paste0(LOC.WD,"InVivo-CL-Table.RData"))
 fig.ratio.httkpfas  <- ggplot(data=subset(cl.table, Species!="Human" & Class=="PFAS")) +
   geom_point(aes(
     x=TK.Ratio.HTTKPFAS,
@@ -1370,21 +1384,21 @@ FigClearanceFrac1<- ggplot(data=pfas.httk.table)+
   ylab(" ")+
   ggtitle("Hepatic Metabolism")+
   scale_x_continuous(limits=c(-.05,1.05))+
-  scale_y_continuous(limits=c(0,100))
+  scale_y_log10(limits=c(0.1,100))
 FigClearanceFrac2<- ggplot(data=pfas.httk.table)+
    geom_histogram(binwidth = 0.1,alpha=1,fill="Blue",aes(Frac.Glomerular))+
   xlab(" ") +
   ylab("Number of chemicals")+
   ggtitle("Glomerular Filtration")+
   scale_x_continuous(limits=c(-.05,1.05))+
-  scale_y_continuous(limits=c(0,100))
+  scale_y_log10(limits=c(0.1,100))
 FigClearanceFrac3<- ggplot(data=pfas.httk.table)+
    geom_histogram(binwidth = 0.1,alpha=1,fill="Green",aes(Frac.Exhalation))+
   xlab("Fraction of Total Clearance") +
   ylab(" ")+
   ggtitle("Exhalation")+
   scale_x_continuous(limits=c(-.05,1.05))+
-  scale_y_continuous(limits=c(0,100))
+  scale_y_log10(limits=c(0.1,100))
 ggarrange(FigClearanceFrac1, FigClearanceFrac2, FigClearanceFrac3,
           ncol = 1, nrow = 3,
           common.legend = TRUE, legend = "right")
