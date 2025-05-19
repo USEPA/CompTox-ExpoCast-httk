@@ -1,6 +1,6 @@
-<img src="httk/man/figures/httk.png" align="right" width="33%"/>
-
 # Git Repository for R Package "httk"
+
+<img src="httk/man/figures/httk.png" align="right" width="33%"/>
 
 <!-- badges: start -->
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/httk)](https://cran.r-project.org/package=httk)
