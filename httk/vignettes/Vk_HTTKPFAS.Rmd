@@ -219,9 +219,25 @@ clint.fup$Human.Funbound.plasma <- sapply(clint.fup$Human.Funbound.plasma,
                                 function(x) as.numeric(strsplit(x,",")[[1]][1]))
 clint.fup[clint.fup$Chemical.Class=="","Chemical.Class"] <- "Non-PFAS"
 clint.fup[clint.fup$Chemical.Class=="PFAS","Chemical.Class"] <- "Newly Measured PFAS"
+clint.fup.pfas <- subset(clint.fup,Chemical.Class!="Non-PFAS")
+clint.fup.pfas <- merge(clint.fup.pfas,subset(httk::dawson2023,Species=="Human" &
+                              Sex=="Female" &
+                              DosingAdj=="Oral")[,c("DTXSID","ClassPredFull")],
+      by="DTXSID",all.x=TRUE)
+colnames(clint.fup.pfas)[colnames(clint.fup.pfas)=="ClassPredFull"] <- "ML.Class"
+save(clint.fup, 
+     clint.fup.pfas,
+     file=paste0(LOC.WD,"Clint-Fup-Values.RData"))
+cat(paste("(fraction unbound in plasma) in",
+          sum(!is.na(clint.fup.pfas$Human.Funbound.plasma)),
+          "PFAS\n"))
+cat(paste("(intrinsic hepatocyte clearance) in",
+          sum(!is.na(clint.fup.pfas$Human.Clint)),
+          "PFAS\n"))
 ```
 
 ```{r clint.fup.figures}
+load(paste0(LOC.WD,"Clint-Fup-Values.RData"))
 fig.clint.fup  <- ggplot(data=clint.fup) +
   geom_point(aes(
     x=Human.Funbound.plasma,
@@ -234,7 +250,7 @@ fig.clint.fup  <- ggplot(data=clint.fup) +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
   theme_bw()  +
-  theme( text  = element_text(size=FONT.SIZE))+
+  theme( text  = element_text(size=FONT.SIZE)) +
         scale_color_viridis(discrete=2)
 
 print(fig.clint.fup)
@@ -341,6 +357,10 @@ load_honda2023()
 ## Compare default httk against in vivo clearance data:
 ```{r invivoeval, eval=TRUE}
 cl.table <- httk::pfas.clearance
+human.ML.table <- subset(httk::dawson2023,
+                         Species=="Human" & 
+                         Sex=="Female" &
+                         DosingAdj=="Oral")
 
 for (this.chem in unique(cl.table$DTXSID))
   if (this.chem %in% get_2023pfasinfo(info="dtxsid",
@@ -351,26 +371,37 @@ for (this.chem in unique(cl.table$DTXSID))
     for (this.species in unique(cl.table$Species))
     {
       # Css in units of mg/L for 1 mg/kg/day
-      out <- calc_total_clearance(dtxsid=this.chem,
+      httk.normal <- calc_total_clearance(dtxsid=this.chem,
                                species=this.species,
                                model=NONPFAS.MODEL.USED,
                                default.to.human=TRUE,
                                class.exclude=FALSE,
                                physchem.exclude=FALSE,
                                suppress.messages=TRUE)
+      httk.pfas <- calc_total_clearance(dtxsid=this.chem,
+                               species=this.species,
+                               model=PFAS.MODEL.USED,
+                               default.to.human=TRUE,
+                               class.exclude=FALSE,
+                               physchem.exclude=FALSE,
+                               suppress.messages=TRUE)
       if (any(cl.table$DTXSID==this.chem &
                cl.table$Species==this.species))
+      {
         cl.table[cl.table$DTXSID==this.chem &
                cl.table$Species==this.species,
-               "HTTK.Cltot.Lphpkgbw"] <- out
-      else {
+               "HTTK.Cltot.Lphpkgbw"] <- httk.normal
+        cl.table[cl.table$DTXSID==this.chem &
+               cl.table$Species==this.species,
+               "HTTKPFAS.Cltot.Lphpkgbw"] <- httk.pfas
+      } else {
         new.row <- cl.table[1,]
         new.row[] <- NA
         new.row[,"DTXSID"] <- this.chem
         new.row[,"Species"] <- this.species
         new.row[,"Sex"] <- "Female"
-        new.row[,"HTTK.Cltot.Lphpkgbw"] <-
-        out
+        new.row[,"HTTK.Cltot.Lphpkgbw"] <- httk.normal
+        new.row[,"HTTKPFAS.Cltot.Lphpkgbw"] <- httk.pfas
         cl.table <- rbind(cl.table,new.row)
         new.row[,"Sex"] <- "Male"
         cl.table <- rbind(cl.table,new.row)
@@ -431,7 +462,11 @@ for (this.sex in c("Female","Male"))
         
         cl.table[cl.table.index, "TK.Ratio.ML"] <- 
         signif(species.data[species.table.index, "MachineLearning.Cltot.Lphpkgbw"] /
-        human.data[human.table.index, "MachineLearning.Cltot.Lphpkgbw"], 4) 
+        human.data[human.table.index, "MachineLearning.Cltot.Lphpkgbw"], 4)
+        
+        cl.table[cl.table.index, "TK.Ratio.HTTKPFAS"] <- 
+        signif(species.data[species.table.index, "HTTKPFAS.Cltot.Lphpkgbw"] /
+        human.data[human.table.index, "HTTKPFAS.Cltot.Lphpkgbw"], 4) 
       }
     }
   }
@@ -502,14 +537,20 @@ cl.table$Class <- factor(cl.table$Class, levels=c("PFAS","Non-PFAS"))
 cat(paste("Also in Figure 2 Panel B are clearances based upon",
   sum(cl.table$Class!="PFAS")/2,
   "non-PFAS chemicals\n"))
+cl.table <- merge(cl.table,subset(httk::dawson2023,DosingAdj=="Oral")[,c("DTXSID","Species","Sex","ClassPredFull")],by=c("DTXSID","Species","Sex"))
+colnames(cl.table)[colnames(cl.table)=="ClassPredFull"] <- "ML.Class"
+save(cl.table, file=paste0(LOC.WD,"CL-Table.RData"))
+write.table(cl.table, file=paste0(LOC.WD,"CL-Table.txt"),sep="\t",row.names=FALSE,quote = FALSE)
 ```
 
 ```{r fit_non_pfas_trend, eval=TRUE}
+load(paste0(LOC.WD,"CL-Table.RData"))
 nonpfasratiotrend <- lm(log10(TK.Ratio.InVivo)~log10(TK.Ratio.HTTK),
                         data=subset(cl.table, Species=="Rat" & Class!="PFAS"))
 summary(nonpfasratiotrend)
 ```
 ```{r fig_clhttk, eval = TRUE}
+load(paste0(LOC.WD,"CL-Table.RData"))
 fig.clhttk.invivo  <- ggplot(data=subset(cl.table, Class=="PFAS")) +
   geom_point(aes(
     x=HTTK.Cltot.Lphpkgbw,
@@ -524,11 +565,13 @@ fig.clhttk.invivo  <- ggplot(data=subset(cl.table, Class=="PFAS")) +
   xlab("HTTK Clearance (L/h/kg bw)") +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
+   scale_color_viridis(discrete=4)+
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE))+
   annotate("text", size=FONT.SIZE/3, x = 10^-4, y = 10^-1, 
            label = paste("RMSLE:",
-                         RMSLE(cl.table,"HTTK.Cltot.Lphpkgbw","ClLphpkgbw")))+
+                         RMSLE(subset(cl.table, Class=="PFAS"),
+                               "HTTK.Cltot.Lphpkgbw","ClLphpkgbw")))+
   theme(legend.title = element_text(size = FONT.SIZE/3), 
                legend.text = element_text(size = FONT.SIZE/2))
 
@@ -537,6 +580,7 @@ print(fig.clhttk.invivo)
 ```
 
 ```{r fig_ratio_httk, eval = TRUE}
+load(paste0(LOC.WD,"CL-Table.RData"))
 fig.ratio.httk  <- ggplot(data=subset(cl.table, Species=="Rat")) +
   geom_point(aes(
     x=TK.Ratio.HTTK,
@@ -556,9 +600,9 @@ fig.ratio.httk  <- ggplot(data=subset(cl.table, Species=="Rat")) +
   scale_color_viridis(discrete=2)
 
 print(fig.ratio.httk)
-  ggsave(paste0(LOC.WD,
-    "Fig_rat_cl_ratio.tiff"),
-         height =11, width =12, dpi = 300)
+#  ggsave(paste0(LOC.WD,
+#    "Fig_rat_cl_ratio.tiff"),
+#         height =11, width =12, dpi = 300)
 ```
 
 
@@ -623,10 +667,61 @@ ratio.table["PFAS Default HTTK Clearance Ratio","Max"] <-
                 Species=="Rat" &
                   Class == "PFAS")$TK.Ratio.HTTK)
 ratio.table <- signif(ratio.table, 2)
+write.table(ratio.table, file=paste0(LOC.WD,"Ratio-Table.txt"),
+            sep="\t")
 kable(ratio.table)
 ```
 
 ## Evaluating Machine Learning Model for PFAS TK
+
+```{r make_ml_clint_table}
+load(paste0(LOC.WD,"Clint-Fup-Values.RData")
+clint.fup.pfas[is.na(clint.fup.pfas$Human.Clint.pValue),"Human.Clint.pValue"] <- 0
+ml.clint.table <- data.frame()
+ml.clint.table["Class 1", "Description"] <- "Rapidly Cleared"
+ml.clint.table["Class 2", "Description"] <- "Moderate"
+ml.clint.table["Class 3", "Description"] <- "Slow"
+ml.clint.table["Class 4", "Description"] <- "Very Slow"
+ml.clint.table["Class 1", "Half-Life"] <- "< 12 h"
+ml.clint.table["Class 2", "Half-Life"] <- "< 1 week"
+ml.clint.table["Class 3", "Half-Life"] <- "< 2 months"
+ml.clint.table["Class 4", "Half-Life"] <- "> 2 months"
+ml.clint.table["Class 1", "Number Crizer (2024) Chemicals"] <- 
+  dim(subset(clint.fup.pfas,
+             ML.Class==1))[1]
+ml.clint.table["Class 2", "Number Crizer (2024) Chemicals"] <- 
+  dim(subset(clint.fup.pfas,
+             ML.Class==2))[1]
+ml.clint.table["Class 3", "Number Crizer (2024) Chemicals"] <- 
+  dim(subset(clint.fup.pfas,
+             ML.Class==3))[1]
+ml.clint.table["Class 4", "Number Crizer (2024) Chemicals"] <- 
+  dim(subset(clint.fup.pfas,
+             ML.Class==4))[1]
+ml.clint.table["Class 1", "Number Non-Zero Clint"] <-
+  dim(subset(clint.fup.pfas,
+             ML.Class==1 &
+             Human.Clint > 0 &
+             Human.Clint.pValue < 0.05))[1]
+ml.clint.table["Class 2", "Number Non-Zero Clint"] <-
+  dim(subset(clint.fup.pfas,
+             ML.Class==2 &
+             Human.Clint > 0 &
+             Human.Clint.pValue < 0.05))[1]
+ml.clint.table["Class 3", "Number Non-Zero Clint"] <-
+  dim(subset(clint.fup.pfas,
+             ML.Class==3 &
+             Human.Clint > 0 &
+             Human.Clint.pValue < 0.05))[1]
+ml.clint.table["Class 4", "Number Non-Zero Clint"] <-
+  dim(subset(clint.fup.pfas,
+             ML.Class==4 &
+             Human.Clint > 0 &
+             Human.Clint.pValue < 0.05))[1]
+write.table(ml.clint.table, file=paste0(LOC.WD,
+                                        "ML-Clint-table.txt"), sep="\t")
+kable(ml.clint.table)
+```
 
 ```{r rat_human_scaling}
 half.lives <- NULL
@@ -665,9 +760,11 @@ for (this.chem in new.pfas)
   half.lives <- rbind(half.lives, new.row)
 }
 half.lives$Ratio <- half.lives$Human.HL / half.lives$Rat.HL
+save(half.lives,file=paste0(LOC.WD,"All-Half-Lives.RData"))
 ```
 
 ```{r half_life_fig}
+load(paste0(LOC.WD,"All-Half-Lives.RData"))
 fig.species.scaling <- ggplot(data=half.lives) +
   geom_histogram(aes(
     x=Ratio,
@@ -680,6 +777,7 @@ fig.species.scaling <- ggplot(data=half.lives) +
   theme( text  = element_text(size=FONT.SIZE))+
         scale_fill_viridis(discrete=2)+
         scale_color_viridis(discrete=2)
+
 
 print(fig.species.scaling)
 ```
@@ -786,9 +884,15 @@ under.novel <- sum(hl.novel$Underestimate)/dim(hl.known)[1]
 under.count.novel <- sum(hl.novel$Underestimate)
 num.novel.pfas.hl <- dim(hl.novel)[1]
 cat(paste(num.novel.pfas.hl,"novel PFAS human half-lives.\n"))
+save(human.invivo.hl,
+     hl.known,
+     hl.novel,
+     file=paste0(LOC.WD,"Human-Invivo-HL.RData"))
 ```
 
 ```{r human_hl_eval_fig}
+load(paste0(LOC.WD,"Human-Invivo-HL.RData"))
+set.seed(1234)
 human.invivo.hl$HL.ML.jitter <- human.invivo.hl$HL.ML*(1.0+runif(dim(human.invivo.hl)[1],-0.5,0.5))
 
 human.invivo.hl.fig <- ggplot(data=human.invivo.hl) +
@@ -821,93 +925,44 @@ human.invivo.hl.fig <- ggplot(data=human.invivo.hl) +
                          #" agree\n",
                          #under.count.novel,
                          #" underestimated",
-                         sep=""))+
+                         ,sep=""))+
   theme( text  = element_text(size=FONT.SIZE))+
-        scale_color_viridis(discrete=2)
+        scale_color_viridis(discrete=2)+
+    theme(legend.title = element_text(size = FONT.SIZE/3), 
+               legend.text = element_text(size = FONT.SIZE/2))
 
 print(human.invivo.hl.fig)
 
-tiff(file = paste0(LOC.WD,"InVivoComparison.tiff"),
-     width=9,
-     height=7,
-     units="in",
-     res=300)
-print(human.invivo.hl.fig)
-dev.off()
+#tiff(file = paste0(LOC.WD,"InVivoComparison.tiff"),
+#     width=9,
+#     height=7,
+#     units="in",
+#     res=300)
+#print(human.invivo.hl.fig)
+#dev.off()
 
 subset(human.invivo.hl, is.na(HL.ML))
 ```
 
-
-
-```{r invivo_interspecies_eval_scaling, eval=TRUE}
-cl.table <- as.data.frame(cl.table)
-for (this.sex in c("Female","Male"))
-{
-  human.data <- subset(cl.table, Species=="Human" &
-                            Sex==this.sex)
-  for (this.species in unique(cl.table$Species))
-  if (this.species != "Human")
-  {
-    species.data <- subset(cl.table, Species==this.species &
-                                     Sex==this.sex)
-    for (this.chem in union(human.data$DTXSID, species.data$DTXSID))
-    {
-      cl.table.index <- cl.table$Sex==this.sex &
-               cl.table$Species==this.species &
-               cl.table$DTXSID==this.chem
-      human.table.index <- human.data$Sex==this.sex &
-               human.data$DTXSID==this.chem
-      species.table.index <- species.data$Sex==this.sex &
-               species.data$DTXSID==this.chem
-      if (any(human.table.index) & any(species.table.index))
-      {
-        cl.table[cl.table.index, "TK.Ratio.InVivo"] <- 
-        signif(species.data[species.table.index, "ClLphpkgbw"] /
-        human.data[human.table.index, "ClLphpkgbw"], 4)
-        
-        cl.table[cl.table.index, "TK.Ratio.HTTK"] <- 
-        signif(species.data[species.table.index, "HTTK.Cltot.Lphpkgbw"] /
-        human.data[human.table.index, "HTTK.Cltot.Lphpkgbw"], 4) 
-        
-        cl.table[cl.table.index, "TK.Ratio.ML"] <- 
-        signif(species.data[species.table.index, "MachineLearning.Cltot.Lphpkgbw"] /
-        human.data[human.table.index, "MachineLearning.Cltot.Lphpkgbw"], 4) 
-      }
-    }
-  }
-}  
+```{r multipanelMLfigureforpaper}
+ggarrange(fig.species.scaling, human.invivo.hl.fig,
+          labels = c("A", "B"),
+          ncol = 2, nrow = 1,
+          common.legend = FALSE, legend = "bottom")
+tiff(file = paste0(LOC.WD,"Fig_MLModelEval.tiff"),
+         height = 2.5*200, width = 5*200, compression = "lzw")
+ggarrange(fig.species.scaling, human.invivo.hl.fig,
+          labels = c("A", "B"),
+          ncol = 2, nrow = 1,
+          hjust=-2.5,
+          common.legend = FALSE, legend = "top",
+          font.label=list(size=20))
+dev.off()
 ```
-
-```{r fig_ratio_ml, eval = TRUE}
-fig.ratio.ml  <- ggplot(data=subset(cl.table, Species!="Human")) +
-  geom_point(aes(
-    x=TK.Ratio.ML,
-    y=TK.Ratio.InVivo,
-    color=Species,
-    shape=Sex),
-    size=POINT.SIZE) +
-  geom_abline(slope=1,intercept=0,linetype="dashed")+
-#  geom_line(aes(x=logP,y=logPfit1),color="black") + 
-#  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
-  ylab("In Vivo Observed Clearance Ratio") + 
-  xlab("Machine Learning Predicted Clearance Ratio") +
-  scale_x_log10(label=scientific_10)+
-  scale_y_log10(label=scientific_10)+
-  theme_bw()  +
-  theme( text  = element_text(size=FONT.SIZE))
-
-print(fig.ratio.ml)
-  ggsave(paste0(LOC.WD,
-    "Fig_ml_cl_ratio.tiff"),
-         height = 11, width = 12, dpi = 300)
-```
-
-## New HTTK Model for PFAS
-
 
 ```{r fig_clml, eval = TRUE}
-fig.clml.invivo  <- ggplot(data=cl.table) +
+load(paste0(LOC.WD,"CL-Table.RData"))
+fig.clml.invivo  <- ggplot(data=subset(cl.table, Class=="PFAS")) +
   geom_jitter(aes(
     x=MachineLearning.Cltot.Lphpkgbw,
     y=ClLphpkgbw,
@@ -922,9 +977,10 @@ fig.clml.invivo  <- ggplot(data=cl.table) +
   xlab("Machine Learning Clearance (L/h/kg bw)") +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
+   scale_color_viridis(discrete=4)+
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE))+
-  annotate("text", x = 10^-5, y = 10^-1, 
+  annotate("text", x = 3*10^-5, y = 10^-1,size=FONT.SIZE/3, 
            label = paste("RMSLE:",
                          RMSLE(cl.table,
                                "MachineLearning.Cltot.Lphpkgbw",
@@ -933,42 +989,138 @@ fig.clml.invivo  <- ggplot(data=cl.table) +
 print(fig.clml.invivo)
 ```
 
-```{r multipanelrefchemdatafigureforpaper}
-ggarrange(fig.clhttk.invivo, fig.clml.invivo, 
-          labels = c("A", "B"),
-          ncol = 1, nrow = 2,
-          common.legend = TRUE, legend = "bottom")
-tiff(file = paste0(LOC.WD,"Fig_PFASClearanceEval.tiff"),
-         height = 5*200, width = 3*200, compression = "lzw")
-ggarrange(fig.clhttk.invivo, fig.clml.invivo, 
-          labels = c("A", "B"),
-          ncol = 1, nrow = 2,
-          common.legend = TRUE, legend = "top")
-dev.off()
+```{r fig_ratio_ml, eval = TRUE}
+load(paste0(LOC.WD,"CL-Table.RData"))
+fig.ratio.ml  <- ggplot(data=subset(cl.table, Species!="Human" & Class=="PFAS")) +
+  geom_point(aes(
+    x=TK.Ratio.ML,
+    y=TK.Ratio.InVivo,
+    color=Species,
+    shape=Sex),
+    size=POINT.SIZE) +
+  geom_abline(slope=1,intercept=0,linetype="dashed")+
+#  geom_line(aes(x=logP,y=logPfit1),color="black") + 
+#  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
+  ylab("In Vivo Observed Clearance Ratio") + 
+  xlab("Machine Learning Predicted Clearance Ratio") +
+  scale_x_log10(label=scientific_10)+
+  scale_y_log10(label=scientific_10)+
+   scale_color_viridis(discrete=3)+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))
+
+print(fig.ratio.ml)
+  ggsave(paste0(LOC.WD,
+    "Fig_ml_cl_ratio.tiff"),
+         height = 11, width = 12, dpi = 300)
+```
+
+## New HTTK Model for PFAS
+```{r fig_clhttkpfas, eval = TRUE}
+load(paste0(LOC.WD,"CL-Table.RData"))
+fig.clhttkpfas.invivo  <- ggplot(data=subset(cl.table, Class=="PFAS")) +
+  geom_point(aes(
+    x=HTTKPFAS.Cltot.Lphpkgbw,
+    y=ClLphpkgbw,
+    color=Species,
+    shape=Sex),
+    size=POINT.SIZE) +
+  geom_abline(slope=1,intercept=0,linetype="dashed")+
+#  geom_line(aes(x=logP,y=logPfit1),color="black") + 
+#  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
+  ylab("PFAS In Vivo Clearance (L/h/kg bw)") + 
+  xlab("HTTK-PFAS Clearance (L/h/kg bw)") +
+  scale_x_log10(label=scientific_10)+
+  scale_y_log10(label=scientific_10)+
+   scale_color_viridis(discrete=4)+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))+
+  annotate("text", size=FONT.SIZE/3, x = 10^-6, y = 10^-1, 
+           label = paste("RMSLE:",
+                         RMSLE(subset(cl.table, Class=="PFAS"),
+                               "HTTKPFAS.Cltot.Lphpkgbw","ClLphpkgbw")))+
+  theme(legend.title = element_text(size = FONT.SIZE/3), 
+               legend.text = element_text(size = FONT.SIZE/2))
+
+print(fig.clhttkpfas.invivo)
+
 ```
 
 
+
+```{r multipanelclearancenewmodelfigureforpaper}
+multiclerancenewmodel <- ggarrange(fig.clml.invivo+ rremove("ylab") , fig.clhttkpfas.invivo+ rremove("ylab") ,
+          labels = c("A", "B"),
+          ncol = 2, nrow = 1,
+          common.legend = TRUE, legend = "bottom")
+multiclerancenewmodel <- annotate_figure(multiclerancenewmodel , 
+                left = textGrob(expression(paste("PFAS ",
+                  italic("In Vivo"),
+                  "Clearance (L/h/kg bw)")), 
+                                rot = 90, vjust = 1, gp = gpar(cex = 1.75)),
+                )
+print(multiclerancenewmodel)
+tiff(file = paste0(LOC.WD,"Fig_PFASClearanceEval.tiff"),
+         height = 2.5*200, width = 5*200, compression = "lzw")
+print(multiclerancenewmodel)
+dev.off()
+```
+
+```{r fig_ratio_httkpfas, eval = TRUE}
+load(paste0(LOC.WD,"CL-Table.RData"))
+fig.ratio.httkpfas  <- ggplot(data=subset(cl.table, Species!="Human" & Class=="PFAS")) +
+  geom_point(aes(
+    x=TK.Ratio.HTTKPFAS,
+    y=TK.Ratio.InVivo,
+    color=Species,
+    shape=Sex),
+    size=POINT.SIZE) +
+  geom_abline(slope=1,intercept=0,linetype="dashed")+
+#  geom_line(aes(x=logP,y=logPfit1),color="black") + 
+#  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
+  ylab(expression(paste(italic("In Vivo"),
+    "Observed Clearance Ratio"))) + 
+  xlab("HTTK-PFAS Predicted Clearance Ratio") +
+  scale_x_log10(label=scientific_10)+
+  scale_y_log10(label=scientific_10)+
+  scale_color_viridis(discrete=3)+
+  annotate("text", size=FONT.SIZE/3, x = 5*10^2, y = 3, 
+           label = paste("RMSLE:",
+                         RMSLE(subset(cl.table, Species!="Human" & Class=="PFAS"),
+                               "TK.Ratio.HTTKPFAS","TK.Ratio.InVivo")))+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE))
+
+print(fig.ratio.httkpfas)
+  ggsave(paste0(LOC.WD,
+    "Fig_httkpfas_cl_ratio.tiff"),
+         height = 5*1.5, width = 6*1.5, dpi = 300)
+```
 
 ```{r MakeSupTableChange}
 pfas.httk.table <- get_2023pfasinfo(info="all")
 for (this.chem in pfas.httk.table$DTXSID)
 {
   this.row <- pfas.httk.table$DTXSID==this.chem
-  pfas.httk.table[this.row, "Css.Classic"] <- try(calc_analytic_css(
+  pfas.httk.table[this.row, "Css.HTTK.Classic"] <- try(calc_analytic_css(
                                                 dtxsid=this.chem,
                                                 class.exclude=FALSE,
                                                 physchem.exclude=FALSE,
                                                 suppress.messages=TRUE,
                                                 model="3compartmentss"))
-  pfas.httk.table[this.row, "Css.Exhale"] <- try(calc_analytic_css(
+  pfas.httk.table[this.row, "Css.HTTK.Exhale"] <- try(calc_analytic_css(
                                                 dtxsid=this.chem,
                                                 class.exclude=FALSE,
                                                 suppress.messages=TRUE,
                                                 model="sumclearances"))
-  pfas.httk.table[this.row, "Css.PFAS"] <- try(calc_analytic_css(
+  pfas.httk.table[this.row, "Css.HTTK.PFAS"] <- try(calc_analytic_css(
                                                 dtxsid=this.chem,
                                                 suppress.messages=TRUE,
                                                 model="sumclearancespfas"))
+  pfas.httk.table[this.row, "Css.ML"] <- try(calc_analytic_css(
+                                                dtxsid=this.chem,
+                                                suppress.messages=TRUE,
+                                                model="pfas1compartment"))
   fractions <- try(calc_clearance_frac(dtxsid=this.chem, 
                                        model="sumclearancespfas",
                                        suppress.messages=TRUE,
@@ -982,36 +1134,133 @@ for (this.chem in pfas.httk.table$DTXSID)
     pfas.httk.table[this.row, "Frac.Exhalation"] <- fractions[["Qalvc"]]
   }
 }
-pfas.httk.table$Css.Classic <- as.numeric(pfas.httk.table$Css.Classic)
-pfas.httk.table$Css.Exhale <- as.numeric(pfas.httk.table$Css.Exhale)
-pfas.httk.table$Css.PFAS <- as.numeric(pfas.httk.table$Css.PFAS)
+pfas.httk.table$Css.HTTK.Classic <- as.numeric(pfas.httk.table$Css.HTTK.Classic)
+pfas.httk.table$Css.HTTK.Exhale <- as.numeric(pfas.httk.table$Css.HTTK.Exhale)
+pfas.httk.table$Css.HTTK.PFAS <- as.numeric(pfas.httk.table$Css.HTTK.PFAS)
+pfas.httk.table$Css.ML <- as.numeric(pfas.httk.table$Css.ML)
 pfas.httk.table$Css.Exhale.FoldChange <- 
-  signif(pfas.httk.table$Css.Exhale/pfas.httk.table$Css.Classic, 3)
+  signif(pfas.httk.table$Css.HTTK.Exhale/pfas.httk.table$Css.HTTK.Classic, 3)
 pfas.httk.table$Css.PFAS.FoldChange <- 
-  signif(pfas.httk.table$Css.PFAS/pfas.httk.table$Css.Classic, 3)
+  signif(pfas.httk.table$Css.HTTK.PFAS/pfas.httk.table$Css.HTTK.Classic, 3)
+pfas.httk.table <- 
+  merge(pfas.httk.table,subset(httk::dawson2023,
+                               Species=="Human" &
+                               Sex=="Female" &
+                               DosingAdj=="Oral")[
+  ,c("DTXSID","ClassPredFull")],by="DTXSID",all.x=TRUE)
+colnames(pfas.httk.table)[colnames(pfas.httk.table)=="ClassPredFull"] <- "ML.Class"
+pfas.httk.table$InVitroMetabolism <- "No"
+clint.pvalue <- pfas.httk.table$Human.Clint.pValue
+clint.pvalue[is.na(clint.pvalue)] <- 0
+pfas.httk.table[pfas.httk.table$Human.Clint > 0 &
+                clint.pvalue < 0.05, 
+                "InVitroMetabolism"] <- "Yes"
 
-write.csv(pfas.httk.table, 
+
+write.table(pfas.httk.table, 
           row.names=FALSE, 
+          quote=FALSE,
+          sep="\t",
           file=paste(LOC.WD,"new-pfas-css-uM.txt",sep=""))
+save(pfas.httk.table,file=paste0(LOC.WD,"PFAS-Css-Table.RData"))
 ```
 
-```{r two_panel_Css_histogram}
-Fig.Cssa <- ggplot(data=pfas.httk.table)+
-  geom_histogram(binwidth = 0.01,aes(Css.Exhale.FoldChange))+
-  xlab("Css Fold Change Due to Exhalation")
-Fig.Cssb <- ggplot(data=pfas.httk.table)+
-  geom_histogram(binwidth = 10,aes(Css.PFAS.FoldChange))+
-  xlab("Css Fold Change Due to PFAS Resorption")
-ggarrange(Fig.Cssa, Fig.Cssb, 
+```{r cssfigpanela, eval=TRUE}
+load(paste0(LOC.WD,"PFAS-Css-Table.RData"))
+pfas.httk.table$ML.Class <- as.factor(pfas.httk.table$ML.Class)
+fig.css.httk  <- ggplot(data=subset(pfas.httk.table,!is.na(ML.Class))) +
+  geom_point(aes(
+    x=Css.HTTK.Classic,
+    y=Css.HTTK.PFAS,
+    shape=InVitroMetabolism,
+    color=ML.Class
+    ),
+    size=POINT.SIZE) +
+  geom_abline(slope=1,intercept=0,linetype="dashed")+
+  geom_abline(slope=1,intercept=1,linetype="dotted", color="blue")+
+  geom_abline(slope=1,intercept=-1,linetype="dotted", color="blue") +
+  ylab(expression(paste("HTTK-PFAS",
+                         ~C[ss],
+                         " (",
+                         mu,
+                         "M)"))) + 
+  xlab(expression(paste("Default HTTK",
+                         ~C[ss],
+                         " (",
+                         mu,
+                         "M)"))) + 
+  scale_x_log10(limits=c(10^-2,10^6),label=scientific_10)+
+  scale_y_log10(limits=c(10^-2,10^6),label=scientific_10)+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE)) +
+  scale_color_viridis(discrete=3)+ 
+  guides(color=guide_legend(title="ML Halflife Class"),
+         shape=guide_legend(title="In Vitro Metabolism"))
+
+print(fig.css.httk)
+#  ggsave(paste0(LOC.WD,
+#    "Fig_httkpfas_cl_ratio.tiff"),
+#         height = 11, width = 12, dpi = 300)
+```
+
+```{r cssfigpanelb, eval=TRUE}
+load(paste0(LOC.WD,"PFAS-Css-Table.RData"))
+pfas.httk.table$ML.Class <- as.factor(pfas.httk.table$ML.Class)
+fig.css.ml  <- ggplot(data=subset(pfas.httk.table,!is.na(ML.Class))) +
+  geom_point(aes(
+    x=Css.ML,
+    y=Css.HTTK.PFAS,
+    shape=InVitroMetabolism,
+    color=ML.Class
+    ),
+    size=POINT.SIZE) +
+  geom_abline(slope=1,intercept=0,linetype="dashed")+
+  geom_abline(slope=1,intercept=1,linetype="dotted", color="blue")+
+  geom_abline(slope=1,intercept=-1,linetype="dotted", color="blue") +
+  ylab(expression(paste("HTTK-PFAS",
+                         ~C[ss],
+                         " (",
+                         mu,
+                         "M)"))) + 
+  xlab(expression(paste("Machine Learning",
+                         ~C[ss],
+                         " (",
+                         mu,
+                         "M)"))) + 
+  scale_x_log10(limits=c(10^-2,10^6),label=scientific_10)+
+  scale_y_log10(limits=c(10^-2,10^6),label=scientific_10)+
+  theme_bw()  +
+  theme( text  = element_text(size=FONT.SIZE)) +
+  scale_color_viridis(discrete=3)+ 
+  guides(color=guide_legend(title="ML Halflife Class"),
+         shape=guide_legend(title="In Vitro Metabolism"))
+
+print(fig.css.ml)
+#  ggsave(paste0(LOC.WD,
+#    "Fig_httkpfas_cl_ratio.tiff"),
+#         height = 11, width = 12, dpi = 300)
+```
+
+```{r multipanelcssfigureforpaper}
+multipanelcss <- ggarrange(fig.css.httk + rremove("ylab") , 
+                                   fig.css.ml + rremove("ylab") ,
           labels = c("A", "B"),
           ncol = 2, nrow = 1,
           common.legend = TRUE, legend = "bottom")
-tiff(file = paste0(LOC.WD,"Fig_CssFoldChange.tiff"),
-         height = 3*100, width = 5*100, compression = "lzw")
-ggarrange(Fig.Cssa, Fig.Cssb, 
-          labels = c("A", "B"),
-          ncol = 2, nrow = 1,
-          common.legend = TRUE, legend = "top")
+multipanelcss <- annotate_figure(multipanelcss, 
+                left = textGrob(expression(paste("HTTK-PFAS",
+                         ~C[ss],
+                         " (",
+                         mu,
+                         "M)")), 
+                rot = 90, 
+                vjust = 1, 
+                gp = gpar(cex = 1.75)),
+                )
+print(multipanelcss)
+tiff(file = paste0(LOC.WD,"Fig_Css.tiff"),
+         height = 2.5*200, width = 5*200, compression = "lzw")
+print(multipanelcss)
 dev.off()
 ```
 
@@ -1137,6 +1386,26 @@ tiff(file = paste0(LOC.WD,"Fig_FracClearance.tiff"),
 ggarrange(FigClearanceFrac1, FigClearanceFrac2, FigClearanceFrac3,
           ncol = 1, nrow = 3,
           common.legend = TRUE, legend = "right")
+dev.off()
+```
+
+```{r two_panel_Css_histogram}
+Fig.Cssa <- ggplot(data=pfas.httk.table)+
+  geom_histogram(binwidth = 0.01,aes(Css.Exhale.FoldChange))+
+  xlab("Css Fold Change Due to Exhalation")
+Fig.Cssb <- ggplot(data=pfas.httk.table)+
+  geom_histogram(binwidth = 10,aes(Css.PFAS.FoldChange))+
+  xlab("Css Fold Change Due to PFAS Resorption")
+ggarrange(Fig.Cssa, Fig.Cssb, 
+          labels = c("A", "B"),
+          ncol = 2, nrow = 1,
+          common.legend = TRUE, legend = "bottom")
+tiff(file = paste0(LOC.WD,"Fig_CssFoldChange.tiff"),
+         height = 3*100, width = 5*100, compression = "lzw")
+ggarrange(Fig.Cssa, Fig.Cssb, 
+          labels = c("A", "B"),
+          ncol = 2, nrow = 1,
+          common.legend = TRUE, legend = "top")
 dev.off()
 ```
 

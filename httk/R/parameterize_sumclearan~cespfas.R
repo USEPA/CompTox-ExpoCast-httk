@@ -364,8 +364,8 @@ parameterize_sumclearancespfas <- function(
         stop("Chemical outside domain of applicability of one of the models used to estimate half-life.")
  
   # Median of the Dawson et al. training set bins in h:             
-    if (this.subset$ClassPredFull==1) resorption.factor <- -1 # No resorption
-    else if (this.subset$ClassPredFull==2) resorption.factor <- 0
+    if (this.subset$ClassPredFull==1) resorption.factor <- -9 # secretion
+    else if (this.subset$ClassPredFull==2) resorption.factor <- 0 # No resorption
     else if (this.subset$ClassPredFull==3) resorption.factor <- 0.9
     else resorption.factor <- 0.99
   } else {

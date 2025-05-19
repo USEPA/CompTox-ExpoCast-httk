@@ -113,11 +113,16 @@ get_2023pfasinfo <- function(info="CAS",
 # Reduce to just the new PFAS data:
   assign("chem.physical_and_invitro.data",
     subset(chem.physical_and_invitro.data,
-    regexpr("Smeltz",Human.Clint.Reference)!=-1 |
+    (regexpr("Smeltz",Human.Clint.Reference)!=-1 |
     regexpr("Smeltz",Human.Funbound.plasma.Reference)!=-1 |
     regexpr("Kreutz",Human.Clint.Reference)!=-1 |
     regexpr("Kreutz",Human.Funbound.plasma.Reference)!=-1 |
-    regexpr("Crizer",Human.Clint.Reference)!=-1),
+    regexpr("Crizer",Human.Clint.Reference)!=-1) &
+    # Remove non-pfas controls:
+    !(Compound %in% c("Ametryn", "Butylparaben",
+                      "4-nitrotoluene", "Propranolol"))
+
+    ),
     envir=target.env)
 
 # Run get_cheminfo on just the PFAS data:
@@ -131,6 +136,7 @@ get_2023pfasinfo <- function(info="CAS",
                          clint.pvalue.threshold=clint.pvalue.threshold,
                          class.exclude=FALSE,
                          suppress.messages=suppress.messages)
+
 
 # Return the full data before exiting the function
   assign("chem.physical_and_invitro.data",

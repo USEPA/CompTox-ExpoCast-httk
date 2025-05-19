@@ -25,6 +25,7 @@
 #' \href{https://doi.org/10.1021/acs.est.7b03299}{Poothong et al. (2017)}
 #' where compounds that are ionized at pH 7.4 (plasma) get a value of 0.5, while
 #' chemicals that are neutral get a value of 20. 
+
 #'
 #' @param chem.cas Chemical Abstract Services Registry Number (CAS-RN) -- the 
 #' chemical must be identified by either CAS, name, or DTXISD
@@ -44,19 +45,60 @@
 #' domain of applicability based on the properties of the training set
 #' ("ClassModDomain"), the domain of all models ("AMAD"), or none ("none")
 #' (Defaults to "ClassModDomain").
+#' @param physchem.exclude Exclude chemicals on the basis of physico-chemical
+#' properties (currently only Henry's law constant) as specified by 
+#' the relevant modelinfo_[MODEL] file (default TRUE).
 #'
 #' @param estimate.firstpass Whether to estimate first-pass hepatic metabolism,
 #' which can only be done for a subset of PFAS with in vitro HTTK parameters
 #' (Defaults to TRUE).
 #' 
+#' @param Caco2.options A list of options to use when working with Caco2 apical 
+#' to basolateral data \code{Caco2.Pab}, default is Caco2.options = 
+#' list(Caco2.Pab.default = 1.6, Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, 
+#' overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the 
+#' default value for Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE 
+#' uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+#' Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE 
+#' overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
+#' with 1 (i.e. 100 percent) regardless of other settings.
+#' See \code{\link{get_fbio}} for further details.
+#' 
+#' @param ... Additional arguments, not currently used.
+
+
+
+
+
+#' 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #' @return 
 #' \item{Vdist}{Volume of distribution, units of L/kg BW.}
 #' \item{plasma.vol}{Volume of the plasma, L/kg BW.}
 #' \item{Fabsgut}{Fraction of the oral dose absorbed, that is, the fraction of the
 #' dose that enters the gutlumen.} 
+#' \item{Fhep.assay.correction}{Not used for this model} 
+
 #' \item{kelim}{Elimination rate, units of 1/h.} 
 #' \item{hematocrit}{Percent volume of red blood cells in the blood.}
 #' \item{kgutabs}{Rate chemical is absorbed, 1/h.}
+#' \item{million.cells.per.gliver}{Not used for this model}
 #' \item{MW}{Molecular Weight, g/mol.} 
 #' \item{Rblood2plasma}{The ratio of the concentration of the chemical in the 
 #' blood to the concentration in the plasma. Not used in calculations but 
@@ -74,20 +116,11 @@
 #' Toxicokinetic Half-Lives of Per-and Polyfluoro-Alkyl Substances (PFAS) in 
 #' Multiple Species." Toxics 11.2 (2023): 98.
 #' 
-#' Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
-#' (2008). Hepatocellular binding of drugs: correction for unbound fraction in
-#' hepatocyte incubations using microsomal binding or drug lipophilicity data.
-#' Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
-#' 
-#' Pearce, Robert G., et al. "Httk: R package for high-throughput 
-#' toxicokinetics." Journal of Statistical Software 79.4 (2017): 1.
+#' \insertRef{pearce2017httk}{httk}
 #'
-#' Schmitt, Walter. "General approach for the calculation of tissue 
-#' to plasma partition coefficients." Toxicology In Vitro 22.2 (2008): 457-467.
+#' \insertRef{schmitt2008general}{httk}
 #'
-#' Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-#' predictions of chemical distribution to tissues." Journal of Pharmacokinetics 
-#' and Pharmacodynamics 44.6 (2017): 549-565.
+#' \insertRef{pearce2017evaluation}{httk}
 #'
 #' Wambaugh, John F., et al. "Evaluating in vitro-in vivo extrapolation of 
 #' toxicokinetics." Toxicological Sciences 163.1 (2018): 152-169.
@@ -99,6 +132,18 @@
 #' @keywords Parameter 1compartment PFAS
 #'
 #' @seealso \code{\link{solve_1comp}}
+#'
+#' @seealso \code{\link{calc_analytic_css_1comp}}
+#'
+#' @seealso \code{\link{calc_vdist}}
+#'
+#' @seealso \code{\link{parameterize_steadystate}}
+#'
+#' @seealso \code{\link{apply_clint_adjustment}}
+#'
+#' @seealso \code{\link{tissue.data}}
+#'
+#' @seealso \code{\link{physiology.data}}
 #'
 #' @examples
 #' # Human elimination rate for PFOA:
@@ -118,7 +163,10 @@ parameterize_pfas1comp <- function(
                         dosingadj="Oral",
                         restrict.doa = "ClassModDomain",
                         estimate.firstpass = TRUE,
-                        suppress.messages=FALSE)
+                        suppress.messages=FALSE,
+                        Caco2.options = list(),
+                        ...
+                        )
 {
 # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
@@ -134,9 +182,19 @@ parameterize_pfas1comp <- function(
     chem.cas <- out$chem.cas
     chem.name <- out$chem.name                                
     dtxsid <- out$dtxsid
-     
+    
   params <- list()
   params[['Vdist']] <- 0.205 # Dawson et al. (2023)
+
+  ss.params <- suppressWarnings(parameterize_steadystate(
+                                  chem.name=chem.name,
+                                  chem.cas=chem.cas,
+                                  dtxsid=dtxsid,
+                                  species=species,
+                                  default.to.human=TRUE,
+                                  class.exclude = FALSE,
+                                  physchem.exclude = FALSE,
+                                  Caco2.options = Caco2.options))
 
 # Check for valid argument values:
   if (!(tolower(dosingadj) %in% c("iv","oral","other")))
@@ -196,17 +254,28 @@ parameterize_pfas1comp <- function(
     
   params[['kelim']] <- log(2)/thalf
   
+# We need params with these names to use the 1comp functions, but we don't use them
+  params[["Clint"]] <- NA
+  params[["Clint.dist"]] <- NA
+  params[["Funbound.plasma"]] <- NA
+  params[["Funbound.plasma.dist"]] <- NA
+  params[["Funbound.plasma.adjustment"]] <- NA
+  params[["Fhep.assay.correction"]] <- NA
+  params[["Funbound.plasma.dist"]] <- NA
+# Phys-chem properties:
+  phys.params <-  suppressWarnings(parameterize_schmitt(chem.name=chem.name,
+                    chem.cas=chem.cas,
+                    species=species,
+                    default.to.human=TRUE,
+                    class.exclude=FALSE,
+                    minimum.Funbound.plasma=1e-4)) 
+  params[["Pow"]] <- phys.params[["Pow"]]
+  params[["pKa_Donor"]] <- phys.params[["pKa_Donor"]] 
+  params[["pKa_Accept"]] <- phys.params[["pKa_Accept"]]
+  params[["MA"]] <- phys.params[["MA"]]
+
 # Average kgutabs value across 44 chemicals in Wambaugh et al. (2018):
   params[['kgutabs']] <- 2.18
-  
-# Phys-chem properties:
-  params[['MW']] <- get_physchem_param("MW", dtxsid=dtxsid)
-  params[["pKa_Donor"]] <- suppressWarnings(get_physchem_param(
-                                    "pKa_Donor",
-                                    dtxsid=dtxsid))
-  params[["pKa_Accept"]] <- suppressWarnings(get_physchem_param(
-                                     "pKa_Accept",
-                                     dtxsid=dtxsid))
 
   # Now let's use calc_ionization to estimate the chemical's charge profile:
   ion <- calc_ionization(
@@ -217,47 +286,42 @@ parameterize_pfas1comp <- function(
   # Poothong (2017)
   if (ion$fraction_negative > 0.9) params[['Rblood2plasma']] <- 0.5
   else params[['Rblood2plasma']] <- 10
+
+  params[['million.cells.per.gliver']] <- NA
+  params[["liver.density"]] <- NA # g/mL
    
 # Check the species argument for capitalization problems and whether or not 
 # it is in the table:  
-    if (!(species %in% colnames(physiology.data)))
+  if (!(species %in% colnames(physiology.data)))
+  {
+    if (toupper(species) %in% toupper(colnames(physiology.data)))
     {
-      if (toupper(species) %in% toupper(colnames(physiology.data)))
-      {
-        phys.species <- colnames(physiology.data)[
-                          toupper(colnames(physiology.data))==toupper(species)]
-      } else stop(paste("Physiological PK data for",species,"not found."))
-    } else phys.species <- species
-  
-  # Load the physiological parameters for this species
-    this.phys.data <- physiology.data[,phys.species]
-    names(this.phys.data) <- physiology.data[,1]
+      phys.species <- colnames(physiology.data)[
+                        toupper(colnames(physiology.data))==toupper(species)]
+    } else stop(paste("Physiological PK data for",species,"not found."))
+  } else phys.species <- species
+
+# Load the physiological parameters for this species
+  this.phys.data <- physiology.data[,phys.species]
+  names(this.phys.data) <- physiology.data[,1]
     
-    params[['hematocrit']] <- this.phys.data[["Hematocrit"]]
-    params[['plasma.vol']] <- this.phys.data[["Plasma Volume"]]/1000 # L/kg BW
-    params[['BW']] <- this.phys.data[["Average BW"]] 
-   
-# Fraction absorbed in the gut either has been measured somewhere or defaults to 1:
-    Fabsgut <- try(
-                 get_invitroPK_param(
-                   "Fabsgut",
-                   species,
-                   chem.cas=chem.cas),
-                 silent=TRUE)
-    if (is(Fabsgut,"try-error")) Fabsgut <- 1
-    params[['Fabsgut']] <- Fabsgut
-    
-# First pass hepatic metabolism can only be estimated if we have fup and clint:
-  if (estimate.firstpass &
-      dtxsid %in% get_cheminfo(info="dtxsid", suppress.messages=TRUE))
-  {    
-    ss.params <- suppressWarnings(parameterize_sumclearances(dtxsid=dtxsid,
-                                                           species=species,
-                                                           suppress.messages=suppress.messages,
-                                                           class.exclude=FALSE))
-    params[['hepatic.bioavailability']] <- 
-      ss.params[['hepatic.bioavailability']]  
-  } else params[['hepatic.bioavailability']] <- 1
+  params[['hematocrit']] <- this.phys.data[["Hematocrit"]]
+  params[['plasma.vol']] <- this.phys.data[["Plasma Volume"]]/1000 # L/kg BW
+
+  params[['MW']] <- get_physchem_param("MW",chem.cas=chem.cas)
+
+  params[['Fabsgut']] <- ss.params[['Fabsgut']]
+  params[['Fabs']] <- ss.params[['Fabs']]
+  params[['Fgut']] <- ss.params[['Fgut']]
+  params[['kgutabs']] <- ss.params[['kgutabs']]
+  params[["Caco2.Pab"]] <- ss.params[['Caco2.Pab']]
+  params[["Caco2.Pab.dist"]] <- ss.params[['Caco2.Pab.dist']]
+
   
-  return(lapply(params[order(tolower(names(params)))],set_httk_precision))
+  params[['hepatic.bioavailability']] <- 
+    ss.params[['hepatic.bioavailability']]  
+  params[['BW']] <- this.phys.data[["Average BW"]]  
+
+  return(lapply(params[model.list[["pfas1compartment"]]$param.names],
+                set_httk_precision))
 }

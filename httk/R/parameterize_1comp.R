@@ -51,6 +51,7 @@
 #'
 #' @param adjusted.Funbound.plasma Uses Pearce et al. (2017) lipid binding adjustment
 #' for Funbound.plasma (which impacts volume of distribution) when set to TRUE (Default).
+
 #' 
 #' @param adjusted.Clint Uses Kilford et al. (2008) hepatocyte incubation
 #' binding adjustment for Clint when set to TRUE (Default).
@@ -77,26 +78,10 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' 
-#' @param Caco2.options A list of options to use when working with Caco2 apical 
-#' to basolateral data \code{Caco2.Pab}, default is Caco2.options = 
-#' list(Caco2.Pab.default = 1.6, Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, 
-#' overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the 
-#' default value for Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE 
-#' uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}. 
-#' Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE 
-#' overwrites Fabs and Fgut in vivo values from literature with 
-#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
-#' with 1 (i.e. 100 percent) regardless of other settings.
-#' See \code{\link{get_fbio}} for further details.
-#' 
-#' @param ... Additional arguments, not currently used.
-#' 
-#' @return \item{Vdist}{Volume of distribution, units of L/kg BW.}
+#' @return 
+#' \item{Vdist}{Volume of distribution, units of L/kg BW.}
 #' \item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, i.e. the 
-#' fraction of the dose that enters the gutlumen.} \item{kelim}{Elimination rate, units of
-#' 1/h.} \item{hematocrit}{Percent volume of red blood cells in the blood.}
-#' \item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of the
+#' fraction of the dose that enters the gutlumen.} 
 #' dose that enters the gutlumen.} 
 #' \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte 
 #' assay using the method of Kilford et al. (2008)} 
@@ -236,6 +221,7 @@ parameterize_1comp <- function(
                          regression=regression,
                          suppress.messages=suppress.messages,
                          minimum.Funbound.plasma = minimum.Funbound.plasma)
+
   
   ss.params <- suppressWarnings(parameterize_steadystate(
                                   chem.name=chem.name,
@@ -287,9 +273,6 @@ parameterize_1comp <- function(
   params[["pKa_Donor"]] <- phys.params[["pKa_Donor"]] 
   params[["pKa_Accept"]] <- phys.params[["pKa_Accept"]]
   params[["MA"]] <- phys.params[["MA"]]
-
-  params[['kgutabs']] <- 2.18
-  
   params[['Rblood2plasma']] <- 
     available_rblood2plasma(chem.cas=chem.cas,chem.name=chem.name,
         species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma)
@@ -311,7 +294,6 @@ parameterize_1comp <- function(
 # Load the physiological parameters for this species
   this.phys.data <- physiology.data[,phys.species]
   names(this.phys.data) <- physiology.data[,1]
-  
     
   params[['hematocrit']] <- this.phys.data[["Hematocrit"]]
   params[['plasma.vol']] <- this.phys.data[["Plasma Volume"]]/1000 # L/kg BW
@@ -321,8 +303,10 @@ parameterize_1comp <- function(
   params[['Fabsgut']] <- ss.params[['Fabsgut']]
   params[['Fabs']] <- ss.params[['Fabs']]
   params[['Fgut']] <- ss.params[['Fgut']]
+  params[['kgutabs']] <- ss.params[['kgutabs']]
   params[["Caco2.Pab"]] <- ss.params[['Caco2.Pab']]
   params[["Caco2.Pab.dist"]] <- ss.params[['Caco2.Pab.dist']]
+
   
   params[['hepatic.bioavailability']] <- 
     ss.params[['hepatic.bioavailability']]  
