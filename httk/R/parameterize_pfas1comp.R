@@ -186,16 +186,6 @@ parameterize_pfas1comp <- function(
   params <- list()
   params[['Vdist']] <- 0.205 # Dawson et al. (2023)
 
-  ss.params <- suppressWarnings(parameterize_steadystate(
-                                  chem.name=chem.name,
-                                  chem.cas=chem.cas,
-                                  dtxsid=dtxsid,
-                                  species=species,
-                                  default.to.human=TRUE,
-                                  class.exclude = FALSE,
-                                  physchem.exclude = FALSE,
-                                  Caco2.options = Caco2.options))
-
 # Check for valid argument values:
   if (!(tolower(dosingadj) %in% c("iv","oral","other")))
     stop("Argument dosingadj values are limited to \"IV\", \"Oral\", and \"Other\".")
@@ -262,6 +252,9 @@ parameterize_pfas1comp <- function(
   params[["Funbound.plasma.adjustment"]] <- NA
   params[["Fhep.assay.correction"]] <- NA
   params[["Funbound.plasma.dist"]] <- NA
+  params[["Caco2.Pab"]] <- NA
+  params[["Caco2.Pab.dist"]] <- NA
+  
 # Phys-chem properties:
   phys.params <-  suppressWarnings(parameterize_schmitt(chem.name=chem.name,
                     chem.cas=chem.cas,
@@ -304,23 +297,21 @@ parameterize_pfas1comp <- function(
 # Load the physiological parameters for this species
   this.phys.data <- physiology.data[,phys.species]
   names(this.phys.data) <- physiology.data[,1]
-    
+  params[['BW']] <- this.phys.data[["Average BW"]]
+                                
   params[['hematocrit']] <- this.phys.data[["Hematocrit"]]
   params[['plasma.vol']] <- this.phys.data[["Plasma Volume"]]/1000 # L/kg BW
 
   params[['MW']] <- get_physchem_param("MW",chem.cas=chem.cas)
 
-  params[['Fabsgut']] <- ss.params[['Fabsgut']]
-  params[['Fabs']] <- ss.params[['Fabs']]
-  params[['Fgut']] <- ss.params[['Fgut']]
-  params[['kgutabs']] <- ss.params[['kgutabs']]
-  params[["Caco2.Pab"]] <- ss.params[['Caco2.Pab']]
-  params[["Caco2.Pab.dist"]] <- ss.params[['Caco2.Pab.dist']]
-
-  
-  params[['hepatic.bioavailability']] <- 
-    ss.params[['hepatic.bioavailability']]  
-  params[['BW']] <- this.phys.data[["Average BW"]]  
+# Assume well absobred:
+  params[["fbio.oral"]] <- 1
+  params[["fabs.oral"]] <- 1
+  params[["fgut.oral"]] <- 1
+  params[["fhep.oral"]] <- 1
+  params[["kgutabs"]] <- 10
+  params[["Fabsgut"]] <- 1
+  params[["hepatic.bioavailability"]] <- 1
 
   return(lapply(params[model.list[["pfas1compartment"]]$param.names],
                 set_httk_precision))

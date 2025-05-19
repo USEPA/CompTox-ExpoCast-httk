@@ -135,6 +135,7 @@ get_2023pfasinfo <- function(info="CAS",
                          fup.ci.cutoff=fup.ci.cutoff,
                          clint.pvalue.threshold=clint.pvalue.threshold,
                          class.exclude=FALSE,
+                         physchem.exclude=FALSE,
                          suppress.messages=suppress.messages)
 
 

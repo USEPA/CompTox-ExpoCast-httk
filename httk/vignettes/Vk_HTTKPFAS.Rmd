@@ -370,7 +370,6 @@ for (this.chem in unique(cl.table$DTXSID))
     chem.subset <- subset(cl.table, DTXSID==this.chem)
     for (this.species in unique(cl.table$Species))
     {
-      # Css in units of mg/L for 1 mg/kg/day
       httk.normal <- calc_total_clearance(dtxsid=this.chem,
                                species=this.species,
                                model=NONPFAS.MODEL.USED,
@@ -412,6 +411,7 @@ for (this.chem in unique(cl.table$DTXSID))
 
 ## Add in Dawson 2023 predictions for later
 ```{r invivoeval2, eval=TRUE}
+outside.doa <- NULL
 for (this.chem in unique(cl.table$DTXSID))
   {
     chem.subset <- subset(cl.table, DTXSID==this.chem)
@@ -421,12 +421,19 @@ for (this.chem in unique(cl.table$DTXSID))
                                   species=this.species,
                                   suppress.messages=TRUE))
       # Clearance in units of L/h/kgBW
-      if(!is(p, "try-error")) 
+      if(!is(p, "try-error"))
+      {
         cl.table[cl.table$DTXSID==this.chem &
                cl.table$Species==this.species,
                "MachineLearning.Cltot.Lphpkgbw"] <- p$kelim*p$Vd
+      } else {
+        outside.doa <- c(outside.doa, this.chem)
+      }
+        
     }
-  }
+}
+outside.doa <- unique(outside.doa)
+outside.doa <- subset(chem.physical_and_invitro.data,DTXSID%in%outside.doa)$Compound
 ```
 
 ### Calculate human:species clearance ratios
