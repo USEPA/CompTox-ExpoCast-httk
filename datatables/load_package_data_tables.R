@@ -1075,6 +1075,7 @@ chem.physical_and_invitro.data <- check_duplicates(
 #
 # Load predictions from Sipes 2017:
 #
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound=="Tetrahydrofuran","Human.Clint"]
 cat("Loading HTTK predictions from Sipes 2017\n")
 
 sipes2017 <- readRDS("ADMET.data.table.RData")
@@ -1173,6 +1174,7 @@ chem.physical_and_invitro.data <- add_chemtable(sipes2017,
 
 chem.physical_and_invitro.data <- check_duplicates(
   chem.physical_and_invitro.data, check.cols="Compound")
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound=="Tetrahydrofuran","Human.Clint"]
 #
 #
 # Data from Paini et al. (2020)
@@ -1235,6 +1237,7 @@ chem.physical_and_invitro.data <- add_chemtable(JRC.data.fup,
                                   
 chem.physical_and_invitro.data <- check_duplicates(
   chem.physical_and_invitro.data, check.cols="Compound")
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound=="Tetrahydrofuran","Human.Clint"]
 #
 #
 # Data from Linakis et al. (2020)
@@ -1243,24 +1246,38 @@ chem.physical_and_invitro.data <- check_duplicates(
 #
 cat("Loading HTTK data from Linakis 2020\n")
 
-volatile.data.raw <- read.csv('Linakis2020.csv',stringsAsFactors = F)
+volatile.data.raw <- read.csv('Linakis2019InhalationReferenced.csv',
+                              stringsAsFactors = FALSE)
 
-chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
+chem.physical_and_invitro.data <- 
+  add_chemtable(volatile.data.raw,
                 current.table = chem.physical_and_invitro.data, 
                 data.list = list(Compound='PREFERRED_NAME',
-                                 CAS = 'CASRN',DTXSID='DTXSID',
+                                 CAS = 'CASRN',
+                                 DTXSID='DTXSID',
                                  LogP="OCTANOL_WATER_PARTITION_LOGP_OPERA_PRED",
                                  LogHenry='LOG_HENRYS_LAW_DIMENSIONLESS',
-                                 MW = 'AVERAGE_MASS',SMILES.desalt='QSAR_READY_SMILES',
-                                 Species='SPECIES'),overwrite=F,reference='Linakis 2020')
+                                 MW = 'AVERAGE_MASS',
+                                 SMILES.desalt='QSAR_READY_SMILES',
+                                 Species='SPECIES',
+                                 Reference='REFERENCE'),
+                                 overwrite=FALSE
+                                 )
 
-chem.physical_and_invitro.data <- add_chemtable(volatile.data.raw,
-                                  current.table=chem.physical_and_invitro.data,
-                                  data.list = list(Compound='PREFERRED_NAME',
-                                  CAS = 'CASRN',DTXSID='DTXSID',Clint='CALC_CLINT',
-                                  Funbound.plasma='CALC_FUP',
-                                  Species='SPECIES'),overwrite=F,reference='Linakis 2020')
+chem.physical_and_invitro.data <- 
+  add_chemtable(volatile.data.raw,
+                current.table=chem.physical_and_invitro.data,
+                data.list = list(Compound='PREFERRED_NAME',
+                                 CAS = 'CASRN',
+                                 DTXSID='DTXSID',
+                                 Clint='CALC_CLINT',
+                                 Funbound.plasma='CALC_FUP',
+                                 Species='SPECIES',
+                                 Reference='REFERENCE'),
+                                 overwrite=FALSE
+                                 )
 
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$Compound=="Tetrahydrofuran","Human.Clint"]
 chem.physical_and_invitro.data <- check_duplicates(
   chem.physical_and_invitro.data, check.cols="Compound")
 #
