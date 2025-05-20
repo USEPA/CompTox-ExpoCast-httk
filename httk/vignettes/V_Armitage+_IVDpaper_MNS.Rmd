@@ -1,0 +1,953 @@
+---
+title: "Modeling in vitro distribution improves accuracy of bioavailable dose estimation"
+author: "Meredith N. Scherer, Katie Paul-Friedman, and John F. Wambaugh"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{h) Kapraun (2022): Human Gestational Model}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+*Please send questions to wambaugh.john@epa.gov*
+
+from "Modeling in vitro distribution improves accuracy of bioavailable dose estimation"
+
+Meredith N. Scherer, Katie Paul-Friedman, John F.Wambaugh
+
+### update w/paper info + link to cleared dataset
+
+
+## Abstract
+
+### update w/abstract info
+
+## HTTK Version 
+
+This vignette was created with **httk** v2.X.0. Although we attempt to maintain 
+backward compatibility, if you encounter issues with the latest release of 
+**httk**
+and cannot easily address the changes, historical versions of httk are 
+available from: https://cran.r-project.org/src/contrib/Archive/httk/
+
+## Prepare for session
+R package **knitr** generates html and PDF documents from this RMarkdown file,
+Each bit of code that follows is known as a "chunk". We start by telling 
+**knitr** how we want our chunks to look.
+```{r configure_knitr, eval = TRUE}
+knitr::opts_chunk$set(collapse = TRUE, comment = '#>')
+options(rmarkdown.html_vignette.check_title = FALSE)
+```
+
+### Clear the memory
+It is a bad idea to let variables and other information from previous R
+sessions float around, so we first remove everything in the R memory.
+```{r clear_memory, eval = TRUE}
+rm(list=ls()) 
+```
+
+### eval = execute.vignette
+If you are using the RMarkdown version of this vignette (extension, .RMD) you
+will be able to see that several chunks of code in this vignette
+have the statement "eval = execute.vignette". The next chunk of code, by default,
+sets execute.vignette = FALSE.  This means that the code is included (and necessary) but was
+not run when the vignette was built. We do this because some steps require 
+extensive computing time and the checks on CRAN limit how long we can spend
+building the package. If you want this vignette to work, you must run all code,
+either by cutting and pasting it into R. Or, if viewing the .RMD file, you can
+either change execute.vignette to TRUE or press "play" (the green arrow) on
+each chunk in RStudio.
+```{r runchunks, eval = TRUE}
+# Set whether or not the following chunks will be executed (run):
+execute.vignette <- TRUE
+```
+
+### Load the relevant libraries
+We use the command 'library()' to load various R packages for our analysis.
+If you get the message "Error in library(X) : there is no package called 'X'"
+then you will need to install that package: 
+
+From the R command prompt:
+
+install.packages("X")
+
+Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
+
+```{r load_packages, eval = execute.vignette}
+#
+#
+# Setup
+#
+#
+#library(httk)        # run Armitage.R in vitro distribution model
+library(tidyverse)   # data wrangling
+library(data.table)  # data table functionality
+library(ggplot2)     # plotting
+library(ggpubr)      # arrange plots for publication
+
+##delete once httk has been updated with armitage.R file and model_param_armitage.R and un-tab out library(httk) above
+library(devtools) # to run httk
+suppressWarnings(setwd("C:/Users/mscherer/httk-dev")) # to load httk
+suppressWarnings(devtools::load_all("httk")) # for armitage
+```
+
+```{r rmsle_func}
+#function to calculate RMSLE
+sle <- function (actual, predicted) 
+{
+    log.act <- log10(actual)
+    log.pred <- log10(predicted)
+    good <- !is.na(log.act) & is.finite(log.act) &
+            !is.na(log.pred) & is.finite(log.pred)
+    log.act <- log.act[good]
+    log.pred <- log.pred[good]
+    return((log.act - log.pred)^2)
+}
+msle <- function (actual, predicted) 
+{
+    mean(sle(actual, predicted))
+}
+rmsle <-function (actual, predicted) 
+{
+    sqrt(msle(actual, predicted))
+}
+```
+# Data Collection
+
+Data sets were curated from the literature to evaluate the in vitro distribution model. 
+
+
+# Load and format the data
+
+```{r load_IVD_Manuscript_data, eval = execute.vignette}
+
+
+#you know it is correct if IVD_Manuscript_data has 174 obs of 29 variables
+#IVD_Manuscript_data <- httk::IVD_Manuscript_data
+load("C:/Users/mscherer/httk-dev/httk/data/ArmitagePlus_Vignette_19MAY25.RData")
+
+cat(paste("Summarized data from ", 
+          length(unique(IVD_Manuscript_data$Citation)),
+          " studies covering ", 
+          length(unique(IVD_Manuscript_data$ChemicalName)),
+          " unique chemicals\n",sep=""))
+
+#15 studies, 54 chemicals, 174 observations
+
+#number each row
+IVD_Manuscript_data[,X:=1:length(IVD_Manuscript_data$ChemicalName)]
+
+```
+
+# Run the in vitro distribution models
+```{r run_IVD_models, eval = execute.vignette}
+
+# run Armitage model, output concentrations in umol/L (e.g. uM)
+armitageOutput_data.dt <- armitage_eval(tcdata=IVD_Manuscript_data, 
+                                        surface.area.switch = FALSE,
+                                        restrict.ion.partitioning = TRUE)
+
+
+# run Kramer model, output concentrations in umol/L (e.g. uM)
+kramerOutput_data.dt <- kramer_eval(tcdata=IVD_Manuscript_data, 
+                                    surface.area.switch = FALSE,
+                                    restrict.ion.partitioning = TRUE)
+
+```
+
+# Manipulate data for plotting
+```{r manipulate_for_plotting, eval = execute.vignette}
+
+#subset then combine into one big dataset
+Armitage.dt<-subset(armitageOutput_data.dt, select=-c(nomconc))
+Kramer.dt_subset<-subset(kramerOutput_data.dt, select=-c(nomconc))
+Kramer.dt<-cbind(Kramer.dt_subset, IOC_Type = Armitage.dt$IOC_Type)
+Nominal.dt_subset<-subset(kramerOutput_data.dt, select = -c(concentration_cells))
+Nominal.dt<-cbind(Nominal.dt_subset, IOC_Type = Armitage.dt$IOC_Type)
+
+Armitage.dt[,label:= "Armitage"]
+Kramer.dt[,label:= "Kramer"]
+Nominal.dt[,label:= "Nominal"]
+
+data.for.plot<-rbind(Armitage.dt, Kramer.dt, Nominal.dt, fill= TRUE)
+
+```
+
+# Main Paper Plots:
+
+## Figure 1: In Vitro Distribution Diagram (no code)
+
+## Figure 2: Predicted and experimental intracellular concentrations from the Nominal = Cfree (left panel), Armitage (middle panel), and Kramer (right panel) models. Dashed line shows unity.
+  
+```{r joint_intracel_plot_2, eval = execute.vignette}
+
+#ARMITAGE:
+
+#Armitage RMSLE:
+arm_rmsle_long<-rmsle((Armitage.dt$CellConcentration_uM),(Armitage.dt$ccells))
+arm_rmsle<-round(arm_rmsle_long, 2)
+#1.28
+
+# now plot
+Armitage_ccell<-ggplot(Armitage.dt, aes(ccells, CellConcentration_uM, 
+                        colour = ChemicalName)) + 
+                        geom_point() +
+                        geom_abline(intercept=0,slope=1, linetype = "dashed") +
+                        xlab("Armitage Predicted Intracellular Concentration (\U00B5M)") + 
+                        ylab("Experimental Intracellular Concentration (\U00B5M)")+
+                        scale_y_continuous(labels = function(x) sprintf("%g", x), 
+                                           limits = c(0.00001, 400000), trans='log10') +
+                        scale_x_continuous(labels = function(x) sprintf("%g", x), 
+                                           limits = c(0.00001, 400000), trans='log10') +
+                        annotate("text", x = Inf, y = Inf, label = paste("RMSLE: ", arm_rmsle), 
+                                 vjust = 28, hjust = 1, size = 3) +
+                        theme_bw() + 
+                        theme(legend.position = "none",
+                              text=element_text(size=8),
+                              panel.border = element_blank(), 
+                              panel.grid.major = element_blank(),
+                              panel.grid.minor = element_blank(), 
+                              axis.line = element_line(colour = "black"))
+
+
+#KRAMER:
+
+#Kramer RMSLE:
+kram_rmsle_long<-rmsle((Kramer.dt$CellConcentration_uM),(Kramer.dt$concentration_cells))
+kram_rmsle<-round(kram_rmsle_long, 2)
+#1.59
+
+# now plot
+Kramer_ccell<-ggplot(Kramer.dt, aes(concentration_cells, CellConcentration_uM, 
+                        colour = ChemicalName)) +
+                        geom_point() +
+                        geom_abline(intercept=0,slope=1, linetype = "dashed") +
+                        scale_y_continuous(labels = function(x) sprintf("%g", x), 
+                                           limits = c(0.00001, 400000), trans='log10') +
+                        scale_x_continuous(labels = function(x) sprintf("%g", x), 
+                                           limits = c(0.00001, 400000), trans='log10') +
+                        xlab("Kramer Predicted Intracellular Concentration (\U00B5M)") + 
+                        ylab("Experimental Intracellular Concentration (\U00B5M)")+
+                        annotate("text", x = Inf, y = Inf, label = paste("RMSLE: ", kram_rmsle), 
+                                 vjust = 28, hjust = 1, size = 3) +
+                        theme_bw() + 
+                        theme(legend.position = "none",
+                          text=element_text(size=8),
+                              panel.border = element_blank(), 
+                              panel.grid.major = element_blank(),
+                              panel.grid.minor = element_blank(), 
+                              axis.line = element_line(colour = "black")) 
+
+
+#NOMINAL:
+
+#Nominal RMSLE:
+nom_rmsle_long<-rmsle((Nominal.dt$CellConcentration_uM),(Nominal.dt$nomconc))
+nom_rmsle<-round(nom_rmsle_long, 2)
+#1.72
+
+# now plot
+Nominal_ccell<-ggplot(Nominal.dt, aes(nomconc, CellConcentration_uM, 
+                        colour = ChemicalName)) + 
+                        geom_point() +
+                        geom_abline(intercept=0,slope=1, linetype = "dashed") +
+                        scale_y_continuous(labels = function(x) sprintf("%g", x), 
+                                           limits = c(0.00001, 400000), trans='log10') +
+                        scale_x_continuous(labels = function(x) sprintf("%g", x), 
+                                           limits = c(0.00001, 400000), trans='log10') +
+                        xlab("Nominal Concentration (\U00B5M)") + 
+                        ylab("Experimental Intracellular Concentration (\U00B5M)")+
+                        labs(color = "Chemical")+
+                        annotate("text", x = Inf, y = Inf, label = paste("RMSLE: ", nom_rmsle), 
+                                 vjust = 28, hjust = 1, size = 3) +
+                        theme_bw() + 
+                        theme(#legend.position = "none",
+                          legend.key.size = unit(2, 'mm'),
+                          text=element_text(size=8),
+                          legend.spacing = unit(10, "pt"),
+                          legend.text = element_text(size = 6),
+                          panel.border = element_blank(), 
+                          panel.grid.major = element_blank(),
+                          panel.grid.minor = element_blank(), 
+                          axis.line = element_line(colour = "black")) 
+
+#Combine the three plots w RMSLE
+Ccells_comboplot<-ggarrange(Nominal_ccell, Armitage_ccell, Kramer_ccell, ncol=3 , legend = "bottom", common.legend = TRUE)
+
+#save
+ggsave("Figure2.png", path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/",
+       Ccells_comboplot, width = 10, height = 5, dpi = 300)
+
+print(Ccells_comboplot)
+
+```
+
+
+
+## Figure 3: Predicted and experimental intracellular concentrations from the Armitage (left panel) and Kramer (right panel) models for the twenty chemicals with multiple observations. Solid lines connect multiple measurements for a single chemical. The dashed line shows unity. 
+  
+```{r multiobs_intracel_plot, eval = execute.vignette}
+
+#how many chemicals only have more than one observation?
+multiObsChemnameList<-Armitage.dt %>% group_by(ChemicalName) %>% summarize(n=n()) %>% dplyr::filter(n>=2) %>% select(ChemicalName) %>% distinct()
+#20 chemicals
+
+#pull out the observations for these chemicals
+Armitage.multobs.dt <- Armitage.dt %>% 
+  dplyr::filter(ChemicalName %in% multiObsChemnameList$ChemicalName)
+
+Kramer.multobs.dt <- Kramer.dt %>% 
+  dplyr::filter(ChemicalName %in% multiObsChemnameList$ChemicalName)
+
+Nominal.multobs.dt <- Nominal.dt %>% 
+  dplyr::filter(ChemicalName %in% multiObsChemnameList$ChemicalName)
+
+#each have 120 observations
+
+#now plot
+
+#ARMITAGE
+
+#Armitage RMSLE:
+arm_mult_rmsle_long<-rmsle((Armitage.multobs.dt$CellConcentration_uM),(Armitage.multobs.dt$ccells))
+arm_mult_rmsle<-round(arm_mult_rmsle_long, 2)
+#1.23
+
+#r squared 
+ml_arm <- lm(CellConcentration_uM~ccells, data = Armitage.multobs.dt)
+rsq_armitage_mult <- summary(ml_arm)$r.squared
+#0.251417
+
+# now plot
+Armitage_ccell_mult<-ggplot(Armitage.multobs.dt, aes(ccells, CellConcentration_uM, 
+                        colour = ChemicalName)) + 
+                        geom_point() +
+                        geom_abline(intercept=0,slope=1, linetype = "dashed") +
+                        geom_smooth(method=lm, se = FALSE) +
+                        scale_y_continuous(labels = function(x) sprintf("%g", x), 
+                                           limits = c(0.00001, 400000), trans='log10') +
+                        scale_x_continuous(labels = function(x) sprintf("%g", x),
+                                           limits = c(0.00001, 400000), trans='log10') +
+                        xlab("Armitage Predicted Intracellular Concentration (\U00B5M)") + 
+                        ylab("Experimental Intracellular Concentration (\U00B5M)")+
+                        labs(colour = "Chemical")+
+                        annotate("text", x = Inf, y = Inf, label = paste("RMSLE: ", arm_mult_rmsle), 
+                                 vjust = 29, hjust = 1, size = 3) +
+                        theme_bw() +
+                        theme(legend.position = "none",
+                              text=element_text(size=8),
+                              panel.border = element_blank(), 
+                              panel.grid.major = element_blank(),
+                              panel.grid.minor = element_blank(), 
+                              axis.line = element_line(colour = "black"))
+
+#KRAMER
+
+#Kramer RMSLE:
+kram_mult_rmsle_long<-rmsle((Kramer.multobs.dt$CellConcentration_uM),(Kramer.multobs.dt$concentration_cells))
+kram_mult_rmsle<-round(kram_mult_rmsle_long, 2)
+# 1.34
+
+#r squared 
+ml_kram <- lm(CellConcentration_uM~concentration_cells, data = Kramer.multobs.dt)
+rsq_kramer_mult <- summary(ml_kram)$r.squared
+#0.04824134
+
+# now plot
+Kramer_ccell_mult<-ggplot(Kramer.multobs.dt, aes(concentration_cells, CellConcentration_uM, 
+                        colour = ChemicalName)) + 
+                        geom_point() +
+                        geom_abline(intercept=0,slope=1, linetype = "dashed") + 
+                        geom_smooth(method=lm, se = FALSE) +
+                        scale_y_continuous(labels = function(x) sprintf("%g", x), 
+                                           limits = c(0.00001, 400000), trans='log10') +
+                        scale_x_continuous(labels = function(x) sprintf("%g", x), 
+                                           limits = c(0.00001, 400000), trans='log10') +
+                        xlab("Kramer Predicted Intracellular Concentration (\U00B5M)") + 
+                        ylab("Experimental Intracellular Concentration (\U00B5M)")+
+                        labs(colour = "Chemical")+
+                        annotate("text", x = Inf, y = Inf, label = paste("RMSLE: ", kram_mult_rmsle),
+                                 vjust = 29, hjust = 1, size = 3) +
+                        theme_bw() + 
+                        theme(legend.key.size = unit(2, 'mm'),
+                          text=element_text(size=8),
+                          legend.spacing = unit(10, "pt"),
+                          legend.text = element_text(size = 6),
+                          panel.border = element_blank(), 
+                          panel.grid.major = element_blank(),
+                          panel.grid.minor = element_blank(), 
+                          axis.line = element_line(colour = "black")) 
+
+
+#arrange
+Ccells_comboplot_mult<-ggarrange(Armitage_ccell_mult, Kramer_ccell_mult, ncol=2, legend = "bottom", common.legend = TRUE)
+
+ggsave("Figure3.png", path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/",
+       Ccells_comboplot_mult, width = 8, height = 5, dpi = 300)
+
+print(Ccells_comboplot_mult)
+
+```
+
+## Figure 4: Predicted and experimental intracellular concentrations from the Armitage (left panel) and Kramer (right panel) models for the twenty chemicals with multiple observations. Solid lines connect multiple measurements for a single chemical. The Ddashed line shows unity. 
+```{r chemicalPart_intracel_plot, eval = execute.vignette}
+
+#combine data in plotting form
+combodata<-merge(Armitage.dt, Kramer.dt, by = "X", all.x = TRUE)
+combodata<-cbind(nomconc=Nominal.dt$nomconc, combodata)
+
+#Cwat_uM -------- Cwat_R
+Cwater_comparison<-ggplot(combodata, aes(concentration_medium, cwat_s, 
+                        colour = ChemicalName.x)) + 
+                        geom_point() +
+                        geom_abline(intercept=0,slope=1, linetype = "dashed")+
+                        scale_y_continuous(labels = function(x) sprintf("%g", x), trans='log10') +
+                        scale_x_continuous(labels = function(x) sprintf("%g", x),trans='log10') +
+                        ggtitle("Water Concentration") +
+                        xlab("Kramer Cmedium (\U00B5M)") + 
+                        ylab("Armitage Cwat_s (\U00B5M)")+
+                        labs(colour = "Chemical")+
+                        theme_bw() + 
+                        theme(legend.position = "none",
+                              text=element_text(size=12),
+                              panel.border = element_blank(), 
+                              panel.grid.major = element_blank(),
+                              panel.grid.minor = element_blank(), 
+                              axis.line = element_line(colour = "black"))
+
+#Cair_uM -------- Cair_R
+Cair_comparison<-ggplot(combodata, aes(concentration_air, cair, 
+                        colour = ChemicalName.x)) + 
+                        geom_point() +
+                        geom_abline(intercept=0,slope=1, linetype = "dashed")+
+                        scale_y_continuous(labels = function(x) sprintf("%g", x), trans='log10') +
+                        scale_x_continuous(labels = function(x) sprintf("%g", x),trans='log10') +
+                        ggtitle("Air Concentration") +
+                        xlab("Kramer Cair (\U00B5M)") + 
+                        ylab("Armitage Cair (\U00B5M)")+
+                        labs(colour = "Chemical")+
+                        theme_bw() + 
+                        theme(legend.position = "none",
+                              text=element_text(size=12),
+                              panel.border = element_blank(), 
+                              panel.grid.major = element_blank(),
+                              panel.grid.minor = element_blank(), 
+                              axis.line = element_line(colour = "black"))
+
+
+#C_cells_uM ----- Ccells
+Ccells_comparison<-ggplot(combodata, aes(concentration_cells, ccells, 
+                        colour = ChemicalName.x)) + 
+                        geom_point() +
+                        geom_abline(intercept=0,slope=1, linetype = "dashed")+
+                        scale_y_continuous(labels = function(x) sprintf("%g", x), trans='log10') +
+                        scale_x_continuous(labels = function(x) sprintf("%g", x),trans='log10') +
+                        ggtitle("Cell Concentration") +
+                        xlab("Kramer Ccells (\U00B5M)") + 
+                        ylab("Armitage Ccells (\U00B5M)")+
+                        labs(colour = "Chemical")+
+                        theme_bw() + 
+                        theme(legend.position = "none",
+                              text=element_text(size=12),
+                              panel.border = element_blank(), 
+                              panel.grid.major = element_blank(),
+                              panel.grid.minor = element_blank(), 
+                              axis.line = element_line(colour = "black"))
+
+#Aplastic_uM_m2 - (Cplastic_R / Sarea_R)
+Aplastic_comparison<-ggplot(combodata, aes(concentration_plastic, cplastic, 
+                        colour = ChemicalName.x)) + 
+                        geom_point() +
+                        geom_abline(intercept=0,slope=1, linetype = "dashed")+
+                        scale_y_continuous(labels = function(x) sprintf("%g", x), trans='log10') +
+                        scale_x_continuous(labels = function(x) sprintf("%g", x),trans='log10') +
+                        ggtitle("Plastic Concentration") +
+                        xlab("Kramer Cplastic (\U00B5mol/m\U00B2)") + 
+                        ylab("Armitage Cplastic (\U00B5mol/m\U00B2)")+
+                        labs(colour = "Chemical")+
+                        theme_bw() + 
+                        theme(legend.key.size = unit(1, 'mm'),
+                          text=element_text(size=12),
+                          legend.spacing = unit(2, "pt"),
+                          legend.text = element_text(size = 6),
+                          panel.border = element_blank(), 
+                          panel.grid.major = element_blank(),
+                          panel.grid.minor = element_blank(), 
+                          axis.line = element_line(colour = "black")) 
+
+
+compartment_plots<-ggarrange(Cwater_comparison, Cair_comparison, Ccells_comparison, Aplastic_comparison, common.legend = TRUE, legend = "bottom")
+
+ggsave("Figure4.png", path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/",
+       compartment_plots, width = 11, height = 10, dpi= 300)
+
+print(compartment_plots)
+
+
+combodata[(ccells>concentration_cells), ] #108 observations where armitage ccells is larger
+combodata[(ccells<concentration_cells)]   #46 observations where armitage is smaller than Kramer
+
+```
+
+# Main paper Calculations:
+
+## Fold Change Between Experimental Intracellular Concentration and Predicted Intracellular Concentration
+```{r fold_change_calculation, eval = execute.vignette}
+
+# 1. calculate RMSLE for each value
+combodata[, RMSLE_nominal := rmsle(CellConcentration_uM.x, nomconc), by = "X"]
+
+#2. the median difference between nominal and cellular concentration was X-fold
+# find the median difference between nominal and cellular concentration
+median(combodata$RMSLE_nominal) #1.973066
+
+#3. ranging between nominal concentration being X-fold higher than cellular (chemical)
+#min(combodata$RMSLE_nominal) #5.46804194 (PBDE-47) - cell conc: 0.0006916427, nomconc: 203.2
+
+#4. to cellular concentration being X-fold higher than nominal (chemical)
+max(combodata$RMSLE_nominal) #8.087239 (Chlorpromazine) - cell conc: 122247.3, nomconc: 0.001
+
+combodata %>% arrange(RMSLE_nominal) %>% select(ChemicalName.x, Citation.x, nomconc, CellConcentration_uM.x, RMSLE_nominal)
+
+```
+
+#Supplement:
+
+## Table S1. Physicochemical properties of test chemicals and Ccell/Cnominal ratios from each reference.
+```{r}
+
+#create datatable to hold the info
+table1.dt<-copy(Nominal.dt)
+
+# format for viewing pleasure
+data.dt<-table1.dt[, c("Citation", "casrn", "ChemicalName", "IOC_Type", "nomconc", "CellConcentration_uM"), with = FALSE] #subset columns
+
+
+# pull dtxsids, log P, henry's law, and pka:
+
+#dtxsids
+cheminfo.dt<-as.data.table(get_chem_id(chem.cas=unique(data.dt$casrn)))
+
+cheminfo.dt[, casrn:=chem.cas] %>% #rename
+  .[,chem.cas:=NULL] %>% #delete column
+  .[,chem.name:=NULL] #delete column
+
+#add dtxsid info to the storage file
+data.dt2<-data.dt[cheminfo.dt,on="casrn"]
+
+#collect log P, henry's law, and pka values
+data.dt2[, c("logP","logHenry", "pKa_Donor", "pKa_Accept") := as.data.frame(get_physchem_param(param = c("logP","logHenry", "pKa_Donor", "pKa_Accept"), chem.cas = casrn))] 
+
+
+# calculate median CellConcentration_uM:cnom ratio (for each citation if multiple) and number of observations per chemical
+
+#get ccell : cnom ratio
+data.dt2[,cellconc_cnom_ratio:=CellConcentration_uM/nomconc]
+
+#for each chemical and citation combination, calculate the median ccell:cnom ratio
+data.dt2[, median_ratio := median(cellconc_cnom_ratio), by=list(Citation, ChemicalName)]
+
+#count the number of observations by citation and chemname
+data.dt2[, number_of_obs:=.N, by=list(Citation, ChemicalName)]
+
+#filter down to one observation per citation/casrn combo
+final_output<-data.dt2 %>% 
+  mutate(logP=round(logP, 2),
+         logHenry=round(logHenry, 2),
+         median_ratio=round(median_ratio, 2),
+         pKa = paste(pKa_Accept, pKa_Donor, sep=",")) %>% 
+  select(-c("casrn", "nomconc", "CellConcentration_uM", "cellconc_cnom_ratio", "pKa_Donor", "pKa_Accept")) %>% #get rid of extra rows
+  distinct(Citation, ChemicalName, .keep_all = TRUE) #filter 
+
+#save the output
+write.csv(final_output, path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/table_s1.csv")
+
+```
+
+## Table S2. In vitro assay descriptors for the measurements
+#need to create!
+
+```{r assay_descriptors_table, eval = execute.vignette}
+
+#copy table to manipulate
+parameter_table<-copy(Nominal.dt)
+
+table_s2<-parameter_table[, c("Citation", "ChemicalName", "nomconc", "NominalDose_uM", "v_total", "v_working", "sarea", "well_number", "cell_yield", "FBSf", "FigureNumber", "CellType")] #subset columns
+
+parameter_table[Citation=="Bopp, 2005", c("ChemicalName", "nomconc" )]
+
+parameter_table[Citation=="Tox21",]
+#save the output
+write.csv(table_s2, "table_s2_raw.csv")
+
+unique(parameter_table$Citation)
+parameter_table$CellConcentration_uM
+parameter_table %>% dplyr::filter(Citation=="Bopp, 2005") %>% select(ChemicalName)
+
+```
+
+## Table S3. Root mean squared log error (RMSLE) and coefficient of determination (r2) for the chemicals with multiple observations. Note: Atrazine, Flusilazole, N-Phenyl-1,4-benzenediamine, Rosiglitazone, Thiacloprid, and Triphenyl phosphate each only reflect two data points.
+```{r multobs_RMSLE_table, eval = execute.vignette}
+
+#Armitage
+multobs_rmsle_armitage<-NULL
+for (chemical.option in unique(Armitage.multobs.dt$ChemicalName)){
+  
+  #isolate the data
+  Chemical_DataList <- Armitage.multobs.dt %>% dplyr::filter(ChemicalName == chemical.option)
+
+  #RMSLE
+  #armitage
+  RMSLE_armitage_mult <- rmsle((Chemical_DataList$CellConcentration_uM), (Chemical_DataList$ccells))
+  
+  #r squared
+  #armitage
+  ml = lm(CellConcentration_uM~ccells, data = Chemical_DataList)
+  rsq_armitage_mult <- summary(ml)$r.squared 
+  
+  #create row
+  current_row<- c(chemical.option, 
+                  round(RMSLE_armitage_mult, 2),
+                  round(rsq_armitage_mult, 2))
+  
+  #append row
+  multobs_rmsle_armitage <- rbind(multobs_rmsle_armitage, current_row) 
+  
+}
+
+
+#run again for kramer
+multobs_rmsle_kramer<-NULL
+for (chemical.option in unique(Kramer.multobs.dt$ChemicalName)){
+  
+  #isolate the data
+  Chemical_DataList <- Kramer.multobs.dt %>% dplyr::filter(ChemicalName == chemical.option)
+
+  #RMSLE
+  #kramer
+  RMSLE_kramer_mult <- rmsle((Chemical_DataList$CellConcentration_uM), (Chemical_DataList$concentration_cells))
+  
+    #r squared
+  #kramer
+  ml = lm(CellConcentration_uM~concentration_cells, data = Chemical_DataList)
+  rsq_kramer_mult <- summary(ml)$r.squared 
+  
+  #create row
+  current_row<- c(chemical.option, 
+                  round(RMSLE_kramer_mult, 2),
+                  round(rsq_kramer_mult, 2))
+  
+  #append row
+  multobs_rmsle_kramer <- rbind(multobs_rmsle_kramer, current_row) 
+  
+}
+
+print(multobs_rmsle_armitage)
+print(multobs_rmsle_kramer)
+
+multobs_rmsle_armitage.dt<-as.data.table(multobs_rmsle_armitage)
+filt_multobs_rmsle_armitage.dt<-copy(multobs_rmsle_armitage.dt[, Name := V1] %>% 
+  .[,RMSLE_arm := V2] %>% 
+  .[,r2_arm := V3] %>% 
+  .[, c("Name", "RMSLE_arm", "r2_arm")])
+
+multobs_rmsle_kramer.dt<-as.data.table(multobs_rmsle_kramer)
+filt_multobs_rmsle_kramer.dt<-copy(multobs_rmsle_kramer.dt[, Name := V1] %>% 
+  .[,RMSLE_kram := V2] %>% 
+  .[,r2_kram := V3] %>% 
+  .[, c("Name", "RMSLE_kram", "r2_kram")])
+
+
+mult.dt<-merge(filt_multobs_rmsle_kramer.dt, filt_multobs_rmsle_armitage.dt)
+
+#for higher/lower rmsle comparison
+mult_HL<-copy(mult.dt[RMSLE_kram>RMSLE_arm, higherorlower:="higher"] %>% 
+  .[RMSLE_kram<RMSLE_arm, higherorlower:="lower"]) %>% 
+  .[, magnitude := as.numeric(RMSLE_kram)-as.numeric(RMSLE_arm)]
+
+mult_HL %>% count(higherorlower)
+
+#save the output
+write.csv(mult.dt, "table_s3.csv")
+
+```
+## Table S4: RMSLE and r^2 for acids and bases.
+```{r ionization_RMSLE_table, eval = execute.vignette}
+
+ionization_rmsle<-NULL
+
+for (modelType in unique(data.for.plot$label)){
+  
+  ionization.df<- data.for.plot[label == modelType,]
+  
+  if (modelType == "Armitage"){
+    
+    for (ionization_option in unique(ionization.df$IOC_Type)){
+      
+      #isolate the data
+      ionization_optionDataList <- ionization.df %>% dplyr::filter(IOC_Type == ionization_option)
+      
+      #RMSLE armitage
+      RMSLE_armitage_ionization <- rmsle((ionization_optionDataList$CellConcentration_uM), (ionization_optionDataList$ccells))
+  
+
+      #r squared armitage
+      ml = lm(CellConcentration_uM~ccells, data = ionization_optionDataList)
+      rsq_armitage_ionization <- summary(ml)$r.squared 
+
+  
+      #create row
+      current_row<- c(modelType,
+                      ionization_option, 
+                  round(RMSLE_armitage_ionization, 2),
+                  round(rsq_armitage_ionization, 2))
+
+  
+      #append row
+      ionization_rmsle <- rbind(ionization_rmsle, current_row)
+    
+    }
+    
+  }
+  
+  if (modelType == "Kramer"){
+    
+    for (ionization_option in unique(ionization.df$IOC_Type)){
+      
+      #isolate the data
+      ionization_optionDataList <- ionization.df %>% dplyr::filter(IOC_Type == ionization_option)
+      
+      #RMSLE kramer
+      RMSLE_kramer_ionization <- rmsle((ionization_optionDataList$CellConcentration_uM), (ionization_optionDataList$concentration_cells))
+  
+
+      #r squared kramer
+      ml = lm(CellConcentration_uM~concentration_cells, data = ionization_optionDataList)
+      rsq_kramer_ionization <- summary(ml)$r.squared 
+
+  
+      #create row
+      current_row<- c(modelType,
+                  ionization_option, 
+                  round(RMSLE_kramer_ionization, 2),
+                  round(rsq_kramer_ionization, 2))
+
+  
+      #append row
+      ionization_rmsle <- rbind(ionization_rmsle, current_row)
+    
+    }
+    
+    
+  }
+  
+}
+
+print(ionization_rmsle)
+
+#save the output
+write.csv(ionization_rmsle, "table_s4.csv")
+
+```
+
+## Table S5. RMSLE across lipophilicity.
+```{r logP_RMSLE_table, eval = execute.vignette}
+
+#cut up into chunks
+gkowbins<-data.for.plot %>% mutate(LogP_bins = cut(gkow, breaks = c(-Inf, 1.30, 3.36, Inf),
+  labels = c("Hydrophilic", "Moderate Lipophilic", "Lipophilic")))
+
+#Armitage:
+gkowbins_armitage<- gkowbins[label == "Armitage",]
+rmsle_gkow_armitage<-gkowbins_armitage[, .(Armitage_RMSLE=rmsle(CellConcentration_uM, ccells)), by = LogP_bins]
+
+#Kramer:
+gkowbins_kramer<- gkowbins[label == "Kramer",]
+rmsle_gkow_kramer<-gkowbins_kramer[, .(Kramer_RMSLE=rmsle(CellConcentration_uM, concentration_cells)), by = LogP_bins]
+
+gkow_output<-merge(rmsle_gkow_armitage, rmsle_gkow_kramer)
+
+#save the output
+write.csv(gkow_output, "table_s5.csv")
+
+```
+
+## Table S6. RMSLE across volatility.
+```{r kaw_RMSLE_table, eval = execute.vignette}
+
+#source for chunks is table 2 Volatility class in water: https://www.epa.gov/pesticide-science-and-assessing-pesticide-risks/guidance-reporting-environmental-fate-and-transport#:~:text=is%20very%20low.-,Volatility%20from%20Water,the%20reciprocal%20of%20KAW.&text=GMW%20=%20gram%20molecular%20weight%20in%20g/mole.&text=This%20value%20is%20the%20inverse,as%20Cwater/Cair.&text=Note%20that%20all%20chemicals%20may,volatility%20potential%20is%20very%20low.
+
+#cut up kaw into relevant bins
+kawbins<-data.for.plot %>% mutate(Kaw_bins = cut(DR_kaw, breaks = c(Inf, 10^-2, 10^-3, 10^-5, -Inf),
+  labels = c("Rapidly lost from a water surface", "Volatile from a water surface", "Slightly volatile from a water surface", "Non-volatile")))
+
+#Armitage:
+kawbins_armitage<- kawbins[label == "Armitage",]
+rmsle_kaw_armitage<-kawbins_armitage[, .(Armitage_RMSLE=rmsle(CellConcentration_uM, ccells)), by = Kaw_bins] 
+
+kawbins_armitage %>% group_by(Kaw_bins) %>% distinct(ChemicalName) %>%  count()
+
+#Kramer:
+kawbins_kramer<- kawbins[label == "Kramer",]
+rmsle_kawbins_kramer<-kawbins_kramer[, .(Kramer_RMSLE=rmsle(CellConcentration_uM, concentration_cells)), by = Kaw_bins]
+
+kaw_output<-merge(rmsle_kawbins_kramer, rmsle_kaw_armitage)
+
+#save the output
+write.csv(kaw_output, "table_s6.csv")
+
+```
+
+## Table S7. Effect of "options" on rmsle in the Armitage model.
+```{r options_plot}
+
+
+#list of options that can be changed in the armitage model:
+
+# 		- this.option.kbsa2 Use alternative bovine-serum-albumin partitioning
+# 		- this.option.swat2 Use alternative water solubility correction
+# 		- this.option.kpl2 Use alternative plastic-water partitioning model
+# 		- option.plastic == TRUE (default) gives nonzero surface area
+# 		- option.bottom == TRUE (default) includes surface area of the bottom of the well in determining sarea
+# 		- restrict.ion.partitioning 
+# 			§ False (default):  Treat entire chemical as neutral and allow it all to partition normally as such
+# 			§ True: Restrict so only the neutral fraction of the chemical is available to partition normally but the ionized portion is scaled
+
+
+# create table to append the results to 
+options.table <- NULL
+
+# run basic armitage, only setting the surface area switch
+option.basic <- armitage_eval(tcdata=IVD_Manuscript_data, 
+                                        surface.area.switch = FALSE)
+
+option.basic_RMSLE<-rmsle((option.basic$CellConcentration_uM),(option.basic$ccells))
+#1.27359
+
+#append to table
+options.table<-rbind(options.table, c(option.basic_RMSLE, "All Default"))
+
+# run with this.option.kbsa2 == TRUE (default is false)
+option.kbsa <- armitage_eval(tcdata=IVD_Manuscript_data, 
+                                        surface.area.switch = FALSE,
+                             this.option.kbsa2 = TRUE)
+
+option.kbsa_RMSLE<-rmsle((option.kbsa$CellConcentration_uM),(option.kbsa$ccells))
+#1.275969
+
+#append to table
+options.table<-rbind(options.table, c(option.kbsa_RMSLE, "option.kbsa=TRUE"))
+
+
+# run with this.option.swat2 == TRUE (default is false)
+option.swat <- armitage_eval(tcdata=IVD_Manuscript_data, 
+                                        surface.area.switch = FALSE,
+                             this.option.swat2 = TRUE)
+
+option.swat_RMSLE<-rmsle((option.swat$CellConcentration_uM),(option.swat$ccells))
+#3.224959
+
+#append to table
+options.table<-rbind(options.table, c(option.swat_RMSLE, "option.swat2=TRUE"))
+
+# run with this.option.kpl2 == TRUE (Fischer) (default is false/kramer)
+option.kpl <- armitage_eval(tcdata=IVD_Manuscript_data, 
+                                        surface.area.switch = FALSE,
+                             this.option.kpl2 = TRUE)
+
+option.kpl_RMSLE<-rmsle((option.kpl$CellConcentration_uM),(option.kpl$ccells))
+#1.727086
+
+#append to table
+options.table<-rbind(options.table, c(option.kpl_RMSLE, "option.kpl2=TRUE"))
+
+# run with option.plastic == FALSE (default is true)
+opt.plast_input<- copy(IVD_Manuscript_data[,option.plastic := FALSE])
+
+option.plast <- armitage_eval(tcdata=opt.plast_input, 
+                                        surface.area.switch = FALSE)
+
+option.plast_RMSLE<-rmsle((option.plast$CellConcentration_uM),(option.plast$ccells))
+#
+
+#append to table
+options.table<-rbind(options.table, c(option.plast_RMSLE, "option.plastic=FALSE"))
+
+# run with option.bottom == FALSE (default is true)
+option.bottom_input<- copy(IVD_Manuscript_data[,option.bottom := FALSE])
+
+option.bottom <- armitage_eval(tcdata=option.bottom_input, 
+                                        surface.area.switch = FALSE)
+
+option.bottom_RMSLE<-rmsle((option.bottom$CellConcentration_uM),(option.bottom$ccells))
+#
+
+#append to table
+options.table<-rbind(options.table, c(option.bottom_RMSLE, "option.bottom=FALSE"))
+
+# run with restrict.ion.partitioning == TRUE (default is FALSE)
+option.restion <- armitage_eval(tcdata=IVD_Manuscript_data, 
+                                        surface.area.switch = FALSE,
+                             restrict.ion.partitioning = TRUE)
+
+option.restion_RMSLE<-rmsle((option.restion$CellConcentration_uM),(option.restion$ccells))
+#1.27784
+
+#append to table
+options.table<-rbind(options.table, c(option.restion_RMSLE, "restrict.ion.partitioning = TRUE"))
+
+
+```
+
+
+## Figure S1. Histogram showing chemical-specific RMSLE for Armitage Ccell vs Measured Ccell and Kramer Ccell vs Measured Ccell:
+```{r intracellular_histogram_plot, eval = execute.vignette}
+
+#combine data in plotting form
+combodata<-merge(Armitage.dt, Kramer.dt, by = "...1", all.x = TRUE)
+combodata<-cbind(nomconc=Nominal.dt$nomconc, combodata)
+
+#calculate RMSLE for each row of data
+combodata[, RMSLE_armitage:= rmsle(CellConcentration_uM.x, ccells), by = "...1"]
+combodata[, RMSLE_kramer:= rmsle(CellConcentration_uM.x, concentration_cells), by = "...1"]
+combodata[, RMSLE_nominal:= rmsle(CellConcentration_uM.x, nomconc), by = "...1"]
+
+max(combodata$RMSLE_armitage)
+
+bw <- 2 * IQR(combodata$RMSLE_nominal) / length(combodata$RMSLE_nominal)^(1/3)
+
+#plot histograms
+nominal_histogram <-ggplot(combodata, aes(x=RMSLE_nominal)) + 
+  geom_histogram(binwidth = 0.2, boundary = 0) +
+  labs(x = "Nominal RMSLE",
+       y = "Count") + 
+  xlim(0, 5) + ylim(0, 30) +
+  theme_classic() +  
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=14))
+
+armitage_histogram <-ggplot(combodata, aes(x=RMSLE_armitage)) + 
+  geom_histogram(binwidth = 0.2, boundary = 0) +
+  labs(x = "Armitage RMSLE",
+       y = "Count") +
+  xlim(0, 5) + ylim(0, 30) +
+  theme_classic() + 
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=14))
+
+kramer_histogram <- ggplot(combodata, aes(x=RMSLE_kramer)) + 
+  geom_histogram(binwidth = 0.2, boundary = 0) +
+  labs(x = "Kramer RMSLE",
+       y = "Count") +
+  xlim(0, 5) + ylim(0, 30) +
+  theme_classic()+
+  theme(axis.text=element_text(size=12),
+        axis.title=element_text(size=14))
+
+histogram_comboplot<-ggarrange(nominal_histogram, armitage_histogram, kramer_histogram, ncol=3)
+
+ggsave("Figure_S1.png", path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/",
+       histogram_comboplot, width = 10, height = 5, dpi = 300)
+
+print(histogram_comboplot)
+
+```

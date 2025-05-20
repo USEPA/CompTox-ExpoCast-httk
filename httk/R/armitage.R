@@ -361,6 +361,8 @@ armitage_eval <- function(chem.cas=NULL,
                           this.option.kbsa2 = FALSE,
                           this.option.swat2 = FALSE,
                           this.option.kpl2 = FALSE,
+                          this.option.plastic = TRUE,
+                          this.option.bottom = TRUE,
                           this.pseudooct = 0.01, # storage lipid content of cells
                           this.memblip = 0.04, # membrane lipid content of cells
                           this.nlom = 0.05, # structural protein content of cells
@@ -433,6 +435,8 @@ armitage_eval <- function(chem.cas=NULL,
                             option.kbsa2=this.option.kbsa2, 
                             option.swat2=this.option.swat2,
                             option.kpl2=this.option.kpl2,
+                            option.plastic=this.option.plastic,
+                            option.bottom=this.option.bottom,
                             FBSf=this.FBSf, pseudooct=this.pseudooct, 
                             memblip=this.memblip,
                             nlom=this.nlom, P_nlom=this.P_nlom, 
@@ -451,6 +455,7 @@ armitage_eval <- function(chem.cas=NULL,
                   "gkmw_n","gkbsa_n","gkpl_n","ksalt")
   
   req.list <- c("Tsys","Tref","option.kbsa2","option.swat2", "option.kpl2",
+                "option.bottom", "option.plastic",
                 "FBSf","pseudooct","memblip","nlom","P_nlom","P_dom","P_cells",
                 "Anionic_VF", "A_Prop_acid", "A_Prop_base", "Lyso_VF", 
                 "Lyso_Diam", "Lyso_pH", "csalt","celldensity",

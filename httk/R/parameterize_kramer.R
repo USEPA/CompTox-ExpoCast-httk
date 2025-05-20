@@ -31,7 +31,7 @@
 #'
 #' @author Meredith Scherer
 #'
-#' @import magrittr measurements
+#' @import magrittr
 #'
 #' @export parameterize_kramer
 
