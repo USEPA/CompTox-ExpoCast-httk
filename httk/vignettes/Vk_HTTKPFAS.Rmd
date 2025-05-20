@@ -228,6 +228,11 @@ colnames(clint.fup.pfas)[colnames(clint.fup.pfas)=="ClassPredFull"] <- "ML.Class
 save(clint.fup, 
      clint.fup.pfas,
      file=paste0(LOC.WD,"Clint-Fup-Values.RData"))
+write.table(clint.fup.pfas,
+            quote=FALSE,
+            row.names=FALSE,
+            sep="\t",
+            file=paste0(LOC.WD,"PFAS-Clint_Fup.txt"))
 cat(paste("(fraction unbound in plasma) in",
           sum(!is.na(clint.fup.pfas$Human.Funbound.plasma)),
           "PFAS\n"))
@@ -674,19 +679,19 @@ ratio.table["PFAS In Vivo Clearance Ratio","Min"] <-
 ratio.table["PFAS In Vivo Clearance Ratio","Max"] <- 
   max(subset(cl.table, 
                 Species=="Rat" &
-                  Class == "PFAS")$TK.Ratio.InVivo,na.rm=TRUE)
+                  Class == "PFAS")$TK.Ratio.InVivo, na.rm=TRUE)
 ratio.table["PFAS Default HTTK Clearance Ratio","Median"] <- 
   median(subset(cl.table, 
                 Species=="Rat" &
-                  Class == "PFAS")$TK.Ratio.HTTK)
+                  Class == "PFAS")$TK.Ratio.HTTK, na.rm=TRUE)
 ratio.table["PFAS Default HTTK Clearance Ratio","Min"] <- 
   min(subset(cl.table, 
                 Species=="Rat" &
-                  Class == "PFAS")$TK.Ratio.HTTK)
+                  Class == "PFAS")$TK.Ratio.HTTK, na.rm=TRUE)
 ratio.table["PFAS Default HTTK Clearance Ratio","Max"] <- 
   max(subset(cl.table, 
                 Species=="Rat" &
-                  Class == "PFAS")$TK.Ratio.HTTK)
+                  Class == "PFAS")$TK.Ratio.HTTK, na.rm=TRUE)
 ratio.table <- signif(ratio.table, 2)
 write.table(ratio.table, file=paste0(LOC.WD,"Ratio-Table.txt"),
             sep="\t")
