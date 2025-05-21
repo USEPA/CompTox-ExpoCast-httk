@@ -500,6 +500,116 @@ combodata[(ccells>concentration_cells), ] #108 observations where armitage ccell
 combodata[(ccells<concentration_cells)]   #46 observations where armitage is smaller than Kramer
 
 ```
+## Figure 5. Comparison of Armitage model using curated vs dashboard physchem values.
+```{r}
+
+#working directory
+setwd("C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/IVD_Data")
+
+#load data
+original_curated.data.df<-read_csv("Dimitrijevic_from_arnot.csv")
+
+#convert to data table for manipulation
+original_curated.data.dt <- as.data.table(original_curated.data.df)
+
+#first - run using the default/dashboard values
+default.dt<-copy(original_curated.data.dt %>% select(-c( "Arnot_pka", "Arnot_pkb", 
+                                                "Chemaxon_pKa", "Chemaxon_pKb", 
+                                                "log KOW,N", "log KAW,N", 
+                                                "Predicted_Ccell_µM", "FoA")))
+
+# run the model, output concentrations in umol/L (e.g. uM)
+armitageOutput_default.dt <- armitage_eval(tcdata=default.dt,
+                                        restrict.ion.partitioning = TRUE,
+                                        surface.area.switch = FALSE)
+
+#next- run using curated values (EAS-E Suite)
+curated.data.dt<-copy(original_curated.data.dt)
+
+#overwrite using curated physchem properties
+curated.data.dt[, pKa_Donor := as.character(Arnot_pka)] %>% #acidic
+  .[, pKa_Accept := as.character(Arnot_pkb)] %>% #basic
+  .[, gkow := `log KOW,N`] %>% # gkow
+  .[, gkaw_n := `log KAW,N`] # gkaw
+
+# run the model, output concentrations in umol/L (e.g. uM)
+armitageOutput_curated.data.dt <- armitage_eval(tcdata=curated.data.dt,
+                                        restrict.ion.partitioning = TRUE,
+                                        surface.area.switch = FALSE)
+
+#check that the properties survived through the function
+#gkow
+armitageOutput_curated.data.dt$gkow_n
+armitageOutput_curated.data.dt$`log KOW,N`
+armitageOutput_default.dt$gkow
+#gkaw
+armitageOutput_curated.data.dt$gkaw_n
+armitageOutput_curated.data.dt$`log KAW,N`
+armitageOutput_default.dt$gkaw_n
+
+armitageOutput_default.dt$ccells
+armitageOutput_curated.data.dt$ccells
+
+#calculate rmsle
+
+#default values
+
+#individual
+armitageOutput_default.dt[,rmsle_ccell:=rmsle(Reported_Ccell_µM, ccells), by = Name]
+
+#total
+rmsle(armitageOutput_default.dt$Reported_Ccell_µM, armitageOutput_default.dt$ccells)
+#0.5819282
+
+#curated values
+
+#individual
+armitageOutput_curated.data.dt[,rmsle_ccell:=rmsle(Reported_Ccell_µM, ccells), by = Name]
+
+#total
+rmsle(armitageOutput_curated.data.dt$Reported_Ccell_µM, armitageOutput_curated.data.dt$ccells)
+#0.5659809
+
+library(ggrepel)
+
+basicvalues_httk_plot<-ggplot(armitageOutput_default.dt, aes(Reported_Ccell_µM, ccells, color = Name, label = round(rmsle_ccell, 2)))+
+  geom_point(size = 4) + 
+  geom_abline(intercept=0,slope=1, linetype = "dashed") +
+  geom_text_repel() +
+                        scale_y_continuous(labels = function(x) sprintf("%g", x),  limits = c(1, 10000), trans='log10') +
+                        scale_x_continuous(labels = function(x) sprintf("%g", x),limits = c(1, 10000),  trans='log10') +
+                        xlab("Reported Ccell (\U00B5M)") + 
+                        ylab("Httk Predicted CCell (\U00B5M)")+
+                        ggtitle("Httk using Default Physchem Input")+
+                        theme_bw() + #now make it look good
+                        theme(text=element_text(size=15),
+                              legend.position="bottom",
+                              panel.border = element_blank(), 
+                              panel.grid.major = element_blank(),
+                              panel.grid.minor = element_blank(), 
+                              axis.line = element_line(colour = "black")) 
+
+curatedvalues_httk_plot<-ggplot(armitageOutput_curated.data.dt, aes(Reported_Ccell_µM, ccells, color = Name, label = round(rmsle_ccell, 2)))+
+  geom_point(size = 4) + 
+  geom_abline(intercept=0,slope=1, linetype = "dashed") +
+  geom_text_repel() +
+                        scale_y_continuous(labels = function(x) sprintf("%g", x),  limits = c(1, 10000), trans='log10') +
+                        scale_x_continuous(labels = function(x) sprintf("%g", x),limits = c(1, 10000),  trans='log10') +
+                        xlab("Reported Ccell (\U00B5M)") + 
+                        ylab("Httk Predicted CCell (\U00B5M)")+
+                        ggtitle("Httk using Curated Physchem Input")+
+                        theme_bw() + #now make it look good
+                        theme(text=element_text(size=15),
+                              legend.position="bottom",
+                              panel.border = element_blank(), 
+                              panel.grid.major = element_blank(),
+                              panel.grid.minor = element_blank(), 
+                              axis.line = element_line(colour = "black")) 
+
+basicvalues_httk_plot
+curatedvalues_httk_plot
+
+```
 
 # Main paper Calculations:
 

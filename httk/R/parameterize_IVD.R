@@ -134,13 +134,25 @@ parameterize_IVD <- function(tcdata = NA, # optionally supply columns v_working,
   
   #### Get PhysChem Parameters ####
   # Check if required phys-chem parameters are provided:
-  if(!all(c("gkow","logHenry","gswat","MP","MW") %in% names(tcdata))){ #if these columns are not in tcdata
+  if(!all(c("logHenry","gswat","MP","MW") %in% names(tcdata))){ #if these columns are not in tcdata
     # If not, pull them:
-    tcdata[, c("gkow","logHenry","logWSol","MP","MW") := 
-             as.data.frame(get_physchem_param(param = c("logP","logHenry","logWSol","MP","MW"), 
+    tcdata[, c("logHenry","logWSol","MP","MW") := 
+             as.data.frame(get_physchem_param(param = c("logHenry","logWSol","MP","MW"), 
                                               chem.cas = casrn))] #, row.names = casrn
     
   }
+  
+  
+  # Check if required phys-chem parameters are provided:
+  if(!all(c("gkow") %in% names(tcdata))){ #if this column is not in tcdata
+    # If not, pull it:
+    tcdata[, c("gkow") := 
+             as.data.frame(get_physchem_param(param = c("logP"), 
+                                              chem.cas = casrn))] #, row.names = casrn
+    
+  } #this is specifically to run the curated data comparison - can be combined with above otherwise
+  
+  
   
   #check for pka donor and acceptor
   if (!all(c("pKa_Donor","pKa_Accept") %in% names(tcdata))){
@@ -177,7 +189,9 @@ parameterize_IVD <- function(tcdata = NA, # optionally supply columns v_working,
   tcdata[, Fnegative := Fcharged - Fpositive]
   
   # Calculate gkaw for both models:
-  tcdata[, "gkaw_n" := logHenry - log10(298.15*8.2057338e-5)] # log10 (atm*m3)/mol to (mol/m3)/(mol/m3) (unitless)
+  if (!(c("gkaw_n") %in% names(tcdata))){
+    # If not present, calculate:
+    tcdata[, "gkaw_n" := logHenry - log10(298.15*8.2057338e-5)]} # log10 (atm*m3)/mol to (mol/m3)/(mol/m3) (unitless)
   #using ideal gas constant (R) = 8.2e-5 (m3*atm / (K*mol)) because logHenry is (atm*m3)/mol
   
   # Rename variables for both models
