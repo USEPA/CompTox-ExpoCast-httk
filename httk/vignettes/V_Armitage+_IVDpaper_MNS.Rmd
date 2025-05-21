@@ -88,6 +88,9 @@ library(ggpubr)      # arrange plots for publication
 library(devtools) # to run httk
 suppressWarnings(setwd("C:/Users/mscherer/httk-dev")) # to load httk
 suppressWarnings(devtools::load_all("httk")) # for armitage
+
+#save outputs: yes/no
+save_output = FALSE
 ```
 
 ```{r rmsle_func}
@@ -274,8 +277,12 @@ Nominal_ccell<-ggplot(Nominal.dt, aes(nomconc, CellConcentration_uM,
 Ccells_comboplot<-ggarrange(Nominal_ccell, Armitage_ccell, Kramer_ccell, ncol=3 , legend = "bottom", common.legend = TRUE)
 
 #save
-ggsave("Figure2.png", path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/",
+if(save_output){
+  ggsave("Figure2.png", path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/",
        Ccells_comboplot, width = 10, height = 5, dpi = 300)
+  
+}
+
 
 print(Ccells_comboplot)
 
@@ -381,8 +388,11 @@ Kramer_ccell_mult<-ggplot(Kramer.multobs.dt, aes(concentration_cells, CellConcen
 #arrange
 Ccells_comboplot_mult<-ggarrange(Armitage_ccell_mult, Kramer_ccell_mult, ncol=2, legend = "bottom", common.legend = TRUE)
 
-ggsave("Figure3.png", path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/",
+if(save_output){
+  ggsave("Figure3.png", path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/",
        Ccells_comboplot_mult, width = 8, height = 5, dpi = 300)
+}
+
 
 print(Ccells_comboplot_mult)
 
@@ -477,8 +487,11 @@ Aplastic_comparison<-ggplot(combodata, aes(concentration_plastic, cplastic,
 
 compartment_plots<-ggarrange(Cwater_comparison, Cair_comparison, Ccells_comparison, Aplastic_comparison, common.legend = TRUE, legend = "bottom")
 
-ggsave("Figure4.png", path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/",
+if(save_output){
+  ggsave("Figure4.png", path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/",
        compartment_plots, width = 11, height = 10, dpi= 300)
+}
+
 
 print(compartment_plots)
 
@@ -559,7 +572,10 @@ final_output<-data.dt2 %>%
   distinct(Citation, ChemicalName, .keep_all = TRUE) #filter 
 
 #save the output
-write.csv(final_output, path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/table_s1.csv")
+if(save_output){
+  write.csv(final_output, path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/table_s1.csv")
+}
+
 
 ```
 
@@ -576,8 +592,11 @@ table_s2<-parameter_table[, c("Citation", "ChemicalName", "nomconc", "NominalDos
 parameter_table[Citation=="Bopp, 2005", c("ChemicalName", "nomconc" )]
 
 parameter_table[Citation=="Tox21",]
+
 #save the output
-write.csv(table_s2, "table_s2_raw.csv")
+if(save_output){
+  write.csv(table_s2, path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/table_s2_raw.csv")
+}
 
 unique(parameter_table$Citation)
 parameter_table$CellConcentration_uM
@@ -667,7 +686,9 @@ mult_HL<-copy(mult.dt[RMSLE_kram>RMSLE_arm, higherorlower:="higher"] %>%
 mult_HL %>% count(higherorlower)
 
 #save the output
-write.csv(mult.dt, "table_s3.csv")
+if(save_output){
+  write.csv(mult.dt, path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/table_s3.csv")
+}
 
 ```
 ## Table S4: RMSLE and r^2 for acids and bases.
@@ -745,7 +766,9 @@ for (modelType in unique(data.for.plot$label)){
 print(ionization_rmsle)
 
 #save the output
-write.csv(ionization_rmsle, "table_s4.csv")
+if(save_output){
+  write.csv(ionization_rmsle, path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/table_s4.csv")
+}
 
 ```
 
@@ -767,7 +790,9 @@ rmsle_gkow_kramer<-gkowbins_kramer[, .(Kramer_RMSLE=rmsle(CellConcentration_uM, 
 gkow_output<-merge(rmsle_gkow_armitage, rmsle_gkow_kramer)
 
 #save the output
-write.csv(gkow_output, "table_s5.csv")
+if(save_output){
+  write.csv(gkow_output, path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/table_s5.csv")
+}
 
 ```
 
@@ -793,7 +818,9 @@ rmsle_kawbins_kramer<-kawbins_kramer[, .(Kramer_RMSLE=rmsle(CellConcentration_uM
 kaw_output<-merge(rmsle_kawbins_kramer, rmsle_kaw_armitage)
 
 #save the output
-write.csv(kaw_output, "table_s6.csv")
+if(save_output){
+  write.csv(kaw_output, path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/table_s6.csv")
+}
 
 ```
 
@@ -813,87 +840,89 @@ write.csv(kaw_output, "table_s6.csv")
 # 			§ True: Restrict so only the neutral fraction of the chemical is available to partition normally but the ionized portion is scaled
 
 
+##filter to just the ones we can run with the surface area calculation since option.plastic and option.bottom require that function:
+options.IVD_Manuscript_data<-copy(IVD_Manuscript_data)
+options.IVD_Manuscript_data<-options.IVD_Manuscript_data[!is.na(well_number), ] %>% 
+  .[,sarea:=NULL]  #delete sarea so the surface area function will run 
+
+#147 out of the original 174 observations
+
 # create table to append the results to 
 options.table <- NULL
 
 # run basic armitage, only setting the surface area switch
-option.basic <- armitage_eval(tcdata=IVD_Manuscript_data, 
-                                        surface.area.switch = FALSE)
+option.basic <- armitage_eval(tcdata=options.IVD_Manuscript_data)
 
 option.basic_RMSLE<-rmsle((option.basic$CellConcentration_uM),(option.basic$ccells))
-#1.27359
+#2.113451
 
 #append to table
-options.table<-rbind(options.table, c(option.basic_RMSLE, "All Default"))
+options.table<-rbind(options.table, c(round(option.basic_RMSLE ,2), "All Default"))
 
 # run with this.option.kbsa2 == TRUE (default is false)
-option.kbsa <- armitage_eval(tcdata=IVD_Manuscript_data, 
-                                        surface.area.switch = FALSE,
+option.kbsa <- armitage_eval(tcdata=options.IVD_Manuscript_data,
                              this.option.kbsa2 = TRUE)
 
 option.kbsa_RMSLE<-rmsle((option.kbsa$CellConcentration_uM),(option.kbsa$ccells))
-#1.275969
+#2.087882
 
 #append to table
-options.table<-rbind(options.table, c(option.kbsa_RMSLE, "option.kbsa=TRUE"))
+options.table<-rbind(options.table, c(round(option.kbsa_RMSLE, 2), "option.kbsa=TRUE"))
 
 
 # run with this.option.swat2 == TRUE (default is false)
-option.swat <- armitage_eval(tcdata=IVD_Manuscript_data, 
-                                        surface.area.switch = FALSE,
+option.swat <- armitage_eval(tcdata=options.IVD_Manuscript_data,
                              this.option.swat2 = TRUE)
 
 option.swat_RMSLE<-rmsle((option.swat$CellConcentration_uM),(option.swat$ccells))
-#3.224959
+#3.214113
 
 #append to table
-options.table<-rbind(options.table, c(option.swat_RMSLE, "option.swat2=TRUE"))
+options.table<-rbind(options.table, c(round(option.swat_RMSLE, 2), "option.swat2=TRUE"))
 
 # run with this.option.kpl2 == TRUE (Fischer) (default is false/kramer)
-option.kpl <- armitage_eval(tcdata=IVD_Manuscript_data, 
-                                        surface.area.switch = FALSE,
+option.kpl <- armitage_eval(tcdata=options.IVD_Manuscript_data,
                              this.option.kpl2 = TRUE)
 
 option.kpl_RMSLE<-rmsle((option.kpl$CellConcentration_uM),(option.kpl$ccells))
-#1.727086
+#2.042262
 
 #append to table
-options.table<-rbind(options.table, c(option.kpl_RMSLE, "option.kpl2=TRUE"))
+options.table<-rbind(options.table, c(round(option.kpl_RMSLE, 2), "option.kpl2=TRUE"))
 
 # run with option.plastic == FALSE (default is true)
-opt.plast_input<- copy(IVD_Manuscript_data[,option.plastic := FALSE])
+opt.plast_input<- copy(options.IVD_Manuscript_data)
+opt.plast_input[,option.plastic := FALSE]
 
-option.plast <- armitage_eval(tcdata=opt.plast_input, 
-                                        surface.area.switch = FALSE)
+option.plast <- armitage_eval(tcdata=opt.plast_input)
 
 option.plast_RMSLE<-rmsle((option.plast$CellConcentration_uM),(option.plast$ccells))
-#
+#2.130671
 
 #append to table
-options.table<-rbind(options.table, c(option.plast_RMSLE, "option.plastic=FALSE"))
+options.table<-rbind(options.table, c(round(option.plast_RMSLE, 2), "option.plastic=FALSE"))
 
 # run with option.bottom == FALSE (default is true)
-option.bottom_input<- copy(IVD_Manuscript_data[,option.bottom := FALSE])
+option.bottom_input<- copy(options.IVD_Manuscript_data)
+option.bottom_input[,option.bottom := FALSE]
 
-option.bottom <- armitage_eval(tcdata=option.bottom_input, 
-                                        surface.area.switch = FALSE)
+option.bottom <- armitage_eval(tcdata=option.bottom_input)
 
 option.bottom_RMSLE<-rmsle((option.bottom$CellConcentration_uM),(option.bottom$ccells))
-#
+#2.117772
 
 #append to table
-options.table<-rbind(options.table, c(option.bottom_RMSLE, "option.bottom=FALSE"))
+options.table<-rbind(options.table, c(round(option.bottom_RMSLE,2), "option.bottom=FALSE"))
 
 # run with restrict.ion.partitioning == TRUE (default is FALSE)
-option.restion <- armitage_eval(tcdata=IVD_Manuscript_data, 
-                                        surface.area.switch = FALSE,
+option.restion <- armitage_eval(tcdata=options.IVD_Manuscript_data,
                              restrict.ion.partitioning = TRUE)
 
 option.restion_RMSLE<-rmsle((option.restion$CellConcentration_uM),(option.restion$ccells))
-#1.27784
+#2.10899
 
 #append to table
-options.table<-rbind(options.table, c(option.restion_RMSLE, "restrict.ion.partitioning = TRUE"))
+options.table<-rbind(options.table, c(round(option.restion_RMSLE,2), "restrict.ion.partitioning = TRUE"))
 
 
 ```
@@ -945,8 +974,11 @@ kramer_histogram <- ggplot(combodata, aes(x=RMSLE_kramer)) +
 
 histogram_comboplot<-ggarrange(nominal_histogram, armitage_histogram, kramer_histogram, ncol=3)
 
-ggsave("Figure_S1.png", path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/",
+if(save_output){
+  ggsave("Figure_S1.png", path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/",
        histogram_comboplot, width = 10, height = 5, dpi = 300)
+}
+
 
 print(histogram_comboplot)
 

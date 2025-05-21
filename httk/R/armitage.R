@@ -533,15 +533,18 @@ armitage_eval <- function(chem.cas=NULL,
   # Use spLFERs to calculate partition coefficients not provided by user:
   # kmw (membrane-water PC) spLFER
   tcdata[is.na(gkmw_n), gkmw_n:=1.01*gkow_n + 0.12]
+        #source: Capacities of Membrane Lipids to Accumulate Neutral Organic Chemicals (Endo, 2011)
   
   # kbsa (bovine serum albumin-water PC) spLFER
   tcdata[option.kbsa2==TRUE & is.na(gkbsa_n) & gkow_n<4.5, gkbsa_n:=(1.08*gkow_n-0.7)] %>% # option 1 for kbsa calc
     .[option.kbsa2==TRUE & is.na(gkbsa_n) & gkow_n>=4.5, gkbsa_n:=(0.37*gkow_n+2.56)] %>% 
+        #source: Figure 2 from Serum Albumin Binding of Structurally Diverse Neutral Organic Compounds: Data and Models (Endo + Goss 2011)
     .[option.kbsa2==FALSE & is.na(gkbsa_n),gkbsa_n:=(0.71*gkow_n+0.42)] # option 2 for kbsa calc
+        #source: Serum Albumin Binding of Structurally Diverse Neutral Organic Compounds: Data and Models (Endo + Goss 2011)
   
   # kpl (plastic-water PC) spLFER 
-  tcdata[option.kpl2==FALSE & is.na(gkpl_n),gkpl_n:=0.97*gkow_n-6.94] %>% #from Kramer 2012
-    .[option.kpl2==TRUE & is.na(gkpl_n),gkpl_n:=0.56*gkow_n-4.635] #from Fischer {{CITATION HERE}}
+  tcdata[option.kpl2==FALSE & is.na(gkpl_n),gkpl_n:=0.97*gkow_n-6.94] %>% #from Kramer 2012 (Kramer, N.I. Measuring, Modeling, and Increasing the Free Concentration of Test Chemicals in Cell Assays)
+    .[option.kpl2==TRUE & is.na(gkpl_n),gkpl_n:=0.56*gkow_n-4.635] #from Fischer 2018 (Application of Experimental Polystyrene Partition Constants andDiﬀusion Coeﬃcients to Predict the Sorption of Neutral OrganicChemicals to Multiwell Plates in in Vivo and in Vitro Bioassay)
   
   ### Calculating Ionized Partition Coefficients ###
   # set up scaling factors (used to calculate PCs for the charged portion of the chemical)
