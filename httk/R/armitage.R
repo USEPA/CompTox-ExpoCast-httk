@@ -8,7 +8,8 @@
 #' 
 #' 
 #' @param tcdata A data table with well_number corresponding to plate format,
-#' optionally include v_working, sarea, option.bottom, and option.plastic
+#' optionally include v_working, sarea, option.bottom, and option.plastic OR 
+#' with assay_component_endpoint_name corresponding to an entry in invitro.assay.params.
 #' 
 #' @param this.well_number For single value, plate format default is 384, used
 #' if is.na(tcdata)==TRUE
@@ -64,30 +65,60 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
     tcdata[,c("sarea","cell_yield","v_working")[!(c("sarea","cell_yield","v_working")%in%names(tcdata))]] <- as.double(NA)
   }
   
-  well.desc.list <- c("flat_bottom","standard","clear_flat_bottom")
-  well.number.list <- c(6,12,24,48)
-  well.param <- copy(well_param)[well_number %in% well.number.list |
-                                   well_desc %in% well.desc.list]
+  #if the user is taking advantage of the invitro.assay.params table:
+  if(((c("assay_component_endpoint_name") %in% names(tcdata)))){
+    
+    #but they are missing information in their table or have not added it to invitro.assay.params
+    if(any(is.na(tcdata[,.(assay_component_endpoint_name)])) | !(unique(IVD_Manuscript_data[,(assay_component_endpoint_name)]) %in% invitro.assay.params[,(assay_component_endpoint_name)])){
+      
+      #stop the code and give this error:
+      stop("assay_component_endpoint_name must be defined for each row and must be a row in invitro.assay.params")
+    }
+    
+    #if all the info is present, pull surface area and other info from the invitro.assay.params table
+    tcdata <- invitro.assay.params[tcdata,on=.(assay_component_endpoint_name)]
+    
+    #account for option.plastic and option.bottom
+    tcdata[option.bottom==FALSE, sarea := 4*diam*height] %>% #overwrite sarea with the bottom area removed
+      .[option.plastic==FALSE, sarea := 0] #overwrite sarea to zero
+
+
+    
+    #pull surface area and other info from the invitro.assay.params table
+    tcdata <- invitro.assay.params[tcdata,on=.(assay_component_endpoint_name)]
+    
+    
+    
+  }
   
-  setnames(well.param,c("cell_yield","v_working"),c("cell_yield_est","v_working_est"))
   
+  #if the user is not taking advantage of the invitro.assay.params table:
+  if(!((c("assay_component_endpoint_name") %in% names(tcdata)))){
   
-  tcdata <- well.param[tcdata,on=.(well_number)]
-  
-  tcdata[,radius:=diam/2] %>%  # mm
-    .[is.na(v_working), v_working:=as.numeric(v_working_est)] %>%
-    .[sysID %in% c(7,9), height:= v_working/(diam^2)] %>%  #mm for square wells
-    .[is.na(option.bottom),option.bottom:=TRUE] %>%
-    .[option.bottom==TRUE & (sysID %in% c(7,9)),sarea_c := 4*diam*height+diam^2] %>% #mm2
-    .[option.bottom==FALSE & (sysID %in% c(7,9)),sarea_c := 4*diam*height] %>%
-    .[!(sysID %in% c(7,9)),height:=v_working/(pi*radius^2)] %>% # for cylindrical wells
-    .[option.bottom==TRUE & !(sysID %in% c(7,9)), sarea_c := 2*pi*radius*height+pi*radius^2] %>%  #mm2
-    .[option.bottom==FALSE & !(sysID %in% c(7,9)), sarea_c := 2*pi*radius*height] %>%
-    .[is.na(option.plastic),option.plastic:=TRUE] %>%
-    .[,sarea_c:=sarea_c/1e6] %>% #mm2 to m2
-    .[option.plastic==FALSE, sarea_c:=0] %>%
-    .[is.na(sarea),sarea:=sarea_c] %>%
-    .[is.na(cell_yield),cell_yield:=as.double(cell_yield_est)]
+    well.desc.list <- c("flat_bottom","standard","clear_flat_bottom")
+    well.number.list <- c(6,12,24,48)
+    well.param <- copy(well_param)[well_number %in% well.number.list |
+                                     well_desc %in% well.desc.list]
+    
+    setnames(well.param,c("cell_yield","v_working"),c("cell_yield_est","v_working_est"))
+    
+    tcdata <- well.param[tcdata,on=.(well_number)]
+    
+    tcdata[,radius:=diam/2] %>%  # mm
+      .[is.na(v_working), v_working:=as.numeric(v_working_est)] %>%
+      .[sysID %in% c(7,9), height:= v_working/(diam^2)] %>%  #mm for square wells
+      .[is.na(option.bottom),option.bottom:=TRUE] %>%
+      .[option.bottom==TRUE & (sysID %in% c(7,9)),sarea_c := 4*diam*height+diam^2] %>% #mm2
+      .[option.bottom==FALSE & (sysID %in% c(7,9)),sarea_c := 4*diam*height] %>%
+      .[!(sysID %in% c(7,9)),height:=v_working/(pi*radius^2)] %>% # for cylindrical wells
+      .[option.bottom==TRUE & !(sysID %in% c(7,9)), sarea_c := 2*pi*radius*height+pi*radius^2] %>%  #mm2
+      .[option.bottom==FALSE & !(sysID %in% c(7,9)), sarea_c := 2*pi*radius*height] %>%
+      .[is.na(option.plastic),option.plastic:=TRUE] %>%
+      .[,sarea_c:=sarea_c/1e6] %>% #mm2 to m2
+      .[option.plastic==FALSE, sarea_c:=0] %>%
+      .[is.na(sarea),sarea:=sarea_c] %>%
+      .[is.na(cell_yield),cell_yield:=as.double(cell_yield_est)]
+  }
   
   return(tcdata)
 }
@@ -190,6 +221,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' v_total \tab Total volume of well \tab uL \cr       
 #' v_working \tab Filled volume of well \tab uL \cr     
 #' cell_yield \tab Number of cells \tab cells \cr    
+#' assay_component_endpoint_name \tab link to invitro.assay.params table \tab character \cr  
 #' gkow \tab The log10 octanol to water (PC) (logP)\tab log10 unitless ratio \cr          
 #' logHenry \tab The log10 Henry's law constant '\tab log10 unitless ratio \cr      
 #' gswat \tab The log10 water solubility (logWSol) \tab log10 mg/L \cr         
