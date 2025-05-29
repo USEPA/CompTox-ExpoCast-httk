@@ -333,16 +333,16 @@ good.Kblood2air <- pfas.data$logKblood2air
 good.logHenry <- pfas.data$logHenry
 good.logHenry <- good.logHenry[!is.na(good.Kblood2air)]
 good.Kblood2air <- good.Kblood2air[!is.na(good.Kblood2air)]
-cat(paste("Out of",
+cat(paste0("Out of ",
           length(good.logHenry),
-          "PFAS for which the Henry's Law Constant could be predicted,",
+          " PFAS for which the Henry's Law Constant could be predicted, ",
           signif(sum(good.logHenry >
                        -4.5)/length(good.logHenry)*100,2),
           "% were more volatile than acetone.\n"))
 most.volatile <- pfas.data[pfas.data$logKblood2air %in% min(good.Kblood2air), 
                            "Compound"]
-cat(paste("The most volatile chemical was",most.volatile,
-          "with a predicted logKblood2air of", signif(min(good.Kblood2air),3),
+cat(paste0("The most volatile chemical was ", most.volatile,
+          " with a predicted logKblood2air of ", signif(min(good.Kblood2air),3),
           ".\n"))
 ```
 
@@ -412,7 +412,7 @@ for (this.chem in unique(cl.table$DTXSID))
       }
     }
   }
-cat(paste0(dim(cl.table)[1],"rows of in vivo clearance data.\n"))
+cat(paste0(dim(cl.table)[1]," rows of in vivo clearance data.\n"))
 ```
 
 ## Add in Dawson 2023 predictions for later
@@ -1061,7 +1061,7 @@ fig.clhttkpfas.invivo  <- ggplot(data=subset(cl.table, Class=="PFAS")) +
    scale_color_viridis(discrete=4)+
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE))+
-  annotate("text", size=FONT.SIZE/3, x = 10^-6, y = 10^-1, 
+  annotate("text", size=FONT.SIZE/3, x = 10^-6*10, y = 10^-1, 
            label = paste("RMSLE:",
                          RMSLE(subset(cl.table, Class=="PFAS"),
                                "HTTKPFAS.Cltot.Lphpkgbw","ClLphpkgbw")))+

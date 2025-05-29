@@ -2015,7 +2015,7 @@ Smeltz2023PPBREDBayes[Smeltz2023PPBREDBayes$Human.Funbound.plasma=="NA,NA,NA",
                      
 chem.physical_and_invitro.data <- add_chemtable(Smeltz2023PPBREDBayes,
   current.table=chem.physical_and_invitro.data,
-  data.list=list(Compound="Compound",
+  data.list=list(Compound="Compound.Name",
     DTXSID="DTXSID",
     CAS="CASRN",
     Funbound.plasma="Human.Funbound.plasma"
@@ -2065,6 +2065,9 @@ Kreutz2023PPBBayes <- as.data.frame(
   read_excel("Kreutz2023/toxics-2360536-supplementary.xlsx",
   sheet="Table_S8_PPB_UC-Level4"))
 length(unique(Kreutz2023PPBBayes$DTXSID))
+# Wrong name:      
+Kreutz2023PPBBayes[Kreutz2023PPBBayes$DTXSID=="DTXSID50382621",
+                   "Compound"] <- "7:3 Fluorotelomer alcohol"
 
 Kreutz2023PPBBayes <- merge(Kreutz2023PPBBayes,
                             PFAS[,c("DTXSID","CASRN")],
@@ -2109,7 +2112,6 @@ Kreutz2023ClintBayes <- merge(Kreutz2023ClintBayes,
 # Add reference chemical Ametryn:
 Kreutz2023ClintBayes[Kreutz2023ClintBayes$DTXSID=="DTXSID1023869",
                    "CASRN"] <-"834-12-8"
-                                               
 Kreutz2023ClintBayes$Human.Clint <- paste(
   signif(Kreutz2023ClintBayes$Clint.1.Med ,3),
   signif(Kreutz2023ClintBayes$Clint.1.Low ,3),
@@ -2133,13 +2135,28 @@ chem.physical_and_invitro.data <- add_chemtable(Kreutz2023ClintBayes,
 # Manually calculated values  
 Kreutz2023Manual <- as.data.frame(
   read_excel("Kreutz2023/toxics-2360536-supplementary.xlsx",
-  sheet="Table S3-TK_Data_Summary"))
+  sheet="Table S3-TK_Data_Summary"))                        
   
+colnames(Kreutz2023Manual)[2] <- "Name"
 colnames(Kreutz2023Manual)[5] <- "fup"
+
+Kreutz2023Manual <- merge(Kreutz2023Manual,
+                            PFAS[,c("DTXSID","CASRN")],
+                            all.x=TRUE)
+                            
+# Add missing CAS's:
+Kreutz2023Manual[Kreutz2023Manual$DTXSID=="DTXSID60238701",
+                   "CASRN"] <-"918-21-8"
+Kreutz2023Manual[Kreutz2023Manual$DTXSID=="DTXSID30395037",
+                   "CASRN"] <-"58244-27-2"     
+Kreutz2023Manual[Kreutz2023Manual$DTXSID=="DTXSID80382093",
+                   "CASRN"] <-"31253-34-6"  
+                                                 
+
 Kreutz2023Manual$fup <- signif(as.numeric(Kreutz2023Manual$fup),4) 
 Kreutz2023Manual$clint <- signif(as.numeric(Kreutz2023Manual$Bkgd_adj_Clint),4)
 
-chem.physical_and_invitro.data <- add_chemtable(Kreutz2023PPBManual,
+chem.physical_and_invitro.data <- add_chemtable(Kreutz2023Manual,
   current.table=chem.physical_and_invitro.data,
   data.list=list(Compound="Name",
     DTXSID="DTXSID",
@@ -2192,10 +2209,14 @@ colnames(Crizer2023ClintManual)[9] <- "Clint"
 Crizer2023ClintManual <- subset(Crizer2023ClintManual,
   !is.na(Crizer2023ClintManual$Clint))
 length(unique(Crizer2023ClintManual$DTXSID))
+Crizer2023ClintManual[,"p-value"] <- 
+  signif(as.numeric(Crizer2023ClintManual[,"p-value"]),4)
+Crizer2023ClintManual[is.na(Crizer2023ClintManual[,"p-value"]),
+                            "p-value"] <- 1.0 
 
 chem.physical_and_invitro.data <- add_chemtable(Crizer2023ClintManual,
   current.table=chem.physical_and_invitro.data,
-  data.list=list(Compound="PREFERRED_NAME",
+  data.list=list(Compound="NAME",
     DTXSID="DTXSID",
     CAS="CASRN",
     CLint="Clint",
