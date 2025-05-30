@@ -580,6 +580,9 @@ TNO.table[TNO.table[,"...14"] %in% "hep", "CLint,h"] <-
 # Set source to reference where available:
 TNO.table[!is.na(TNO.table[,"References"]),"Source"] <-
   TNO.table[!is.na(TNO.table[,"References"]),"References"]
+# We already have primary source for EPA/Hamner:
+TNO.table <- subset(TNO.table, Source != "EPA/Hamner")
+
 chem.prop <- add_chemtable(TNO.table,
                species="Human",
                current.table=chem.prop,
