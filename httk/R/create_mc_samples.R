@@ -609,6 +609,7 @@ Set species=\"Human\" to run httkpop model.')
     if (!is.na(Rb2p.invivo))
     {
 # From Pearce et al. (2017):
+
       parameters.dt[, Krbc2pu:=calc_krbc2pu(Rb2p = Rb2p.invivo,
                                             Funbound.plasma = Funbound.plasma,
                                             hematocrit = hematocrit,
@@ -620,6 +621,7 @@ Set species=\"Human\" to run httkpop model.')
     parameters.dt[,Rblood2plasma := calc_rblood2plasma(
                                       hematocrit=hematocrit,
                                       Krbc2pu=Krbc2pu,
+                                      species = species,
                                       Funbound.plasma=Funbound.plasma,
                                       species = species,
                                       default.to.human = parameterize.args.list$default.to.human,
@@ -663,6 +665,7 @@ adjusted.Funbound.plasma=TRUE,
                     species = species,
           hepatic.model='unscaled',
           restrictive.clearance=parameterize.args.list[["restrictive.clearance"]],
+          species = species,
           suppress.messages=TRUE)
           )
           ) #L/h/kg body weight
@@ -670,6 +673,7 @@ adjusted.Funbound.plasma=TRUE,
 # we use purrr::compact to drop NULL values from arguments list:
   parameters.dt[,hepatic.bioavailability := do.call(calc_hep_bioavailability,
     args=purrr::compact(list(
+      species = species,
       parameters=list(
         Qtotal.liverc=parameters.dt$Qtotal.liverc, # L/h/kg^3/4
         Funbound.plasma=parameters.dt$Funbound.plasma,
