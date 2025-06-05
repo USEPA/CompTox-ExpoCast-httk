@@ -380,7 +380,7 @@ create_mc_samples <- function(chem.cas=NULL,
 
 # Sample any parameters requested with the conventional sampler
 # (Wambaugh et al., 2015):
-  parameters.dt <- monte_carlo(parameters.mean,
+  parameters.dt <- monte_carlo(parameters = parameters.mean,
                      censored.params=censored.params,
                      cv.params=vary.params,
                      samples=samples,
@@ -488,7 +488,8 @@ Set species=\"Human\" to run httkpop model.')
         parameters.dt[, Funbound.plasma.adjustment :=
           calc_fup_correction(
             parameters = parameters.dt,
-            species = species)]
+            species = species,
+            default.to.human = parameterize.args.list$default.to.human)]
         parameters.dt[, Funbound.plasma := 
           apply_fup_adjustment(Funbound.plasma,
                       Funbound.plasma.adjustment)]
@@ -534,7 +535,8 @@ Set species=\"Human\" to run httkpop model.')
     Rb2p.invivo <- get_rblood2plasma(chem.cas=chem.cas,
                                      chem.name=chem.name,
                                      dtxsid=dtxsid,
-                                     species = species)
+                                     species = species,
+                                     default.to.human = parameterize.args.list$default.to.human)
   } else Rb2p.invivo <- NA
 
 # We need all of these parameters to recalculate values with the 
@@ -581,7 +583,8 @@ Set species=\"Human\" to run httkpop model.')
     parameters.dt[,Krbc2pu:=calc_krbc2pu(
       Rb2p = adj.parameters.mean$Rblood2plasma,
       Funbound.plasma = adj.parameters.mean$Funbound.plasma,
-      species = species)]
+      species = species,
+      default.to.human = parameterize.args.list$default.to.human)]
   }
 
 # If the model uses partion coefficients we need to lump each individual
@@ -589,7 +592,7 @@ Set species=\"Human\" to run httkpop model.')
   if (model.list[[model]]$calcpc)
   {
      lumptissues <- lump_tissues(
-                      PCs,
+       Ktissue2pu.in = PCs,
                       parameters=parameters.dt,
                       tissuelist=model.list[[model]]$tissuelist,
                       species=species,
@@ -609,7 +612,8 @@ Set species=\"Human\" to run httkpop model.')
       parameters.dt[, Krbc2pu:=calc_krbc2pu(Rb2p = Rb2p.invivo,
                                             Funbound.plasma = Funbound.plasma,
                                             hematocrit = hematocrit,
-                                            species = species)]
+                                            species = species,
+                                            default.to.human = parameterize.args.list$default.to.human)]
     } 
 # Calculate Rblood2plasma based on hematocrit, Krbc2plasma, and Funbound.plasma. 
 # This is the ratio of chemical in blood vs. in plasma.
@@ -618,6 +622,7 @@ Set species=\"Human\" to run httkpop model.')
                                       Krbc2pu=Krbc2pu,
                                       Funbound.plasma=Funbound.plasma,
                                       species = species,
+                                      default.to.human = parameterize.args.list$default.to.human,
 # We can set this to TRUE because the value in Funbound.plasma is either adjusted
 # or not adjusted already:
                                       adjusted.Funbound.plasma=TRUE)]
@@ -632,7 +637,8 @@ Set species=\"Human\" to run httkpop model.')
                             dtxsid=dtxsid,
                             species=species,
 # We can set this to TRUE because the value in Funbound.plasma is either adjusted
-# or not adjusted already:                           adjusted.Funbound.plasma=TRUE,
+# or not adjusted already:                           
+adjusted.Funbound.plasma=TRUE,
                             suppress.messages=suppress.messages)]
     }
   }
@@ -671,6 +677,7 @@ Set species=\"Human\" to run httkpop model.')
         Rblood2plasma=parameters.dt$Rblood2plasma,
         BW=parameters.dt$BW),
       species = species,
+      default.to.human = parameterize.args.list$default.to.human,
       restrictive.clearance=parameterize.args.list[["restrictive.clearance"]])))]
   }
   
