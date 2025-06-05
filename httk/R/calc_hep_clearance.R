@@ -247,7 +247,8 @@ calc_hep_clearance <- function(chem.name=NULL,
   # Convert from uL/min/kg BW to L/h/kg BW
   Clint <- Clint/10^6*60 
 
-  Qtotal.liverc <- Qtotal.liverc / parameters[['BW']]^0.25
+  # Convert from L/hr/kg^(3/4) to L/hr/kg
+  Qtotal.liver_pkg <- Qtotal.liverc / parameters[['BW']]^0.25
   if (tolower(model) == "unscaled")
   {
     CLh <- fup*Clint
@@ -266,16 +267,16 @@ calc_hep_clearance <- function(chem.name=NULL,
           adjusted.Funbound.plasma=adjusted.Funbound.plasma,
           suppress.messages=suppress.messages)
       } else(stop("Enter chem.cas or chem.name with corresponding species or enter Rblood2plasma as a parameter for the well-stirred model correction."))
-      CLh <- Qtotal.liverc*fup*Clint/(Qtotal.liverc+fup*Clint / Rblood2plasma)
-    } else CLh <- Qtotal.liverc*fup*Clint/(Qtotal.liverc+fup*Clint)   
+      CLh <- Qtotal.liver_pkg*fup*Clint/(Qtotal.liver_pkg+fup*Clint / Rblood2plasma)
+    } else CLh <- Qtotal.liver_pkg*fup*Clint/(Qtotal.liver_pkg+fup*Clint)   
   } else if(tolower(model) == "parallel tube")
   {
-    CLh <- Qtotal.liverc*(1-exp(-fup*Clint/Qtotal.liverc))
+    CLh <- Qtotal.liver_pkg*(1-exp(-fup*Clint/Qtotal.liver_pkg))
   } else if(tolower(model) == "dispersion")
   {
-    Rn <- fup*Clint/Qtotal.liverc
+    Rn <- fup*Clint/Qtotal.liver_pkg
     a <- sqrt(1 + 4*Rn*Dn)
-    CLh <- Qtotal.liverc*
+    CLh <- Qtotal.liver_pkg*
       (1 - 4*a/((1+a)^2*exp((a-1)/2/Dn)-(1-a)^2*exp(-(a+1)/2/Dn)))
   }
   if (!suppress.messages) cat(
