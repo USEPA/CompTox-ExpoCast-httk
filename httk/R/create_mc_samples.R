@@ -296,12 +296,21 @@ create_mc_samples <- function(chem.cas=NULL,
   #Depending on model, choose the function in HTTK that will return the default
   #HTTK parameters for this chemical
   paramfun <- model.list[[model]]$parameterize.func
+  tmp_tissuelist <- as.list(
+    setdiff(
+      model.list[[model]]$alltissues,
+      "red blood cells")
+  )
+  names(tmp_tissuelist) <-   setdiff(
+    model.list[[model]]$alltissues,
+    "red blood cells")
   parameterize.args.list<- purrr::compact(c(list(chem.cas=chem.cas,
                                              chem.name=chem.name,
                                              dtxsid=dtxsid,
                                              species=species,
                                         parameters=parameters,
-                                        suppress.messages=suppress.messages),
+                                        suppress.messages=suppress.messages,
+                                        tissuelist = tmp_tissuelist),
                                         parameterize.args.list))
   if (!is.null(Caco2.options)) parameterize.args.list[["Caco2.options"]] <- Caco2.options
   
