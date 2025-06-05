@@ -487,7 +487,8 @@ Set species=\"Human\" to run httkpop model.')
         parameters.dt[, Funbound.plasma := unadjusted.Funbound.plasma]
         parameters.dt[, Funbound.plasma.adjustment :=
           calc_fup_correction(
-            parameters = parameters.dt)]
+            parameters = parameters.dt,
+            species = species)]
         parameters.dt[, Funbound.plasma := 
           apply_fup_adjustment(Funbound.plasma,
                       Funbound.plasma.adjustment)]
@@ -532,7 +533,8 @@ Set species=\"Human\" to run httkpop model.')
   {
     Rb2p.invivo <- get_rblood2plasma(chem.cas=chem.cas,
                                      chem.name=chem.name,
-                                     dtxsid=dtxsid)
+                                     dtxsid=dtxsid,
+                                     species = species)
   } else Rb2p.invivo <- NA
 
 # We need all of these parameters to recalculate values with the 
@@ -578,7 +580,8 @@ Set species=\"Human\" to run httkpop model.')
     } else adj.parameters.mean <- parameters
     parameters.dt[,Krbc2pu:=calc_krbc2pu(
       Rb2p = adj.parameters.mean$Rblood2plasma,
-      Funbound.plasma = adj.parameters.mean$Funbound.plasma)]
+      Funbound.plasma = adj.parameters.mean$Funbound.plasma,
+      species = species)]
   }
 
 # If the model uses partion coefficients we need to lump each individual
@@ -603,9 +606,10 @@ Set species=\"Human\" to run httkpop model.')
     if (!is.na(Rb2p.invivo))
     {
 # From Pearce et al. (2017):
-      parameters.dt[, Krbc2pu:=calc_krbc2pu(Rb2p.invivo,
-                                            Funbound.plasma,
-                                            hematocrit)]
+      parameters.dt[, Krbc2pu:=calc_krbc2pu(Rb2p = Rb2p.invivo,
+                                            Funbound.plasma = Funbound.plasma,
+                                            hematocrit = hematocrit,
+                                            species = species)]
     } 
 # Calculate Rblood2plasma based on hematocrit, Krbc2plasma, and Funbound.plasma. 
 # This is the ratio of chemical in blood vs. in plasma.
@@ -613,6 +617,7 @@ Set species=\"Human\" to run httkpop model.')
                                       hematocrit=hematocrit,
                                       Krbc2pu=Krbc2pu,
                                       Funbound.plasma=Funbound.plasma,
+                                      species = species,
 # We can set this to TRUE because the value in Funbound.plasma is either adjusted
 # or not adjusted already:
                                       adjusted.Funbound.plasma=TRUE)]
@@ -649,6 +654,7 @@ Set species=\"Human\" to run httkpop model.')
                 args = purrr::compact(
                   list(
                     parameters=parameters.dt,
+                    species = species,
           hepatic.model='unscaled',
           restrictive.clearance=parameterize.args.list[["restrictive.clearance"]],
           suppress.messages=TRUE)
@@ -664,6 +670,7 @@ Set species=\"Human\" to run httkpop model.')
         Clmetabolismc=cl, # L/h/kg
         Rblood2plasma=parameters.dt$Rblood2plasma,
         BW=parameters.dt$BW),
+      species = species,
       restrictive.clearance=parameterize.args.list[["restrictive.clearance"]])))]
   }
   
@@ -681,7 +688,8 @@ Set species=\"Human\" to run httkpop model.')
   #
   if (!keepit100) 
   {
-    bioavail <- calc_fbio.oral(parameters = parameters.dt) 
+    bioavail <- calc_fbio.oral(parameters = parameters.dt,
+                               species = species) 
     if (Caco2.Fabs) parameters.dt[,Fabs:=
                                    bioavail$fabs.oral]
     if (Caco2.Fgut) parameters.dt[,Fgut:=
@@ -699,7 +707,8 @@ Set species=\"Human\" to run httkpop model.')
   propagateuvfun <- model.list[[model]]$propagateuv.func
   if (!is.null(propagateuvfun))
     parameters.dt <- do.call(propagateuvfun, args=purrr::compact(c(list(
-                       parameters.dt=parameters.dt),
+                       parameters.dt=parameters.dt,
+                       species = species),
                        propagate.invitrouv.arg.list)))
   
 # set precision:
