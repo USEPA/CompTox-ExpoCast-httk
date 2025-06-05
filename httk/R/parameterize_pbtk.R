@@ -357,8 +357,8 @@ parameterize_pbtk <- function(
   outlist <- list()
   # Begin flows:
   #mL/min/kgBW^(3/4) converted to L/h/kgBW^(3/4):
-  QGFRc <- this.phys.data["GFR"]/1000*60 
-  Qcardiacc = this.phys.data["Cardiac Output"]/1000*60 
+  QGFRc <- this.phys.data["GFR"]/1000*60 # L/h/kgBW^(3/4) 
+  Qcardiacc = this.phys.data["Cardiac Output"]/1000*60 # L/h/kgBW^(3/4)
   flows <- unlist(lumped_params[substr(names(lumped_params),1,1) == 'Q'])
   
   outlist <- c(outlist,c(
@@ -429,7 +429,7 @@ parameterize_pbtk <- function(
              BW=BW,
              Vliverc=lumped_params$Vliverc, #L/kg
              Qtotal.liverc=
-               (lumped_params$Qtotal.liverf*as.numeric(Qcardiacc))/1000*60),
+               (lumped_params$Qtotal.liverf*as.numeric(Qcardiacc))), # L/h/kgBW^(3/4)
            suppress.messages=TRUE,
            restrictive.clearance=restrictive.clearance)), #L/h/kg BW
       million.cells.per.gliver=110, # 10^6 cells/g-liver
