@@ -247,7 +247,7 @@ calc_hep_clearance <- function(chem.name=NULL,
   # Convert from uL/min/kg BW to L/h/kg BW
   Clint <- Clint/10^6*60 
 
-  Qtotal.liverc <- Qtotal.liverc / parameters[['BW']]^0.25
+  Qtotal.liverc <- Qtotal.liverc / parameters[['BW']]^0.75
   if (tolower(model) == "unscaled")
   {
     CLh <- fup*Clint
