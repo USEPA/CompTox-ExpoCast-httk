@@ -621,7 +621,6 @@ Set species=\"Human\" to run httkpop model.')
     parameters.dt[,Rblood2plasma := calc_rblood2plasma(
                                       hematocrit=hematocrit,
                                       Krbc2pu=Krbc2pu,
-                                      species = species,
                                       Funbound.plasma=Funbound.plasma,
                                       species = species,
                                       default.to.human = parameterize.args.list$default.to.human,
