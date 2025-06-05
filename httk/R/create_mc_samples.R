@@ -532,6 +532,7 @@ Set species=\"Human\" to run httkpop model.')
   {
     Rb2p.invivo <- get_rblood2plasma(chem.cas=chem.cas,
                                      chem.name=chem.name,
+                                     species = species,
                                      dtxsid=dtxsid)
   } else Rb2p.invivo <- NA
 
@@ -605,6 +606,7 @@ Set species=\"Human\" to run httkpop model.')
 # From Pearce et al. (2017):
       parameters.dt[, Krbc2pu:=calc_krbc2pu(Rb2p.invivo,
                                             Funbound.plasma,
+                                            species = species,
                                             hematocrit)]
     } 
 # Calculate Rblood2plasma based on hematocrit, Krbc2plasma, and Funbound.plasma. 
@@ -612,6 +614,7 @@ Set species=\"Human\" to run httkpop model.')
     parameters.dt[,Rblood2plasma := calc_rblood2plasma(
                                       hematocrit=hematocrit,
                                       Krbc2pu=Krbc2pu,
+                                      species = species,
                                       Funbound.plasma=Funbound.plasma,
 # We can set this to TRUE because the value in Funbound.plasma is either adjusted
 # or not adjusted already:
@@ -651,6 +654,7 @@ Set species=\"Human\" to run httkpop model.')
                     parameters=parameters.dt,
           hepatic.model='unscaled',
           restrictive.clearance=parameterize.args.list[["restrictive.clearance"]],
+          species = species,
           suppress.messages=TRUE)
           )
           ) #L/h/kg body weight
@@ -658,6 +662,7 @@ Set species=\"Human\" to run httkpop model.')
 # we use purrr::compact to drop NULL values from arguments list:
   parameters.dt[,hepatic.bioavailability := do.call(calc_hep_bioavailability,
     args=purrr::compact(list(
+      species = species,
       parameters=list(
         Qtotal.liverc=parameters.dt$Qtotal.liverc, # L/h/kg^3/4
         Funbound.plasma=parameters.dt$Funbound.plasma,
@@ -681,7 +686,8 @@ Set species=\"Human\" to run httkpop model.')
   #
   if (!keepit100) 
   {
-    bioavail <- calc_fbio.oral(parameters = parameters.dt) 
+    bioavail <- calc_fbio.oral(parameters = parameters.dt,
+                               species = species) 
     if (Caco2.Fabs) parameters.dt[,Fabs:=
                                    bioavail$fabs.oral]
     if (Caco2.Fgut) parameters.dt[,Fgut:=
