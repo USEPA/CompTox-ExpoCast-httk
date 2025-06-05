@@ -30,7 +30,9 @@ propagate_invitrouv_pbtk <- function(
                                           names(formals(calc_hep_clearance))]
       parameters.dt[, Clmetabolismc := 
         as.numeric(do.call(calc_hep_clearance,
-                           args=purrr::compact(list(
+                           args=purrr::compact(
+                             c(
+                               list(
                              hepatic.model="unscaled",
                              parameters=list(
                                Clint=Clint, #uL/min/10^6 cells
@@ -45,7 +47,7 @@ propagate_invitrouv_pbtk <- function(
                                Qtotal.liverc=
                                  ((Qgutf+Qliverf)*as.numeric(Qcardiacc))), # L/h/kgBW^(3/4)
                              suppress.messages=TRUE),
-                             calc.hep.clear.args)))]
+                             calc.hep.clear.args))))]
 
   return(parameters.dt)
 }
