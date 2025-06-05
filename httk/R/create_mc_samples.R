@@ -631,9 +631,15 @@ Set species=\"Human\" to run httkpop model.')
 # For models that don't described first pass blood flow from the gut, need the
 # unscaled hepatic clearance to cacluate a hepatic bioavailability 
 # (Rowland, 1973):      
-  cl <- calc_hep_clearance(parameters=parameters.dt,
+  cl <- do.call(calc_hep_clearance,
+                args = purrr::compact(
+                  list(
+                    parameters=parameters.dt,
           hepatic.model='unscaled',
-          suppress.messages=TRUE)#L/h/kg body weight
+          restrictive.clearance=parameterize.args.list[["restrictive.clearance"]],
+          suppress.messages=TRUE)
+          )
+          ) #L/h/kg body weight
 
 # we use purrr::compact to drop NULL values from arguments list:
   parameters.dt[,hepatic.bioavailability := do.call(calc_hep_bioavailability,
