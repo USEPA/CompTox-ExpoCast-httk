@@ -265,6 +265,7 @@ calc_mc_tk<- function(chem.cas=NULL,
    model.out[[i]] <- do.call(model.list[[model]]$solve.func,
                              args=purrr::compact(c(list(
      parameters=as.list(parameter.dt[i,]),
+     species = species,
      suppress.messages=TRUE),
      solvemodel.arg.list)))
 
