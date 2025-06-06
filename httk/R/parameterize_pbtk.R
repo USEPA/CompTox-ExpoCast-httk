@@ -324,6 +324,7 @@ parameterize_pbtk <- function(
   PCs <- predict_partitioning_schmitt(
     parameters=schmitt.params,
     species=species,
+    default.to.human=default.to.human,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
     regression=regression,
     minimum.Funbound.plasma=minimum.Funbound.plasma,
@@ -431,6 +432,7 @@ parameterize_pbtk <- function(
              Qtotal.liverc=
                (lumped_params$Qtotal.liverf*as.numeric(Qcardiacc))), # L/h/kgBW^(3/4)
            suppress.messages=TRUE,
+           species = species,
            restrictive.clearance=restrictive.clearance)), #L/h/kg BW
       million.cells.per.gliver=110, # 10^6 cells/g-liver
       liver.density=1.05)) # g/mL

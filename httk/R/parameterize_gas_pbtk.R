@@ -428,6 +428,7 @@ parameterize_gas_pbtk <- function(chem.cas=NULL,
           Qtotal.liverc=
                (lumped_params$Qtotal.liverf*as.numeric(Qcardiacc))/1000*60),
           suppress.messages=TRUE,
+        species = species,
           restrictive.clearance=restrictive.clearance)), #L/h/kg BW
       million.cells.per.gliver=110, # 10^6 cells/g-liver
       liver.density=1.05)) # g/mL
