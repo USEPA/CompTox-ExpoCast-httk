@@ -129,6 +129,9 @@
 #'
 #' @param parameterize.args.list Additional parameters passed to the
 #'   parameterize_* function for the model.
+#'   
+#' @param propagate.invitrouv.arg.list List of additional parameters passed to
+#'   \code{\link{create_mc_samples}}.
 #'
 #' @param return.all.sims Logical indicating whether to return the results of
 #'   all simulations, in addition to the default toxicokinetic statistics
@@ -273,7 +276,6 @@ calc_mc_tk<- function(chem.cas=NULL,
       tmp_times <- 24 * days_vec * tsteps_vec
     } else if (is.null(days_vec) & is.null(tsteps_vec)) {
       tmp_times <- 24 * 10 * 4 # Defaults for the solve function
-    }
     } else if (is.null(days_vec)) {
       tmp_times <- 24 * 10 * tsteps_vec
     } else {
