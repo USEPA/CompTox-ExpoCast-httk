@@ -297,10 +297,6 @@ calc_mc_tk<- function(chem.cas=NULL,
                         matrix(data = NA_real_, nrow = matdims[1], ncol = matdims[2],
                                dimnames = list(NULL, LETTERS[seq_len(matdims[2])]))
                       })
-  if (!suppress.messages) {
-    message(sprintf("Initial object size: %.3f MB",
-                    signif(as.numeric(lobstr::obj_size(model.out))/1E6, 4)))
-  }
   
   for (i in 1:nrow(parameter.dt)) {
     model.out[[i]] <- do.call(model.list[[model]]$solve.func,
@@ -310,12 +306,6 @@ calc_mc_tk<- function(chem.cas=NULL,
                                 suppress.messages=TRUE),
                                 solvemodel.arg.list)))
   }
-  
-  if (!suppress.messages) {
-    message(sprintf("Final object size: %.3f MB",
-                    signif(as.numeric(lobstr::obj_size(model.out))/1E6, 4)))
-  }
-  
   
   means <- Reduce("+",model.out)/length(model.out)
   sds <- set_httk_precision(
