@@ -260,15 +260,61 @@ calc_mc_tk<- function(chem.cas=NULL,
 #
 # HERE LIES THE ACTUAL MONTE CARLO STEP:
 #
-  model.out <- list()
-  for (i in 1:nrow(parameter.dt)) 
-   model.out[[i]] <- do.call(model.list[[model]]$solve.func,
-                             args=purrr::compact(c(list(
-     parameters=as.list(parameter.dt[i,]),
-     species = species,
-     suppress.messages=TRUE),
-     solvemodel.arg.list)))
-
+  # Pre-allocate list and matrices (trying to prevent R crashing here)
+  # Estimate the number of rows (timepoints)
+  times_vec <- solvemodel.arg.list$times
+  days_vec <- solvemodel.arg.list$days[1]
+  tsteps_vec <- solvemodel.arg.list$tsteps[1]
+  
+  if (!is.null(times_vec)) {
+    tmp_times <- length(times_vec)
+  } else { # 24hr * [DAYS] * [TSTEPS]
+    if (!is.null(days_vec) && !is.null(tsteps_vec)) {
+      tmp_times <- 24 * days_vec * tsteps_vec
+    } else if (is.null(days_vec) & is.null(tsteps_vec)) {
+      tmp_times <- 24 * 10 * 4 # Defaults for the solve function
+    }
+    } else if (is.null(days_vec)) {
+      tmp_times <- 24 * 10 * tsteps_vec
+    } else {
+      tmp_times <- 24 * days_vec * 4
+    }
+  }
+  
+  # Create the matrix dimensions
+  matdims <- c(
+    tmp_times + 1, # There is often a small time interval added
+    ifelse(is.null(solvemodel.arg.list$monitor.vars),
+           length(model.list[[model]]$default.monitor.vars) + 1, # time column
+           length(solvemodel.arg.list$monitor.vars) + 2 # time and A... column
+    )
+  )
+  # Creating the preallocated matrix
+  model.out <- lapply(seq_len(nrow(parameter.dt)),
+                      function(x) {
+                        matrix(data = NA_real_, nrow = matdims[1], ncol = matdims[2],
+                               dimnames = list(NULL, LETTERS[seq_len(matdims[2])]))
+                      })
+  if (!suppress.messages) {
+    message(sprintf("Initial object size: %.3f MB",
+                    signif(as.numeric(lobstr::obj_size(model.out))/1E6, 4)))
+  }
+  
+  for (i in 1:nrow(parameter.dt)) {
+    model.out[[i]] <- do.call(model.list[[model]]$solve.func,
+                              args=purrr::compact(c(list(
+                                parameters=as.list(parameter.dt[i,]),
+                                species = species,
+                                suppress.messages=TRUE),
+                                solvemodel.arg.list)))
+  }
+  
+  if (!suppress.messages) {
+    message(sprintf("Final object size: %.3f MB",
+                    signif(as.numeric(lobstr::obj_size(model.out))/1E6, 4)))
+  }
+  
+  
   means <- Reduce("+",model.out)/length(model.out)
   sds <- set_httk_precision(
     (Reduce("+", lapply(model.out, function(x) (x-means)^2))/(length(model.out)-1))^(1/2)
