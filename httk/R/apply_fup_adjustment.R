@@ -52,7 +52,7 @@ apply_fup_adjustment <- function(fup,
                                           pKa_Donor = pKa_Donor,
                                           pKa_Accept = pKa_Accept))
   }
-  fup.corrected <- max(fup * fup.correction,
+  fup.corrected <- pmax(fup * fup.correction,
                    minimum.Funbound.plasma,
                    na.rm = TRUE) # Enforcing a sanity check on 
                                              # plasma binding
