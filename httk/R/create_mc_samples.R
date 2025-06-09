@@ -486,10 +486,15 @@ Set species=\"Human\" to run httkpop model.')
         # put the unadjusted fup where calc_fup_correction will look for it:
         parameters.dt[, Funbound.plasma := unadjusted.Funbound.plasma]
         parameters.dt[, Funbound.plasma.adjustment :=
-          calc_fup_correction(
-            parameters = parameters.dt,
-            species = species,
-            default.to.human = parameterize.args.list$default.to.human)]
+                        do.call(calc_fup_correction,
+                                args = purrr::compact(
+                                  list(
+                                    parameters = parameters.dt,
+                                    species = species,
+                                    default.to.human = parameterize.args.list$default.to.human
+                                  )
+                                ))]
+        
         parameters.dt[, Funbound.plasma := 
           apply_fup_adjustment(Funbound.plasma,
                       Funbound.plasma.adjustment)]
@@ -502,7 +507,7 @@ Set species=\"Human\" to run httkpop model.')
     if (parameterize.args.list[["adjusted.Clint"]])
     {
       parameters.dt[, Clint := apply_clint_adjustment(
-                                 Clint,
+                                 Clint = Clint,
                                  Fu_hep=Fhep.assay.correction,
                                  suppress.messages=TRUE)]
     }
@@ -532,11 +537,17 @@ Set species=\"Human\" to run httkpop model.')
                        !is.null(chem.name),
                        !is.null(dtxsid))))
   {
-    Rb2p.invivo <- get_rblood2plasma(chem.cas=chem.cas,
-                                     chem.name=chem.name,
-                                     dtxsid=dtxsid,
-                                     species = species,
-                                     default.to.human = parameterize.args.list$default.to.human)
+    rb2p_args <- purrr::compact(
+      list(chem.cas = chem.cas,
+           chem.name = chem.name,
+           dtxsid = dtxsid,
+           species = species,
+           default.to.human = parameterize.args.list$default.to.human)
+    )
+    
+    Rb2p.invivo <- do.call(what = get_rblood2plasma,
+                           args = rb2p_args)
+    
   } else Rb2p.invivo <- NA
 
 # We need all of these parameters to recalculate values with the 
@@ -556,7 +567,8 @@ Set species=\"Human\" to run httkpop model.')
   #tissue-to-plasma partitioning coefficient, and one element of each vector
   #for each individual. The list element names specify which partition
   #coefficient it is, e.g. Kliver2plasma, Kgut2plasma, etc.
-      PCs <- do.call(predict_partitioning_schmitt, args=purrr::compact(list(
+      PCs <- do.call(predict_partitioning_schmitt,
+                     args=purrr::compact(list(
                parameters=parameters.dt,
                args.schmitt,
                tissues=model.list[[model]]$alltissues,
@@ -580,11 +592,18 @@ Set species=\"Human\" to run httkpop model.')
       adj.parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
                            args=purrr::compact(parameterize.args.list))
     } else adj.parameters.mean <- parameters
-    parameters.dt[,Krbc2pu:=calc_krbc2pu(
-      Rb2p = adj.parameters.mean$Rblood2plasma,
-      Funbound.plasma = adj.parameters.mean$Funbound.plasma,
-      species = species,
-      default.to.human = parameterize.args.list$default.to.human)]
+    
+    
+    parameters.dt[,Krbc2pu:=do.call(calc_krbc2pu,
+                                    args = purrr::compact(
+                                      list(
+                                        Rb2p = adj.parameters.mean$Rblood2plasma,
+                                        Funbound.plasma = adj.parameters.mean$Funbound.plasma,
+                                        species = species,
+                                        default.to.human = parameterize.args.list$default.to.human    
+                                      )
+                                    )
+   )]
   }
 
 # If the model uses partion coefficients we need to lump each individual
@@ -610,23 +629,30 @@ Set species=\"Human\" to run httkpop model.')
     {
 # From Pearce et al. (2017):
 
-      parameters.dt[, Krbc2pu:=calc_krbc2pu(Rb2p = Rb2p.invivo,
+      parameters.dt[, Krbc2pu:=do.call(
+        calc_krbc2pu,
+        args = purrr::compact(
+          list(Rb2p = Rb2p.invivo,
                                             Funbound.plasma = Funbound.plasma,
                                             hematocrit = hematocrit,
                                             species = species,
-                                            default.to.human = parameterize.args.list$default.to.human)]
+                                            default.to.human = parameterize.args.list$default.to.human)
+          ))]
     } 
 # Calculate Rblood2plasma based on hematocrit, Krbc2plasma, and Funbound.plasma. 
 # This is the ratio of chemical in blood vs. in plasma.
-    parameters.dt[,Rblood2plasma := calc_rblood2plasma(
-                                      hematocrit=hematocrit,
-                                      Krbc2pu=Krbc2pu,
-                                      Funbound.plasma=Funbound.plasma,
-                                      species = species,
-                                      default.to.human = parameterize.args.list$default.to.human,
-# We can set this to TRUE because the value in Funbound.plasma is either adjusted
-# or not adjusted already:
-                                      adjusted.Funbound.plasma=TRUE)]
+    parameters.dt[,Rblood2plasma := do.call(calc_rblood2plasma,
+                                            args = purrr::compact(
+                                              list(
+                                                hematocrit=hematocrit,
+                                                Krbc2pu=Krbc2pu,
+                                                Funbound.plasma=Funbound.plasma,
+                                                species = species,
+                                                default.to.human = parameterize.args.list$default.to.human,
+                                                # We can set this to TRUE because the value in Funbound.plasma is either adjusted
+                                                # or not adjusted already:
+                                                adjusted.Funbound.plasma=TRUE)
+                                            ))]
                              
                                       
     if (any(is.na(parameters.dt$Rblood2plasma)))
@@ -664,7 +690,6 @@ adjusted.Funbound.plasma=TRUE,
                     species = species,
           hepatic.model='unscaled',
           restrictive.clearance=parameterize.args.list[["restrictive.clearance"]],
-          species = species,
           suppress.messages=TRUE)
           )
           ) #L/h/kg body weight
@@ -679,7 +704,6 @@ adjusted.Funbound.plasma=TRUE,
         Clmetabolismc=cl, # L/h/kg
         Rblood2plasma=parameters.dt$Rblood2plasma,
         BW=parameters.dt$BW),
-      species = species,
       default.to.human = parameterize.args.list$default.to.human,
       restrictive.clearance=parameterize.args.list[["restrictive.clearance"]])))]
   }
