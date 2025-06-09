@@ -265,14 +265,22 @@ calc_mc_tk<- function(chem.cas=NULL,
 #
 
   parameter.dt[, ID := 1:.N]
+  this_solvefun <- model.list[[model]]$solve.func
+  solve_args <- purrr::compact(
+    c(
+      list(
+        species = species,
+        suppress.messages=TRUE),
+      solvemodel.arg.list
+    )
+  )
+  
   model.out <- parameter.dt[,
                             as.data.table(
-                              do.call(model.list[[model]]$solve.func,
-                                    args=purrr::compact(c(list(
-                                      parameters=as.list(.SD),
-                                      species = species,
-                                      suppress.messages=TRUE),
-                                      solvemodel.arg.list)))
+                              do.call(this_solvefun,
+                                    args=c(list(
+                                      parameters=as.list(.SD)),
+                                      solve_args))
                               ),
                             by = ID
                             ]
