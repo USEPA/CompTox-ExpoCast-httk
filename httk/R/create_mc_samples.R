@@ -319,16 +319,18 @@ create_mc_samples <- function(chem.cas=NULL,
                                         parameterize.args.list))
   if (!is.null(Caco2.options)) parameterize.args.list[["Caco2.options"]] <- Caco2.options
   
+
+  mean.args.list <- parameterize.args.list
+  mean.args.list[["adjusted.Funbound.plasma"]] <- FALSE # We want the unadjusted in vitro measured value for the mean
+  mean.args.list[["adjusted.Clint"]] <- FALSE # We want the unadjusted in vitro measured value for the mean
+
   # Check to see if we need to call the parameterize_MODEL function:
   if (is.null(parameters))
   {
-    mean.args.list <- parameterize.args.list
-    mean.args.list[["adjusted.Funbound.plasma"]] <- FALSE # We want the unadjusted in vitro measured value for the mean
-    mean.args.list[["adjusted.Clint"]] <- FALSE # We want the unadjusted in vitro measured value for the mean
 
     # Make sure all the arguments are used by the parameterization function:
-#    parameterize.args.list<- parameterize.args[names(parameterize.args) %in% 
-#                                             methods::formalArgs(paramfun)]
+    mean.args.list <- mean.args.list[names(mean.args.list) %in% 
+                                             methods::formalArgs(paramfun)]
     parameters.mean <- do.call(getFromNamespace(paramfun, "httk"),
                          args=purrr::compact(mean.args.list))
   } else {
