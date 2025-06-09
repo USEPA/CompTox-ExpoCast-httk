@@ -338,8 +338,8 @@ create_mc_samples <- function(chem.cas=NULL,
   }
   # Pass all 'parameterize.args' arguments and the 'suppress.messages'
   # arguments to the 'parameterize_schmitt' function.
-  args.schmitt <- parameterize.args.list[which(
-    names(parameterize.args.list) %in% names(formals(fun = parameterize_schmitt))
+  args.schmitt <- mean.args.list[which(
+    names(mean.args.list) %in% names(formals(fun = parameterize_schmitt))
     )]
   args.schmitt$suppress.messages <- TRUE
   # The Schmitt parameters are useful if we need to redo partitioning later, though
@@ -385,6 +385,11 @@ create_mc_samples <- function(chem.cas=NULL,
                      cv.params=vary.params,
                      samples=samples,
                      suppress.messages=suppress.messages)
+  
+  if(('Funbound.plasma' %in% names(vary.params)) &
+     !('unadjusted.Funbound.plasma' %in% names(vary.params))){
+    parameters.dt[, unadjusted.Funbound.plasma := Funbound.plasma]
+  }
                       
 #
 #
@@ -496,8 +501,8 @@ Set species=\"Human\" to run httkpop model.')
                                 ))]
         
         parameters.dt[, Funbound.plasma := 
-          apply_fup_adjustment(Funbound.plasma,
-                      Funbound.plasma.adjustment)]
+          apply_fup_adjustment(fup = Funbound.plasma,
+                      fup.correction = Funbound.plasma.adjustment)]
       } else stop("Missing phys-chem parameters in invitro_mc for calc_fup_correction.") 
     } else {
       parameters.dt[, Funbound.plasma.adjustment:=1]
