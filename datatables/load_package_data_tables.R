@@ -2129,6 +2129,39 @@ for (this.id in unique(dup.cas))
 }
 
 #
+# Add nitrite phys-chem to HTTK:
+#
+nitrite.pchem <- data.frame(
+    CAS='14797-65-0',
+    Compound="Nitrite ion",
+    DTXSID="DTXSID5024219",
+    logP=-5.00e-3,
+    logHenry = 2.06E-07, # Abdollah Encyclopedia of Toxicology 2014
+    logWSol = 4.80,
+    pKa_Donor=" ",
+    pKa_Accept=3.15,
+    MP = 220,
+    MW = 46.006
+  )
+
+chem.physical_and_invitro.data <- add_chemtable(nitrite.pchem,
+  current.table = chem.physical_and_invitro.data,
+  data.list=list(
+    CAS = "CAS",
+    Compound = "Compound",
+    DTXSID = "DTXSID",
+    logP = "logP",
+    logHenry = "logHenry",
+    logWSol = "logWSol",
+    pKa_Donor="pKa_Donor",
+    pKa_Accept="pKa_Accept",
+    MP = "MP",
+    MW = "MW"
+    ),                                                                        
+  reference="EPA-CCD-EPISUITE",
+  overwrite=FALSE)
+
+#
 #
 # CREATE .SMI FILE FOR OPERA (Not needed currently, but just in case)
 #
