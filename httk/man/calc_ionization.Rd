@@ -113,9 +113,9 @@ possible
 for a compound to have a net zero charge, but be simultaneously positively 
 and
 negatively charged. Such a state is called a Zwitter ion. For example:
-XDAA+ -> XAA++ -> XA+ -> XA -> X- . The state XA is technically neutral 
-because
-X has donated one hydrogen, but also accepted one hydrogen. XA is a Zwitter 
+XDAA++ -> XAA+ -> XA -> X-. 
+The state XA is technically neutral 
+because' X has donated one hydrogen, but also accepted one hydrogen. XA is a Zwitter 
 ion.
 
 Each pKa gives the equlibrium ratio of two states pH - pKa = log10[X/XD] for
@@ -130,7 +130,7 @@ so that X1 = 1 / Sum_i=1:N 10^(Sum_j=1:i Cj)
 
 The sum im the denominator is the ratio from X1 to each state (including X1).
 We use a table called "charge_matrix" to keep track of all N + 1 ionization
-states and the ratio of each state to the next. We use these ratios to calculate
+states and the ratio of each state to the next.
 }
 \examples{
 
