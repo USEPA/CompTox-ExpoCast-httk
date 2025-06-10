@@ -288,11 +288,11 @@ calc_mc_tk<- function(chem.cas=NULL,
   means <- model.out[, lapply(.SD,
                               function(x) set_httk_precision(mean(x))
                               ),
-                              by = .(ID, time)]
+                              by = time]
   sds <- model.out[, lapply(.SD,
                             function(x) set_httk_precision(sd(x))
                             ),
-                   by = .(ID, time)]
+                   by = time]
   
   out <- list(means=means,sds=sds)
   if (return.all.sims) out <- list(stats=out,sims=model.out)
