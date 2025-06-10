@@ -9,12 +9,12 @@ calc_analytic_css_sumclearances(
   chem.name = NULL,
   chem.cas = NULL,
   dtxsid = NULL,
+  species = "Human",
   parameters = NULL,
   dosing = list(daily.dose = 1),
   hourly.dose = NULL,
   dose.units = "mg",
   concentration = "plasma",
-  species = "human",
   Caco2.options = NULL,
   suppress.messages = FALSE,
   recalc.blood2plasma = FALSE,
@@ -35,6 +35,9 @@ be specified.}
 \item{dtxsid}{EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
+\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+default "Human").}
+
 \item{parameters}{Chemical parameters from \code{\link{parameterize_sumclearances}} overrides chem.name and chem.cas.}
 
 \item{dosing}{List of dosing metrics used in simulation, which includes
@@ -47,9 +50,6 @@ calculations this is likely to be either "daily.dose" for oral exposures or
 \item{dose.units}{The units associated with the dose received.}
 
 \item{concentration}{Desired concentration type, 'blood' or default 'plasma'.}
-
-\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-default "Human").}
 
 \item{Caco2.options}{A list of options to use when working with Caco2 apical to
 basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,

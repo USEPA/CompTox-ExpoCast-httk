@@ -189,7 +189,7 @@ calc_analytic_css_sumclearances <- function(chem.name=NULL,
     )
     )
     
-    parameters$Rblood2plasma <- do.call(what = calc_r2blood2plasma,
+    parameters$Rblood2plasma <- do.call(what = calc_rblood2plasma,
                                         args = rb2p_args)
   }
 
