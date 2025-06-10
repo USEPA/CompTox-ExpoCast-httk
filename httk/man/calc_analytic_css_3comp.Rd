@@ -8,6 +8,7 @@ calc_analytic_css_3comp(
   chem.name = NULL,
   chem.cas = NULL,
   dtxsid = NULL,
+  species = "Human",
   parameters = NULL,
   dosing = list(daily.dose = 1),
   hourly.dose = NULL,
@@ -31,6 +32,9 @@ be specified.}
 
 \item{dtxsid}{EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
+
+\item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+default "Human").}
 
 \item{parameters}{Chemical parameters from parameterize_pbtk (for model = 
 'pbtk'), parameterize_3comp (for model = '3compartment), 
