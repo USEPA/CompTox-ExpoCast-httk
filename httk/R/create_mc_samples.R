@@ -490,6 +490,9 @@ Set species=\"Human\" to run httkpop model.')
       if (all(c("Pow","pKa_Donor","pKa_Accept") %in% names(parameters.dt)) | 
           ("Dow74" %in% names(parameters.dt)))
       {
+        # need a default value:
+        if (is.null(parameterize.args.list$default.to.human))
+          parameterize.args.list[["default.to.human"]] <- FALSE
         # put the unadjusted fup where calc_fup_correction will look for it:
         parameters.dt[, Funbound.plasma := unadjusted.Funbound.plasma]
         parameters.dt[, Funbound.plasma.adjustment :=
