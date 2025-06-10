@@ -188,6 +188,167 @@ convert_units <- function(input.units = NULL,
     )
   }
   
+  ### Input units
+  # density (weight per volume) to molar (that is, moles per volume):
+  input_units <- c("mg/l",
+                   "ug/ml",
+                   "mcg/ml",
+                   "ug/l",
+                   "ug/dl",
+                   "mg/l",
+                   "mg/l",
+                   "mg/l",
+                   # density to density:
+                   "ug/ml",
+                   "mcg/ml",
+                   "ug/l",
+                   "ug/dl",
+                   "ng/l",
+                   "ng/ml",
+                   # molar to molar:
+                   "umol/l",
+                   "nmol/l",
+                   "nm",
+                   "nmol/l",
+                   # molar to density:
+                   "umol/l",
+                   "nmol/l",
+                   #######
+                   #liquid state
+                   ##########
+                   # Liquid solvent has density liquid.density g / mL:
+                   # density and weight per weight:
+                   "mg/l",
+                   "mg/l",
+                   "mg/m3",
+                   "ug/l",
+                   "ug/ml",
+                   # molar and weight per weight:
+                   "um",
+                   "um",
+                   "nm",
+                   "nm",
+                   "m",  
+                   "m",
+                   "mm",
+                   "mm",
+                   # molar and weight per weight:
+                   "ug/g",
+                   "ppmw",
+                   # density and weight per weight:
+                   "mg/kg",
+                   "ug/g",
+                   "ug/g",
+                   #######
+                   # gas state
+                   #######
+                   # Gas has density volidealgas L / mol:
+                   # volume per volume to volume per volume:
+                   "ppbv",
+                   "pptv",
+                   # density and volume per volume:
+                   "mg/l",
+                   "mg/l", 
+                   "ug/l",
+                   "ng/l",
+                   "ug/ml",
+                   "ng/ml",
+                   "mcg/ml",
+                   "ug/dl",
+                   "mg/m3",
+                   # molar and volume per volume:
+                   "um",
+                   "umol/l",
+                   "nmol/l",
+                   # molar and weight per weight:
+                   # ug/g -> uL/L for air not water    CHECK    
+                   # density and weight per weight:
+                   "ug/g",
+                   "mg/kg",
+                   # weight per weight and volume per volume:
+                   "ppmw")
+  
+  ##### Output units
+  output_units <- c( "um",
+                     "um",
+                     "um",
+                     "um",
+                     "um",
+                     "m",
+                     "mm",
+                     "nm",
+                     # density to density:
+                     "mg/l",
+                     "mg/l",
+                     "mg/l",
+                     "mg/l",
+                     "mg/l",
+                     "mg/l",
+                     # molar to molar:
+                     "um",
+                     "um",
+                     "um",
+                     "nm",
+                     # molar to density:
+                     "mg/l",
+                     "mg/l",
+                     #######
+                     #liquid state
+                     ##########
+                     # Liquid solvent has density liquid.density g / mL:
+                     # density and weight per weight:
+                     "ppmw",  
+                     "ppbw" , 
+                     "ppmw" , 
+                     "ppmw",
+                     "ppmw",
+                     # molar and weight per weight:
+                     "ppmw"  ,
+                     "ppbw"  ,
+                     "ppmw"  ,
+                     "ppbw"  ,
+                     "ppmw"  ,
+                     "ppbw"  ,
+                     "ppmw"  ,
+                     "ppbw"  ,
+                     # molar and weight per weight:
+                     "um",
+                     "um"     ,
+                     # density and weight per weight:
+                     "mg/l",
+                     "mg/l",
+                     "ppmw",
+                     #######
+                     # gas state
+                     #######
+                     # Gas has density volidealgas L / mol:
+                     # volume per volume to volume per volume:
+                     "ppmv",
+                     "ppmv",
+                     # density and volume per volume:
+                     "ppmv" ,
+                     "ppbv" ,
+                     "ppmv",
+                     "ppmv",
+                     "ppmv",
+                     "ppmv",
+                     "ppmv",
+                     "ppmv",
+                     "ppmv"  ,
+                     # molar and volume per volume:
+                     "ppmv" ,
+                     "ppmv",
+                     "ppmv",
+                     # molar and weight per weight:
+                     # ug/g -> uL/L for air not water    CHECK    
+                     # density and weight per weight:
+                     "ppmv",
+                     "ppmv",
+                     # weight per weight and volume per volume:
+                     "ppmv")
+  
+  
+  
   # Loop over multiple MW values:
   conversion_factors <- NA
   for (this.MW in unique(MW))
@@ -204,169 +365,10 @@ convert_units <- function(input.units = NULL,
     #pre-slug a complete lookup table of conversion units
     #rows are input units, columns are output units
     
-    ### Input units
-    # density (weight per volume) to molar (that is, moles per volume):
-    input_units <- c("mg/l",
-    "ug/ml",
-    "mcg/ml",
-    "ug/l",
-    "ug/dl",
-    "mg/l",
-    "mg/l",
-    "mg/l",
-    # density to density:
-    "ug/ml",
-    "mcg/ml",
-    "ug/l",
-    "ug/dl",
-    "ng/l",
-    "ng/ml",
-    # molar to molar:
-    "umol/l",
-    "nmol/l",
-    "nm",
-    "nmol/l",
-    # molar to density:
-    "umol/l",
-    "nmol/l",
-    #######
-    #liquid state
-    ##########
-    # Liquid solvent has density liquid.density g / mL:
-    # density and weight per weight:
-    "mg/l",
-    "mg/l",
-    "mg/m3",
-    "ug/l",
-    "ug/ml",
-    # molar and weight per weight:
-    "um",
-    "um",
-    "nm",
-    "nm",
-    "m",  
-    "m",
-    "mm",
-    "mm",
-    # molar and weight per weight:
-    "ug/g",
-    "ppmw",
-    # density and weight per weight:
-    "mg/kg",
-    "ug/g",
-    "ug/g",
-    #######
-    # gas state
-    #######
-    # Gas has density volidealgas L / mol:
-    # volume per volume to volume per volume:
-    "ppbv",
-    "pptv",
-    # density and volume per volume:
-    "mg/l",
-    "mg/l", 
-    "ug/l",
-    "ng/l",
-    "ug/ml",
-    "ng/ml",
-    "mcg/ml",
-    "ug/dl",
-    "mg/m3",
-    # molar and volume per volume:
-    "um",
-    "umol/l",
-    "nmol/l",
-    # molar and weight per weight:
-    # ug/g -> uL/L for air not water    CHECK    
-    # density and weight per weight:
-    "ug/g",
-    "mg/kg",
-    # weight per weight and volume per volume:
-    "ppmw")
-    
-    ##### Output units
-  output_units <- c( "um",
-    "um",
-    "um",
-   "um",
-    "um",
-    "m",
-    "mm",
-    "nm",
-    # density to density:
-   "mg/l",
-   "mg/l",
-    "mg/l",
-    "mg/l",
-    "mg/l",
-    "mg/l",
-    # molar to molar:
-   "um",
-    "um",
-    "um",
-    "nm",
-    # molar to density:
-   "mg/l",
-    "mg/l",
-    #######
-    #liquid state
-    ##########
-    # Liquid solvent has density liquid.density g / mL:
-    # density and weight per weight:
-    "ppmw",  
-   "ppbw" , 
-    "ppmw" , 
-    "ppmw",
-    "ppmw",
-    # molar and weight per weight:
-    "ppmw"  ,
-    "ppbw"  ,
-    "ppmw"  ,
-   "ppbw"  ,
-    "ppmw"  ,
-    "ppbw"  ,
-    "ppmw"  ,
-   "ppbw"  ,
-    # molar and weight per weight:
-    "um",
-    "um"     ,
-    # density and weight per weight:
-    "mg/l",
-   "mg/l",
-   "ppmw",
-    #######
-    # gas state
-    #######
-    # Gas has density volidealgas L / mol:
-    # volume per volume to volume per volume:
-    "ppmv",
-   "ppmv",
-    # density and volume per volume:
-    "ppmv" ,
-    "ppbv" ,
-    "ppmv",
-    "ppmv",
-    "ppmv",
-    "ppmv",
-    "ppmv",
-    "ppmv",
-    "ppmv"  ,
-    # molar and volume per volume:
-    "ppmv" ,
-   "ppmv",
-    "ppmv",
-    # molar and weight per weight:
-    # ug/g -> uL/L for air not water    CHECK    
-    # density and weight per weight:
-    "ppmv",
-   "ppmv",
-    # weight per weight and volume per volume:
-    "ppmv")
-    
-    
+  
     # Conversions
+    #correspond to input_units and output_units
    conversions <- c(
-     
     10^3/this.MW ,
    10^3/this.MW,
     10^3/this.MW,
