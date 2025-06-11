@@ -40,6 +40,7 @@
 #'
 #' @export armitage_estimate_sarea
 armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_working,sarea, option.bottom, and option.plastic
+                                    user_assay_parameters = NA, #option to fill in your own assay parameters (data table)
                                     this.well_number = 384,
                                     this.cell_yield = NA,
                                     this.v_working = NA){
@@ -68,26 +69,31 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
   #if the user is taking advantage of the invitro.assay.params table:
   if(((c("assay_component_endpoint_name") %in% names(tcdata)))){
     
-    #but they are missing information in their table or have not added it to invitro.assay.params
-    if(any(is.na(tcdata[,.(assay_component_endpoint_name)])) | !(unique(IVD_Manuscript_data[,(assay_component_endpoint_name)]) %in% invitro.assay.params[,(assay_component_endpoint_name)])){
+    #but they are missing information in their table or the assay is not in invitro.assay.params nor has it been added to user_assay_parameters
+    if(any(is.na(tcdata[,.(assay_component_endpoint_name)])) | 
+       (!(all((tcdata[,(assay_component_endpoint_name)]) %in% invitro.assay.params[,(assay_component_endpoint_name)])) &
+       !(all((tcdata[,(assay_component_endpoint_name)]) %in% user_assay_parameters[,(assay_component_endpoint_name)])))){
       
       #stop the code and give this error:
       stop("assay_component_endpoint_name must be defined for each row and must be a row in invitro.assay.params")
+      
     }
     
-    #if all the info is present, pull surface area and other info from the invitro.assay.params table
-    tcdata <- invitro.assay.params[tcdata,on=.(assay_component_endpoint_name)]
+    
+    #if all the assay names are present, pull surface area and other info from either invitro.assay.params or user_assay_parameters 
+    #table and assign to the appropriate assay_component_endpoint_name
+    if(all((tcdata[,(assay_component_endpoint_name)]) %in% invitro.assay.params[,(assay_component_endpoint_name)])){
+      tcdata <- invitro.assay.params[tcdata,on=.(assay_component_endpoint_name)]
+    }else if(all((tcdata[,(assay_component_endpoint_name)]) %in% user_assay_parameters[,(assay_component_endpoint_name)])){
+      tcdata <- user_assay_parameters[tcdata,on=.(assay_component_endpoint_name)]
+    }else{
+      #stop the code and give this error:
+      stop("assay_component_endpoint_name present in both invitro.assay.params and user_assay_parameters")
+    }
     
     #account for option.plastic and option.bottom
     tcdata[option.bottom==FALSE, sarea := 4*diam*height] %>% #overwrite sarea with the bottom area removed
       .[option.plastic==FALSE, sarea := 0] #overwrite sarea to zero
-
-
-    
-    #pull surface area and other info from the invitro.assay.params table
-    tcdata <- invitro.assay.params[tcdata,on=.(assay_component_endpoint_name)]
-    
-    
     
   }
   
@@ -95,6 +101,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
   #if the user is not taking advantage of the invitro.assay.params table:
   if(!((c("assay_component_endpoint_name") %in% names(tcdata)))){
   
+    #set up well parameter table
     well.desc.list <- c("flat_bottom","standard","clear_flat_bottom")
     well.number.list <- c(6,12,24,48)
     well.param <- copy(well_param)[well_number %in% well.number.list |
@@ -102,8 +109,10 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
     
     setnames(well.param,c("cell_yield","v_working"),c("cell_yield_est","v_working_est"))
     
+    #assign well parameters to each row of tcdata
     tcdata <- well.param[tcdata,on=.(well_number)]
     
+    #calculate surface area based on options and assign all variables
     tcdata[,radius:=diam/2] %>%  # mm
       .[is.na(v_working), v_working:=as.numeric(v_working_est)] %>%
       .[sysID %in% c(7,9), height:= v_working/(diam^2)] %>%  #mm for square wells
@@ -382,8 +391,9 @@ armitage_eval <- function(chem.cas=NULL,
                           casrn.vector = NA_character_, # vector of CAS numbers
                           nomconc.vector = 1, # nominal concentration vector (e.g. apparent AC50 values) in uM = umol/L
                           this.well_number = 384,
-                          this.FBSf = NA_real_, # Must be set if not in tcdata, this is the most senstive parameter in the model.
+                          this.FBSf = NA_real_, # Must be set if not in tcdata, this is the most sensitive parameter in the model.
                           tcdata = NA, # A data.table with casrn, ac50, and well_number or all of sarea, v_total, and v_working
+                          user_assay_parameters = NA, # A data.table with user-entered assay parameters (optional)
                           this.sarea = NA_real_,
                           this.v_total = NA_real_,
                           this.v_working = NA_real_,
@@ -458,10 +468,6 @@ armitage_eval <- function(chem.cas=NULL,
   #  stop("casrn or nomconc undefined")
   #}  
   
-  if(any(is.na(this.FBSf)) & !"FBSf" %in% names(tcdata)){
-    stop("this.FBSf must be defined or FBSf must be a column in tcdata")
-  }
-  
   #add in the optional parameters:
   manual.input.list <- list(Tsys=this.Tsys, Tref=this.Tref,
                             option.kbsa2=this.option.kbsa2, 
@@ -484,7 +490,7 @@ armitage_eval <- function(chem.cas=NULL,
                             conc_ser_lip = this.conc_ser_lip, Vdom = this.Vdom)
   
   check.list <- c("duow","duaw", "SFkow", "SFmw", "SFbsa_acidic", "SFbsa_basic", "SFplw",
-                  "gkmw_n","gkbsa_n","gkpl_n","ksalt")
+                  "gkmw_n","gkbsa_n","gkpl_n","ksalt", "sarea", "well_number","v_total")
   
   req.list <- c("Tsys","Tref","option.kbsa2","option.swat2", "option.kpl2",
                 "option.bottom", "option.plastic",
@@ -515,13 +521,14 @@ armitage_eval <- function(chem.cas=NULL,
         missing.rows <- 1:length(tcdata[,casrn])
       }
       
-      if(any(is.na(tcdata[missing.rows, well_number]))){
+      #add something here to allow it if you have the assay parameter defined
+      if(any(is.na(tcdata[missing.rows, well_number])) & !(c("assay_component_endpoint_name") %in% names(tcdata))){
         print(paste0("Either well_number or geometry must be defined for rows: ", 
                      paste(which(tcdata[, is.na(sarea) & is.na(well_number)]),
                            collapse = ",")))
         stop()
       }else{
-        temp <- armitage_estimate_sarea(tcdata[missing.rows,])
+        temp <- armitage_estimate_sarea(tcdata[missing.rows,], user_assay_parameters)
         tcdata[missing.rows,"sarea"] <- temp[,"sarea"]
         if(any(is.na(tcdata[missing.rows,"v_total"]))){
           tcdata[missing.rows,"v_total"] <- temp[,"v_total"]
@@ -531,6 +538,11 @@ armitage_eval <- function(chem.cas=NULL,
       }
       
     }
+  }
+  
+  #final check after surface area function
+  if(any(is.na(this.FBSf)) & !"FBSf" %in% names(tcdata)){
+    stop("this.FBSf must be defined or FBSf must be a column in tcdata")
   }
   
   #### Parameterize Armitage: ####

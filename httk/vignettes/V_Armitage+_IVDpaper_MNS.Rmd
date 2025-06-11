@@ -91,6 +91,11 @@ suppressWarnings(devtools::load_all("httk")) # for armitage
 #save figures and tables to working directory: yes/no
 save_output = TRUE
 
+#for saving outputs
+data.date <- "10JUN2025"
+path_out <- "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/manuscript figures 10JUN/"
+
+
 ```
 
 ```{r rmsle_func}
@@ -126,16 +131,22 @@ Data sets were curated from the literature to evaluate the in vitro distribution
 
 #you know it is correct if IVD_Manuscript_data has 174 obs of 29 variables
 #IVD_Manuscript_data <- httk::IVD_Manuscript_data
-load("C:/Users/mscherer/httk-dev/httk/data/ArmitagePlus_Vignette_26MAY25.RData")
+#load("C:/Users/mscherer/httk-dev/httk/data/ArmitagePlus_Vignette_2JUN25.RData")
+load("C:/Users/mscherer/httk-dev/httk/data/ArmitagePlus_Vignette_10JUN25.RData")
 
 
 cat(paste("Summarized data from ", 
           length(unique(IVD_Manuscript_data$Citation)),
           " studies covering ", 
           length(unique(IVD_Manuscript_data$ChemicalName)),
-          " unique chemicals\n",sep=""))
+          " unique chemicals ", 
+          "with ",
+          length(IVD_Manuscript_data$CellConcentration_uM),
+          " observations total.",
+          sep="")
+    )
 
-#15 studies, 54 chemicals, 174 observations
+#14 studies, 43 chemicals, 163 observations
 
 #number each row
 IVD_Manuscript_data[,X:=1:length(IVD_Manuscript_data$ChemicalName)]
@@ -146,17 +157,41 @@ IVD_Manuscript_data[,X:=1:length(IVD_Manuscript_data$ChemicalName)]
 In vitro assay descriptors for the measurements in Supplemental Materials Table S2 were added as additional assays into httk:invitro.assay.params using the AENM “IVD” + Author + Year (that is, Smith et al. (2000) would be AENM “IVDSmith2000”. 
 ```{r}
 
-#load in vitro assay parameters table
-load("C:/Users/mscherer/httk-dev/httk/data/invitro.assay.params.RData")
+### Create assay_component_endpoint_name columns for experimental assay parameters ###
 
-#copy the overall data frame
+#create assay_name column
+IVD_Manuscript_data[, assay_name := gsub(", ", "", IVD_Manuscript_data$Citation)]
+
+#create the assay_component_endpoint_name column
+IVD_Manuscript_data[, assay_component_endpoint_name := paste("IVD", gsub(", ", "", assay_name), sep="")]
+
+#tack on the "interesting" part for each assay to create the assay_component_endpoint_name 
+  #(these ones have multiple concentrations or time points)
+IVD_Manuscript_data[assay_component_endpoint_name=="IVDBellwon2015b" |
+                  assay_component_endpoint_name == "IVDBroeders2013" |
+                  assay_component_endpoint_name == "IVDWei2010",
+                assay_component_endpoint_name := paste(assay_component_endpoint_name, CellType, sep="_")]
+
+#same here
+IVD_Manuscript_data[assay_component_endpoint_name=="IVDMundy2004" |
+                      assay_component_endpoint_name=="IVDLundquist2014",
+                assay_component_endpoint_name := paste(paste(assay_component_endpoint_name, paste(ExposureDuration_hrs, "hr", sep = ""), sep="_"), paste(FBSf, "FBSf", sep = ""), sep = "_")]
+
+### pull in assay table ###
+
+#load in vitro assay parameters table
+#load("C:/Users/mscherer/httk-dev/httk/data/invitro.assay.params.RData")
+invitro.assay.params <- copy(invitro.assay.params)
+
+#copy the experimental data frame to pull out the parameter lines
 parameters_only<-copy(IVD_Manuscript_data)
 
-#rename columns
-parameters_only[, timepoint_hr := ExposureDuration_hrs] %>% 
-  .[, media_serum := SerumType] %>% 
-  .[, cell_type := CellType] %>% 
-  .[, assay_name := gsub(", ", "", parameters_only$Citation)]
+### Set up experimental assay parameters to match with invitro.assay.params.RData ###
+
+#rename columns to align with the names in invitro.assay.params.RData
+parameters_only[, timepoint_hr := ExposureDuration_hrs] %>%
+  .[, media_serum := SerumType] %>%
+  .[, cell_type := CellType] 
 
 # get the list of columns we need
 ivpnames<-names(invitro.assay.params)
@@ -168,45 +203,22 @@ if(!all(ivpnames%in%names(parameters_only))){
 #filter parameters_only to match up with ivpnames and only the unique rows
 parameters_only<-parameters_only %>% select(as.character(ivpnames)) %>% unique()
 
-#create the assay_component_endpoint_name column
-parameters_only[, assay_component_endpoint_name := paste("IVD", gsub(", ", "", assay_name), sep="")]
+# reassign own parameters table to pass to armitage function
+user_assay_parameters<-parameters_only
+# should have 29 + 1649 = 1678 rows
 
-#tack on the "interesting" part for each assay
-parameters_only[assay_component_endpoint_name=="IVDBellwon2015b" | 
-                  assay_component_endpoint_name == "IVDBroeders2013" |
-                  assay_component_endpoint_name == "IVDWei2010",
-                assay_component_endpoint_name := paste(assay_component_endpoint_name, cell_type, sep="_")]
+#check all experimental assay endpoint names are present in the parameters table 
+#unique(IVD_Manuscript_data[,(assay_component_endpoint_name)]) %in% user_assay_parameters[,(assay_component_endpoint_name)]
+# all true = ready to run!
 
-parameters_only[assay_component_endpoint_name=="IVDMundy2004", 
-                assay_component_endpoint_name := paste(paste(assay_component_endpoint_name, paste(timepoint_hr, "hr", sep = ""), sep="_"), paste(FBSf, "FBSf", sep = ""), sep = "_")]
+#delete the surface area and other assay info from IVD_Manuscript_data to check whether sarea is running correctly
+#overlapping columns in IVD_Manuscript_data and ivpnames should be replaced with null (columns removed)
+ivpnames[2]<-NA #remove assay_component_endpoint_name bc we need to be able to reference it
+IVD_Manuscript_data[,ivpnames[(ivpnames %in% names(IVD_Manuscript_data))]]<- NULL
 
-#bind and reassign over the invitro.assay.params table so it passes to sarea calculation function
-invitro.assay.params<-rbind(invitro.assay.params, parameters_only)
-# should have 30 + 1649 = 1679 rows
+checkpoint<-copy(IVD_Manuscript_data)
 
-#add the assay_component_endpoint_name to the experimental dataframe 
-IVD_Manuscript_data[, assay_component_endpoint_name := paste("IVD", gsub(", ", "", Citation), sep="")]
-
-#tack on the "interesting" part for each assay
-IVD_Manuscript_data[assay_component_endpoint_name=="IVDBellwon2015b" | 
-                  assay_component_endpoint_name == "IVDBroeders2013" |
-                  assay_component_endpoint_name == "IVDWei2010",
-                assay_component_endpoint_name := paste(assay_component_endpoint_name, CellType, sep="_")]
-
-IVD_Manuscript_data[assay_component_endpoint_name=="IVDMundy2004", 
-                assay_component_endpoint_name := paste(paste(assay_component_endpoint_name, 
-                                                             paste(ExposureDuration_hrs, "hr", sep = ""), sep="_"), 
-                                                       paste(FBSf, "FBSf", sep = ""), sep = "_")]
-
-all(unique(IVD_Manuscript_data[,.(assay_component_endpoint_name)]) %in% invitro.assay.params[,.(assay_component_endpoint_name)])
-
-
-
-invitro.assay.params$assay_component_endpoint_name
-class(invitro.assay.params)
 ```
-
-
 
 
 
@@ -215,15 +227,22 @@ class(invitro.assay.params)
 
 # run Armitage model, output concentrations in umol/L (e.g. uM)
 armitageOutput_data.dt <- armitage_eval(tcdata=IVD_Manuscript_data, 
-                                        surface.area.switch = FALSE,
+                                        surface.area.switch = TRUE,
+                                        user_assay_parameters = user_assay_parameters,
                                         restrict.ion.partitioning = TRUE)
+
+
+#need to also incorporate the fbsf and other columns in the sarea function
+
+
+#IVD_Manuscript_data[missing.rows,"sarea"] <- as.numeric(unlist(output[,"sarea"]))
+
 
 
 # run Kramer model, output concentrations in umol/L (e.g. uM)
 kramerOutput_data.dt <- kramer_eval(tcdata=IVD_Manuscript_data, 
                                     surface.area.switch = FALSE,
                                     restrict.ion.partitioning = TRUE)
-
 ```
 
 # Manipulate data for plotting
@@ -240,7 +259,19 @@ Armitage.dt[,label:= "Armitage"]
 Kramer.dt[,label:= "Kramer"]
 Nominal.dt[,label:= "Nominal"]
 
-data.for.plot<-rbind(Armitage.dt, Kramer.dt, Nominal.dt, fill= TRUE)
+#combine data in plotting form
+combodata<-merge(Armitage.dt, kramerOutput_data.dt, by = "X", all.x = TRUE) #kramer output still has nomconc values 
+
+if(save_output){
+  write.csv(combodata, file = paste0(path_out,"ManuscriptOutput_",data.date,"_",Sys.Date(),".csv"))
+}
+
+combodata %>% dplyr::filter(Citation.x== "Tox21" | Citation.x == "Steve Ferguson") %>% select(ChemicalName.x) %>% distinct
+
+#70 datapoints from them, 13 chemicals
+
+combodata %>% dplyr::filter(Citation.x != "Tox21" & Citation.x != "Steve Ferguson") %>% select(ChemicalName.x) %>% distinct
+#104 data points, 43 chemicals
 
 ```
 
@@ -323,7 +354,7 @@ Kramer_ccell<-ggplot(Kramer.dt, aes(concentration_cells, CellConcentration_uM,
 #Nominal RMSLE:
 nom_rmsle_long<-rmsle((Nominal.dt$CellConcentration_uM),(Nominal.dt$nomconc))
 nom_rmsle<-round(nom_rmsle_long, 2)
-#1.72
+#1.69
 
 # now plot
 Nominal_ccell<-ggplot(Nominal.dt, aes(nomconc, CellConcentration_uM, 
@@ -356,9 +387,9 @@ Ccells_comboplot<-ggarrange(Nominal_ccell, Armitage_ccell, Kramer_ccell, ncol=3 
 
 #save
 if(save_output){
-  ggsave("Figure2.png", path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/",
-       Ccells_comboplot, width = 10, height = 5, dpi = 300)
-  
+  ggsave(file = paste0("Figure2_",data.date,"_",Sys.Date(),".png"),
+         path = path_out,
+         Ccells_comboplot, width = 10, height = 5, dpi = 300)
 }
 
 
@@ -386,7 +417,7 @@ Kramer.multobs.dt <- Kramer.dt %>%
 Nominal.multobs.dt <- Nominal.dt %>% 
   dplyr::filter(ChemicalName %in% multiObsChemnameList$ChemicalName)
 
-#each have 120 observations
+#each have 140 observations
 
 #now plot
 
@@ -467,21 +498,17 @@ Kramer_ccell_mult<-ggplot(Kramer.multobs.dt, aes(concentration_cells, CellConcen
 Ccells_comboplot_mult<-ggarrange(Armitage_ccell_mult, Kramer_ccell_mult, ncol=2, legend = "bottom", common.legend = TRUE)
 
 if(save_output){
-  ggsave("Figure3.png", path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/",
-       Ccells_comboplot_mult, width = 8, height = 5, dpi = 300)
+  ggsave(file = paste0("Figure3_",data.date,"_",Sys.Date(),".png"),
+         path = path_out,
+         Ccells_comboplot_mult, width = 8, height = 5, dpi = 300)
 }
 
 print(Ccells_comboplot_mult)
 
 ```
 
-## Figure 4: Predicted and experimental intracellular concentrations from the Armitage (left panel) and Kramer (right panel) models for the twenty chemicals with multiple observations. Solid lines connect multiple measurements for a single chemical. The Ddashed line shows unity. 
+## Figure 4: Chemical partitioning into water, air, cell, and plastic compartments for the Armitage and Kramer models. Dashed line shows unity.
 ```{r chemicalPart_intracel_plot, eval = execute.vignette}
-
-#combine data in plotting form
-combodata<-merge(Armitage.dt, kramerOutput_data.dt, by = "X", all.x = TRUE) #kramer output still has nomconc values 
-
-combodata %>% dplyr::filter(Citation.x == "Broeders, 2013") %>% select(nomconc)
 
 #Cwat_uM -------- Cwat_R
 Cwater_comparison<-ggplot(combodata, aes(concentration_medium, cwat_s, 
@@ -565,17 +592,18 @@ Aplastic_comparison<-ggplot(combodata, aes(concentration_plastic, cplastic,
 
 compartment_plots<-ggarrange(Cwater_comparison, Cair_comparison, Ccells_comparison, Aplastic_comparison, common.legend = TRUE, legend = "bottom")
 
+
 if(save_output){
-  ggsave("Figure4.png", path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/",
-       compartment_plots, width = 11, height = 10, dpi= 300)
+  ggsave(file = paste0("Figure4_",data.date,"_",Sys.Date(),".png"),
+         path = path_out,
+         compartment_plots, width = 11, height = 10, dpi= 300)
 }
 
 
 print(compartment_plots)
 
-
-combodata[(ccells>concentration_cells), length(unique(ChemicalName.x))] #38 chemicals where armitage ccells is larger
-combodata[(ccells<concentration_cells), length(unique(ChemicalName.x))]   #16 chemicals where armitage is smaller than Kramer
+#count the number of chemicals that kramer and armitage predict to be larger
+#combodata %>% group_by(ChemicalName.x) %>% dplyr::filter(concentration_cellsccells) %>% select(ChemicalName.x) %>% distinct()
 
 
 ```
@@ -640,7 +668,7 @@ armitageOutput_default.dt[,rmsle_ccell_default:=rmsle(Reported_Ccell_µM, ccells
 #total
 RMSLE_default.dt<-rmsle(armitageOutput_default.dt$Reported_Ccell_µM, armitageOutput_default.dt$ccells)
 RMSLE_default.dt<-round(RMSLE_default.dt, 3)
-#0.5819282
+#0.582
 
 #curated values
 
@@ -650,12 +678,16 @@ armitageOutput_curated.data.dt[,rmsle_ccell_curated:=rmsle(Reported_Ccell_µM, c
 #total
 RMSLE_curated.data.dt<-rmsle(armitageOutput_curated.data.dt$Reported_Ccell_µM, armitageOutput_curated.data.dt$ccells)
 RMSLE_curated.data.dt<-round(RMSLE_curated.data.dt, 3)
-#0.5659809
+#0.566
 
-## difference between the two ##
+#improvement when using curated data:
+RMSLE_default.dt-RMSLE_curated.data.dt
+#0.016
+
+## difference between the two on a per-chemical basis ##
 curated_data.dt<-merge(armitageOutput_default.dt, armitageOutput_curated.data.dt, by = "Name")
 
-#calculate rmsle difference
+#calculate rmsle difference for each chemical
 curated_data.dt[,rmsle_difference:=rmsle_ccell_curated-rmsle_ccell_default, by = Name]
 
 library(ggrepel)
@@ -680,57 +712,14 @@ curated_difference_httk_plot<-ggplot(curated_data.dt, aes(ccells.y, Reported_Cce
                           panel.grid.minor = element_blank(), 
                           axis.line = element_line(colour = "black"))
 
-
-# basicvalues_httk_plot<-ggplot(armitageOutput_default.dt, aes(ccells, Reported_Ccell_µM, color = Name, label = round(rmsle_ccell_default, 2)))+
-#   geom_point(size = 4) + 
-#   geom_abline(intercept=0,slope=1, linetype = "dashed") +
-#   geom_text_repel() +
-#                         scale_y_continuous(labels = function(x) sprintf("%g", x),  limits = c(10, 10000), trans='log10') +
-#                         scale_x_continuous(labels = function(x) sprintf("%g", x),limits = c(10, 10000),  trans='log10') +
-#                         xlab("Armitage Predicted Intracellular Concentration (\U00B5M)") + 
-#                         ylab("Experimental Intracellular Concentration (\U00B5M)")+
-#                         labs(color = "Chemical Name")+
-#                         ggtitle("Default Physchem Input")+
-#                         annotate("text", x = Inf, y = Inf, label = paste("RMSLE: ", RMSLE_default.dt),
-#                                  vjust = 29, hjust = 1, size = 3) +
-#                         theme_bw() + 
-#                         theme(legend.key.size = unit(2, 'mm'),
-#                           text=element_text(size=10),
-#                           legend.spacing = unit(10, "pt"),
-#                           legend.text = element_text(size = 10),
-#                           panel.border = element_blank(), 
-#                           panel.grid.major = element_blank(),
-#                           panel.grid.minor = element_blank(), 
-#                           axis.line = element_line(colour = "black")) 
-# 
-# curatedvalues_httk_plot<-ggplot(armitageOutput_curated.data.dt, aes(ccells, Reported_Ccell_µM, color = Name, label = round(rmsle_ccell_curated, 2)))+
-#   geom_point(size = 4) + 
-#   geom_abline(intercept=0,slope=1, linetype = "dashed") +
-#   geom_text_repel() +
-#                         scale_y_continuous(labels = function(x) sprintf("%g", x),  limits = c(10, 10000), trans='log10') +
-#                         scale_x_continuous(labels = function(x) sprintf("%g", x),limits = c(10, 10000),  trans='log10') +
-#                         xlab("Armitage Predicted Intracellular Concentration (\U00B5M)") + 
-#                         ylab("Experimental Intracellular Concentration (\U00B5M)")+
-#                         labs(color = "Chemical Name")+
-#                         ggtitle("Curated Physchem Input")+
-#                         annotate("text", x = Inf, y = Inf, label = paste("RMSLE: ", RMSLE_curated.data.dt),
-#                                  vjust = 29, hjust = 1, size = 3) +
-#                         theme_bw() + 
-#                         theme(legend.key.size = unit(2, 'mm'),
-#                           text=element_text(size=10),
-#                           legend.spacing = unit(10, "pt"),
-#                           legend.text = element_text(size = 10),
-#                           panel.border = element_blank(), 
-#                           panel.grid.major = element_blank(),
-#                           panel.grid.minor = element_blank(), 
-#                           axis.line = element_line(colour = "black")) 
-# 
-# curated_comboplot<-ggarrange(basicvalues_httk_plot, curatedvalues_httk_plot, ncol=2, legend = "bottom", common.legend = TRUE)
-
 if(save_output){
-  ggsave("Figure_5.png", path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/",
-       curated_difference_httk_plot, width = 8, height = 5, dpi = 300)
+  ggsave(file = paste0("Figure5_",data.date,"_",Sys.Date(),".png"),
+         path = path_out,
+         curated_difference_httk_plot, width = 8, height = 5, dpi = 300)
 }
+
+names(armitageOutput_curated.data.dt)
+armitageOutput_curated.data.dt %>% select(Name, Arnot_pka, Arnot_pkb, `log KOW,N`, `log KAW,N`)
 ```
 
 
@@ -750,20 +739,25 @@ median(combodata$RMSLE_nominal_by_chem) #1.660651
 #min(combodata$RMSLE_nominal) #5.46804194 (PBDE-47) - cell conc: 0.0006916427, nomconc: 203.2
 
 #4. to cellular concentration being X-fold higher than nominal (chemical)
-max(combodata$RMSLE_nominal_by_chem) #3.553827 (Chlorpromazine) - cell conc: 338757.6, nomconc: 20.7
+max(combodata$RMSLE_nominal_by_chem) #3.130213 (Chlorpromazine) - cell conc: 4558.731, nomconc: 20
 
 combodata %>% arrange(RMSLE_nominal_by_chem) %>% select(ChemicalName.x, Citation.x, nomconc, CellConcentration_uM.x, RMSLE_nominal_by_chem)
-
-combodata[, RMSLE_nominal := rmsle(CellConcentration_uM.x, nomconc), by = "X"]
-combodata %>% arrange(RMSLE_nominal) %>% select(ChemicalName.x, Citation.x, nomconc, CellConcentration_uM.x, RMSLE_nominal)
 
 ```
 
 ## Change in Accuracy of Intracellular Concentration predicted by studies reporting experimentally measured nominal dose
 ```{r}
 
-exp_nom.dt<-copy(IVD_Manuscript_data[NominalDose_uM != ExperimentalDose_uM,]) #25 entries
-#unique(exp_nom.dt$Citation) #5 citations
+unique(IVD_Manuscript_data %>% dplyr::filter(is.na(ExperimentalDose_uM)) %>% select(Citation))
+#9 citations did not measure experimental dose at all
+#132 observations
+
+IVD_Manuscript_data %>% dplyr::filter(!(is.na(ExperimentalDose_uM))) %>% select(Citation, nomconc, NominalDose_uM, ExperimentalDose_uM)
+#6 citations did measure experimental dose
+#42 observations
+
+exp_nom.dt<-copy(IVD_Manuscript_data[!(is.na(ExperimentalDose_uM)),]) #25 entries
+#unique(exp_nom.dt$Citation) #6 citations
 
 #run armitage with nomconc as NominalDose_uM.x
 arm_nomconc<-copy(exp_nom.dt[, nomconc := NominalDose_uM])
@@ -783,16 +777,16 @@ armitageOutput_arm_expconc <- armitage_eval(tcdata=arm_expconc,
 #Armitage NOMCONC RMSLE:
 arm_nomconc_rmsle_long<-rmsle((armitageOutput_arm_nomconc$CellConcentration_uM),(armitageOutput_arm_nomconc$ccells))
 arm_nomconc_rmsle<-round(arm_nomconc_rmsle_long, 2)
-#1.79
+#1.62
 
 #Armitage EXPCONC RMSLE:
 arm_expconc_rmsle_long<-rmsle((armitageOutput_arm_expconc$CellConcentration_uM),(armitageOutput_arm_expconc$ccells))
 arm_expconc_rmsle<-round(arm_expconc_rmsle_long, 2)
-#1.63
+#1.53
 
 #improvement between the experimental and nomconc rmsles
 arm_nomconc_rmsle- arm_expconc_rmsle
-#0.16
+#0.09
 
 # plots are not visually interesting so not including
 
@@ -848,17 +842,12 @@ final_output<-data.dt2 %>%
 
 #save the output
 if(save_output){
-  write.csv(final_output, path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/table_s1.csv")
+  write.csv(final_output, file = paste0(path_out,"table_s1_",data.date,"_",Sys.Date(),".csv"))
 }
 
-
-final_output %>% dplyr::filter(Citation == "Tox21") %>%  select(ChemicalName, median_ratio, Citation, number_of_obs)
-
-data.dt2%>% dplyr::filter(Citation == "Tox21") %>% select(ChemicalName, cellconc_cnom_ratio, median_ratio)
 ```
 
 ## Table S2. In vitro assay descriptors for the measurements
-#need to create!
 
 ```{r assay_descriptors_table, eval = execute.vignette}
 
@@ -867,18 +856,11 @@ parameter_table<-copy(Nominal.dt)
 
 table_s2<-parameter_table[, c("Citation", "ChemicalName", "nomconc", "NominalDose_uM", "v_total", "v_working", "sarea", "well_number", "cell_yield", "FBSf", "FigureNumber", "CellType")] #subset columns
 
-parameter_table[Citation=="Bopp, 2005", c("ChemicalName", "nomconc" )]
-
-parameter_table[Citation=="Tox21",]
-
 #save the output
 if(save_output){
-  write.csv(table_s2, path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/table_s2_raw.csv")
+  write.csv(table_s2, 
+            file = paste0(path_out,"table_s2_raw_",data.date,"_",Sys.Date(),".csv"))
 }
-
-unique(parameter_table$Citation)
-parameter_table$CellConcentration_uM
-parameter_table %>% dplyr::filter(Citation=="Bopp, 2005") %>% select(ChemicalName)
 
 ```
 
@@ -965,18 +947,23 @@ mult_HL %>% count(higherorlower)
 
 #save the output
 if(save_output){
-  write.csv(mult.dt, path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/table_s3.csv")
+  write.csv(mult.dt, 
+            file = paste0(path_out,"table_s3_",data.date,"_",Sys.Date(),".csv"))
 }
 
 ```
 ## Table S4: RMSLE and r^2 for acids and bases.
 ```{r ionization_RMSLE_table, eval = execute.vignette}
 
+##create datatable with both outputs stacked 
+stacked.data<-rbind(Armitage.dt, Kramer.dt, fill=TRUE)
+
+
 ionization_rmsle<-NULL
 
-for (modelType in unique(data.for.plot$label)){
+for (modelType in unique(stacked.data$label)){
   
-  ionization.df<- data.for.plot[label == modelType,]
+  ionization.df<- stacked.data[label == modelType,]
   
   if (modelType == "Armitage"){
     
@@ -1045,8 +1032,10 @@ print(ionization_rmsle)
 
 #save the output
 if(save_output){
-  write.csv(ionization_rmsle, path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/table_s4.csv")
+  write.csv(ionization_rmsle, 
+            file = paste0(path_out,"table_s4_",data.date,"_",Sys.Date(),".csv"))
 }
+
 
 ```
 
@@ -1054,7 +1043,7 @@ if(save_output){
 ```{r logP_RMSLE_table, eval = execute.vignette}
 
 #cut up into chunks
-gkowbins<-data.for.plot %>% mutate(LogP_bins = cut(gkow, breaks = c(-Inf, 1.30, 3.36, Inf),
+gkowbins<-stacked.data %>% mutate(LogP_bins = cut(gkow, breaks = c(-Inf, 1.30, 3.36, Inf),
   labels = c("Hydrophilic", "Moderate Lipophilic", "Lipophilic")))
 
 #Armitage:
@@ -1069,7 +1058,8 @@ gkow_output<-merge(rmsle_gkow_armitage, rmsle_gkow_kramer)
 
 #save the output
 if(save_output){
-  write.csv(gkow_output, path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/table_s5.csv")
+  write.csv(gkow_output, 
+            file = paste0(path_out,"table_s5_",data.date,"_",Sys.Date(),".csv"))
 }
 
 ```
@@ -1080,7 +1070,7 @@ if(save_output){
 #source for chunks is table 2 Volatility class in water: https://www.epa.gov/pesticide-science-and-assessing-pesticide-risks/guidance-reporting-environmental-fate-and-transport#:~:text=is%20very%20low.-,Volatility%20from%20Water,the%20reciprocal%20of%20KAW.&text=GMW%20=%20gram%20molecular%20weight%20in%20g/mole.&text=This%20value%20is%20the%20inverse,as%20Cwater/Cair.&text=Note%20that%20all%20chemicals%20may,volatility%20potential%20is%20very%20low.
 
 #cut up kaw into relevant bins
-kawbins<-data.for.plot %>% mutate(Kaw_bins = cut(DR_kaw, breaks = c(Inf, 10^-2, 10^-3, 10^-5, -Inf),
+kawbins<-stacked.data %>% mutate(Kaw_bins = cut(DR_kaw, breaks = c(Inf, 10^-2, 10^-3, 10^-5, -Inf),
   labels = c("Rapidly lost from a water surface", "Volatile from a water surface", "Slightly volatile from a water surface", "Non-volatile")))
 
 #Armitage:
@@ -1097,8 +1087,10 @@ kaw_output<-merge(rmsle_kawbins_kramer, rmsle_kaw_armitage)
 
 #save the output
 if(save_output){
-  write.csv(kaw_output, path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/table_s6.csv")
+  write.csv(kaw_output, 
+            file = paste0(path_out,"table_s6_",data.date,"_",Sys.Date(),".csv"))
 }
+
 
 ```
 
@@ -1122,7 +1114,7 @@ if(save_output){
 options.IVD_Manuscript_data<-copy(IVD_Manuscript_data)
 options.IVD_Manuscript_data<-options.IVD_Manuscript_data[!is.na(well_number), ] %>% 
   .[,sarea:=NULL]  #delete sarea so the surface area function will run 
-#147 out of the original 174 observations
+#136 out of the original 163 observations
 
 # create table to append the results to 
 options.table <- NULL
@@ -1201,72 +1193,12 @@ option.restion_RMSLE<-rmsle((option.restion$CellConcentration_uM),(option.restio
 #append to table
 options.table<-rbind(options.table, c(round(option.restion_RMSLE,3), "restrict.ion.partitioning = TRUE"))
 
-2.113-2.118
+
 ```
 
 
 ## Figure S1. Histogram showing chemical-specific RMSLE for Armitage Ccell vs Measured Ccell and Kramer Ccell vs Measured Ccell:
 ```{r intracellular_histogram_plot, eval = execute.vignette}
-
-#combine data in plotting form
-#combodata<-merge(Armitage.dt, Kramer.dt, by = "...1", all.x = TRUE)
-#combodata<-cbind(nomconc=Nominal.dt$nomconc, combodata)
-
-#calculate RMSLE for each row of data
-combodata[, RMSLE_armitage:= rmsle(CellConcentration_uM.x, ccells), by = "X"]
-combodata[, RMSLE_kramer:= rmsle(CellConcentration_uM.x, concentration_cells), by = "X"]
-combodata[, RMSLE_nominal:= rmsle(CellConcentration_uM.x, nomconc), by = "X"]
-
-max(combodata$RMSLE_armitage)
-
-bw <- 2 * IQR(combodata$RMSLE_nominal) / length(combodata$RMSLE_nominal)^(1/3)
-
-#plot histograms
-nominal_histogram <-ggplot(combodata, aes(x=RMSLE_nominal)) + 
-  geom_histogram(binwidth = 0.2, boundary = 0) +
-  labs(x = "Nominal RMSLE",
-       y = "Count") + 
-  xlim(0, 5) + ylim(0, 30) +
-  theme_classic() +  
-  theme(axis.text=element_text(size=12),
-        axis.title=element_text(size=14))
-
-armitage_histogram <-ggplot(combodata, aes(x=RMSLE_armitage)) + 
-  geom_histogram(binwidth = 0.2, boundary = 0) +
-  labs(x = "Armitage RMSLE",
-       y = "Count") +
-  xlim(0, 5) + ylim(0, 30) +
-  theme_classic() + 
-  theme(axis.text=element_text(size=12),
-        axis.title=element_text(size=14))
-
-kramer_histogram <- ggplot(combodata, aes(x=RMSLE_kramer)) + 
-  geom_histogram(binwidth = 0.2, boundary = 0) +
-  labs(x = "Kramer RMSLE",
-       y = "Count") +
-  xlim(0, 5) + ylim(0, 30) +
-  theme_classic()+
-  theme(axis.text=element_text(size=12),
-        axis.title=element_text(size=14))
-
-histogram_comboplot<-ggarrange(nominal_histogram, armitage_histogram, kramer_histogram, ncol=3)
-
-if(save_output){
-  ggsave("Figure_S1.png", path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/",
-       histogram_comboplot, width = 10, height = 5, dpi = 300)
-}
-
-
-print(histogram_comboplot)
-
-```
-#other option:
-## Figure S1. Histogram showing chemical-specific RMSLE for Armitage Ccell vs Measured Ccell and Kramer Ccell vs Measured Ccell: BY CHEMICAL
-```{r intracellular_histogram_plot_2, eval = execute.vignette}
-
-#combine data in plotting form
-#combodata<-merge(Armitage.dt, Kramer.dt, by = "...1", all.x = TRUE)
-#combodata<-cbind(nomconc=Nominal.dt$nomconc, combodata)
 
 #calculate RMSLE for each row of data
 combodata[, RMSLE_armitage_by_chem:= rmsle(CellConcentration_uM.x, ccells), by = "ChemicalName.x"]
@@ -1278,6 +1210,7 @@ histo.data<-copy(combodata %>%
                    select(ChemicalName.x, RMSLE_armitage_by_chem, RMSLE_kramer_by_chem, RMSLE_nominal_by_chem) %>% 
                    unique())
 
+#option to set binwidth:
 #bw <- 2 * IQR(combodata$RMSLE_nominal) / length(combodata$RMSLE_nominal)^(1/3)
 
 #plot histograms
@@ -1311,8 +1244,9 @@ kramer_histogram_by_chem <- ggplot(histo.data, aes(x=RMSLE_kramer_by_chem)) +
 histogram_comboplot_by_chem<-ggarrange(nominal_histogram_by_chem, armitage_histogram_by_chem, kramer_histogram_by_chem, ncol=3)
 
 if(save_output){
-  ggsave("Figure_S1_by_chem.png", path = "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ManuscriptFigures_19MAY25/",
-       histogram_comboplot_by_chem, width = 10, height = 5, dpi = 300)
+  ggsave(file = paste0("Figure_S1_by_chem_",data.date,"_",Sys.Date(),".png"),
+         path = path_out,
+         histogram_comboplot_by_chem, width = 10, height = 5, dpi = 300)
 }
 
 
