@@ -98,9 +98,9 @@ convert_units <- function(input.units = NULL,
                           liquid.density = 1.0, # g/mL
                           state="liquid")
 {
-# The volume of an ideal gas at this temperature (L/mol)
+  # The volume of an ideal gas at this temperature (L/mol)
   volidealgas <- (273.15 + temp)*0.08205
-
+  
   #Take the lower case form of the units requested
   input.units <- tolower(input.units)
   output.units <- tolower(output.units)
@@ -122,7 +122,7 @@ convert_units <- function(input.units = NULL,
   if (is.null(MW)) {
     if (is.null(chem.cas) & is.null(chem.name) & is.null(dtxsid) &
         is.null(parameters))
-      {
+    {
       stop('User must specify either MW (molecular weight), or give chemical
   identifying information like chem.cas, chem.name, or dtxsid
   so that httk can retrieve a molecular weight value in determining
@@ -298,22 +298,22 @@ convert_units <- function(input.units = NULL,
                      # Liquid solvent has density liquid.density g / mL:
                      # density and weight per weight:
                      "ppmw",  
-                     "ppbw" , 
-                     "ppmw" , 
+                     "ppbw", 
+                     "ppmw", 
                      "ppmw",
                      "ppmw",
                      # molar and weight per weight:
-                     "ppmw"  ,
-                     "ppbw"  ,
-                     "ppmw"  ,
-                     "ppbw"  ,
-                     "ppmw"  ,
-                     "ppbw"  ,
-                     "ppmw"  ,
-                     "ppbw"  ,
+                     "ppmw",
+                     "ppbw",
+                     "ppmw",
+                     "ppbw",
+                     "ppmw",
+                     "ppbw",
+                     "ppmw",
+                     "ppbw",
                      # molar and weight per weight:
                      "um",
-                     "um"     ,
+                     "um",
                      # density and weight per weight:
                      "mg/l",
                      "mg/l",
@@ -326,17 +326,17 @@ convert_units <- function(input.units = NULL,
                      "ppmv",
                      "ppmv",
                      # density and volume per volume:
-                     "ppmv" ,
-                     "ppbv" ,
+                     "ppmv",
+                     "ppbv",
                      "ppmv",
                      "ppmv",
                      "ppmv",
                      "ppmv",
                      "ppmv",
                      "ppmv",
-                     "ppmv"  ,
+                     "ppmv",
                      # molar and volume per volume:
-                     "ppmv" ,
+                     "ppmv",
                      "ppmv",
                      "ppmv",
                      # molar and weight per weight:
@@ -356,7 +356,7 @@ convert_units <- function(input.units = NULL,
     #initialize a data.frame that determines conversion factors between key 
     #units corresponding to extrinsic quantities
     amounts_units_conversion_mat <- cbind(mg = c(1, this.MW/10^3), 
-                                                 umol = c(10^3/this.MW, 1))
+                                          umol = c(10^3/this.MW, 1))
     row.names(amounts_units_conversion_mat) <- c('mg','umol')
     
     #initialize a data.frame that determines conversion factors between key
@@ -365,108 +365,104 @@ convert_units <- function(input.units = NULL,
     #pre-slug a complete lookup table of conversion units
     #rows are input units, columns are output units
     
-  
+    
     # Conversions
     #correspond to input_units and output_units
-   conversions <- c(
-    10^3/this.MW ,
-   10^3/this.MW,
-    10^3/this.MW,
-   1/this.MW ,
-    1/10^2*10^3/this.MW,
-    1/this.MW/10^3 ,
-    1/this.MW ,
-    10^6/this.MW ,
-    # density to density:
-     1,
-     1,
-    1/10^3,
-     1/10^2,
-     1/10^6,
-     1/10^3,
-    # molar to molar:
-     1,
-     1/10^3,
-    1/10^3,
-    1,
-    # molar to density:
-     this.MW/10^3,
-     this.MW/10^6,
-    #######
-    #liquid state
-    ##########
-    # Liquid solvent has density liquid.density g / mL:
-    # density and weight per weight:
-     1/liquid.density  ,
-     10^3/liquid.density  ,
-    1/liquid.density/10^3  ,
-    1/10^3/liquid.density,
-     1/liquid.density,
-    # molar and weight per weight:
-     this.MW*10^-3/liquid.density , 
-     this.MW*10^0/liquid.density  ,
-     this.MW*10^-6/liquid.density , 
-     this.MW*10^-3/liquid.density  ,
-     this.MW*10^3/liquid.density  ,
-     this.MW*10^6/liquid.density  ,
-     this.MW*10^0/liquid.density  ,
-     this.MW*10^3/liquid.density , 
-    # molar and weight per weight:
-     10^3/this.MW*liquid.density,
-     10^3/this.MW*liquid.density   ,  
-    # density and weight per weight:
-    liquid.density ,
-    liquid.density ,
-    liquid.density,
-    #######
-    # gas state
-    #######
-    # Gas has density volidealgas L / mol:
-    # volume per volume to volume per volume:
-    10^-3  ,
-     10^-6  ,
-    # density and volume per volume:
-     10^3/this.MW*volidealgas  ,
-     10^6/this.MW*volidealgas  ,
-    10^0/this.MW*volidealgas,
-     10^-3/this.MW*volidealgas,
-    10^3/this.MW*volidealgas,
-     10^0/this.MW*volidealgas,
-     10^3/this.MW*volidealgas,
-     1/10^2*10^3*this.MW*volidealgas,
-    1/this.MW*volidealgas  ,
-    # molar and volume per volume:
-    1*volidealgas ,
-     1*volidealgas,
-    1/10^3*volidealgas,
-    # molar and weight per weight:
-    # ug/g -> uL/L for air not water    CHECK    
-    # density and weight per weight:
-    1.225/(this.MW/volidealgas*10^6) ,
-     1.225/(this.MW/volidealgas*10^6) ,
-    # weight per weight and volume per volume:
-    1.225/(this.MW/volidealgas*10^6)
-   )
-   
-   all_units <- union(input_units,output_units)
-   
-   conc_units_conversion_mat <- matrix(nrow = length(all_units),
-                                       ncol = length(all_units))
-   rownames(conc_units_conversion_mat) <- all_units
-   colnames(conc_units_conversion_mat) <- all_units
-   diag(conc_units_conversion_mat) <- 1
-   
-   #input units to output units
-   conc_units_conversion_mat[cbind(input_units,
-                               output_units)] <- conversions
-   #and the inverse -- output units to input units
-   conc_units_conversion_mat[cbind(output_units,
-                                     input_units)] <- 1/conversions
-           
-    # # Make sure there is a row and column for each unit and that they are in the same order:
-    # conc_units_conversion_mat <- conc_units_conversion_mat[conc_units,   
-    #   conc_units]
-  
+    conversions <- c(
+      10^3/this.MW,
+      10^3/this.MW,
+      10^3/this.MW,
+      1/this.MW,
+      1/10^2*10^3/this.MW,
+      1/this.MW/10^3,
+      1/this.MW,
+      10^6/this.MW,
+      # density to density:
+      1,
+      1,
+      1/10^3,
+      1/10^2,
+      1/10^6,
+      1/10^3,
+      # molar to molar:
+      1,
+      1/10^3,
+      1/10^3,
+      1,
+      # molar to density:
+      this.MW/10^3,
+      this.MW/10^6,
+      #######
+      #liquid state
+      ##########
+      # Liquid solvent has density liquid.density g / mL:
+      # density and weight per weight:
+      1/liquid.density,
+      10^3/liquid.density,
+      1/liquid.density/10^3,
+      1/10^3/liquid.density,
+      1/liquid.density,
+      # molar and weight per weight:
+      this.MW*10^-3/liquid.density, 
+      this.MW*10^0/liquid.density,
+      this.MW*10^-6/liquid.density, 
+      this.MW*10^-3/liquid.density,
+      this.MW*10^3/liquid.density,
+      this.MW*10^6/liquid.density,
+      this.MW*10^0/liquid.density,
+      this.MW*10^3/liquid.density, 
+      # molar and weight per weight:
+      10^3/this.MW*liquid.density,
+      10^3/this.MW*liquid.density,  
+      # density and weight per weight:
+      liquid.density,
+      liquid.density,
+      liquid.density,
+      #######
+      # gas state
+      #######
+      # Gas has density volidealgas L / mol:
+      # volume per volume to volume per volume:
+      10^-3,
+      10^-6,
+      # density and volume per volume:
+      10^3/this.MW*volidealgas,
+      10^6/this.MW*volidealgas,
+      10^0/this.MW*volidealgas,
+      10^-3/this.MW*volidealgas,
+      10^3/this.MW*volidealgas,
+      10^0/this.MW*volidealgas,
+      10^3/this.MW*volidealgas,
+      1/10^2*10^3*this.MW*volidealgas,
+      1/this.MW*volidealgas,
+      # molar and volume per volume:
+      1*volidealgas,
+      1*volidealgas,
+      1/10^3*volidealgas,
+      # molar and weight per weight:
+      # ug/g -> uL/L for air not water    CHECK    
+      # density and weight per weight:
+      1.225/(this.MW/volidealgas*10^6),
+      1.225/(this.MW/volidealgas*10^6),
+      # weight per weight and volume per volume:
+      1.225/(this.MW/volidealgas*10^6)
+    )
+    
+    all_units <- union(input_units,output_units)
+    
+    conc_units_conversion_mat <- matrix(nrow = length(all_units),
+                                        ncol = length(all_units))
+    rownames(conc_units_conversion_mat) <- all_units
+    colnames(conc_units_conversion_mat) <- all_units
+    diag(conc_units_conversion_mat) <- 1
+    
+    #input units to output units
+    conc_units_conversion_mat[cbind(input_units,
+                                    output_units)] <- conversions
+    #and the inverse -- output units to input units
+    conc_units_conversion_mat[cbind(output_units,
+                                    input_units)] <- 1/conversions
+    
     #initialize a data.frame that determines conversion factors between key
     #amount units and concentration units, set official names manually
     #Check if volume is provided to complete the conversion table.
@@ -482,22 +478,22 @@ convert_units <- function(input.units = NULL,
     #initialize master list of names of chemical amounts/concentration-based
     #units supported in httk, excluding those scaled to body weight 
     httk_dose_units_list <- sort(unique(c(rownames(conc_units_conversion_mat),
-      rownames(amounts_units_conversion_mat))))
+                                          rownames(amounts_units_conversion_mat))))
     
     #Now check to see if our compiled information can appropriately support
     #the requested units conversion, and if so, provide the conversion factor.
     if (any(!c(input.units,output.units) %in% httk_dose_units_list))
     {
       stop(paste("Requested units",
-        paste(unique(c(input.units,output.units))[!(
-        unique(c(input.units,output.units)) %in% httk_dose_units_list)],
-        collapse=", "), "
+                 paste(unique(c(input.units,output.units))[!(
+                   unique(c(input.units,output.units)) %in% httk_dose_units_list)],
+                   collapse=", "), "
   not supported for unit conversion. 
   Extrinsic amounts are supported in units of \'mg\' and \'umol\', and intrinsic 
   concentrations are supported in \'mg/L\', \'uM\', and, in the case of gas models 
   where the gas is assumed ideal, \'ppmv\'.")) 
     }
-  
+    
     conversion_factor <- NA
     if(all(c(input.units,output.units) %in% rownames(amounts_units_conversion_mat))){
       conversion_factor <-
@@ -537,7 +533,7 @@ convert_units <- function(input.units = NULL,
   mg/L, uM, and in the case of gas models where the gas is
   assumed ideal, ppmv. If converting between amount and
   concentration, user must specify volume (vol).'))
-
+  
   return(set_httk_precision(conversion_factors))
 }
 
