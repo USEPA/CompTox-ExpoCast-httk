@@ -448,20 +448,32 @@ convert_units <- function(input.units = NULL,
       1.225/(this.MW/volidealgas*10^6)
     )
     
-    all_units <- union(input_units,output_units)
     
+    
+    #matrix of conversion factors:
+    #rows are input units, columns are output units
+    #but include all units in both row & column, so we can do inverse conversions
+    
+    
+    all_units <- union(input_units,output_units)
+    #create all-NA matrix to begin with
     conc_units_conversion_mat <- matrix(nrow = length(all_units),
                                         ncol = length(all_units))
+    
+    #name rows and columns 
     rownames(conc_units_conversion_mat) <- all_units
     colnames(conc_units_conversion_mat) <- all_units
+    
+    #diagonal 1: each unit to itself has conversion factor 1
     diag(conc_units_conversion_mat) <- 1
     
-    #input units to output units
+    #fill matrix with conversion factors for input units to output units
     conc_units_conversion_mat[cbind(input_units,
                                     output_units)] <- conversions
     #and the inverse -- output units to input units
     conc_units_conversion_mat[cbind(output_units,
                                     input_units)] <- 1/conversions
+    #all other conversion factors remain NA
     
     #initialize a data.frame that determines conversion factors between key
     #amount units and concentration units, set official names manually
