@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2025-04-18 r88159 ucrt) -- "Unsuffered Consequences"
+R Under development (unstable) (2025-05-01 r88184 ucrt) -- "Unsuffered Consequences"
 Copyright (C) 2025 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
@@ -92,7 +92,7 @@ Warning messages:
 > calc_mc_css(chem.cas="15972-60-8",samples=NSAMP)
 Human plasma concentration returned in mg/L units for 0.95 quantile.
    95% 
-0.1355 
+0.1354 
 Warning messages:
 1: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
