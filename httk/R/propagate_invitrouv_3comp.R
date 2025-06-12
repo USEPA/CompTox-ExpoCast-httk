@@ -25,24 +25,29 @@ propagate_invitrouv_3comp<- function(
   #End R CMD CHECK appeasement.
   
   
-      #Compute Vdist, volume of distribution
-      parameters.dt[, Clmetabolismc := 
-        as.numeric(calc_hep_clearance(
-          hepatic.model="unscaled",
-          parameters=list(
-            Clint=Clint, #uL/min/10^6 cells
-            Funbound.plasma=Funbound.plasma, # unitless fraction
-            Fhep.assay.correction=
-              Fhep.assay.correction, 
-            million.cells.per.gliver= million.cells.per.gliver, # 10^6 cells/g-liver
-            liver.density= liver.density, # g/mL
-            Dn=0.17,
-            BW=BW,
-            Vliverc=Vliverc, #L/kg
-            Qtotal.liverc=
-              ((Qgutf+Qliverf)*as.numeric(Qcardiacc))/1000*60),
-          suppress.messages=TRUE,
-          ...))]
-
+  extra.args <- list(...)
+  calc.hep.clear.args <- extra.args[names(extra.args) %in%
+                                      names(formals(calc_hep_clearance))]
+  parameters.dt[, Clmetabolismc := 
+                  as.numeric(do.call(calc_hep_clearance,
+                                     args=purrr::compact(
+                                       c(
+                                         list(
+                                           hepatic.model="unscaled",
+                                           parameters=list(
+                                             Clint=Clint, #uL/min/10^6 cells
+                                             Funbound.plasma=Funbound.plasma, # unitless fraction
+                                             Fhep.assay.correction=
+                                               Fhep.assay.correction, 
+                                             million.cells.per.gliver= million.cells.per.gliver, # 10^6 cells/g-liver
+                                             liver.density= liver.density, # g/mL
+                                             Dn=0.17,
+                                             BW=BW,
+                                             Vliverc=Vliverc, #L/kg
+                                             Qtotal.liverc=
+                                               ((Qgutf+Qliverf)*as.numeric(Qcardiacc))), # L/h/kgBW^(3/4)
+                                           suppress.messages=TRUE),
+                                         calc.hep.clear.args))))]
+  
   return(parameters.dt)
 }
