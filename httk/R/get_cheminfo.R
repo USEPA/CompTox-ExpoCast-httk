@@ -467,13 +467,10 @@ get_cheminfo <- function(info="CAS",
   
   # Pare the chemical data down to only those chemicals where all the necessary
   # parameters are not NA
-    tmp_rownames <- rownames(
-      chem.physical_and_invitro.data[necessary.params][
-        stats::complete.cases(chem.physical_and_invitro.data[necessary.params]),
-        ]
-      )
-    good.chemicals.index <- rownames(chem.physical_and_invitro.data) %in% tmp_rownames
-    names(good.chemicals.index) <- rownames(chem.physical_and_invitro.data)
+    good.chemicals.index <- setNames(
+      stats::complete.cases(chem.physical_and_invitro.data[necessary.params]),
+      rownames(chem.physical_and_invitro.data)
+    )	
     
   # print a warning of exclusion criteria for compounds
   #  - ONLY if it is applies (i.e. is an exclusion criterion for at least 1 compound)
