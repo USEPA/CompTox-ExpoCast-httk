@@ -5,6 +5,7 @@
 * Css functions (`calc_analytic_css`, `calc_css`, model-specific `calc_analytic_css_MODEL` functions) accept explicit "species" argument and pass it explicitly to all functions that use a species argument
 *	Added argument propagate.invitro.uv.arg.list to `calc_mc_tk` and passed it to `create_mc_samples`
 *	`create_mc_samples`, when firstpass == TRUE, now calls `calc_hep_clearance` with restrictive.clearance from the parameterize.args.list
+* modelinfo_[MODEL] files now includes variable 'invitro.params' naming the model parameters affected by sampling using `invitro_mc`
 
 ## Bug fixes
 * Fixed bug where `create_mc_samples` was using human parameters for lumping non-human species
