@@ -75,7 +75,7 @@
 #'
 #'@author Robert Pearce, John Wambaugh
 #'
-#'@keywords Steady-State
+#'@keywords steady-state
 #'
 #' @examples
 #'
@@ -101,6 +101,13 @@
 #' ggtitle("Bisphenol A")
 #'
 #' print(c.vs.t)
+#'
+#'
+#' calc_css(chem.name='nicotine', model="1compartment")
+#' 
+#' calc_css(chem.name='nicotine', model="3compartment")
+#' 
+#' calc_css(chem.name="endrin")
 #'}
 #'
 #'@importFrom purrr compact
@@ -201,6 +208,7 @@ calc_css <- function(chem.name=NULL,
     chem.name = chem.name,
     chem.cas = chem.cas,
     dtxsid = dtxsid,
+    species = species,
     parameters=parameters,
     dose=daily.dose,
     concentration='plasma',
@@ -245,6 +253,7 @@ calc_css <- function(chem.name=NULL,
     model=model, 
     dosing=dosing,
     route=route,
+    species = species,
     input.units=dose.units,
     suppress.messages=TRUE,
     days=days,
@@ -275,6 +284,7 @@ calc_css <- function(chem.name=NULL,
       model=model, 
       dosing=dosing,
       route=route,
+      species = species,
       input.units=dose.units,
       suppress.messages=TRUE,
       days=days,
@@ -356,6 +366,7 @@ calc_css <- function(chem.name=NULL,
       initial.values = Final_State[state.vars],  
       dosing=dosing,
       route=route,
+      species = species,
       input.units=dose.units,
       days = additional.days,
       output.units = output.units,

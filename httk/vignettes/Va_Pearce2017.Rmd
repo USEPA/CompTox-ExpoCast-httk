@@ -108,10 +108,10 @@ packageVersion("httk")
 
 ### Control run speed
 To speed up how fast these examples run, we only simulate every $N^{th}$ chemical
-(currently 50) -- to get all chemicals with data set SKIP.CHEMS to 1:
+(currently 100) -- to get all chemicals with data set SKIP.CHEMS to 1:
 ```{r chemical_thining, eval = execute.vignette}
 NUM.CHEMS <- length(get_cheminfo(model="pbtk", suppress.messages = TRUE))
-SKIP.CHEMS <- 50
+SKIP.CHEMS <- 100
 ```
 
 Similarly, portions of this vignette use Monte Carlo sampling to simulate variability and

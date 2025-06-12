@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2025-04-18 r88159 ucrt) -- "Unsuffered Consequences"
+R Under development (unstable) (2025-05-01 r88184 ucrt) -- "Unsuffered Consequences"
 Copyright (C) 2025 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
@@ -65,7 +65,7 @@ Type 'q()' to quit R.
 +                     atol=1e-7)), 2)
             output.unit conversion.factor
 Cendexhppmv       mg/m3             9.332
-AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
+AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.77.
 The model outputs are provided in the following units:
 	uM: Cgut, Cliver, Cven, Clung, Cart, Crest, Ckidney, Cplasma, Cmuc
 	ppmv: Calvppmv, Cmixexhppmv
@@ -76,13 +76,13 @@ The model outputs are provided in the following units:
       time    Cgut  Cliver    Cven   Clung   Cart   Crest Ckidney Cplasma
 [1,] 0e+00 0.00000 0.0e+00 0.0e+00 0.00000 0.0000 0.0e+00  0.0000 0.0e+00
 [2,] 1e-04 0.00046 7.7e-05 1.8e-06 0.00012 0.0058 2.2e-05  0.0018 2.3e-06
-[3,] 5e-02 0.59000 1.4e-01 1.7e-02 0.29000 0.0390 1.0e-01  0.9400 2.1e-02
-[4,] 1e-01 0.74000 1.8e-01 2.5e-02 0.39000 0.0480 2.0e-01  1.2000 3.1e-02
-     Calvppmv Cendexhppmv Cmixexhppmv   Cmuc Atubules Ametabolized     AUC
-[1,]    0e+00     0.00000        0.30    0.0  0.0e+00      0.0e+00 0.00000
-[2,]    0e+00     0.00016        0.30    3.7  1.7e-06      1.2e-06 0.00000
-[3,]    1e-07     0.07400        0.31 1800.0  9.1e-03      2.2e+00 0.00069
-[4,]    2e-07     0.15000        0.31 3600.0  2.1e-02      5.8e+00 0.00200
+[3,] 5e-02 0.60000 1.4e-01 1.6e-02 0.29000 0.0390 1.0e-01  0.9700 2.1e-02
+[4,] 1e-01 0.75000 1.7e-01 2.4e-02 0.40000 0.0480 2.0e-01  1.2000 3.2e-02
+     Calvppmv Cendexhppmv Cmixexhppmv   Cmuc Atubules Ametabolized   AUC
+[1,]    0e+00     0.00000        0.30    0.0  0.0e+00      0.0e+00 0e+00
+[2,]    0e+00     0.00016        0.30    3.7  1.7e-06      1.2e-06 0e+00
+[3,]    1e-07     0.07500        0.31 1800.0  9.4e-03      2.1e+00 7e-04
+[4,]    2e-07     0.15000        0.31 3600.0  2.2e-02      5.7e+00 2e-03
 Warning messages:
 1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Clint is provided as a distribution.

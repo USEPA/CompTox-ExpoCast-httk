@@ -257,8 +257,6 @@
 #'   \item{v_working}{Working volume of well in uL}
 #' }
 #'
-#' @source \url{https://www.corning.com/catalog/cls/documents/application-notes/CLS-AN-209.pdf}
-#'
 #' @keywords data
 #'
 #' @author Greg Honda

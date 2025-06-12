@@ -237,6 +237,11 @@ try(head(solve_3comp(chem.cas = "6385-62-2")))
 # However, we can turn off checking for phys-chem properties, since we know
 # that  Diquat dibromide monohydrate is not too volatile:
 head(solve_3comp(chem.cas = "6385-62-2", physchem.exclude = FALSE))
+
+# Try different ways of calling the function:
+head(solve_3comp(chem.name="bisphenol a",days=1))
+head(solve_3comp(chem.cas="80-05-7",days=1))
+head(solve_3comp(parameters=parameterize_3comp(chem.cas="80-05-7"),days=1))
 }
 
 }
