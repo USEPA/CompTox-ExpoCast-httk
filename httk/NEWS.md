@@ -1,17 +1,18 @@
 ## Enhancements
-* Increased efficiency of `get_cheminfo` -- replaced row-wise apply with complete.cases data subsetting
-* Increased efficiency of `convert_units` -- now forms matrix of conversion factors all at once rather than building up a data frame row by row
+* Increased efficiency of `get_cheminfo` -- replaced row-wise apply with complete.cases data subsetting. Results in substantial speed increase, especially for Monte Carlo.
+* Increased efficiency of `convert_units` -- now forms matrix of conversion factors all at once rather than building up a data frame row by row. Results in substantial speed increase, especially for Monte Carlo.
 * Monte Carlo in `calc_mc_tk` is now implemented via data.table for efficiency.
-* Css functions (`calc_analytic_css`, `calc_css`, model-specific `calc_analytic_css_MODEL` functions) accept explicit "species" argument and pass it explicitly to all functions that use a species argument
-*	Added argument propagate.invitro.uv.arg.list to `calc_mc_tk` and passed it to `create_mc_samples`
-*	`create_mc_samples`, when firstpass == TRUE, now calls `calc_hep_clearance` with restrictive.clearance from the parameterize.args.list
+* Css functions (`calc_analytic_css`, `calc_css`, model-specific `calc_analytic_css_MODEL` functions) now accept explicit "species" argument and pass it explicitly to all functions that use a species argument
+*	 `create_mc_samples()` now accepts a named list of arguments to be passed to model-specific function for propagating uncertainty/variability (`propagate_invitrouv_MODEL` functions)
+*	`create_mc_samples`, when firstpass == TRUE, now calls `calc_hep_clearance` with restrictive.clearance as specified in the parameterize.args.list
 
 ## Bug fixes
+* Rest-of-body tissue lumping is now correct in `create_mc_samples()` when `httkpop = FALSE`. (Previously, when `httkpop = FALSE`, rest-of-body compartment was incorrectly doubled in volume.)
 * Fixed bug where `create_mc_samples` was using human parameters for lumping non-human species
-* Fixed species argument passing in `parameterize_MODEL` functions and `solve_model` as well as Monte Carlo-related functions
-* Fixed bug occuring when `create_mc_samples` was called with invitrouv = FALSE and vary.params containing an item named Funbound.plasma, Funbound.plasma was not actually being varied.
+* Fixed species argument passing in `parameterize_MODEL` functions and `solve_model` as well as Monte Carlo-related functions: `species` is now correctly passed to all downstream functions
+*  `create_mc_samples()` now varies `Funbound.plasma` correctly if it is specified in argument `vary.params` and`invitrouv = FALSE` (previously, it would be held constant under these circumstances rather than being varied)
 * Fixed sum of squared errors calculation in `calc_mc_tk`
-* A bug has been fixed `create_mc_samples` caused arguments to get shuffled when the order of arguments changed. Arguments supplied by user in named list invitro.mc.arg.list should now retain their names. (thanks to Tyler LaLonde and Lisa Sweeney)
+* A bug has been fixed in `create_mc_samples` that caused arguments to `invitro_mc` supplied in a named list in `invitro.mc.arg.list` to drop their names and be passed out of order. Arguments now retain their names and are passed correctly to `invitro_mc`. (thanks to Tyler LaLonde and Lisa Sweeney)
 * Intrinsic clearance based on microsomes mistakenly labeled as hepatocyte data were removed for four chemicals: Hexobarbital(DTXSID9023122), Nicardipine (DTXSID6023363), Nilvadipine (DTXSID2046624), and 4-Hydroxydiclofenac (DTXSID40214326)
 * Removed data curated by TNO from source "EPA/Hamner" since we already had the primary source -- a few chemicals were reporting f_up = 0.005 which is the assumed value (LOD/2) when there was a non-detect.
 
