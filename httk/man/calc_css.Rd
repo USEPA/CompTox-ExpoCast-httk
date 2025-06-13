@@ -124,6 +124,13 @@ element_text(size = 16), plot.title = element_text(size = 17)) +
 ggtitle("Bisphenol A")
 
 print(c.vs.t)
+
+
+calc_css(chem.name='nicotine', model="1compartment")
+
+calc_css(chem.name='nicotine', model="3compartment")
+
+calc_css(chem.name="endrin")
 }
 
 }
@@ -133,4 +140,4 @@ print(c.vs.t)
 \author{
 Robert Pearce, John Wambaugh
 }
-\keyword{Steady-State}
+\keyword{steady-state}

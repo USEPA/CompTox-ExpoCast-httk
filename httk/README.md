@@ -1,6 +1,6 @@
-<img src="man/figures/httk.png" align="right" width="33%"/>
-
 # R Package "httk"
+
+<img src="man/figures/httk.png" align="right" width="33%"/>
 
 <!-- badges: start -->
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/httk)](https://cran.r-project.org/package=httk)
