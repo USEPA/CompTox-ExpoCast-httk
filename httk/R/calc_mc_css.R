@@ -208,7 +208,7 @@
 #'                                                       
 #'\insertRef{rowland1973clearance}{httk}
 #'
-#' @keywords Monte-Carlo Steady-State
+#' @keywords Monte-Carlo steady-state
 #'
 #' @seealso \code{\link{calc_analytic_css}}
 #'
@@ -409,6 +409,16 @@
 #' # quite the same but should be close:
 #' unique(css4)/css2
 #'
+#' # Now test that MC works across different models:
+#' set.seed(1234)
+#' calc_mc_css(chem.cas="15972-60-8",model="3compartment",samples=NSAMP)
+#' set.seed(1234)
+#' calc_mc_css(chem.cas="15972-60-8",model="1compartment",samples=NSAMP)
+#' set.seed(1234)
+#' calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP)
+#' 
+#' # Should be the same as the mean result:
+#' calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
 #' }
 #'
 #' @import stats

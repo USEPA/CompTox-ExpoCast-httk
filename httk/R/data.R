@@ -257,8 +257,6 @@
 #'   \item{v_working}{Working volume of well in uL}
 #' }
 #'
-#' @source \url{https://www.corning.com/catalog/cls/documents/application-notes/CLS-AN-209.pdf}
-#'
 #' @keywords data
 #'
 #' @author Greg Honda
@@ -1174,8 +1172,6 @@
 #' Variability in Risk Prioritization." Toxicological Sciences 172.2 (2019): 
 #' 235-251.
 #'
-#'
-#' @source \url{https://gaftp.epa.gov/comptox/High_Throughput_Screening_Data/Previous_Data/ToxCast_Data_Release_Oct_2015/MySQL_Data/}
 #' @keywords data
 "wambaugh2019.tox21"
 

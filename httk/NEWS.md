@@ -6,6 +6,24 @@ This version accompanies the submission of the Meade et al. manuscript
 * Added new high throughput PBTK model for dermal exposure 'solve_dermal_pbtk'
 * Added new vignette "Vignette Name"
 
+## Enhancements
+* Increased efficiency of `get_cheminfo` -- replaced row-wise apply with complete.cases data subsetting. Results in substantial speed increase, especially for Monte Carlo.
+* Increased efficiency of `convert_units` -- now forms matrix of conversion factors all at once rather than building up a data frame row by row. Results in substantial speed increase, especially for Monte Carlo.
+* Monte Carlo in `calc_mc_tk` is now implemented via data.table for efficiency.
+* Css functions (`calc_analytic_css`, `calc_css`, model-specific `calc_analytic_css_MODEL` functions) now accept explicit "species" argument and pass it explicitly to all functions that use a species argument
+*	 `create_mc_samples()` now accepts a named list of arguments to be passed to model-specific function for propagating uncertainty/variability (`propagate_invitrouv_MODEL` functions)
+*	`create_mc_samples`, when firstpass == TRUE, now calls `calc_hep_clearance` with restrictive.clearance as specified in the parameterize.args.list
+
+## Bug fixes
+* Rest-of-body tissue lumping is now correct in `create_mc_samples()` when `httkpop = FALSE`. (Previously, when `httkpop = FALSE`, rest-of-body compartment was incorrectly doubled in volume.)
+* Fixed bug where `create_mc_samples` was using human parameters for lumping non-human species
+* Fixed species argument passing in `parameterize_MODEL` functions and `solve_model` as well as Monte Carlo-related functions: `species` is now correctly passed to all downstream functions
+*  `create_mc_samples()` now varies `Funbound.plasma` correctly if it is specified in argument `vary.params` and`invitrouv = FALSE` (previously, it would be held constant under these circumstances rather than being varied)
+* Fixed sum of squared errors calculation in `calc_mc_tk`
+* A bug has been fixed in `create_mc_samples` that caused arguments to `invitro_mc` supplied in a named list in `invitro.mc.arg.list` to drop their names and be passed out of order. Arguments now retain their names and are passed correctly to `invitro_mc`. (thanks to Tyler LaLonde and Lisa Sweeney)
+* Intrinsic clearance based on microsomes mistakenly labeled as hepatocyte data were removed for four chemicals: Hexobarbital(DTXSID9023122), Nicardipine (DTXSID6023363), Nilvadipine (DTXSID2046624), and 4-Hydroxydiclofenac (DTXSID40214326)
+* Removed data curated by TNO from source "EPA/Hamner" since we already had the primary source -- a few chemicals were reporting f_up = 0.005 which is the assumed value (LOD/2) when there was a non-detect.
+
 # httk 2.6.1 (2025-04-28)
 
 ## Bug fixes

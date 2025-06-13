@@ -117,3 +117,4 @@ chemicals.
 Robert Pearce and John Wambaugh
 }
 \keyword{3compss}
+\keyword{steady-state}
