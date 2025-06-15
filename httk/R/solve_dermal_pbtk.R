@@ -170,7 +170,9 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
                     suppress.messages=F, #solve_model
                     species = "Human", #solve_model
                     #output.units=NULL, #solve_model DOSING
-                    method="lsoda",rtol=1e-8,atol=1e-12, #solve_model
+                  #  method="lsoda",
+                  rtol=1e-8,
+                  atol=1e-12, #solve_model
                     recalc.blood2plasma=FALSE, #solve_model
                     recalc.clearance=FALSE, #solve_model
                     adjusted.Funbound.plasma=TRUE, #solve_model
@@ -241,6 +243,8 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
               Vvehicle is set to 0.")
     }
     forcings = cbind(times = start.time, forcing_values = 0)
+    Vvehicle <- 0
+    InfiniteDose <- FALSE
   }
   
   # ROUTE - DERMAL -------------------------------------------------------
@@ -434,7 +438,9 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     species=species, #other species not (yet) supported by solve_fetal_pbtk
     input.units=input.units,
     #output.units=output.units,
-    method=method,rtol=rtol,atol=atol,
+   # method=method,
+   rtol=rtol,
+   atol=atol,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
