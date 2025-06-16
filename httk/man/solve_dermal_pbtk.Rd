@@ -149,7 +149,7 @@ by new dose  (i.e., wash-off occurs before new dose is administered). If FALSE
 
 \item{InfiniteDose}{Is there so much compound in the vehicle that it does not deplete?}
 
-\item{...}{Additional arguments passed to the integrator (\code{\link{deSolve}}).}
+\item{...}{Additional arguments passed to the integrator (\code{\link[deSolve]{ode}}).}
 }
 \value{
 A matrix of class deSolve with a column for time (in days), each
@@ -158,22 +158,27 @@ for each time point.
 }
 \description{
 This function solves for the amounts or concentrations in uM of a chemical in
-different tissues as functions of time after dermal exposure. The user can input 
-dermal doses via one of three options:
-  \item{"dose.duration:"}{User can input the length of exposure time for one dermal
-  dose before wash-off occurs. Note that initial.dose can be used to change the
-  initial dose used along with this option.}
-  \item{"dosing.dermal:"}{With this option, users can input multiple doses over
-  time as a matrix with columns for time, the volume of vehicle administered,
-  and the concentration of the vehicle administered. Note that the the parameter
-  washoff can be used to specify whether chemical is washed off in between doses.}
-  \item{"dosing.matrix:"}{This option is also used to describe multiple exposure doses
-  over time, and is described in the help file of solve_model. 
-  Note that unlike dosing.dermal, Vvehicle cannot be changed with this option.}
+different tissues as functions of time after dermal exposure.
 }
 \details{
+The user can input            
+dermal doses via one of three options:
+\describe{
+  \item{"dose.duration"}{ User can input the length of exposure time for one 
+dermal dose before wash-off occurs. Note that initial.dose can be used to 
+change the initial dose used along with this option.}
+  \item{"dosing.dermal"}{ With this option, users can input multiple doses 
+over time as a matrix with columns for time, the volume of vehicle 
+administered, and the concentration of the vehicle administered. Note that 
+the the parameter washoff can be used to specify whether chemical is washed 
+off in between doses.}
+  \item{"dosing.matrix"}{ This option is also used to describe multiple 
+exposure doses over time, and is described in the help file of solve_model. 
+Note that unlike dosing.dermal, Vvehicle cannot be changed with this option.}
+}
+
 Model units are the same as vehicle concentration, units/L or units when
-use.amounts=T.
+use.amounts=TRUE.
 
 New doses replace rather than add to previous doses. A concentration of 0 in
 dosing.matrix switches off the dosing/diffusion between the vehicle and
@@ -226,13 +231,12 @@ Vvehicle <- rep(1e-3,length(time)) #convert mL to L
 Cvehicle <- rep(c(2,0),num.days)/Vvehicle # convert 2 mg to mg/L
 dosing.dermal <- cbind(time,Cvehicle,Vvehicle)
 out <- solve_dermal_pbtk(chem.name='bisphenola',
-                         dosing.dermal=dosing.dermal,
-                        plots=TRUE)
+                         dosing.dermal=dosing.dermal)
 
 parameters <- parameterize_dermal_pbtk(chem.name='bisphenola',skin_depth=1)
 parameters$Fskin_exposed <- 0.25
 parameters$Vvehicle <- 1
-out <- solve_dermal_pbtk(parameters=parameters,plots=T)
+out <- solve_dermal_pbtk(parameters=parameters)
 
 # Dermal is the default route:
 head(solve_dermal_pbtk(chem.name="bisphenola"))
@@ -244,6 +248,6 @@ head(solve_dermal_pbtk(chem.name="bisphenola", route="oral"))
 
 }
 \author{
-Annabel Meade, John Wambaugh, and Robert Pearce
+Annabel Meade, John Wambaugh, Celia Schacht, and Robert Pearce
 }
 \keyword{Solve}
