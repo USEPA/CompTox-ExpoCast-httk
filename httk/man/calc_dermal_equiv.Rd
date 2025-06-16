@@ -47,8 +47,6 @@ the chemical must be identified by either CAS, name, or DTXSIDs}
 not given.}
 
 \item{...}{Additional parameters passed to solve_dermal_pbtk.}
-
-\item{daily.dose}{Total daily dose, defaults to mg/kg BW.}
 }
 \value{
 Equivalent dose in specified units, default of mg/kg BW/day.

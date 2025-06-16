@@ -134,7 +134,7 @@ See \code{\link{get_fbio}} for further details.}
 The default value of NULL provides "Cgut", "Cliver", "Cven", "Clung", "Cart", 
 "Crest", "Ckidney", "Cplasma", "Atubules", "Ametabolized", and "AUC"}
 
-\item{...}{Additional arguments passed to the integrator (deSolve).}
+\item{...}{Additional arguments passed to the integrator (\code{\link[deSolve]{ode}}).}
 }
 \value{
 A matrix of class deSolve with a column for time(in days), each

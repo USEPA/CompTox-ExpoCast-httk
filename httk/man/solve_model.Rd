@@ -98,15 +98,15 @@ to mg/kg BW, in line with the default dosing scheme of a one-time dose of
 \item{output.units}{Output units of interest for the compiled components.
 Defaults to NULL, and will provide values in model units if unspecified.}
 
-\item{method}{Method used by integrator (\code{\link{deSolve}}).}
+\item{method}{Method used by integrator (\code{\link[deSolve]{ode}}).}
 
-\item{rtol}{Relative tolerance used by integrator (\code{\link{deSolve}}) to determine 
+\item{rtol}{Relative tolerance used by integrator (\code{\link[deSolve]{ode}}) to determine 
 numerical precision -- defaults to 1e-6.}
 
-\item{atol}{Absolute tolerance used by integrator (\code{\link{deSolve}}) to determine
+\item{atol}{Absolute tolerance used by integrator (\code{\link[deSolve]{ode}}) to determine
 numerical precision -- defaults to 1e-6.}
 
-\item{hmin}{minimum value of the integration stepsize (\code{\link{deSolve}})
+\item{hmin}{minimum value of the integration stepsize (\code{\link[deSolve]{ode}})
 -- defaults to 1e-8}
 
 \item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical

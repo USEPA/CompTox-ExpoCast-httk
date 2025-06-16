@@ -106,15 +106,15 @@
 #' @param output.units Output units of interest for the compiled components.
 #' Defaults to NULL, and will provide values in model units if unspecified.
 #' 
-#' @param method Method used by integrator (\code{\link{deSolve}}).
+#' @param method Method used by integrator (\code{\link[deSolve]{ode}}).
 #' 
-#' @param rtol Relative tolerance used by integrator (\code{\link{deSolve}}) to determine 
+#' @param rtol Relative tolerance used by integrator (\code{\link[deSolve]{ode}}) to determine 
 #' numerical precision -- defaults to 1e-6.
 #' 
-#' @param atol Absolute tolerance used by integrator (\code{\link{deSolve}}) to determine
+#' @param atol Absolute tolerance used by integrator (\code{\link[deSolve]{ode}}) to determine
 #' numerical precision -- defaults to 1e-6.
 #' 
-#' @param hmin minimum value of the integration stepsize (\code{\link{deSolve}})
+#' @param hmin minimum value of the integration stepsize (\code{\link[deSolve]{ode}})
 #' -- defaults to 1e-8
 #'
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical

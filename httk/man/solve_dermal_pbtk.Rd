@@ -87,11 +87,11 @@ Default values of NULL looks up variables specified in modelinfo_MODEL.R}
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
-\item{method}{Method used by integrator (\code{\link{deSolve}}).}
+\item{method}{Method used by integrator (\code{\link[deSolve]{ode}}).}
 
-\item{rtol}{Argument passed to integrator (\code{\link{deSolve}}).}
+\item{rtol}{Argument passed to integrator (\code{\link[deSolve]{ode}}).}
 
-\item{atol}{Argument passed to integrator (\code{\link{deSolve}}).}
+\item{atol}{Argument passed to integrator (\code{\link[deSolve]{ode}}).}
 
 \item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical
 in the blood to plasma using the input parameters, calculated with
@@ -119,6 +119,10 @@ InfiniteDose=TRUE, this parameter is ignored and set = 1.}
 \item{initial.dose}{Initial exposure dose. If InfiniteDose=TRUE, this is a concentration, 
 otherwise, this is an amount.}
 
+\item{daily.dose}{Total daily dose, defaults to mg/kg BW.}
+
+\item{doses.per.day}{Number of doses per day.}
+
 \item{input.units}{Exposure units applied to initial.dose and/or dosing.dermal.
 If InfiniteDose=TRUE, must be a concentration, e.g., "mg/kg/L" (default), otherwise,
 must be an amount, e.g., "mg/kg" (default).}
@@ -143,9 +147,9 @@ mg/kg BW, of each dose.}
 by new dose  (i.e., wash-off occurs before new dose is administered). If FALSE 
 (default), any chemical left on the skin is added to the new dose.}
 
-\item{...}{Additional arguments passed to the integrator (\code{\link{deSolve}}).}
+\item{InfiniteDose}{Is there so much compound in the vehicle that it does not deplete?}
 
-\item{InfinitDose}{Is there so much compound in the vehicle that it does not deplete?}
+\item{...}{Additional arguments passed to the integrator (\code{\link{deSolve}}).}
 }
 \value{
 A matrix of class deSolve with a column for time (in days), each
@@ -198,8 +202,7 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 \examples{
 
 # Dermal exposure to default dose
-out <- solve_dermal_pbtk(chem.name="bisphenola",plots=TRUE)
-
+out <- solve_dermal_pbtk(chem.name="bisphenola"
 # Dermal exposure to 20 mg/L in 0.01 L of octanol with wash-off after 8 hours
 # Since skin permeability happens quickly for bisphenol A, let's only look at 3 days.
 dose.conc <- 2 #mg/L
@@ -208,14 +211,14 @@ initial.dose <- dose.conc*Vvehicle
 out <- solve_dermal_pbtk(chem.name="bisphenola", initial.dose=initial.dose, 
                          input.units="mg", Vvehicle=0.01, 
                          Kskin2vehicle="octanol", dose.duration=8, 
-                         dose.duration.units="hr", days=3, plots=TRUE)
+                         dose.duration.units="hr", days=3)
 
 # Now, try this again with an infinite dose.
 out <- solve_dermal_pbtk(chem.name="bisphenola", initial.dose=dose.conc, 
                          input.units="mg/L", Vvehicle=0.01, 
                          Kskin2vehicle="octanol", dose.duration=8, 
                          dose.duration.units="hr", days=3, 
-                         InfiniteDose=TRUE, plots=TRUE)
+                         InfiniteDose=TRUE)
 
 # Now, try a scenario where 2 mg of chemical in 1 mL of water is applied 
 # and washed off 8 hours later every day for 5 days
