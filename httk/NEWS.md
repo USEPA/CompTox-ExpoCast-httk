@@ -921,8 +921,4 @@ naming convention.
 * Minor bugs have been corrected. 
 
 # httk 1.1 (2015-03-06)
-<<<<<<< HEAD
 Initial public (CRAN) release (March 6, 2015)
-=======
-Initial public (CRAN) release (March 6, 2015)
->>>>>>> dev
