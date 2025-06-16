@@ -3,7 +3,6 @@
 #' This function solves for the amounts or concentrations in uM of a chemical in
 #' different tissues as functions of time after dermal exposure. The user can input 
 #' dermal doses via one of three options:
-#' \itemize{
 #'   \item{"dose.duration:"}{User can input the length of exposure time for one dermal
 #'   dose before wash-off occurs. Note that initial.dose can be used to change the
 #'   initial dose used along with this option.}
@@ -14,7 +13,6 @@
 #'   \item{"dosing.matrix:"}{This option is also used to describe multiple exposure doses
 #'   over time, and is described in the help file of solve_model. 
 #'   Note that unlike dosing.dermal, Vvehicle cannot be changed with this option.}
-#' }
 #' 
 #' Model units are the same as vehicle concentration, units/L or units when
 #' use.amounts=T.
@@ -159,7 +157,7 @@
 #' @examples
 #' 
 #' # Dermal exposure to default dose
-#' out <- solve_dermal_pbtk(chem.name="bisphenola"
+#' out <- solve_dermal_pbtk(chem.name="bisphenola")
 #' # Dermal exposure to 20 mg/L in 0.01 L of octanol with wash-off after 8 hours
 #' # Since skin permeability happens quickly for bisphenol A, let's only look at 3 days.
 #' dose.conc <- 2 #mg/L
