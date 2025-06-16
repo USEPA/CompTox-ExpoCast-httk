@@ -19,9 +19,9 @@ solve_dermal_pbtk(
   monitor.vars = NULL,
   suppress.messages = F,
   species = "Human",
-  method = "lsoda",
-  rtol = 1e-08,
-  atol = 1e-12,
+  method = NULL,
+  rtol = 1e-06,
+  atol = 1e-06,
   recalc.blood2plasma = FALSE,
   recalc.clearance = FALSE,
   adjusted.Funbound.plasma = TRUE,
@@ -87,11 +87,11 @@ Default values of NULL looks up variables specified in modelinfo_MODEL.R}
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
-\item{method}{Method used by integrator (deSolve).}
+\item{method}{Method used by integrator (\code{\link{deSolve}}).}
 
-\item{rtol}{Argument passed to integrator (deSolve).}
+\item{rtol}{Argument passed to integrator (\code{\link{deSolve}}).}
 
-\item{atol}{Argument passed to integrator (deSolve).}
+\item{atol}{Argument passed to integrator (\code{\link{deSolve}}).}
 
 \item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical
 in the blood to plasma using the input parameters, calculated with
@@ -102,6 +102,10 @@ hematocrit, Funbound.plasma, and Krbc2pu.}
 
 \item{adjusted.Funbound.plasma}{Uses adjusted Funbound.plasma when set to
 TRUE along with partition coefficients calculated with this value.}
+
+\item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
+equal to this value (default is 0.0001 -- half the lowest measured Fup in our
+dataset).}
 
 \item{parameterize.arg.list}{Additional parameterized passed to the model 
 parameterization function, "parameterize_dermal_pbtk". The inputs "model.type",
@@ -131,15 +135,17 @@ with the applied amount in the vehicle, and the volume of the applied
 vehicle, L. Note that the units of Cvehicle are controlled by input.units. **If
 InfiniteDose=TRUE, the Vvehicle column of dosing.dermal is ignored.**}
 
+\item{dosing.matrix}{Vector of dosing times or a matrix consisting of two
+columns or rows named "dose" and "time" containing the time and amount, in
+mg/kg BW, of each dose.}
+
 \item{washoff}{If TRUE, any chemical left on the skin is assumed to be replaced 
 by new dose  (i.e., wash-off occurs before new dose is administered). If FALSE 
 (default), any chemical left on the skin is added to the new dose.}
 
-\item{...}{Additional arguments passed to the integrator.}
+\item{...}{Additional arguments passed to the integrator (\code{\link{deSolve}}).}
 
-\item{InitialDose}{If TRUE, we assume infinite dosing (i.e., a constant unchanging concentration
-of chemical in the vehicle is considered) and Cvehicle is a constant. If
-FALSE (default), dosing is finite and Cvehicle changes over time.}
+\item{InfinitDose}{Is there so much compound in the vehicle that it does not deplete?}
 }
 \value{
 A matrix of class deSolve with a column for time (in days), each
@@ -151,14 +157,14 @@ This function solves for the amounts or concentrations in uM of a chemical in
 different tissues as functions of time after dermal exposure. The user can input 
 dermal doses via one of three options:
 \itemize{
-  \item{dose.duration: }{User can input the length of exposure time for one dermal
+  \item{"dose.duration:"}{User can input the length of exposure time for one dermal
   dose before wash-off occurs. Note that initial.dose can be used to change the
   initial dose used along with this option.}
-  \item{dosing.dermal: }{With this option, users can input multiple doses over
+  \item{"dosing.dermal:"}{With this option, users can input multiple doses over
   time as a matrix with columns for time, the volume of vehicle administered,
   and the concentration of the vehicle administered. Note that the the parameter
   washoff can be used to specify whether chemical is washed off in between doses.}
-  \item{dosing.matrix: }{This option is also used to describe multiple exposure doses
+  \item{"dosing.matrix:"}{This option is also used to describe multiple exposure doses
   over time, and is described in the help file of solve_model. 
   Note that unlike dosing.dermal, Vvehicle cannot be changed with this option.}
 }
@@ -199,21 +205,28 @@ out <- solve_dermal_pbtk(chem.name="bisphenola",plots=TRUE)
 dose.conc <- 2 #mg/L
 Vvehicle <- 0.01 #L
 initial.dose <- dose.conc*Vvehicle
-out <- solve_dermal_pbtk(chem.name="bisphenola", initial.dose=initial.dose, input.units="mg",
-Vvehicle=0.01, Kskin2vehicle="octanol", dose.duration=8, dose.duration.units="hr", days=3, plots=TRUE)
+out <- solve_dermal_pbtk(chem.name="bisphenola", initial.dose=initial.dose, 
+                         input.units="mg", Vvehicle=0.01, 
+                         Kskin2vehicle="octanol", dose.duration=8, 
+                         dose.duration.units="hr", days=3, plots=TRUE)
 
 # Now, try this again with an infinite dose.
-out <- solve_dermal_pbtk(chem.name="bisphenola", initial.dose=dose.conc, input.units="mg/L",
-Vvehicle=0.01, Kskin2vehicle="octanol", dose.duration=8, dose.duration.units="hr", 
-days=3, InfiniteDose=TRUE, plots=TRUE)
+out <- solve_dermal_pbtk(chem.name="bisphenola", initial.dose=dose.conc, 
+                         input.units="mg/L", Vvehicle=0.01, 
+                         Kskin2vehicle="octanol", dose.duration=8, 
+                         dose.duration.units="hr", days=3, 
+                         InfiniteDose=TRUE, plots=TRUE)
 
-# Now, try a scenario where 2 mg of chemical in 1 mL of water is applied and washed off 8 hours later every day for 5 days
+# Now, try a scenario where 2 mg of chemical in 1 mL of water is applied 
+# and washed off 8 hours later every day for 5 days
 num.days <- 5;
 time <- c(0:(num.days-1),(0:(num.days-1)) + 8/24); time <- sort(time) #in days
 Vvehicle <- rep(1e-3,length(time)) #convert mL to L
 Cvehicle <- rep(c(2,0),num.days)/Vvehicle # convert 2 mg to mg/L
 dosing.dermal <- cbind(time,Cvehicle,Vvehicle)
-out <- solve_dermal_pbtk(chem.name='bisphenola',dosing.dermal=dosing.dermal,plots=T)
+out <- solve_dermal_pbtk(chem.name='bisphenola',
+                         dosing.dermal=dosing.dermal,
+                        plots=TRUE)
 
 parameters <- parameterize_dermal_pbtk(chem.name='bisphenola',skin_depth=1)
 parameters$Fskin_exposed <- 0.25

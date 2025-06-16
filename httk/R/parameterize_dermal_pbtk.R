@@ -117,6 +117,10 @@
 #' of chemical in the vehicle is considered) and Cvehicle is a constant. If
 #' FALSE (default), dosing is finite and Cvehicle changes over time.
 #' 
+#' @param BW Body weight (kg)
+#'
+#' @param totalSA  Total body surface area (cm^2)
+#'
 #' @return
 #' 
 #' \item{BW}{Body Weight, kg.} 
@@ -294,7 +298,7 @@ parameterize_dermal_pbtk <-
   chem.name <- out$chem.name
   dtxsid <- out$dtxsid
    
-  if(class(tissuelist)!='list') stop("tissuelist must be a list of vectors.") 
+  if(!is.list(tissuelist)) stop("tissuelist must be a list of vectors.") 
 
   # Get the intrinsic hepatic clearance:
   # Clint has units of uL/min/10^6 cells

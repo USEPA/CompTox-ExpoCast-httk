@@ -14,6 +14,9 @@
 #' @param chem.cas Either the CAS number or the chemical name must be
 #' specified.
 #' 
+#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
+#' the chemical must be identified by either CAS, name, or DTXSIDs
+#' 
 #' @param parameters Parameters from parameterize_dermal_pbtk.
 #' 
 #' @param days Number of days of simulation.
@@ -28,6 +31,10 @@
 #' 
 #' @param Fskinexposed Fraction of total skin exposed, used when parameters are
 #' not given.
+#' 
+#' @param daily.dose Total daily dose, defaults to mg/kg BW.
+#' 
+#' @param doses.per.day Number of doses per day.
 #' 
 #' @param ... Additional parameters passed to solve_dermal_pbtk.
 #' 

@@ -28,6 +28,9 @@ specified.}
 \item{chem.cas}{Either the CAS number or the chemical name must be
 specified.}
 
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
+the chemical must be identified by either CAS, name, or DTXSIDs}
+
 \item{parameters}{Parameters from parameterize_dermal_pbtk.}
 
 \item{days}{Number of days of simulation.}
@@ -44,6 +47,8 @@ specified.}
 not given.}
 
 \item{...}{Additional parameters passed to solve_dermal_pbtk.}
+
+\item{daily.dose}{Total daily dose, defaults to mg/kg BW.}
 }
 \value{
 Equivalent dose in specified units, default of mg/kg BW/day.
