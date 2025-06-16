@@ -32,8 +32,6 @@
 #' @param Fskinexposed Fraction of total skin exposed, used when parameters are
 #' not given.
 #' 
-#' @param daily.dose Total daily dose, defaults to mg/kg BW.
-#' 
 #' @param doses.per.day Number of doses per day.
 #' 
 #' @param ... Additional parameters passed to solve_dermal_pbtk.

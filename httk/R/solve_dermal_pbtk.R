@@ -84,17 +84,21 @@
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 #' default "Human").
 #' 
-#' @param method Method used by integrator (\code{\link{deSolve}}).
+#' @param method Method used by integrator (\code{\link[deSolve]{ode}}).
 #' 
-#' @param rtol Argument passed to integrator (\code{\link{deSolve}}).
+#' @param rtol Argument passed to integrator (\code{\link[deSolve]{ode}}).
 #' 
-#' @param atol Argument passed to integrator (\code{\link{deSolve}}).
+#' @param atol Argument passed to integrator (\code{\link[deSolve]{ode}}).
 #' 
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
 #' hematocrit, Funbound.plasma, and Krbc2pu.
 #'
-#' @param InfinitDose Is there so much compound in the vehicle that it does not deplete?
+#' @param InfiniteDose Is there so much compound in the vehicle that it does not deplete?
+#' 
+#' @param daily.dose Total daily dose, defaults to mg/kg BW.
+#' 
+#' @param doses.per.day Number of doses per day.
 #' 
 #' @param recalc.clearance Recalculates the the hepatic clearance
 #' (Clmetabolism) with new million.cells.per.gliver parameter.
@@ -155,8 +159,7 @@
 #' @examples
 #' 
 #' # Dermal exposure to default dose
-#' out <- solve_dermal_pbtk(chem.name="bisphenola",plots=TRUE)
-#' 
+#' out <- solve_dermal_pbtk(chem.name="bisphenola"
 #' # Dermal exposure to 20 mg/L in 0.01 L of octanol with wash-off after 8 hours
 #' # Since skin permeability happens quickly for bisphenol A, let's only look at 3 days.
 #' dose.conc <- 2 #mg/L
@@ -165,14 +168,14 @@
 #' out <- solve_dermal_pbtk(chem.name="bisphenola", initial.dose=initial.dose, 
 #'                          input.units="mg", Vvehicle=0.01, 
 #'                          Kskin2vehicle="octanol", dose.duration=8, 
-#'                          dose.duration.units="hr", days=3, plots=TRUE)
+#'                          dose.duration.units="hr", days=3)
 #' 
 #' # Now, try this again with an infinite dose.
 #' out <- solve_dermal_pbtk(chem.name="bisphenola", initial.dose=dose.conc, 
 #'                          input.units="mg/L", Vvehicle=0.01, 
 #'                          Kskin2vehicle="octanol", dose.duration=8, 
 #'                          dose.duration.units="hr", days=3, 
-#'                          InfiniteDose=TRUE, plots=TRUE)
+#'                          InfiniteDose=TRUE)
 #' 
 #' # Now, try a scenario where 2 mg of chemical in 1 mL of water is applied 
 #' # and washed off 8 hours later every day for 5 days
@@ -263,9 +266,9 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
   
   # Check InfiniteDose is logical or = 1 or 0
   if (InfiniteDose==1) {
-    InfiniteDose=TRUE
+    InfiniteDose <- TRUE
   } else if (InfiniteDose==0){
-    InfiniteDose=FALSE
+    InfiniteDose <- FALSE
   } else if (typeof(InfiniteDose)!="logical"){
     stop("InfiniteDose must be either be equal to FALSE (i.e., 0) (default) or TRUE (i.e., 1).")
   }  
@@ -492,7 +495,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
-    parameterize.arg.list = c(
+    parameterize.args.list = c(
       model.type = model.type,
       method.permeability = method.permeability,
       Kvehicle2water = Kvehicle2water,
