@@ -170,9 +170,9 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
                     suppress.messages=F, #solve_model
                     species = "Human", #solve_model
                     #output.units=NULL, #solve_model DOSING
-                  #  method="lsoda",
-                  rtol=1e-8,
-                  atol=1e-12, #solve_model
+                    method=NULL,
+                    rtol=1e-6,
+                    atol=1e-6, #solve_model
                     recalc.blood2plasma=FALSE, #solve_model
                     recalc.clearance=FALSE, #solve_model
                     adjusted.Funbound.plasma=TRUE, #solve_model
@@ -419,7 +419,8 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
 # But only keep the dosing parameters you need:
   dosing <- dosing[model.list[[model.type ]]$routes[[route]][["dosing.params"]]]
 
-  out <- solve_model(
+  out <- do.call(solve_model,
+                 args=c(list(
     chem.name = chem.name,
     chem.cas = chem.cas,
     dtxsid=dtxsid,
@@ -438,9 +439,10 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     species=species, #other species not (yet) supported by solve_fetal_pbtk
     input.units=input.units,
     #output.units=output.units,
-   # method=method,
-   rtol=rtol,
-   atol=atol,
+    method=method,
+    rtol=rtol,
+    atol=atol,
+    small.time=1e2,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,
@@ -450,8 +452,9 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
       Kvehicle2water = Kvehicle2water,
       InfiniteDose = InfiniteDose,
       parameterize.arg.list
-    ),
-    ...)
+    )),
+    list(...))
+    )
   
   return(out) 
 }

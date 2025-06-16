@@ -407,4 +407,4 @@ model.list[[THIS.MODEL]]$forcings.materials <- list(
   fcontrol = list(method='constant',rule=2,f=0))
 
 # Different systems of equations are better suited to different ODE solvers:
-model.list[[THIS.MODEL]]$default.solver.method <- "lsode"
+model.list[[THIS.MODEL]]$default.solver.method <- "lsoda"
