@@ -36,7 +36,6 @@ Authors:
 
 Other contributors:
 \itemize{
-  \item Nathan Pollesch \email{pollesch.nathan@epa.gov} (\href{https://orcid.org/0000-0001-8992-9294}{ORCID}) [contributor]
   \item Todor Antonijevic \email{tantonijevic@toxstrategies.com} (\href{https://orcid.org/0000-0002-0248-8412}{ORCID}) [contributor]
   \item Miyuki Breen \email{breen.miyuki@epa.gov} (\href{https://orcid.org/0000-0001-8511-4653}{ORCID}) [contributor]
   \item Shannon Bell \email{Shannon.bell@inotivco.com} (\href{https://orcid.org/0000-0002-5754-6085}{ORCID}) [contributor]

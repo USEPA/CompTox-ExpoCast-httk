@@ -126,7 +126,11 @@ dataset).}
 
 \item{skin.pH}{pH of dermis/skin, used in calculating P and Kskin2vehicle.}
 
+\item{BW}{Body weight (kg)}
+
 \item{height}{Height in cm, used in calculating totalSA.}
+
+\item{totalSA}{Total body surface area (cm^2)}
 
 \item{Kvehicle2water}{Partition coefficient for the vehicle (sometimes called the 
 vehicle) carrying the chemical to water. Default is "water", which assumes the vehicle is water.

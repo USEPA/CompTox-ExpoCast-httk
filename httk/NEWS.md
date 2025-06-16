@@ -170,16 +170,9 @@ suggesting refinements and putting up with bugs
 ***dosing*** for a given model and route (acceptible dosing.params are now
 specified by the modelinfo_[MODEL].R file)
 
-<<<<<<< HEAD
->>>>>>> dev
 # httk 2.3.0 (2023-12-05)
 This version accompanies the submission of manuscript Honda et al. 
 ["Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals 
-=======
-# httk 2.3.0 (2023-12-05)
-This version accompanies the submission of the 
-[Honda et al. (2025) manuscript "Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals 
->>>>>>> dev
 in Commerce and the Environment"](https://doi.org/10.14573/altex.2403271). Find the analysis scripts on 
 [GitHub](https://github.com/USEPA/comptox-expocast-caco2)
 
