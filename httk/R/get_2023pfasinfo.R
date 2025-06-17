@@ -91,7 +91,7 @@
 #' {
 #'   PFASCssTable <- rbind(PFASCssTable, data.frame(
 #'     DTXSID = this.id,
-#'     Css = calc_mc_css(dtxsid=this.id)
+#'     Css = calc_mc_css(dtxsid=this.id, model="sumclearancespfas")
 #'     ))
 #' }
 #' 
