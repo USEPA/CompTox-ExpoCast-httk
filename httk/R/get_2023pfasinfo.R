@@ -85,7 +85,7 @@
 #' 
 #' @examples
 #'
-#' library(httk)
+#' \donttest{
 #' PFASCssTable <- NULL
 #' for (this.id in get_2023pfasinfo(info="dtxsid"))
 #' {
@@ -96,7 +96,8 @@
 #'                                   suppress.messages=TRUE
 #'    ))))
 #' }
-#' 
+#' }
+#'
 #' @export get_2023pfasinfo
 get_2023pfasinfo <- function(info="CAS",
                          species="Human",

@@ -20,7 +20,8 @@ parameterize_1comp(
   minimum.Funbound.plasma = 1e-04,
   class.exclude = TRUE,
   physchem.exclude = TRUE,
-  Caco2.options = list()
+  Caco2.options = list(),
+  ...
 )
 }
 \arguments{
@@ -86,11 +87,16 @@ overwrites Fabs and Fgut in vivo values from literature with
 Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
 with 1 (i.e. 100 percent) regardless of other settings.
 See \code{\link{get_fbio}} for further details.}
+
+\item{...}{Additional arguments, not currently used.}
 }
 \value{
 \item{Vdist}{Volume of distribution, units of L/kg BW.}
 \item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, i.e. the 
-fraction of the dose that enters the gutlumen.} 
+fraction of the dose that enters the gutlumen.} \item{kelim}{Elimination rate, units of
+1/h.} \item{hematocrit}{Percent volume of red blood cells in the blood.}
+\item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of the
+dose that enters the gutlumen.} 
 \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte 
 assay using the method of Kilford et al. (2008)} 
 \item{kelim}{Elimination rate, units of 1/h.} 

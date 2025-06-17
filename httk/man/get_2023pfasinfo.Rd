@@ -100,14 +100,17 @@ to NULL) then the Fup is treated as too uncertain and the value NA is given.
 }
 \examples{
 
-library(httk)
+\donttest{
 PFASCssTable <- NULL
 for (this.id in get_2023pfasinfo(info="dtxsid"))
 {
   PFASCssTable <- rbind(PFASCssTable, data.frame(
     DTXSID = this.id,
-    Css = calc_css(dtxsid=this.id, model="sumclearancespfas")
-    ))
+    Css = try(calc_analytic_css(dtxsid=this.id, 
+                                  model="sumclearancespfas",
+                                  suppress.messages=TRUE
+   ))))
+}
 }
 
 }

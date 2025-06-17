@@ -81,6 +81,7 @@ calc_clearance_frac(chem.name="bisphenola",
                     model="pbtk",
                     fraction.params=c("Qgfrc","Clmetabolismc"))
 
+\donttest{
 # A model with exhalation:
 # sumclearances model:
 calc_clearance_frac(chem.name="bisphenola",
@@ -95,6 +96,7 @@ calc_clearance_frac(chem.name="toluene",
 calc_clearance_frac(chem.name="toluene",
                     model="3compartment2",
                     fraction.params=c("Clmetabolismc","Qgfrc","Qalvc"))
+}
 
 }
 \author{
