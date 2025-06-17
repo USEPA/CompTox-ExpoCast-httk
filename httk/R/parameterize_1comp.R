@@ -82,7 +82,6 @@
 #' \item{Vdist}{Volume of distribution, units of L/kg BW.}
 #' \item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, i.e. the 
 #' fraction of the dose that enters the gutlumen.} 
-#' dose that enters the gutlumen.} 
 #' \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte 
 #' assay using the method of Kilford et al. (2008)} 
 #' \item{kelim}{Elimination rate, units of 1/h.} 

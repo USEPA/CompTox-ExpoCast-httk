@@ -12,17 +12,17 @@
 #' not available then all chemical is assumed to be absorbed. 
 #' The rate of oral absorption used
 #' is 2.2 L/h, the median rate observed across 44 chemicals by 
-#' \href{https://doi.org/10.1093/toxsci/kfy020}{Wambaugh et al. (2018)}.
+#' Wambaugh et al. (2018) (\doi{10.1093/toxsci/kfy020}).
 #' There is a single, unspecified route of elimination (clearance). 
 #' Half-life is estimated using the 
-#' \href{https://doi.org/10.3390/toxics11020098}{Dawson et al. (2023)} 
+#' Dawson et al. (2023) (\doi{10.3390/toxics11020098}) 
 #' machine learning model for per- and poly-flurinated alkyl substances (PFAS).
 #' In keeping with the findings of that paper, volume of distribtuion is held 
 #' fixed at 0.205 L kg/BW. Clearance is calculated as the product of elimination
 #' rate (determined from half-life) and the volume of distribution.
 #' The ratio of chemical concentration in blood to plasma is determined
 #' according to
-#' \href{https://doi.org/10.1021/acs.est.7b03299}{Poothong et al. (2017)}
+#' Poothong et al. (2017) (\doi{10.1021/acs.est.7b03299})
 #' where compounds that are ionized at pH 7.4 (plasma) get a value of 0.5, while
 #' chemicals that are neutral get a value of 20. 
 
@@ -45,6 +45,7 @@
 #' domain of applicability based on the properties of the training set
 #' ("ClassModDomain"), the domain of all models ("AMAD"), or none ("none")
 #' (Defaults to "ClassModDomain").
+#'
 #' @param physchem.exclude Exclude chemicals on the basis of physico-chemical
 #' properties (currently only Henry's law constant) as specified by 
 #' the relevant modelinfo_[MODEL] file (default TRUE).
@@ -65,29 +66,14 @@
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
 #' with 1 (i.e. 100 percent) regardless of other settings.
 #' See \code{\link{get_fbio}} for further details.
-#' 
+#'
+#' @param dosingadj Route of dosing for Dawson et al. (2023) PFAS half-life model
+#' ("oral", "iv", or "other")
+#'
+#' @param sex Sex of simulated individual ("Male" or "Female")
+#'
 #' @param ... Additional arguments, not currently used.
-
-
-
-
-
 #' 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #' @return 
 #' \item{Vdist}{Volume of distribution, units of L/kg BW.}
 #' \item{plasma.vol}{Volume of the plasma, L/kg BW.}
@@ -168,7 +154,15 @@ parameterize_pfas1comp <- function(
                         ...
                         )
 {
-# We need to describe the chemical to be simulated one way or another:
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
+  DTXSID <- Species <- DosingAdj <- NULL
+  #End R CMD CHECK appeasement.
+  
+  # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
       is.null(dtxsid)) 
@@ -191,13 +185,13 @@ parameterize_pfas1comp <- function(
     stop("Argument dosingadj values are limited to \"IV\", \"Oral\", and \"Other\".")
   if (!(tolower(sex) %in% c("female","male")))
     stop("Argument sex values are limited to \"female\" and \"male\".")
-  avail.species <- unique(dawson2023$Species)
+  avail.species <- unique(httk::dawson2023$Species)
   if (!(tolower(species) %in% tolower(avail.species)))
     stop(paste("Available species are limited to ",
                paste(avail.species,collapse=", ")))
 
 # Check to see if we have a prediction from Dawson et al. (2023):
-  this.subset <- subset(dawson2023,
+  this.subset <- subset(httk::dawson2023,
                         tolower(DTXSID)==tolower(dtxsid))
   if (dim(this.subset)[1]==0)
       stop(paste("No predictions for chemical",

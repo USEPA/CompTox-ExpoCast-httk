@@ -76,15 +76,33 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' 
-#' @param Caco2.options A list of options to use when working with Caco2 apical to
-#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.Pab.default = 1.6,
-#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the default value for 
-#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
-#' See \code{\link{get_fabsgut}} for further details.
-#' 
+#' @param Caco2.options A list of options to use when working with Caco2 apical 
+#' to basolateral data \code{Caco2.Pab}, default is Caco2.options = 
+#' list(Caco2.Pab.default = 1.6, Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, 
+#' overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the 
+#' default value for Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE 
+#' uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+#' Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE 
+#' overwrites Fabs and Fgut in vivo values from literature with 
+#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
+#' with 1 (i.e. 100 percent) regardless of other settings.
+#' See \code{\link{get_fbio}} for further details.
+#'
+#' @param dosingadj Route of dosing for Dawson et al. (2023) PFAS half-life model
+#' ("oral", "iv", or "other")
+#'
+#' @param sex Sex of simulated individual ("Male" or "Female")
+#'
+#' @param physchem.exclude Exclude chemicals on the basis of physico-chemical
+#' properties (currently only Henry's law constant) as specified by 
+#' the relevant modelinfo_[MODEL] file (default TRUE).
+#'
+#' @param restrict.doa Whether to restrict to chemicals within an estimated
+#' domain of applicability based on the properties of the training set
+#' ("ClassModDomain"), the domain of all models ("AMAD"), or none ("none")
+#' (Defaults to "ClassModDomain").
+#'
 #' @param ... Other parameters
 #'
 #' @return 
@@ -154,6 +172,7 @@ parameterize_sumclearancespfas <- function(
 #NULL. Note that within the data.table, these variables will not be NULL! Yes,
 #this is pointless and annoying.
   Parameter <- Species <- variable <- Tissue <- NULL
+  DTXSID <- DosingAdj <- Sex <- NULL
   physiology.data <- physiology.data
   tissue.data <- tissue.data
 #End R CMD CHECK appeasement.  
@@ -318,13 +337,13 @@ parameterize_sumclearancespfas <- function(
       stop("Argument dosingadj values are limited to \"IV\", \"Oral\", and \"Other\".")
     if (!(tolower(sex) %in% c("female","male")))
       stop("Argument sex values are limited to \"female\" and \"male\".")
-    avail.species <- unique(dawson2023$Species)
+    avail.species <- unique(httk::dawson2023$Species)
     if (!(tolower(species) %in% tolower(avail.species)))
       stop(paste("Available species are limited to ",
                  paste(avail.species,collapse=", ")))
   
   # Check to see if we have a prediction from Dawson et al. (2023):
-    this.subset <- subset(dawson2023,
+    this.subset <- subset(httk::dawson2023,
                           tolower(DTXSID)==tolower(dtxsid))
     if (dim(this.subset)[1]==0)
       stop(paste("PFAS with no predictions for chemical",

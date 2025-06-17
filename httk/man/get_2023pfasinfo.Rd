@@ -13,8 +13,7 @@ get_2023pfasinfo(
   median.only = FALSE,
   fup.ci.cutoff = FALSE,
   clint.pvalue.threshold = 0.05,
-  suppress.messages = FALSE,
-  target.env = .GlobalEnv
+  suppress.messages = FALSE
 )
 }
 \arguments{

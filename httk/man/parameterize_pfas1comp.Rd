@@ -13,7 +13,9 @@ parameterize_pfas1comp(
   dosingadj = "Oral",
   restrict.doa = "ClassModDomain",
   estimate.firstpass = TRUE,
-  suppress.messages = FALSE
+  suppress.messages = FALSE,
+  Caco2.options = list(),
+  ...
 )
 }
 \arguments{
@@ -29,6 +31,11 @@ chemical must be identified by either CAS, name, or DTXISD}
 \item{species}{Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
 default "Human").}
 
+\item{sex}{Sex of simulated individual ("Male" or "Female")}
+
+\item{dosingadj}{Route of dosing for Dawson et al. (2023) PFAS half-life model
+("oral", "iv", or "other")}
+
 \item{restrict.doa}{Whether to restrict to chemicals within an estimated
 domain of applicability based on the properties of the training set
 ("ClassModDomain"), the domain of all models ("AMAD"), or none ("none")
@@ -39,15 +46,36 @@ which can only be done for a subset of PFAS with in vitro HTTK parameters
 (Defaults to TRUE).}
 
 \item{suppress.messages}{Whether to suppress messages (Defaults to FALSE).}
+
+\item{Caco2.options}{A list of options to use when working with Caco2 apical 
+to basolateral data \code{Caco2.Pab}, default is Caco2.options = 
+list(Caco2.Pab.default = 1.6, Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, 
+overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.Pab.default sets the 
+default value for Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE 
+uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}. 
+Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
+fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE 
+overwrites Fabs and Fgut in vivo values from literature with 
+Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut 
+with 1 (i.e. 100 percent) regardless of other settings.
+See \code{\link{get_fbio}} for further details.}
+
+\item{...}{Additional arguments, not currently used.}
+
+\item{physchem.exclude}{Exclude chemicals on the basis of physico-chemical
+properties (currently only Henry's law constant) as specified by 
+the relevant modelinfo_[MODEL] file (default TRUE).}
 }
 \value{
 \item{Vdist}{Volume of distribution, units of L/kg BW.}
 \item{plasma.vol}{Volume of the plasma, L/kg BW.}
 \item{Fabsgut}{Fraction of the oral dose absorbed, that is, the fraction of the
 dose that enters the gutlumen.} 
+\item{Fhep.assay.correction}{Not used for this model} 
 \item{kelim}{Elimination rate, units of 1/h.} 
 \item{hematocrit}{Percent volume of red blood cells in the blood.}
 \item{kgutabs}{Rate chemical is absorbed, 1/h.}
+\item{million.cells.per.gliver}{Not used for this model}
 \item{MW}{Molecular Weight, g/mol.} 
 \item{Rblood2plasma}{The ratio of the concentration of the chemical in the 
 blood to the concentration in the plasma. Not used in calculations but 
@@ -71,17 +99,17 @@ unbound in plasma, if available. If these chemical-specific parameters are
 not available then all chemical is assumed to be absorbed. 
 The rate of oral absorption used
 is 2.2 L/h, the median rate observed across 44 chemicals by 
-\href{https://doi.org/10.1093/toxsci/kfy020}{Wambaugh et al. (2018)}.
+Wambaugh et al. (2018) (\doi{10.1093/toxsci/kfy020}).
 There is a single, unspecified route of elimination (clearance). 
 Half-life is estimated using the 
-\href{https://doi.org/10.3390/toxics11020098}{Dawson et al. (2023)} 
+Dawson et al. (2023) (\doi{10.3390/toxics11020098}) 
 machine learning model for per- and poly-flurinated alkyl substances (PFAS).
 In keeping with the findings of that paper, volume of distribtuion is held 
 fixed at 0.205 L kg/BW. Clearance is calculated as the product of elimination
 rate (determined from half-life) and the volume of distribution.
 The ratio of chemical concentration in blood to plasma is determined
 according to
-\href{https://doi.org/10.1021/acs.est.7b03299}{Poothong et al. (2017)}
+Poothong et al. (2017) (\doi{10.1021/acs.est.7b03299})
 where compounds that are ionized at pH 7.4 (plasma) get a value of 0.5, while
 chemicals that are neutral get a value of 20.
 }
@@ -99,20 +127,11 @@ Dawson, Daniel E., et al. "A Machine Learning Model to Estimate
 Toxicokinetic Half-Lives of Per-and Polyfluoro-Alkyl Substances (PFAS) in 
 Multiple Species." Toxics 11.2 (2023): 98.
 
-Kilford, P. J., Gertz, M., Houston, J. B. and Galetin, A.
-(2008). Hepatocellular binding of drugs: correction for unbound fraction in
-hepatocyte incubations using microsomal binding or drug lipophilicity data.
-Drug Metabolism and Disposition 36(7), 1194-7, 10.1124/dmd.108.020834.
+\insertRef{pearce2017httk}{httk}
 
-Pearce, Robert G., et al. "Httk: R package for high-throughput 
-toxicokinetics." Journal of Statistical Software 79.4 (2017): 1.
+\insertRef{schmitt2008general}{httk}
 
-Schmitt, Walter. "General approach for the calculation of tissue 
-to plasma partition coefficients." Toxicology In Vitro 22.2 (2008): 457-467.
-
-Pearce, Robert G., et al. "Evaluation and calibration of high-throughput 
-predictions of chemical distribution to tissues." Journal of Pharmacokinetics 
-and Pharmacodynamics 44.6 (2017): 549-565.
+\insertRef{pearce2017evaluation}{httk}
 
 Wambaugh, John F., et al. "Evaluating in vitro-in vivo extrapolation of 
 toxicokinetics." Toxicological Sciences 163.1 (2018): 152-169.
@@ -123,6 +142,18 @@ Environmental Science & Technology 51.22 (2017): 13388-13396.
 }
 \seealso{
 \code{\link{solve_1comp}}
+
+\code{\link{calc_analytic_css_1comp}}
+
+\code{\link{calc_vdist}}
+
+\code{\link{parameterize_steadystate}}
+
+\code{\link{apply_clint_adjustment}}
+
+\code{\link{tissue.data}}
+
+\code{\link{physiology.data}}
 }
 \author{
 John Wambaugh
