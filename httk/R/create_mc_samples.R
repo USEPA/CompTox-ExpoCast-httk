@@ -288,6 +288,8 @@ create_mc_samples <- function(chem.cas=NULL,
     stop(paste("Model",model,"not available. Please select from:",
       paste(names(model.list),collapse=", ")))
   }
+  if (is.null(model.list[[model]]$monte.carlo))
+    stop(paste("Model", model, "does not yet work with Monte Carlo sampling"))
   if (!model.list[[model]]$monte.carlo)
     stop(paste("Model", model, "does not yet work with Monte Carlo sampling"))
     
