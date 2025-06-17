@@ -58,6 +58,8 @@ in liver clearance if FALSE.}
 \item{parameterize.args}{Named list of any additional arguments passed to
 model parameterization function (other than the already-named arguments).
 Default `list()` to pass no additional arguments.}
+
+\item{analytic_css.args}{Arguments to analytical Css function}
 }
 \value{
 A numeric fraction unpbound in plasma between zero and one
@@ -73,15 +75,26 @@ calculation of the fration of total clearance driven by that parameter.
 
 # 3compartmentss model:
 calc_clearance_frac(chem.name="bisphenola")
+
 # pbtk model:
-calc_clearance_frac(chem.name="bisphenola",model="pbtk",fraction.params=c("Qgfrc","Clmetabolismc"))
+calc_clearance_frac(chem.name="bisphenola",
+                    model="pbtk",
+                    fraction.params=c("Qgfrc","Clmetabolismc"))
 
 # A model with exhalation:
 # sumclearances model:
-calc_clearance_frac(chem.name="bisphenola",model="sumclearances",fraction.params=c("Clint","Qgfrc","Qalvc"))
-calc_clearance_frac(chem.name="toluene",model="sumclearances",fraction.params=c("Clint","Qgfrc","Qalvc"))
+calc_clearance_frac(chem.name="bisphenola",
+                    model="sumclearances",
+                    fraction.params=c("Clint","Qgfrc","Qalvc"))
+
+calc_clearance_frac(chem.name="toluene",
+                    model="sumclearances",
+                    fraction.params=c("Clint","Qgfrc","Qalvc"))
+                      
 # 3comp2 model:
-calc_clearance_frac(chem.name="toluene",model="3compartment2",fraction.params=c("Clmetabolismc","Qgfrc","Qalvc"))
+calc_clearance_frac(chem.name="toluene",
+                    model="3compartment2",
+                    fraction.params=c("Clmetabolismc","Qgfrc","Qalvc"))
 
 }
 \author{

@@ -12,7 +12,7 @@ vignette: >
   
   from "Applying High Throughput Toxicokinetics (HTTK) to Per- and Polyfluoro Alkyl Substances (PFAS)"
 
-John F. Wambaugh, Rogelio Tornero-Velez, Rachael Cogbill, Michael Devito,  and Barbara Wetmore1
+John F. Wambaugh, Rogelio Tornero-Velez, Rachael Cogbill, Michael Devito,  and Barbara Wetmore
 
 ## Abstract
 
@@ -37,7 +37,7 @@ options(rmarkdown.html_vignette.check_title = FALSE)
 ### Clear the memory
 It is a bad idea to let variables and other information from previous R
 sessions float around, so we first remove everything in the R memory.
-```{r clear_memory, eval = TRUE}
+```{r clear_memory}
 rm(list=ls()) 
 ```
 
@@ -52,9 +52,9 @@ building the package. If you want this vignette to work, you must run all code,
 either by cutting and pasting it into R. Or, if viewing the .RMD file, you can
 either change execute.vignette to TRUE or press "play" (the green arrow) on
 each chunk in RStudio.
-```{r runchunks, eval = TRUE}
+```{r runchunks}
 # Set whether or not the following chunks will be executed (run):
-execute.vignette <- TRUE
+execute.vignette <- FALSE
 ```
 
 ### Load the relevant libraries
@@ -67,7 +67,7 @@ then you will need to install that package:
 
 Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
 
-```{r load_packages, eval = TRUE}
+```{r load_packages, eval = execute.vignette}
 #
 #
 # Setup
@@ -88,7 +88,7 @@ NONPFAS.MODEL.USED <- "sumclearances"
 ```
 
 Set the sizes of the labels and points in the figure (these settings impact the PNG differently than the figure within RStudio):
-```{r fig_properties, eval = TRUE}
+```{r fig_properties, eval = execute.vignette}
 FONT.SIZE <- 24
 POINT.SIZE <- 4
 ```
@@ -105,7 +105,7 @@ scientific_10 <- function(x) {
 ```
 
 ### Function to calculate root mean squared log10 error
-```{r RMSLE_function, eval = TRUE}
+```{r RMSLE_function, eval = execute.vignette}
 RMSLE <- function(tab,colx,coly) 
 { 
     return(signif(mean(log10(tab[,colx]/tab[,coly])^2,na.rm=TRUE)^(1/2),3))
@@ -117,7 +117,7 @@ RMSLE <- function(tab,colx,coly)
 ## Methods
 
 ### Evaluate Ratio Blood:Plasma Predictions
-```{r rb2peval, eval=TRUE}
+```{r rb2peval, eval = execute.vignette}
 rb2p.table <- subset(chem.physical_and_invitro.data,
                      Human.Rblood2plasma.Reference %in% "Poothong 2017")
 rb2p.table <- rb2p.table[,colnames(rb2p.table) %in%
@@ -142,7 +142,7 @@ kable(rb2p.table)
 ```
 
 ### Evaluate Membrane Affinity Predictions
-```{r MAeval, eval=TRUE}
+```{r MAeval, eval = execute.vignette}
 logma.table <- subset(chem.physical_and_invitro.data,
                      logMA.Reference %in% "Droge 2019")
 logma.table <- logma.table[,colnames(logma.table) %in%
@@ -159,7 +159,7 @@ for (this.chem in logma.table$DTXSID)
 kable(logma.table)
 ```
 
-```{r fit_logma, eval = TRUE}
+```{r fit_logma, eval = execute.vignette}
 fit.logma <- lm(logMA~HTTK.logMA,data=logma.table)
 summary(fit.logma)
 
@@ -167,7 +167,7 @@ logma.table$Fit.logMA <- signif(fit.logma$coefficients[1] +
   fit.logma$coefficients[2]*logma.table$HTTK.logMA,3)
 ```
 
-```{r fig_logma, eval = TRUE}
+```{r fig_logma, eval = execute.vignette}
 fig.logma  <- ggplot(data=logma.table) +
   geom_point(aes(
     x=HTTK.logMA,
@@ -190,7 +190,7 @@ print(fig.logma)
 
 ## New In Vitro TK Parameters
 
-```{r plot_clint_fup}
+```{r plot_clint_fup, eval = execute.vignette}
 new.pfas <- get_2023pfasinfo(info="dtxsid",
                                       model=PFAS.MODEL.USED,
                                       suppress.messages=TRUE)
@@ -241,7 +241,7 @@ cat(paste("(intrinsic hepatocyte clearance) in",
           "PFAS\n"))
 ```
 
-```{r clint.fup.figures}
+```{r clint.fup.figures, eval = execute.vignette}
 load(paste0(LOC.WD,"Clint-Fup-Values.RData"))
 fig.clint.fup  <- ggplot(data=clint.fup) +
   geom_point(aes(
@@ -305,7 +305,7 @@ fig.henry.hist <- ggplot(data=clint.fup) +
 print(fig.henry.hist)
 ```
 
-```{r multipanelnewclintfupdata}
+```{r multipanelnewclintfupdata, eval = execute.vignette}
 ggarrange(fig.clint.fup, fig.clint.hist, fig.fup.hist, fig.henry.hist, 
           labels = c("A", "B", "C", "D"),
           ncol = 2, nrow = 2,
@@ -319,7 +319,7 @@ ggarrange(fig.clint.fup, fig.clint.hist, fig.fup.hist, fig.henry.hist,
 dev.off()
 ```
 ## Examine Kbloodair
-```{r calc_Kbloodair, eval=TRUE}
+```{r calc_Kbloodair, eval = execute.vignette}
 pfas.data <- subset(clint.fup,Chemical.Class=="Newly Measured PFAS")
 pfas.data[,"logKblood2air"] <- apply(pfas.data,
                                      1,
@@ -328,7 +328,7 @@ pfas.data[,"logKblood2air"] <- apply(pfas.data,
                                        suppress.messages=TRUE)$Kblood2air)))
 ```
 
-```{r kblood2air_results, eval=TRUE}
+```{r kblood2air_results, eval = execute.vignette}
 good.Kblood2air <- pfas.data$logKblood2air
 good.logHenry <- pfas.data$logHenry
 good.logHenry <- good.logHenry[!is.na(good.Kblood2air)]
@@ -349,18 +349,18 @@ cat(paste0("The most volatile chemical was ", most.volatile,
 # HTTK Interspecies Clearance Differences
 
 ## Remove Rat-specific HTTK data:
-```{r removeoldhttk}
+```{r removeoldhttk, eval = execute.vignette}
 chem.physical_and_invitro.data$Rat.Clint <- NA
 chem.physical_and_invitro.data$Rat.Funbound.plasma <- NA
 ```
 
 ## Add bioavailability predictions
-```{r load_bioavailability_preds}
+```{r load_bioavailability_preds, eval = execute.vignette}
 load_honda2023()
 ```
 
 ## Compare default httk against in vivo clearance data:
-```{r invivoeval, eval=TRUE}
+```{r invivoeval, eval = execute.vignette}
 cl.table <- httk::pfas.clearance
 human.ML.table <- subset(httk::dawson2023,
                          Species=="Human" & 
@@ -416,7 +416,7 @@ cat(paste0(dim(cl.table)[1]," rows of in vivo clearance data.\n"))
 ```
 
 ## Add in Dawson 2023 predictions for later
-```{r invivoeval2, eval=TRUE}
+```{r invivoeval2, eval = execute.vignette}
 outside.doa <- NULL
 for (this.chem in unique(cl.table$DTXSID))
   {
@@ -443,7 +443,7 @@ outside.doa <- subset(chem.physical_and_invitro.data,DTXSID%in%outside.doa)$Comp
 ```
 
 ### Calculate human:species clearance ratios
-```{r invivo_interspecies_eval_scaling, eval=TRUE}
+```{r invivo_interspecies_eval_scaling, eval = execute.vignette}
 cl.table <- as.data.frame(cl.table)
 for (this.sex in c("Female","Male"))
 {
@@ -488,7 +488,7 @@ cat(paste0(dim(cl.table)[1],"rows of in vivo clearance data.\n"))
 ```
 
 ## Add non-PFAS clearances from literature
-```{r cl_lit_Data}
+```{r cl_lit_Data, eval = execute.vignette}
 huh.data <- as.data.frame(read_excel(paste0(
   LOC.WD,"Huh-2011-HumanCL.xlsx")))
 # Huh Data is in ml/min/kg:
@@ -549,7 +549,7 @@ for (this.chem in sort(unique(huh.data[,"DTXSID"])))
 cat(paste0(dim(cl.table)[1],"rows of in vivo clearance data.\n"))
 ```
 
-```{r annotate_chemical_class, eval=TRUE}
+```{r annotate_chemical_class, eval = execute.vignette}
 cat(paste0(dim(cl.table)[1],"rows of in vivo clearance data.\n"))
 cl.table$Class <- "PFAS"
 cl.table[!(cl.table$DTXSID %in% 
@@ -569,13 +569,23 @@ write.table(cl.table, file=paste0(LOC.WD,"InVivo-CL-Table.txt"),sep="\t",row.nam
 cat(paste0(dim(cl.table)[1],"rows of in vivo clearance data.\n"))
 ```
 
-```{r fit_non_pfas_trend, eval=TRUE}
+```{r fit_non_pfas_trend, eval = execute.vignette}
 load(paste0(LOC.WD,"InVivo-CL-Table.RData"))
 nonpfasratiotrend <- lm(log10(TK.Ratio.InVivo)~log10(TK.Ratio.HTTK),
                         data=subset(cl.table, Species=="Rat" & Class!="PFAS"))
 summary(nonpfasratiotrend)
+cat(paste0("For typical organic chemicals, HTTK in vitro data combined with ",
+           "species-specific physiological parameters predicts the Rat:Human ",
+           "clearance ratio with a root mean squared log10 error (RMSLE) of ",
+           signif(RMSLE(subset(cl.table, 
+                               Species=="Rat" & Class!="PFAS"),
+                        "TK.Ratio.InVivo", "TK.Ratio.HTTK"),2),
+           ".\n"))
 ```
-```{r fig_clhttk, eval = TRUE}
+
+
+
+```{r fig_clhttk, eval = execute.vignette}
 load(paste0(LOC.WD,"InVivo-CL-Table.RData"))
 fig.clhttk.invivo  <- ggplot(data=subset(cl.table, Class=="PFAS")) +
   geom_point(aes(
@@ -605,7 +615,7 @@ print(fig.clhttk.invivo)
 
 ```
 
-```{r fig_ratio_httk, eval = TRUE}
+```{r fig_ratio_httk, eval = execute.vignette}
 load(paste0(LOC.WD,"InVivo-CL-Table.RData"))
 fig.ratio.httk  <- ggplot(data=subset(cl.table, Species=="Rat")) +
   geom_point(aes(
@@ -631,14 +641,7 @@ print(fig.ratio.httk)
 #         height =11, width =12, dpi = 300)
 ```
 
-
-
-
-
-
-
-
-```{r multipanelclearancefigureforpaper}
+```{r multipanelclearancefigureforpaper, eval = execute.vignette}
 ggarrange(fig.clhttk.invivo, fig.ratio.httk,
           labels = c("A", "B"),
           ncol = 2, nrow = 1,
@@ -654,7 +657,7 @@ ggarrange(fig.clhttk.invivo, fig.ratio.httk,
 dev.off()
 ```
 
-```{r summary_table}
+```{r summary_table, eval = execute.vignette}
 ratio.table <- data.frame()
 ratio.table["Non-PFAS In Vivo Clearance Ratio","Median"] <- 
   median(subset(cl.table, 
@@ -668,6 +671,22 @@ ratio.table["Non-PFAS In Vivo Clearance Ratio","Max"] <-
   max(subset(cl.table, 
                 Species=="Rat" &
                   Class != "PFAS")$TK.Ratio.InVivo,na.rm=TRUE)
+ratio.table["Non-PFAS Default HTTK Clearance Ratio","Median"] <- 
+  median(subset(cl.table, 
+                Species=="Rat" &
+                  Class != "PFAS")$TK.Ratio.HTTK, na.rm=TRUE)
+ratio.table["Non-PFAS Default HTTK Clearance Ratio","Min"] <- 
+  min(subset(cl.table, 
+                Species=="Rat" &
+                  Class != "PFAS")$TK.Ratio.HTTK, na.rm=TRUE)
+ratio.table["Non-PFAS Default HTTK Clearance Ratio","Max"] <- 
+  max(subset(cl.table, 
+                Species=="Rat" &
+                  Class != "PFAS")$TK.Ratio.HTTK, na.rm=TRUE)
+ratio.table["Non-PFAS Default HTTK Clearance Ratio","RMSLE"] <- 
+  RMSLE(subset(cl.table, 
+                Species=="Rat" &
+                  Class != "PFAS"),"TK.Ratio.HTTK", "TK.Ratio.InVivo")
 ratio.table["PFAS In Vivo Clearance Ratio","Median"] <- 
   median(subset(cl.table, 
                 Species=="Rat" &
@@ -692,16 +711,30 @@ ratio.table["PFAS Default HTTK Clearance Ratio","Max"] <-
   max(subset(cl.table, 
                 Species=="Rat" &
                   Class == "PFAS")$TK.Ratio.HTTK, na.rm=TRUE)
+ratio.table["PFAS Default HTTK Clearance Ratio","RMSLE"] <- 
+  RMSLE(subset(cl.table, 
+                Species=="Rat" &
+                  Class == "PFAS"), "TK.Ratio.HTTK", "TK.Ratio.InVivo")
 ratio.table <- signif(ratio.table, 2)
 write.table(ratio.table, file=paste0(LOC.WD,"Ratio-Table.txt"),
             sep="\t")
 kable(ratio.table)
+
+cat(paste0("RMSLE is much larger for PFAS (",
+           ratio.table["PFAS Default HTTK Clearance Ratio","RMSLE"],
+           " = ",
+           signif(10^ratio.table["PFAS Default HTTK Clearance Ratio","RMSLE"],2),
+           "-fold error) than for non-PFAS chemicals (",
+           ratio.table["Non-PFAS Default HTTK Clearance Ratio","RMSLE"],
+           " = ",
+           signif(10^ratio.table["Non-PFAS Default HTTK Clearance Ratio","RMSLE"],2),
+           "-fold error).\n"))
 ```
 
 ## Evaluating Machine Learning Model for PFAS TK
 
-```{r make_ml_clint_table}
-load(paste0(LOC.WD,"Clint-Fup-Values.RData")
+```{r make_ml_clint_table, eval = execute.vignette}
+load(paste0(LOC.WD,"Clint-Fup-Values.RData"))
 clint.fup.pfas[is.na(clint.fup.pfas$Human.Clint.pValue),"Human.Clint.pValue"] <- 0
 ml.clint.table <- data.frame()
 ml.clint.table["Class 1", "Description"] <- "Rapidly Cleared"
@@ -749,7 +782,7 @@ write.table(ml.clint.table, file=paste0(LOC.WD,
 kable(ml.clint.table)
 ```
 
-```{r rat_human_scaling}
+```{r rat_human_scaling, eval = execute.vignette}
 half.lives <- NULL
 for (this.chem in new.pfas)
 {
@@ -789,7 +822,7 @@ half.lives$Ratio <- half.lives$Human.HL / half.lives$Rat.HL
 save(half.lives,file=paste0(LOC.WD,"All-Half-Lives.RData"))
 ```
 
-```{r half_life_fig}
+```{r half_life_fig, eval = execute.vignette}
 load(paste0(LOC.WD,"All-Half-Lives.RData"))
 fig.species.scaling <- ggplot(data=half.lives) +
   geom_histogram(aes(
@@ -808,7 +841,7 @@ fig.species.scaling <- ggplot(data=half.lives) +
 print(fig.species.scaling)
 ```
 
-```{r wallis_2023_halflives}
+```{r wallis_2023_halflives, eval = execute.vignette}
 Dawson.known.human.HLs <- c(
 "DTXSID1037303",
 "DTXSID1037303",
@@ -863,7 +896,7 @@ for (this.chem in human.invivo.hl$DTXSID)
 }
 ```
 
-```{r results_from_new_model_run}
+```{r results_from_new_model_run, eval = execute.vignette}
 human.invivo.hl[human.invivo.hl$DTXSID=="DTXSID90723993","HL.ML"] <- 29000/24
 human.invivo.hl[human.invivo.hl$DTXSID=="DTXSID50723994","HL.ML"] <- 29000/24
 human.invivo.hl[human.invivo.hl$DTXSID=="DTXSID20892348","HL.ML"] <- 53/24
@@ -890,7 +923,7 @@ human.invivo.hl$Underestimate <- human.invivo.hl$HL.High.Class <
                            human.invivo.hl$HL.ML.Class
 ```
 
-```{r human_hl_stats}
+```{r human_hl_stats, eval = execute.vignette}
 human.invivo.hl$HL.GeoMean <- exp((log(human.invivo.hl$HL.Low)+log(human.invivo.hl$HL.High))/2)
 fit.overall <- lm(log10(HL.GeoMean) ~ log10(HL.ML),
                   data=human.invivo.hl)
@@ -916,7 +949,7 @@ save(human.invivo.hl,
      file=paste0(LOC.WD,"Human-Invivo-HL.RData"))
 ```
 
-```{r human_hl_eval_fig}
+```{r human_hl_eval_fig, eval = execute.vignette}
 load(paste0(LOC.WD,"Human-Invivo-HL.RData"))
 set.seed(1234)
 human.invivo.hl$HL.ML.jitter <- human.invivo.hl$HL.ML*(1.0+runif(dim(human.invivo.hl)[1],-0.5,0.5))
@@ -970,7 +1003,7 @@ print(human.invivo.hl.fig)
 subset(human.invivo.hl, is.na(HL.ML))
 ```
 
-```{r multipanelMLfigureforpaper}
+```{r multipanelMLfigureforpaper, eval = execute.vignette}
 ggarrange(fig.species.scaling, human.invivo.hl.fig,
           labels = c("A", "B"),
           ncol = 2, nrow = 1,
@@ -986,7 +1019,7 @@ ggarrange(fig.species.scaling, human.invivo.hl.fig,
 dev.off()
 ```
 
-```{r fig_clml, eval = TRUE}
+```{r fig_clml, eval = execute.vignette}
 load(paste0(LOC.WD,"InVivo-CL-Table.RData"))
 fig.clml.invivo  <- ggplot(data=subset(cl.table, Class=="PFAS")) +
   geom_jitter(aes(
@@ -1015,7 +1048,7 @@ fig.clml.invivo  <- ggplot(data=subset(cl.table, Class=="PFAS")) +
 print(fig.clml.invivo)
 ```
 
-```{r fig_ratio_ml, eval = TRUE}
+```{r fig_ratio_ml, eval = execute.vignette}
 load(paste0(LOC.WD,"InVivo-CL-Table.RData"))
 fig.ratio.ml  <- ggplot(data=subset(cl.table, Species!="Human" & Class=="PFAS")) +
   geom_point(aes(
@@ -1042,7 +1075,7 @@ print(fig.ratio.ml)
 ```
 
 ## New HTTK Model for PFAS
-```{r fig_clhttkpfas, eval = TRUE}
+```{r fig_clhttkpfas, eval = execute.vignette}
 load(paste0(LOC.WD,"InVivo-CL-Table.RData"))
 fig.clhttkpfas.invivo  <- ggplot(data=subset(cl.table, Class=="PFAS")) +
   geom_point(aes(
@@ -1074,7 +1107,7 @@ print(fig.clhttkpfas.invivo)
 
 
 
-```{r multipanelclearancenewmodelfigureforpaper}
+```{r multipanelclearancenewmodelfigureforpaper, eval = execute.vignette}
 multiclerancenewmodel <- ggarrange(fig.clml.invivo+ rremove("ylab") , fig.clhttkpfas.invivo+ rremove("ylab") ,
           labels = c("A", "B"),
           ncol = 2, nrow = 1,
@@ -1092,7 +1125,7 @@ print(multiclerancenewmodel)
 dev.off()
 ```
 
-```{r fig_ratio_httkpfas, eval = TRUE}
+```{r fig_ratio_httkpfas, eval = execute.vignette}
 load(paste0(LOC.WD,"InVivo-CL-Table.RData"))
 fig.ratio.httkpfas  <- ggplot(data=subset(cl.table, Species!="Human" & Class=="PFAS")) +
   geom_point(aes(
@@ -1123,7 +1156,7 @@ print(fig.ratio.httkpfas)
          height = 5*1.5, width = 6*1.5, dpi = 300)
 ```
 
-```{r MakeSupTableChange}
+```{r MakeSupTableChange, eval = execute.vignette}
 pfas.httk.table <- get_2023pfasinfo(info="all")
 for (this.chem in pfas.httk.table$DTXSID)
 {
@@ -1191,7 +1224,7 @@ write.table(pfas.httk.table,
 save(pfas.httk.table,file=paste0(LOC.WD,"PFAS-Css-Table.RData"))
 ```
 
-```{r cssfigpanela, eval=TRUE}
+```{r cssfigpanela, eval = execute.vignette}
 load(paste0(LOC.WD,"PFAS-Css-Table.RData"))
 pfas.httk.table$ML.Class <- as.factor(pfas.httk.table$ML.Class)
 fig.css.httk  <- ggplot(data=subset(pfas.httk.table,!is.na(ML.Class))) +
@@ -1229,7 +1262,7 @@ print(fig.css.httk)
 #         height = 11, width = 12, dpi = 300)
 ```
 
-```{r cssfigpanelb, eval=TRUE}
+```{r cssfigpanelb, eval = execute.vignette}
 load(paste0(LOC.WD,"PFAS-Css-Table.RData"))
 pfas.httk.table$ML.Class <- as.factor(pfas.httk.table$ML.Class)
 fig.css.ml  <- ggplot(data=subset(pfas.httk.table,!is.na(ML.Class))) +
@@ -1267,7 +1300,7 @@ print(fig.css.ml)
 #         height = 11, width = 12, dpi = 300)
 ```
 
-```{r multipanelcssfigureforpaper}
+```{r multipanelcssfigureforpaper, eval = execute.vignette}
 multipanelcss <- ggarrange(fig.css.httk + rremove("ylab") , 
                                    fig.css.ml + rremove("ylab") ,
           labels = c("A", "B"),
@@ -1290,8 +1323,63 @@ print(multipanelcss)
 dev.off()
 ```
 
+## Text for manuscript
+```{r text_for_paper, eval = execute.vignette}
+cat("\nAbstract\n")
+cat(paste0("For typical organic chemicals, HTTK in vitro data combined with ",
+           "species-specific physiological parameters predicts the Rat:Human ",
+           "clearance ratio with a root mean squared log10 error (RMSLE) of ",
+           signif(RMSLE(subset(cl.table, 
+                               Species=="Rat" & Class!="PFAS"),
+                        "TK.Ratio.InVivo", "TK.Ratio.HTTK"),2),
+           ".\n"))
+cat("\n")
+cat(paste0("With this and other modifications, HTTK methods for PFAS achieve ",
+           "improved prediction of interspecies clearance ratios, with an ",
+           "RMSLE of ",
+           signif(RMSLE(subset(cl.table, Species!="Human" & Class=="PFAS"),
+                        "TK.Ratio.HTTKPFAS","TK.Ratio.InVivo"),2),
+           ".\n"))
+
+cat("\nResults: 3.2\n")
+cat(paste0("RMSLE is much larger for PFAS (",
+           ratio.table["PFAS Default HTTK Clearance Ratio","RMSLE"],
+           " = ",
+           signif(10^ratio.table["PFAS Default HTTK Clearance Ratio","RMSLE"],2),
+           "-fold error) than for non-PFAS chemicals (",
+           ratio.table["Non-PFAS Default HTTK Clearance Ratio","RMSLE"],
+           " = ",
+           signif(10^ratio.table["Non-PFAS Default HTTK Clearance Ratio","RMSLE"],2),
+           "-fold error).\n"))
+
+cat("\nResults: 3.3\n")
+cat(paste0("The ML performs well on the ",
+           num.novel.pfas.hl, 
+           " novel chemicals, with a RMSLE of ",
+            signif(RMSLE.novel,2),
+           ".\n"))
+cat("\n")
+cat(paste0("As shown in panel A of Figure 4, this model does well (RMSLE ",
+           RMSLE(cl.table,
+                 "MachineLearning.Cltot.Lphpkgbw",
+                 "ClLphpkgbw"),
+           ") at reproducing the data on which it was essentially trained.\n"))
+
+cat("\nResults: 3.4\n")
+cat(paste0("The overall RMSLE is ",
+           RMSLE(subset(cl.table, Class=="PFAS"),
+                 "HTTKPFAS.Cltot.Lphpkgbw",
+                 "ClLphpkgbw"),
+           ".\n"))
+cat("\n")
+cat(paste0("HTTK-PFAS clearance ratios are improved, in contrast to Figure 2, with an RMSLE of ",
+           RMSLE(subset(cl.table, Species!="Human" & Class=="PFAS"),
+                 "TK.Ratio.HTTKPFAS","TK.Ratio.InVivo"),
+           ".\n"))
+```
+
 ## Other Analyses
-```{r firstpass, eval=TRUE}
+```{r firstpass, eval = execute.vignette}
 firstpass.table <- NULL
 for (this.chem in get_2023pfasinfo(info="dtxsid", suppress.messages=TRUE,
                                    model=PFAS.MODEL.USED))
@@ -1320,7 +1408,7 @@ for (this.chem in get_2023pfasinfo(info="dtxsid", suppress.messages=TRUE,
 }
 ```
 
-```{r firstpass_fig, eval=TRUE}
+```{r firstpass_fig, eval = execute.vignette}
 fig.firstpass  <- ggplot(data=firstpass.table) +
   geom_histogram(aes(
     x=Fsystemic),bins=10) +
@@ -1332,7 +1420,7 @@ fig.firstpass  <- ggplot(data=firstpass.table) +
 print(fig.firstpass)
 ```
 
-```{r fig_clspecies_invivo, eval = TRUE}
+```{r fig_clspecies_invivo, eval = execute.vignette}
 fig.clspecies.invivo  <- ggplot(data=cl.table) +
   geom_point(aes(
     x=Species,
@@ -1354,7 +1442,7 @@ fig.clspecies.invivo  <- ggplot(data=cl.table) +
 print(fig.clspecies.invivo)
 ```
 
-```{r fig_clspecies_httk, eval = TRUE}
+```{r fig_clspecies_httk, eval = execute.vignette}
 fig.clspecies.httk  <- ggplot(data=cl.table) +
   geom_point(aes(
     x=Species,
@@ -1382,7 +1470,7 @@ print(fig.clspecies.httk)
 ```
 
 
-```{r clearance_fraction}
+```{r clearance_fraction, eval = execute.vignette}
 FigClearanceFrac1<- ggplot(data=pfas.httk.table)+
    geom_histogram(binwidth = 0.1,alpha=1,fill="Red",aes(Frac.Metabolism))+ 
   xlab(" ") +
@@ -1415,7 +1503,7 @@ ggarrange(FigClearanceFrac1, FigClearanceFrac2, FigClearanceFrac3,
 dev.off()
 ```
 
-```{r two_panel_Css_histogram}
+```{r two_panel_Css_histogram, eval = execute.vignette}
 Fig.Cssa <- ggplot(data=pfas.httk.table)+
   geom_histogram(binwidth = 0.01,aes(Css.Exhale.FoldChange))+
   xlab("Css Fold Change Due to Exhalation")

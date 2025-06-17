@@ -2054,9 +2054,6 @@ chem.physical_and_invitro.data <- add_chemtable(Crizer2023ClintManual,
   species="Human",
   overwrite=FALSE)
 
-pfas.fup.predictions <- as.data.frame(
-  read_excel("PFAS-Fup-Compiled-Predictions.xlsx",sheet=1))
-
 chem.physical_and_invitro.data <- add_chemtable(
   subset(gut.data, !is.na(musther_Fbio_mouse)),
   current.table = chem.physical_and_invitro.data,
@@ -3036,7 +3033,6 @@ save(chem.physical_and_invitro.data,
      pradeep2020,
      dawson2023,
      pfas.clearance,
-     pfas.fup.predictions,
      sipes2017,
      physiology.data,
      pearce2017regression,
