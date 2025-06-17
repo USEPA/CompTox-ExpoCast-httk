@@ -2027,7 +2027,7 @@
 #'  data result from a series of reviews of the literature by 
 #' Lau et al. (most recently Fenton et al. 2021) that were further revised for
 #' Dawson et al. (2023).
-#' Dawson et al. (2023) Supplemental Information S2.5 compiled \eqn{V_{d}$
+#' Dawson et al. (2023) Supplemental Information S2.5 compiled \eqn{V_{d}}
 #' values that 
 #' were used here for calculating total clearance. A dataset of 
 #' literature-derived values of \eqn{V_{d}} was compiled starting from 

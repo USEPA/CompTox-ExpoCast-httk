@@ -51,7 +51,6 @@
 #'
 #' @param adjusted.Funbound.plasma Uses Pearce et al. (2017) lipid binding adjustment
 #' for Funbound.plasma (which impacts volume of distribution) when set to TRUE (Default).
-
 #' 
 #' @param adjusted.Clint Uses Kilford et al. (2008) hepatocyte incubation
 #' binding adjustment for Clint when set to TRUE (Default).
@@ -91,10 +90,14 @@
 #' with 1 (i.e. 100 percent) regardless of other settings.
 #' See \code{\link{get_fbio}} for further details.
 #' 
-#' @return 
-#' \item{Vdist}{Volume of distribution, units of L/kg BW.}
+#' @param ... Additional arguments, not currently used.
+#' 
+#' @return \item{Vdist}{Volume of distribution, units of L/kg BW.}
 #' \item{Fabsgut}{Fraction of the oral dose absorbed and surviving gut metabolism, i.e. the 
-#' fraction of the dose that enters the gutlumen.} 
+#' fraction of the dose that enters the gutlumen.} \item{kelim}{Elimination rate, units of
+#' 1/h.} \item{hematocrit}{Percent volume of red blood cells in the blood.}
+#' \item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of the
+#' dose that enters the gutlumen.} 
 #' \item{Fhep.assay.correction}{The fraction of chemical unbound in hepatocyte 
 #' assay using the method of Kilford et al. (2008)} 
 #' \item{kelim}{Elimination rate, units of 1/h.} 
@@ -172,7 +175,8 @@ parameterize_1comp <- function(
                         minimum.Funbound.plasma=0.0001,
                         class.exclude=TRUE,
                         physchem.exclude = TRUE,
-                        Caco2.options = list()
+                        Caco2.options = list(),
+                        ...
                         )
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -232,7 +236,6 @@ parameterize_1comp <- function(
                          regression=regression,
                          suppress.messages=suppress.messages,
                          minimum.Funbound.plasma = minimum.Funbound.plasma)
-
   
   ss.params <- suppressWarnings(parameterize_steadystate(
                                   chem.name=chem.name,
@@ -284,6 +287,9 @@ parameterize_1comp <- function(
   params[["pKa_Donor"]] <- phys.params[["pKa_Donor"]] 
   params[["pKa_Accept"]] <- phys.params[["pKa_Accept"]]
   params[["MA"]] <- phys.params[["MA"]]
+
+  params[['kgutabs']] <- 2.18
+  
   params[['Rblood2plasma']] <- 
     available_rblood2plasma(chem.cas=chem.cas,chem.name=chem.name,
         species=species,adjusted.Funbound.plasma=adjusted.Funbound.plasma)
@@ -305,6 +311,7 @@ parameterize_1comp <- function(
 # Load the physiological parameters for this species
   this.phys.data <- physiology.data[,phys.species]
   names(this.phys.data) <- physiology.data[,1]
+  
     
   params[['hematocrit']] <- this.phys.data[["Hematocrit"]]
   params[['plasma.vol']] <- this.phys.data[["Plasma Volume"]]/1000 # L/kg BW
@@ -314,10 +321,8 @@ parameterize_1comp <- function(
   params[['Fabsgut']] <- ss.params[['Fabsgut']]
   params[['Fabs']] <- ss.params[['Fabs']]
   params[['Fgut']] <- ss.params[['Fgut']]
-  params[['kgutabs']] <- ss.params[['kgutabs']]
   params[["Caco2.Pab"]] <- ss.params[['Caco2.Pab']]
   params[["Caco2.Pab.dist"]] <- ss.params[['Caco2.Pab.dist']]
-
   
   params[['hepatic.bioavailability']] <- 
     ss.params[['hepatic.bioavailability']]  
