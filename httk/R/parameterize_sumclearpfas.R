@@ -103,8 +103,6 @@
 #' ("ClassModDomain"), the domain of all models ("AMAD"), or none ("none")
 #' (Defaults to "ClassModDomain").
 #'
-#' @param ... Other parameters
-#'
 #' @return 
 #' \item{Clint}{Hepatic Intrinsic Clearance, uL/min/10^6 cells.}
 #' \item{Fabsgut}{Fraction of the oral dose absorbed, i.e. the fraction of the
@@ -163,8 +161,7 @@ parameterize_sumclearancespfas <- function(
                               fup.lod.default=0.005,
                               suppress.messages=FALSE,
                               minimum.Funbound.plasma=0.0001,
-                              Caco2.options=NULL,
-                              ...)
+                              Caco2.options=NULL)
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
 #each time a data.table column name is used without quotes. To appease R CMD

@@ -15,7 +15,8 @@ parameterize_pfas1comp(
   estimate.firstpass = TRUE,
   suppress.messages = FALSE,
   Caco2.options = list(),
-  ...
+  class.exclude = TRUE,
+  physchem.exclude = TRUE
 )
 }
 \arguments{
@@ -60,7 +61,8 @@ Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut
 with 1 (i.e. 100 percent) regardless of other settings.
 See \code{\link{get_fbio}} for further details.}
 
-\item{...}{Additional arguments, not currently used.}
+\item{class.exclude}{Exclude chemical classes identified as outside of 
+domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
 
 \item{physchem.exclude}{Exclude chemicals on the basis of physico-chemical
 properties (currently only Henry's law constant) as specified by 

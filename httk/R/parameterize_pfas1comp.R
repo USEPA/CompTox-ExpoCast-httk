@@ -45,6 +45,9 @@
 #' domain of applicability based on the properties of the training set
 #' ("ClassModDomain"), the domain of all models ("AMAD"), or none ("none")
 #' (Defaults to "ClassModDomain").
+#' 
+#' @param class.exclude Exclude chemical classes identified as outside of 
+#' domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).
 #'
 #' @param physchem.exclude Exclude chemicals on the basis of physico-chemical
 #' properties (currently only Henry's law constant) as specified by 
@@ -71,8 +74,6 @@
 #' ("oral", "iv", or "other")
 #'
 #' @param sex Sex of simulated individual ("Male" or "Female")
-#'
-#' @param ... Additional arguments, not currently used.
 #' 
 #' @return 
 #' \item{Vdist}{Volume of distribution, units of L/kg BW.}
@@ -151,7 +152,8 @@ parameterize_pfas1comp <- function(
                         estimate.firstpass = TRUE,
                         suppress.messages=FALSE,
                         Caco2.options = list(),
-                        ...
+                        class.exclude=TRUE,
+                        physchem.exclude=TRUE
                         )
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -159,7 +161,7 @@ parameterize_pfas1comp <- function(
   #CHECK, a variable has to be created for each of these column names and set to
   #NULL. Note that within the data.table, these variables will not be NULL! Yes,
   #this is pointless and annoying.
-  DTXSID <- Species <- DosingAdj <- NULL
+  DTXSID <- Species <- DosingAdj <- Sex <- NULL
   #End R CMD CHECK appeasement.
   
   # We need to describe the chemical to be simulated one way or another:
@@ -176,7 +178,17 @@ parameterize_pfas1comp <- function(
     chem.cas <- out$chem.cas
     chem.name <- out$chem.name                                
     dtxsid <- out$dtxsid
-    
+
+    # Make sure we have all the parameters we need:
+    check_model(chem.cas=chem.cas, 
+                chem.name=chem.name,
+                dtxsid=dtxsid,
+                model="1compartment",
+                species=species,
+                class.exclude=class.exclude,
+                physchem.exclude=physchem.exclude,
+                default.to.human=default.to.human)
+                    
   params <- list()
   params[['Vdist']] <- 0.205 # Dawson et al. (2023)
 

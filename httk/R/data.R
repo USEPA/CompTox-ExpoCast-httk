@@ -2016,33 +2016,33 @@
 
 #' Interspecies In vivo Clearance Data for PFAS
 #' 
-#' If the chemical- and species-specific TK half-life ($t_{1/2}$) and volume of 
-#' distribution ($V_{d}$) are known, a whole-body plasma clearance rate can be 
-#' calculated as: $$Cl_{tot} = ln(1/2) / t_{1/2} * V_{d}$$
+#' If the chemical- and species-specific TK half-life (\eqn{t_{1/2}}) and volume of 
+#' distribution (\eqn{V_{d}}) are known, a whole-body plasma clearance rate can be 
+#' calculated as: \deqn{Cl_{tot} = ln(1/2) / t_{1/2} * V_{d}}
 #' The first term involving the natural logarithm of 1/2 converts half-life (h) 
-#' into an elimination rate (1/h) so that $Cl_{tot}$ has units of 
+#' into an elimination rate (1/h) so that \eqn{Cl_{tot}} has units of 
 #' L/kg bodyweight/h. 
-#' Dawson et al. (2023) reported a table of in vivo PFAS $t_{1/2}$ data for multiple 
+#' Dawson et al. (2023) reported a table of in vivo PFAS \eqn{t_{1/2}} data for multiple 
 #' species across eleven PFAS. Most of the measured data are for rodents. These
 #'  data result from a series of reviews of the literature by 
 #' Lau et al. (most recently Fenton et al. 2021) that were further revised for
 #' Dawson et al. (2023).
-#' Dawson et al. (2023) Supplemental Information S2.5 compiled $V_{d}$
+#' Dawson et al. (2023) Supplemental Information S2.5 compiled \eqn{V_{d}$
 #' values that 
 #' were used here for calculating total clearance. A dataset of 
-#' literature-derived values of $V_{d}$ was compiled starting from 
+#' literature-derived values of \eqn{V_{d}} was compiled starting from 
 #' Pizzurro et al. (2019) Table 2, which compiled 38 observations spanning 
 #' five PFAS chemicals, four species, and both sexes from various literature 
-#' sources. To these we added 24 calculated $V_{d}$ observations in rat for three 
+#' sources. To these we added 24 calculated \eqn{V_{d}} observations in rat for three 
 #' chemicals across a range of doses and routes from Huang et al. (2019). 
-#' Further values for $V_{d}$ were collected from the peer-review literature 
+#' Further values for \eqn{V_{d}} were collected from the peer-review literature 
 #' (Dzierlenga et al. 2020; Lau et al. 2020; Lou et al. 2009; Tatum-Gibbs et al. 2011).
-#'  The total data set includes 128 values for $V_{d}$ from 8 PFAS chemicals 
+#'  The total data set includes 128 values for \eqn{V_{d}} from 8 PFAS chemicals 
 #' across 4 species. 
-#' A $Cl_{tot}$ was calculated using the above equation for every chemical- and 
+#' A \eqn{Cl_{tot}} was calculated using the above equation for every chemical- and 
 #' species-specific half-life reported in the
 #'  Dawson et al. (2023) supplemental materials. For chemicals without
-#'  species- and compound-specific measurements for $V_{d}$ we used the median
+#'  species- and compound-specific measurements for \eqn{V_{d}} we used the median
 #'  in vivo measured PFAS Vd of 0.205 L/kg BW.
 #' 
 #' The data.frame contains the following columns:
