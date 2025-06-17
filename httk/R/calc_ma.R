@@ -92,17 +92,17 @@ calc_ma <- function(
   }
   
   if (!suppress.messages) warning(
-      "Membrane affinity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.\n")  
+      "Membrane affinity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.")  
   
   MA <- 10^(1.294 + 0.304 * log10(Pow))
   
   # Calibration for PFAS based on Droge (2019) data:
   if (pfas.calibration & 
-      regexpr("PFAS", get_physchem_param("Chemical.Class",dtxsid=dtxsid)!=-1))
+      regexpr("PFAS", get_physchem_param("Chemical.Class",dtxsid=dtxsid))!=-1)
   {
     MA <- 10^(-2.59 + 2.61 * log10(MA))
     if (!suppress.messages) warning(
-      "Membrane affinity for PFAS increased according to regression on Droge (2019) data.\n")  
+      "Membrane affinity for PFAS increased according to regression on Droge (2019) data.")  
   }
   
   return(set_httk_precision(MA)) 

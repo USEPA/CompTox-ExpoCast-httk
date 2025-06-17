@@ -183,11 +183,10 @@ parameterize_pfas1comp <- function(
     check_model(chem.cas=chem.cas, 
                 chem.name=chem.name,
                 dtxsid=dtxsid,
-                model="1compartment",
+                model="pfas1compartment",
                 species=species,
                 class.exclude=class.exclude,
-                physchem.exclude=physchem.exclude,
-                default.to.human=default.to.human)
+                physchem.exclude=physchem.exclude)
                     
   params <- list()
   params[['Vdist']] <- 0.205 # Dawson et al. (2023)

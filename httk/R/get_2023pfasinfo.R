@@ -91,8 +91,10 @@
 #' {
 #'   PFASCssTable <- rbind(PFASCssTable, data.frame(
 #'     DTXSID = this.id,
-#'     Css = calc_css(dtxsid=this.id, model="sumclearancespfas")
-#'     ))
+#'     Css = try(calc_analytic_css(dtxsid=this.id, 
+#'                                   model="sumclearancespfas",
+#'                                   suppress.messages=TRUE
+#'    ))))
 #' }
 #' 
 #' @export get_2023pfasinfo
