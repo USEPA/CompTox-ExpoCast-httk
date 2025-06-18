@@ -227,11 +227,6 @@ checkpoint<-copy(IVD_Manuscript_data)
 # Run the in vitro distribution models
 ```{r run_IVD_models, eval = execute.vignette}
 
-# # run Armitage model, output concentrations in umol/L (e.g. uM)
-# armitageOutput_data.dt <- armitage_eval(tcdata=IVD_Manuscript_data, 
-#                                         surface.area.switch = FALSE,
-#                                         restrict.ion.partitioning = TRUE)
-
 
 # # run Armitage model, output concentrations in umol/L (e.g. uM)
 armitageOutput_data.dt <- armitage_eval(tcdata=IVD_Manuscript_data,
@@ -243,7 +238,8 @@ armitageOutput_data.dt <- armitage_eval(tcdata=IVD_Manuscript_data,
 
 # run Kramer model, output concentrations in umol/L (e.g. uM)
 kramerOutput_data.dt <- kramer_eval(tcdata=IVD_Manuscript_data, 
-                                    surface.area.switch = FALSE,
+                                    surface.area.switch = TRUE,
+                                    user_assay_parameters = user_assay_parameters,
                                     restrict.ion.partitioning = TRUE)
 ```
 

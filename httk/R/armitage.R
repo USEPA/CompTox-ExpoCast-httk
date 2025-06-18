@@ -530,10 +530,6 @@ armitage_eval <- function(chem.cas=NULL,
         
         #bind the surface area
         #tcdata<-merge(tcdata[missing.rows,], temp)
-        print("first")
-        
-
-        
         
       }else if(c("assay_component_endpoint_name") %in% names(tcdata)){
         #if the code has the assay endpoints labeled but they have not been provided
@@ -546,16 +542,13 @@ armitage_eval <- function(chem.cas=NULL,
         #tcdata[missing.rows,] <- temp
         #tcdata<-merge(tcdata[missing.rows,], temp)
         
-        #print("second")
-        
       }else if(any(is.na(tcdata[missing.rows, well_number])) & !(c("assay_component_endpoint_name") %in% names(tcdata))){
         print(paste0("Either well_number or geometry must be defined for rows: ", 
                      paste(which(tcdata[, is.na(sarea) & is.na(well_number)]),
                            collapse = ",")))
         stop()
       }else{
-        print("second2")
-        
+
         #run surface area code  
         temp <- armitage_estimate_sarea(tcdata[missing.rows,])
         
@@ -574,15 +567,13 @@ armitage_eval <- function(chem.cas=NULL,
         if(any(is.na(tcdata[missing.rows,"cell_yield"]))){
           tcdata[missing.rows,"cell_yield"] <- temp[,"cell_yield"]
         }
-        
-        print("third")
+
       }
         
       }
       
     }
-  
-  print("fourth")
+
   
   #final check after surface area function
   if(any(is.na(this.FBSf)) & !"FBSf" %in% names(tcdata)){
@@ -592,7 +583,6 @@ armitage_eval <- function(chem.cas=NULL,
   
   #### Parameterize Armitage: ####
   tcdata <- parameterize_armitage(tcdata) #call parameterize_armitage(), overwrite tcdata with the updated variables
-  print("fifth")
   
   #### Run Armitage Code: ####
   
