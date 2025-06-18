@@ -62,10 +62,6 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
     tcdata[,c("option.bottom","option.plastic")[!(c("option.bottom","option.plastic")%in%names(tcdata))]] <- as.logical(NA)
   }
   
-  if(!(all(c("sarea","cell_yield","v_working")%in%names(tcdata)))){
-    tcdata[,c("sarea","cell_yield","v_working")[!(c("sarea","cell_yield","v_working")%in%names(tcdata))]] <- as.double(NA)
-  }
-  
   #if the user is taking advantage of the invitro.assay.params table:
   if(((c("assay_component_endpoint_name") %in% names(tcdata)))){
     
@@ -100,6 +96,11 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
   
   #if the user is not taking advantage of the invitro.assay.params table:
   if(!((c("assay_component_endpoint_name") %in% names(tcdata)))){
+    
+    # 
+    # if(!(all(c("sarea","cell_yield","v_working")%in%names(tcdata)))){
+    #   tcdata[,c("sarea","cell_yield","v_working")[!(c("sarea","cell_yield","v_working")%in%names(tcdata))]] <- as.double(NA)
+    # }
   
     #set up well parameter table
     well.desc.list <- c("flat_bottom","standard","clear_flat_bottom")
@@ -490,7 +491,7 @@ armitage_eval <- function(chem.cas=NULL,
                             conc_ser_lip = this.conc_ser_lip, Vdom = this.Vdom)
   
   check.list <- c("duow","duaw", "SFkow", "SFmw", "SFbsa_acidic", "SFbsa_basic", "SFplw",
-                  "gkmw_n","gkbsa_n","gkpl_n","ksalt", "sarea", "well_number","v_total")
+                  "gkmw_n","gkbsa_n","gkpl_n","ksalt")
   
   req.list <- c("Tsys","Tref","option.kbsa2","option.swat2", "option.kpl2",
                 "option.bottom", "option.plastic",
@@ -521,33 +522,77 @@ armitage_eval <- function(chem.cas=NULL,
         missing.rows <- 1:length(tcdata[,casrn])
       }
       
-      #add something here to allow it if you have the assay parameter defined
-      if(any(is.na(tcdata[missing.rows, well_number])) & !(c("assay_component_endpoint_name") %in% names(tcdata))){
+      if(c("assay_component_endpoint_name") %in% names(tcdata) & (exists("user_assay_parameters"))){
+        #if the code has the assay endpoints labeled and they have been provided
+        
+        #run the surface area code with the user entered assay parameters
+        tcdata <- armitage_estimate_sarea(tcdata[missing.rows,], user_assay_parameters)
+        
+        #bind the surface area
+        #tcdata<-merge(tcdata[missing.rows,], temp)
+        print("first")
+        
+
+        
+        
+      }else if(c("assay_component_endpoint_name") %in% names(tcdata)){
+        #if the code has the assay endpoints labeled but they have not been provided
+        
+        #run the surface area code and let it provide the standardized assay info (or error out)
+        tcdata <- armitage_estimate_sarea(tcdata[missing.rows,])
+        
+        #bind the surface area
+        #tcdata[missing.rows,] <- temp[tcdata[missing.rows,],on=.(assay_component_endpoint_name)]
+        #tcdata[missing.rows,] <- temp
+        #tcdata<-merge(tcdata[missing.rows,], temp)
+        
+        #print("second")
+        
+      }else if(any(is.na(tcdata[missing.rows, well_number])) & !(c("assay_component_endpoint_name") %in% names(tcdata))){
         print(paste0("Either well_number or geometry must be defined for rows: ", 
                      paste(which(tcdata[, is.na(sarea) & is.na(well_number)]),
                            collapse = ",")))
         stop()
       }else{
-        temp <- armitage_estimate_sarea(tcdata[missing.rows,], user_assay_parameters)
-        tcdata[missing.rows,"sarea"] <- temp[,"sarea"]
+        print("second2")
+        
+        #run surface area code  
+        temp <- armitage_estimate_sarea(tcdata[missing.rows,])
+        
+        if(any(is.na(tcdata[missing.rows,"sarea"]))){
+          tcdata[missing.rows,"sarea"] <- temp[,"sarea"]
+        }
+        
         if(any(is.na(tcdata[missing.rows,"v_total"]))){
           tcdata[missing.rows,"v_total"] <- temp[,"v_total"]
         }
-        tcdata[missing.rows,"v_working"] <- temp[,"v_working"]
-        tcdata[missing.rows,"cell_yield"] <- temp[,"cell_yield"]
+        
+        if(any(is.na(tcdata[missing.rows,"v_working"]))){
+          tcdata[missing.rows,"v_working"] <- temp[,"v_working"]
+        }
+        
+        if(any(is.na(tcdata[missing.rows,"cell_yield"]))){
+          tcdata[missing.rows,"cell_yield"] <- temp[,"cell_yield"]
+        }
+        
+        print("third")
+      }
+        
       }
       
     }
-  }
+  
+  print("fourth")
   
   #final check after surface area function
   if(any(is.na(this.FBSf)) & !"FBSf" %in% names(tcdata)){
     stop("this.FBSf must be defined or FBSf must be a column in tcdata")
   }
   
+  
   #### Parameterize Armitage: ####
   tcdata <- parameterize_armitage(tcdata) #call parameterize_armitage(), overwrite tcdata with the updated variables
-  
+  print("fifth")
   
   #### Run Armitage Code: ####
   
