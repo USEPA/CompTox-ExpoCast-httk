@@ -6,6 +6,7 @@
 \usage{
 armitage_estimate_sarea(
   tcdata = NA,
+  user_assay_parameters = NA,
   this.well_number = 384,
   this.cell_yield = NA,
   this.v_working = NA
@@ -13,7 +14,8 @@ armitage_estimate_sarea(
 }
 \arguments{
 \item{tcdata}{A data table with well_number corresponding to plate format,
-optionally include v_working, sarea, option.bottom, and option.plastic}
+optionally include v_working, sarea, option.bottom, and option.plastic OR 
+with assay_component_endpoint_name corresponding to an entry in invitro.assay.params.}
 
 \item{this.well_number}{For single value, plate format default is 384, used
 if is.na(tcdata)==TRUE}

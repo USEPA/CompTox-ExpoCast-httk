@@ -17,9 +17,6 @@ A data frame / data table with 11 rows and 8 variables:
   \item{v_working}{Working volume of well in uL}
 }
 }
-\source{
-\url{https://www.corning.com/catalog/cls/documents/application-notes/CLS-AN-209.pdf}
-}
 \usage{
 well_param
 }

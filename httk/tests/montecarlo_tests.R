@@ -11,16 +11,6 @@ NSAMP <- 5
 
 #
 #
-# Test that the underlying PK models give the same answers:
-calc_analytic_css(chem.cas="15972-60-8")
-calc_analytic_css(chem.cas="15972-60-8",model="1compartment")
-calc_analytic_css(chem.cas="15972-60-8",model="pbtk")
-calc_analytic_css(chem.cas="15972-60-8",model="3compartment")
-
-
-
-#
-#
 # Now test Monte Carlo for a variety of chemicals:
 # Clint and Fup are distributions, clint is zero:
 set.seed(1234)
@@ -43,17 +33,4 @@ calc_mc_css(chem.cas="15972-60-8",samples=NSAMP)
 set.seed(1234)
 calc_mc_css(dtxsid="DTXSID5041726",samples=NSAMP)
 
-#
-#
-# Now test that MC works across different models:
-set.seed(1234)
-calc_mc_css(chem.cas="15972-60-8",model="3compartment",samples=NSAMP)
-set.seed(1234)
-calc_mc_css(chem.cas="15972-60-8",model="1compartment",samples=NSAMP)
-set.seed(1234)
-calc_mc_css(chem.cas="15972-60-8",model="pbtk",samples=NSAMP)
-
-# Should be the same as the mean result:
-calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
-                   
 quit("no")

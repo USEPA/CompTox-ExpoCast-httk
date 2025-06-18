@@ -13,6 +13,7 @@ armitage_eval(
   this.well_number = 384,
   this.FBSf = NA_real_,
   tcdata = NA,
+  user_assay_parameters = NA,
   this.sarea = NA_real_,
   this.v_total = NA_real_,
   this.v_working = NA_real_,
@@ -22,6 +23,8 @@ armitage_eval(
   this.option.kbsa2 = FALSE,
   this.option.swat2 = FALSE,
   this.option.kpl2 = FALSE,
+  this.option.plastic = TRUE,
+  this.option.bottom = TRUE,
   this.pseudooct = 0.01,
   this.memblip = 0.04,
   this.nlom = 0.05,
@@ -137,6 +140,7 @@ sarea \tab Surface area of well \tab m^2 \cr
 v_total \tab Total volume of well \tab uL \cr       
 v_working \tab Filled volume of well \tab uL \cr     
 cell_yield \tab Number of cells \tab cells \cr    
+assay_component_endpoint_name \tab link to invitro.assay.params table \tab character \cr  
 gkow \tab The log10 octanol to water (PC) (logP)\tab log10 unitless ratio \cr          
 logHenry \tab The log10 Henry's law constant '\tab log10 unitless ratio \cr      
 gswat \tab The log10 water solubility (logWSol) \tab log10 mg/L \cr         

@@ -88,7 +88,7 @@
 #' @references 
 #' \insertAllCited{}
 #'
-#' @keywords 3compss
+#' @keywords 3compss steady-state
 calc_analytic_css_3compss <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid = NULL,

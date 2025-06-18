@@ -209,6 +209,10 @@ try(head(solve_fetal_pbtk(chem.cas = "6385-62-2")))
 # However, we can turn off checking for phys-chem properties, since we know
 # that  Diquat dibromide monohydrate is not too volatile:
 head(solve_fetal_pbtk(chem.cas = "6385-62-2", physchem.exclude = FALSE))
+
+# Try different ways to call the function:
+head(solve_fetal_pbtk(chem.cas="80-05-7"))
+head(solve_fetal_pbtk(parameters=parameterize_fetal_pbtk(chem.cas="80-05-7")))
 }
 
 }

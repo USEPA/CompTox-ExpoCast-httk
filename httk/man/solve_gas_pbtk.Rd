@@ -302,6 +302,13 @@ head(solve_gas_pbtk(chem.name="lindane", days=2.5, output.units="mg/L"))
 # Convert just the plasma to mg/L:
 head(solve_gas_pbtk(chem.name="lindane", days=2.5, 
                     output.units=list(Cplasma="mg/L")))
+
+signif(head(solve_gas_pbtk(chem.cas="129-00-0",times=c(0,0.1,0.05),
+                    method = "lsode",mf = 10)),2)
+signif(head(solve_gas_pbtk(
+  parameters=parameterize_gas_pbtk(chem.cas="129-00-0"),
+  times=c(0,0.1,0.05),
+  method = "lsode",mf = 10)),2)
 }
 
 }

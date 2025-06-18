@@ -223,10 +223,10 @@ propagate uncertainty. The more samples that are used, the more stable the
 results are (that is, the less likely they are to change if a different random
 sequence is used). However, the more samples that are used, the longer it takes
 to run. So, to speed up how fast these examples run, we specify here that we
-only want to use 25 samples, even though the actual **httk** default is 1000.
+only want to use 5 samples, even though the actual **httk** default is 1000.
 Increase this number to get more stable (and accurate) results:
 ```{r MC_samples, eval = execute.vignette}
-NSAMP <- 25
+NSAMP <- 5
 ```
 
 # Step One: Loading *In Vitro* Screening Data
@@ -383,9 +383,11 @@ estimated to cause 10%, and "ACC" is the "activity concentration at cutoff" are
 which is the concentration that first causes statistically significant activity.
 See [Filer et al. (2017)](https://doi.org/10.1093/bioinformatics/btw680) figure 
 three for additional discussion.
+
+To speed things up we only look at first ten chemials:
 ```{r toxcast_summary.table, eval = TRUE}
 toxcast.table <- NULL
-for (this.id in unique(example.toxcast$dsstox_substance_id))
+for (this.id in unique(example.toxcast$dsstox_substance_id)[1:10])
 {
   this.subset <- subset(example.toxcast, dsstox_substance_id == this.id)
   these.hits <- subset(this.subset, hitc==1)

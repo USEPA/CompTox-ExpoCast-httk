@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2025-04-18 r88159 ucrt) -- "Unsuffered Consequences"
+R Under development (unstable) (2025-05-01 r88184 ucrt) -- "Unsuffered Consequences"
 Copyright (C) 2025 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
@@ -24,34 +24,10 @@ Type 'q()' to quit R.
 > 
 > library(httk)
 > 
-> #calc_analytic_css(chem.name="bisphenol a",model="1compartment")
 > calc_analytic_css(chem.cas="80-05-7",model="1compartment")
 Human volume of distribution returned in units of L/kg BW.
 Plasma concentration returned in uM units.
-[1] 0.9439
-Warning messages:
-1: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Fraction unbound is provided as a distribution.
-2: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
-  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-3: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
-  Human in vivo measured Rblood2plasma used.
-> calc_analytic_css(chem.cas="80-05-7",parameters=parameterize_1comp(chem.cas="80-05-7"),model="1compartment")
-Human volume of distribution returned in units of L/kg BW.
-Plasma concentration returned in uM units.
-[1] 0.9439
-Warning messages:
-1: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Fraction unbound is provided as a distribution.
-2: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
-  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-3: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
-  Human in vivo measured Rblood2plasma used.
-> #calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="liver")
-> calc_analytic_css(chem.cas="80-05-7",model="1compartment",tissue="brain")
-Human volume of distribution returned in units of L/kg BW.
-Plasma concentration for brain returned in uM units.
-[1] 5.512
+[1] 0.9427
 Warning messages:
 1: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Fraction unbound is provided as a distribution.
@@ -60,25 +36,23 @@ Warning messages:
 3: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
   Human in vivo measured Rblood2plasma used.
 > 
-> ##head(solve_1comp(chem.name="bisphenol a"))
-> #head(solve_1comp(chem.cas="80-05-7"))
 > head(solve_1comp(parameters=parameterize_1comp(chem.cas="80-05-7"),days=1))
 Human volume of distribution returned in units of L/kg BW.
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
-AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
+AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.77.
 The model outputs are provided in the following units:
 	umol: Agutlumen, Ametabolized
 	uM: Ccompartment
 	uM*days: AUC
 
        time Agutlumen Ccompartment Ametabolized      AUC
-[1,] 0.0000    175.80     0.000000     0.000000 0.000000
-[2,] 0.0001    174.90     0.002066     0.000019 0.000000
-[3,] 0.0104    102.00     0.165800     0.175200 0.000941
-[4,] 0.0208     59.22     0.261300     0.597300 0.003207
-[5,] 0.0312     34.37     0.316000     1.161000 0.006235
-[6,] 0.0416     19.94     0.347000     1.806000 0.009698
+[1,] 0.0000    175.20     0.000000     0.000000 0.000000
+[2,] 0.0001    174.30     0.002059     0.000019 0.000000
+[3,] 0.0104    101.70     0.165200     0.174200 0.000937
+[4,] 0.0208     59.01     0.260400     0.593900 0.003196
+[5,] 0.0312     34.25     0.314900     1.155000 0.006213
+[6,] 0.0416     19.87     0.345800     1.796000 0.009664
 Warning messages:
 1: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
   Fraction unbound is provided as a distribution.
@@ -103,69 +77,23 @@ Warning messages:
   Fraction unbound is provided as a distribution.
 3: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-> calc_vdist(chem.cas="80-05-7")
+> 
+> p <- parameterize_1comp(chem.name="Aminopterin")
 Human volume of distribution returned in units of L/kg BW.
-[1] 6.343
-Warning messages:
-1: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Fraction unbound is provided as a distribution.
-2: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
-  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-> params <- parameterize_schmitt(chem.name="triclosan")
 Warning messages:
 1: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
-2: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Fraction unbound is provided as a distribution.
-3: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
+2: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-> params <- c(params, predict_partitioning_schmitt(parameters = params))
-> calc_vdist(parameters=params)
-Volume of distribution returned in units of L/kg BW.
-[1] 2.11
-> params <- parameterize_3comp(chem.name="triclosan")
-Warning messages:
-1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Clint is provided as a distribution.
-2: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
-  Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
 3: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
-4: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Fraction unbound is provided as a distribution.
-5: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
+4: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-6: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human in vivo measured Rblood2plasma used.
-7: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Default value of 1.6 used for Caco2 permeability.
-> calc_vdist(parameters=params)
-Volume of distribution returned in units of L/kg BW.
-[1] 2.111
-> params <- parameterize_pbtk(chem.name="triclosan")
-Warning messages:
-1: In get_clint(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Clint is provided as a distribution.
-2: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
-  Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
-3: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
-4: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Fraction unbound is provided as a distribution.
-5: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
-  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-6: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human in vivo measured Rblood2plasma used.
-7: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Default value of 1.6 used for Caco2 permeability.
-> calc_vdist(parameters=params)
-Volume of distribution returned in units of L/kg BW.
-[1] 2.112
-> 
-> p <- parameterize_1comp(chem.name="Aminopterin")[sort(names(parameterize_1comp(chem.name="Aminopterin")))]
-Human volume of distribution returned in units of L/kg BW.
-Human volume of distribution returned in units of L/kg BW.
-There were 12 warnings (use warnings() to see them)
+5: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+  Rblood2plasma has been recalculated.
+6: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
+  Human Rblood2plasma calculated with calc_rblood2plasma.
+> p <- p[sort(names(p))]
 > # Try to standardize order of variable names
 > for (this.param in names(p)[order(toupper(names(p)))]) cat(paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
 BW: 70

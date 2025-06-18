@@ -305,6 +305,14 @@ model.list[[THIS.MODEL]]$httkpop.params <- c(
   "Qliver",
   "Ratioblood2plasma")
 
+model.list[[THIS.MODEL]]$invitro.params <- c("Funbound.plasma",
+                                             "Clint",
+                                             "unadjusted.Funbound.plasma",
+                                             "fup.mean",
+                                             "Funbound.plasma.adjustment",
+                                             "Caco2.Pab",
+                                             "Fabsgut")
+
 # Do we need to recalculate partition coefficients when doing Monte Carlo?
 model.list[[THIS.MODEL]]$calcpc <- TRUE
 
