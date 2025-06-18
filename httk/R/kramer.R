@@ -72,6 +72,7 @@ kramer_eval <- function(chem.cas=NULL,
                         nomconc.vector = 1,            #Nominal concentration vector (uM)
                         this.well_number = 384,        #Number of wells per plate
                         tcdata = NA,                   #Data.table with casrn, nomconc, and well_number
+                        user_assay_parameters = NA,    #Data.table with user-entered assay parameters (optional)
                         this.serum = NA_real_,         #Concentration of serum in media (%)
                         this.gKow = NA_real_,          #Log octanol-water PC (unitless)
                         this.Hconst = NA_real_,        #Henry's law constant (atm*m^3/mol)
@@ -149,6 +150,8 @@ kramer_eval <- function(chem.cas=NULL,
   #### Call Surface Area Function ####
   
   
+  #### Call Surface Area Function ####
+  
   #check surface area on/off
   if(surface.area.switch){
     if(!all(names(tcdata) %in% c("sarea", "v_total", "v_working", "cell_yield")) |
@@ -161,22 +164,56 @@ kramer_eval <- function(chem.cas=NULL,
         missing.rows <- 1:length(tcdata[,casrn])
       }
       
-      if(any(is.na(tcdata[missing.rows, well_number]))){
+      if(c("assay_component_endpoint_name") %in% names(tcdata) & (exists("user_assay_parameters"))){
+        #if the code has the assay endpoints labeled and they have been provided
+        
+        #run the surface area code with the user entered assay parameters
+        tcdata <- armitage_estimate_sarea(tcdata[missing.rows,], user_assay_parameters)
+        
+        #bind the surface area
+        #tcdata<-merge(tcdata[missing.rows,], temp)
+        
+      }else if(c("assay_component_endpoint_name") %in% names(tcdata)){
+        #if the code has the assay endpoints labeled but they have not been provided
+        
+        #run the surface area code and let it provide the standardized assay info (or error out)
+        tcdata <- armitage_estimate_sarea(tcdata[missing.rows,])
+        
+        #bind the surface area
+        #tcdata[missing.rows,] <- temp[tcdata[missing.rows,],on=.(assay_component_endpoint_name)]
+        #tcdata[missing.rows,] <- temp
+        #tcdata<-merge(tcdata[missing.rows,], temp)
+        
+      }else if(any(is.na(tcdata[missing.rows, well_number])) & !(c("assay_component_endpoint_name") %in% names(tcdata))){
         print(paste0("Either well_number or geometry must be defined for rows: ", 
                      paste(which(tcdata[, is.na(sarea) & is.na(well_number)]),
                            collapse = ",")))
         stop()
       }else{
+        
+        #run surface area code  
         temp <- armitage_estimate_sarea(tcdata[missing.rows,])
-        tcdata[missing.rows,"sarea"] <- temp[,"sarea"]
+        
+        if(any(is.na(tcdata[missing.rows,"sarea"]))){
+          tcdata[missing.rows,"sarea"] <- temp[,"sarea"]
+        }
+        
         if(any(is.na(tcdata[missing.rows,"v_total"]))){
           tcdata[missing.rows,"v_total"] <- temp[,"v_total"]
         }
-        tcdata[missing.rows,"v_working"] <- temp[,"v_working"]
-        tcdata[missing.rows,"cell_yield"] <- temp[,"cell_yield"]
+        
+        if(any(is.na(tcdata[missing.rows,"v_working"]))){
+          tcdata[missing.rows,"v_working"] <- temp[,"v_working"]
+        }
+        
+        if(any(is.na(tcdata[missing.rows,"cell_yield"]))){
+          tcdata[missing.rows,"cell_yield"] <- temp[,"cell_yield"]
+        }
+        
       }
       
     }
+    
   }
   
   #### Parameterize Kramer: ####

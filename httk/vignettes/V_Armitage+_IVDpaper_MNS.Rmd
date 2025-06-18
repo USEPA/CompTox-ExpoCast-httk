@@ -89,11 +89,11 @@ library(devtools) # to run httk
 #suppressWarnings(devtools::load_all("httk")) # for armitage
 
 #save figures and tables to working directory: yes/no
-save_output = TRUE
+save_output = FALSE
 
 #for saving outputs
 data.date <- "10JUN2025"
-path_out <- "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/manuscript figures 10JUN/"
+path_out <- "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/"
 
 
 ```
@@ -219,6 +219,8 @@ IVD_Manuscript_data[,ivpnames[(ivpnames %in% names(IVD_Manuscript_data))]]<- NUL
 
 checkpoint<-copy(IVD_Manuscript_data)
 
+#names(parameters_only)
+
 ```
 
 
@@ -226,23 +228,19 @@ checkpoint<-copy(IVD_Manuscript_data)
 # Run the in vitro distribution models
 ```{r run_IVD_models, eval = execute.vignette}
 
-# run Armitage model, output concentrations in umol/L (e.g. uM)
-armitageOutput_data.dt <- armitage_eval(tcdata=IVD_Manuscript_data, 
-                                        surface.area.switch = TRUE,
-                                        user_assay_parameters = user_assay_parameters,
-                                        restrict.ion.partitioning = TRUE)
 
-
-#need to also incorporate the fbsf and other columns in the sarea function
-
-
-#IVD_Manuscript_data[missing.rows,"sarea"] <- as.numeric(unlist(output[,"sarea"]))
+# # run Armitage model, output concentrations in umol/L (e.g. uM)
+armitageOutput_data.dt <- armitage_eval(tcdata=IVD_Manuscript_data,
+                                       surface.area.switch = TRUE,
+                                       user_assay_parameters = user_assay_parameters,
+                                       restrict.ion.partitioning = TRUE)
 
 
 
 # run Kramer model, output concentrations in umol/L (e.g. uM)
 kramerOutput_data.dt <- kramer_eval(tcdata=IVD_Manuscript_data, 
-                                    surface.area.switch = FALSE,
+                                    surface.area.switch = TRUE,
+                                    user_assay_parameters = user_assay_parameters,
                                     restrict.ion.partitioning = TRUE)
 ```
 
@@ -267,14 +265,15 @@ if(save_output){
   write.csv(combodata, file = paste0(path_out,"ManuscriptOutput_",data.date,"_",Sys.Date(),".csv"))
 }
 
-combodata %>% dplyr::filter(Citation.x== "Tox21" | Citation.x == "Steve Ferguson") %>% select(ChemicalName.x) %>% distinct
-
-#70 datapoints from them, 13 chemicals
-
-combodata %>% dplyr::filter(Citation.x != "Tox21" & Citation.x != "Steve Ferguson") %>% select(ChemicalName.x) %>% distinct
-#104 data points, 43 chemicals
+# combodata %>% dplyr::filter(Citation.x== "Tox21" | Citation.x == "Steve Ferguson") %>% select(ChemicalName.x) %>% distinct
+# 
+# #70 datapoints from them, 13 chemicals
+# 
+# combodata %>% dplyr::filter(Citation.x != "Tox21" & Citation.x != "Steve Ferguson") %>% select(ChemicalName.x) %>% distinct
+# #104 data points, 43 chemicals
 
 ```
+
 
 # Main Paper Plots:
 
@@ -289,7 +288,7 @@ combodata %>% dplyr::filter(Citation.x != "Tox21" & Citation.x != "Steve Ferguso
 #Armitage RMSLE:
 arm_rmsle_long<-rmsle((Armitage.dt$CellConcentration_uM),(Armitage.dt$ccells))
 arm_rmsle<-round(arm_rmsle_long, 2)
-#1.28
+#1.29
 
 #Armitage r^2:
 ml_arm_overall = lm(CellConcentration_uM~ccells, data = Armitage.dt)
@@ -322,7 +321,7 @@ Armitage_ccell<-ggplot(Armitage.dt, aes(ccells, CellConcentration_uM,
 #Kramer RMSLE:
 kram_rmsle_long<-rmsle((Kramer.dt$CellConcentration_uM),(Kramer.dt$concentration_cells))
 kram_rmsle<-round(kram_rmsle_long, 2)
-#1.59
+#1.64
 
 #Kramer r^2:
 ml_kram_overall = lm(CellConcentration_uM~concentration_cells, data = Kramer.dt)
@@ -405,45 +404,77 @@ print(Ccells_comboplot)
 ```{r multiobs_intracel_plot, eval = execute.vignette}
 
 #how many chemicals only have more than one observation?
-multiObsChemnameList<-Armitage.dt %>% group_by(ChemicalName) %>% summarize(n=n()) %>% dplyr::filter(n>=2) %>% select(ChemicalName) %>% distinct()
-#20 chemicals
+#multiObsChemnameList<-Armitage.dt %>% group_by(ChemicalName) %>% summarize(n=n()) %>% dplyr::filter(n>=2)  %>% distinct()
+#20 chemicals have multiple observations 
+#but we want multiple observations AND multiple nomconcs reported
+
+#Armitage.multobs.dt %>% count(ChemicalName, NominalDose_uM, Citation)
+#some of these have super close nomconcs because they are experimentally measured - not really relevant for this comparison because they are replicates
+#chemicals to remove:
+#Hexachlorobenzene, Malathion, Pentachlorophenol, Propiconazole (all of the chemicals from Stadnicka, 2014 which makes sense)
+
+multiObsChemnameList<-Armitage.dt %>% dplyr::filter(Citation != "Stadnicka, 2014") %>% 
+  count(ChemicalName, NominalDose_uM) %>% 
+  count(ChemicalName) %>% dplyr::filter(n>=2) %>% select(ChemicalName) %>% distinct()
+#10 chemicals with multiple nominal doses measured
+
+Armitage.multobs.dt_og <- Armitage.dt %>% 
+  dplyr::filter(ChemicalName %in% multiObsChemnameList$ChemicalName)
+
+Kramer.multobs.dt_og <- Kramer.dt %>% 
+  dplyr::filter(ChemicalName %in% multiObsChemnameList$ChemicalName)
+
+Nominal.multobs.dt_og <- Nominal.dt %>% 
+  dplyr::filter(ChemicalName %in% multiObsChemnameList$ChemicalName)
+
+#each have 89 observations
+
+#need to merge the lines with multiple observations for the same nomconc (ie tox21) because they are pulled in from the crossover 
+#with the above call  
+#isolate the lines that fall into this category
 
 #pull out the observations for these chemicals
-Armitage.multobs.dt <- Armitage.dt %>% 
-  dplyr::filter(ChemicalName %in% multiObsChemnameList$ChemicalName)
+Armitage.multobs.dt<-Armitage.multobs.dt_og %>% group_by(ChemicalName, NominalDose_uM) %>% 
+  mutate(mean_measuredccell = mean(CellConcentration_uM),
+         mean_predictedccell = mean(ccells)) %>% 
+  select(ChemicalName, NominalDose_uM, mean_measuredccell, mean_predictedccell) %>% distinct()
 
-Kramer.multobs.dt <- Kramer.dt %>% 
-  dplyr::filter(ChemicalName %in% multiObsChemnameList$ChemicalName)
+Kramer.multobs.dt<-Kramer.multobs.dt_og %>% group_by(ChemicalName, NominalDose_uM) %>% 
+  mutate(mean_measuredccell = mean(CellConcentration_uM),
+         mean_predictedccell = mean(concentration_cells)) %>% 
+  select(ChemicalName, NominalDose_uM, mean_measuredccell, mean_predictedccell) %>% distinct()
 
-Nominal.multobs.dt <- Nominal.dt %>% 
-  dplyr::filter(ChemicalName %in% multiObsChemnameList$ChemicalName)
+Nominal.multobs.dt<-Nominal.multobs.dt_og %>% group_by(ChemicalName, NominalDose_uM) %>% 
+  mutate(mean_measuredccell = mean(CellConcentration_uM),
+         mean_predictedccell = mean(NominalDose_uM)) %>% 
+  select(ChemicalName, NominalDose_uM, mean_measuredccell, mean_predictedccell) %>% distinct()
+#down to 50 observations because the duplicates have been averaged
 
-#each have 140 observations
 
 #now plot
 
 #ARMITAGE
 
 #Armitage RMSLE:
-arm_mult_rmsle_long<-rmsle((Armitage.multobs.dt$CellConcentration_uM),(Armitage.multobs.dt$ccells))
+arm_mult_rmsle_long<-rmsle((Armitage.multobs.dt$mean_measuredccell),(Armitage.multobs.dt$mean_predictedccell))
 arm_mult_rmsle<-round(arm_mult_rmsle_long, 2)
-#1.23
+#1.27
 
 #r squared 
-ml_arm <- lm(CellConcentration_uM~ccells, data = Armitage.multobs.dt)
+ml_arm <- lm(mean_measuredccell~mean_predictedccell, data = Armitage.multobs.dt)
 rsq_armitage_mult <- summary(ml_arm)$r.squared
-#0.251417
+#0.850567
 
 # now plot
-Armitage_ccell_mult<-ggplot(Armitage.multobs.dt, aes(ccells, CellConcentration_uM, 
+Armitage_ccell_mult<-ggplot(Armitage.multobs.dt, aes(mean_predictedccell, mean_measuredccell, 
                         colour = ChemicalName)) + 
                         geom_point() +
                         geom_abline(intercept=0,slope=1, linetype = "dashed") +
                         geom_smooth(method=lm, se = FALSE) +
                         scale_y_continuous(labels = function(x) sprintf("%g", x), 
-                                           limits = c(0.00001, 400000), trans='log10') +
+                                           limits = c(0.0001, 400000), trans='log10') +
                         scale_x_continuous(labels = function(x) sprintf("%g", x),
-                                           limits = c(0.00001, 400000), trans='log10') +
+                                           limits = c(0.0001, 400000), trans='log10') +
                         xlab("Armitage Predicted Intracellular Concentration (\U00B5M)") + 
                         ylab("Experimental Intracellular Concentration (\U00B5M)")+
                         labs(colour = "Chemical")+
@@ -460,25 +491,25 @@ Armitage_ccell_mult<-ggplot(Armitage.multobs.dt, aes(ccells, CellConcentration_u
 #KRAMER
 
 #Kramer RMSLE:
-kram_mult_rmsle_long<-rmsle((Kramer.multobs.dt$CellConcentration_uM),(Kramer.multobs.dt$concentration_cells))
+kram_mult_rmsle_long<-rmsle((Kramer.multobs.dt$mean_measuredccell),(Kramer.multobs.dt$mean_predictedccell))
 kram_mult_rmsle<-round(kram_mult_rmsle_long, 2)
-# 1.34
+# 1.60
 
 #r squared 
-ml_kram <- lm(CellConcentration_uM~concentration_cells, data = Kramer.multobs.dt)
+ml_kram <- lm(mean_measuredccell~mean_predictedccell, data = Kramer.multobs.dt)
 rsq_kramer_mult <- summary(ml_kram)$r.squared
-#0.04824134
+#0.8706758
 
 # now plot
-Kramer_ccell_mult<-ggplot(Kramer.multobs.dt, aes(concentration_cells, CellConcentration_uM, 
+Kramer_ccell_mult<-ggplot(Kramer.multobs.dt, aes(mean_predictedccell, mean_measuredccell, 
                         colour = ChemicalName)) + 
                         geom_point() +
                         geom_abline(intercept=0,slope=1, linetype = "dashed") + 
                         geom_smooth(method=lm, se = FALSE) +
                         scale_y_continuous(labels = function(x) sprintf("%g", x), 
-                                           limits = c(0.00001, 400000), trans='log10') +
+                                           limits = c(0.0001, 400000), trans='log10') +
                         scale_x_continuous(labels = function(x) sprintf("%g", x), 
-                                           limits = c(0.00001, 400000), trans='log10') +
+                                           limits = c(0.0001, 400000), trans='log10') +
                         xlab("Kramer Predicted Intracellular Concentration (\U00B5M)") + 
                         ylab("Experimental Intracellular Concentration (\U00B5M)")+
                         labs(colour = "Chemical")+
@@ -505,6 +536,15 @@ if(save_output){
 }
 
 print(Ccells_comboplot_mult)
+
+# Armitage.multobs.dt %>% 
+#   select(ChemicalName, Citation, NominalDose_uM, ccells) %>% 
+#   dplyr::filter(ChemicalName=="Triphenyl phosphate" | 
+#                   ChemicalName == "N-Phenyl-1,4-benzenediamine" |
+#                   ChemicalName == "Thiacloprid" |
+#                   ChemicalName == "Rosiglitazone")
+
+
 
 ```
 
@@ -877,22 +917,26 @@ for (chemical.option in unique(Armitage.multobs.dt$ChemicalName)){
 
   #RMSLE
   #armitage
-  RMSLE_armitage_mult <- rmsle((Chemical_DataList$CellConcentration_uM), (Chemical_DataList$ccells))
+  RMSLE_armitage_mult <- rmsle((Chemical_DataList$mean_measuredccell), (Chemical_DataList$mean_predictedccell))
   
   #r squared
   #armitage
-  ml = lm(CellConcentration_uM~ccells, data = Chemical_DataList)
+  ml = lm(mean_measuredccell~mean_predictedccell, data = Chemical_DataList)
   rsq_armitage_mult <- summary(ml)$r.squared 
+  
+  numberofpoints<-length(Chemical_DataList$ChemicalName)
   
   #create row
   current_row<- c(chemical.option, 
                   round(RMSLE_armitage_mult, 2),
-                  round(rsq_armitage_mult, 2))
+                  round(rsq_armitage_mult, 2), 
+                  numberofpoints)
   
   #append row
   multobs_rmsle_armitage <- rbind(multobs_rmsle_armitage, current_row) 
   
 }
+#numberofpoints = number of datapoints considered (includes averaged points)
 
 
 #run again for kramer
@@ -904,17 +948,20 @@ for (chemical.option in unique(Kramer.multobs.dt$ChemicalName)){
 
   #RMSLE
   #kramer
-  RMSLE_kramer_mult <- rmsle((Chemical_DataList$CellConcentration_uM), (Chemical_DataList$concentration_cells))
+  RMSLE_kramer_mult <- rmsle((Chemical_DataList$mean_measuredccell), (Chemical_DataList$mean_predictedccell))
   
     #r squared
   #kramer
-  ml = lm(CellConcentration_uM~concentration_cells, data = Chemical_DataList)
+  ml = lm(mean_measuredccell~mean_predictedccell, data = Chemical_DataList)
   rsq_kramer_mult <- summary(ml)$r.squared 
+  
+  numberofpoints<-length(Chemical_DataList$ChemicalName)
   
   #create row
   current_row<- c(chemical.option, 
                   round(RMSLE_kramer_mult, 2),
-                  round(rsq_kramer_mult, 2))
+                  round(rsq_kramer_mult, 2),
+                  numberofpoints)
   
   #append row
   multobs_rmsle_kramer <- rbind(multobs_rmsle_kramer, current_row) 
@@ -928,20 +975,22 @@ multobs_rmsle_armitage.dt<-as.data.table(multobs_rmsle_armitage)
 filt_multobs_rmsle_armitage.dt<-copy(multobs_rmsle_armitage.dt[, Name := V1] %>% 
   .[,RMSLE_arm := V2] %>% 
   .[,r2_arm := V3] %>% 
-  .[, c("Name", "RMSLE_arm", "r2_arm")])
+    .[,NumberofPts := V4] %>% 
+  .[, c("Name", "RMSLE_arm", "r2_arm", "NumberofPts")])
 
 multobs_rmsle_kramer.dt<-as.data.table(multobs_rmsle_kramer)
 filt_multobs_rmsle_kramer.dt<-copy(multobs_rmsle_kramer.dt[, Name := V1] %>% 
   .[,RMSLE_kram := V2] %>% 
   .[,r2_kram := V3] %>% 
-  .[, c("Name", "RMSLE_kram", "r2_kram")])
+    .[,NumberofPts := V4] %>% 
+  .[, c("Name", "RMSLE_kram", "r2_kram", "NumberofPts")])
 
 
 mult.dt<-merge(filt_multobs_rmsle_kramer.dt, filt_multobs_rmsle_armitage.dt)
 
 #for higher/lower rmsle comparison
-mult_HL<-copy(mult.dt[RMSLE_kram>RMSLE_arm, higherorlower:="higher"] %>% 
-  .[RMSLE_kram<RMSLE_arm, higherorlower:="lower"]) %>% 
+mult_HL<-copy(mult.dt[RMSLE_kram>RMSLE_arm, higherorlower:="Kramer higher"] %>% 
+  .[RMSLE_kram<RMSLE_arm, higherorlower:="kramer lower"]) %>% 
   .[, magnitude := as.numeric(RMSLE_kram)-as.numeric(RMSLE_arm)]
 
 mult_HL %>% count(higherorlower)
@@ -951,6 +1000,8 @@ if(save_output){
   write.csv(mult.dt, 
             file = paste0(path_out,"table_s3_",data.date,"_",Sys.Date(),".csv"))
 }
+
+
 
 ```
 ## Table S4: RMSLE and r^2 for acids and bases.
