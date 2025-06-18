@@ -24,39 +24,15 @@ Type 'q()' to quit R.
 > 
 > library(httk)
 > 
-> #calc_css(chem.name='nicotine')
-> 
-> calc_css(chem.name='nicotine', model="1compartment")
-Human volume of distribution returned in units of L/kg BW.
+> calc_css(chem.name='nicotine')
 $avg
-[1] 0.3883
+[1] 0.5541
 
 $frac
-[1] 0.9287
+[1] 0.9624
 
 $max
-[1] 0.8287
-
-$the.day
-[1] 6
-
-Warning messages:
-1: In get_fup(dtxsid = dtxsid, chem.name = chem.name, chem.cas = chem.cas,  :
-  Fraction unbound is provided as a distribution.
-2: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
-  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-3: In available_rblood2plasma(chem.cas = chem.cas, chem.name = chem.name,  :
-  Human in vivo measured Rblood2plasma used.
-> 
-> calc_css(chem.name='nicotine', model="3compartment")
-$avg
-[1] 0.3972
-
-$frac
-[1] 0.9599
-
-$max
-[1] 0.5511
+[1] 0.7429
 
 $the.day
 [1] 3
@@ -75,90 +51,17 @@ Warning messages:
 6: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
   Default value of 1.6 used for Caco2 permeability.
 > 
-> calc_css(chem.name="endrin")
-Extending simulation...
-Extending simulation...
-Extending simulation...
-$avg
-[1] 681.8
-
-$frac
-[1] 0.9299
-
-$max
-[1] 681.8
-
-$the.day
-[1] 3273
-
-Warning messages:
-1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
-  Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
-2: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
-3: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
-  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-4: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
-5: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
-  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
-6: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
-  Rblood2plasma has been recalculated.
-7: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
-  Human Rblood2plasma calculated with calc_rblood2plasma.
-8: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Default value of 1.6 used for Caco2 permeability.
-> 
 > calc_tkstats(chem.name='nicotine',days=10)
 Human plasma concentrations returned in uM units.
 AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 0.8238 .
 $AUC
-[1] 4.117
+[1] 5.737
 
 $peak
-[1] 1.217
+[1] 1.695
 
 $mean
-[1] 0.4117
-
-> 
-> calc_tkstats(dtxsid="DTXSID0020442",days=1)
-Plasma values returned in uM units.
-AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
-$AUC
-[1] 8.644
-
-$peak
-[1] 9.663
-
-$mean
-[1] 8.644
-
-> 
-> calc_tkstats(dtxsid="DTXSID0020442",days=10)
-Plasma values returned in uM units.
-AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
-$AUC
-[1] 272.9
-
-$peak
-[1] 40.72
-
-$mean
-[1] 27.29
-
-> 
-> calc_tkstats(dtxsid="DTXSID0020442",days=100)
-Plasma values returned in uM units.
-AUC is area under plasma concentration curve in uM * days units with Rblood2plasma = 2.11 .
-$AUC
-[1] 3910
-
-$peak
-[1] 44.42
-
-$mean
-[1] 39.1
+[1] 0.5737
 
 > 
 > calc_analytic_css(
@@ -172,8 +75,8 @@ $mean
 +     minimum.Funbound.plasma=1e-4),
 +   daily.dose=2)
 Plasma concentration for liver returned in uM units.
-[1] 31
-There were 14 warnings (use warnings() to see them)
+[1] 28.13
+There were 15 warnings (use warnings() to see them)
 > 
 > predict_partitioning_schmitt(chem.name='nicotine')
 $Kadipose2pu

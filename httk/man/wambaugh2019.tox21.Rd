@@ -7,9 +7,6 @@
 \format{
 A data.table with 401 rows and 6 columns
 }
-\source{
-\url{https://gaftp.epa.gov/comptox/High_Throughput_Screening_Data/Previous_Data/ToxCast_Data_Release_Oct_2015/MySQL_Data/}
-}
 \usage{
 wambaugh2019.tox21
 }

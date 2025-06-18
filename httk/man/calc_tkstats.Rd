@@ -101,6 +101,13 @@ calc_tkstats(chem.name='Bisphenol-A',days=100,stats='mean',model='3compartment')
 calc_tkstats(chem.name='Bisphenol-A',days=100,stats=c('peak','mean'),species='Rat')
 
 triclosan.stats <- calc_tkstats(days=10, chem.name = "triclosan")
+
+calc_tkstats(dtxsid="DTXSID0020442",days=1)
+
+calc_tkstats(dtxsid="DTXSID0020442",days=10)
+
+calc_tkstats(dtxsid="DTXSID0020442",days=100)
+
 }
 
 }

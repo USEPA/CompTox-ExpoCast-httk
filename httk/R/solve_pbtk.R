@@ -226,6 +226,26 @@
 #' # However, we can turn off checking for phys-chem properties, since we know
 #' # that  Diquat dibromide monohydrate is not too volatile:
 #' head(solve_pbtk(chem.cas = "6385-62-2", physchem.exclude = FALSE))
+#'
+#' # Caco-2 absorption tests:
+#' p <- parameterize_pbtk(chem.name="Aminopterin")
+#' # calculate what initial dose of 1 mg/kg should be in uM in the gut:
+#' initial.dose <- signif(1/1e3*1e6/p[["MW"]]*p[["BW"]]*p[["Fabsgut"]],
+#'                        4)
+#' # This should be the same as what solve_pbtk givesus:
+#' initial.dose == solve_pbtk(chem.cas="80-05-7",days=1)[1,"Agutlumen"]
+#' 
+#' # By default we now include calculation of Fabs and Fgut (we explicitly model
+#' # first-pass hepatic metabolism in the model "pbtk")
+#' head(solve_pbtk(chem.cas="80-05-7",days=1))
+#' # Therefore if we set Fabs = Fgut = 1 with keetit100=TRUE, we should get a
+#' # higher tissue concentrations:
+#' head(solve_pbtk(chem.cas="80-05-7",days=1,
+#'                 Caco2.options=list(keepit100=TRUE)))
+#'
+#' # Different ways to call the function:
+#' head(solve_pbtk(chem.cas="80-05-7",days=1))
+#' head(solve_pbtk(parameters=parameterize_pbtk(chem.cas="80-05-7"),days=1))
 #' }
 #' 
 #' @export solve_pbtk

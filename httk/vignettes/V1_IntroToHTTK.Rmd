@@ -122,10 +122,10 @@ propagate uncertainty. The more samples that are used, the more stable the
 results are (that is, the less likely they are to change if a different random
 sequence is used). However, the more samples that are used, the longer it takes
 to run. So, to speed up how fast these examples run, we specify here that we
-only want to use 25 samples, even though the actual **httk** default is 1000.
+only want to use 5 samples, even though the actual **httk** default is 1000.
 Increase this number to get more stable (and accurate) results:
 ```{r MC_samples, eval = TRUE}
-NSAMP <- 25
+NSAMP <- 5
 ```
 
 ### Suppressing Messages
