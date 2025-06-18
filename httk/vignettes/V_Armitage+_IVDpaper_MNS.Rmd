@@ -77,7 +77,7 @@ Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
 # Setup
 #
 #
-#library(httk)        # run Armitage.R in vitro distribution model
+library(httk)        # run Armitage.R in vitro distribution model
 library(tidyverse)   # data wrangling
 library(data.table)  # data table functionality
 library(ggplot2)     # plotting
@@ -85,8 +85,8 @@ library(ggpubr)      # arrange plots for publication
 
 ##delete once httk has been updated with armitage.R file and model_param_armitage.R and un-tab out library(httk) above
 library(devtools) # to run httk
-suppressWarnings(setwd("C:/Users/mscherer/httk-dev")) # to load httk
-suppressWarnings(devtools::load_all("httk")) # for armitage
+#suppressWarnings(setwd("C:/Users/mscherer/httk-dev")) # to load httk
+#suppressWarnings(devtools::load_all("httk")) # for armitage
 
 #save figures and tables to working directory: yes/no
 save_output = TRUE
@@ -132,9 +132,10 @@ Data sets were curated from the literature to evaluate the in vitro distribution
 #you know it is correct if IVD_Manuscript_data has 174 obs of 29 variables
 #IVD_Manuscript_data <- httk::IVD_Manuscript_data
 #load("C:/Users/mscherer/httk-dev/httk/data/ArmitagePlus_Vignette_2JUN25.RData")
-load("C:/Users/mscherer/httk-dev/httk/data/ArmitagePlus_Vignette_10JUN25.RData")
+#load("C:/Users/mscherer/httk-dev/httk/data/ArmitagePlus_Vignette_10JUN25.RData")
 
-
+# Get a working copy from HTTK:
+IVD_Manuscript_data <- httk::IVD_Manuscript_data
 cat(paste("Summarized data from ", 
           length(unique(IVD_Manuscript_data$Citation)),
           " studies covering ", 
