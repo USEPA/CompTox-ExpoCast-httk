@@ -452,15 +452,20 @@ specification in compartment_units for model ", model)
   if (recalc.clearance)
   {
   # Do we have all the parameters we need:
-    if (!all(param_names%in%names(parameters)))
+    if (!all(param_names %in% model.list[['3compartmentss']]$param.names))
     {
       if (is.null(chem.name) & is.null(chem.cas)) 
         stop('Chemical name or CAS must be specified to recalculate hepatic clearance.')
       ss.params <- parameterize_steadystate(chem.name=chem.name,
-                                            chem.cas=chem.cas)
+                                            chem.cas=chem.cas,
+                                            species = species)
+      ss.params[[names(ss.params) %in% names(parameters)]] <- 
+        parameters[[names(ss.params) %in% names(parameters)]]
+    } else {
+      ss.params <- 
+        parameters[names(parameters) %in% model.list[['3compartmentss']]$param.names]
     }
-    ss.params[[names(ss.params) %in% names(parameters)]] <- 
-      parameters[[names(ss.params) %in% names(parameters)]]
+    
     parameters[['Clmetabolismc']] <- do.call(calc_hep_clearance, 
                                              args=purrr::compact(c(
                                                parameters=ss.params,
