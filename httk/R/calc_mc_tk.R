@@ -240,12 +240,12 @@ calc_mc_tk<- function(chem.cas=NULL,
   # If parameters are supplied, adjusted.Clint and adjusted.Funbound.plasma
   # must be set to FALSE or else they will be adjusted twice in create_mc_samples()
   if (!is.null(parameters)) {
-    if (is.null(parameters[['adjusted.Clint']])) {
+    if (is.null(parameterize.args.list[['adjusted.Clint']])) {
       parameterize.args.list[['adjusted.Clint']] <- FALSE
       warning("Because parameters were specified, adjusted.Clint was set to FALSE in parameterize.args.list")
     }
-    if (is.null(parameters[['adjusted.Funbound.plasma']])) {
-      parameterize.args.list[['adjusted.Clint']] <- FALSE
+    if (is.null(parameterize.args.list[['adjusted.Funbound.plasma']])) {
+      parameterize.args.list[['adjusted.Funbound.plasma']] <- FALSE
       warning("Because parameters were specified, adjusted.Funbound.plasma was set to FALSE in parameterize.args.list")
     }
   }
