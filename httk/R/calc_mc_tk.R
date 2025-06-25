@@ -237,6 +237,19 @@ calc_mc_tk<- function(chem.cas=NULL,
   if (is.null(model.list[[model]]$solve.func)) 
     stop(paste("Kinetic model solver not available for model ",model,".",sep="")) 
 
+  # If parameters are supplied, adjusted.Clint and adjusted.Funbound.plasma
+  # must be set to FALSE or else they will be adjusted twice in create_mc_samples()
+  if (!is.null(parameters)) {
+    if (is.null(parameters[['adjusted.Clint']])) {
+      parameterize.args.list[['adjusted.Clint']] <- FALSE
+      warning("Because parameters were specified, adjusted.Clint was set to FALSE in parameterize.args.list")
+    }
+    if (is.null(parameters[['adjusted.Funbound.plasma']])) {
+      parameterize.args.list[['adjusted.Clint']] <- FALSE
+      warning("Because parameters were specified, adjusted.Funbound.plasma was set to FALSE in parameterize.args.list")
+    }
+  }
+  
   #
   #
   # CREATE A TABLE OF PARAMETER VALUES WHERE EACH ROW IS A SEPARATE SET OF 
