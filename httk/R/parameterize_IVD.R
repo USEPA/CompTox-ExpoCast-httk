@@ -57,16 +57,13 @@
 parameterize_IVD <- function(tcdata = NA, # optionally supply columns v_working, sarea, option.bottom, and option.plastic
                              casrn.vector = NA_character_, #CAS number
                              nomconc.vector = NA_real_,    #nominal concentration
-                             this.serum = NA_real_,        #serum concentration
                              this.well_number = 384,       #Number of wells per plate
                              this.sarea = NA_real_,        #Surface area of plastic exposed to medium (m^2)
                              this.cell_yield = NA_real_,   #Number of cells/well seeded
                              this.v_working = NA_real_,    #Volume of medium/well (uL)
                              this.v_total = NA_real_,      #Total volume of well (uL)
-                             this.pH = 7, 
-                             this.option.bottom = TRUE,    #Include the bottom of the well in surface area calculation
-                             this.option.plastic = FALSE,  #Automatically set surface area to zero
-                             surface.area.switch = TRUE)   #Calculate surface area of the well (assumes yes)
+                             this.pH = 7
+                             )
 {
   #do not delete:
   sarea <- v_working <- v_total <- cell_yield <- logHenry <- NULL
@@ -86,7 +83,6 @@ parameterize_IVD <- function(tcdata = NA, # optionally supply columns v_working,
   }
   
 
-  
 
 #  
 #  if(!all(names(tcdata) %in% c("sarea", "v_total", "v_working", "cell_yield")) | #not all the things we need present
