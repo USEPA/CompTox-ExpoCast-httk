@@ -43,8 +43,8 @@ be specified.}
 (\url{https://comptox.epa.gov/dashboard}) the chemical must be identified
 by either CAS, name, or DTXSIDs}
 
-\item{parameters}{Parameters from parameterize_steadystate. Not used with
-httkpop model.}
+\item{parameters}{Parameters from parameterize_MODEL, which must align with
+\code{model}. Not used with httkpop model.}
 
 \item{samples}{Number of samples generated in calculating quantiles.}
 
