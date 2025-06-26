@@ -93,7 +93,7 @@ save_output = FALSE
 
 #for saving outputs
 data.date <- "10JUN2025"
-path_out <- "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/"
+path_out <- "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/manuscript figures 18JUN/"
 
 
 ```
@@ -164,7 +164,7 @@ IVD_Manuscript_data[, assay_name := gsub(", ", "", IVD_Manuscript_data$Citation)
 
 #create the assay_component_endpoint_name column
 IVD_Manuscript_data[, assay_component_endpoint_name := paste("IVD", gsub(", ", "", assay_name), sep="")]
-
+IVD_Manuscript_data$assay_component_endpoint_name
 #tack on the "interesting" part for each assay to create the assay_component_endpoint_name 
   #(these ones have multiple concentrations or time points)
 IVD_Manuscript_data[assay_component_endpoint_name=="IVDBellwon2015b" |
@@ -176,6 +176,9 @@ IVD_Manuscript_data[assay_component_endpoint_name=="IVDBellwon2015b" |
 IVD_Manuscript_data[assay_component_endpoint_name=="IVDMundy2004" |
                       assay_component_endpoint_name=="IVDLundquist2014",
                 assay_component_endpoint_name := paste(paste(assay_component_endpoint_name, paste(ExposureDuration_hrs, "hr", sep = ""), sep="_"), paste(FBSf, "FBSf", sep = ""), sep = "_")]
+
+#pull a copy with the assay parameters so we have it for the options table
+options.IVD_Manuscript_data<-copy(IVD_Manuscript_data)
 
 ### pull in assay table ###
 
@@ -216,12 +219,11 @@ user_assay_parameters<-parameters_only
 ivpnames[2]<-NA #remove assay_component_endpoint_name bc we need to be able to reference it
 IVD_Manuscript_data[,ivpnames[(ivpnames %in% names(IVD_Manuscript_data))]]<- NULL
 
-checkpoint<-copy(IVD_Manuscript_data)
-
+#checkpoint<-copy(IVD_Manuscript_data)
+#
 #names(parameters_only)
 
 ```
-
 
 
 # Run the in vitro distribution models
@@ -268,8 +270,8 @@ if(save_output){
 # 
 # #70 datapoints from them, 13 chemicals
 # 
-# combodata %>% dplyr::filter(Citation.x != "Tox21" & Citation.x != "Steve Ferguson") %>% select(ChemicalName.x) %>% distinct
-# #104 data points, 43 chemicals
+# combodata %>% dplyr::filter(Citation.x != "Tox21" & Citation.x != "Steve Ferguson") %>% select(ChemicalName.x, Citation.x) %>% distinct(Citation.x)
+# #93 data points, 32 chemicals
 
 ```
 
@@ -698,6 +700,10 @@ armitageOutput_default.dt$gkaw_n
 armitageOutput_default.dt$ccells
 armitageOutput_curated.data.dt$ccells
 
+#save output with these values (Supplemental Materials T9)
+defaultvals<- armitageOutput_default.dt %>% select(Name, casrn, gkow_n, gkaw_n, pKa_Donor, pKa_Accept)
+curatedvals<-armitageOutput_curated.data.dt %>% select(Name, casrn, gkow_n, gkaw_n, pKa_Donor, pKa_Accept)
+
 #calculate rmsle
 
 #default values
@@ -758,8 +764,7 @@ if(save_output){
          curated_difference_httk_plot, width = 8, height = 5, dpi = 300)
 }
 
-names(armitageOutput_curated.data.dt)
-armitageOutput_curated.data.dt %>% select(Name, Arnot_pka, Arnot_pkb, `log KOW,N`, `log KAW,N`)
+
 ```
 
 
@@ -789,14 +794,15 @@ combodata %>% arrange(RMSLE_nominal_by_chem) %>% select(ChemicalName.x, Citation
 ```{r}
 
 unique(IVD_Manuscript_data %>% dplyr::filter(is.na(ExperimentalDose_uM)) %>% select(Citation))
-#9 citations did not measure experimental dose at all
-#132 observations
+#8 citations did not measure experimental dose at all
+#121 observations
 
 IVD_Manuscript_data %>% dplyr::filter(!(is.na(ExperimentalDose_uM))) %>% select(Citation, nomconc, NominalDose_uM, ExperimentalDose_uM)
+unique(IVD_Manuscript_data %>% dplyr::filter(!(is.na(ExperimentalDose_uM))) %>% select(Citation))
 #6 citations did measure experimental dose
 #42 observations
 
-exp_nom.dt<-copy(IVD_Manuscript_data[!(is.na(ExperimentalDose_uM)),]) #25 entries
+exp_nom.dt<-copy(IVD_Manuscript_data[!(is.na(ExperimentalDose_uM)),]) #42 entries
 #unique(exp_nom.dt$Citation) #6 citations
 
 #run armitage with nomconc as NominalDose_uM.x
@@ -804,14 +810,16 @@ arm_nomconc<-copy(exp_nom.dt[, nomconc := NominalDose_uM])
 
 # run Armitage model, output concentrations in umol/L (e.g. uM)
 armitageOutput_arm_nomconc <- armitage_eval(tcdata=arm_nomconc, 
-                                        surface.area.switch = FALSE,
+                                            surface.area.switch = TRUE,
+                                       user_assay_parameters = user_assay_parameters,
                                         restrict.ion.partitioning = TRUE)
 
 #run armitage with nomconc as ExperimentalDose_uM.x
 arm_expconc<-copy(exp_nom.dt[, nomconc := ExperimentalDose_uM])
 
 armitageOutput_arm_expconc <- armitage_eval(tcdata=arm_expconc, 
-                                        surface.area.switch = FALSE,
+                                            surface.area.switch = TRUE,
+                                       user_assay_parameters = user_assay_parameters,
                                         restrict.ion.partitioning = TRUE)
 
 #Armitage NOMCONC RMSLE:
@@ -1162,7 +1170,6 @@ if(save_output){
 
 
 ##filter to just the ones we can run with the surface area calculation since option.plastic and option.bottom require that function:
-options.IVD_Manuscript_data<-copy(IVD_Manuscript_data)
 options.IVD_Manuscript_data<-options.IVD_Manuscript_data[!is.na(well_number), ] %>% 
   .[,sarea:=NULL]  #delete sarea so the surface area function will run 
 #136 out of the original 163 observations
@@ -1171,7 +1178,9 @@ options.IVD_Manuscript_data<-options.IVD_Manuscript_data[!is.na(well_number), ] 
 options.table <- NULL
 
 # run basic armitage, only setting the surface area switch
-option.basic <- armitage_eval(tcdata=options.IVD_Manuscript_data)
+option.basic <- armitage_eval(tcdata=options.IVD_Manuscript_data,
+                              surface.area.switch = TRUE,
+                              user_assay_parameters = user_assay_parameters)
 
 option.basic_RMSLE<-rmsle((option.basic$CellConcentration_uM),(option.basic$ccells))
 #2.113451
@@ -1181,7 +1190,9 @@ options.table<-rbind(options.table, c(round(option.basic_RMSLE ,3), "All Default
 
 # run with this.option.kbsa2 == TRUE (default is false)
 option.kbsa <- armitage_eval(tcdata=options.IVD_Manuscript_data,
-                             this.option.kbsa2 = TRUE)
+                             this.option.kbsa2 = TRUE,
+                             surface.area.switch = TRUE,
+                             user_assay_parameters = user_assay_parameters)
 
 option.kbsa_RMSLE<-rmsle((option.kbsa$CellConcentration_uM),(option.kbsa$ccells))
 #2.087882
@@ -1192,7 +1203,9 @@ options.table<-rbind(options.table, c(round(option.kbsa_RMSLE, 3), "option.kbsa=
 
 # run with this.option.swat2 == TRUE (default is false)
 option.swat <- armitage_eval(tcdata=options.IVD_Manuscript_data,
-                             this.option.swat2 = TRUE)
+                             this.option.swat2 = TRUE,
+                             surface.area.switch = TRUE,
+                             user_assay_parameters = user_assay_parameters)
 
 option.swat_RMSLE<-rmsle((option.swat$CellConcentration_uM),(option.swat$ccells))
 #3.214113
@@ -1202,7 +1215,9 @@ options.table<-rbind(options.table, c(round(option.swat_RMSLE, 3), "option.swat2
 
 # run with this.option.kpl2 == TRUE (Fischer) (default is false/kramer)
 option.kpl <- armitage_eval(tcdata=options.IVD_Manuscript_data,
-                             this.option.kpl2 = TRUE)
+                             this.option.kpl2 = TRUE,
+                            surface.area.switch = TRUE,
+                            user_assay_parameters = user_assay_parameters)
 
 option.kpl_RMSLE<-rmsle((option.kpl$CellConcentration_uM),(option.kpl$ccells))
 #2.042262
@@ -1214,7 +1229,9 @@ options.table<-rbind(options.table, c(round(option.kpl_RMSLE, 3), "option.kpl2=T
 opt.plast_input<- copy(options.IVD_Manuscript_data)
 opt.plast_input[,option.plastic := FALSE]
 
-option.plast <- armitage_eval(tcdata=opt.plast_input)
+option.plast <- armitage_eval(tcdata=opt.plast_input,
+                              surface.area.switch = TRUE,
+                              user_assay_parameters = user_assay_parameters)
 
 option.plast_RMSLE<-rmsle((option.plast$CellConcentration_uM),(option.plast$ccells))
 #2.130671
@@ -1226,7 +1243,9 @@ options.table<-rbind(options.table, c(round(option.plast_RMSLE, 3), "option.plas
 option.bottom_input<- copy(options.IVD_Manuscript_data)
 option.bottom_input[,option.bottom := FALSE]
 
-option.bottom <- armitage_eval(tcdata=option.bottom_input)
+option.bottom <- armitage_eval(tcdata=option.bottom_input,
+                               surface.area.switch = TRUE,
+                              user_assay_parameters = user_assay_parameters)
 
 option.bottom_RMSLE<-rmsle((option.bottom$CellConcentration_uM),(option.bottom$ccells))
 #2.117772
@@ -1236,7 +1255,9 @@ options.table<-rbind(options.table, c(round(option.bottom_RMSLE,3), "option.bott
 
 # run with restrict.ion.partitioning == TRUE (default is FALSE)
 option.restion <- armitage_eval(tcdata=options.IVD_Manuscript_data,
-                             restrict.ion.partitioning = TRUE)
+                             restrict.ion.partitioning = TRUE,
+                             surface.area.switch = TRUE,
+                              user_assay_parameters = user_assay_parameters)
 
 option.restion_RMSLE<-rmsle((option.restion$CellConcentration_uM),(option.restion$ccells))
 #2.10899

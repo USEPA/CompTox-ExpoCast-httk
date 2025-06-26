@@ -234,7 +234,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' assay_component_endpoint_name \tab link to invitro.assay.params table \tab character \cr  
 #' gkow \tab The log10 octanol to water (PC) (logP)\tab log10 unitless ratio \cr          
 #' logHenry \tab The log10 Henry's law constant '\tab log10 unitless ratio \cr      
-#' gswat \tab The log10 water solubility (logWSol) \tab log10 mg/L \cr         
+#' gswat \tab The log10 water solubility (logWSol) \tab log10 mol/L \cr         
 #' MP_C \tab The chemical compound melting point \tab degrees Celcius \cr  
 #' MP_K \tab The chemical compound melting point \tab degrees Kelvin \cr        
 #' MW \tab The chemical compound molecular weight \tab g/mol \cr            
@@ -285,7 +285,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' kmw \tab The membrane to water PC (i.e., 10^gkmow \tab unitless \cr           
 #' kow \tab The octanol to water PC (i.e., 10^gkow) \tab unitless \cr           
 #' kaw \tab The air to water PC (i.e., 10^gkaw) \tab unitless \cr           
-#' swat \tab The water solubility (i.e., 10^gswat) \tab mg/L \cr         
+#' swat \tab The water solubility (i.e., 10^gswat) \tab mol/L \cr         
 #' kpl \tab The plastic to water PC (i.e., 10^gkpl) \tab m3/m2 \cr           
 #' kcw \tab The cell/tissue to water PC (i.e., 10^gkcw) \tab unitless \cr           
 #' kbsa \tab The bovine serum albumin to water PC \tab unitless \cr          
@@ -552,19 +552,17 @@ armitage_eval <- function(chem.cas=NULL,
         #run surface area code  
         temp <- armitage_estimate_sarea(tcdata[missing.rows,])
         
-        if(any(is.na(tcdata[missing.rows,"sarea"]))){
-          tcdata[missing.rows,"sarea"] <- temp[,"sarea"]
-        }
+        tcdata[missing.rows,"sarea"] <- temp[,"sarea"]
         
-        if(any(is.na(tcdata[missing.rows,"v_total"]))){
+        if(any(is.na(tcdata[missing.rows,"v_total"]) | !(c("v_total") %in% names(tcdata)))){
           tcdata[missing.rows,"v_total"] <- temp[,"v_total"]
         }
         
-        if(any(is.na(tcdata[missing.rows,"v_working"]))){
+        if(any(is.na(tcdata[missing.rows,"v_working"]) | !(c("v_working") %in% names(tcdata)))){
           tcdata[missing.rows,"v_working"] <- temp[,"v_working"]
         }
         
-        if(any(is.na(tcdata[missing.rows,"cell_yield"]))){
+        if(any(is.na(tcdata[missing.rows,"cell_yield"]) | !(c("cell_yield") %in% names(tcdata)))){
           tcdata[missing.rows,"cell_yield"] <- temp[,"cell_yield"]
         }
 
@@ -700,8 +698,7 @@ armitage_eval <- function(chem.cas=NULL,
     .[,DR_kcw_preadj:= (P_cells * pseudooct * cell_DR_kow + 
                           memblip  * cell_DR_kmw + 
                           P_nlom * nlom * cell_DR_kow + 
-                          cellwat) * IOC_mult] %>% 
-    .[,cell_DR_kmw:=cell_DR_kmw*IOC_mult] #correct cell_kmw to account for ion trapping
+                          cellwat) * IOC_mult]
   
   ### Adjust DR_kcw to account for lysosomal trapping ###
   
@@ -714,12 +711,13 @@ armitage_eval <- function(chem.cas=NULL,
       by = seq_len(nrow(tcdata[IOC_Type_cell=="Base" & is.character(pKa_Accept) & (pKa_Accept != " ") & is.na(largest_pKa_Accept),]))]  #if only one pka accept value, set that at the largest value
   #if there are no lines that fit the criteria, we wont use largest pka (line 702) so do not need to set to zero
   
-  #Account for lysosomal trapping with Lyso_pump; sorption to anionics already accounted for in Dmw
-  tcdata[, Lyso_MemVF:= (((4/3*pi*(Lyso_Diam/2)^3)-(4/3*pi*((Lyso_Diam/2)-5)^3))/(4/3*pi*(Lyso_Diam/2)^3))] %>% #lysosome membrane volume fraction
+  #Account for lysosomal trapping with Lyso_pump; sorption to anionics already accounted for in DR_kmw
+  tcdata[, Lyso_MemVF:= (((4/3*pi*(Lyso_Diam/2)^3)-(4/3*pi*((Lyso_Diam/2)-7)^3))/(4/3*pi*(Lyso_Diam/2)^3))] %>% #lysosome membrane volume fraction
     .[IOC_Type_cell=="Neutral" | IOC_Type_cell=="Acid", Lyso_Pump:= 1] %>% #sequestration factor
     .[IOC_Type_cell=="Base", Lyso_Pump:= ((1 + 10^(largest_pKa_Accept - Lyso_pH)) / (1 + 10^(largest_pKa_Accept - this.cell_pH)))] %>% #sequestration factor
     .[, DR_kcw := (1 - Lyso_VF) * (DR_kcw_preadj) + Lyso_VF * (Lyso_MemVF * cell_DR_kmw * IOC_mult * Lyso_Pump)]
   #	Lyso_Pump: Neutral = 1, Acid = 1, Base = (1 + 10^(pKa - Lyso_pH)) / (1 + 10^(pKa - cell_pH))
+  print("own -7 lysodiam correction")
   
   ### End of cell-specific distribution ratio calculation ###
   
@@ -771,12 +769,12 @@ armitage_eval <- function(chem.cas=NULL,
     .[,Vwell:=v_total/1e6] %>% # uL to L; the volume of well
     .[,Vcells:=cell_yield*(cellmass/1e6)/celldensity/1e6] %>% # cell*(ng/cell)*(1mg/1e6ng)/(mg/uL)*(1uL/L); the volume of cells
     .[,Vair:=Vwell-Vbm-Vcells] %>%  # the volume of head space
-    .[,Valb:=Vbm*FBSf*0.733*conc_ser_alb/1000] %>% # the volume of serum albumin
-    .[,Vslip:=Vbm*FBSf*conc_ser_lip/1000] %>% # the volume of serum lipids
+    .[,Valb:=Vbm*FBSf*0.733*conc_ser_alb/1000] %>% # the volume of serum albumin #/1000
+    .[,Vslip:=Vbm*FBSf*conc_ser_lip/1000] %>% # the volume of serum lipids #/1000
     .[,Vdom:=Vdom/1e6] %>% # uL to L; the volume of Dissolved Organic Matter (DOM)
     .[,Vm:=Vbm-Valb-Vslip-Vdom] # the volume of medium
   #add in conv_units for the above chunk
-  
+
   # umol/L for all concentrations
   tcdata[,mtot:= nomconc*Vbm] %>% # amount of umol chemical in the bulk medium in each well
     .[,cwat:=mtot/(DR_kaw*Vair + Vm + DR_kbsa*Valb +
