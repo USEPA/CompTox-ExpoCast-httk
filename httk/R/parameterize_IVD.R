@@ -1,44 +1,25 @@
 #' Parameterize In Vitro Distribution Models
 #' 
-#' This function collects information on chemicals and well plate geometry input by the user.
+#' This function collects physicochemical properties from chemicals input by the user for use with armitage.R and kramer.R.
 #' 
 #' @param casrn.vector For vector or single value, CAS number
 #' 
-#' @param this.well_number For single value, plate format default is 384, used
-#' if is.na(tcdata)==TRUE. This value chooses default surface area settings for
-#' \code{\link{armitage_estimate_sarea}} based on the number of plates per well.
-#' 
-#' @param this.sarea Surface area of plastic exposed to medium (m^2)
-#' 
-#' @param this.v_total Total volume per well (uL)
-#' 
-#' @param this.v_working Working volume per well (uL)
-#' 
-#' @param this.cell_yield Number of cells per well
-#' 
-#' @param tcdata A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
-#' v_total, v_working. Otherwise supply single values to this.params (e.g., this.sarea,
-#' this.v_total, etc.). Chemical parameters are taken from 
-#' \code{\link{chem.physical_and_invitro.data}}.
-#' 
-#' @param option.bottom If true (default), include the bottom of the well in surface area calculation
-#' 
-#' @param option.plastic If true (not default), automatically set well surface area to zero
+#' @param tcdata A data.table with casrn, logHenry, gswat, MP, MW, gkow, pKa_Donor,pKa_Accept, pH, and gkaw_n. 
+#' Otherwise chemical parameters are taken from \code{\link{chem.physical_and_invitro.data}}.
 #' 
 #' @return
 #' \tabular{lll}{
 #' \strong{Param} \tab \strong{Description} \tab \strong{Units} \cr
 #' casrn \tab Chemical Abstracts Service Registry Number \tab character \cr
-#' well_number \tab Number of wells in plate (used to set default surface area) \tab unitless \cr   
-#' sarea \tab Surface area of plastic exposed to medium \tab m^2 \cr         
-#' v_total \tab Total volume of well \tab uL \cr       
-#' v_working \tab Filled volume of well \tab uL \cr     
-#' cell_yield \tab Number of cells \tab cells \cr
-#' gkow \tab The log10 octanol to water (PC) (logP)\tab log10 unitless ratio \cr     
 #' logHenry \tab The log10 Henry's law constant \tab atm*m^3/mol \cr      
 #' gswat \tab The log10 water solubility at 25C (logWSol) \tab log10 mol/L \cr
-#' MP \tab The chemical compound's melting point \tab degrees C \cr           
-#' MW \tab The chemical compound's molecular weight \tab g/mol \cr            
+#' MP_C \tab The chemical compound's melting point \tab degrees C \cr           
+#' MW \tab The chemical compound's molecular weight \tab g/mol \cr          
+#' gkow_n \tab The log10 octanol to water (PC) (logP)\tab log10 unitless ratio \cr  
+#' pKa_Donor \tab Chemical dissociation equilibrium constant(s); pKa(ie pKa_Donor) = -log10(Ka) \tab unitless \cr  
+#' pKa_Accept \tab Chemical association equilibrium constant(s); pKb(ie pKa_Accept) = 14 - pKa  \tab unitless \cr 
+#' pH \tab pH where ionization is evaluated (typically assay medium) \tab unitless \cr 
+#' gkaw_n \tab The air to water PC (neutral) \tab unitless ratio \cr 
 #' }
 #' 
 #' @author Meredith Scherer
@@ -47,114 +28,46 @@
 #' 
 #' library(httk)
 #' 
-#' output <- parameterize_IVD(casrn.vector = c("15687-27-1"), this.well_number = 384)
+#' output <- parameterize_IVD(casrn.vector = c("15687-27-1"))
 #' print(output)
 #' 
 #' @export parameterize_IVD
 
 
 
-parameterize_IVD <- function(tcdata = NA, # optionally supply columns v_working, sarea, option.bottom, and option.plastic
+parameterize_IVD <- function(tcdata = NA, # optionally supply columns logHenry, gswat, MP, MW, gkow, pKa_Donor,pKa_Accept, pH, and gkaw_n
                              casrn.vector = NA_character_, #CAS number
-                             nomconc.vector = NA_real_,    #nominal concentration
-                             this.serum = NA_real_,        #serum concentration
-                             this.well_number = 384,       #Number of wells per plate
-                             this.sarea = NA_real_,        #Surface area of plastic exposed to medium (m^2)
-                             this.cell_yield = NA_real_,   #Number of cells/well seeded
-                             this.v_working = NA_real_,    #Volume of medium/well (uL)
-                             this.v_total = NA_real_,      #Total volume of well (uL)
-                             this.pH = 7, 
-                             this.option.bottom = TRUE,    #Include the bottom of the well in surface area calculation
-                             this.option.plastic = FALSE,  #Automatically set surface area to zero
-                             surface.area.switch = TRUE)   #Calculate surface area of the well (assumes yes)
+                             this.pH = 7)
 {
-  #do not delete:
-  sarea <- v_working <- v_total <- cell_yield <- logHenry <- NULL
-  
-  
   #### Set tcdata variables ####
-
   
   if(all(is.na(tcdata))){
-    tcdata <- data.table(casrn = casrn.vector,
-                         nomconc = nomconc.vector,
-                         well_number = this.well_number,
-                         sarea = this.sarea,
-                         v_total = this.v_total,
-                         v_working = this.v_working,
-                         cell_yield = this.cell_yield)
+    tcdata <- data.table(casrn = casrn.vector)
   }
   
-
-  
-
-#  
-#  if(!all(names(tcdata) %in% c("sarea", "v_total", "v_working", "cell_yield")) | #not all the things we need present
-#     any(is.na(tcdata[,.(sarea, v_total, v_working, cell_yield)]))){              #or present and NA
-#    
-#    if(all(names(tcdata) %in% c("sarea", "v_total", "v_working", "cell_yield")) & #all names are present
-#       any(is.na(tcdata[,.(sarea, v_total, v_working, cell_yield)]))){            #and any are nas
-#      missing.rows <- which(is.na(tcdata[,sarea]))                                #create a table for those missing rows
-#      
-#    }else{                                                                        #not all names present or there are some nas
-#      missing.rows <- 1:length(tcdata[,casrn])                                    #create a table for the missing rows
-#    }
-#    
-#    if(any(is.na(tcdata[missing.rows, well_number]) & is.na(tcdata[missing.rows, sarea]))){
-#      print(paste0("Either well_number or geometry must be defined for rows: ", 
-#                   paste(which(tcdata[, is.na(sarea) & is.na(well_number)]),collapse = ",")))
-#      stop()
-#    }else{
-#      temp <- armitage_estimate_sarea(tcdata[missing.rows,], option.bottom)      #get the values for the missing rows
-#      
-#      #fill in sarea
-#      if(!(c("sarea") %in% (names(tcdata))) | (any(is.na(tcdata[missing.rows,.(sarea)])))){ #if surface area isnt in the list or is na
-#        tcdata[missing.rows,"sarea"] <- temp[,"sarea"]
-#      }
-#      
-#      #fill in v_total
-#      if(!(c("v_total") %in% (names(tcdata))) | (any(is.na(tcdata[missing.rows,.(v_total)])))){ #if v_total isnt in the list or is na
-#        tcdata[missing.rows,"v_total"] <- temp[,"v_total"]
-#      }
-#      
-#      #fill in v_working
-#      if(!(c("v_working") %in% (names(tcdata))) | (any(is.na(tcdata[missing.rows,.(v_working)])))){ #if v_working isnt in the list or is na
-#        tcdata[missing.rows,"v_working"] <- temp[,"v_working"]
-#      }
-#      
-#      #fill in cell_yield
-#      if(!(c("cell_yield") %in% (names(tcdata))) | (any(is.na(tcdata[missing.rows,.(cell_yield)])))){ #if cell_yield isnt in the list or is na
-#        tcdata[missing.rows,"cell_yield"] <- temp[,"cell_yield"]
-#      }
-#
-#    }
-#    
-#  }
-
   
   #### Get PhysChem Parameters ####
   # Check if required phys-chem parameters are provided:
-  if(!all(c("logHenry","gswat","MP","MW") %in% names(tcdata))){ #if these columns are not in tcdata
+  if(!all(c("logHenry","gswat","MP","MW") %in% names(tcdata))){ #if these columns are not all in tcdata
     # If not, pull them:
     tcdata[, c("logHenry","logWSol","MP","MW") := 
              as.data.frame(get_physchem_param(param = c("logHenry","logWSol","MP","MW"), 
-                                              chem.cas = casrn))] #, row.names = casrn
+                                              chem.cas = casrn))]
     
   }
   
   
-  # Check if required phys-chem parameters are provided:
+  # Check if logKow is provided (separate so user can enter if desired):
   if(!all(c("gkow") %in% names(tcdata))){ #if this column is not in tcdata
     # If not, pull it:
     tcdata[, c("gkow") := 
              as.data.frame(get_physchem_param(param = c("logP"), 
-                                              chem.cas = casrn))] #, row.names = casrn
+                                              chem.cas = casrn))] 
     
-  } #this is specifically to run the curated data comparison - can be combined with above otherwise
+  } 
   
   
-  
-  #check for pka donor and acceptor
+  # Check if pKa_Donor and pKa_Accept are provided:
   if (!all(c("pKa_Donor","pKa_Accept") %in% names(tcdata))){
     # If not present, pull them:
     tcdata[, c("pKa_Donor") := 
@@ -165,7 +78,7 @@ parameterize_IVD <- function(tcdata = NA, # optionally supply columns v_working,
                                               chem.cas = casrn),row.names = casrn)]
   }
   
-  #check for pH
+  # Check if pH is provided:
   if (!(c("pH") %in% names(tcdata))){
     # If not present, auto assign:
     tcdata[,pH := this.pH]}
@@ -191,12 +104,15 @@ parameterize_IVD <- function(tcdata = NA, # optionally supply columns v_working,
   # Calculate gkaw for both models:
   if (!(c("gkaw_n") %in% names(tcdata))){
     # If not present, calculate:
-    tcdata[, "gkaw_n" := logHenry - log10(298.15*8.2057338e-5)]} # log10 (atm*m3)/mol to (mol/m3)/(mol/m3) (unitless)
+    tcdata[, gkaw_n := logHenry - log10(298.15*8.2057338e-5)]} # log10 (atm*m3)/mol to (mol/m3)/(mol/m3) (unitless)
   #using ideal gas constant (R) = 8.2e-5 (m3*atm / (K*mol)) because logHenry is (atm*m3)/mol
   
   # Rename variables for both models
-  tcdata[, "gkow_n" := gkow] %>% 
-    .[,"MP_C":=MP]
+  tcdata[, gkow_n := gkow] %>% 
+    .[, MP_C := MP] 
+  
+  # Delete unnecessary variables (because they were renamed)
+  tcdata[, -c(gkow, MP)]
   
   #### Return data table ####
   return(tcdata)
