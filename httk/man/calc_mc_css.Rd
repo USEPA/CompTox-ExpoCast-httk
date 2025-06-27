@@ -236,7 +236,7 @@ used by this function.
 \examples{
 \donttest{
 # Set the number of samples (NSAMP) to a small value for rapid testing, 
-increase NSAMP for more stable (reproducible) results. Default value is 1000:
+# increase NSAMP for more stable (reproducible) results. Default value is 1000:
 NSAMP = 100
 
 # Basic in vitro - in vivo extrapolation with httk, convert 3 uM in vitro
@@ -307,8 +307,8 @@ calc_mc_css(parameters=params,model="pbtk", samples=NSAMP)
 set.seed(1234)
 calc_mc_css(chem.cas="90-43-7", model="pbtk", samples=NSAMP)
 
-# We can use HTTK Monte Carlo with no measurement uncertainty (introduced in
-Wambaugh et al. (2019) -- this is what we did pre v1.10.0):
+# We can use HTTK Monte Carlo with no measurement uncertainty (this is how 
+# monte carlo was performed before v1.10.0):
 set.seed(1234)
 calc_mc_css(chem.cas="90-43-7",
             model="pbtk",
