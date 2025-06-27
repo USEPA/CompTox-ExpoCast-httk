@@ -31,6 +31,8 @@
 #' output <- parameterize_IVD(casrn.vector = c("15687-27-1"))
 #' print(output)
 #' 
+#' @import magrittr
+#' 
 #' @export parameterize_IVD
 
 

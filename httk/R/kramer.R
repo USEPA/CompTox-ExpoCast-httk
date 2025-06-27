@@ -250,8 +250,6 @@ kramer_eval <- function(chem.cas=NULL,
   
   ##### Calculations for Partition Coefficients  ##### 
   
-  tcdata[, BSA2 := (BSA/1000)*(serum/100)] #calculate serum constituents
-  
   tcdata[,gkbsa_n:= (0.71*gkow+0.42)] %>%   #Ks (bovine serum albumin to water PC), L/kg BSA Endo and Goss 2011
     .[,gkpl_n:=(0.97*gkow-6.94)] %>%        #Kp (plastic to water PC), m
     .[,gkcw_n:=(1.25*gkow-3.7)]             #Kc (lipid to water PC), m3/kg cell lipid
@@ -285,7 +283,7 @@ kramer_eval <- function(chem.cas=NULL,
     .[,duaw:=60000] %>% # internal energy of phase change for air-water (J/mol)
     .[,gkaw_n_temp := gkaw_n-duaw*Tcor] #correct gkaw for temp
 
-    #convert logged PCs to unlogged versions
+  #convert logged PCs to unlogged versions
   tcdata[,kcw_n := 10^(gkcw_n)] %>%
     .[,kcw_i := 10^(gkcw_i)] %>%
     .[,kbsa_n := 10^(gkbsa_n)] %>%
@@ -318,11 +316,11 @@ kramer_eval <- function(chem.cas=NULL,
   
   ##### Calculations for Fractions, all unitless  ##### 
   
-  tcdata[,frac_free := 1/(1+Ks*BSA2+Kp*conc_plastic+Kc*conc_cell+Ka*(v_headspace_m3/v_working_m3))] %>%  #Fraction free medium
+  tcdata[,frac_free := 1/(1+Ks*conc_BSA+Kp*conc_plastic+Kc*conc_cell+Ka*(v_headspace_m3/v_working_m3))] %>%  #Fraction free medium
     .[,frac_headspace:= (Ka*frac_free*v_headspace_m3)/v_working_m3] %>%               #Fraction absorbed into headspace
     .[,frac_plastic:= (Kp*frac_free*sarea)/v_working_m3] %>%                 #Fraction absorbed to plastic
     .[,frac_cells:= Kc*frac_free*conc_cell] %>%                       #Fraction absorbed to cells
-    .[,frac_serum:= Ks*frac_free*BSA2] %>%                            #Fraction absorbed to serum
+    .[,frac_serum:= Ks*frac_free*conc_BSA] %>%                            #Fraction absorbed to serum
     .[,frac_equilib:= frac_free+frac_serum] %>%                       #Fraction in medium at equilibrium
     .[,mass_balance:= frac_equilib+frac_cells+frac_plastic+frac_headspace] #Mass balance needs to be 1
   

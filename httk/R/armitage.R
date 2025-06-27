@@ -234,7 +234,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' assay_component_endpoint_name \tab link to invitro.assay.params table \tab character \cr  
 #' gkow \tab The log10 octanol to water (PC) (logP)\tab log10 unitless ratio \cr          
 #' logHenry \tab The log10 Henry's law constant '\tab log10 unitless ratio \cr      
-#' gswat \tab The log10 water solubility (logWSol) \tab log10 mol/L \cr         
+#' gswat \tab The log10 water solubility (logWSol) \tab log10 mg/L \cr         
 #' MP_C \tab The chemical compound melting point \tab degrees Celcius \cr  
 #' MP_K \tab The chemical compound melting point \tab degrees Kelvin \cr        
 #' MW \tab The chemical compound molecular weight \tab g/mol \cr            
@@ -285,7 +285,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' kmw \tab The membrane to water PC (i.e., 10^gkmow \tab unitless \cr           
 #' kow \tab The octanol to water PC (i.e., 10^gkow) \tab unitless \cr           
 #' kaw \tab The air to water PC (i.e., 10^gkaw) \tab unitless \cr           
-#' swat \tab The water solubility (i.e., 10^gswat) \tab mol/L \cr         
+#' swat \tab The water solubility (i.e., 10^gswat) \tab mg/L \cr         
 #' kpl \tab The plastic to water PC (i.e., 10^gkpl) \tab m3/m2 \cr           
 #' kcw \tab The cell/tissue to water PC (i.e., 10^gkcw) \tab unitless \cr           
 #' kbsa \tab The bovine serum albumin to water PC \tab unitless \cr          
@@ -577,7 +577,6 @@ armitage_eval <- function(chem.cas=NULL,
   if(any(is.na(this.FBSf)) & !"FBSf" %in% names(tcdata)){
     stop("this.FBSf must be defined or FBSf must be a column in tcdata")
   }
-  
   
   #### Parameterize Armitage: ####
   tcdata <- parameterize_armitage(tcdata) #call parameterize_armitage(), overwrite tcdata with the updated variables
