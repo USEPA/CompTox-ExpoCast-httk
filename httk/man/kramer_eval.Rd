@@ -87,8 +87,6 @@ this.v_total, etc.). Chemical parameters are taken from
 \item{well_number}{description}
 
 \item{nomconc}{Nominal test concentration (uM)}
-
-\item{option.piechart}{Option to generate a pie chart to visualize chemical partitioning}
 }
 \value{
 \tabular{lll}{

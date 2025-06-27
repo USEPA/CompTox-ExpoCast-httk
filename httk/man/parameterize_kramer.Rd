@@ -7,21 +7,13 @@
 parameterize_kramer(
   tcdata = NA,
   casrn.vector = NA_character_,
-  nomconc.vector = 1,
-  this.well_number = 384,
+  this.FBSf = NA_real_,
   this.BSA = 44,
-  this.logKow = NA_real_,
-  this.logHenry = NA_real_,
-  this.serum = NA_real_,
   this.v_total = NA_real_,
   this.v_working = NA_real_,
   this.cell_yield = NA_real_,
   this.sarea = NA_real_,
-  this.temp_k = 298.15,
-  this.prot_conc = 0.21,
-  this.option.bottom = TRUE,
-  restrict.ion.partitioning = FALSE,
-  surface.area.switch = TRUE
+  this.prot_conc = 0.21
 )
 }
 \arguments{
@@ -32,33 +24,34 @@ optionally include v_working, sarea, option.bottom, and option.plastic}
 Chemical Abstracts Service Registry 
 Number(s) (CAS-RN) of desired chemical(s).}
 
-\item{nomconc.vector}{For vector or single value, micromolar (uM = mol/L) nominal 
-concentration (e.g. AC50 value)}
-
-\item{this.well_number}{For single value, plate format default is 384, used
-if is.na(tcdata)==TRUE}
+\item{this.FBSf}{Fraction fetal bovine serum}
 
 \item{this.BSA}{bovine serum albumin concentration (g/L)}
 
-\item{this.v_total}{For single value, optionally supply total volume,
-otherwise estimated based on well number (uL)}
+\item{this.v_total}{Total volume per well (uL)}
 
-\item{this.v_working}{For single value, optionally supply working volume,
-otherwise estimated based on well number (uL)}
+\item{this.v_working}{Working volume per well (uL)}
 
-\item{this.cell_yield}{For single value, optionally supply cell_yield,
-otherwise estimated based on well number}
+\item{this.sarea}{Surface area per well (m^2)}
+
+\item{this.prot_conc}{Cell protein concentration (mg protein/million cells)}
+
+\item{this.cell.yield}{Number of cells/well seeded}
 }
 \value{
 A data table composed of any input data.table \emph{tcdata}
 with only the following columns either created or altered by this function:
 \tabular{ccc}{
 \strong{Column Name} \tab \strong{Description} \tab \strong{Units} \cr
-well_number \tab number of wells on plate \tab \cr
 sarea \tab surface area \tab m^2 \cr
-cell_yield \tab number of cells \tab cells \cr
-v_working_m3 \tab working (filled) volume of each well \tab uL \cr
-v_total_m3 \tab total volume of each well \tab uL \cr
+v_working_m3 \tab working (filled) volume of each well \tab m^3 \cr
+v_total_m3 \tab total volume of each well \tab m^3 \cr
+v_headspace_m3 \tab volume of headspace per well \tab m^3 \cr
+conc_BSA \tab BSA concentration in media \tab kg/L \cr 
+FBSp \tab Percent fetal bovine serum in media \tab percent \cr
+conc_cell_mg \tab concentration of cell lipids \tab mg/m^3 \cr
+conc_cell \tab concentration of cell lipids \tab kg/m^3 \cr 
+conc_plastic \tab concentration of plastic \tab m2/m^3 \cr 
 }
 }
 \description{

@@ -4,14 +4,7 @@
 \alias{parameterize_armitage}
 \title{Parameterize Armitage In Vitro Distribution Model}
 \usage{
-parameterize_armitage(
-  tcdata = NA,
-  casrn.vector = NA_character_,
-  nomconc.vector = 1,
-  this.well_number = 384,
-  this.cell_yield = NA_real_,
-  this.sarea = NA_real_
-)
+parameterize_armitage(tcdata = NA, casrn.vector = NA_character_)
 }
 \arguments{
 \item{tcdata}{A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
@@ -22,25 +15,20 @@ this.v_total, etc.). Chemical parameters are taken from
 \item{casrn.vector}{A deprecated argument specifying a single or vector of 
 Chemical Abstracts Service Registry 
 Number(s) (CAS-RN) of desired chemical(s).}
-
-\item{nomconc.vector}{For vector or single value, micromolar (uM = mol/L) nominal 
-concentration (e.g. AC50 value)}
-
-\item{this.well_number}{For single value, plate format default is 384, used
-if is.na(tcdata)==TRUE. This value chooses default surface area settings for
-\code{\link{armitage_estimate_sarea}} based on the number of wells per plate.}
-
-\item{this.cell_yield}{For single value, optionally supply cell_yield,
-otherwise estimated based on well number}
-
-\item{this.sarea}{Surface area per well (m^2)}
 }
 \value{
 \tabular{lll}{
 \strong{Param} \tab \strong{Description} \tab \strong{Units} \cr
-gkaw \tab The air to water PC \tab unitless ratio \cr  
-logHenry \tab The log10 Henry's law constant \tab atm*m^3/mol \cr  
-gswat \tab The log10 water solubility at 25C (logWSol) \tab log10 mg/L \cr
+casrn \tab Chemical Abstracts Service Registry Number \tab character \cr
+logHenry \tab The log10 Henry's law constant \tab atm*m^3/mol \cr      
+MP_C \tab The chemical compound's melting point \tab degrees C \cr           
+MW \tab The chemical compound's molecular weight \tab g/mol \cr          
+gkow_n \tab The log10 octanol to water (PC) (logP)\tab log10 unitless ratio \cr  
+pKa_Donor \tab Chemical dissociation equilibrium constant(s); pKa(ie pKa_Donor) = -log10(Ka) \tab unitless \cr  
+pKa_Accept \tab Chemical association equilibrium constant(s); pKb(ie pKa_Accept) = 14 - pKa  \tab unitless \cr 
+pH \tab pH where ionization is evaluated (typically assay medium) \tab unitless \cr 
+gkaw_n \tab The air to water PC (neutral) \tab unitless ratio \cr
+gswat_n \tab The log10 water solubility at 25C (logWSol) \tab log10 mg/L \cr
 }
 }
 \description{

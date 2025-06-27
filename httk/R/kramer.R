@@ -67,8 +67,6 @@
 #' 
 #' @param this.BSA Boving serum albumin concentration in serum (g/L)
 #' 
-#' @param option.piechart Option to generate a pie chart to visualize chemical partitioning
-#' 
 #' @param restrict.ion.partitioning only allow neutral fraction to partition
 #' 
 #' @param surface.area.switch TRUE, automatically calculates surface area, switch to FALSE if user provided
@@ -147,6 +145,7 @@ kramer_eval <- function(chem.cas=NULL,
   L_per_mil_cells <- concentration_cells <- plastic_umol <- NULL
   concentration_plastic <- air_umol <- concentration_air <- NULL
   concentration_medium <- logWSol <- swat_umol <- swat_mol <- csat <- NULL
+  conc_BSA <- NULL
   #End R CMD CHECK appeasement.
     
   if (all(is.na(tcdata)))
@@ -180,8 +179,8 @@ kramer_eval <- function(chem.cas=NULL,
                          serum = this.serum,
                          prot_conc = this.prot_conc,
                          temp_k = this.temp_k,
-                         L_per_mil_cells = this.L_per_mil_cells,
-                         option.piechart = this.option.piechart)
+                         L_per_mil_cells = this.L_per_mil_cells
+                         )
   }
   
   
@@ -393,22 +392,4 @@ kramer_eval <- function(chem.cas=NULL,
   #csat: Is the solution saturated (yes = 1, no = 0) 
   
   return(tcdata)
-  ##### Create data.frame for option.piechart  ##### 
-  
-  #if option.piechart=TRUE...
-  #if(tcdata[option.piechart==TRUE]){
-  
-  
-  #  for (chemical in tcdata$compound_name){
-  
-  #    temp_for_piechart<-data.frame(group = c("Free in medium", "Bound in plasma", "Associated with cells", "In headspace", "Soaked to well plastic"), values= t(as.data.frame(tcdata[compound_name==chemical,c("frac_free", "frac_serum", "frac_cells", "frac_headspace", "frac_plastic")])))                                                         #collect data
-  #    temp_for_piechart$values<-round(temp_for_piechart$values, digits = 4) #round values
-  #    temp_for_piechart$label<-scales::percent(temp_for_piechart$values) #create labels for percentages
-  
-  #    piechartPlot <- plot.piechart(temp_for_piechart) #call pie chart function
-  #    }
-  #    
-  #}
-  
-  
 }

@@ -24,6 +24,8 @@
 #' 
 #' @param this.sarea Surface area per well (m^2)
 #'
+#' @param this.cell.yield Number of cells/well seeded
+#'
 #' @return A data table composed of any input data.table \emph{tcdata}
 #' with only the following columns either created or altered by this function:
 #' \tabular{ccc}{
@@ -71,6 +73,7 @@ parameterize_kramer <- function(tcdata = NA,                   #Data.table with 
   cell_yield<-prot_conc<-temp_k<-sarea<-casrn <-logHenry <- logWSol<-NULL
   this.restrict.ion.partitioning <- FBSf <- v_total_m3 <- v_working_m3 <- NULL
   v_headspace_m3 <- BSA2 <- conc_cell_mg <- conc_cell <- conc_plastic <- NULL
+  FBSp <- conc_BSA <- NULL
   #End R CMD CHECK appeasement. 
 
   #### Set tcdata variables ####

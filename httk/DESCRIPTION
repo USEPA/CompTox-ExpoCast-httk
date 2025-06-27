@@ -98,7 +98,7 @@ RdMacros: Rdpack
 Suggests: knitr, rmarkdown, gplots, scales, EnvStats, MASS,
         RColorBrewer, stringr, reshape, viridis, gmodels, colorspace,
         cowplot, ggrepel, forcats, smatr, gridExtra, readxl, ks,
-        testthat
+        testthat, ggpubr, tidyverse
 License: GPL-3
 LazyData: true
 LazyDataCompression: xz

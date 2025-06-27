@@ -4,15 +4,12 @@
 #' 
 #' @param casrn.vector For vector or single value, CAS number
 #' 
-#' @param A data.table with casrn, logHenry, gswat, MP, MW, gkow, pKa_Donor,pKa_Accept, pH, and gkaw_n. 
-#' Otherwise chemical parameters are taken from \code{\link{chem.physical_and_invitro.data
-#' 
 #' @param tcdata A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
 #' v_total, v_working. Otherwise supply single values to this.params (e.g., this.sarea,
 #' this.v_total, etc.). Chemical parameters are taken from 
 #' \code{\link{chem.physical_and_invitro.data}}.
 #'
-#' @param this.ph pH of media
+#' @param this.pH pH of media
 #' 
 #' @return
 #' \tabular{lll}{
@@ -56,7 +53,7 @@ parameterize_IVD <- function(tcdata = NA, # optionally supply columns logHenry, 
   #this is pointless and annoying.
   sarea <- v_working <- v_total <- cell_yield <- logHenry <- NULL
   casrn <- pH <- Fneutral <- Fcharged <- Fpositive <- Fnegative <- gkow <- NULL
-  MP <- NULL
+  MP <- gkaw_n <- gkow_n <- MP_C <- NULL
   #End R CMD CHECK appeasement.
     
   #### Set tcdata variables ####

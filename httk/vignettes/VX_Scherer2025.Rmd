@@ -669,7 +669,7 @@ original_curated.data.dt <- as.data.table(original_curated.data.df)
 default.dt<-copy(original_curated.data.dt %>% select(-c( "Arnot_pka", "Arnot_pkb", 
                                                 "Chemaxon_pKa", "Chemaxon_pKb", 
                                                 "log.KOW.N", "log.KAW.N", 
-                                                "Predicted_Ccell_µM", "FoA")))
+                                                "Predicted_Ccell_uM", "FoA")))
 
 # run the model, output concentrations in umol/L (e.g. uM)
 armitageOutput_default.dt <- armitage_eval(tcdata=default.dt,
@@ -712,20 +712,20 @@ curatedvals<-armitageOutput_curated.data.dt %>% select(Name, casrn, gkow_n, gkaw
 #default values
 
 #individual
-armitageOutput_default.dt[,rmsle_ccell_default:=rmsle(Reported_Ccell_µM, ccells), by = Name]
+armitageOutput_default.dt[,rmsle_ccell_default:=rmsle(Reported_Ccell_uM, ccells), by = Name]
 
 #total
-RMSLE_default.dt<-rmsle(armitageOutput_default.dt$Reported_Ccell_µM, armitageOutput_default.dt$ccells)
+RMSLE_default.dt<-rmsle(armitageOutput_default.dt$Reported_Ccell_uM, armitageOutput_default.dt$ccells)
 RMSLE_default.dt<-round(RMSLE_default.dt, 3)
 #0.582
 
 #curated values
 
 #individual
-armitageOutput_curated.data.dt[,rmsle_ccell_curated:=rmsle(Reported_Ccell_µM, ccells), by = Name]
+armitageOutput_curated.data.dt[,rmsle_ccell_curated:=rmsle(Reported_Ccell_uM, ccells), by = Name]
 
 #total
-RMSLE_curated.data.dt<-rmsle(armitageOutput_curated.data.dt$Reported_Ccell_µM, armitageOutput_curated.data.dt$ccells)
+RMSLE_curated.data.dt<-rmsle(armitageOutput_curated.data.dt$Reported_Ccell_uM, armitageOutput_curated.data.dt$ccells)
 RMSLE_curated.data.dt<-round(RMSLE_curated.data.dt, 3)
 #0.566
 
@@ -741,7 +741,7 @@ curated_data.dt[,rmsle_difference:=rmsle_ccell_curated-rmsle_ccell_default, by =
 ```
 
 ```{r make_physchem_figure, eval = execute.vignette}
-curated_difference_httk_plot<-ggplot(curated_data.dt, aes(ccells.y, Reported_Ccell_µM.y, color = Name, label = round(rmsle_difference, 2)))+
+curated_difference_httk_plot<-ggplot(curated_data.dt, aes(ccells.y, Reported_Ccell_uM.y, color = Name, label = round(rmsle_difference, 2)))+
   geom_point(size = 4) + 
   geom_abline(intercept=0,slope=1, linetype = "dashed") +
   geom_text_repel() +
