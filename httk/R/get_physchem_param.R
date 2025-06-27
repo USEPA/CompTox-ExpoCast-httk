@@ -197,7 +197,7 @@ get_physchem_param <- function(
             values.out[["pKa_Donor"]] <- 
               unlist(gsub(";",",",values[,"pKa_Donor"]))
           }
-          if("pKa_Accept" %in% tolower(param))
+          if(tolower("pKa_Accept") %in% param)
           {
             values.out[["pKa_Accept"]] <- 
               unlist(gsub(";",",",values[,"pKa_Accept"]))
