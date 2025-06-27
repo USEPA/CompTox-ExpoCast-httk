@@ -17,6 +17,15 @@
 #'
 #' @param this.v_working For single value, optionally supply working volume,
 #' otherwise estimated based on well number (uL)
+#' 
+#' @param casrn.vector A deprecated argument specifying a single or vector of 
+#' Chemical Abstracts Service Registry 
+#' Number(s) (CAS-RN) of desired chemical(s).
+#' 
+#' @param nomconc.vector For vector or single value, micromolar (uM = mol/L) nominal 
+#' concentration (e.g. AC50 value)
+#'
+#' @param this.BSA bovine serum albumin concentration (g/L)
 #'
 #' @return A data table composed of any input data.table \emph{tcdata}
 #' with only the following columns either created or altered by this function:
@@ -58,9 +67,16 @@ parameterize_kramer <- function(tcdata = NA,                   #Data.table with 
 
 
 {
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
   well_number<-nomconc<-serum<-BSA<-BSA_kg<-v_total<-v_working<- NULL
   cell_yield<-prot_conc<-temp_k<-sarea<-casrn <-logHenry <- logWSol<-NULL
-
+  this.restrict.ion.partitioning <- FBSf <- v_total_m3 <- v_working_m3 <- NULL
+  v_headspace_m3 <- BSA2 <- conc_cell_mg <- conc_cell <- conc_plastic <- NULL
+  #End R CMD CHECK appeasement. 
 
   #### Set tcdata variables ####
   if(all(is.na(tcdata))){

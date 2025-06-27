@@ -12,6 +12,7 @@ kramer_eval(
   nomconc.vector = 1,
   this.well_number = 384,
   tcdata = NA,
+  user_assay_parameters = NA,
   this.serum = NA_real_,
   this.gKow = NA_real_,
   this.Hconst = NA_real_,
@@ -83,14 +84,8 @@ concentration_air \tab Concentration in headspace \tab uM \cr
 Evaluate the Kramer model for chemical distribution \emph{in vitro}. Takes input
 as data table or vectors of values. Outputs a data table.
 }
-\examples{
-
-library(httk)
-...something here...
-
-}
 \references{
-Kramer, 2010. Measuring, Modeling, and Increasing the Free Concentration of Test Chemicals in Cell Assays. Utrecht University.
+\insertref{kramer2010measuring}
 }
 \author{
 Meredith Scherer, adapted from code written by L.S Lautz for A. Punt, N. Kramer

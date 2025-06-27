@@ -8,16 +8,12 @@ parameterize_IVD(
   tcdata = NA,
   casrn.vector = NA_character_,
   nomconc.vector = NA_real_,
-  this.serum = NA_real_,
   this.well_number = 384,
   this.sarea = NA_real_,
   this.cell_yield = NA_real_,
   this.v_working = NA_real_,
   this.v_total = NA_real_,
-  this.pH = 7,
-  this.option.bottom = TRUE,
-  this.option.plastic = FALSE,
-  surface.area.switch = TRUE
+  this.pH = 7
 )
 }
 \arguments{

@@ -1937,3 +1937,19 @@
 #'
 #' \insertRef{Ring2017SEEM}{httk}
 "truong25.seem3"
+
+#' Literature Measurments of In Vitro Cellular and Nominal Concentration 
+#' 
+#' @author Meredith Scherer
+#' @name IVD_Manuscript_data
+#' @docType data
+#' @format data.table and data.frame
+'IVD_Manuscript_data' 
+
+#' ToxCast In Vitro Assay Descriptors
+#' 
+#' @author Madison Feshuk
+#' @name invitro.assay.params
+#' @docType data
+#' @format data.table and data.frame
+'invitro.assay.params'

@@ -76,8 +76,6 @@ Authors@R: c(
              role = c("ctb"),comment = c(ORCID = "0000-0001-8992-9294")),
            person("Celia", "Schacht", email="Schacht.Celia@epa.gov",
              role = c("ctb"), comment = c(ORCID = "0000-0002-8131-513X")),
-           person("James", "Sluka", email = "jsluka@indiana.edu", 
-             role = c("ctb"), comment = c(ORCID = "0000-0002-5901-1404")),
            person("Noelle", "Sinski", email = "Noelle.Sinski@icf.com",
              role = c("ctb")), 
            person("Nisha", "Sipes", email = "sipes.nisha@epa.gov", 

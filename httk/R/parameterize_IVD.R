@@ -65,10 +65,16 @@ parameterize_IVD <- function(tcdata = NA, # optionally supply columns v_working,
                              this.pH = 7
                              )
 {
-  #do not delete:
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
   sarea <- v_working <- v_total <- cell_yield <- logHenry <- NULL
-  
-  
+  casrn <- pH <- Fneutral <- Fcharged <- Fpositive <- Fnegative <- gkow <- NULL
+  MP <- NULL
+  #End R CMD CHECK appeasement.
+    
   #### Set tcdata variables ####
 
   

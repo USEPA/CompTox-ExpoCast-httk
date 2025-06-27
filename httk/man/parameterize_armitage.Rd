@@ -9,33 +9,31 @@ parameterize_armitage(
   casrn.vector = NA_character_,
   nomconc.vector = 1,
   this.well_number = 384,
-  this.logKow = NA_real_,
   this.cell_yield = NA_real_,
-  this.sarea = NA_real_,
-  this.prot_conc = 0.21,
-  this.option.bottom = TRUE,
-  this.FBSf = NA_real_,
-  this.Tsys = 37,
-  this.Tref = 298.15,
-  this.option.kbsa2 = FALSE,
-  this.option.swat2 = FALSE,
-  this.pseudooct = 0.01,
-  this.memblip = 0.04,
-  this.nlom = 0.2,
-  this.P_nlom = 0.035,
-  this.P_dom = 0.05,
-  this.P_cells = 1,
-  this.csalt = 0.15,
-  this.celldensity = 1,
-  this.cellmass = 3,
-  this.f_oc = 1,
-  this.conc_ser_alb = 24,
-  this.conc_ser_lip = 1.9,
-  this.Vdom = 0,
-  this.option.plastic = FALSE,
-  restrict.ion.partitioning = FALSE,
-  surface.area.switch = TRUE
+  this.sarea = NA_real_
 )
+}
+\arguments{
+\item{tcdata}{A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
+v_total, v_working. Otherwise supply single values to this.params (e.g., this.sarea,
+this.v_total, etc.). Chemical parameters are taken from 
+\code{\link{chem.physical_and_invitro.data}}.}
+
+\item{casrn.vector}{A deprecated argument specifying a single or vector of 
+Chemical Abstracts Service Registry 
+Number(s) (CAS-RN) of desired chemical(s).}
+
+\item{nomconc.vector}{For vector or single value, micromolar (uM = mol/L) nominal 
+concentration (e.g. AC50 value)}
+
+\item{this.well_number}{For single value, plate format default is 384, used
+if is.na(tcdata)==TRUE. This value chooses default surface area settings for
+\code{\link{armitage_estimate_sarea}} based on the number of wells per plate.}
+
+\item{this.cell_yield}{For single value, optionally supply cell_yield,
+otherwise estimated based on well number}
+
+\item{this.sarea}{Surface area per well (m^2)}
 }
 \value{
 \tabular{lll}{

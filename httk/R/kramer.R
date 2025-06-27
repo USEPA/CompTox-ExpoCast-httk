@@ -52,14 +52,10 @@
 #' 
 #' @author Meredith Scherer, adapted from code written by L.S Lautz for A. Punt, N. Kramer
 #'
-#' @references Kramer, 2010. Measuring, Modeling, and Increasing the Free Concentration of Test Chemicals in Cell Assays. Utrecht University.
+#' @references 
+#' \insertref{kramer2010measuring}
 #'
 #' @import magrittr
-#'
-#' @examples 
-#' 
-#' library(httk)
-#' ...something here...
 #' 
 #' @export kramer_eval
 # 
@@ -97,9 +93,28 @@ kramer_eval <- function(chem.cas=NULL,
 
 
 {
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
   well_number<-nomconc<-serum<-BSA<-v_total<-v_working<-cell_yield<-NULL
   prot_conc<-temp_k<-sarea<-casrn<- csalt<- NULL
-  
+  Fneutral <- Fcharged <- Fpositive <- Fnegative <- NULL
+  BSA2 <- gkbsa_n <- gkow <- gkpl_n <- gkcw_n <- SFmw <- SFbsa_acidic <- NULL
+  SFbsa_basic <- SFplw <- gkcw_i <- gkbsa_i_acidic <- gkbsa_i_basic <- NULL
+  gkpl_i <- ksalt <- gkow_n <- Tsys <- Tcor <- Tref <- duaw <- NULL
+  gkaw_n_temp <- gkaw_n <- kcw_n <- kcw_i <- kbsa_n <- kbsa_i_acidic <- NULL
+  kbsa_i_basic <- kaw_n <- kpl_n <- kpl_i <- DR_kcw <- DR_kbsa <- DR_kaw <- NULL
+  DR_kpl <- Ka <- Ks <- Kp <- Kc <- frac_free <- conc_plastic <- NULL
+  conc_cell <- v_headspace_m3 <- v_working_m3 <- frac_headspace <- NULL
+  frac_plastic <- frac_cells <- frac_serum <- frac_equilib <- NULL
+  mass_balance <- system_umol <- cell_umol <- cellcompartment_L <- NULL
+  L_per_mil_cells <- concentration_cells <- plastic_umol <- NULL
+  concentration_plastic <- air_umol <- concentration_air <- NULL
+  concentration_medium <- logWSol <- swat_umol <- swat_mol <- csat <- NULL
+  #End R CMD CHECK appeasement.
+    
   if (all(is.na(tcdata)))
   {
     if (length(casrn.vector) > 1) chem.cas <- casrn.vector

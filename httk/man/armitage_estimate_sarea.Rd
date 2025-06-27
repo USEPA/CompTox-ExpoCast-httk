@@ -49,5 +49,5 @@ include user values for working volume (v_working, m^3) and surface area.
 \insertRef{armitage2014application}{httk}
 }
 \author{
-Greg Honda
+Greg Honda, Meredith Scherer
 }

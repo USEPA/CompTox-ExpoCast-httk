@@ -29,8 +29,17 @@ parameterize_kramer(
 \item{tcdata}{A data table with well_number corresponding to plate format,
 optionally include v_working, sarea, option.bottom, and option.plastic}
 
+\item{casrn.vector}{A deprecated argument specifying a single or vector of 
+Chemical Abstracts Service Registry 
+Number(s) (CAS-RN) of desired chemical(s).}
+
+\item{nomconc.vector}{For vector or single value, micromolar (uM = mol/L) nominal 
+concentration (e.g. AC50 value)}
+
 \item{this.well_number}{For single value, plate format default is 384, used
 if is.na(tcdata)==TRUE}
+
+\item{this.BSA}{bovine serum albumin concentration (g/L)}
 
 \item{this.v_total}{For single value, optionally supply total volume,
 otherwise estimated based on well number (uL)}

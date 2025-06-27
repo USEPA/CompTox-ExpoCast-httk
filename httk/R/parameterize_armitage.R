@@ -1,5 +1,30 @@
 #' Parameterize Armitage In Vitro Distribution Model
 #' 
+#' @param this.well_number For single value, plate format default is 384, used
+#' if is.na(tcdata)==TRUE. This value chooses default surface area settings for
+#' \code{\link{armitage_estimate_sarea}} based on the number of wells per plate.
+#' 
+#' @param tcdata A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
+#' v_total, v_working. Otherwise supply single values to this.params (e.g., this.sarea,
+#' this.v_total, etc.). Chemical parameters are taken from 
+#' \code{\link{chem.physical_and_invitro.data}}.
+#' 
+#' @param this.sarea Surface area per well (m^2)
+#' 
+#' @param this.cell_yield For single value, optionally supply cell_yield,
+#' otherwise estimated based on well number
+#' 
+#' @param casrn.vector A deprecated argument specifying a single or vector of 
+#' Chemical Abstracts Service Registry 
+#' Number(s) (CAS-RN) of desired chemical(s).
+#' 
+#' @param nomconc.vector For vector or single value, micromolar (uM = mol/L) nominal 
+#' concentration (e.g. AC50 value)
+#' 
+#' @param this.well_number For single value, plate format default is 384, used
+#' if is.na(tcdata)==TRUE. This value chooses default surface area settings for
+#' \code{\link{armitage_estimate_sarea}} based on the number of wells per plate.
+#' 
 #' @return
 #' \tabular{lll}{
 #' \strong{Param} \tab \strong{Description} \tab \strong{Units} \cr
@@ -10,43 +35,22 @@
 #' 
 #' @author Meredith Scherer
 #' 
-#' @import magrittr measurements
-#'
 #' @export parameterize_armitage
-
 parameterize_armitage <- function(tcdata = NA,                   #Data.table with casrn, nomconc, and well_number
-                                casrn.vector = NA_character_,  #CAS number
-                                nomconc.vector = 1,            #Nominal concentration vector (uM)
-                                this.well_number = 384,        #Number of wells per plate
-                                this.logKow = NA_real_,        #Log octanol-water PC (unitless)
-                                this.cell_yield = NA_real_,    #Number of cells/well seeded
-                                this.sarea = NA_real_,         #Surface area of plastic exposed to medium (m^2)
-                                this.prot_conc = 0.21,         #Cell protein concentration (mg protein/million cells)
-                                this.option.bottom = TRUE,     #Include the bottom of the well in surface area calculation
-                                this.FBSf = NA_real_, # Must be set if not in tcdata, this is the most senstive parameter in the model.
-                                this.Tsys = 37,
-                                this.Tref = 298.15,
-                                this.option.kbsa2 = FALSE,
-                                this.option.swat2 = FALSE,
-                                this.pseudooct = 0.01, # storage lipid content of cells
-                                this.memblip = 0.04, # membrane lipid content of cells
-                                this.nlom = 0.20, # structural protein content of cells
-                                this.P_nlom = 0.035, # proportionality constant to octanol structural protein
-                                this.P_dom = 0.05,# proportionality constant to octanol dom
-                                this.P_cells = 1,# proportionality constant to octanol storage-liqid
-                                this.csalt = 0.15, # ionic strength of buffer, M = mol/L
-                                this.celldensity=1, # kg/L g/mL  mg/uL
-                                this.cellmass = 3, #ng/cell
-                                this.f_oc = 1, # everything assumed to be like proteins
-                                this.conc_ser_alb = 24, # g/L mass concentration of albumin in serum
-                                this.conc_ser_lip = 1.9, # g/L mass concentration of lipids in serum
-                                this.Vdom = 0, # L the volume of dissolved organic matter (DOM)
-                                this.option.plastic = FALSE,   #Automatically set surface area to zero
-                                restrict.ion.partitioning = FALSE, # Should we restrict the partitioning concentration to neutral only?
-                                surface.area.switch = TRUE       #Calculate surface area of the well (assumes yes)
-)
+                                  casrn.vector = NA_character_,  #CAS number
+                                  nomconc.vector = 1,            #Nominal concentration vector (uM)
+                                  this.well_number = 384,        #Number of wells per plate
+                                  this.cell_yield = NA_real_,    #Number of cells/well seeded
+                                  this.sarea = NA_real_         #Surface area of plastic exposed to medium (m^2)
+                                  )
 {
-  
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
+  logWSol <- MW <- NULL
+  #End R CMD CHECK appeasement.         
   
   #### Set tcdata variables ####
   if(all(is.na(tcdata))){
