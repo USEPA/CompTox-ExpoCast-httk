@@ -20,7 +20,6 @@ parameterize_kramer(
   this.temp_k = 298.15,
   this.prot_conc = 0.21,
   this.option.bottom = TRUE,
-  this.option.plastic = FALSE,
   restrict.ion.partitioning = FALSE,
   surface.area.switch = TRUE
 )
@@ -64,6 +63,9 @@ v_total_m3 \tab total volume of each well \tab uL \cr
 }
 \description{
 This function takes inputs from kramer_eval() and calls parameterize_IVD(). Converts units and sets up variables for kramer_eval().
+}
+\references{
+\insertRef{kramer2010measuring}{httk}
 }
 \author{
 Meredith Scherer

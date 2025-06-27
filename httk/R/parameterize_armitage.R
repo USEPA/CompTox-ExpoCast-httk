@@ -35,6 +35,9 @@
 #' 
 #' @author Meredith Scherer
 #' 
+#' @references
+#' \insertRef{armitage2014application}{httk}
+#' 
 #' @export parameterize_armitage
 parameterize_armitage <- function(tcdata = NA,                   #Data.table with casrn, nomconc, and well_number
                                   casrn.vector = NA_character_,  #CAS number

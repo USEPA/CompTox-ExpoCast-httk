@@ -40,6 +40,9 @@
 #'
 #' @author Meredith Scherer
 #'
+#' @references 
+#' \insertRef{kramer2010measuring}{httk}
+#'
 #' @import magrittr
 #'
 #' @export parameterize_kramer
@@ -59,7 +62,6 @@ parameterize_kramer <- function(tcdata = NA,                   #Data.table with 
                                 this.temp_k = 298.15,          #Temperature (Kelvin)
                                 this.prot_conc = 0.21,         #Cell protein concentration (mg protein/million cells)
                                 this.option.bottom = TRUE,     #Include the bottom of the well in surface area calculation
-                                this.option.plastic = FALSE,   #Automatically set surface area to zero
                                 restrict.ion.partitioning = FALSE, # Should we restrict the partitioning concentration to neutral only?
                                 surface.area.switch = TRUE       #Calculate surface area of the well (assumes yes)
 )

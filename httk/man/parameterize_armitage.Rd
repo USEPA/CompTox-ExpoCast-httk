@@ -46,6 +46,9 @@ gswat \tab The log10 water solubility at 25C (logWSol) \tab log10 mg/L \cr
 \description{
 Parameterize Armitage In Vitro Distribution Model
 }
+\references{
+\insertRef{armitage2014application}{httk}
+}
 \author{
 Meredith Scherer
 }

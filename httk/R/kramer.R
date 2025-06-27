@@ -3,6 +3,43 @@
 #' Evaluate the Kramer model for chemical distribution \emph{in vitro}. Takes input
 #' as data table or vectors of values. Outputs a data table.
 #' 
+#' @param chem.name A single or vector of name(s)) of desired chemical(s).
+#' @param chem.cas A single or vector of Chemical Abstracts Service Registry 
+#' Number(s) (CAS-RN) of desired chemical(s).
+#' @param dtxsid A single or vector ofEPA's DSSTox Structure ID(s) 
+#' (\url{https://comptox.epa.gov/dashboard})  
+#' 
+#' @param casrn.vector A deprecated argument specifying a single or vector of 
+#' Chemical Abstracts Service Registry 
+#' Number(s) (CAS-RN) of desired chemical(s).
+#' 
+#' @param nomconc.vector For vector or single value, micromolar (uM = mol/L) nominal 
+#' concentration (e.g. AC50 value)
+#' 
+#' @param this.well_number For single value, plate format default is 384, used
+#' if is.na(tcdata)==TRUE. This value chooses default surface area settings for
+#' \code{\link{armitage_estimate_sarea}} based on the number of wells per plate.
+#' 
+#' @param this.FBSf Fraction fetal bovine serum, must be entered by user.
+#' 
+#' @param tcdata A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
+#' v_total, v_working. Otherwise supply single values to this.params (e.g., this.sarea,
+#' this.v_total, etc.). Chemical parameters are taken from 
+#' \code{\link{chem.physical_and_invitro.data}}.
+#' 
+#' @param this.sarea Surface area per well (m^2)
+#' 
+#' @param this.v_total Total volume per well (uL)
+#' 
+#' @param this.v_working Working volume per well (uL)
+#' 
+#' @param this.cell_yield Number of cells per well
+#' 
+#' @param this.Tsys System temperature (degrees C)
+#' 
+#' @param this.Tref Reference temperature (degrees K)
+#' 
+
 #' @param casrn description
 #' 
 #' @param nomconc description
@@ -53,7 +90,7 @@
 #' @author Meredith Scherer, adapted from code written by L.S Lautz for A. Punt, N. Kramer
 #'
 #' @references 
-#' \insertref{kramer2010measuring}
+#' \insertRef{kramer2010measuring}{httk}
 #'
 #' @import magrittr
 #' 
@@ -84,7 +121,6 @@ kramer_eval <- function(chem.cas=NULL,
                         this.temp_k = 298.15,          #Temperature (Kelvin)
                         this.prot_conc = 0.21,         #Cell protein concentration (mg protein/million cells)
                         this.option.bottom = TRUE,     #Include the bottom of the well in surface area calculation
-                        this.option.plastic = FALSE,   #Automatically set surface area to zero
                         restrict.ion.partitioning = FALSE, #only allow the neutral fraction to partition
                         this.option.piechart = FALSE,   #Do not return pie chart
                         surface.area.switch = TRUE      #Calculate surface area of the well (assumes yes)

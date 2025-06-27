@@ -28,18 +28,50 @@ kramer_eval(
   this.temp_k = 298.15,
   this.prot_conc = 0.21,
   this.option.bottom = TRUE,
-  this.option.plastic = FALSE,
   restrict.ion.partitioning = FALSE,
   this.option.piechart = FALSE,
   surface.area.switch = TRUE
 )
 }
 \arguments{
+\item{chem.cas}{A single or vector of Chemical Abstracts Service Registry 
+Number(s) (CAS-RN) of desired chemical(s).}
+
+\item{chem.name}{A single or vector of name(s)) of desired chemical(s).}
+
+\item{dtxsid}{A single or vector ofEPA's DSSTox Structure ID(s) 
+(\url{https://comptox.epa.gov/dashboard})}
+
+\item{casrn.vector}{A deprecated argument specifying a single or vector of 
+Chemical Abstracts Service Registry 
+Number(s) (CAS-RN) of desired chemical(s).}
+
+\item{nomconc.vector}{For vector or single value, micromolar (uM = mol/L) nominal 
+concentration (e.g. AC50 value)}
+
+\item{this.well_number}{For single value, plate format default is 384, used
+if is.na(tcdata)==TRUE. This value chooses default surface area settings for
+\code{\link{armitage_estimate_sarea}} based on the number of wells per plate.}
+
 \item{tcdata}{A data.table with casrn, nomconc,v_total, v_working. Otherwise supply single values to this.params (e.g., this.sarea,
 this.v_total, etc.). Chemical parameters are taken from 
 \code{\link{chem.physical_and_invitro.data}}.}
 
+\item{this.v_total}{Total volume per well (uL)}
+
+\item{this.v_working}{Working volume per well (uL)}
+
+\item{this.cell_yield}{Number of cells per well}
+
+\item{this.sarea}{Surface area per well (m^2)}
+
+\item{this.Tsys}{System temperature (degrees C)}
+
+\item{this.Tref}{Reference temperature (degrees K)}
+
 \item{restrict.ion.partitioning}{only allow neutral fraction to partition}
+
+\item{this.FBSf}{Fraction fetal bovine serum, must be entered by user.}
 
 \item{casrn}{description}
 
@@ -85,7 +117,7 @@ Evaluate the Kramer model for chemical distribution \emph{in vitro}. Takes input
 as data table or vectors of values. Outputs a data table.
 }
 \references{
-\insertref{kramer2010measuring}
+\insertRef{kramer2010measuring}{httk}
 }
 \author{
 Meredith Scherer, adapted from code written by L.S Lautz for A. Punt, N. Kramer

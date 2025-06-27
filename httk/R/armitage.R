@@ -20,6 +20,8 @@
 #' @param this.v_working For single value, optionally supply working volume,
 #' otherwise estimated based on well number (m^3)
 #' 
+#' @param user_assay_parameters option to fill in your own assay parameters (data table)
+#' 
 #' @return A data table composed of any input data.table \emph{tcdata}
 #' with only the following columns either created or altered by this function:  
 #' \tabular{ccc}{
@@ -81,11 +83,16 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
     
     #if all the assay names are present, pull surface area and other info from either invitro.assay.params or user_assay_parameters 
     #table and assign to the appropriate assay_component_endpoint_name
-    if(all((tcdata[,(assay_component_endpoint_name)]) %in% invitro.assay.params[,(assay_component_endpoint_name)])){
-      tcdata <- invitro.assay.params[tcdata,on=.(assay_component_endpoint_name)]
-    }else if(all((tcdata[,(assay_component_endpoint_name)]) %in% user_assay_parameters[,(assay_component_endpoint_name)])){
+    if (all((tcdata[,(assay_component_endpoint_name)]) %in% 
+        invitro.assay.params[,(assay_component_endpoint_name)]))
+    {
+      tcdata <- 
+        httk::invitro.assay.params[tcdata,on=.(assay_component_endpoint_name)]
+    } else if (all((tcdata[,(assay_component_endpoint_name)]) %in% 
+               user_assay_parameters[,(assay_component_endpoint_name)]))
+    {
       tcdata <- user_assay_parameters[tcdata,on=.(assay_component_endpoint_name)]
-    }else{
+    } else {
       #stop the code and give this error:
       stop("assay_component_endpoint_name present in both invitro.assay.params and user_assay_parameters")
     }
@@ -223,6 +230,22 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' @param restrict.ion.partitioning FALSE, Should we restrict the chemical available to partition to only the neutral fraction?
 #' 
 #' @param surface.area.switch TRUE, automatically calculates surface area, switch to FALSE if user provided
+#' 
+#' @param user_assay_parameters option to fill in your own assay parameters (data table)
+#' 
+#' @param this.option.bottom Include the bottom of the well in surface area calculation
+#' 
+#' @param this.Anionic_VF Anionic phospholipid fraction
+#' 
+#' @param this.A_Prop_acid Sorption to anionic lipids - acidic chemicals
+#' 
+#' @param this.A_Prop_base Sorption to anionic lipids - basic chemicals
+#' 
+#' @param this.Lyso_VF lysosome volume fraction
+#' 
+#' @param this.Lyso_Diam diameter of lysosome (500 nm)
+#' 
+#' @param this.Lyso_pH pH of lysosome (5.1)
 #'
 #' @return
 #' \tabular{lll}{
@@ -244,7 +267,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' gkaw \tab The air to water PC \tab unitless ratio \cr          
 #' duow \tab internal energy of phase change for octanol-water \tab J/mol \cr          
 #' duaw \tab internal energy of phase change for air-water \tab J/mol \cr          
-#' gkmw \tab The log10 membrane to water PC \tab log10 unitless ratio \tab \cr          
+#' gkmw \tab The log10 membrane to water PC \tab log10 unitless ratio \cr          
 #' gkcw \tab The log10 cell/tissue to water PC \tab log10 unitless ratio\cr          
 #' gkbsa \tab The log10 bovine serum albumin to water PC \tab log10 unitless ratio \cr         
 #' gkpl \tab The log10 plastic to water PC \tab log10 m2/m2 \cr   
@@ -406,7 +429,6 @@ armitage_eval <- function(chem.cas=NULL,
                           this.option.kbsa2 = FALSE,
                           this.option.swat2 = FALSE,
                           this.option.kpl2 = FALSE,
-                          this.option.plastic = TRUE,
                           this.option.bottom = TRUE,
                           this.pseudooct = 0.01, # storage lipid content of cells
                           this.memblip = 0.04, # membrane lipid content of cells
@@ -508,7 +530,6 @@ armitage_eval <- function(chem.cas=NULL,
                             option.kbsa2=this.option.kbsa2, 
                             option.swat2=this.option.swat2,
                             option.kpl2=this.option.kpl2,
-                            option.plastic=this.option.plastic,
                             option.bottom=this.option.bottom,
                             FBSf=this.FBSf, pseudooct=this.pseudooct, 
                             memblip=this.memblip,

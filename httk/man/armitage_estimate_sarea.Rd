@@ -17,6 +17,8 @@ armitage_estimate_sarea(
 optionally include v_working, sarea, option.bottom, and option.plastic OR 
 with assay_component_endpoint_name corresponding to an entry in invitro.assay.params.}
 
+\item{user_assay_parameters}{option to fill in your own assay parameters (data table)}
+
 \item{this.well_number}{For single value, plate format default is 384, used
 if is.na(tcdata)==TRUE}
 
