@@ -21,9 +21,10 @@
 #' this.v_total, etc.). Chemical parameters are taken from 
 #' \code{\link{chem.physical_and_invitro.data}}.
 #' 
-#' @param option.bottom If true (default), include the bottom of the well in surface area calculation
-#' 
-#' @param option.plastic If true (not default), automatically set well surface area to zero
+#' @param nomconc.vector For vector or single value, micromolar (uM = mol/L) nominal 
+#' concentration (e.g. AC50 value)
+#'
+#' @             param this.ph pH of media
 #' 
 #' @return
 #' \tabular{lll}{

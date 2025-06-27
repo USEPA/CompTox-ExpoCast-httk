@@ -1938,13 +1938,23 @@
 #' \insertRef{Ring2017SEEM}{httk}
 "truong25.seem3"
 
-#' Literature Measurments of In Vitro Cellular and Nominal Concentration 
+#' Literature Measurements of In Vitro Cellular and Nominal Concentration 
 #' 
 #' @author Meredith Scherer
-#' @name IVD_Manuscript_data
+#' @name Scherer2025.IVD
 #' @docType data
 #' @format data.table and data.frame
-'IVD_Manuscript_data' 
+'Scherer2025.IVD' 
+
+#' Dimitrijevic et al. (2022)In Vitro Cellular and Nominal Concentration 
+#' 
+#' @author Jon Arnot
+#' @name Dimitrijevic.IVD
+#' @docType data
+#' @format data.table and data.frame
+#' @references
+#' \insertRef{dimitrijevic2022toward}{httk}
+'Dimitrijevic.IVD'
 
 #' ToxCast In Vitro Assay Descriptors
 #' 

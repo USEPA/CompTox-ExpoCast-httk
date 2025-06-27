@@ -24,6 +24,9 @@ this.v_total, etc.). Chemical parameters are taken from
 
 \item{casrn.vector}{For vector or single value, CAS number}
 
+\item{nomconc.vector}{For vector or single value, micromolar (uM = mol/L) nominal 
+concentration (e.g. AC50 value)}
+
 \item{this.well_number}{For single value, plate format default is 384, used
 if is.na(tcdata)==TRUE. This value chooses default surface area settings for
 \code{\link{armitage_estimate_sarea}} based on the number of plates per well.}
@@ -35,10 +38,6 @@ if is.na(tcdata)==TRUE. This value chooses default surface area settings for
 \item{this.v_working}{Working volume per well (uL)}
 
 \item{this.v_total}{Total volume per well (uL)}
-
-\item{option.bottom}{If true (default), include the bottom of the well in surface area calculation}
-
-\item{option.plastic}{If true (not default), automatically set well surface area to zero}
 }
 \value{
 \tabular{lll}{

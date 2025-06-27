@@ -84,7 +84,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
     #if all the assay names are present, pull surface area and other info from either invitro.assay.params or user_assay_parameters 
     #table and assign to the appropriate assay_component_endpoint_name
     if (all((tcdata[,(assay_component_endpoint_name)]) %in% 
-        invitro.assay.params[,(assay_component_endpoint_name)]))
+        httk::invitro.assay.params[,(assay_component_endpoint_name)]))
     {
       tcdata <- 
         httk::invitro.assay.params[tcdata,on=.(assay_component_endpoint_name)]
@@ -549,7 +549,7 @@ armitage_eval <- function(chem.cas=NULL,
                   "gkmw_n","gkbsa_n","gkpl_n","ksalt")
   
   req.list <- c("Tsys","Tref","option.kbsa2","option.swat2", "option.kpl2",
-                "option.bottom", "option.plastic",
+                "option.bottom", 
                 "FBSf","pseudooct","memblip","nlom","P_nlom","P_dom","P_cells",
                 "Anionic_VF", "A_Prop_acid", "A_Prop_base", "Lyso_VF", 
                 "Lyso_Diam", "Lyso_pH", "csalt","celldensity",

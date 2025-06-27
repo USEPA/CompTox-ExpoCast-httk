@@ -29,7 +29,6 @@ kramer_eval(
   this.prot_conc = 0.21,
   this.option.bottom = TRUE,
   restrict.ion.partitioning = FALSE,
-  this.option.piechart = FALSE,
   surface.area.switch = TRUE
 )
 }
@@ -57,49 +56,37 @@ if is.na(tcdata)==TRUE. This value chooses default surface area settings for
 this.v_total, etc.). Chemical parameters are taken from 
 \code{\link{chem.physical_and_invitro.data}}.}
 
-\item{this.v_total}{Total volume per well (uL)}
+\item{user_assay_parameters}{option to fill in your own assay parameters (data table)}
 
-\item{this.v_working}{Working volume per well (uL)}
+\item{this.serum}{Concentration of serum in media (percent volume/volume)}
 
-\item{this.cell_yield}{Number of cells per well}
+\item{this.BSA}{Boving serum albumin concentration in serum (g/L)}
 
-\item{this.sarea}{Surface area per well (m^2)}
+\item{this.v_total}{Total volume of well (uL)}
 
-\item{this.Tsys}{System temperature (degrees C)}
+\item{this.v_working}{Volume of medium per well (uL)}
 
-\item{this.Tref}{Reference temperature (degrees K)}
+\item{this.cell_yield}{Number of cells/well seeded (unitless)}
+
+\item{this.sarea}{Surface area of plastic exposed to medium (m^2)}
+
+\item{this.Tsys}{System temperature (Celcius)}
+
+\item{this.Tref}{Reference temperature (Kelvin)}
+
+\item{this.prot_conc}{Cell protein concentration (mg protein/million cells)}
+
+\item{this.option.bottom}{Include the bottom of the well in surface area calculation}
 
 \item{restrict.ion.partitioning}{only allow neutral fraction to partition}
 
-\item{this.FBSf}{Fraction fetal bovine serum, must be entered by user.}
+\item{surface.area.switch}{TRUE, automatically calculates surface area, switch to FALSE if user provided}
 
 \item{casrn}{description}
 
 \item{well_number}{description}
 
-\item{gkow_n}{Log octanol to water PC (unitless)}
-
-\item{logHenry}{log10 Henry's law constant (atm*m^3/mol)}
-
 \item{nomconc}{Nominal test concentration (uM)}
-
-\item{v_total}{Total volume of well (uL)}
-
-\item{v_working}{Volume of medium per well (uL)}
-
-\item{cell_yield}{Number of cells/well seeded (unitless)}
-
-\item{sarea}{Surface area of plastic exposed to medium (m^2)}
-
-\item{Tsys}{System temperature (Celcius)}
-
-\item{Tref}{Reference temperature (Kelvin)}
-
-\item{prot_conc}{Cell protein concentration (mg protein/million cells)}
-
-\item{serum}{Concentration of serum in media (percent volume/volume)}
-
-\item{BSA}{BSA concentration in serum (g/L)}
 
 \item{option.piechart}{Option to generate a pie chart to visualize chemical partitioning}
 }

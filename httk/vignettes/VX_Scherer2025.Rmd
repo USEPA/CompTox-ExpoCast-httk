@@ -57,7 +57,7 @@ either change execute.vignette to TRUE or press "play" (the green arrow) on
 each chunk in RStudio.
 ```{r runchunks, eval = TRUE}
 # Set whether or not the following chunks will be executed (run):
-execute.vignette <- FALSE
+execute.vignette <- TRUE
 ```
 
 ### Load the relevant libraries
@@ -134,7 +134,7 @@ Data sets were curated from the literature to evaluate the in vitro distribution
 
 ```{r load_IVD_Manuscript_data_from_httk, eval = execute.vignette}
 # Get a working copy from HTTK:
-IVD_Manuscript_data <- httk::IVD_Manuscript_data
+IVD_Manuscript_data <- httk::Scherer2025.IVD
 cat(paste("Summarized data from ", 
           length(unique(IVD_Manuscript_data$Citation)),
           " studies covering ", 
@@ -655,17 +655,18 @@ print(compartment_plots)
 setwd("C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/IVD_Data")
 
 #load data
-original_curated.data.df<-read_csv("Dimitrijevic_from_arnot.csv")
+original_curated.data.df<-read.csv("Dimitrijevic_from_arnot.csv")
 ```
 
 ```{r format_data, eval = execute.vignette}
+original_curated.data.df <- httk::Dimitrijevic.IVD
 #convert to data table for manipulation
 original_curated.data.dt <- as.data.table(original_curated.data.df)
 
 #first - run using the default/dashboard values
 default.dt<-copy(original_curated.data.dt %>% select(-c( "Arnot_pka", "Arnot_pkb", 
                                                 "Chemaxon_pKa", "Chemaxon_pKb", 
-                                                "log KOW,N", "log KAW,N", 
+                                                "log.KOW.N", "log.KAW.N", 
                                                 "Predicted_Ccell_µM", "FoA")))
 
 # run the model, output concentrations in umol/L (e.g. uM)
@@ -679,8 +680,8 @@ curated.data.dt<-copy(original_curated.data.dt)
 #overwrite using curated physchem properties
 curated.data.dt[, pKa_Donor := as.character(Arnot_pka)] %>% #acidic
   .[, pKa_Accept := as.character(Arnot_pkb)] %>% #basic
-  .[, gkow := `log KOW,N`] %>% # gkow
-  .[, gkaw_n := `log KAW,N`] # gkaw
+  .[, gkow := `log.KOW.N`] %>% # gkow
+  .[, gkaw_n := `log.KAW.N`] # gkaw
 
 # run the model, output concentrations in umol/L (e.g. uM)
 armitageOutput_curated.data.dt <- armitage_eval(tcdata=curated.data.dt,
@@ -690,11 +691,11 @@ armitageOutput_curated.data.dt <- armitage_eval(tcdata=curated.data.dt,
 #check that the properties survived through the function
 #gkow
 armitageOutput_curated.data.dt$gkow_n
-armitageOutput_curated.data.dt$`log KOW,N`
+armitageOutput_curated.data.dt$log.KOW.N
 armitageOutput_default.dt$gkow
 #gkaw
 armitageOutput_curated.data.dt$gkaw_n
-armitageOutput_curated.data.dt$`log KAW,N`
+armitageOutput_curated.data.dt$log.KAW.N
 armitageOutput_default.dt$gkaw_n
 
 armitageOutput_default.dt$ccells
@@ -761,7 +762,7 @@ if(save_output){
 }
 
 names(armitageOutput_curated.data.dt)
-armitageOutput_curated.data.dt %>% select(Name, Arnot_pka, Arnot_pkb, `log KOW,N`, `log KAW,N`)
+armitageOutput_curated.data.dt %>% select(Name, Arnot_pka, Arnot_pkb, log.KOW.N, log.KAW.N)
 ```
 
 

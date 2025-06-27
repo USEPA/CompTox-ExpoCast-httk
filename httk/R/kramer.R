@@ -20,8 +20,6 @@
 #' if is.na(tcdata)==TRUE. This value chooses default surface area settings for
 #' \code{\link{armitage_estimate_sarea}} based on the number of wells per plate.
 #' 
-#' @param this.FBSf Fraction fetal bovine serum, must be entered by user.
-#' 
 #' @param tcdata A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
 #' v_total, v_working. Otherwise supply single values to this.params (e.g., this.sarea,
 #' this.v_total, etc.). Chemical parameters are taken from 
@@ -39,7 +37,6 @@
 #' 
 #' @param this.Tref Reference temperature (degrees K)
 #' 
-
 #' @param casrn description
 #' 
 #' @param nomconc description
@@ -50,33 +47,35 @@
 #' this.v_total, etc.). Chemical parameters are taken from 
 #' \code{\link{chem.physical_and_invitro.data}}.
 #' 
-#' @param gkow_n Log octanol to water PC (unitless)
-#' 
-#' @param logHenry log10 Henry's law constant (atm*m^3/mol)
-#' 
 #' @param nomconc Nominal test concentration (uM)
 #' 
-#' @param v_total Total volume of well (uL)
+#' @param this.v_total Total volume of well (uL)
 #' 
-#' @param v_working Volume of medium per well (uL)
+#' @param this.v_working Volume of medium per well (uL)
 #' 
-#' @param cell_yield Number of cells/well seeded (unitless)
+#' @param this.cell_yield Number of cells/well seeded (unitless)
 #' 
-#' @param sarea Surface area of plastic exposed to medium (m^2)
+#' @param this.sarea Surface area of plastic exposed to medium (m^2)
 #' 
-#' @param Tsys System temperature (Celcius)
+#' @param this.Tsys System temperature (Celcius)
 #' 
-#' @param Tref Reference temperature (Kelvin)
+#' @param this.Tref Reference temperature (Kelvin)
 #' 
-#' @param prot_conc Cell protein concentration (mg protein/million cells)
+#' @param this.prot_conc Cell protein concentration (mg protein/million cells)
 #' 
-#' @param serum Concentration of serum in media (percent volume/volume)
+#' @param this.serum Concentration of serum in media (percent volume/volume)
 #' 
-#' @param BSA BSA concentration in serum (g/L)
+#' @param this.BSA Boving serum albumin concentration in serum (g/L)
 #' 
 #' @param option.piechart Option to generate a pie chart to visualize chemical partitioning
 #' 
 #' @param restrict.ion.partitioning only allow neutral fraction to partition
+#' 
+#' @param surface.area.switch TRUE, automatically calculates surface area, switch to FALSE if user provided
+#' 
+#' @param user_assay_parameters option to fill in your own assay parameters (data table)
+#' 
+#' @param this.option.bottom Include the bottom of the well in surface area calculation
 #'
 #' @return
 #' \tabular{lll}{
@@ -122,7 +121,6 @@ kramer_eval <- function(chem.cas=NULL,
                         this.prot_conc = 0.21,         #Cell protein concentration (mg protein/million cells)
                         this.option.bottom = TRUE,     #Include the bottom of the well in surface area calculation
                         restrict.ion.partitioning = FALSE, #only allow the neutral fraction to partition
-                        this.option.piechart = FALSE,   #Do not return pie chart
                         surface.area.switch = TRUE      #Calculate surface area of the well (assumes yes)
 )
 
