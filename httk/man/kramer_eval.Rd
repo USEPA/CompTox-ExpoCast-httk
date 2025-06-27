@@ -14,8 +14,6 @@ kramer_eval(
   tcdata = NA,
   user_assay_parameters = NA,
   this.serum = NA_real_,
-  this.gKow = NA_real_,
-  this.Hconst = NA_real_,
   this.csalt = 0.15,
   this.BSA = 44,
   this.v_total = NA_real_,
@@ -60,6 +58,8 @@ this.v_total, etc.). Chemical parameters are taken from
 
 \item{this.serum}{Concentration of serum in media (percent volume/volume)}
 
+\item{this.csalt}{Ionic strength of buffer, mol/L}
+
 \item{this.BSA}{Boving serum albumin concentration in serum (g/L)}
 
 \item{this.v_total}{Total volume of well (uL)}
@@ -68,11 +68,15 @@ this.v_total, etc.). Chemical parameters are taken from
 
 \item{this.cell_yield}{Number of cells/well seeded (unitless)}
 
+\item{this.L_per_mil_cells}{Liters per 1 million cells}
+
 \item{this.sarea}{Surface area of plastic exposed to medium (m^2)}
 
 \item{this.Tsys}{System temperature (Celcius)}
 
 \item{this.Tref}{Reference temperature (Kelvin)}
+
+\item{this.temp_k}{Temperature (Kelvin)}
 
 \item{this.prot_conc}{Cell protein concentration (mg protein/million cells)}
 

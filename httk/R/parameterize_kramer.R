@@ -24,7 +24,7 @@
 #' 
 #' @param this.sarea Surface area per well (m^2)
 #'
-#' @param this.cell.yield Number of cells/well seeded
+#' @param this.cell_yield Number of cells/well seeded
 #'
 #' @return A data table composed of any input data.table \emph{tcdata}
 #' with only the following columns either created or altered by this function:

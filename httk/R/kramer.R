@@ -74,6 +74,12 @@
 #' @param user_assay_parameters option to fill in your own assay parameters (data table)
 #' 
 #' @param this.option.bottom Include the bottom of the well in surface area calculation
+#' 
+#' @param this.csalt Ionic strength of buffer, mol/L
+#'
+#' @param this.L_per_mil_cells Liters per 1 million cells
+#'
+#' @param this.temp_k Temperature (Kelvin)
 #'
 #' @return
 #' \tabular{lll}{
@@ -104,8 +110,6 @@ kramer_eval <- function(chem.cas=NULL,
                         tcdata = NA,                   #Data.table with casrn, nomconc, and well_number
                         user_assay_parameters = NA,    #Data.table with user-entered assay parameters (optional)
                         this.serum = NA_real_,         #Concentration of serum in media (%)
-                        this.gKow = NA_real_,          #Log octanol-water PC (unitless)
-                        this.Hconst = NA_real_,        #Henry's law constant (atm*m^3/mol)
                         this.csalt = 0.15,             # Ionic strength of buffer, mol/L
                         this.BSA = 44,                 #BSA concentration in serum (g/L)
                         this.v_total = NA_real_,       #Total volume of well (uL)

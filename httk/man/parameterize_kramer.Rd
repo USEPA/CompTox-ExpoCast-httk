@@ -32,11 +32,11 @@ Number(s) (CAS-RN) of desired chemical(s).}
 
 \item{this.v_working}{Working volume per well (uL)}
 
+\item{this.cell_yield}{Number of cells/well seeded}
+
 \item{this.sarea}{Surface area per well (m^2)}
 
 \item{this.prot_conc}{Cell protein concentration (mg protein/million cells)}
-
-\item{this.cell.yield}{Number of cells/well seeded}
 }
 \value{
 A data table composed of any input data.table \emph{tcdata}
