@@ -1,36 +1,27 @@
 #' Parameterize Armitage In Vitro Distribution Model
 #' 
-#' @param this.well_number For single value, plate format default is 384, used
-#' if is.na(tcdata)==TRUE. This value chooses default surface area settings for
-#' \code{\link{armitage_estimate_sarea}} based on the number of wells per plate.
-#' 
 #' @param tcdata A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
 #' v_total, v_working. Otherwise supply single values to this.params (e.g., this.sarea,
 #' this.v_total, etc.). Chemical parameters are taken from 
 #' \code{\link{chem.physical_and_invitro.data}}.
-#' 
-#' @param this.sarea Surface area per well (m^2)
-#' 
-#' @param this.cell_yield For single value, optionally supply cell_yield,
-#' otherwise estimated based on well number
-#' 
+#'
 #' @param casrn.vector A deprecated argument specifying a single or vector of 
 #' Chemical Abstracts Service Registry 
 #' Number(s) (CAS-RN) of desired chemical(s).
 #' 
-#' @param nomconc.vector For vector or single value, micromolar (uM = mol/L) nominal 
-#' concentration (e.g. AC50 value)
-#' 
-#' @param this.well_number For single value, plate format default is 384, used
-#' if is.na(tcdata)==TRUE. This value chooses default surface area settings for
-#' \code{\link{armitage_estimate_sarea}} based on the number of wells per plate.
-#' 
 #' @return
 #' \tabular{lll}{
 #' \strong{Param} \tab \strong{Description} \tab \strong{Units} \cr
-#' gkaw \tab The air to water PC \tab unitless ratio \cr  
-#' logHenry \tab The log10 Henry's law constant \tab atm*m^3/mol \cr  
-#' gswat \tab The log10 water solubility at 25C (logWSol) \tab log10 mg/L \cr
+#' casrn \tab Chemical Abstracts Service Registry Number \tab character \cr
+#' logHenry \tab The log10 Henry's law constant \tab atm*m^3/mol \cr      
+#' MP_C \tab The chemical compound's melting point \tab degrees C \cr           
+#' MW \tab The chemical compound's molecular weight \tab g/mol \cr          
+#' gkow_n \tab The log10 octanol to water (PC) (logP)\tab log10 unitless ratio \cr  
+#' pKa_Donor \tab Chemical dissociation equilibrium constant(s); pKa(ie pKa_Donor) = -log10(Ka) \tab unitless \cr  
+#' pKa_Accept \tab Chemical association equilibrium constant(s); pKb(ie pKa_Accept) = 14 - pKa  \tab unitless \cr 
+#' pH \tab pH where ionization is evaluated (typically assay medium) \tab unitless \cr 
+#' gkaw_n \tab The air to water PC (neutral) \tab unitless ratio \cr
+#' gswat_n \tab The log10 water solubility at 25C (logWSol) \tab log10 mg/L \cr
 #' }
 #' 
 #' @author Meredith Scherer
@@ -38,14 +29,13 @@
 #' @references
 #' \insertRef{armitage2014application}{httk}
 #' 
+#' @import magrittr
+#'
 #' @export parameterize_armitage
-parameterize_armitage <- function(tcdata = NA,                   #Data.table with casrn, nomconc, and well_number
-                                  casrn.vector = NA_character_,  #CAS number
-                                  nomconc.vector = 1,            #Nominal concentration vector (uM)
-                                  this.well_number = 384,        #Number of wells per plate
-                                  this.cell_yield = NA_real_,    #Number of cells/well seeded
-                                  this.sarea = NA_real_         #Surface area of plastic exposed to medium (m^2)
-                                  )
+
+parameterize_armitage <- function(tcdata = NA,                   #Data.table with casrn
+                                  casrn.vector = NA_character_     #CAS number
+)
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
   #each time a data.table column name is used without quotes. To appease R CMD
@@ -57,18 +47,11 @@ parameterize_armitage <- function(tcdata = NA,                   #Data.table wit
   
   #### Set tcdata variables ####
   if(all(is.na(tcdata))){
-    tcdata <- data.table(casrn = casrn.vector,
-                         nomconc = nomconc.vector,
-                         well_number = this.well_number,
-                         sarea = this.sarea,
-                         cell_yield = this.cell_yield)
+    tcdata <- data.table(casrn = casrn.vector)
   }
-  
-
   
   #### Call parameterize_IVD ####
   p_Armitage_output<- parameterize_IVD(tcdata)
-  
   
   # Convert from chem.physical_and_invitro.data units to Armitage model units:
   p_Armitage_output[, "gswat_n" := logWSol + log10(MW*1000)] # log10 mol/L to log10 mg/L
