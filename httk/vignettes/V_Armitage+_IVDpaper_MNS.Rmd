@@ -151,6 +151,14 @@ cat(paste("Summarized data from ",
 #number each row
 IVD_Manuscript_data[,X:=1:length(IVD_Manuscript_data$ChemicalName)]
 
+# unique(IVD_Manuscript_data$Citation)
+# 
+# IVD_Manuscript_data %>% 
+#   dplyr::filter(Citation == "Bellwon, 2015a" |
+#                 Citation == "Bellwon, 2015b") %>% 
+#   select(CellConcentration_uM)
+
+  
 ```
 
 #In vitro assay descriptors (optional step)
@@ -552,16 +560,24 @@ print(Ccells_comboplot_mult)
 ## Figure 4: Chemical partitioning into water, air, cell, and plastic compartments for the Armitage and Kramer models. Dashed line shows unity.
 ```{r chemicalPart_intracel_plot, eval = execute.vignette}
 
+#convert from scientific format for axis labels
+scientific_10 <- function(x) {                                  
+  out <- gsub("1e", "10^", scientific_format()(x))              
+  out <- gsub("\\+","",out)                                     
+  out <- gsub("10\\^01","10",out)                               
+  out <- parse(text=gsub("10\\^00","1",out))                    
+}  
+
 #Cwat_uM -------- Cwat_R
 Cwater_comparison<-ggplot(combodata, aes(concentration_medium, cwat_s, 
                         colour = ChemicalName.x)) + 
                         geom_point() +
                         geom_abline(intercept=0,slope=1, linetype = "dashed")+
-                        scale_y_continuous(labels = function(x) sprintf("%g", x), trans='log10') +
-                        scale_x_continuous(labels = function(x) sprintf("%g", x),trans='log10') +
-                        ggtitle("Water Concentration") +
-                        xlab("Kramer Cmedium (\U00B5M)") + 
-                        ylab("Armitage Cwat_s (\U00B5M)")+
+                        scale_x_log10(label=scientific_10)+
+                        scale_y_log10(label=scientific_10)+
+                        ggtitle("Medium Concentration") +
+                        xlab(expression("Kramer Predicted "*italic("C"["medium"])~"(\u03BCM)")) + 
+                        ylab(expression("Armitage Predicted "*italic("C"["medium"])~"(\u03BCM)"))+
                         labs(colour = "Chemical")+
                         theme_bw() + 
                         theme(legend.position = "none",
@@ -576,11 +592,11 @@ Cair_comparison<-ggplot(combodata, aes(concentration_air, cair,
                         colour = ChemicalName.x)) + 
                         geom_point() +
                         geom_abline(intercept=0,slope=1, linetype = "dashed")+
-                        scale_y_continuous(labels = function(x) sprintf("%g", x), trans='log10') +
-                        scale_x_continuous(labels = function(x) sprintf("%g", x),trans='log10') +
+                        scale_x_log10(label=scientific_10)+
+                        scale_y_log10(label=scientific_10)+
                         ggtitle("Air Concentration") +
-                        xlab("Kramer Cair (\U00B5M)") + 
-                        ylab("Armitage Cair (\U00B5M)")+
+                        xlab(expression("Kramer Predicted "*italic("C"["air"])~"(\u03BCM)")) + 
+                        ylab(expression("Armitage Predicted "*italic("C"["air"])~"(\u03BCM)"))+
                         labs(colour = "Chemical")+
                         theme_bw() + 
                         theme(legend.position = "none",
@@ -596,11 +612,11 @@ Ccells_comparison<-ggplot(combodata, aes(concentration_cells, ccells,
                         colour = ChemicalName.x)) + 
                         geom_point() +
                         geom_abline(intercept=0,slope=1, linetype = "dashed")+
-                        scale_y_continuous(labels = function(x) sprintf("%g", x), trans='log10') +
-                        scale_x_continuous(labels = function(x) sprintf("%g", x),trans='log10') +
+                        scale_x_log10(label=scientific_10)+
+                        scale_y_log10(label=scientific_10)+
                         ggtitle("Cell Concentration") +
-                        xlab("Kramer Ccells (\U00B5M)") + 
-                        ylab("Armitage Ccells (\U00B5M)")+
+                        xlab(expression("Kramer Predicted "*italic("C"["cell"])~"(\u03BCM)")) + 
+                        ylab(expression("Armitage Predicted "*italic("C"["cell"])~"(\u03BCM)"))+
                         labs(colour = "Chemical")+
                         theme_bw() + 
                         theme(legend.position = "none",
@@ -615,11 +631,11 @@ Aplastic_comparison<-ggplot(combodata, aes(concentration_plastic, cplastic,
                         colour = ChemicalName.x)) + 
                         geom_point() +
                         geom_abline(intercept=0,slope=1, linetype = "dashed")+
-                        scale_y_continuous(labels = function(x) sprintf("%g", x), trans='log10') +
-                        scale_x_continuous(labels = function(x) sprintf("%g", x),trans='log10') +
+                        scale_x_log10(label=scientific_10)+
+                        scale_y_log10(label=scientific_10)+
                         ggtitle("Plastic Concentration") +
-                        xlab("Kramer Cplastic (\U00B5mol/m\U00B2)") + 
-                        ylab("Armitage Cplastic (\U00B5mol/m\U00B2)")+
+                        xlab(expression("Kramer Predicted "*italic("C"["plastic"])~"(\U00B5mol/m\U00B2)")) + 
+                        ylab(expression("Armitage Predicted "*italic("C"["plastic"])~"(\U00B5mol/m\U00B2)"))+
                         labs(colour = "Chemical")+
                         theme_bw() + 
                         theme(legend.key.size = unit(1, 'mm'),
