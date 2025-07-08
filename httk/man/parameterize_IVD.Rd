@@ -4,21 +4,7 @@
 \alias{parameterize_IVD}
 \title{Parameterize In Vitro Distribution Models}
 \usage{
-parameterize_IVD(
-  tcdata = NA,
-  casrn.vector = NA_character_,
-  nomconc.vector = NA_real_,
-  this.serum = NA_real_,
-  this.well_number = 384,
-  this.sarea = NA_real_,
-  this.cell_yield = NA_real_,
-  this.v_working = NA_real_,
-  this.v_total = NA_real_,
-  this.pH = 7,
-  this.option.bottom = TRUE,
-  this.option.plastic = FALSE,
-  surface.area.switch = TRUE
-)
+parameterize_IVD(tcdata = NA, casrn.vector = NA_character_, this.pH = 7)
 }
 \arguments{
 \item{tcdata}{A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
@@ -28,46 +14,31 @@ this.v_total, etc.). Chemical parameters are taken from
 
 \item{casrn.vector}{For vector or single value, CAS number}
 
-\item{this.well_number}{For single value, plate format default is 384, used
-if is.na(tcdata)==TRUE. This value chooses default surface area settings for
-\code{\link{armitage_estimate_sarea}} based on the number of plates per well.}
-
-\item{this.sarea}{Surface area of plastic exposed to medium (m^2)}
-
-\item{this.cell_yield}{Number of cells per well}
-
-\item{this.v_working}{Working volume per well (uL)}
-
-\item{this.v_total}{Total volume per well (uL)}
-
-\item{option.bottom}{If true (default), include the bottom of the well in surface area calculation}
-
-\item{option.plastic}{If true (not default), automatically set well surface area to zero}
+\item{this.pH}{pH of media}
 }
 \value{
 \tabular{lll}{
 \strong{Param} \tab \strong{Description} \tab \strong{Units} \cr
 casrn \tab Chemical Abstracts Service Registry Number \tab character \cr
-well_number \tab Number of wells in plate (used to set default surface area) \tab unitless \cr   
-sarea \tab Surface area of plastic exposed to medium \tab m^2 \cr         
-v_total \tab Total volume of well \tab uL \cr       
-v_working \tab Filled volume of well \tab uL \cr     
-cell_yield \tab Number of cells \tab cells \cr
-gkow \tab The log10 octanol to water (PC) (logP)\tab log10 unitless ratio \cr     
 logHenry \tab The log10 Henry's law constant \tab atm*m^3/mol \cr      
 gswat \tab The log10 water solubility at 25C (logWSol) \tab log10 mol/L \cr
-MP \tab The chemical compound's melting point \tab degrees C \cr           
-MW \tab The chemical compound's molecular weight \tab g/mol \cr            
+MP_C \tab The chemical compound's melting point \tab degrees C \cr           
+MW \tab The chemical compound's molecular weight \tab g/mol \cr          
+gkow_n \tab The log10 octanol to water (PC) (logP)\tab log10 unitless ratio \cr  
+pKa_Donor \tab Chemical dissociation equilibrium constant(s); pKa(ie pKa_Donor) = -log10(Ka) \tab unitless \cr  
+pKa_Accept \tab Chemical association equilibrium constant(s); pKb(ie pKa_Accept) = 14 - pKa  \tab unitless \cr 
+pH \tab pH where ionization is evaluated (typically assay medium) \tab unitless \cr 
+gkaw_n \tab The air to water PC (neutral) \tab unitless ratio \cr 
 }
 }
 \description{
-This function collects information on chemicals and well plate geometry input by the user.
+This function collects physicochemical properties from chemicals input by the user for use with armitage.R and kramer.R.
 }
 \examples{
 
 library(httk)
 
-output <- parameterize_IVD(casrn.vector = c("15687-27-1"), this.well_number = 384)
+output <- parameterize_IVD(casrn.vector = c("15687-27-1"))
 print(output)
 
 }

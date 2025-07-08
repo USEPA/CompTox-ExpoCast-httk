@@ -1,5 +1,14 @@
 #' Parameterize Armitage In Vitro Distribution Model
 #' 
+#' @param tcdata A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
+#' v_total, v_working. Otherwise supply single values to this.params (e.g., this.sarea,
+#' this.v_total, etc.). Chemical parameters are taken from 
+#' \code{\link{chem.physical_and_invitro.data}}.
+#'
+#' @param casrn.vector A deprecated argument specifying a single or vector of 
+#' Chemical Abstracts Service Registry 
+#' Number(s) (CAS-RN) of desired chemical(s).
+#' 
 #' @return
 #' \tabular{lll}{
 #' \strong{Param} \tab \strong{Description} \tab \strong{Units} \cr
@@ -17,6 +26,9 @@
 #' 
 #' @author Meredith Scherer
 #' 
+#' @references
+#' \insertRef{armitage2014application}{httk}
+#' 
 #' @import magrittr
 #'
 #' @export parameterize_armitage
@@ -25,7 +37,13 @@ parameterize_armitage <- function(tcdata = NA,                   #Data.table wit
                                   casrn.vector = NA_character_     #CAS number
 )
 {
-  
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
+  logWSol <- MW <- NULL
+  #End R CMD CHECK appeasement.         
   
   #### Set tcdata variables ####
   if(all(is.na(tcdata))){

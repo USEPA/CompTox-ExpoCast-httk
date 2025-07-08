@@ -4,49 +4,38 @@
 \alias{parameterize_armitage}
 \title{Parameterize Armitage In Vitro Distribution Model}
 \usage{
-parameterize_armitage(
-  tcdata = NA,
-  casrn.vector = NA_character_,
-  nomconc.vector = 1,
-  this.well_number = 384,
-  this.logKow = NA_real_,
-  this.cell_yield = NA_real_,
-  this.sarea = NA_real_,
-  this.prot_conc = 0.21,
-  this.option.bottom = TRUE,
-  this.FBSf = NA_real_,
-  this.Tsys = 37,
-  this.Tref = 298.15,
-  this.option.kbsa2 = FALSE,
-  this.option.swat2 = FALSE,
-  this.pseudooct = 0.01,
-  this.memblip = 0.04,
-  this.nlom = 0.2,
-  this.P_nlom = 0.035,
-  this.P_dom = 0.05,
-  this.P_cells = 1,
-  this.csalt = 0.15,
-  this.celldensity = 1,
-  this.cellmass = 3,
-  this.f_oc = 1,
-  this.conc_ser_alb = 24,
-  this.conc_ser_lip = 1.9,
-  this.Vdom = 0,
-  this.option.plastic = FALSE,
-  restrict.ion.partitioning = FALSE,
-  surface.area.switch = TRUE
-)
+parameterize_armitage(tcdata = NA, casrn.vector = NA_character_)
+}
+\arguments{
+\item{tcdata}{A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
+v_total, v_working. Otherwise supply single values to this.params (e.g., this.sarea,
+this.v_total, etc.). Chemical parameters are taken from 
+\code{\link{chem.physical_and_invitro.data}}.}
+
+\item{casrn.vector}{A deprecated argument specifying a single or vector of 
+Chemical Abstracts Service Registry 
+Number(s) (CAS-RN) of desired chemical(s).}
 }
 \value{
 \tabular{lll}{
 \strong{Param} \tab \strong{Description} \tab \strong{Units} \cr
-gkaw \tab The air to water PC \tab unitless ratio \cr  
-logHenry \tab The log10 Henry's law constant \tab atm*m^3/mol \cr  
-gswat \tab The log10 water solubility at 25C (logWSol) \tab log10 mg/L \cr
+casrn \tab Chemical Abstracts Service Registry Number \tab character \cr
+logHenry \tab The log10 Henry's law constant \tab atm*m^3/mol \cr      
+MP_C \tab The chemical compound's melting point \tab degrees C \cr           
+MW \tab The chemical compound's molecular weight \tab g/mol \cr          
+gkow_n \tab The log10 octanol to water (PC) (logP)\tab log10 unitless ratio \cr  
+pKa_Donor \tab Chemical dissociation equilibrium constant(s); pKa(ie pKa_Donor) = -log10(Ka) \tab unitless \cr  
+pKa_Accept \tab Chemical association equilibrium constant(s); pKb(ie pKa_Accept) = 14 - pKa  \tab unitless \cr 
+pH \tab pH where ionization is evaluated (typically assay medium) \tab unitless \cr 
+gkaw_n \tab The air to water PC (neutral) \tab unitless ratio \cr
+gswat_n \tab The log10 water solubility at 25C (logWSol) \tab log10 mg/L \cr
 }
 }
 \description{
 Parameterize Armitage In Vitro Distribution Model
+}
+\references{
+\insertRef{armitage2014application}{httk}
 }
 \author{
 Meredith Scherer

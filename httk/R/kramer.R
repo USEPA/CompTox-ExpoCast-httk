@@ -3,6 +3,40 @@
 #' Evaluate the Kramer model for chemical distribution \emph{in vitro}. Takes input
 #' as data table or vectors of values. Outputs a data table.
 #' 
+#' @param chem.name A single or vector of name(s)) of desired chemical(s).
+#' @param chem.cas A single or vector of Chemical Abstracts Service Registry 
+#' Number(s) (CAS-RN) of desired chemical(s).
+#' @param dtxsid A single or vector ofEPA's DSSTox Structure ID(s) 
+#' (\url{https://comptox.epa.gov/dashboard})  
+#' 
+#' @param casrn.vector A deprecated argument specifying a single or vector of 
+#' Chemical Abstracts Service Registry 
+#' Number(s) (CAS-RN) of desired chemical(s).
+#' 
+#' @param nomconc.vector For vector or single value, micromolar (uM = mol/L) nominal 
+#' concentration (e.g. AC50 value)
+#' 
+#' @param this.well_number For single value, plate format default is 384, used
+#' if is.na(tcdata)==TRUE. This value chooses default surface area settings for
+#' \code{\link{armitage_estimate_sarea}} based on the number of wells per plate.
+#' 
+#' @param tcdata A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
+#' v_total, v_working. Otherwise supply single values to this.params (e.g., this.sarea,
+#' this.v_total, etc.). Chemical parameters are taken from 
+#' \code{\link{chem.physical_and_invitro.data}}.
+#' 
+#' @param this.sarea Surface area per well (m^2)
+#' 
+#' @param this.v_total Total volume per well (uL)
+#' 
+#' @param this.v_working Working volume per well (uL)
+#' 
+#' @param this.cell_yield Number of cells per well
+#' 
+#' @param this.Tsys System temperature (degrees C)
+#' 
+#' @param this.Tref Reference temperature (degrees K)
+#' 
 #' @param casrn description
 #' 
 #' @param nomconc description
@@ -13,31 +47,39 @@
 #' this.v_total, etc.). Chemical parameters are taken from 
 #' \code{\link{chem.physical_and_invitro.data}}.
 #' 
-#' @param gkow_n Log octanol to water PC (unitless)
-#' 
-#' @param logHenry log10 Henry's law constant (atm*m^3/mol)
-#' 
 #' @param nomconc Nominal test concentration (uM)
 #' 
-#' @param v_total Total volume of well (uL)
+#' @param this.v_total Total volume of well (uL)
 #' 
-#' @param v_working Volume of medium per well (uL)
+#' @param this.v_working Volume of medium per well (uL)
 #' 
-#' @param cell_yield Number of cells/well seeded (unitless)
+#' @param this.cell_yield Number of cells/well seeded (unitless)
 #' 
-#' @param sarea Surface area of plastic exposed to medium (m^2)
+#' @param this.sarea Surface area of plastic exposed to medium (m^2)
 #' 
-#' @param Tsys System temperature (Celcius)
+#' @param this.Tsys System temperature (Celcius)
 #' 
-#' @param Tref Reference temperature (Kelvin)
+#' @param this.Tref Reference temperature (Kelvin)
 #' 
-#' @param prot_conc Cell protein concentration (mg protein/million cells)
+#' @param this.prot_conc Cell protein concentration (mg protein/million cells)
 #' 
-#' @param serum Concentration of serum in media (percent volume/volume)
+#' @param this.serum Concentration of serum in media (percent volume/volume)
 #' 
-#' @param BSA BSA concentration in serum (g/L)
+#' @param this.BSA Bovine serum albumin concentration in serum (g/L)
 #' 
 #' @param restrict.ion.partitioning only allow neutral fraction to partition
+#' 
+#' @param surface.area.switch TRUE, automatically calculates surface area, switch to FALSE if user provided
+#' 
+#' @param user_assay_parameters option to fill in your own assay parameters (data table)
+#' 
+#' @param this.option.bottom Include the bottom of the well in surface area calculation
+#' 
+#' @param this.csalt Ionic strength of buffer, mol/L
+#'
+#' @param this.L_per_mil_cells Liters per 1 million cells
+#'
+#' @param this.temp_k Temperature (Kelvin)
 #'
 #' @return
 #' \tabular{lll}{
@@ -50,14 +92,10 @@
 #' 
 #' @author Meredith Scherer, adapted from code written by L.S Lautz for A. Punt, N. Kramer
 #'
-#' @references Kramer, 2010. Measuring, Modeling, and Increasing the Free Concentration of Test Chemicals in Cell Assays. Utrecht University.
+#' @references 
+#' \insertRef{kramer2010measuring}{httk}
 #'
 #' @import magrittr
-#'
-#' @examples 
-#' 
-#' library(httk)
-#' ...something here...
 #' 
 #' @export kramer_eval
 # 
@@ -72,8 +110,6 @@ kramer_eval <- function(chem.cas=NULL,
                         tcdata = NA,                   #Data.table with casrn, nomconc, and well_number
                         user_assay_parameters = NA,    #Data.table with user-entered assay parameters (optional)
                         this.serum = NA_real_,         #Concentration of serum in media (%)
-                        this.gKow = NA_real_,          #Log octanol-water PC (unitless)
-                        this.Hconst = NA_real_,        #Henry's law constant (atm*m^3/mol)
                         this.csalt = 0.15,             # Ionic strength of buffer, mol/L
                         this.BSA = 44,                 #BSA concentration in serum (g/L)
                         this.v_total = NA_real_,       #Total volume of well (uL)
@@ -86,7 +122,6 @@ kramer_eval <- function(chem.cas=NULL,
                         this.temp_k = 298.15,          #Temperature (Kelvin)
                         this.prot_conc = 0.21,         #Cell protein concentration (mg protein/million cells)
                         this.option.bottom = TRUE,     #Include the bottom of the well in surface area calculation
-                        this.option.plastic = FALSE,   #Automatically set surface area to zero
                         restrict.ion.partitioning = FALSE, #only allow the neutral fraction to partition
                         surface.area.switch = TRUE      #Calculate surface area of the well (assumes yes)
 )
@@ -94,9 +129,29 @@ kramer_eval <- function(chem.cas=NULL,
 
 
 {
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
   well_number<-nomconc<-serum<-BSA<-v_total<-v_working<-cell_yield<-NULL
   prot_conc<-temp_k<-sarea<-casrn<- csalt<- NULL
-  
+  Fneutral <- Fcharged <- Fpositive <- Fnegative <- NULL
+  BSA2 <- gkbsa_n <- gkow <- gkpl_n <- gkcw_n <- SFmw <- SFbsa_acidic <- NULL
+  SFbsa_basic <- SFplw <- gkcw_i <- gkbsa_i_acidic <- gkbsa_i_basic <- NULL
+  gkpl_i <- ksalt <- gkow_n <- Tsys <- Tcor <- Tref <- duaw <- NULL
+  gkaw_n_temp <- gkaw_n <- kcw_n <- kcw_i <- kbsa_n <- kbsa_i_acidic <- NULL
+  kbsa_i_basic <- kaw_n <- kpl_n <- kpl_i <- DR_kcw <- DR_kbsa <- DR_kaw <- NULL
+  DR_kpl <- Ka <- Ks <- Kp <- Kc <- frac_free <- conc_plastic <- NULL
+  conc_cell <- v_headspace_m3 <- v_working_m3 <- frac_headspace <- NULL
+  frac_plastic <- frac_cells <- frac_serum <- frac_equilib <- NULL
+  mass_balance <- system_umol <- cell_umol <- cellcompartment_L <- NULL
+  L_per_mil_cells <- concentration_cells <- plastic_umol <- NULL
+  concentration_plastic <- air_umol <- concentration_air <- NULL
+  concentration_medium <- logWSol <- swat_umol <- swat_mol <- csat <- NULL
+  conc_BSA <- NULL
+  #End R CMD CHECK appeasement.
+    
   if (all(is.na(tcdata)))
   {
     if (length(casrn.vector) > 1) chem.cas <- casrn.vector
@@ -340,5 +395,4 @@ kramer_eval <- function(chem.cas=NULL,
   #csat: Is the solution saturated (yes = 1, no = 0) 
   
   return(tcdata)
-  
 }

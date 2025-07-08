@@ -267,29 +267,6 @@
 #' \insertRef{honda2019using}{httk}
 "well_param"
 
-#' Armitage et al. (2014) Model Inputs from Honda et al. (2019)
-#'
-#' @format A data frame with 53940 rows and 10 variables:
-#' \describe{
-#'   \item{MP}{}
-#'   \item{MW}{}
-#'   \item{casrn}{}
-#'   \item{compound_name}{}
-#'   \item{gkaw}{}
-#'   \item{gkow}{}
-#'   \item{gswat}{}
-#' }
-#' @source \url{https://www.diamondse.info/}
-#'
-#'@keywords data
-#'
-#'@author Greg Honda
-#' @references 
-#' \insertRef{armitage2014application}{httk} 
-#'
-#' \insertRef{honda2019using}{httk}
-"armitage_input"
-
 #' DRUGS|NORMAN: Pharmaceutical List with EU, Swiss, US Consumption Data
 #'
 #' SWISSPHARMA is a list of pharmaceuticals with consumption data from
@@ -1960,3 +1937,29 @@
 #'
 #' \insertRef{Ring2017SEEM}{httk}
 "truong25.seem3"
+
+#' Literature Measurements of In Vitro Cellular and Nominal Concentration 
+#' 
+#' @author Meredith Scherer
+#' @name Scherer2025.IVD
+#' @docType data
+#' @format data.table and data.frame
+'Scherer2025.IVD' 
+
+#' Dimitrijevic et al. (2022)In Vitro Cellular and Nominal Concentration 
+#' 
+#' @author Jon Arnot
+#' @name Dimitrijevic.IVD
+#' @docType data
+#' @format data.table and data.frame
+#' @references
+#' \insertRef{dimitrijevic2022toward}{httk}
+'Dimitrijevic.IVD'
+
+#' ToxCast In Vitro Assay Descriptors
+#' 
+#' @author Madison Feshuk
+#' @name invitro.assay.params
+#' @docType data
+#' @format data.table and data.frame
+'invitro.assay.params'

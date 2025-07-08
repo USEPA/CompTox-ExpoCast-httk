@@ -20,6 +20,8 @@
 #' @param this.v_working For single value, optionally supply working volume,
 #' otherwise estimated based on well number (m^3)
 #' 
+#' @param user_assay_parameters option to fill in your own assay parameters (data table)
+#' 
 #' @return A data table composed of any input data.table \emph{tcdata}
 #' with only the following columns either created or altered by this function:  
 #' \tabular{ccc}{
@@ -31,7 +33,7 @@
 #' v_total \tab total volume of each well \tab uL \cr
 #' }
 #'
-#' @author Greg Honda
+#' @author Greg Honda, Meredith Scherer
 #'
 #' @references 
 #' \insertRef{armitage2014application}{httk} 
@@ -52,6 +54,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
   well_number<-well_desc<-radius<-diam<-v_working<-NULL
   v_working_est<-sysID<-height<-option.bottom<-sarea_c<-option.plastic<-NULL
   sarea<-cell_yield<-cell_yield_est<-NULL
+  assay_component_endpoint_name <- NULL
   #End R CMD CHECK appeasement.
   
   if(all(is.na(tcdata))){
@@ -67,8 +70,10 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
     
     #but they are missing information in their table or the assay is not in invitro.assay.params nor has it been added to user_assay_parameters
     if(any(is.na(tcdata[,.(assay_component_endpoint_name)])) | 
-       (!(all((tcdata[,(assay_component_endpoint_name)]) %in% invitro.assay.params[,(assay_component_endpoint_name)])) &
-       !(all((tcdata[,(assay_component_endpoint_name)]) %in% user_assay_parameters[,(assay_component_endpoint_name)])))){
+       (!(all((tcdata[,(assay_component_endpoint_name)]) %in% 
+        httk::invitro.assay.params[,(assay_component_endpoint_name)])) &
+       !(all((tcdata[,(assay_component_endpoint_name)]) %in% 
+         user_assay_parameters[,(assay_component_endpoint_name)])))){
       
       #stop the code and give this error:
       stop("assay_component_endpoint_name must be defined for each row and must be a row in invitro.assay.params")
@@ -78,11 +83,16 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
     
     #if all the assay names are present, pull surface area and other info from either invitro.assay.params or user_assay_parameters 
     #table and assign to the appropriate assay_component_endpoint_name
-    if(all((tcdata[,(assay_component_endpoint_name)]) %in% invitro.assay.params[,(assay_component_endpoint_name)])){
-      tcdata <- invitro.assay.params[tcdata,on=.(assay_component_endpoint_name)]
-    }else if(all((tcdata[,(assay_component_endpoint_name)]) %in% user_assay_parameters[,(assay_component_endpoint_name)])){
+    if (all((tcdata[,(assay_component_endpoint_name)]) %in% 
+        httk::invitro.assay.params[,(assay_component_endpoint_name)]))
+    {
+      tcdata <- 
+        httk::invitro.assay.params[tcdata,on=.(assay_component_endpoint_name)]
+    } else if (all((tcdata[,(assay_component_endpoint_name)]) %in% 
+               user_assay_parameters[,(assay_component_endpoint_name)]))
+    {
       tcdata <- user_assay_parameters[tcdata,on=.(assay_component_endpoint_name)]
-    }else{
+    } else {
       #stop the code and give this error:
       stop("assay_component_endpoint_name present in both invitro.assay.params and user_assay_parameters")
     }
@@ -220,6 +230,22 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' @param restrict.ion.partitioning FALSE, Should we restrict the chemical available to partition to only the neutral fraction?
 #' 
 #' @param surface.area.switch TRUE, automatically calculates surface area, switch to FALSE if user provided
+#' 
+#' @param user_assay_parameters option to fill in your own assay parameters (data table)
+#' 
+#' @param this.option.bottom Include the bottom of the well in surface area calculation
+#' 
+#' @param this.Anionic_VF Anionic phospholipid fraction
+#' 
+#' @param this.A_Prop_acid Sorption to anionic lipids - acidic chemicals
+#' 
+#' @param this.A_Prop_base Sorption to anionic lipids - basic chemicals
+#' 
+#' @param this.Lyso_VF lysosome volume fraction
+#' 
+#' @param this.Lyso_Diam diameter of lysosome (500 nm)
+#' 
+#' @param this.Lyso_pH pH of lysosome (5.1)
 #'
 #' @return
 #' \tabular{lll}{
@@ -241,7 +267,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' gkaw \tab The air to water PC \tab unitless ratio \cr          
 #' duow \tab internal energy of phase change for octanol-water \tab J/mol \cr          
 #' duaw \tab internal energy of phase change for air-water \tab J/mol \cr          
-#' gkmw \tab The log10 membrane to water PC \tab log10 unitless ratio \tab \cr          
+#' gkmw \tab The log10 membrane to water PC \tab log10 unitless ratio \cr          
 #' gkcw \tab The log10 cell/tissue to water PC \tab log10 unitless ratio\cr          
 #' gkbsa \tab The log10 bovine serum albumin to water PC \tab log10 unitless ratio \cr         
 #' gkpl \tab The log10 plastic to water PC \tab log10 m2/m2 \cr   
@@ -321,12 +347,11 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' \strong{cfree.invitro} \tab \strong{Free concentration in the in vitro media} (use for Honda1 and Honda2) \tab fraction \cr
 #' }
 #'
-#' @author Greg Honda
+#' @author Greg Honda, Meredith Scherer adapeed from code by James Armitage, Jon Arnot
 #'
-#' @references Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 
-#' 2014, 48, 9770-9779. https://doi.org/10.1021/es501955g
-#'
-#' @references 
+#' @references
+#' \insertRef{armitage2014application}{httk}
+#' 
 #' \insertRef{honda2019using}{httk} 
 #'
 #' @import magrittr
@@ -404,7 +429,6 @@ armitage_eval <- function(chem.cas=NULL,
                           this.option.kbsa2 = FALSE,
                           this.option.swat2 = FALSE,
                           this.option.kpl2 = FALSE,
-                          this.option.plastic = TRUE,
                           this.option.bottom = TRUE,
                           this.pseudooct = 0.01, # storage lipid content of cells
                           this.memblip = 0.04, # membrane lipid content of cells
@@ -431,8 +455,40 @@ armitage_eval <- function(chem.cas=NULL,
                           surface.area.switch = TRUE #calculate surface area (assumes yes)
 )
 {
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
   sarea<-v_total<-v_working<-cell_yield<-NULL
-  
+  casrn <- well_number <- NULL
+  Fneutral <- Fcharged <- Fpositive <- Fnegative <- IOC_Type <- NULL 
+  csat <- activity <- cair <- calb <- cslip <- cdom <- ccells <- NULL
+  cplastic <- mwat_s  <- mair <- mbsa  <- mslip <- mdom  <- mcells <- NULL
+  mplastic  <- mprecip  <- xwat_s  <- xair <- xbsa  <- xslip <- xdom <- NULL
+  xcells <- xplastic  <- xprecip  <- eta_free  <- cfree.invitro <- NULL
+  swat_subcooled_liquid.GSE <- gswat_subcooled_liquid.GSE_25C <- NULL
+  gswat_subcooled_liquid.GSE <- option.swat2 <- swat_L <- Vbm <- Vwell <- NULL
+  Vcells <- cellmass <- celldensity <- Vair <- Valb <- FBSf <- NULL
+  conc_ser_alb <- Vslip <- conc_ser_lip <- Vdom <- Vm <- mtot <- NULL
+  nomconc <- cwat <- P_dom <- f_oc <- cwat_s <- NULL
+  A_Prop_base <- cell_DR_kow <- csalt <- cell_DR_kmw <- IOC_mult <- NULL
+  DR_kcw_preadj <- P_cells <- P_nlom <- pKa_Accept <- largest_pKa_Accept <- NULL
+  Lyso_MemVF <- Lyso_Diam <- Lyso_Pump <- Lyso_pH <- DR_kcw <- Lyso_VF <- NULL
+  DR_kow <- DR_kaw <- DR_kbsa <- DR_kpl <- DR_swat <- MP_K <- MP_C <- NULL
+  F_ratio <- gswat_liquid.GSE <- swat_liquid.GSE <- gswat_solid.GSE <- NULL
+  swat_solid.GSE <- ksalt <- Tsys <- Tcor <- Tref <- duow <- duaw <- NULL
+  gkow_n_temp <- gkow_i_temp <- gkaw_n_temp <- gkaw_n <- gswat_n_temp <- NULL
+  gswat_n <- Fneutral_cell <- Fpositive_cell <- Fcharged_cell <- NULL
+  Fnegative_cell <- IOC_Type_cell <- kow_n <- kow_i <- swat_n <- kaw_n <- NULL
+  kbsa_n <- kpl_n <- kmw_n <- cell_DR_kow_preadj <- cell_DR_kmw_preadj <- NULL
+  Anionic_VF <- A_Prop_acid <- cellwat <- pseudooct <- memblip <- nlom <- NULL
+  gkmw_n <- gkow_n <- option.kbsa2 <- gkbsa_n <- option.kpl2 <- gkpl_n <- NULL
+  SFkow <- SFmw <- SFbsa_acidic <- SFbsa_basic <- SFplw <- gkow_i <- NULL
+  kmw_i <- kbsa_i_acidic <- kbsa_i_basic <- kpl_i <- ksalt <- Tsys <- NULL
+  Tcor <- Tref <- duow <- duaw <- NULL
+  #End R CMD CHECK appeasement.
+    
   #if no data table supplied
   if (all(is.na(tcdata)))
   {
@@ -474,7 +530,6 @@ armitage_eval <- function(chem.cas=NULL,
                             option.kbsa2=this.option.kbsa2, 
                             option.swat2=this.option.swat2,
                             option.kpl2=this.option.kpl2,
-                            option.plastic=this.option.plastic,
                             option.bottom=this.option.bottom,
                             FBSf=this.FBSf, pseudooct=this.pseudooct, 
                             memblip=this.memblip,
@@ -494,7 +549,7 @@ armitage_eval <- function(chem.cas=NULL,
                   "gkmw_n","gkbsa_n","gkpl_n","ksalt")
   
   req.list <- c("Tsys","Tref","option.kbsa2","option.swat2", "option.kpl2",
-                "option.bottom", "option.plastic",
+                "option.bottom", 
                 "FBSf","pseudooct","memblip","nlom","P_nlom","P_dom","P_cells",
                 "Anionic_VF", "A_Prop_acid", "A_Prop_base", "Lyso_VF", 
                 "Lyso_Diam", "Lyso_pH", "csalt","celldensity",

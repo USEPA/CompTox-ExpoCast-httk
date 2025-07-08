@@ -112,7 +112,7 @@ referred to as a "path".
 For information on how folder structures work, please check out these sites:
 
 * <https://en.wikipedia.org/wiki/Directory_structure>
-* <https://www.geeksforgeeks.org/structures-of-directory-in-operating-system/>
+* <https://www.geeksforgeeks.org/operating-systems/structures-of-directory-in-operating-system/>
 
 Within the command shell you use the "cd" command to "change directories".
 

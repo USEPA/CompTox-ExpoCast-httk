@@ -12,9 +12,8 @@ kramer_eval(
   nomconc.vector = 1,
   this.well_number = 384,
   tcdata = NA,
+  user_assay_parameters = NA,
   this.serum = NA_real_,
-  this.gKow = NA_real_,
-  this.Hconst = NA_real_,
   this.csalt = 0.15,
   this.BSA = 44,
   this.v_total = NA_real_,
@@ -27,48 +26,71 @@ kramer_eval(
   this.temp_k = 298.15,
   this.prot_conc = 0.21,
   this.option.bottom = TRUE,
-  this.option.plastic = FALSE,
   restrict.ion.partitioning = FALSE,
-  this.option.piechart = FALSE,
   surface.area.switch = TRUE
 )
 }
 \arguments{
+\item{chem.cas}{A single or vector of Chemical Abstracts Service Registry 
+Number(s) (CAS-RN) of desired chemical(s).}
+
+\item{chem.name}{A single or vector of name(s)) of desired chemical(s).}
+
+\item{dtxsid}{A single or vector ofEPA's DSSTox Structure ID(s) 
+(\url{https://comptox.epa.gov/dashboard})}
+
+\item{casrn.vector}{A deprecated argument specifying a single or vector of 
+Chemical Abstracts Service Registry 
+Number(s) (CAS-RN) of desired chemical(s).}
+
+\item{nomconc.vector}{For vector or single value, micromolar (uM = mol/L) nominal 
+concentration (e.g. AC50 value)}
+
+\item{this.well_number}{For single value, plate format default is 384, used
+if is.na(tcdata)==TRUE. This value chooses default surface area settings for
+\code{\link{armitage_estimate_sarea}} based on the number of wells per plate.}
+
 \item{tcdata}{A data.table with casrn, nomconc,v_total, v_working. Otherwise supply single values to this.params (e.g., this.sarea,
 this.v_total, etc.). Chemical parameters are taken from 
 \code{\link{chem.physical_and_invitro.data}}.}
 
+\item{user_assay_parameters}{option to fill in your own assay parameters (data table)}
+
+\item{this.serum}{Concentration of serum in media (percent volume/volume)}
+
+\item{this.csalt}{Ionic strength of buffer, mol/L}
+
+\item{this.BSA}{Boving serum albumin concentration in serum (g/L)}
+
+\item{this.v_total}{Total volume of well (uL)}
+
+\item{this.v_working}{Volume of medium per well (uL)}
+
+\item{this.cell_yield}{Number of cells/well seeded (unitless)}
+
+\item{this.L_per_mil_cells}{Liters per 1 million cells}
+
+\item{this.sarea}{Surface area of plastic exposed to medium (m^2)}
+
+\item{this.Tsys}{System temperature (Celcius)}
+
+\item{this.Tref}{Reference temperature (Kelvin)}
+
+\item{this.temp_k}{Temperature (Kelvin)}
+
+\item{this.prot_conc}{Cell protein concentration (mg protein/million cells)}
+
+\item{this.option.bottom}{Include the bottom of the well in surface area calculation}
+
 \item{restrict.ion.partitioning}{only allow neutral fraction to partition}
+
+\item{surface.area.switch}{TRUE, automatically calculates surface area, switch to FALSE if user provided}
 
 \item{casrn}{description}
 
 \item{well_number}{description}
 
-\item{gkow_n}{Log octanol to water PC (unitless)}
-
-\item{logHenry}{log10 Henry's law constant (atm*m^3/mol)}
-
 \item{nomconc}{Nominal test concentration (uM)}
-
-\item{v_total}{Total volume of well (uL)}
-
-\item{v_working}{Volume of medium per well (uL)}
-
-\item{cell_yield}{Number of cells/well seeded (unitless)}
-
-\item{sarea}{Surface area of plastic exposed to medium (m^2)}
-
-\item{Tsys}{System temperature (Celcius)}
-
-\item{Tref}{Reference temperature (Kelvin)}
-
-\item{prot_conc}{Cell protein concentration (mg protein/million cells)}
-
-\item{serum}{Concentration of serum in media (percent volume/volume)}
-
-\item{BSA}{BSA concentration in serum (g/L)}
-
-\item{option.piechart}{Option to generate a pie chart to visualize chemical partitioning}
 }
 \value{
 \tabular{lll}{
@@ -83,14 +105,8 @@ concentration_air \tab Concentration in headspace \tab uM \cr
 Evaluate the Kramer model for chemical distribution \emph{in vitro}. Takes input
 as data table or vectors of values. Outputs a data table.
 }
-\examples{
-
-library(httk)
-...something here...
-
-}
 \references{
-Kramer, 2010. Measuring, Modeling, and Increasing the Free Concentration of Test Chemicals in Cell Assays. Utrecht University.
+\insertRef{kramer2010measuring}{httk}
 }
 \author{
 Meredith Scherer, adapted from code written by L.S Lautz for A. Punt, N. Kramer

@@ -4,7 +4,7 @@ author: "Meredith N. Scherer, Katie Paul-Friedman, and John F. Wambaugh"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{h) Kapraun (2022): Human Gestational Model}
+  %\VignetteIndexEntry{X) Scherer (2025) In Vitro Distribution}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -77,16 +77,13 @@ Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
 # Setup
 #
 #
-#library(httk)        # run Armitage.R in vitro distribution model
+library(httk)        # run Armitage.R in vitro distribution model
 library(tidyverse)   # data wrangling
 library(data.table)  # data table functionality
 library(ggplot2)     # plotting
 library(ggpubr)      # arrange plots for publication
-
-##delete once httk has been updated with armitage.R file and model_param_armitage.R and un-tab out library(httk) above
-library(devtools) # to run httk
-suppressWarnings(setwd("C:/Users/mscherer/httk-dev")) # to load httk
-suppressWarnings(devtools::load_all("httk")) # for armitage
+library(ggrepel)
+library(dplyr)
 
 #save figures and tables to working directory: yes/no
 save_output = FALSE
@@ -98,7 +95,7 @@ path_out <- "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/
 
 ```
 
-```{r rmsle_func}
+```{r rmsle_functions, eval = execute.vignette}
 #function to calculate RMSLE
 sle <- function (actual, predicted) 
 {
@@ -127,14 +124,17 @@ Data sets were curated from the literature to evaluate the in vitro distribution
 
 # Load and format the data
 
-```{r load_IVD_Manuscript_data, eval = execute.vignette}
+```{r load_IVD_Manuscript_data, eval = FALSE}
 
 #you know it is correct if IVD_Manuscript_data has 174 obs of 29 variables
 #IVD_Manuscript_data <- httk::IVD_Manuscript_data
 #load("C:/Users/mscherer/httk-dev/httk/data/ArmitagePlus_Vignette_2JUN25.RData")
-load("C:/Users/mscherer/httk-dev/httk/data/ArmitagePlus_Vignette_10JUN25.RData")
+#load("C:/Users/mscherer/httk-dev/httk/data/ArmitagePlus_Vignette_10JUN25.RData")
+```
 
-
+```{r load_IVD_Manuscript_data_from_httk, eval = execute.vignette}
+# Get a working copy from HTTK:
+IVD_Manuscript_data <- httk::Scherer2025.IVD
 cat(paste("Summarized data from ", 
           length(unique(IVD_Manuscript_data$Citation)),
           " studies covering ", 
@@ -163,7 +163,7 @@ IVD_Manuscript_data[,X:=1:length(IVD_Manuscript_data$ChemicalName)]
 
 #In vitro assay descriptors (optional step)
 In vitro assay descriptors for the measurements in Supplemental Materials Table S2 were added as additional assays into httk:invitro.assay.params using the AENM “IVD” + Author + Year (that is, Smith et al. (2000) would be AENM “IVDSmith2000”. 
-```{r}
+```{r add_assay_names, eval=execute.vignette}
 
 ### Create assay_component_endpoint_name columns for experimental assay parameters ###
 
@@ -667,22 +667,25 @@ print(compartment_plots)
 ```
 
 ## Figure 5. Comparison of Armitage model using curated vs dashboard physchem values.
-```{r}
+```{r load_data, eval=FALSE}
 
 #working directory
 setwd("C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/IVD_Data")
 
 #load data
-original_curated.data.df<-read_csv("Dimitrijevic_from_arnot.csv")
+original_curated.data.df<-read.csv("Dimitrijevic_from_arnot.csv")
+```
 
+```{r format_data, eval = execute.vignette}
+original_curated.data.df <- httk::Dimitrijevic.IVD
 #convert to data table for manipulation
 original_curated.data.dt <- as.data.table(original_curated.data.df)
 
 #first - run using the default/dashboard values
 default.dt<-copy(original_curated.data.dt %>% select(-c( "Arnot_pka", "Arnot_pkb", 
                                                 "Chemaxon_pKa", "Chemaxon_pKb", 
-                                                "log KOW,N", "log KAW,N", 
-                                                "Predicted_Ccell_µM", "FoA")))
+                                                "log.KOW.N", "log.KAW.N", 
+                                                "Predicted_Ccell_uM", "FoA")))
 
 # run the model, output concentrations in umol/L (e.g. uM)
 armitageOutput_default.dt <- armitage_eval(tcdata=default.dt,
@@ -695,8 +698,8 @@ curated.data.dt<-copy(original_curated.data.dt)
 #overwrite using curated physchem properties
 curated.data.dt[, pKa_Donor := as.character(Arnot_pka)] %>% #acidic
   .[, pKa_Accept := as.character(Arnot_pkb)] %>% #basic
-  .[, gkow := `log KOW,N`] %>% # gkow
-  .[, gkaw_n := `log KAW,N`] # gkaw
+  .[, gkow := `log.KOW.N`] %>% # gkow
+  .[, gkaw_n := `log.KAW.N`] # gkaw
 
 # run the model, output concentrations in umol/L (e.g. uM)
 armitageOutput_curated.data.dt <- armitage_eval(tcdata=curated.data.dt,
@@ -706,11 +709,11 @@ armitageOutput_curated.data.dt <- armitage_eval(tcdata=curated.data.dt,
 #check that the properties survived through the function
 #gkow
 armitageOutput_curated.data.dt$gkow_n
-armitageOutput_curated.data.dt$`log KOW,N`
+armitageOutput_curated.data.dt$log.KOW.N
 armitageOutput_default.dt$gkow
 #gkaw
 armitageOutput_curated.data.dt$gkaw_n
-armitageOutput_curated.data.dt$`log KAW,N`
+armitageOutput_curated.data.dt$log.KAW.N
 armitageOutput_default.dt$gkaw_n
 
 armitageOutput_default.dt$ccells
@@ -725,20 +728,20 @@ curatedvals<-armitageOutput_curated.data.dt %>% select(Name, casrn, gkow_n, gkaw
 #default values
 
 #individual
-armitageOutput_default.dt[,rmsle_ccell_default:=rmsle(Reported_Ccell_µM, ccells), by = Name]
+armitageOutput_default.dt[,rmsle_ccell_default:=rmsle(Reported_Ccell_uM, ccells), by = Name]
 
 #total
-RMSLE_default.dt<-rmsle(armitageOutput_default.dt$Reported_Ccell_µM, armitageOutput_default.dt$ccells)
+RMSLE_default.dt<-rmsle(armitageOutput_default.dt$Reported_Ccell_uM, armitageOutput_default.dt$ccells)
 RMSLE_default.dt<-round(RMSLE_default.dt, 3)
 #0.582
 
 #curated values
 
 #individual
-armitageOutput_curated.data.dt[,rmsle_ccell_curated:=rmsle(Reported_Ccell_µM, ccells), by = Name]
+armitageOutput_curated.data.dt[,rmsle_ccell_curated:=rmsle(Reported_Ccell_uM, ccells), by = Name]
 
 #total
-RMSLE_curated.data.dt<-rmsle(armitageOutput_curated.data.dt$Reported_Ccell_µM, armitageOutput_curated.data.dt$ccells)
+RMSLE_curated.data.dt<-rmsle(armitageOutput_curated.data.dt$Reported_Ccell_uM, armitageOutput_curated.data.dt$ccells)
 RMSLE_curated.data.dt<-round(RMSLE_curated.data.dt, 3)
 #0.566
 
@@ -751,10 +754,10 @@ curated_data.dt<-merge(armitageOutput_default.dt, armitageOutput_curated.data.dt
 
 #calculate rmsle difference for each chemical
 curated_data.dt[,rmsle_difference:=rmsle_ccell_curated-rmsle_ccell_default, by = Name]
+```
 
-library(ggrepel)
-
-curated_difference_httk_plot<-ggplot(curated_data.dt, aes(ccells.y, Reported_Ccell_µM.y, color = Name, label = round(rmsle_difference, 2)))+
+```{r make_physchem_figure, eval = execute.vignette}
+curated_difference_httk_plot<-ggplot(curated_data.dt, aes(ccells.y, Reported_Ccell_uM.y, color = Name, label = round(rmsle_difference, 2)))+
   geom_point(size = 4) + 
   geom_abline(intercept=0,slope=1, linetype = "dashed") +
   geom_text_repel() +
@@ -779,8 +782,6 @@ if(save_output){
          path = path_out,
          curated_difference_httk_plot, width = 8, height = 5, dpi = 300)
 }
-
-
 ```
 
 
@@ -807,7 +808,7 @@ combodata %>% arrange(RMSLE_nominal_by_chem) %>% select(ChemicalName.x, Citation
 ```
 
 ## Change in Accuracy of Intracellular Concentration predicted by studies reporting experimentally measured nominal dose
-```{r}
+```{r calculate_accuracy_change, eval = execute.vignette}
 
 unique(IVD_Manuscript_data %>% dplyr::filter(is.na(ExperimentalDose_uM)) %>% select(Citation))
 #8 citations did not measure experimental dose at all
@@ -859,7 +860,7 @@ arm_nomconc_rmsle- arm_expconc_rmsle
 #Supplement:
 
 ## Table S1. Physicochemical properties of test chemicals and Ccell/Cnominal ratios from each reference.
-```{r}
+```{r physchem_props, eval = execute.vignette}
 
 #create datatable to hold the info
 table1.dt<-copy(Nominal.dt)
@@ -1170,7 +1171,7 @@ if(save_output){
 ```
 
 ## Table S7. Effect of "options" on rmsle in the Armitage model.
-```{r options_plot}
+```{r options_plot, eval = execute.vignette}
 
 
 #list of options that can be changed in the armitage model:

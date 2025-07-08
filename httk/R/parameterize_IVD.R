@@ -4,8 +4,12 @@
 #' 
 #' @param casrn.vector For vector or single value, CAS number
 #' 
-#' @param tcdata A data.table with casrn, logHenry, gswat, MP, MW, gkow, pKa_Donor,pKa_Accept, pH, and gkaw_n. 
-#' Otherwise chemical parameters are taken from \code{\link{chem.physical_and_invitro.data}}.
+#' @param tcdata A data.table with casrn, nomconc, MP, gkow, gkaw, gswat, sarea,
+#' v_total, v_working. Otherwise supply single values to this.params (e.g., this.sarea,
+#' this.v_total, etc.). Chemical parameters are taken from 
+#' \code{\link{chem.physical_and_invitro.data}}.
+#'
+#' @param this.pH pH of media
 #' 
 #' @return
 #' \tabular{lll}{
@@ -39,14 +43,26 @@
 
 parameterize_IVD <- function(tcdata = NA, # optionally supply columns logHenry, gswat, MP, MW, gkow, pKa_Donor,pKa_Accept, pH, and gkaw_n
                              casrn.vector = NA_character_, #CAS number
-                             this.pH = 7)
+                              this.pH = 7
+                             )
 {
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
+  sarea <- v_working <- v_total <- cell_yield <- logHenry <- NULL
+  casrn <- pH <- Fneutral <- Fcharged <- Fpositive <- Fnegative <- gkow <- NULL
+  MP <- gkaw_n <- gkow_n <- MP_C <- NULL
+  #End R CMD CHECK appeasement.
+    
   #### Set tcdata variables ####
   
   if(all(is.na(tcdata))){
     tcdata <- data.table(casrn = casrn.vector)
   }
   
+
   
   #### Get PhysChem Parameters ####
   # Check if required phys-chem parameters are provided:

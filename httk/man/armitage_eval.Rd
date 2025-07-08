@@ -23,7 +23,6 @@ armitage_eval(
   this.option.kbsa2 = FALSE,
   this.option.swat2 = FALSE,
   this.option.kpl2 = FALSE,
-  this.option.plastic = TRUE,
   this.option.bottom = TRUE,
   this.pseudooct = 0.01,
   this.memblip = 0.04,
@@ -77,6 +76,8 @@ v_total, v_working. Otherwise supply single values to this.params (e.g., this.sa
 this.v_total, etc.). Chemical parameters are taken from 
 \code{\link{chem.physical_and_invitro.data}}.}
 
+\item{user_assay_parameters}{option to fill in your own assay parameters (data table)}
+
 \item{this.sarea}{Surface area per well (m^2)}
 
 \item{this.v_total}{Total volume per well (uL)}
@@ -96,6 +97,8 @@ model}
 
 \item{this.option.kpl2}{Use alternative plastic-water partitioning model}
 
+\item{this.option.bottom}{Include the bottom of the well in surface area calculation}
+
 \item{this.pseudooct}{Pseudo-octanol cell storage lipid content}
 
 \item{this.memblip}{Membrane lipid content of cells}
@@ -109,6 +112,18 @@ model}
 \item{this.P_cells}{Proportionality constant to octanol storage lipid}
 
 \item{this.cell_pH}{7.4, pH of cell}
+
+\item{this.Anionic_VF}{Anionic phospholipid fraction}
+
+\item{this.A_Prop_acid}{Sorption to anionic lipids - acidic chemicals}
+
+\item{this.A_Prop_base}{Sorption to anionic lipids - basic chemicals}
+
+\item{this.Lyso_VF}{lysosome volume fraction}
+
+\item{this.Lyso_Diam}{diameter of lysosome (500 nm)}
+
+\item{this.Lyso_pH}{pH of lysosome (5.1)}
 
 \item{this.csalt}{Ionic strength of buffer (M = mol/L)}
 
@@ -150,7 +165,7 @@ MW \tab The chemical compound molecular weight \tab g/mol \cr
 gkaw \tab The air to water PC \tab unitless ratio \cr          
 duow \tab internal energy of phase change for octanol-water \tab J/mol \cr          
 duaw \tab internal energy of phase change for air-water \tab J/mol \cr          
-gkmw \tab The log10 membrane to water PC \tab log10 unitless ratio \tab \cr          
+gkmw \tab The log10 membrane to water PC \tab log10 unitless ratio \cr          
 gkcw \tab The log10 cell/tissue to water PC \tab log10 unitless ratio\cr          
 gkbsa \tab The log10 bovine serum albumin to water PC \tab log10 unitless ratio \cr         
 gkpl \tab The log10 plastic to water PC \tab log10 m2/m2 \cr   
@@ -290,11 +305,10 @@ print(out)
 
 }
 \references{
-Armitage, J. M.; Wania, F.; Arnot, J. A. Environ. Sci. Technol. 
-2014, 48, 9770-9779. https://doi.org/10.1021/es501955g
+\insertRef{armitage2014application}{httk}
 
 \insertRef{honda2019using}{httk}
 }
 \author{
-Greg Honda
+Greg Honda, Meredith Scherer adapeed from code by James Armitage, Jon Arnot
 }
