@@ -384,12 +384,12 @@ kramer_eval <- function(chem.cas=NULL,
     .[,plastic_umol := system_umol * frac_plastic] %>% # umol in plastic compartment
     .[,concentration_plastic := plastic_umol/sarea] %>% #umol/m^2
     .[,air_umol := system_umol * frac_headspace] %>% # umol in headspace compartment
-    .[,concentration_air := air_umol/(v_headspace_m3 *(convert_units("m3", "l"))] %>% #concentration in headspace (uM)
+    .[,concentration_air := air_umol/(v_headspace_m3 *(convert_units("m3", "l")))] %>% #concentration in headspace (uM)
     .[,concentration_medium:= nomconc*frac_free]      #concentration in medium (uM)
   
   # Check concentration_medium (umol/L) against water solubility (mol/L)
   tcdata[, "swat_mol" := 10^(logWSol+log10(1+(1-Fneutral/Fneutral)))] %>%  #account for the ionized portion of the chemical in the water solubility from https://docs.chemaxon.com/display/lts-europium/theory-of-aqueous-solubility-prediction.md and arnot email (and unlog it for convenience)
-    .[,swat_umol := (swat_mol * convert_units("mol/L", "umol/L"))] %>% #convert swat_mol (mol/L) to umol/L
+    .[,swat_umol := (swat_mol * convert_units("mol", "umol"))] %>% #convert swat_mol (mol/L) to umol/L
     .[concentration_medium>swat_umol,csat:=1] %>% #medium conc greater than solubility = saturated
     .[concentration_medium<=swat_umol,csat:=0] # medium conc less than solubility = unsaturated
   #csat: Is the solution saturated (yes = 1, no = 0) 

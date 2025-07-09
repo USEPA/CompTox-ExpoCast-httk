@@ -818,7 +818,7 @@ armitage_eval <- function(chem.cas=NULL,
   ### Calculate the volume (in Liters) of each compartment ###
   tcdata[,Vbm:=v_working*convert_units("ul", "l")] %>% # uL to L; the volume of bulk medium
     .[,Vwell:=v_total*convert_units("ul", "l")] %>% # uL to L; the volume of well
-    .[,Vcells:=cell_yield*(cellmass*convert_units("ng", "mg"))/(celldensity*convert_units("ul", "l"))] %>% # cell*(ng/cell)*(1mg/1e6ng)/(mg/uL)*(1uL/L); the volume of cells  
+    .[,Vcells:=cell_yield*(cellmass*convert_units("ng", "mg"))/celldensity*convert_units("ul", "l")] %>% # cell*(ng/cell)*(1mg/1e6ng)/(mg/uL)*(1uL/L); the volume of cells  
     .[,Vair:=Vwell-Vbm-Vcells] %>%  # the volume of head space
     .[,Valb:=Vbm*FBSf*0.733*conc_ser_alb*convert_units("ml", "l")] %>% # the volume of serum albumin; 0.733 mL/g is the partial specific volume of bovine serum albumin (source: Chemical, Physiological, and Immunological Properties and Clinical Uses of Blood Derivatives)
     .[,Vslip:=Vbm*FBSf*conc_ser_lip*convert_units("ml", "l")] %>% # the volume of serum lipids
