@@ -369,27 +369,27 @@ kramer_eval <- function(chem.cas=NULL,
   
   tcdata[,frac_free := 1/(1+Ks*conc_BSA+Kp*conc_plastic+Kc*conc_cell+Ka*(v_headspace_m3/v_working_m3))] %>%  #Fraction free medium
     .[,frac_headspace:= (Ka*frac_free*v_headspace_m3)/v_working_m3] %>%               #Fraction absorbed into headspace
-    .[,frac_plastic:= (Kp*frac_free*sarea)/v_working_m3] %>%                 #Fraction absorbed to plastic
-    .[,frac_cells:= Kc*frac_free*conc_cell] %>%                       #Fraction absorbed to cells
-    .[,frac_serum:= Ks*frac_free*conc_BSA] %>%                            #Fraction absorbed to serum
-    .[,frac_equilib:= frac_free+frac_serum] %>%                       #Fraction in medium at equilibrium
-    .[,mass_balance:= frac_equilib+frac_cells+frac_plastic+frac_headspace] #Mass balance needs to be 1
+    .[,frac_plastic:= (Kp*frac_free*sarea)/v_working_m3] %>%                          #Fraction absorbed to plastic
+    .[,frac_cells:= Kc*frac_free*conc_cell] %>%                                       #Fraction absorbed to cells
+    .[,frac_serum:= Ks*frac_free*conc_BSA] %>%                                        #Fraction absorbed to serum
+    .[,frac_equilib:= frac_free+frac_serum] %>%                                       #Fraction in medium at equilibrium
+    .[,mass_balance:= frac_equilib+frac_cells+frac_plastic+frac_headspace]            #Mass balance needs to be 1
   
   ##### Calculations for Concentrations  ##### 
   
-  tcdata[,system_umol := nomconc*(v_working_m3*1000)] %>% #umol in the system #(conv_unit(v_working_m3, "m3", "l"))
+  tcdata[,system_umol := nomconc*(v_working_m3*convert_units("m3", "l"))] %>% #umol in the system
     .[,cell_umol := system_umol * frac_cells] %>% # umol in cell compartment
     .[,cellcompartment_L := (L_per_mil_cells*cell_yield)/1000000] %>% #volume of cells (liters)
     .[,concentration_cells := cell_umol/cellcompartment_L] %>% #concentration in cells (uM)
     .[,plastic_umol := system_umol * frac_plastic] %>% # umol in plastic compartment
     .[,concentration_plastic := plastic_umol/sarea] %>% #umol/m^2
     .[,air_umol := system_umol * frac_headspace] %>% # umol in headspace compartment
-    .[,concentration_air := air_umol/(v_headspace_m3 * 1000)] %>% #concentration in headspace (uM) #conv_unit(v_headspace_m3, "m3", "l")
+    .[,concentration_air := air_umol/(v_headspace_m3 *(convert_units("m3", "l"))] %>% #concentration in headspace (uM)
     .[,concentration_medium:= nomconc*frac_free]      #concentration in medium (uM)
   
   # Check concentration_medium (umol/L) against water solubility (mol/L)
   tcdata[, "swat_mol" := 10^(logWSol+log10(1+(1-Fneutral/Fneutral)))] %>%  #account for the ionized portion of the chemical in the water solubility from https://docs.chemaxon.com/display/lts-europium/theory-of-aqueous-solubility-prediction.md and arnot email (and unlog it for convenience)
-    .[,swat_umol := (swat_mol * 1000000)] %>% #convert swat_mol (mol/L) to umol/L #conv_unit(swat_mol, "mol", "umol")
+    .[,swat_umol := (swat_mol * convert_units("mol/L", "umol/L"))] %>% #convert swat_mol (mol/L) to umol/L
     .[concentration_medium>swat_umol,csat:=1] %>% #medium conc greater than solubility = saturated
     .[concentration_medium<=swat_umol,csat:=0] # medium conc less than solubility = unsaturated
   #csat: Is the solution saturated (yes = 1, no = 0) 

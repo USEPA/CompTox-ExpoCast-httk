@@ -201,7 +201,11 @@ convert_units <- function(input.units = NULL,
   input_units <- c(
     #volume to volume
     "ul",
+    "ul",
+    "l",
     #weight to weight
+    "mg",
+    "mg",
     "mg",
     # density (weight per volume) to molar (that is, moles per volume):
     "mg/l",
@@ -220,6 +224,7 @@ convert_units <- function(input.units = NULL,
     "ng/l",
     "ng/ml",
     # molar to molar:
+    "mol/L",
     "umol/l",
     "nmol/l",
     "nm",
@@ -285,9 +290,13 @@ convert_units <- function(input.units = NULL,
   ##### Output units
   output_units <- c(
     #volume to volume
+    "l",
+    "m3",
     "m3",
     #weight to weight
+    "ng",
     "kg",
+    "g",
     # density (weight per volume) to molar (that is, moles per volume):
     "um",
     "um",
@@ -305,6 +314,7 @@ convert_units <- function(input.units = NULL,
     "mg/l",
     "mg/l",
     # molar to molar:
+    "um"
     "um",
     "um",
     "um",
@@ -389,8 +399,12 @@ convert_units <- function(input.units = NULL,
     # Conversions
     #correspond to input_units and output_units
     conversions <- c(
-      1/10^9,
       1/10^6,
+      1/10^9,
+      1/10^3,
+      10^6,
+      1/10^6,
+      1/10^3,
       10^3/this.MW,
       10^3/this.MW,
       10^3/this.MW,
@@ -407,6 +421,7 @@ convert_units <- function(input.units = NULL,
       1/10^6,
       1/10^3,
       # molar to molar:
+      10^6,
       1,
       1/10^3,
       1/10^3,

@@ -304,14 +304,10 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' Vslip \tab Volume of serum lipids \tab L \cr         
 #' Vdom \tab Volume of dissolved organic matter\tab L \cr          
 #' F_ratio \tab Fugacity ratio \tab unitless \cr       
-#' gs1.GSE \tab \tab \cr       
-#' s1.GSE \tab \tab \cr        
-#' gss.GSE \tab \tab \cr       
-#' ss.GSE \tab \tab \cr        
 #' kmw \tab The membrane to water PC (i.e., 10^gkmow \tab unitless \cr           
 #' kow \tab The octanol to water PC (i.e., 10^gkow) \tab unitless \cr           
 #' kaw \tab The air to water PC (i.e., 10^gkaw) \tab unitless \cr           
-#' swat \tab The water solubility (i.e., 10^gswat) \tab mg/L \cr         
+#' swat \tab The intrinsic water solubility (i.e., 10^gswat) \tab mg/L \cr         
 #' kpl \tab The plastic to water PC (i.e., 10^gkpl) \tab m3/m2 \cr           
 #' kcw \tab The cell/tissue to water PC (i.e., 10^gkcw) \tab unitless \cr           
 #' kbsa \tab The bovine serum albumin to water PC \tab unitless \cr          
@@ -320,7 +316,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' cwat \tab Total concentration in water \tab uM=umol/L \cr          
 #' cwat_s \tab Dissolved concentration in water \tab uM=umol/L \cr        
 #' csat \tab Is the solution saturated (1/0) \tab logical \cr         
-#' activity \tab Chemical activity \tab \cr      
+#' activity \tab Chemical activity; indicates the potential for baseline toxicity to occur \tab \cr      
 #' cair \tab Concentration in head space\tab uM=umol/L \cr          
 #' calb \tab Concentration in serum albumin\tab uM=umol/L \cr          
 #' cslip \tab Concentration in serum lipids\tab uM=umol/L \cr         
@@ -347,7 +343,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' \strong{cfree.invitro} \tab \strong{Free concentration in the in vitro media} (use for Honda1 and Honda2) \tab fraction \cr
 #' }
 #'
-#' @author Greg Honda, Meredith Scherer adapeed from code by James Armitage, Jon Arnot
+#' @author Greg Honda, Meredith Scherer adapted from code by James Armitage, Jon Arnot
 #'
 #' @references
 #' \insertRef{armitage2014application}{httk}
@@ -521,9 +517,9 @@ armitage_eval <- function(chem.cas=NULL,
   ### User Entered Parameter Checks ###
   
   # Check CAS and AC50 supplied
-  #if(any(is.na(tcdata[,.(casrn,nomconc)]))){
-  #  stop("casrn or nomconc undefined")
-  #}  
+  if(any(is.na(tcdata[,.(casrn,nomconc)]))){
+    stop("casrn or nomconc undefined")
+  }  
   
   #add in the optional parameters:
   manual.input.list <- list(Tsys=this.Tsys, Tref=this.Tref,
@@ -675,7 +671,7 @@ armitage_eval <- function(chem.cas=NULL,
   
   # kpl (plastic-water PC) spLFER 
   tcdata[option.kpl2==FALSE & is.na(gkpl_n),gkpl_n:=0.97*gkow_n-6.94] %>% #from Kramer 2012 (Kramer, N.I. Measuring, Modeling, and Increasing the Free Concentration of Test Chemicals in Cell Assays)
-    .[option.kpl2==TRUE & is.na(gkpl_n),gkpl_n:=0.56*gkow_n-4.635] #from Fischer 2018 (Application of Experimental Polystyrene Partition Constants andDiﬀusion Coeﬃcients to Predict the Sorption of Neutral OrganicChemicals to Multiwell Plates in in Vivo and in Vitro Bioassay)
+    .[option.kpl2==TRUE & is.na(gkpl_n),gkpl_n:=0.56*gkow_n-4.635] #from Fischer 2018 (Application of Experimental Polystyrene Partition Constants and Diffusion Coefficients to Predict the Sorption of Neutral Organic Chemicals to Multiwell Plates in in Vivo and in Vitro Bioassay)
   
   ### Calculating Ionized Partition Coefficients ###
   # set up scaling factors (used to calculate PCs for the charged portion of the chemical)
@@ -738,7 +734,9 @@ armitage_eval <- function(chem.cas=NULL,
   
   #calculate anionic specific membrane-water distribution ratio
   tcdata[,cell_DR_kow_preadj:= (Fneutral_cell*kow_n)+(Fcharged_cell*kow_i)] %>% # DR kow - cell
-    .[,cell_DR_kmw_preadj:= (1-Anionic_VF)*(Fneutral_cell*kmw_n+Fcharged_cell*kmw_i)+(Anionic_VF)*(Fneutral_cell*kmw_n + Fnegative_cell*kmw_i*A_Prop_acid + Fpositive_cell*kmw_i*A_Prop_base)] # DR kmw - cell
+    .[,cell_DR_kmw_preadj:= (1-Anionic_VF)*(Fneutral_cell*kmw_n+Fcharged_cell*kmw_i)+
+        (Anionic_VF)*(Fneutral_cell*kmw_n + Fnegative_cell*kmw_i*A_Prop_acid + 
+                        Fpositive_cell*kmw_i*A_Prop_base)] # DR kmw - cell
   
   ### Adjust cell DRs to account for salting out ###
   tcdata[,cell_DR_kow := cell_DR_kow_preadj / 10^(-1*ksalt*csalt)] %>% 
@@ -763,25 +761,24 @@ armitage_eval <- function(chem.cas=NULL,
     .[IOC_Type_cell=="Base" & is.character(pKa_Accept) & (pKa_Accept != " ") & is.na(largest_pKa_Accept), 
       largest_pKa_Accept:=as.numeric(pKa_Accept),
       by = seq_len(nrow(tcdata[IOC_Type_cell=="Base" & is.character(pKa_Accept) & (pKa_Accept != " ") & is.na(largest_pKa_Accept),]))]  #if only one pka accept value, set that at the largest value
-  #if there are no lines that fit the criteria, we wont use largest pka (line 702) so do not need to set to zero
+  #if there are no lines that fit the criteria, we wont use largest pka (line 733) so do not need to set to zero
   
   #Account for lysosomal trapping with Lyso_pump; sorption to anionics already accounted for in DR_kmw
-  tcdata[, Lyso_MemVF:= (((4/3*pi*(Lyso_Diam/2)^3)-(4/3*pi*((Lyso_Diam/2)-7)^3))/(4/3*pi*(Lyso_Diam/2)^3))] %>% #lysosome membrane volume fraction
+  tcdata[, Lyso_MemVF:= (((4/3*pi*(Lyso_Diam/2)^3)-(4/3*pi*((Lyso_Diam/2)-7)^3))/(4/3*pi*(Lyso_Diam/2)^3))] %>% #lysosome membrane volume fraction, 7 represents thickness of hepatocyte lysosome membrane (in nanometers) (source: Lysosomal quality control of cell fate: a novel therapeutic target for human diseases)
     .[IOC_Type_cell=="Neutral" | IOC_Type_cell=="Acid", Lyso_Pump:= 1] %>% #sequestration factor
     .[IOC_Type_cell=="Base", Lyso_Pump:= ((1 + 10^(largest_pKa_Accept - Lyso_pH)) / (1 + 10^(largest_pKa_Accept - this.cell_pH)))] %>% #sequestration factor
     .[, DR_kcw := (1 - Lyso_VF) * (DR_kcw_preadj) + Lyso_VF * (Lyso_MemVF * cell_DR_kmw * IOC_mult * Lyso_Pump)]
   #	Lyso_Pump: Neutral = 1, Acid = 1, Base = (1 + 10^(pKa - Lyso_pH)) / (1 + 10^(pKa - cell_pH))
-  print("own -7 lysodiam correction")
   
   ### End of cell-specific distribution ratio calculation ###
   
   ### Calculate pH dependent distribution ratios (DR) ###
   tcdata[Fneutral == 0, Fneutral := 0.00001] %>% #if Fneutral=0, reassign bc we use it to divide
     .[,DR_kow:= (Fneutral*kow_n) +(Fcharged*kow_i)] %>% #DR kow (not cell-based)
-    .[,DR_kaw:= (Fneutral*kaw_n)] %>% # no dependence on ionization: charged form assumed to have negligible vapor pressure
+    .[,DR_kaw:= (Fneutral*kaw_n)] %>% # no dependence on ionization: charged form assumed to have negligible vapor pressure (Rayne & Forest 2010)
     .[,DR_kbsa:= (Fneutral*kbsa_n)+(Fpositive*kbsa_i_basic)+(Fnegative*kbsa_i_acidic)] %>% # DR kbsa (depends on acid/base)
     .[,DR_kpl:= (Fneutral*kpl_n)+(Fcharged*kpl_i)] %>% # DR kpl
-    .[,DR_swat:= swat_n*(1+(Fcharged/Fneutral))] # no scaling factors, just this ratio
+    .[,DR_swat:= swat_n*(1+(Fcharged/Fneutral))] # DR swat; aqueous solubility (Hansen et al 2006)
   
   ### Adjust DRs to account for salting out ###
   tcdata[,DR_kow:= DR_kow / 10^(-1*ksalt*csalt)] %>% 
@@ -798,11 +795,11 @@ armitage_eval <- function(chem.cas=NULL,
   
   ### General Solubility Equations (option.swat2==TRUE) ###
   #general solubility equation - estimate water solubility limits if none provided by user (option.swat2==TRUE)
-  tcdata[,gswat_liquid.GSE:=0.5-gkow_n] %>% # general solubility equation for liquids or sub-cooled liquids
+  tcdata[,gswat_liquid.GSE:=0.5-gkow_n] %>% # general solubility equation for liquids or sub-cooled liquids (Yalkowsky et al 1980)
     .[,swat_liquid.GSE:=10^gswat_liquid.GSE] #unlog
   
   #general solubility equation for chemicals that are solid at the system temperature (option.swat2==TRUE)
-  tcdata[MP_K>Tsys, gswat_solid.GSE:=0.5-0.01*(MP_C-25)-gkow_n] %>% # gse (at 25C) for solids (system temp lower than MP)
+  tcdata[MP_K>Tsys, gswat_solid.GSE:=0.5-0.01*(MP_C-25)-gkow_n] %>% # gse (at 25C) for solids (system temp lower than MP) (Yalkowsky et al 1980)
     .[MP_K>Tsys, swat_solid.GSE:=10^gswat_solid.GSE] %>% #unlog
     .[MP_K>Tsys, swat_subcooled_liquid.GSE := swat_solid.GSE/F_ratio] %>% #if the chem is solid at sys temp, use F_ratio to get sub-cooled liquid water solubility limit (not needed for liquids)
     .[MP_K>Tsys, gswat_subcooled_liquid.GSE_25C := log10(swat_subcooled_liquid.GSE)] %>% # log transform gswat (at 25C)
@@ -819,21 +816,20 @@ armitage_eval <- function(chem.cas=NULL,
   tcdata[option.swat2==FALSE, swat_L:=DR_swat/F_ratio]
   
   ### Calculate the volume (in Liters) of each compartment ###
-  tcdata[,Vbm:=v_working/1e6] %>% # uL to L; the volume of bulk medium
-    .[,Vwell:=v_total/1e6] %>% # uL to L; the volume of well
-    .[,Vcells:=cell_yield*(cellmass/1e6)/celldensity/1e6] %>% # cell*(ng/cell)*(1mg/1e6ng)/(mg/uL)*(1uL/L); the volume of cells
+  tcdata[,Vbm:=v_working*convert_units("ul", "l")] %>% # uL to L; the volume of bulk medium
+    .[,Vwell:=v_total*convert_units("ul", "l")] %>% # uL to L; the volume of well
+    .[,Vcells:=cell_yield*(cellmass*convert_units("ng", "mg"))/(celldensity*convert_units("ul", "l"))] %>% # cell*(ng/cell)*(1mg/1e6ng)/(mg/uL)*(1uL/L); the volume of cells  
     .[,Vair:=Vwell-Vbm-Vcells] %>%  # the volume of head space
-    .[,Valb:=Vbm*FBSf*0.733*conc_ser_alb/1000] %>% # the volume of serum albumin #/1000
-    .[,Vslip:=Vbm*FBSf*conc_ser_lip/1000] %>% # the volume of serum lipids #/1000
-    .[,Vdom:=Vdom/1e6] %>% # uL to L; the volume of Dissolved Organic Matter (DOM)
+    .[,Valb:=Vbm*FBSf*0.733*conc_ser_alb*convert_units("ml", "l")] %>% # the volume of serum albumin; 0.733 mL/g is the partial specific volume of bovine serum albumin (source: Chemical, Physiological, and Immunological Properties and Clinical Uses of Blood Derivatives)
+    .[,Vslip:=Vbm*FBSf*conc_ser_lip*convert_units("ml", "l")] %>% # the volume of serum lipids
+    .[,Vdom:=Vdom*convert_units("ul", "l")] %>% # uL to L; the volume of Dissolved Organic Matter (DOM)
     .[,Vm:=Vbm-Valb-Vslip-Vdom] # the volume of medium
-  #add in conv_units for the above chunk
 
   # umol/L for all concentrations
   tcdata[,mtot:= nomconc*Vbm] %>% # amount of umol chemical in the bulk medium in each well
     .[,cwat:=mtot/(DR_kaw*Vair + Vm + DR_kbsa*Valb +
                      P_cells*DR_kow*Vslip + DR_kow*P_dom*f_oc*Vdom + DR_kcw*Vcells +
-                     1000*DR_kpl*sarea)] %>% #calculate freely dissolved aqueous concentration in the test system (umol)
+                     DR_kpl*sarea*convert_units("m3", "l"))] %>% #calculate freely dissolved aqueous concentration in the test system (umol)
     #DR_kpl (m3/m2) * sarea (m2) * 1000 (L/m3) =  (L)
     .[cwat>DR_swat,cwat_s:=DR_swat] %>% #if the water solubility is exceeded, we use the water solubility as the dissolved concentration in the water (uM) and the excess is assumed to precipitate, therefore not included in the mass balance 
     .[cwat>DR_swat,csat:=1] %>% # and note that the solution is saturated (1 = true)
@@ -850,7 +846,7 @@ armitage_eval <- function(chem.cas=NULL,
     .[Vslip>0,cslip:=DR_kow*cwat_s*P_cells] %>% #concentration bound to serum lipids
     .[Vdom>0,cdom:=DR_kow*cwat_s*P_dom*f_oc] %>% #concentration bound to dissolved organic matter
     .[Vcells>0,ccells:=DR_kcw*cwat_s] %>% #concentration in cells
-    .[,cplastic:=DR_kpl*cwat_s*1000] %>% #DR_kpl (m3/m2) * cwat_s (umol/L) * 1000 (L/m3) = cplastic (umol/m2)
+    .[,cplastic:=DR_kpl*cwat_s*convert_units("m3", "l")] %>% #DR_kpl (m3/m2) * cwat_s (umol/L) * 1000 (L/m3) = cplastic (umol/m2)
     .[,mwat_s:=cwat_s*Vm] %>% #umol in water (medium)
     .[,mair:=cair*Vair] %>% #umol in air (headspace)
     .[,mbsa:=calb*Valb] %>% #umol in bsa
