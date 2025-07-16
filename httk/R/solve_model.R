@@ -455,24 +455,28 @@ specification in compartment_units for model ", model)
   # changed by Monte Carlo simulation. This code recalculates it if needed:
   if (recalc.clearance)
   {
-  # Do we have all the parameters we need:
-    if (!all(param_names%in%names(parameters)))
-    {
-      if (is.null(chem.name) & is.null(chem.cas)) 
-        stop('Chemical name or CAS must be specified to recalculate hepatic clearance.')
-      ss.params <- parameterize_steadystate(chem.name=chem.name,
-                                            chem.cas=chem.cas)
-    }
-    ss.params[[names(ss.params) %in% names(parameters)]] <- 
-      parameters[[names(ss.params) %in% names(parameters)]]
-    parameters[['Clmetabolismc']] <- do.call(calc_hep_clearance, 
-                                             args=purrr::compact(c(
-                                               parameters=ss.params,
-                                               species = species,
-                                               hepatic.model='unscaled',
-                                               restrictive.clearance = 
-                                                 parameterize.args.list[["restrictive.clearance"]],
-                                               suppress.messages=TRUE)))
+    # All parameters already checked at the beginning of function
+    # But, double check if Qtotal.liverc or component parts are present
+    if (!(
+      all(c("Qgutf", "Qliverf", "Qcardiacc") %in% names(parameters)) ||
+      "Qtotal.liverc" %in% names(parameters)
+    )) stop("Cannot recalculate clearance, missing ", 
+            paste(
+              setdiff(c("Qgutf", "Qliverf", "Qcardiacc") %in% names(parameters)),
+              collapse = ", "
+            )
+            ," in parameters.")
+    
+    parameters[['Clmetabolismc']] <- do.call(
+      calc_hep_clearance, 
+      args=purrr::compact(c(
+        parameters=parameters,
+        species = species,
+        hepatic.model='unscaled',
+        restrictive.clearance = 
+          parameterize.args.list[["restrictive.clearance"]],
+        suppress.messages=TRUE))
+    )
   }
     
   # If there is not an explicit liver we need to include a factor for first-
