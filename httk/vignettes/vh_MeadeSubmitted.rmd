@@ -414,7 +414,7 @@ knitr::kable(table,
 
 
 ## Display which chemicals are being looked at
-```{r summarize_cvt, eval=run.simulations}
+```{r summarize_cvt2, eval=run.simulations}
 table <- df %>% mutate(Chemical = get_chem_id(dtxsid=test_substance_dtxsid)$chem.name) %>% dplyr::count(Chemical,test_substance_dtxsid,extraction_document_pmid,sort=F) %>% dplyr::rename(Number.of.Data.Points = n)
 row.names(table) <- 1:nrow(table)
 knitr::kable(table, row.names=TRUE,caption="List of chemicals with dermal data before cleaning data.")
@@ -1294,7 +1294,7 @@ ivive_meade2023 <- toxcast3 %>% select(Chemical,DTXSID,`Permeability Type`,`Equi
 ```
 
 
-```{r add_water_solubility, eval=run.simulations2}
+```{r add_water_solubility, eval=run.simulations.2}
 chem.props <- subset(chem.physical_and_invitro.data,
                      DTXSID %in% ivive_meade2023$DTXSID)[
                        ,c("DTXSID","MW","logWSol")]
