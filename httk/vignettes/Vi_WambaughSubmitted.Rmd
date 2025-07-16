@@ -250,7 +250,7 @@ fig.clint.fup  <- ggplot(data=clint.fup) +
     colour=Chemical.Class,
     shape=Chemical.Class),
     size=POINT.SIZE) +
-  ylab(expression(italic("In Vitro")~"Measured Cl"[int]~"("*mu*"L/min/10"^'6'~"hepatocytes)")) +
+  ylab(expression(italic("In Vitro")~"Measured Cl"[int]~"("*mu*"L/min/10"^'6'~"hep.)")) +
   xlab(expression(italic("In Vitro")~"Measured f"[up])) +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
@@ -279,7 +279,7 @@ fig.clint.hist <- ggplot(data=clint.fup) +
     x=Human.Clint+10^-5,
     colour=Chemical.Class,
     fill=Chemical.Class)) +
-  xlab(expression(italic("In Vitro")~"Measured Cl"[int]~"("*mu*"L/min/10"^'6'~"hepatocytes)")) +
+  xlab(expression(italic("In Vitro")~"Measured Cl"[int]~"("*mu*"L/min/10"^'6'~"hep.)")) +
   scale_x_log10(label=scientific_10)+
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE))+

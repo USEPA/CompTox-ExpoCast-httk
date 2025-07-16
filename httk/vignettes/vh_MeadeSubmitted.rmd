@@ -50,14 +50,14 @@ If you are using the RMarkdown version of this vignette (has the file extension 
 We set a variable `run.simulations`. This will run simulations and regenerate data files. If this is set to `TRUE`, make sure you have the following data file: 
 
 * R_CvT_Database/CvT_all_tables_2202-08-17.Rdata: CvT data inside the [CvTdb](https://doi.org/10.1038%2Fs41597-020-0455-1)
-* R_CvT_Database/CvT_all_tables_2202-09-14_noSQL.Rdata: CvT data outside the [CvTdb](https://doi.org/10.1038%2Fs41597-020-0455-1) which had to be currated and loaded maually.
+* R_CvT_Database/CvT_all_tables_2202-09-14_noSQL.Rdata: CvT data outside the [CvTdb](https://doi.org/10.1038%2Fs41597-020-0455-1) which had to be curated and loaded manually.
 * CCD-Batch-Search_2022-11-29_07_06_35.xlsx: Excel file loaded from CompTox Dashboard for thirteen chemicals of interest.
 #Note - also need file invitrodb_3_5_mc5.Rdata - downloaded ToxCast data. AG 12/7/2023
 
 and if `run.simulations = FALSE`, make sure to have the following files in your working directory:
 
 * *`r paste0("meade2023_",format(Sys.time(), "%b_%d_%Y"),".Rdata")`*: 
-  + *concentration_data_meade2023*: conventration vs time and dosing data
+  + *concentration_data_meade2023*: concentration vs time and dosing data
  +  *conc_predictions_meade2023fDF* : simulations with and without exhalation included in the model, joined with concentration data.
   + *supptab1_meade2023*: Supplementary Table 1 which contains chemical data used for each of the simulated 13 chemicals saved in your working directory.
   + *ivive_meade2023* : IVIVE information for part 2 (if run.simulations.2 = FALSE)
@@ -67,7 +67,9 @@ and if `run.simulations = FALSE`, make sure to have the following files in your 
 ```{r runchunks, eval = TRUE}
 # Set whether or not the following chunks will be executed (run):
 run.simulations <- FALSE # Change FALSE to TRUE here to make the vignette work
+make.plots <- FALSE # change to TRUE to make the plots
 run.simulations.2 <- FALSE #for second part of vignette
+make.plots.2 <- FALSE # change to TRUE to make the plots
 ```
 
 ### Set working directory and install packages
@@ -688,14 +690,14 @@ for (include.e in exhalation_for_simulation){
 ```
 
 Now, if run.simulations = FALSE, we must load data. This load supptab1_meade2023, concentration_data_meade2023, conc_predictions_meade2023DF, conc_predictions_meade2023LIST.
-```{r load_data, eval=!(run.simulations)}
+```{r load_data, eval=(make.plots & !run.simulations)}
 load(paste0(loc.wd, "/meade2023_Jun_13_2025.Rdata"))
 ```
 
 ## Step Four: Calculate Root Mean Squared Log10 Errors (RMSLE)
 Now, we want to get the RMSLE for each chemical, comparing the model to the data. Let us group by
 chemical, method, and whether or not we include exhalation.
-```{r 1_prepareData, eval=TRUE}
+```{r 1_prepareData, eval = make.plots}
 conc_predictions_meade2023DF$method.perm = gsub( "UK-Surrey","Surrey", conc_predictions_meade2023DF$method.perm)
 conc_predictions_meade2023DF$method.name = gsub( "UK-Surrey","Surrey", conc_predictions_meade2023DF$method.name)
 df.sim = conc_predictions_meade2023DF
@@ -730,7 +732,7 @@ ddf.sim.rmsle <- df.sim.rmsle %>% group_by(method.name) %>% do(
 
 Let us compare the RMSLE and the volatility (i.e., boiling point) for each compound (assuming exhalation).
 
-```{r 1_plot3, eval=TRUE, fig.height=10, fig.width=20}
+```{r 1_plot3, eval = make.plots, fig.height=10, fig.width=20}
 # Plot RMSLE vs Boiling Point
 
 data = subset(df.sim.rmsle, exhalation_for_simulation==TRUE)
@@ -803,7 +805,7 @@ ggsave(paste(getwd(), "/Figures_May1/BPvsRMSLE_cmax_suppl.png",sep=""),
 ```
 Now, we compare simulations with exhalation to those without exhalation (as a function of boiling point).
 
-```{r 1_exhalation_rmsle_plot,  eval=TRUE, fig.height=10, fig.width=30}
+```{r 1_exhalation_rmsle_plot,  eval=make.plots, fig.height=10, fig.width=30}
 df.exh.compare=df.sim.rmsle
 
 Exh = data.frame(df.exh.compare %>% group_by(PREFERRED_NAME,method.name, Boiling.Point.C)%>%
@@ -878,8 +880,9 @@ stackExhStats = stackExh%>% group_by(ind, method.name) %>%
         )%>%select(ind,method.name,rsquared,p_val)
 
 ```
+
 Now, let's generate CvT plots for each chemical and color by whether or not exhalation was included.
-```{r cvt_plot_by_exh, eval =TRUE, fig.height=3, fig.width=3 }
+```{r cvt_plot_by_exh, eval =make.plots, fig.height=3, fig.width=3 }
 df.sim2 = df.sim.rmsle
 
 chem = unique(df.sim2$PREFERRED_NAME)
@@ -911,10 +914,8 @@ for(chx in 1:length(chem)){
 ```
 
 
-
-
 Now plot the data in Predicted vs Observed (PvO) plots for each of the 13 chemicals. First, we extract only simulated results that match the correct exhalation conditions by finding simulations where exhalation_for_simulations = T if Exhalation (which was calculated from volatility parameters), is TRUE and FALSE if FALSE.
-```{r 1_plot1,eval =TRUE, fig.height=3, fig.width=3}
+```{r 1_plot1,eval =make.plots, fig.height=3, fig.width=3}
 df.new = subset(df.sim.rmsle, exhalation_for_simulation==Exhalation)
 
 chem = unique(df.new$PREFERRED_NAME)
@@ -975,7 +976,7 @@ rmsle.all = df.new%>%group_by(method.name)%>%
 
 now plot log-transformed predicted vs. observed values and group by permeability method, vehicle (or route of exposure), and tested tissue.
 
-```{r 1_plot6, eval=TRUE, fig.height=10, fig.width=20}
+```{r 1_plot6, eval=make.plots, fig.height=10, fig.width=20}
 df.new = subset(df.sim, exhalation_for_simulation==Exhalation)
 df.sim.rmsle2=df.new %>% group_by(PREFERRED_NAME, method.name)%>%
   mutate(cmax_obs = max(conc_normalized), cmax_pred=max(Prediction)) %>%
@@ -1035,7 +1036,7 @@ method.rmsle.only=df.new %>% group_by(PREFERRED_NAME, method.name)%>%
 Now let's plot a heat map of the RMSLE and Cmax RMSLE. We will subset the dataframe to only plot the simulations appropriate for exhalation (that is, for a volatile chemical where Exhalation = TRUE, we will extract the solutions when exhalation_for_simulation = TRUE).We will also make note of the experiments for which a dosing vehicle was specified (water or octanol). For dermal, we will plot the results using both permeability methods and both vehicle methods, but will mark boxes over the cases where the vehicle matched to the simulated vehicle. We also want to plot the chemicals in order of volatility (based on boiling point).
 
 
-```{r 1_exhalation_correct, eval=TRUE}
+```{r 1_exhalation_correct, eval=make.plots}
 # Extract correct exhalation
 
 # df = conc_predictions_meade2023DF
@@ -1071,7 +1072,7 @@ dfmatchE3$PREFERRED_NAME = factor(dfmatchE3$PREFERRED_NAME,
 
 Generate the plot.
 
-```{r 1_heatmap, eval=TRUE, fig.height=8, fig.width=11}
+```{r 1_heatmap, eval=make.plots, fig.height=8, fig.width=11}
 ggplot(dfmatchE3, aes(y=PREFERRED_NAME, x=method.name))+
   geom_tile(aes(fill=value))+
   #geom_tile(aes(fill=Chemical.Cmax.RMSLE.NE))+
@@ -1099,7 +1100,7 @@ Now, we perform *in vitro* to *in vivo* extrapolation using the dermal model to 
 
 ## Step One: Load Data
 
-First we load [ToxCast Data](https://www.epa.gov/chemical-research/exploring-toxcast-data) data from the [EPA-ORD-CCTE Clowder](https://clowder.edap-cluster.com/spaces/62bb560ee4b07abf29f88fef). Some of the variables in this dataset of importance include:
+First we load [ToxCast Data](https://www.epa.gov/comptox-tools/exploring-toxcast-data) data from the [EPA-ORD-CCTE Clowder](https://clowder.edap-cluster.com/spaces/62bb560ee4b07abf29f88fef). Some of the variables in this dataset of importance include:
 
 * `hitc`: if `hitc=1` there was a statistically significant systematic conc-response observed, and if `hitc=0` there was no statistically significant
 * `mc6_flags`: features of the hit that might be of interest
@@ -1317,7 +1318,7 @@ signif(MW*10^logWSol*1.001142303,4))
                     ".Rdata"))
 ```
 
-```{r 2_load_without_running, eval = !run.simulations.2,echo=F}
+```{r 2_load_without_running, eval = (make.plots.2 & !run.simulations.2), echo=F}
 # load file with ivive_meade2023
 load("meade2023_Jun_20_2025.Rdata")
 ```
@@ -1325,7 +1326,7 @@ load("meade2023_Jun_20_2025.Rdata")
 
 ## Step Six: Plot Results
 
-```{r identify_potent, eval=TRUE}
+```{r identify_potent, eval=make.plots.2}
 # Modify for plotting
 ivive_meade2023$`Permeability Type` = gsub("UK-Surrey","Surrey",ivive_meade2023$`Permeability Type`)
 ivive_meade2023[ivive_meade2023==Inf] = 1e15
@@ -1347,7 +1348,7 @@ write.table(ivive_meade2023,
             sep="\t")
 ```
 
-```{r 2_plot1,fig.width=20,fig.height=12, eval=TRUE}
+```{r 2_plot1,fig.width=20,fig.height=12, eval=make.plots.2}
 # Plot Histogram
 data = ivive_meade2023 %>% group_by(`Permeability Type`) %>% mutate(Mean = mean(`Equivalent Dose`,na.rm=TRUE)) %>% mutate(Median = median(`Equivalent Dose`,na.rm=TRUE))
 AED.labels <- c("Needs Protection (AED caused by <1ppm)",
@@ -1395,7 +1396,7 @@ ggsave(paste(getwd(), "/Figures_May1/histogram2.png",sep=""),
 ```
 
 
-```{r 2_dataprep_for_plot2, fig.width=15, fig.height=10,eval=TRUE}
+```{r 2_dataprep_for_plot2, fig.width=15, fig.height=10,eval=make.plots.2}
 
 # WATER SOLUBILITY
 ivive_meade2023 <- 
@@ -1420,7 +1421,7 @@ data = ivive_meade2023 %>% group_by(`Permeability Type`,`WSol`) %>% mutate(Mean 
 data.med = unique(data[,c("Permeability Type","WSol","Mean","Median")]) %>% pivot_longer(cols=c("Mean","Median"),names_to="Statistic",values_to="Statistic.Value")
 ```
 
-```{r 2_plot2, fig.width=15, fig.height=10,eval=TRUE}
+```{r 2_plot2, fig.width=15, fig.height=10,eval=make.plots.2}
 chem.to.label <-  c("DTXSID0020232",
                   # "DTXSID6022923",
                   # "DTXSID8024151",
@@ -1519,7 +1520,7 @@ ggsave(paste(getwd(), "/Figures_May1/logKowvPerm.png",sep=""),
 
 ```
 
-```{r save_workspace}
+```{r save_workspace, make.plots.2}
 save.image(paste0(loc.wd,
                       "MeadeWorkspace",
                       Sys.Date(),
