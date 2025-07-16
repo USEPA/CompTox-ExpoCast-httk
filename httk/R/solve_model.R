@@ -106,14 +106,17 @@
 #' @param output.units Output units of interest for the compiled components.
 #' Defaults to NULL, and will provide values in model units if unspecified.
 #' 
-#' @param method Method used by integrator (deSolve).
+#' @param method Method used by integrator (\code{\link[deSolve]{ode}}).
 #' 
-#' @param rtol Relative tolerance used by integrator (deSolve) to determine 
+#' @param rtol Relative tolerance used by integrator (\code{\link[deSolve]{ode}}) to determine 
 #' numerical precision -- defaults to 1e-6.
 #' 
-#' @param atol Absolute tolerance used by integrator (deSolve) to determine
-#" numerical precision-- defaults to 1e-6.
+#' @param atol Absolute tolerance used by integrator (\code{\link[deSolve]{ode}}) to determine
+#' numerical precision -- defaults to 1e-6.
 #' 
+#' @param hmin minimum value of the integration stepsize (\code{\link[deSolve]{ode}})
+#' -- defaults to 1e-8
+#'
 #' @param recalc.blood2plasma Recalculates the ratio of the amount of chemical
 #' in the blood to plasma using the input parameters, calculated with
 #' hematocrit, Funbound.plasma, and Krbc2pu.
@@ -228,6 +231,7 @@ solve_model <- function(chem.name = NULL,
                     method=NULL,
                     rtol=1e-6,
                     atol=1e-6,
+                    hmin=1e-8,
                     recalc.blood2plasma=FALSE,
                     recalc.clearance=FALSE,
                     parameterize.args.list =list(),
@@ -451,24 +455,28 @@ specification in compartment_units for model ", model)
   # changed by Monte Carlo simulation. This code recalculates it if needed:
   if (recalc.clearance)
   {
-  # Do we have all the parameters we need:
-    if (!all(param_names%in%names(parameters)))
-    {
-      if (is.null(chem.name) & is.null(chem.cas)) 
-        stop('Chemical name or CAS must be specified to recalculate hepatic clearance.')
-      ss.params <- parameterize_steadystate(chem.name=chem.name,
-                                            chem.cas=chem.cas)
-    }
-    ss.params[[names(ss.params) %in% names(parameters)]] <- 
-      parameters[[names(ss.params) %in% names(parameters)]]
-    parameters[['Clmetabolismc']] <- do.call(calc_hep_clearance, 
-                                             args=purrr::compact(c(
-                                               parameters=ss.params,
-                                               species = species,
-                                               hepatic.model='unscaled',
-                                               restrictive.clearance = 
-                                                 parameterize.args.list[["restrictive.clearance"]],
-                                               suppress.messages=TRUE)))
+    # All parameters already checked at the beginning of function
+    # But, double check if Qtotal.liverc or component parts are present
+    if (!(
+      all(c("Qgutf", "Qliverf", "Qcardiacc") %in% names(parameters)) ||
+      "Qtotal.liverc" %in% names(parameters)
+    )) stop("Cannot recalculate clearance, missing ", 
+            paste(
+              setdiff(c("Qgutf", "Qliverf", "Qcardiacc") %in% names(parameters)),
+              collapse = ", "
+            )
+            ," in parameters.")
+    
+    parameters[['Clmetabolismc']] <- do.call(
+      calc_hep_clearance, 
+      args=purrr::compact(c(
+        parameters=parameters,
+        species = species,
+        hepatic.model='unscaled',
+        restrictive.clearance = 
+          parameterize.args.list[["restrictive.clearance"]],
+        suppress.messages=TRUE))
+    )
   }
     
   # If there is not an explicit liver we need to include a factor for first-
@@ -892,6 +900,7 @@ specification in compartment_units for model ", model)
     method=method,
     rtol=rtol,
     atol=atol,
+    hmin=hmin,
     dllname="httk",
     initfunc=initialize_compiled_function,
     nout=num_outputs,

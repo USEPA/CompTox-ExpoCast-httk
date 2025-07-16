@@ -620,7 +620,8 @@ Set species=\"Human\" to run httkpop model.')
 
 # If the model uses partion coefficients we need to lump each individual
 # separately in case rest of body organ volumes or PCs vary:
-  if (model.list[[model]]$calcpc)
+# But do not lump tissues twice (if 'Vrestc' and 'Krest2pu' both already exists in parameters.dt)
+  if (model.list[[model]]$calcpc & !all(c("Vrestc", "Krest2pu") %in% names(parameters.dt)))
   {
      lumptissues <- lump_tissues(
        Ktissue2pu.in = PCs,

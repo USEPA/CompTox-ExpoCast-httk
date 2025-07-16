@@ -26,6 +26,7 @@ solve_model(
   method = NULL,
   rtol = 1e-06,
   atol = 1e-06,
+  hmin = 1e-08,
   recalc.blood2plasma = FALSE,
   recalc.clearance = FALSE,
   parameterize.args.list = list(),
@@ -97,12 +98,16 @@ to mg/kg BW, in line with the default dosing scheme of a one-time dose of
 \item{output.units}{Output units of interest for the compiled components.
 Defaults to NULL, and will provide values in model units if unspecified.}
 
-\item{method}{Method used by integrator (deSolve).}
+\item{method}{Method used by integrator (\code{\link[deSolve]{ode}}).}
 
-\item{rtol}{Relative tolerance used by integrator (deSolve) to determine 
+\item{rtol}{Relative tolerance used by integrator (\code{\link[deSolve]{ode}}) to determine 
 numerical precision -- defaults to 1e-6.}
 
-\item{atol}{Absolute tolerance used by integrator (deSolve) to determine}
+\item{atol}{Absolute tolerance used by integrator (\code{\link[deSolve]{ode}}) to determine
+numerical precision -- defaults to 1e-6.}
+
+\item{hmin}{minimum value of the integration stepsize (\code{\link[deSolve]{ode}})
+-- defaults to 1e-8}
 
 \item{recalc.blood2plasma}{Recalculates the ratio of the amount of chemical
 in the blood to plasma using the input parameters, calculated with
