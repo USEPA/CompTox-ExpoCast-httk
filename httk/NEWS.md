@@ -1,10 +1,10 @@
-# version feature/dermal
+# httk 2.7.0 (2025-07-16)
 This version accompanies the submission of the Meade et al. manuscript 
 "Dermal absorption route and integration into high throughput toxicokinetics modeling (httk)"
 
 ## New Features
 * Added new high throughput PBTK model for dermal exposure 'solve_dermal_pbtk'
-* Added new vignette "Vignette Name"
+* Added new vignette "Meade et al. (2025): High Throughput Dermal Exposure Model"
 
 ## Enhancements
 * Increased efficiency of `get_cheminfo` -- replaced row-wise apply with complete.cases data subsetting. Results in substantial speed increase, especially for Monte Carlo.
