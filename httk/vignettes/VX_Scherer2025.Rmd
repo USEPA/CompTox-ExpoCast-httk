@@ -165,15 +165,6 @@ cat(paste("Summarized data from ",
 #number each row
 IVD_Manuscript_data[,X:=1:length(IVD_Manuscript_data$ChemicalName)]
 
-# #manuscript data
-# load("C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/ManuscriptDataJourney/ArmitagePlus_Vignette_16JUL25.RData")
-# 
-# #load data
-# original_curated.data.df<-read.csv("C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)/Profile/Desktop/IVD_Data/Dimitrijevic_from_arnot.csv")
-# 
-# curated.data.dt <- as.data.table(original_curated.data.df)
-# save(IVD_Manuscript_data, curated.data.dt, file = "Scherer2025Vignette.Rdata")
-
 ```
 
 #In vitro assay descriptors (optional step)

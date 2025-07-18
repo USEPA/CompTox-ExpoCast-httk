@@ -867,8 +867,6 @@ armitage_eval <- function(chem.cas=NULL,
     .[,eta_free := cwat_s/nomconc] %>%  # Effective availability ratio
     .[,cfree.invitro := cwat_s] # Free in vitro concentration in micromolar
   
-  print("4/10/24 Working Version")
-  
   return(tcdata)
   
   #output concentrations in umol/L
