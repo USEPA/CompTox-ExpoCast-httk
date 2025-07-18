@@ -29,7 +29,8 @@ This version also accompanies the submission of the Wambaugh et al. manuscript
 * Revised 'calc_ma' to increase membrane affinities for PFAS chemicals ~400x based on regression to data from [Droge et al. (2019)](https://doi.org/10.1021/acs.est.8b05052) (if new argument 'pfas.calibration==TRUE')
 * Can now use 'get_physchem_param' to retrieve "Chemical.Class" (only defined for PFAS to date)
 * Revised documentation for 1compartment model
-
+* Updated in vivo data from CvTdb (tables chem.invivo.PK.data, chem.invivo.PK.summary.data, and chem.invivo.PK.aggregate.data) to reflect curve fits made with [invivoPKfit](https://cran.r-project.org/web/packages/invivoPKfit/index.html) used in recently submitted manuscript "Collaborative Evaluation of In Silico Predictions for High Throughput Toxicokinetics"
+ 
 ## Bug fixes
 * Rest-of-body tissue lumping is now correct in `create_mc_samples()` when `httkpop = FALSE`. (Previously, when `httkpop = FALSE`, rest-of-body compartment was incorrectly doubled in volume.)
 * Fixed bug where `create_mc_samples` was using human parameters for lumping non-human species

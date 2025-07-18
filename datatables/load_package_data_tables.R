@@ -2850,9 +2850,111 @@ pradeep2020 <- dplyr::select(
 #
 #
 #
-#Add in vivo data from Wambaugh (2018):
-load('NewInVivoTablesForHTTK.RData')
+# Add in vivo data from CvTdb:
+# https://github.com/USEPA/CompTox-PK-CvTdb
+test.chems.dashboard <- read.csv("CvTdb/TestChemsDashboardInfo.csv")
+DASHBOARDCAS.COL <- "CASRN"
+test.chems.dashboard[,"CAS"] <- test.chems.dashboard[, DASHBOARDCAS.COL]
 
+CVTSPECIES.COL <- "species"
+CVTMEDIA.COL <- "conc_medium_normalized"
+CVTTIME.COL <- "time_hr"
+CVTCONC.COL <- "invivPK_conc"
+CVTDOSE.COL <- "invivPK_dose_level"
+CVTROUTE.COL <- "administration_route_normalized"
+CVTLOQ.COL <- "invivPK_loq"
+CVTDTXSID.COL <- "analyzed_chem_dtxsid"
+CVTCAS.COL <- "analyzed_chem_casrn"
+CVTREFERENCE.COL <- "pmid"
+CVTCOMPOUNDNAME.COL <- "PREFERRED_NAME"
+
+series_res_set <- read.csv("CvTdb/CvTdb_selectData_2025May.csv")
+series_res_set$Species <- series_res_set[,CVTSPECIES.COL]
+series_res_set$Media <- series_res_set[,CVTMEDIA.COL]
+series_res_set$Time_Days <- series_res_set[,CVTTIME.COL] / 24 # hours -> days
+series_res_set$Conc_mgpL <- series_res_set[,CVTCONC.COL] # mg/L
+series_res_set$Dose <- series_res_set[,CVTDOSE.COL] # mg/kg
+series_res_set$Route <- series_res_set[,CVTROUTE.COL]
+series_res_set$calc_loq <- series_res_set[,CVTLOQ.COL] # mg/L
+series_res_set$DTXSID <- series_res_set[,CVTDTXSID.COL]
+
+series_res_set <- merge(
+  series_res_set, test.chems.dashboard[c("DTXSID", "PREFERRED_NAME")],
+  all.x = TRUE,
+  by = "DTXSID"
+  )
+
+series_res_set$CAS <- series_res_set[,CVTCAS.COL]
+series_res_set$Reference <- series_res_set[,CVTREFERENCE.COL]
+series_res_set[is.na(series_res_set$Reference), "Reference"] <- "NTP"
+series_res_set$Source <- series_res_set$Reference
+
+# Other code looks for a column named "Compound":
+series_res_set[,"Compound"] <- series_res_set[,CVTCOMPOUNDNAME.COL]
+
+series_res_set[series_res_set$DTXSID == "DTXSID6021117", "CAS"] <- "60-80-0"
+# Sodium valproate is valproic acid:
+series_res_set[series_res_set$DTXSID == "DTXSID5037072", "DTXSID"] <- "DTXSID6023733"
+# Needs its CAS:
+series_res_set[series_res_set$DTXSID == "DTXSID6023733", "CAS"] <- "99-66-1"
+
+chem.invivo.PK.data <- series_res_set
+
+
+#
+#
+#
+#
+#
+# Add TK parameter estimates from invivoPKfit:
+# https://CRAN.R-project.org/package=invivoPKfit
+fittable <- as.data.frame(read_excel(
+  "CvTdb/evalTKstats_bakeoff_2025May.xlsx",
+  sheet=1))
+
+KELIM.COL <- "kelim"
+HALFLIFE.COL <- "halflife.tkstats"
+MODEL.COL <- "model"
+VDIST.COL <- "Vss.tkstats"
+V1.COL <- "V1"  
+K12.COL <- "k12"
+K21.COL <- "k21"
+KGUTABS.COL <- "kgutabs"
+FGUTABS.COL <- "Fgutabs"
+TIMEUNITS.COL <- "Time.Units"
+DTXSID.COL <- "Chemical"
+SIGFIGS <- 4
+
+fittable[,"DTXSID"] <- fittable[,DTXSID.COL]
+fittable[,"Model"] <- fittable[,MODEL.COL]
+fittable[fittable$Model=="model_1comp","Model"] <- "1Comp"
+fittable[fittable$Model=="model_2comp","Model"] <- "2Comp"
+
+fittable[,"Vdist"] <- signif(as.numeric(fittable[,VDIST.COL]), SIGFIGS)  
+
+for (this.col in c(K12.COL, K21.COL, KELIM.COL, KGUTABS.COL))
+{
+  fittable[,this.col] <- signif(as.numeric(fittable[,this.col])*24, SIGFIGS) # 1/day
+}
+fittable[,HALFLIFE.COL] <- signif(as.numeric(fittable[,HALFLIFE.COL])/24, SIGFIGS) # day
+fittable[,TIMEUNITS.COL] <- "days"
+fittable[,"halflife"] <- fittable[,HALFLIFE.COL]
+fittable[,"kelim"] <- fittable[,KELIM.COL]
+fittable[,"V1"] <- fittable[,V1.COL]
+fittable[,"k12"] <- fittable[,K12.COL]
+fittable[,"k21"] <- fittable[,K21.COL]
+fittable[,"Fgutabs"] <- fittable[,FGUTABS.COL]
+fittable[,"kgutabs"] <- fittable[,KGUTABS.COL]
+#
+# This table contains one line per treatment (dose/species/etc.):
+chem.invivo.PK.summary.data <- fittable
+# 
+# This table contains one line per chemical (PK params only):
+chem.invivo.PK.aggregate.data <- subset(fittable, !duplicated(DTXSID))
+chem.invivo.PK.aggregate.data <- chem.invivo.PK.aggregate.data[,
+  !(colnames(chem.invivo.PK.aggregate.data.data) %in% 
+    c("Reference","Route","Media","Dose",
+      "Dose.Units","Conc.Units","Time.Units"))]
 #
 #
 #
