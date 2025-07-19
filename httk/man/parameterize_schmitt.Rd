@@ -15,7 +15,8 @@ parameterize_schmitt(
   adjusted.Funbound.plasma = TRUE,
   suppress.messages = FALSE,
   class.exclude = TRUE,
-  minimum.Funbound.plasma = 1e-04
+  minimum.Funbound.plasma = 1e-04,
+  pfas.calibration = TRUE
 )
 }
 \arguments{
@@ -56,6 +57,9 @@ domain of applicability by relevant modelinfo_[MODEL] file (default TRUE).}
 \item{minimum.Funbound.plasma}{Monte Carlo draws less than this value are set 
 equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 dataset).}
+
+\item{pfas.calibration}{Whether MA for chemicals in class PFAS should be
+increased using the regression to the Droge (2019) dataset.}
 }
 \value{
 \item{Funbound.plasma}{Unbound fraction in plasma, adjusted for lipid binding according to Pearce et al. (2017)}

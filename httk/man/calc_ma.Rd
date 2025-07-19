@@ -9,7 +9,8 @@ calc_ma(
   chem.name = NULL,
   dtxsid = NULL,
   parameters = NULL,
-  suppress.messages = FALSE
+  suppress.messages = FALSE,
+  pfas.calibration = TRUE
 )
 }
 \arguments{
@@ -29,9 +30,12 @@ either CAS, name, or DTXSIDs}
 for the model indicated by argument model}
 
 \item{suppress.messages}{Whether or not the output message is suppressed.}
+
+\item{pfas.calibration}{Whether MA for chemicals in class PFAS should be
+increased using the regression to the Droge (2019) dataset.}
 }
 \value{
-A numeric fraction unpbound in plasma between zero and one
+A membrane:unbound fraction in plasma partition coefficient
 }
 \description{
 Membrane affinity (MA) is the membrane:water partition coefficient. MA
@@ -46,8 +50,10 @@ Yun and Edgington (2013) was identified as the best:
 \insertRef{pearce2017evaluation}{httk}
 
 \insertRef{yun2013correlation}{httk}
+
+\insertRef{droge2019pfasmembraneaffinity}{httk}
 }
 \author{
 John Wambaugh
 }
-\keyword{in-vitro}
+\keyword{parameters}
