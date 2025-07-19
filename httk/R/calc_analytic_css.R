@@ -79,6 +79,9 @@ model.list <- list()
 #'
 #' @param dose.units The units associated with the dose received.
 #'
+#'@param parameterize.args Additional parameters passed to parameterize function if 
+#'parameters is NULL.
+#'  
 #'@param ... Additional parameters passed to parameterize function if 
 #'parameters is NULL.
 #'  

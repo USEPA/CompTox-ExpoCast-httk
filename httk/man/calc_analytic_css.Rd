@@ -98,6 +98,9 @@ the lowest measured Fup in our dataset).}
 
 \item{...}{Additional parameters passed to parameterize function if 
 parameters is NULL.}
+
+\item{parameterize.args}{Additional parameters passed to parameterize function if 
+parameters is NULL.}
 }
 \value{
 Steady state plasma concentration in specified units

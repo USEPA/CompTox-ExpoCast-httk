@@ -1,8 +1,7 @@
-# source("L:/Lab/NCCT_ExpoCast/ExpoCast2019/HTTKDataTable/load_package_data_tables-030719.R")
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
-SCRIPT.VERSION <- "March2025"
+SCRIPT.VERSION <- "feature/PFAS March 2025"
 
 ## R Packages ##
 library(reshape)
@@ -546,9 +545,15 @@ Obach2018.table[Obach2018.table[,"CAS #"]=="4731-52-6", "CAS #"] <-
   "444731-52-6"
 Obach2018.table[Obach2018.table[,"CAS #"]=="66981-73-5", "CAS #"] <- 
   "72797-41-2"
+Obach2018.table[Obach2018.table[,"CAS #"]=="135729-61-2", "CAS #"] <- 
+  "135729-56-5"
 Obach2018.table[Obach2018.table[,"CAS #"]=="51931-66-9", "CAS #"] <- 
   "32447-90-8"
-
+Obach2018.table[Obach2018.table[,"CAS #"]=="120443-16-5", "CAS #"] <- 
+  "115104-28-4"
+# Carnitine_l -> "levocarnitine", dashboard gives CAS="541-15-1"
+Obach2018.table[Obach2018.table[,"Name"]=="Carnitine_L",
+  "CAS #"] <- "541-15-1"  
 # Get rid of non-numeric fu values:
 Obach2018.table$fu <- signif(as.numeric(Obach2018.table[,
   "fraction unbound \r\nin plasma (fu)"]),4)
@@ -751,7 +756,7 @@ length(unique(chem.prop$CAS))==dim(chem.prop)[1]
 
 chem.physical_and_invitro.data <- chem.prop
 
-if (length(unique(chem.physical_and_invitro.data$CAS)) < 
+if (length(unique(chem.physical_and_invitro.data$CAS)) <
   dim(chem.physical_and_invitro.data)[1]) 
   stop("Duplicated CAS numbers in chem.physical_and_invitro.data")
 if (any(sapply(chem.physical_and_invitro.data$CAS,
@@ -882,10 +887,13 @@ pc.data.table[which(pc.data.table[,'CAS'] %in% c(
   '59-99-4','2955-38-6','155-97-5','41903-57-5','58-55-9','77-32-7','59-05-2',
   '60-54-8')),
   'fu'] <- NA
+  
+# Change outdated CAS:
+pc.data.table[pc.data.table$Drug=="Bisoprolol-S", "CAS"] <- "66722-44-9"
 # Use blank space to indicate no ionization:
 pc.data.table[is.na(pc.data.table$Donor),"Donor"] <- " "
 pc.data.table[is.na(pc.data.table$Accept),"Accept"] <- " "
-#pc.data <- subset(pc.data, Tissue %in% c("Adipose","Bone","Brain","Gut","Heart","Kidney","Liver","Lung","Muscle","Skin","Spleen","Blood Cells") & Species == 'Rat')   
+
 chem.physical_and_invitro.data <- add_chemtable(
   pc.data.table,
   current.table=chem.physical_and_invitro.data,
@@ -1774,6 +1782,278 @@ chem.physical_and_invitro.data <- add_chemtable(
   species="Human",                                                                        
   reference="Musther 2014")
 
+#PFAS:
+# Identify PFAS chemical class using CCD master list:
+cat("PFAS identification from PFAS8a7v3-2025-04-29.csv\n")
+PFAS <- read.csv("PFAS8a7v3-2025-04-29.csv")
+# Remove URLs:
+PFAS$DTXSID <- gsub("https://comptox.epa.gov/dashboard/chemical/details/","",PFAS$DTXSID)
+
+cat("Loading PFAS HTTK data from Smeltz 2023\n")
+Smeltz2023PPBUCBayes <- as.data.frame(
+  read_excel("Smeltz2023/tx3c00003_si_001.xlsx",
+  sheet="Table S7 PPB-UC-Level4"))
+length(unique(Smeltz2023PPBUCBayes$DTXSID))
+# Add CASRN:
+Smeltz2023PPBUCBayes <- merge(Smeltz2023PPBUCBayes,
+                            PFAS[,c("DTXSID","CASRN")],
+                            all.x=TRUE)
+# Add reference chemical n-butylparaben:
+Smeltz2023PPBUCBayes[Smeltz2023PPBUCBayes$DTXSID=="DTXSID3020209",
+                   "CASRN"] <-"94-26-8"
+
+Smeltz2023PPBUCBayes$Human.Funbound.plasma <- paste(
+  signif(Smeltz2023PPBUCBayes$Fup.Med ,3),
+  signif(Smeltz2023PPBUCBayes$Fup.Low ,3),
+  signif(Smeltz2023PPBUCBayes$Fup.High ,3),
+  sep=",")
+Smeltz2023PPBUCBayes[Smeltz2023PPBUCBayes$Human.Funbound.plasma=="NA,NA,NA", 
+  "Human.Funbound.plasma"] <-NA
+                     
+chem.physical_and_invitro.data <- add_chemtable(Smeltz2023PPBUCBayes,
+  current.table=chem.physical_and_invitro.data,
+  data.list=list(Compound="Compound",
+    DTXSID="DTXSID",
+    CAS="CASRN",
+    Funbound.plasma="Human.Funbound.plasma"
+    ),
+  reference="Smeltz 2023",
+  species="Human",
+  overwrite=TRUE)
+  
+Smeltz2023PPBREDBayes <- as.data.frame(
+  read_excel("Smeltz2023/tx3c00003_si_001.xlsx",
+  sheet="Table S8 PPB-RED-Level4"))
+length(unique(Smeltz2023PPBREDBayes$DTXSID))
+# Add CASRN:
+Smeltz2023PPBREDBayes <- merge(Smeltz2023PPBREDBayes,
+                            PFAS[,c("DTXSID","CASRN")],
+                            all.x=TRUE)
+# Add reference chemical n-butylparaben:
+Smeltz2023PPBREDBayes[Smeltz2023PPBREDBayes$DTXSID=="DTXSID3020209",
+                   "CASRN"] <-"94-26-8"
+
+Smeltz2023PPBREDBayes$Human.Funbound.plasma <- paste(
+  signif(Smeltz2023PPBREDBayes$Fup.Med ,3),
+  signif(Smeltz2023PPBREDBayes$Fup.Low ,3),
+  signif(Smeltz2023PPBREDBayes$Fup.High ,3),
+  sep=",")
+Smeltz2023PPBREDBayes[Smeltz2023PPBREDBayes$Human.Funbound.plasma=="NA,NA,NA", 
+  "Human.Funbound.plasma"] <-NA
+                     
+chem.physical_and_invitro.data <- add_chemtable(Smeltz2023PPBREDBayes,
+  current.table=chem.physical_and_invitro.data,
+  data.list=list(Compound="Compound.Name",
+    DTXSID="DTXSID",
+    CAS="CASRN",
+    Funbound.plasma="Human.Funbound.plasma"
+    ),
+  reference="Smeltz 2023",
+  species="Human",
+  overwrite=TRUE)  
+
+Smeltz2023PPBManual <- as.data.frame(
+  read_excel("Smeltz2023/tx3c00003_si_001.xlsx",
+  sheet="Table S4  UC-RED_Data",
+  skip=1))
+Smeltz2023PPBManual <- subset(Smeltz2023PPBManual,
+                              !is.na(DTXSID))
+colnames(Smeltz2023PPBManual)[2] <- "Compound"
+
+Smeltz2023PPBManual <- merge(Smeltz2023PPBManual,
+                            PFAS[,c("DTXSID","CASRN")],
+                            all.x=TRUE)
+Smeltz2023PPBManual$fup.uc <- signif(as.numeric(
+                                Smeltz2023PPBManual[,"Mean fu"]),4)
+# Add reference chemical n-butylparaben:
+Smeltz2023PPBManual[Smeltz2023PPBManual$DTXSID=="DTXSID3020209",
+                   "CASRN"] <-"94-26-8"
+Smeltz2023PPBManual[Smeltz2023PPBManual$DTXSID=="DTXSID30170109",
+                   "CASRN"] <-"1763-28-6"
+                           
+chem.physical_and_invitro.data <- add_chemtable(Smeltz2023PPBManual,
+  current.table=chem.physical_and_invitro.data,
+  data.list=list(Compound="Compound",
+    DTXSID="DTXSID",
+     CAS="CASRN",
+    Funbound.plasma="fup.uc"
+    ),
+  reference="Smeltz 2023",
+  species="Human",
+  overwrite=FALSE)
+  
+#
+#
+#
+#
+cat("Loading PFAS HTTK data from Kreutz 2023\n")
+
+# PPB from invitroTKstats
+Kreutz2023PPBBayes <- as.data.frame(
+  read_excel("Kreutz2023/toxics-2360536-supplementary.xlsx",
+  sheet="Table_S8_PPB_UC-Level4"))
+length(unique(Kreutz2023PPBBayes$DTXSID))
+# Wrong name:      
+Kreutz2023PPBBayes[Kreutz2023PPBBayes$DTXSID=="DTXSID50382621",
+                   "Compound"] <- "7:3 Fluorotelomer alcohol"
+
+Kreutz2023PPBBayes <- merge(Kreutz2023PPBBayes,
+                            PFAS[,c("DTXSID","CASRN")],
+                            all.x=TRUE)
+# Add missing CAS's:
+Kreutz2023PPBBayes[Kreutz2023PPBBayes$DTXSID=="DTXSID5023792",
+                   "CASRN"] <-"99-99-0"
+Kreutz2023PPBBayes[Kreutz2023PPBBayes$DTXSID=="DTXSID30395037",
+                   "CASRN"] <-"58244-27-2"     
+Kreutz2023PPBBayes[Kreutz2023PPBBayes$DTXSID=="DTXSID80382093",
+                   "CASRN"] <-"31253-34-6"              
+                                               
+Kreutz2023PPBBayes$Human.Funbound.plasma <- paste(
+  signif(Kreutz2023PPBBayes$Fup.Med ,3),
+  signif(Kreutz2023PPBBayes$Fup.Low ,3),
+  signif(Kreutz2023PPBBayes$Fup.High ,3),
+  sep=",")
+Kreutz2023PPBBayes[Kreutz2023PPBBayes$Human.Funbound.plasma=="NA,NA,NA", 
+  "Human.Funbound.plasma"] <-NA
+                     
+chem.physical_and_invitro.data <- add_chemtable(Kreutz2023PPBBayes,
+  current.table=chem.physical_and_invitro.data,
+  data.list=list(Compound="Compound",
+    DTXSID="DTXSID",
+    CAS="CASRN",
+    Funbound.plasma="Human.Funbound.plasma"
+    ),
+  reference="Kreutz 2023",
+  species="Human",
+  overwrite=TRUE)
+  
+# Clint from invitroTKstats  
+Kreutz2023ClintBayes <- as.data.frame(
+  read_excel("Kreutz2023/toxics-2360536-supplementary.xlsx",
+  sheet="Table_S9_Clint_Level4"))  
+
+length(unique(Kreutz2023ClintBayes$DTXSID))
+Kreutz2023ClintBayes <- merge(Kreutz2023ClintBayes,
+                            PFAS[,c("DTXSID","CASRN")],
+                            all.x=TRUE)
+                            
+# Add reference chemical Ametryn:
+Kreutz2023ClintBayes[Kreutz2023ClintBayes$DTXSID=="DTXSID1023869",
+                   "CASRN"] <-"834-12-8"
+Kreutz2023ClintBayes$Human.Clint <- paste(
+  signif(Kreutz2023ClintBayes$Clint.1.Med ,3),
+  signif(Kreutz2023ClintBayes$Clint.1.Low ,3),
+  signif(Kreutz2023ClintBayes$Clint.1.High ,3),
+  signif(Kreutz2023ClintBayes$Clint.pValue, 3),
+  sep=",")
+Kreutz2023ClintBayes[Kreutz2023ClintBayes$Human.Clint=="NA,NA,NA,NA", 
+  "Human.Clint"] <-NA
+                
+chem.physical_and_invitro.data <- add_chemtable(Kreutz2023ClintBayes,
+  current.table=chem.physical_and_invitro.data,
+  data.list=list(Compound="Compound.Name",
+    DTXSID="DTXSID",
+    CAS="CASRN",
+    Clint="Human.Clint"
+    ),
+  reference="Kreutz 2023",
+  species="Human",
+  overwrite=TRUE)
+  
+# Manually calculated values  
+Kreutz2023Manual <- as.data.frame(
+  read_excel("Kreutz2023/toxics-2360536-supplementary.xlsx",
+  sheet="Table S3-TK_Data_Summary"))                        
+  
+colnames(Kreutz2023Manual)[2] <- "Name"
+colnames(Kreutz2023Manual)[5] <- "fup"
+
+Kreutz2023Manual <- merge(Kreutz2023Manual,
+                            PFAS[,c("DTXSID","CASRN")],
+                            all.x=TRUE)
+                            
+# Add missing CAS's:
+Kreutz2023Manual[Kreutz2023Manual$DTXSID=="DTXSID60238701",
+                   "CASRN"] <-"918-21-8"
+Kreutz2023Manual[Kreutz2023Manual$DTXSID=="DTXSID30395037",
+                   "CASRN"] <-"58244-27-2"     
+Kreutz2023Manual[Kreutz2023Manual$DTXSID=="DTXSID80382093",
+                   "CASRN"] <-"31253-34-6"  
+                                                 
+
+Kreutz2023Manual$fup <- signif(as.numeric(Kreutz2023Manual$fup),4) 
+Kreutz2023Manual$clint <- signif(as.numeric(Kreutz2023Manual$Bkgd_adj_Clint),4)
+
+chem.physical_and_invitro.data <- add_chemtable(Kreutz2023Manual,
+  current.table=chem.physical_and_invitro.data,
+  data.list=list(Compound="Name",
+    DTXSID="DTXSID",
+    CAS="CASRN",
+    Funbound.plasma="fup",
+    Clint="clint"
+    ),
+  reference="Kreutz 2023",
+  species="Human",
+  overwrite=FALSE)
+
+#
+#  
+cat("Loading PFAS HTTK data from Crizer 2024\n")
+Crizer2023ClintBayes <- as.data.frame(
+                          read_excel("Crizer2023/toxics-3180049-supplementary.xlsx",
+                                   sheet="Table_S6_Clint-Level4"))
+
+Crizer2023ClintBayes <- merge(Crizer2023ClintBayes ,
+                              PFAS[,c("DTXSID","CASRN")],
+                              all.x=TRUE,
+                              by="DTXSID")
+
+Crizer2023ClintBayes$Human.Clint <- paste(
+  signif(Crizer2023ClintBayes$Clint.1.Med, 3),
+  signif(Crizer2023ClintBayes$Clint.1.Low, 3),
+  signif(Crizer2023ClintBayes$Clint.1.High, 3),
+  signif(Crizer2023ClintBayes$Clint.pValue, 3),
+  sep=",")
+Crizer2023ClintBayes[Crizer2023ClintBayes$Human.Clint=="NA,NA,NA,NA", 
+                     "Human.Clint"] <-NA
+
+chem.physical_and_invitro.data <- add_chemtable(Crizer2023ClintBayes,
+                                                current.table=chem.physical_and_invitro.data,
+                                                data.list=list(Compound="Compound.Name",
+                                                               DTXSID="DTXSID",
+                                                               CAS="CASRN",
+                                                               Clint="Human.Clint",
+                                                               Clint.pValue="Clint.pValue"
+                                                ),
+                                                reference="Crizer 2024",
+                                                species="Human",
+                                                overwrite=TRUE)
+
+
+Crizer2023ClintManual <- as.data.frame(
+                          read_excel("Crizer2023/toxics-3180049-supplementary.xlsx",
+                                   sheet="Table_S4_Clint_Data_Summary"))
+colnames(Crizer2023ClintManual)[9] <- "Clint"
+Crizer2023ClintManual <- subset(Crizer2023ClintManual,
+  !is.na(Crizer2023ClintManual$Clint))
+length(unique(Crizer2023ClintManual$DTXSID))
+Crizer2023ClintManual[,"p-value"] <- 
+  signif(as.numeric(Crizer2023ClintManual[,"p-value"]),4)
+Crizer2023ClintManual[is.na(Crizer2023ClintManual[,"p-value"]),
+                            "p-value"] <- 1.0 
+
+chem.physical_and_invitro.data <- add_chemtable(Crizer2023ClintManual,
+  current.table=chem.physical_and_invitro.data,
+  data.list=list(Compound="NAME",
+    DTXSID="DTXSID",
+    CAS="CASRN",
+    CLint="Clint",
+    Clint.pValue="p-value"
+    ),
+  reference="Crizer 2024",
+  species="Human",
+  overwrite=FALSE)
+
 chem.physical_and_invitro.data <- add_chemtable(
   subset(gut.data, !is.na(musther_Fbio_mouse)),
   current.table = chem.physical_and_invitro.data,
@@ -1818,10 +2098,8 @@ chem.physical_and_invitro.data <- add_chemtable(
   species="Monkey",                                                                        
   reference="Musther 2014")
 
-
- 
 ## Load in Dawson 2021 Predictions ##
-cat("Loading HTTK data from Dawson2021...\n")
+cat("Loading HTTK predictions from Dawson 2021...\n")
 dawson.clint.1 <- 
   read.csv("Dawson2021/Novel_clint_predictions_with_AD_Main29_descs_from_Opera2.9.csv")
 dawson.clint.2 <- 
@@ -1857,6 +2135,95 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dawson.clint.2,CASRN!="")
                                  overwrite=FALSE,
                                  reference="Dawson 2021")                                   
 
+#
+# Create dawson2023 PFAS Half-Life Machine Learning Prediction Table
+#   we add this here because we need phys-chem for these chemicals
+dawson2023 <- read.csv("Dawson2023/S3_Dawsonetal_PFAS_HL_101122.csv")
+# Add in missing CAS:
+dawson2023[dawson2023$DTXSID=="DTXSID40275710","CASRN"] <- "250122-61-3"
+dawson2023[dawson2023$DTXSID=="DTXSID701019144","CASRN"] <- "255831-20-0"
+dawson2023[dawson2023$DTXSID=="DTXSID30892612","DTXSID"] <- "DTXSID601036094"
+dawson2023[dawson2023$DTXSID=="DTXSID30893003","CASRN"] <- "2179232-13-2"
+dawson2023[dawson2023$DTXSID=="DTXSID00893419","CASRN"] <- "1597-11-1"
+dawson2023[dawson2023$DTXSID=="DTXSID60367287","CASRN"] <- "25642-11-9"
+dawson2023[dawson2023$DTXSID=="DTXSID401009906","CASRN"] <- "1283087-54-6"
+dawson2023[dawson2023$DTXSID=="DTXSID801009908","CASRN"] <- "2252239-09-9"
+dawson2023[dawson2023$DTXSID=="DTXSID70894099","CASRN"] <- "960315-49-5"
+dawson2023[dawson2023$DTXSID=="DTXSID20894100","CASRN"] <- "960315-50-8"
+dawson2023[dawson2023$DTXSID=="DTXSID001009916","CASRN"] <- "2481740-05-8"
+dawson2023[dawson2023$DTXSID=="DTXSID701009917","CASRN"] <- "2361298-14-6"
+dawson2023[dawson2023$DTXSID=="DTXSID401009918","CASRN"] <- "23282-60-2"
+
+
+
+
+chem.physical_and_invitro.data <- add_chemtable(subset(dawson2023,
+                                                       !duplicated(DTXSID)),
+                current.table = chem.physical_and_invitro.data, 
+                data.list = list(CAS = 'CASRN',
+                                 DTXSID='DTXSID',
+                                 LogP="LogP_pred"
+                                 ), species="Human",
+                                 overwrite=FALSE,
+                                 reference="Dawson 2023")
+
+# Save only needed columns:                                 
+dawson2023 <- dawson2023[,c(
+                          "DTXSID",
+                          "Species",
+                          "Sex",
+                          "DosingAdj",
+                          "ClassPredFull",
+                          "ClassModDomain",
+                          "AMAD")]
+#
+# END dawson2023 Creation
+#
+
+# Load in vivo clearances for evaluation:
+pfas.clearance <- read.csv("Dawson2023/PFAS-Clearance.txt")
+
+#
+# Poothong et al. (2017) PFAS Blood:Plasma Ratios
+#
+poothong2017 <- as.data.frame(read_excel("Poothong2017.xlsx",skip=1))
+poothong2017 <- as.data.frame(t(poothong2017[c(1,3,19:24),]))
+colnames(poothong2017) <- poothong2017[1,]
+poothong2017 <- poothong2017[2:15,]
+for (i in 1+c(2,5:7))
+{
+ poothong2017[,i] <- as.numeric(poothong2017[,i])
+}
+poothong2017$RB2P <- signif(1/poothong2017[,"Median concentration ratio"],3)
+
+chem.physical_and_invitro.data <- add_chemtable(poothong2017, 
+               current.table=chem.physical_and_invitro.data, 
+               species="Human",
+               reference="Poothong 2017",
+               data.list=list(
+                 CAS="CASRN",
+                 DTXSID="DTXSID",
+                 Rblood2plasma="RB2P"))
+#
+# END Poothong et al. (2017)
+#
+
+#
+# Droge (2019) PFAS Membrane Affinities
+#
+droge2019 <- as.data.frame(read_excel("Droge2019.xlsx",skip=1))
+colnames(droge2019)[5] <- "logMA"
+
+chem.physical_and_invitro.data <- add_chemtable(droge2019, 
+               current.table=chem.physical_and_invitro.data, 
+               reference="Droge 2019",
+               data.list=list(
+                 CAS="CASRN",
+                 DTXSID="DTXSID",
+                 logMA="logMA"))
+#
+# 
+#
 ## Load Lynn 2025 fup data
 cat("Loading HTTK data from Lynn 2025...\n")
 lynn2025 <- as.data.frame(read_excel("Lynn-2025-ThreeSpeciesFup.xlsx",
@@ -2174,10 +2541,7 @@ write.table(chem.physical_and_invitro.data[,c("SMILES.desalt","CAS")],
   col.names=FALSE,
   quote=FALSE)
 cat("Chemical QSAR-ready SMILES written to HTTK-AllChems.smi")
-cat(" use that file to in OPERA to generate phys-chem properties including pKa.\n")
-cat("Enter \"c\" to continue when ready.\n")
-#browser()
-
+cat(" use that file to generate phys-chem properties including pKa.\n")
 #
 #
 # Annotate important chemicals classes as concatenated list:
@@ -2185,16 +2549,21 @@ cat("Enter \"c\" to continue when ready.\n")
 #
 chem.physical_and_invitro.data[,"Chemical.Class"] <- ""
 
-#PFAS:
-PFAS <- read.csv("Dashboard-PFASMaster-091620.tsv",sep="\t")
 chem.physical_and_invitro.data[
   chem.physical_and_invitro.data[,"DTXSID"] %in% PFAS[,"DTXSID"],
   "Chemical.Class"] <- sapply(chem.physical_and_invitro.data[
     chem.physical_and_invitro.data[,"DTXSID"] %in% PFAS[,"DTXSID"],
     "Chemical.Class"], function(x) ifelse(x=="","PFAS",paste(x,"PFAS",sep=","))) 
-
-
-#Remove chemicals with no DTXSID:
+# Tris(2,2,2-trifluoroethyl)orthoformate is PFAS:
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$DTXSID %in%
+                               "DTXSID30395037",
+                   "Chemical.Class"] <-"PFAS"
+# Chemicals from Dawson 2023 are PFAS:
+chem.physical_and_invitro.data[chem.physical_and_invitro.data$DTXSID %in%
+                               unique(dawson2023$DTXSID),
+                   "Chemical.Class"] <-"PFAS"
+                   
+# Remove chemicals with no DTXSID:
 if (any(is.na(chem.physical_and_invitro.data$DTXSID)))
 {
   cat("There are chemicals missing DTXSID's that have been removed from the\n\
@@ -2426,6 +2795,8 @@ for (this.col in c("QSAR_Clint", "QSAR_Clint_SD", "QSAR_Fup"))
 # END dawson2021 Creation
 #
 
+
+
 #
 # Create pradeep2020 QSPR predictions table
 #
@@ -2479,9 +2850,109 @@ pradeep2020 <- dplyr::select(
 #
 #
 #
-#Add in vivo data from Wambaugh (2018):
-load('NewInVivoTablesForHTTK.RData')
+# Add in vivo data from CvTdb:
+# https://github.com/USEPA/CompTox-PK-CvTdb
+test.chems.dashboard <- read.csv("CvTdb/TestChemsDashboardInfo.csv")
+DASHBOARDCAS.COL <- "CASRN"
+test.chems.dashboard[,"CAS"] <- test.chems.dashboard[, DASHBOARDCAS.COL]
 
+CVTSPECIES.COL <- "species"
+CVTMEDIA.COL <- "conc_medium_normalized"
+CVTTIME.COL <- "time_hr"
+CVTCONC.COL <- "invivPK_conc"
+CVTDOSE.COL <- "invivPK_dose_level"
+CVTROUTE.COL <- "administration_route_normalized"
+CVTLOQ.COL <- "invivPK_loq"
+CVTDTXSID.COL <- "analyzed_chem_dtxsid"
+CVTCAS.COL <- "analyzed_chem_casrn"
+CVTREFERENCE.COL <- "pmid"
+CVTCOMPOUNDNAME.COL <- "PREFERRED_NAME"
+
+series_res_set <- read.csv("CvTdb/CvTdb_selectData_2025May.csv")
+series_res_set$Species <- series_res_set[,CVTSPECIES.COL]
+series_res_set$Media <- series_res_set[,CVTMEDIA.COL]
+series_res_set$Time_Days <- series_res_set[,CVTTIME.COL] / 24 # hours -> days
+series_res_set$Conc_mgpL <- series_res_set[,CVTCONC.COL] # mg/L
+series_res_set$Dose <- series_res_set[,CVTDOSE.COL] # mg/kg
+series_res_set$Route <- series_res_set[,CVTROUTE.COL]
+series_res_set$calc_loq <- series_res_set[,CVTLOQ.COL] # mg/L
+series_res_set$DTXSID <- series_res_set[,CVTDTXSID.COL]
+
+series_res_set <- merge(
+  series_res_set, test.chems.dashboard[c("DTXSID", "PREFERRED_NAME")],
+  all.x = TRUE,
+  by = "DTXSID"
+  )
+
+series_res_set$CAS <- series_res_set[,CVTCAS.COL]
+series_res_set$Reference <- series_res_set[,CVTREFERENCE.COL]
+series_res_set[is.na(series_res_set$Reference), "Reference"] <- "NTP"
+series_res_set$Source <- series_res_set$Reference
+
+# Other code looks for a column named "Compound":
+series_res_set[,"Compound"] <- series_res_set[,CVTCOMPOUNDNAME.COL]
+
+series_res_set[series_res_set$DTXSID == "DTXSID6021117", "CAS"] <- "60-80-0"
+# Sodium valproate is valproic acid:
+series_res_set[series_res_set$DTXSID == "DTXSID5037072", "DTXSID"] <- "DTXSID6023733"
+# Needs its CAS:
+series_res_set[series_res_set$DTXSID == "DTXSID6023733", "CAS"] <- "99-66-1"
+
+chem.invivo.PK.data <- series_res_set
+#
+#
+#
+#
+#
+# Add TK parameter estimates from invivoPKfit:
+# https://CRAN.R-project.org/package=invivoPKfit
+fittable <- as.data.frame(read_excel(
+  "CvTdb/evalTKstats_bakeoff_2025May.xlsx",
+  sheet=1))
+
+KELIM.COL <- "kelim"
+HALFLIFE.COL <- "halflife.tkstats"
+MODEL.COL <- "model"
+VDIST.COL <- "Vss.tkstats"
+V1.COL <- "V1"  
+K12.COL <- "k12"
+K21.COL <- "k21"
+KGUTABS.COL <- "kgutabs"
+FGUTABS.COL <- "Fgutabs"
+TIMEUNITS.COL <- "Time.Units"
+DTXSID.COL <- "Chemical"
+SIGFIGS <- 4
+
+fittable[,"DTXSID"] <- fittable[,DTXSID.COL]
+fittable[,"Model"] <- fittable[,MODEL.COL]
+fittable[fittable$Model=="model_1comp","Model"] <- "1Comp"
+fittable[fittable$Model=="model_2comp","Model"] <- "2Comp"
+
+fittable[,"Vdist"] <- signif(as.numeric(fittable[,VDIST.COL]), SIGFIGS)  
+
+for (this.col in c(K12.COL, K21.COL, KELIM.COL, KGUTABS.COL))
+{
+  fittable[,this.col] <- signif(as.numeric(fittable[,this.col])*24, SIGFIGS) # 1/day
+}
+fittable[,HALFLIFE.COL] <- signif(as.numeric(fittable[,HALFLIFE.COL])/24, SIGFIGS) # day
+fittable[,TIMEUNITS.COL] <- "days"
+fittable[,"halflife"] <- fittable[,HALFLIFE.COL]
+fittable[,"kelim"] <- fittable[,KELIM.COL]
+fittable[,"V1"] <- fittable[,V1.COL]
+fittable[,"k12"] <- fittable[,K12.COL]
+fittable[,"k21"] <- fittable[,K21.COL]
+fittable[,"Fgutabs"] <- fittable[,FGUTABS.COL]
+fittable[,"kgutabs"] <- fittable[,KGUTABS.COL]
+#
+# This table contains one line per treatment (dose/species/etc.):
+chem.invivo.PK.summary.data <- fittable
+# 
+# This table contains one line per chemical (PK params only):
+chem.invivo.PK.aggregate.data <- subset(fittable, !duplicated(DTXSID))
+chem.invivo.PK.aggregate.data <- chem.invivo.PK.aggregate.data[,
+  !(colnames(chem.invivo.PK.aggregate.data) %in% 
+    c("Reference","Route","Media","Dose",
+      "Dose.Units","Conc.Units","Time.Units"))]
 #
 #
 #
@@ -2617,6 +3088,7 @@ write.table(pearce2017regression,file = "Pearce_2017_Regression.txt",quote = F,s
 #
 #
 
+
 #
 # HTTK Performance Benchmarks
 #
@@ -2633,6 +3105,11 @@ write.table(chem.invivo.PK.aggregate.data,file="HTTK-Chem-InVivo-Aggregate-Data.
 write.table(chem.invivo.PK.summary.data,file="HTTK-Chem-InVivo-Summary-Data.txt",row.names=F,quote=F,sep="\t")
 write.table(physiology.data,file="HTTK-Physiology-Data.txt",row.names=F,quote=F,sep="\t")
 write.table(tissue.data,file="HTTK-Tissue-Data.txt",row.names=F,quote=F,sep="\t")
+
+sipes2017 <- sipes2017[,c(
+  'CAS',
+  'Human.Funbound.plasma',
+  'Human.Clint')]
 
 Tables.Rdata.stamp <- paste("This Tables.RData file was created on",Sys.Date(),"by script version",SCRIPT.VERSION)
 #Write the tables.Rdata file:                                  
@@ -2654,10 +3131,13 @@ save(chem.physical_and_invitro.data,
      sipes2017,
      dawson2021,
      pradeep2020,
+     dawson2023,
+     pfas.clearance,
      sipes2017,
      physiology.data,
      pearce2017regression,
      kapraun2019,
+     sipes2017,
      honda2023.qspr,
      honda2023.data,
      tissue.data,
@@ -2672,7 +3152,7 @@ cat("Move the Tables.RData to the httk/data directory.\n")
 cat("Move the sysdata.rda to the httk/R directory.\n")
 
 sysdata.rda.stamp <- paste("This sysdata.rdata file was created on",Sys.Date(),"by script version",SCRIPT.VERSION)
- 
+
 save(Wetmore.data,
      chem.lists,
      sysdata.rda.stamp,

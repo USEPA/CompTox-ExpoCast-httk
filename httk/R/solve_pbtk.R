@@ -151,7 +151,7 @@
 #' The default value of NULL provides "Cgut", "Cliver", "Cven", "Clung", "Cart", 
 #' "Crest", "Ckidney", "Cplasma", "Atubules", "Ametabolized", and "AUC"
 #'
-#' @param ... Additional arguments passed to the integrator (deSolve).
+#' @param ... Additional arguments passed to the integrator (\code{\link[deSolve]{ode}}).
 #'
 #' @return A matrix of class deSolve with a column for time(in days), each
 #' compartment, the area under the curve, and plasma concentration and a row
