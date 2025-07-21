@@ -208,9 +208,9 @@ convert_units <- function(input.units = NULL,
   {
     #initialize a matrix that determines conversion factors between key 
     #units corresponding to extrinsic quantities
-    amounts_units_conversion_frame <- data.frame(mg = c(1, this.MW/10^3), 
+    amounts_units_conversion_mat <- cbind(mg = c(1, this.MW/10^3), 
                                                  umol = c(10^3/this.MW, 1))
-    row.names(amounts_units_conversion_frame) <- c('mg','umol')
+    row.names(amounts_units_conversion_mat) <- c('mg','umol')
     
     #initialize a matrix that determines conversion factors between key
     #units corresponding to intrinsic quantities, set official names manually
@@ -495,16 +495,16 @@ convert_units <- function(input.units = NULL,
     if(!is.null(vol)){
       # rows = concentrations; columns = amount (input, output -- respectively)
       # if amount to concentration is needed use the inverse
-      conc2amount_units_conversion_frame <- 
-        conc_units_conversion_frame[,c("mg/l", "um")]*vol
+      conc2amount_units_conversion_mat <- 
+        conc_units_conversion_mat[, c("mg/l", "um")]*vol
       
-      colnames(conc2amount_units_conversion_frame) <- c("mg","umol")
+      colnames(conc2amount_units_conversion_mat) <- c("mg","umol")
     }
     
     #initialize master list of names of chemical amounts/concentration-based
     #units supported in httk, excluding those scaled to body weight 
-    httk_dose_units_list <- sort(unique(c(rownames(conc_units_conversion_frame),
-      rownames(amounts_units_conversion_frame))))
+    httk_dose_units_list <- sort(unique(c(rownames(conc_units_conversion_mat),
+      rownames(amounts_units_conversion_mat))))
     
     #Now check to see if our compiled information can appropriately support
     #the requested units conversion, and if so, provide the conversion factor.
@@ -521,33 +521,33 @@ convert_units <- function(input.units = NULL,
     }
   
     conversion_factor <- NA
-    if(all(c(input.units,output.units)%in%names(amounts_units_conversion_frame))){
+    if(all(c(input.units,output.units) %in% colnames(amounts_units_conversion_mat))){
       conversion_factor <-
-        amounts_units_conversion_frame[input.units, output.units]
+        amounts_units_conversion_mat[cbind(input.units, output.units)]
       
-    }else if(all(c(input.units,output.units)%in%names(conc_units_conversion_frame))){
+    }else if(all(c(input.units,output.units) %in% colnames(conc_units_conversion_mat))){
       conversion_factor <-
-        conc_units_conversion_frame[input.units, output.units]
+        conc_units_conversion_mat[cbind(input.units, output.units)]
       
-    }else if(input.units%in%names(amounts_units_conversion_frame) &
-             output.units%in% names(conc_units_conversion_frame) &
+    }else if(input.units %in% colnames(amounts_units_conversion_mat) &
+             output.units %in% colnames(conc_units_conversion_mat) &
              is.null(vol)==FALSE){
       # if we need to switch between an amount and concentration;
       # volume must be provided
       # ** amount to concentration (use inverse from
-      #    'conc2amount_units_conversion_frame') **
+      #    'conc2amount_units_conversion_mat') **
       conversion_factor <-
-        1/conc2amount_units_conversion_frame[output.units, input.units]
+        1/conc2amount_units_conversion_mat[cbind(output.units, input.units)]
       
-    }else if(input.units%in%names(conc_units_conversion_frame) &
-             output.units%in%names(amounts_units_conversion_frame) &
+    }else if(input.units %in% colnames(conc_units_conversion_mat) &
+             output.units %in% colnames(amounts_units_conversion_mat) &
              is.null(vol)==FALSE){
       # if we need to switch between an amount and concentration;
       # volume must be provided
       # ** concentration to amount (use straight from
-      #    'conc2amount_units_conversion_frame') **
+      #    'conc2amount_units_conversion_mat') **
       conversion_factor <- 
-        conc2amount_units_conversion_frame[input.units,output.units]
+        conc2amount_units_conversion_mat[cbind(input.units,output.units)]
     }
     conversion_factors[MW==this.MW] <- conversion_factor
   }
