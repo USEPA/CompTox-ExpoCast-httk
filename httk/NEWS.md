@@ -25,6 +25,7 @@ This version also accompanies the submission of the Wambaugh et al. manuscript
 * Added new functions for parameterizing in vitro distribution models: `parameterize_armitage`, `parametierize_kramer`, and `parameterize_IVD`
 * Added new table "invitro.assay.params" describing ToxCast and Tox21 in vitro assays in terms needed to run in vitro distriution models
 * Added new vignette "Scherer (Submitted): In Vitro Distribution"
+* New fraction unbound in plasma (fup) data from [Nicol et al. (2024)](https://doi.org/10.1016/j.tox.2024.153826) have been added for 29 chemicals
 
 ## Enhancements
 * Increased efficiency of `get_cheminfo` -- replaced row-wise apply with complete.cases data subsetting. Results in substantial speed increase, especially for Monte Carlo.

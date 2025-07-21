@@ -79,7 +79,7 @@ the .RMD file, you can either change execute.vignette to TRUE or press "play"
 (the green arrow) on each chunk in RStudio.
 ```{r runchunks, eval = TRUE}
 # Set whether or not the following chunks will be executed (run):
-execute.vignette <- TRUE
+execute.vignette <- FALSE
 ```
 
 ### Load the relevant libraries
@@ -147,7 +147,7 @@ experiments to evaluate the in vitro distribution models.
 # Load and format the data
 ```{r load_IVD_Manuscript_data, eval = execute.vignette}
 
-IVD_Manuscript_data <- httk::IVD_Manuscript_data
+IVD_Manuscript_data <- httk::IVD_Manuscript_data 
 
 cat(paste("Summarized data from ", 
           length(unique(IVD_Manuscript_data$Citation)),

@@ -2257,6 +2257,22 @@ chem.physical_and_invitro.data[chem.physical_and_invitro.data$CAS=="15302-18-8",
                                "CAS"] <- "22148-75-0"
 chem.physical_and_invitro.data[chem.physical_and_invitro.data$CAS=="NOCAS_47129",
                                "CAS"] <- "2349-14-6"
+#                               
+#                               
+#                               
+## Load Nicol 2024 fup data
+cat("Loading HTTK data from Lynn 2025...\n")
+nicol2024 <- read.csv("Nicol2024-S1S2CCD.txt", sep="\t")
+chem.physical_and_invitro.data <- add_chemtable(nicol2024,
+                current.table = chem.physical_and_invitro.data, 
+                data.list = list(Compound="PREFERRED_NAME",
+                                 CAS = "CASRN",
+                                 DTXSID="DTXSID",
+                                 Funbound.plasma = "Human.Plasma"
+                                 ),
+                                 species="Human",
+                                 overwrite=FALSE,
+                                 reference="Nicol 2024")  
 #
 #
 #

@@ -109,8 +109,6 @@ First, we want to verify our model by testing it against *in vivo* data from lit
 ## Step One: Load Data
 We have some data which is taken from the CvT Database ([Sayre, Wambaugh, and Grulke, 2020](https://doi.org/10.1038%2Fs41597-020-0455-1)) and some data which has been prepared for the database but is not yet added to the Database, denoted as `noSQL` since it is not yet in the SQL space. The CvT Database contains structured data in the form of separate datasets linked with foreign keys ("fk"). Below is the entity-relationship for each of the databases. 
 
-![Entity-relationship diagram of CvT Database. This is an updated version of Figure 2 in [Sayre, et al. 2020](https://doi.org/10.1038%2Fs41597-020-0455-1).](R_CvT_Database/cvt_eer_diagram_20220811.png){width=500}
-
 To learn more about where these datasets come from, please see `R_CvT_Database` folder, which contains files used to generate the data below.
 
 
