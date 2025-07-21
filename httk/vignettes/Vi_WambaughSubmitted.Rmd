@@ -1,10 +1,10 @@
 ---
-title: "Wambaugh et al. (Submitted): HTTK for PFAS"
+title: "Wambaugh (Submitted): HTTK for PFAS"
 author: "John F. Wambaugh"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Wambaugh et al. (2025): HTTK for PFAS}
+  %\VignetteIndexEntry{i) Wambaugh (Submitted): HTTK for PFAS}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

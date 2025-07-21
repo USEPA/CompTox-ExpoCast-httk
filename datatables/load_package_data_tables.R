@@ -2899,8 +2899,6 @@ series_res_set[series_res_set$DTXSID == "DTXSID5037072", "DTXSID"] <- "DTXSID602
 series_res_set[series_res_set$DTXSID == "DTXSID6023733", "CAS"] <- "99-66-1"
 
 chem.invivo.PK.data <- series_res_set
-
-
 #
 #
 #
@@ -2952,7 +2950,7 @@ chem.invivo.PK.summary.data <- fittable
 # This table contains one line per chemical (PK params only):
 chem.invivo.PK.aggregate.data <- subset(fittable, !duplicated(DTXSID))
 chem.invivo.PK.aggregate.data <- chem.invivo.PK.aggregate.data[,
-  !(colnames(chem.invivo.PK.aggregate.data.data) %in% 
+  !(colnames(chem.invivo.PK.aggregate.data) %in% 
     c("Reference","Route","Media","Dose",
       "Dose.Units","Conc.Units","Time.Units"))]
 #

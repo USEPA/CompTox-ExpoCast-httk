@@ -6,6 +6,7 @@
 \usage{
 armitage_estimate_sarea(
   tcdata = NA,
+  user_assay_parameters = NA,
   this.well_number = 384,
   this.cell_yield = NA,
   this.v_working = NA
@@ -13,7 +14,10 @@ armitage_estimate_sarea(
 }
 \arguments{
 \item{tcdata}{A data table with well_number corresponding to plate format,
-optionally include v_working, sarea, option.bottom, and option.plastic}
+optionally include v_working, sarea, option.bottom, and option.plastic OR 
+with assay_component_endpoint_name corresponding to an entry in invitro.assay.params.}
+
+\item{user_assay_parameters}{option to fill in your own assay parameters (data table)}
 
 \item{this.well_number}{For single value, plate format default is 384, used
 if is.na(tcdata)==TRUE}
@@ -44,10 +48,8 @@ surface area of the bottom of the well in determining sarea.  Optionally
 include user values for working volume (v_working, m^3) and surface area.
 }
 \references{
-\insertRef{armitage2014application}{httk} 
-
-\insertRef{honda2019using}{httk}
+\insertRef{armitage2014application}{httk}
 }
 \author{
-Greg Honda
+Greg Honda, Meredith Scherer
 }

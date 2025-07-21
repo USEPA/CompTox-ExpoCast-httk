@@ -33,7 +33,7 @@ Conclusions:
 
 ## HTTK Version 
 
-This vignette was created with **httk** v2.1.0. Although we attempt to maintain 
+This vignette was created with **httk** v2.X.0. Although we attempt to maintain 
 backward compatibility, if you encounter issues with the latest release of 
 **httk**
 and cannot easily address the changes, historical versions of httk are 
@@ -91,14 +91,14 @@ Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
 library(data.table)  # data table functionality
 library(tidyverse)  # data wrangling
 library(ggplot2)    # plotting
-#library(httk)       # run Armitage.R in vitro distribution model
+library(httk)       # run Armitage.R in vitro distribution model
 library(Metrics)    # calculate RMSLE
 library(ggpubr)     # arrange plots for publication
 
 ##delete once httk has been updated with armitage.R file and model_param_armitage.R and un-tab out library(httk) above
 library(devtools) # to run httk
-suppressWarnings(setwd("C:/Users/mscherer/httk-dev")) # to load httk
-suppressWarnings(devtools::load_all("httk")) # for armitage
+#suppressWarnings(setwd("C:/Users/mscherer/httk-dev")) # to load httk
+#suppressWarnings(devtools::load_all("httk")) # for armitage
 ```
 
 

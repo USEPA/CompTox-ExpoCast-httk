@@ -98,9 +98,9 @@ convert_units <- function(input.units = NULL,
                           liquid.density = 1.0, # g/mL
                           state="liquid")
 {
-  # The volume of an ideal gas at this temperature (L/mol)
+# The volume of an ideal gas at this temperature (L/mol)
   volidealgas <- (273.15 + temp)*0.08205
-  
+
   #Take the lower case form of the units requested
   input.units <- tolower(input.units)
   output.units <- tolower(output.units)
@@ -119,10 +119,18 @@ convert_units <- function(input.units = NULL,
   
   #Conditional block that checks if enough info is available to retrieve
   #MW value and use in determining conversion factor:
+  
+  #create list of variables that require MW
+  requires_MW <- c("mg/l","ug/ml","mcg/ml","ug/l","ug/dl","umol/l","nmol/l","um","nm","m",  "mm","ug/g",
+    "ppmw","ng/l","ng/ml","mg/m3","mg/kg","ppbw","ppmv","ppbv")
+  
   if (is.null(MW)) {
-    if (is.null(chem.cas) & is.null(chem.name) & is.null(dtxsid) &
-        is.null(parameters))
-    {
+    
+    if (input.units %in% requires_MW | output.units %in% requires_MW){
+    
+      if (is.null(chem.cas) & is.null(chem.name) & is.null(dtxsid) &
+          is.null(parameters))
+      {
       stop('User must specify either MW (molecular weight), or give chemical
   identifying information like chem.cas, chem.name, or dtxsid
   so that httk can retrieve a molecular weight value in determining
@@ -150,8 +158,10 @@ convert_units <- function(input.units = NULL,
     } else {
       MW <- get_physchem_param(param = 'MW', chem.cas=chem.cas,
                                chem.name=chem.name, dtxsid=dtxsid)
-    }
+      }
+    }else {MW<-0}
   }
+
   
   #Check if input.units or output.units contain a time component indicating
   #AUC value for conversion
@@ -198,13 +208,13 @@ convert_units <- function(input.units = NULL,
   {
     #initialize a matrix that determines conversion factors between key 
     #units corresponding to extrinsic quantities
-    amounts_units_conversion_mat <- cbind(mg = c(1, this.MW/10^3), 
-                                          umol = c(10^3/this.MW, 1))
-    row.names(amounts_units_conversion_mat) <- c('mg','umol')
+    amounts_units_conversion_frame <- data.frame(mg = c(1, this.MW/10^3), 
+                                                 umol = c(10^3/this.MW, 1))
+    row.names(amounts_units_conversion_frame) <- c('mg','umol')
     
     #initialize a matrix that determines conversion factors between key
     #units corresponding to intrinsic quantities, set official names manually
-    
+
     #first fill in vectors for input units, output units, conversions.
     #(these vectors were initialized above)
 
@@ -485,59 +495,59 @@ convert_units <- function(input.units = NULL,
     if(!is.null(vol)){
       # rows = concentrations; columns = amount (input, output -- respectively)
       # if amount to concentration is needed use the inverse
-      conc2amount_units_conversion_mat <- 
-        conc_units_conversion_mat[,c("mg/l", "um")]*vol
+      conc2amount_units_conversion_frame <- 
+        conc_units_conversion_frame[,c("mg/l", "um")]*vol
       
-      colnames(conc2amount_units_conversion_mat) <- c("mg","umol")
+      colnames(conc2amount_units_conversion_frame) <- c("mg","umol")
     }
     
     #initialize master list of names of chemical amounts/concentration-based
     #units supported in httk, excluding those scaled to body weight 
-    httk_dose_units_list <- sort(unique(c(rownames(conc_units_conversion_mat),
-                                          rownames(amounts_units_conversion_mat))))
+    httk_dose_units_list <- sort(unique(c(rownames(conc_units_conversion_frame),
+      rownames(amounts_units_conversion_frame))))
     
     #Now check to see if our compiled information can appropriately support
     #the requested units conversion, and if so, provide the conversion factor.
     if (any(!c(input.units,output.units) %in% httk_dose_units_list))
     {
       stop(paste("Requested units",
-                 paste(unique(c(input.units,output.units))[!(
-                   unique(c(input.units,output.units)) %in% httk_dose_units_list)],
-                   collapse=", "), "
+        paste(unique(c(input.units,output.units))[!(
+        unique(c(input.units,output.units)) %in% httk_dose_units_list)],
+        collapse=", "), "
   not supported for unit conversion. 
   Extrinsic amounts are supported in units of \'mg\' and \'umol\', and intrinsic 
   concentrations are supported in \'mg/L\', \'uM\', and, in the case of gas models 
   where the gas is assumed ideal, \'ppmv\'.")) 
     }
-    
+  
     conversion_factor <- NA
-    if(all(c(input.units,output.units) %in% rownames(amounts_units_conversion_mat))){
+    if(all(c(input.units,output.units)%in%names(amounts_units_conversion_frame))){
       conversion_factor <-
-        amounts_units_conversion_mat[cbind(input.units, output.units)]
+        amounts_units_conversion_frame[input.units, output.units]
       
-    }else if(all(c(input.units,output.units) %in% rownames(conc_units_conversion_mat))){
+    }else if(all(c(input.units,output.units)%in%names(conc_units_conversion_frame))){
       conversion_factor <-
-        conc_units_conversion_mat[cbind(input.units, output.units)]
+        conc_units_conversion_frame[input.units, output.units]
       
-    }else if(input.units %in% rownames(amounts_units_conversion_mat) &
-             output.units %in% rownames(conc_units_conversion_mat) &
+    }else if(input.units%in%names(amounts_units_conversion_frame) &
+             output.units%in% names(conc_units_conversion_frame) &
              is.null(vol)==FALSE){
       # if we need to switch between an amount and concentration;
       # volume must be provided
       # ** amount to concentration (use inverse from
-      #    'conc2amount_units_conversion_mat') **
+      #    'conc2amount_units_conversion_frame') **
       conversion_factor <-
-        1/conc2amount_units_conversion_mat[cbind(output.units, input.units)]
+        1/conc2amount_units_conversion_frame[output.units, input.units]
       
-    }else if(input.units %in% rownames(conc_units_conversion_mat) &
-             output.units %in% rownames(amounts_units_conversion_mat) &
+    }else if(input.units%in%names(conc_units_conversion_frame) &
+             output.units%in%names(amounts_units_conversion_frame) &
              is.null(vol)==FALSE){
       # if we need to switch between an amount and concentration;
       # volume must be provided
       # ** concentration to amount (use straight from
-      #    'conc2amount_units_conversion_mat') **
+      #    'conc2amount_units_conversion_frame') **
       conversion_factor <- 
-        conc2amount_units_conversion_mat[cbind(input.units,output.units)]
+        conc2amount_units_conversion_frame[input.units,output.units]
     }
     conversion_factors[MW==this.MW] <- conversion_factor
   }
@@ -549,7 +559,7 @@ convert_units <- function(input.units = NULL,
   mg/L, uM, and in the case of gas models where the gas is
   assumed ideal, ppmv. If converting between amount and
   concentration, user must specify volume (vol).'))
-  
+
   return(set_httk_precision(conversion_factors))
 }
 

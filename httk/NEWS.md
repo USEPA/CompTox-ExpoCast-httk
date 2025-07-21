@@ -2,22 +2,29 @@
 This version accompanies the submission of the Meade et al. manuscript 
 "Dermal absorption route and integration into high throughput toxicokinetics modeling (httk)"
 
+This version also accompanies the submission of the Scherer et al. manuscript 
+"Characterizing Accuracy of Model Predictions for Concentration in High Throughput Screening Assays"
+
 This version also accompanies the submission of the Wambaugh et al. manuscript 
 "Applying High Throughput Toxicokinetics (HTTK) to Per- and Polyfluoro Alkyl Substances (PFAS)"
 
 ## New Features
 * Added new high throughput PBTK model for dermal exposure 'solve_dermal_pbtk'
-* Added new vignette "Meade et al. (submitted): High Throughput Dermal Exposure Model"
+* Added new vignette "Meade (submitted): High Throughput Dermal Exposure Model"
 * Added new chemical-specific in vitro data for Fup and Clint for PFAS measured in [Smeltz et al. (2023)](https://doi.org/10.1021/acs.chemrestox.3c00003)
 * Added new chemical-specific in vitro data for Fup and Clint for PFAS measured in [Kreutz et al. (2023)](https://doi.org/10.3390/toxics11050463)
 * Added new chemical-specific in vitro data for Clint for PFAS measured in [Crizer et al. (2024)](https://doi.org/10.3390/toxics12090672)
 * Added new chemical-specific in vivo Rblood2plasma data for 14 PFAS measured in [Poothong et al. (2017)](https://doi.org/10.1021/acs.est.7b03299)
 * Added new chemical-specific measurements of membrane afinity (logMA) for 10 PFAS measured in [Droge et al. (2019)](https://doi.org/10.1021/acs.est.8b05052)
 * Added new chemical-specific in silico predictions for 4136 PFAS half-life and clearance from [Dawson et al. (2023)](https://doi.org/10.3390/toxics11020098)
-* Added new function 'get_2023pfasinfo' to allow easy identification of newly measured PFAS chemicals
+* Added new function `get_2023pfasinfo` to allow easy identification of newly measured PFAS chemicals
 * Added new model '3compartmentss2' that solves for steady-state plasma/blood concentration resulting from elimination by metabolism, renal excretion, and also exhalation since many PFAS have some volatility
-* Added new model 'pfas1compartment' that uses the [Dawson et al. (2023)](https://doi.org/10.3390/toxics11020098) to parameterize an empirical one compartment model for PFAS chemicals -- see 'parameterize_pfas1comp'
-* Added new vignette "Wambaugh et al. (Submitted): HTTK for PFAS"
+* Added new model 'pfas1compartment' that uses the [Dawson et al. (2023)](https://doi.org/10.3390/toxics11020098) to parameterize an empirical one compartment model for PFAS chemicals -- see `parameterize_pfas1comp`
+* Added new vignette "Wambaugh (Submitted): HTTK for PFAS"
+* Added new in vitro distribution model [Kramer 2010](https://dspace.library.uu.nl/handle/1874/37545) implemented in function `kramer_eval`
+* Added new functions for parameterizing in vitro distribution models: `parameterize_armitage`, `parametierize_kramer`, and `parameterize_IVD`
+* Added new table "invitro.assay.params" describing ToxCast and Tox21 in vitro assays in terms needed to run in vitro distriution models
+* Added new vignette "Scherer (Submitted): In Vitro Distribution"
 
 ## Enhancements
 * Increased efficiency of `get_cheminfo` -- replaced row-wise apply with complete.cases data subsetting. Results in substantial speed increase, especially for Monte Carlo.
@@ -30,7 +37,8 @@ This version also accompanies the submission of the Wambaugh et al. manuscript
 * Can now use 'get_physchem_param' to retrieve "Chemical.Class" (only defined for PFAS to date)
 * Revised documentation for 1compartment model
 * Updated in vivo data from CvTdb (tables chem.invivo.PK.data, chem.invivo.PK.summary.data, and chem.invivo.PK.aggregate.data) to reflect curve fits made with [invivoPKfit](https://cran.r-project.org/web/packages/invivoPKfit/index.html) used in recently submitted manuscript "Collaborative Evaluation of In Silico Predictions for High Throughput Toxicokinetics"
- 
+* Updated implementation of [Armitage mass balance model to better reflect 2021 enhancements](https://doi.org/10.3390/toxics9110315), changed functions `armitage_estimate_sarea` and `armitage eval`
+
 ## Bug fixes
 * Rest-of-body tissue lumping is now correct in `create_mc_samples()` when `httkpop = FALSE`. (Previously, when `httkpop = FALSE`, rest-of-body compartment was incorrectly doubled in volume.)
 * Fixed bug where `create_mc_samples` was using human parameters for lumping non-human species
@@ -77,7 +85,6 @@ This release also accompanies the submission of the new manuscript "Modeling Lif
 * Expanded model documentation of solve_[MODEL] and parameterize_[MODEL] functions to explain physchem filter (models without inhalation/exhalation exclude chemicals more volatile than Acetone by default) and class filter (models not suited to per- and polyfluoroalkyl substances excluded by default. These filters can be turned of using arguments exclude.physchem = FALSE and exclude.class = FALSE, respectively.
 * Added use of Caco-2 data for estimating oral permeability to the models "gas_pbtk", and "sumclearances".
 * Refactored multiple functions to pass arguments using ellipsis (three dots/...) and/or parameterize.args.list so that when new arguments are added to parameterize functions these other functions do not need to be modified
-* Added flexible tolerance to `calc_css` to increase stability
 
 ## New Features
 * Added new function `list_models` to identify all available HTTK models.

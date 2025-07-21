@@ -1,6 +1,6 @@
 Package: httk
 Version: 2.7.0
-Date: 2025-07-16
+Date: 2025-07-19
 Title: High-Throughput Toxicokinetics
 Description: Pre-made models that can be rapidly tailored to various chemicals
              and species using chemical-specific in vitro data and physiological 
@@ -55,6 +55,8 @@ Authors@R: c(
              role = c("aut"), comment = c(ORCID = "0000-0003-1716-1006")), 
            person("Colin", "Thomson", email = "thomson.colin@epa.gov", 
              role = c("aut"), comment = c(ORCID = "0000-0001-5303-6646")), 
+           person("Meredith", "Scherer", email="Scherer.Meredith@epa.gov",
+             role = c("aut"), comment = c(ORCID = "0000-0002-9785-7363")),
            person("Annabel", "Meade", email = "aemeade7@gmail.com",
              role = c("aut"), comment = c(ORCID = "0000-0002-5452-8797")),
            person("Celia", "Schacht", email="Schacht.Celia@epa.gov",
@@ -76,8 +78,6 @@ Authors@R: c(
              role = c("ctb"), comment = c(ORCID = "0000-0002-2710-1691")),
            person("Nathan","Pollesch",email = "pollesch.nathan@epa.gov",
              role = c("ctb"),comment = c(ORCID = "0000-0001-8992-9294")),
-           person("Meredith", "Scherer", email="Scherer.Meredith@epa.gov",
-             role = c("ctb"), comment = c(ORCID = "0000-0002-9785-7363")),
            person("Noelle", "Sinski", email = "Noelle.Sinski@icf.com",
              role = c("ctb")), 
            person("Nisha", "Sipes", email = "sipes.nisha@epa.gov", 
@@ -100,7 +100,7 @@ RdMacros: Rdpack
 Suggests: knitr, rmarkdown, gplots, scales, EnvStats, MASS,
         RColorBrewer, stringr, reshape, viridis, gmodels, colorspace,
         cowplot, ggrepel, forcats, smatr, gridExtra, readxl, ks,
-        testthat
+        testthat, ggpubr, tidyverse
 License: GPL-3
 LazyData: true
 LazyDataCompression: xz
@@ -122,6 +122,7 @@ Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>),
   Dustin Kapraun [aut] (<https://orcid.org/0000-0001-5570-6383>),
   Kimberly Truong [aut] (<https://orcid.org/0000-0003-1716-1006>),
   Colin Thomson [aut] (<https://orcid.org/0000-0001-5303-6646>),
+  Meredith Scherer [aut] (<https://orcid.org/0000-0002-9785-7363>), 
   Annabel Meade [aut] (<https://orcid.org/0000-0002-5452-8797>),
   Celia Schacht [aut] (<https://orcid.org/0000-0002-8131-513X>),
   Todor Antonijevic [ctb] (<https://orcid.org/0000-0002-0248-8412>),
@@ -133,7 +134,6 @@ Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>),
   Gilberto Padilla Mercado [ctb] (<https://orcid.org/0000-0001-5423-1646>),
   Katie Paul Friedman [ctb] (<https://orcid.org/0000-0002-2710-1691>),
   Nathan Pollesch [ctb] (<https://orcid.org/0000-0001-8992-9294>),
-  Meredith Scherer [ctb] (<https://orcid.org/0000-0002-9785-7363>),
   Noelle Sinski [ctb],
   Nisha Sipes [ctb] (<https://orcid.org/0000-0003-4203-6426>),
   James Sluka [ctb] (<https://orcid.org/0000-0002-5901-1404>),
