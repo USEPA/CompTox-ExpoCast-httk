@@ -16,7 +16,7 @@ in High Throughput Screening Assays"
 
 Meredith Scherer, Madison Feshuk, James M. Armitage, Jon A. Arnot, 
 David Crizer, Michael Devito, Stephen S. Ferguson, Kimberly Freeman, 
-Josh Harrill, Nynke Kramer, Alessandro Sangion, Caroline Stevens, 
+Josh Harrill, Nynke Kramer, Alessandro Sangion, Caroline Tebes-Stevens, 
 Katie Paul Friedman, John F. Wambaugh
 
 ### update w/paper info + link to cleared dataset
@@ -98,7 +98,7 @@ Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
 # Setup
 #
 #
-library(httk)        # run Armitage.R in vitro distribution model
+library(httk)        # run Armitage.R and Kramer.R in vitro distribution models
 library(tidyverse)   # data wrangling
 library(data.table)  # data table functionality
 library(ggplot2)     # plotting
@@ -108,7 +108,7 @@ library(viridis)     # colorblind palette
 library(scales)      # required for label_log
 
 #save figures and tables to working directory: yes/no
-save_output = FALSE
+save_output = TRUE
 
 #for saving outputs
 data.date <- "16JUL2025"
@@ -147,7 +147,7 @@ experiments to evaluate the in vitro distribution models.
 # Load and format the data
 ```{r load_IVD_Manuscript_data, eval = execute.vignette}
 
-IVD_Manuscript_data <- httk::IVD_Manuscript_data
+IVD_Manuscript_data <- httk::Scherer2025.IVD
 
 cat(paste("Summarized data from ", 
           length(unique(IVD_Manuscript_data$Citation)),
@@ -682,12 +682,11 @@ Comparison of Armitage model using curated vs dashboard physchem values.
 ```{r curated_values_plot_fig5}
 
 #load curated data info
-original_curated.data.dt <- httk::curated.data.dt
+original_curated.data.dt <- httk::Dimitrijevic.IVD
 
 #first - run using the default/dashboard values
 default.dt<-copy(original_curated.data.dt %>% 
-                   select(-c( "Arnot_pka", "Arnot_pkb", "Chemaxon_pKa",
-                              "Chemaxon_pKb", "log.KOW.N", "log.KAW.N", 
+                   select(-c( "Arnot_pka", "Arnot_pkb", "log KOW,N", "log KAW,N", 
                               "Predicted_Ccell_µM", "FoA")))
 
 # run the model, output concentrations in umol/L (e.g. uM)
@@ -701,8 +700,8 @@ curated.data.dt<-copy(original_curated.data.dt)
 #overwrite using curated physchem properties
 curated.data.dt[, pKa_Donor := as.character(Arnot_pka)] %>% #acidic
   .[, pKa_Accept := as.character(Arnot_pkb)] %>% #basic
-  .[, gkow := log.KOW.N] %>% 
-  .[, gkaw_n := log.KAW.N] 
+  .[, gkow := `log KOW,N`] %>% 
+  .[, gkaw_n := `log KAW,N`] 
 
 # run the model, output concentrations in umol/L (e.g. uM)
 armitageOutput_curated.data.dt <- armitage_eval(tcdata=curated.data.dt,
