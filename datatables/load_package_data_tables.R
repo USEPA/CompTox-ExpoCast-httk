@@ -2154,7 +2154,11 @@ dawson2023[dawson2023$DTXSID=="DTXSID001009916","CASRN"] <- "2481740-05-8"
 dawson2023[dawson2023$DTXSID=="DTXSID701009917","CASRN"] <- "2361298-14-6"
 dawson2023[dawson2023$DTXSID=="DTXSID401009918","CASRN"] <- "23282-60-2"
 
-
+# Reduce object size by using factors:
+for (this.col in colnames(dawson2023))
+{
+  dawson2023[,this.col] <- as.factor(dawson2023[,this.col])
+}
 
 
 chem.physical_and_invitro.data <- add_chemtable(subset(dawson2023,
@@ -2257,6 +2261,22 @@ chem.physical_and_invitro.data[chem.physical_and_invitro.data$CAS=="15302-18-8",
                                "CAS"] <- "22148-75-0"
 chem.physical_and_invitro.data[chem.physical_and_invitro.data$CAS=="NOCAS_47129",
                                "CAS"] <- "2349-14-6"
+#                               
+#                               
+#                               
+## Load Nicol 2024 fup data
+cat("Loading HTTK data from Lynn 2025...\n")
+nicol2024 <- read.csv("Nicol2024-S1S2CCD.txt", sep="\t")
+chem.physical_and_invitro.data <- add_chemtable(nicol2024,
+                current.table = chem.physical_and_invitro.data, 
+                data.list = list(Compound="PREFERRED_NAME",
+                                 CAS = "CASRN",
+                                 DTXSID="DTXSID",
+                                 Funbound.plasma = "Human.Plasma"
+                                 ),
+                                 species="Human",
+                                 overwrite=FALSE,
+                                 reference="Nicol 2024")  
 #
 #
 #

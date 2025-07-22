@@ -25,6 +25,7 @@ This version also accompanies the submission of the Wambaugh et al. manuscript
 * Added new functions for parameterizing in vitro distribution models: `parameterize_armitage`, `parametierize_kramer`, and `parameterize_IVD`
 * Added new table "invitro.assay.params" describing ToxCast and Tox21 in vitro assays in terms needed to run in vitro distriution models
 * Added new vignette "Scherer (Submitted): In Vitro Distribution"
+* New fraction unbound in plasma (fup) data from [Nicol et al. (2024)](https://doi.org/10.1016/j.tox.2024.153826) have been added for 29 chemicals
 
 ## Enhancements
 * Increased efficiency of `get_cheminfo` -- replaced row-wise apply with complete.cases data subsetting. Results in substantial speed increase, especially for Monte Carlo.
@@ -36,7 +37,7 @@ This version also accompanies the submission of the Wambaugh et al. manuscript
 * Revised 'calc_ma' to increase membrane affinities for PFAS chemicals ~400x based on regression to data from [Droge et al. (2019)](https://doi.org/10.1021/acs.est.8b05052) (if new argument 'pfas.calibration==TRUE')
 * Can now use 'get_physchem_param' to retrieve "Chemical.Class" (only defined for PFAS to date)
 * Revised documentation for 1compartment model
-* Updated in vivo data from CvTdb (tables chem.invivo.PK.data, chem.invivo.PK.summary.data, and chem.invivo.PK.aggregate.data) to reflect curve fits made with [invivoPKfit](https://cran.r-project.org/web/packages/invivoPKfit/index.html) used in recently submitted manuscript "Collaborative Evaluation of In Silico Predictions for High Throughput Toxicokinetics"
+* Updated in vivo data from CvTdb (tables chem.invivo.PK.data, chem.invivo.PK.summary.data, and chem.invivo.PK.aggregate.data) to reflect curve fits made with [invivoPKfit](https://CRAN.R-project.org/package=invivoPKfit) used in recently submitted manuscript "Collaborative Evaluation of In Silico Predictions for High Throughput Toxicokinetics"
 * Updated implementation of [Armitage mass balance model to better reflect 2021 enhancements](https://doi.org/10.3390/toxics9110315), changed functions `armitage_estimate_sarea` and `armitage eval`
 
 ## Bug fixes

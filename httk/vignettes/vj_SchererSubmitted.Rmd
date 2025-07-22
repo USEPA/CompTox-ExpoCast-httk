@@ -79,7 +79,7 @@ the .RMD file, you can either change execute.vignette to TRUE or press "play"
 (the green arrow) on each chunk in RStudio.
 ```{r runchunks, eval = TRUE}
 # Set whether or not the following chunks will be executed (run):
-execute.vignette <- TRUE
+execute.vignette <- FALSE
 ```
 
 ### Load the relevant libraries
@@ -117,7 +117,7 @@ path_out <- "C:/Users/mscherer/OneDrive - Environmental Protection Agency (EPA)
 
 ```
 
-```{r rmsle_func}
+```{r rmsle_func, eval = execute.vignette}
 #function to calculate RMSLE
 sle <- function (actual, predicted) 
 {
@@ -147,7 +147,7 @@ experiments to evaluate the in vitro distribution models.
 # Load and format the data
 ```{r load_IVD_Manuscript_data, eval = execute.vignette}
 
-IVD_Manuscript_data <- httk::IVD_Manuscript_data
+IVD_Manuscript_data <- httk::Scherer2025.IVD
 
 cat(paste("Summarized data from ", 
           length(unique(IVD_Manuscript_data$Citation)),
@@ -172,7 +172,7 @@ In vitro assay descriptors for the measurements in Supplemental Materials
 Table S2 were added as additional assays into 
 httk:invitro.assay.params using the AENM “IVD” + Author + Year 
 (that is, Smith et al. (2000) would be AENM “IVDSmith2000”.
-```{r}
+```{r, eval = execute.vignette}
 
 ### Create assay_component_endpoint_name columns for assay parameters ###
 
@@ -293,7 +293,7 @@ if(save_output){
 
 ```
 
-```{r ggplot set up}
+```{r ggplot_set_up, eval = execute.vignette}
 
 #set default theme elements for visually consistent manuscript plots
 personal_theme <- function(){ 
@@ -679,10 +679,10 @@ print(compartment_plots)
 ## Figure 5:
 Comparison of Armitage model using curated vs dashboard physchem values.
 
-```{r curated_values_plot_fig5}
+```{r curated_values_plot_fig5, eval = execute.vignette}
 
 #load curated data info
-original_curated.data.dt <- httk::curated.data.dt
+original_curated.data.dt <- httk::Dimitrijevic.IVD
 
 #first - run using the default/dashboard values
 default.dt<-copy(original_curated.data.dt %>% 
@@ -846,7 +846,7 @@ sidebyside.data_HL %>% select(ChemicalName.x, ARMITAGE, KRAMER) %>%
 ## Effect of experimentally measured nominal dose
 Change in accuracy of intracellular concentration predicted by studies 
 reporting experimentally measured nominal dose
-```{r experimental_nomconc}
+```{r experimental_nomconc, eval = execute.vignette}
 
 #pull observations that did experimentally measure the nominal dose
 exp_nom.dt<-copy(IVD_Manuscript_data[!(is.na(ExperimentalDose_uM)),]) 
@@ -895,7 +895,7 @@ arm_nomconc_rmsle- arm_expconc_rmsle
 ## Table S1. 
 Physicochemical properties of test chemicals and Ccell/Cnominal ratios 
 from each reference.
-```{r physchem_data_tableS1}
+```{r physchem_data_tableS1, eval = execute.vignette}
 
 #create datatable to hold the info
 table1.dt<-copy(Nominal.dt)
@@ -1153,7 +1153,7 @@ if(save_output){
 ```
 
 ## Table S7. Effect of "options" on rmsle in the Armitage model.
-```{r options_tableS7}
+```{r options_tableS7, eval = execute.vignette}
 
 
 #list of options that can be changed in the armitage model:

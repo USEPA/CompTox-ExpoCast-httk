@@ -198,9 +198,12 @@ convert_units <- function(input.units = NULL,
     )
   }
   
-  known_input_units <- vector(mode = "character", length = 55)
-  known_output_units <- vector(mode = "character", length = 55)
-  known_conversions <- vector(mode = "numeric", length = 55)
+  # How many unit conversions do we currently have:
+  NUM.CONVERSIONS <- 60
+  
+  known_input_units <- vector(mode = "character", length = NUM.CONVERSIONS)
+  known_output_units <- vector(mode = "character", length = NUM.CONVERSIONS)
+  known_conversions <- vector(mode = "numeric", length = NUM.CONVERSIONS)
   
   # Loop over multiple MW values:
   conversion_factors <- NA
@@ -463,6 +466,26 @@ convert_units <- function(input.units = NULL,
     known_output_units[55] <- 'ppmv'
     known_conversions[55] <- 1.225/(this.MW/volidealgas * 10^6)
     
+    known_input_units[56] <- 'g'
+    known_output_units[56] <- 'mg'
+    known_conversions[56] <- 1000
+    
+    known_input_units[57] <- 'ul'
+    known_output_units[57] <- 'l'
+    known_conversions[57] <- 1e-6
+    
+    known_input_units[58] <- 'ng'
+    known_output_units[58] <- 'mg'
+    known_conversions[58] <- 1e-6
+
+    known_input_units[59] <- 'ml'
+    known_output_units[59] <- 'l'
+    known_conversions[59] <- 1e-3
+
+    known_input_units[60] <- 'm3'
+    known_output_units[60] <- 'l'
+    known_conversions[60] <- 1e3
+        
     #Use these vectors to construct a matrix of conversion factors:
     #rows are input units, columns are output units
     
