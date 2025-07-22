@@ -16,7 +16,7 @@ in High Throughput Screening Assays"
 
 Meredith Scherer, Madison Feshuk, James M. Armitage, Jon A. Arnot, 
 David Crizer, Michael Devito, Stephen S. Ferguson, Kimberly Freeman, 
-Josh Harrill, Nynke Kramer, Alessandro Sangion, Caroline Stevens, 
+Josh Harrill, Nynke Kramer, Alessandro Sangion, Caroline Stevens,    
 Katie Paul Friedman, John F. Wambaugh
 
 ### update w/paper info + link to cleared dataset

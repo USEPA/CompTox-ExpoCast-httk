@@ -83,8 +83,6 @@ loc.wd <- "C:/Users/jwambaug/OneDrive - Environmental Protection Agency (EPA)/Pr
 
 #loc.wd = "C:/Users/cschacht/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/CCTE_2023_2024/dermal/thisone"
 
-knitr::opts_knit$set(root.dir = loc.wd)
-
 # Set location of httk package
 #loc.httk <- "C:/Users/jwambaug/git/httk-dev/httk"
 
