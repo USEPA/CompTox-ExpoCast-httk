@@ -77,6 +77,7 @@ calc_vdist(parameters=c(p,PCs))
 # Should be the same as chemical by name:
 calc_vdist(chem.name="propranolol")
 
+\donttest{
 # Different ways to give the arguments:
 calc_vdist(chem.cas="80-05-7")
 params <- parameterize_schmitt(chem.name="triclosan")
@@ -86,6 +87,7 @@ params <- parameterize_3comp(chem.name="triclosan")
 calc_vdist(parameters=params)
 params <- parameterize_pbtk(chem.name="triclosan")
 calc_vdist(parameters=params)
+}
 
 }
 \references{

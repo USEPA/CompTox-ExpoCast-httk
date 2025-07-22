@@ -4,7 +4,7 @@ author: "John F. Wambaugh"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{i) Wambaugh (Submitted): HTTK for PFAS}
+  %\VignetteIndexEntry{f) Wambaugh (Submitted): HTTK for PFAS}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

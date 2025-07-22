@@ -202,14 +202,10 @@ Valb \tab Volume of serum albumin \tab L \cr
 Vslip \tab Volume of serum lipids \tab L \cr         
 Vdom \tab Volume of dissolved organic matter\tab L \cr          
 F_ratio \tab Fugacity ratio \tab unitless \cr       
-gs1.GSE \tab \tab \cr       
-s1.GSE \tab \tab \cr        
-gss.GSE \tab \tab \cr       
-ss.GSE \tab \tab \cr        
 kmw \tab The membrane to water PC (i.e., 10^gkmow \tab unitless \cr           
 kow \tab The octanol to water PC (i.e., 10^gkow) \tab unitless \cr           
 kaw \tab The air to water PC (i.e., 10^gkaw) \tab unitless \cr           
-swat \tab The water solubility (i.e., 10^gswat) \tab mg/L \cr         
+swat \tab The intrinsic water solubility (i.e., 10^gswat) \tab mg/L \cr         
 kpl \tab The plastic to water PC (i.e., 10^gkpl) \tab m3/m2 \cr           
 kcw \tab The cell/tissue to water PC (i.e., 10^gkcw) \tab unitless \cr           
 kbsa \tab The bovine serum albumin to water PC \tab unitless \cr          
@@ -218,7 +214,7 @@ mtot \tab Total micromoles \tab umol \cr
 cwat \tab Total concentration in water \tab uM=umol/L \cr          
 cwat_s \tab Dissolved concentration in water \tab uM=umol/L \cr        
 csat \tab Is the solution saturated (1/0) \tab logical \cr         
-activity \tab Chemical activity \tab \cr      
+activity \tab Chemical activity; indicates the potential for baseline toxicity to occur \tab \cr      
 cair \tab Concentration in head space\tab uM=umol/L \cr          
 calb \tab Concentration in serum albumin\tab uM=umol/L \cr          
 cslip \tab Concentration in serum lipids\tab uM=umol/L \cr         
@@ -310,5 +306,5 @@ print(out)
 \insertRef{honda2019using}{httk}
 }
 \author{
-Greg Honda, Meredith Scherer adapeed from code by James Armitage, Jon Arnot
+Greg Honda, Meredith Scherer adapted from code by James Armitage, Jon Arnot
 }

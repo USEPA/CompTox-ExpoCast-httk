@@ -60,7 +60,7 @@ this.v_total, etc.). Chemical parameters are taken from
 
 \item{this.csalt}{Ionic strength of buffer, mol/L}
 
-\item{this.BSA}{Boving serum albumin concentration in serum (g/L)}
+\item{this.BSA}{Bovine serum albumin concentration in serum (g/L)}
 
 \item{this.v_total}{Total volume of well (uL)}
 

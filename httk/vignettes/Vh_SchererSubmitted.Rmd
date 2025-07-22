@@ -5,7 +5,7 @@ author: "Meredith N. Scherer, Katie Paul-Friedman, and John F. Wambaugh"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{j) Scherer (Submitted): In Vitro Distribution}
+  %\VignetteIndexEntry{h) Scherer (Submitted): In Vitro Distribution}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

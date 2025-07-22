@@ -4,7 +4,7 @@ author: "Annabel Meade, Celia Schacht, Alex George"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
- %\VignetteIndexEntry{h) Meade (Submitted): High Throughput Dermal Exposure Model}
+ %\VignetteIndexEntry{g) Meade (Submitted): High Throughput Dermal Exposure Model}
  %\VignetteEngine{knitr::rmarkdown}
  %\VignetteEncoding{UTF-8}
 ---
@@ -83,7 +83,6 @@ loc.wd <- "C:/Users/jwambaug/OneDrive - Environmental Protection Agency (EPA)/Pr
 
 #loc.wd = "C:/Users/cschacht/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/CCTE_2023_2024/dermal/thisone"
 
-#setwd(loc.wd)
 knitr::opts_knit$set(root.dir = loc.wd)
 
 # Set location of httk package
