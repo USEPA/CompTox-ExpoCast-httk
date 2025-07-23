@@ -1515,7 +1515,7 @@ ggsave(paste(getwd(), "/Figures_May1/logKowvPerm.png",sep=""),
 
 ```
 
-```{r save_workspace, make.plots.2}
+```{r save_workspace, eval=make.plots.2}
 save.image(paste0(loc.wd,
                       "MeadeWorkspace",
                       Sys.Date(),

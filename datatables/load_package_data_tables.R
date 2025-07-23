@@ -2968,11 +2968,24 @@ fittable[,"kgutabs"] <- fittable[,KGUTABS.COL]
 chem.invivo.PK.summary.data <- fittable
 # 
 # This table contains one line per chemical (PK params only):
+chemchem.invivo.PK.aggregate.data <- subset(fittable, tolower(Media)=="plasma")
 chem.invivo.PK.aggregate.data <- subset(fittable, !duplicated(DTXSID))
-chem.invivo.PK.aggregate.data <- chem.invivo.PK.aggregate.data[,
+# Normalize Css to 1 mg/kg/day:
+chem.invivo.PK.aggregate.data$Css.tkstats <- signif(
+  chem.invivo.PK.aggregate.data$Css.tkstats/
+  chem.invivo.PK.aggregate.data$Dose,
+  4)
+# Drop treatment related columns:
+chem.invivo.PK.aggregate.data <-
+  chem.invivo.PK.aggregate.data[, 
   !(colnames(chem.invivo.PK.aggregate.data) %in% 
     c("Reference","Route","Media","Dose",
       "Dose.Units","Conc.Units","Time.Units"))]
+# Get table of DTXSID->CAS:
+invivocas <- subset(chem.invivo.PK.data,!duplicated(DTXSID))[,c("DTXSID","CAS")]
+# add the CAS:
+chem.invivo.PK.summary.data <- merge(chem.invivo.PK.summary.data,invivocas,by="DTXSID")
+chem.invivo.PK.aggregate.data <- merge(chem.invivo.PK.aggregate.data,invivocas,by="DTXSID")
 #
 #
 #
