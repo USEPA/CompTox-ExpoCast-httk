@@ -45,7 +45,7 @@
 
    2 Inputs:
      forcing (forcing function)
-     switch (forcing function)
+     forcing_switch (forcing function)
 
    51 Parameters:
      depth = 0,
@@ -192,7 +192,7 @@ static double parms[51];
 static double forc[2];
 
 #define forcing forc[0]
-#define switch forc[1]
+#define forcing_switch forc[1]
 
 /*----- Initializers */
 void initmod_skin_mm (void (* odeparms)(int *, double *))
@@ -276,7 +276,7 @@ void derivs_skin_mm (int *neq, double *pdTime, double *y, double *ydot, double *
 
   ydot[ID_Agutlumen] = - kgutabs * y[ID_Agutlumen] ;
 
-  ydot[ID_Amedia] = - Kp * SA * 24 * 0.001 * ( yout[ID_Cmedia] - yout[ID_Cskinexposed] / Kskin2media ) * switch ;
+  ydot[ID_Amedia] = - Kp * SA * 24 * 0.001 * ( yout[ID_Cmedia] - yout[ID_Cskinexposed] / Kskin2media ) * forcing_switch ;
 
   ydot[ID_Agut] = kgutabs * y[ID_Agutlumen] + Qgut * ( y[ID_Aart] / Vart - y[ID_Agut] / Vgut * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma ) ;
 
@@ -298,7 +298,7 @@ void derivs_skin_mm (int *neq, double *pdTime, double *y, double *ydot, double *
 
   ydot[ID_AUC] = y[ID_Aven] / Vven / Rblood2plasma ;
 
-  ydot[ID_Askinexposed] = Qskinexposed * ( yout[ID_Cart] - yout[ID_Cskinexposed] * Rblood2plasma / Kskin2pu / Fraction_unbound_plasma ) + Kp * SA * 24 * 0.001 * ( yout[ID_Cmedia] - yout[ID_Cskinexposed] / Kskin2media ) * switch ;
+  ydot[ID_Askinexposed] = Qskinexposed * ( yout[ID_Cart] - yout[ID_Cskinexposed] * Rblood2plasma / Kskin2pu / Fraction_unbound_plasma ) + Kp * SA * 24 * 0.001 * ( yout[ID_Cmedia] - yout[ID_Cskinexposed] / Kskin2media ) * forcing_switch ;
 
   ydot[ID_Askin] = Qskin * ( yout[ID_Cart] - yout[ID_Cskin] * Rblood2plasma / Kskin2pu / Fraction_unbound_plasma ) ;
 
