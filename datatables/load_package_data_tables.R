@@ -2970,7 +2970,7 @@ chem.invivo.PK.summary.data <- fittable
 # This table contains one line per chemical (PK params only):
 chemchem.invivo.PK.aggregate.data <- subset(fittable, tolower(Media)=="plasma")
 chem.invivo.PK.aggregate.data <- subset(fittable, !duplicated(DTXSID))
-# Normalize Css to 1 mg/kg/day:
+# Normalize Css from mg/L/dose to 1 mg/kg/day:
 chem.invivo.PK.aggregate.data$Css.tkstats <- signif(
   chem.invivo.PK.aggregate.data$Css.tkstats/
   chem.invivo.PK.aggregate.data$Dose,
