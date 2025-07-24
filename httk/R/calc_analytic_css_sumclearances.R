@@ -12,7 +12,10 @@
 #'
 #' @param dtxsid EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})   
 #' the chemical must be identified by either CAS, name, or DTXSIDs
-#'
+#' 
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#'  default "Human").
+#'  
 #' @param parameters Chemical parameters from \code{\link{parameterize_sumclearances}} overrides chem.name and chem.cas.
 #'
 #' @param hourly.dose Hourly dose rate mg/kg BW/h.
@@ -48,8 +51,6 @@
 #' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
 #' See \code{\link{get_fbio}} for further details.
 #' 
-#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-#' default "Human").
 #' 
 #' @param dosing List of dosing metrics used in simulation, which includes
 #' the namesake entries of a model's associated dosing.params. For steady-state
@@ -75,12 +76,12 @@
 calc_analytic_css_sumclearances <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid = NULL,
+                                   species="Human",
                                    parameters=NULL,
                                    dosing=list(daily.dose=1),
                                    hourly.dose = NULL,
                                    dose.units = "mg",
                                    concentration='plasma',
-                                   species="human",
                                    Caco2.options = NULL,
                                    suppress.messages=FALSE,
                                    recalc.blood2plasma=FALSE,
@@ -95,6 +96,8 @@ calc_analytic_css_sumclearances <- function(chem.name=NULL,
      warning("calc_analytic_css_sumclearances deprecated argument hourly.dose replaced with new argument dose, value given assigned to dosing.")
      dosing <- list(daily.dose = 24*hourly.dose)
   }
+  
+  parameterize.arg.list <- list(...)
   
 # Load from modelinfo file:
   THIS.MODEL <- "sumclearances"
@@ -145,6 +148,7 @@ calc_analytic_css_sumclearances <- function(chem.name=NULL,
                           args=purrr::compact(c(
                             list(chem.cas=chem.cas,
                                  chem.name=chem.name,
+                                 species = species,
                                  suppress.messages=suppress.messages,
                                  Caco2.options = Caco2.options,
                                  restrictive.clearance = restrictive.clearance
@@ -167,9 +171,26 @@ calc_analytic_css_sumclearances <- function(chem.name=NULL,
 #  if (is.na(parameters$hepatic.bioavailability)) browser() 
   if (recalc.blood2plasma) 
   {
-    parameters$Rblood2plasma <- calc_rblood2plasma(chem.cas=chem.cas,
-                                                   parameters=parameters,
-                                                   hematocrit=parameters$hematocrit)
+    rb2p_args <- purrr::compact(
+      c(list(chem.cas=chem.cas,
+           parameters=parameters,
+           hematocrit=parameters$hematocrit,
+           species = species),
+        #any additional args specified in ... (captured in parameterize.arg.list)
+        parameterize.arg.list[
+          setdiff(
+            intersect(
+              names(parameterize.arg.list),
+              names(formals(calc_rblood2plasma))
+            ),
+            c("chem.cas", "parameters", "hematocrit", "species")
+          )
+        ]
+    )
+    )
+    
+    parameters$Rblood2plasma <- do.call(what = calc_rblood2plasma,
+                                        args = rb2p_args)
   }
 
   Fup <- parameters$Funbound.plasma
@@ -187,10 +208,27 @@ calc_analytic_css_sumclearances <- function(chem.name=NULL,
   Qgfr <- parameters$Qgfrc/BW^0.25 #L/h/kg BW
 
   # Scale up from in vitro Clint to a whole liver clearance:
-  Clhep <- calc_hep_clearance(parameters=parameters,
-                           hepatic.model='well-stirred',
-                           restrictive.clearance = restrictive.clearance,
-                           suppress.messages=TRUE) #L/h/kg body weight
+  Clhep_args <- purrr::compact(
+    c(list( parameters=parameters,
+            hepatic.model='well-stirred',
+            restrictive.clearance = restrictive.clearance,
+            suppress.messages=TRUE,
+           species = species),
+      #any additional args specified in ... (captured in parameterize.arg.list)
+      parameterize.arg.list[
+        setdiff(
+          intersect(
+            names(parameterize.arg.list),
+            names(formals(calc_hep_clearance))
+          ),
+          c("parameters", "hepatic.model", "restrictive.clearance", "suppress.messages", "species")
+        )
+      ]
+    )
+  )
+    
+    Clhep <- do.call(what = calc_hep_clearance,
+                     args = Clhep_args) #L/h/kg body weight
 
   # Inhalation parameters
   Qalv <- parameters$Qalvc/BW^0.25 #L/h/kg BW
@@ -261,15 +299,39 @@ calc_analytic_css_sumclearances <- function(chem.name=NULL,
     #pass our parameters to predict_partitioning_schmitt so we can get
     #the needed pc's.
     if (any(class(parameters) == "data.table")){
-      pcs <- predict_partitioning_schmitt(parameters =
-          parameters[, param.names.schmitt[param.names.schmitt %in% 
-          names(parameters)], with = F])
-    }else if (is(parameters,"list")) {
-      pcs <- predict_partitioning_schmitt(parameters =
-          parameters[param.names.schmitt[param.names.schmitt %in% 
-          names(parameters)]])
+      parameters_in <- parameters[, param.names.schmitt[param.names.schmitt %in% 
+                                                          names(parameters)],
+                                  with = FALSE]
+    }else if (is(parameters,"list")){
+      parameters_in <- parameters[param.names.schmitt[param.names.schmitt %in% 
+                                                        names(parameters)]]
     }else stop('httk is only configured to process parameters as objects of 
                class list or class compound data.table/data.frame.')
+    
+    #put together argument list for predict_partitioning_schmitt
+    #use purrr::compact to remove any NULL or empty lists
+    schmitt_args <- purrr::compact(
+      c(list(
+        parameters = parameters_in,
+        species = species,
+        model = THIS.MODEL
+      ),
+      #any additional args specified in ... (captured in parameterize.arg.list)
+      parameterize.arg.list[
+        setdiff(
+          intersect(
+            names(parameterize.arg.list),
+            names(formals(predict_partitioning_schmitt))
+          ),
+          c("parameters", "species", "model")
+        )
+      ]
+      )
+    )
+    
+    pcs <- do.call(what = predict_partitioning_schmitt,
+                   args = schmitt_args)
+    
     
     if (!paste0('K',tolower(tissue)) %in% 
       substr(names(pcs),1,nchar(names(pcs))-3))

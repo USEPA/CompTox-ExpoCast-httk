@@ -74,7 +74,7 @@ For model 3compartmentss each chemical must have non-NA values for:Rat.Clint, Ra
 > length(Css.list)
 [1] 1026
 > length(pbpk.list)
-[1] 964
+[1] 965
 > length(rat.list)
 [1] 208
 >                                                  
@@ -126,7 +126,7 @@ For model 3compartmentss each chemical must have non-NA values for:Rat.Clint, Ra
 5: In get_cheminfo(species = "rat") :
   Excluding compounds that are categorized in one or more of the following chemical classes: PFAS.
 > length(get_cheminfo(model="pbtk"))
-[1] 964
+[1] 965
 Warning messages:
 1: In get_cheminfo(model = "pbtk") :
   Excluding compounds that have one or more needed parameters missing in chem.physical_and_invitro.table.
@@ -177,7 +177,7 @@ For model 3compartmentss each chemical must have non-NA values for:Human.Clint, 
 7: In get_cheminfo(info = "all") :
   Excluding compounds that are categorized in one or more of the following chemical classes: PFAS.
 > length(get_cheminfo(model="schmitt"))
-[1] 1726
+[1] 1733
 Warning messages:
 1: In get_cheminfo(model = "schmitt") :
   Excluding compounds that have one or more needed parameters missing in chem.physical_and_invitro.table.
@@ -190,7 +190,7 @@ For model schmitt each chemical must have non-NA values for:Human.Funbound.plasm
 4: In get_cheminfo(model = "schmitt") :
   Excluding compounds that are categorized in one or more of the following chemical classes: PFAS.
 > length(get_cheminfo(model="schmitt",species="rat"))
-[1] 331
+[1] 330
 Warning messages:
 1: In get_cheminfo(model = "schmitt", species = "rat") :
   Excluding compounds that have one or more needed parameters missing in chem.physical_and_invitro.table.
@@ -201,7 +201,7 @@ For model schmitt each chemical must have non-NA values for:Rat.Funbound.plasma,
 3: In get_cheminfo(model = "schmitt", species = "rat") :
   Excluding compounds that are categorized in one or more of the following chemical classes: PFAS.
 > length(get_cheminfo(model="1compartment"))
-[1] 964
+[1] 965
 Warning messages:
 1: In get_cheminfo(model = "1compartment") :
   Excluding compounds that have one or more needed parameters missing in chem.physical_and_invitro.table.
@@ -253,7 +253,7 @@ For model 1compartment each chemical must have non-NA values for:Rat.Clint, Rat.
                         2.6                 NA              0.007932
  Human.Rblood2plasma
                   NA
-              0.7949
+              0.7702
                   NA
               0.7333
 Warning messages:

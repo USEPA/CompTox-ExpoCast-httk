@@ -381,6 +381,7 @@ parameterize_sumclearances <- function(
   cl <- calc_hep_clearance(parameters=Params,
           hepatic.model='unscaled',
           restrictive.clearance = restrictive.clearance,
+          species = species,
           suppress.messages=TRUE)#L/h/kg body weight
 
           
@@ -392,6 +393,8 @@ parameterize_sumclearances <- function(
                     Clmetabolismc=cl, # L/h/kg
                     Rblood2plasma=Params[["Rblood2plasma"]],
                     BW=BW),
+    species = species,
+    default.to.human = default.to.human,
     restrictive.clearance=restrictive.clearance)
 
   if (is.na(Params[['hepatic.bioavailability']])) browser() 

@@ -328,14 +328,17 @@ benchmark_httk <- function(
   if (in_vivo_stats.check)
   {
     cat("Running In Vivo PK Stats check...\n")
-    # Subset 'FitData' - exclude Bensulide for poor data in Wambaugh et al. 2018
-    FitData <- subset(chem.ivv.PK.agg,
-                      !(Compound=="Bensulide" &
-                      Source=="Wambaugh et al. (2018), NHEERL/RTI"))
-    # Subset 'FitData' - exclude Propyzamide for poor data in Wambaugh et al. 2018
-    FitData <- subset(FitData,
-                      !(Compound=="Propyzamide" &
-                      Source=="Wambaugh et al. (2018), NHEERL/RTI"))
+    FitData <- chem.ivv.PK.agg
+    if (!("dose" %in% colnames(FitData))) FitData$dose <- FitData$Dose
+    if (!("Css" %in% colnames(FitData))) FitData$Css <- FitData$Css.tkstats
+#    # Subset 'FitData' - exclude Bensulide for poor data in Wambaugh et al. 2018
+#    FitData <- subset(chem.ivv.PK.agg,
+#                      !(Compound=="Bensulide" &
+#                      Source=="Wambaugh et al. (2018), NHEERL/RTI"))
+#    # Subset 'FitData' - exclude Propyzamide for poor data in Wambaugh et al. 2018
+#    FitData <- subset(FitData,
+#                      !(Compound=="Propyzamide" &
+#                      Source=="Wambaugh et al. (2018), NHEERL/RTI"))
     if (any(regexpr("parameterize.args.list", formalArgs(calc_analytic_css))!=-1))
     {
       calc_analytic_css.args <- function(x) return(list(
@@ -382,14 +385,19 @@ benchmark_httk <- function(
                               as.numeric(FitData$Css))^2,
                          na.rm=TRUE)^(1/2),4) 
     
-    # Subset 'FitData2' - exclude Bensulide for poor data in Wambaugh et al. 2018
-    FitData2 <- subset(chem.ivv.PK.sum,
-                      !(Compound=="Bensulide" & 
-                      Reference %in% c("RTI 2015","NHEERL 2015")))
-    # Subset 'FitData2' - exclude Propyzamide for poor data in Wambaugh et al. 2018
-    FitData2 <- subset(FitData2,
-                      !(Compound=="Propyzamide" &
-                      Reference %in% c("RTI 2015","NHEERL 2015")))
+    FitData2 <- chem.ivv.PK.sum
+    if (!("dose" %in% colnames(FitData2))) FitData2$dose <- FitData2$Dose
+    if (!("AUC" %in% colnames(FitData2))) FitData2$AUC <- FitData2$AUC_infinity.tkstats*24
+    if (!("peak" %in% colnames(FitData2))) FitData2$peak <- FitData2$Cmax.tkstats
+    if (!("time" %in% colnames(FitData2))) FitData2$time <- FitData2$halflife.tkstats*4*24 # We want most of the chemical eliminated for AUC-infinity
+     # Subset 'FitData2' - exclude Bensulide for poor data in Wambaugh et al. 2018
+#    FitData2 <- subset(chem.ivv.PK.sum,
+#                      !(Compound=="Bensulide" & 
+#                      Reference %in% c("RTI 2015","NHEERL 2015")))
+#    # Subset 'FitData2' - exclude Propyzamide for poor data in Wambaugh et al. 2018
+#    FitData2 <- subset(FitData2,
+#                      !(Compound=="Propyzamide" &
+#                      Reference %in% c("RTI 2015","NHEERL 2015")))
     # v1.1 did not have an argument "dose" for calc_stats:
     if ("dose" %in% formalArgs(calc_stats)) 
     {

@@ -74,6 +74,26 @@ get_physchem_param <- function(
                         chem.cas=NULL,
                         dtxsid=NULL)
 {
+# Define list of acceptable paramters:
+  GOOD.PARAMS <- c("MW",
+                   "pKa_Donor",
+                   "pKa_Accept",
+                   "logMA",
+                   "logP",
+                   "logHenry",
+                   "logWSol",
+                   "MP",
+                   "logPwa",
+                   "Chemical.Class")
+  NON.NUMERIC.PARAMS <- c(
+                   "pKa_Donor",
+                   "pKa_Accept",
+                   "Chemical.Class")
+  ACCEPTABLE.NA.PARAMS <- c(
+                   "logMA",
+                   "pKa_Donor",
+                   "pKa_Accept",
+                   "Chemical.Class") 
 
   chem.physical_and_invitro.data <- chem.physical_and_invitro.data
   
@@ -119,23 +139,20 @@ get_physchem_param <- function(
   }
   
   if(!all(tolower(param) %in% 
-     tolower(c("MW",
-               "pKa_Donor",
-               "pKa_Accept",
-               'logMA',
-               "logP",
-               "logHenry",
-               "logWSol",
-               "MP",
-               "logPwa"))))
+     tolower(GOOD.PARAMS)))
   {
-    stop(paste("Parameter",
+    stop(paste("Requested parameter \"",
       param,
-      "not among \"MW\", \"logP\", \"logPwa\", \"logMA\", \"logHenry\", \"logWSol\", \"MP\", \"pKa_Donor\", and \"pKa_Accept\".\n"))
+      "\" not among \"",
+      paste(GOOD.PARAMS, sep = "\", \""),
+      ".\n", sep = ""))
   }
   
   # Match to identifier containing all chemicals -- CHANGED BY AMEADE 2/9/2023
-  num.chems <- max(length(chem.cas0),length(chem.name0),length(dtxsid0),na.rm=TRUE)
+  num.chems <- max(length(chem.cas0), 
+                   length(chem.name0), 
+                   length(dtxsid0),
+                   na.rm=TRUE)
   if (length(dtxsid) == num.chems) this.index <- 
     match(dtxsid, chem.physical_and_invitro.data[,"DTXSID"])
   else if (length(chem.cas) == num.chems) this.index <- 
@@ -145,7 +162,10 @@ get_physchem_param <- function(
   else stop("The chemical identifiers, dtxsid, chem.cas, or chem.name, were not all present in chem.physical_and_invitro.data.")
 
   # Make code case insensitive:
-  PARAM <- colnames(chem.physical_and_invitro.data)[tolower(colnames(chem.physical_and_invitro.data))%in%tolower(param)]
+  PARAM <- colnames(chem.physical_and_invitro.data)[
+                    tolower(colnames(chem.physical_and_invitro.data))
+                    %in%
+                    tolower(param)]
   param <- tolower(param)
   
   # We allow "pKa_Donor","pKa_Accept", and "logMA" to have the value "NA"
@@ -153,11 +173,9 @@ get_physchem_param <- function(
   # For logMA we have a built-in predictor that can be used if logMA is NA
   if (!any(is.na(suppressWarnings(
     chem.physical_and_invitro.data[this.index,
-                                  PARAM[!param %in% tolower(c(
-                                                      "pKa_Accept",
-                                                      "pKa_Donor",
-                                                      "logMA"))]]))) | 
-     any(param %in% tolower(c("pKa_Donor","pKa_Accept","logMA"))))
+                                  PARAM[!param %in% 
+                                        tolower(ACCEPTABLE.NA.PARAMS)]]))) | 
+     any(param %in% tolower(ACCEPTABLE.NA.PARAMS)))
   {
     col.numbers <- NULL
     for (this.param in param) col.numbers <- c(col.numbers,
@@ -168,11 +186,21 @@ get_physchem_param <- function(
     if (any(!param %in% tolower(c("pKa_Accept", "pKa_Donor"))))
     {
       values.out <- lapply(as.list(values[!param %in% 
-                                   tolower(c("pKa_Accept", "pKa_Donor"))]), 
+                                   tolower(NON.NUMERIC.PARAMS)]), 
                                    as.numeric)
     } else {
       values.out <- list()
     }
+
+# Chemical class is text and should be added to values.out if requested:
+    if (any(param %in% tolower(c("Chemical.Class"))))
+    { 
+      if (is.na(values[param %in% tolower(c("Chemical.Class"))]))
+        values[param %in% tolower(c("Chemical.Class"))] <- ""
+      values.out[["Chemical.Class"]] <-
+        values[param %in% tolower(c("Chemical.Class"))]
+    }
+
 # Sometimes pKa's are stored as a semi-colon separated list, we replace the
 # semi-colons with commas:
     if(any(param %in% tolower(c("pKa_Donor", "pKa_Accept"))))
@@ -197,7 +225,7 @@ get_physchem_param <- function(
             values.out[["pKa_Donor"]] <- 
               unlist(gsub(";",",",values[,"pKa_Donor"]))
           }
-          if("pKa_Accept" %in% tolower(param))
+          if(tolower("pKa_Accept") %in% param)
           {
             values.out[["pKa_Accept"]] <- 
               unlist(gsub(";",",",values[,"pKa_Accept"]))
@@ -238,7 +266,7 @@ get_physchem_param <- function(
                    param,"."))
     }else{
       missing.param <- which(is.na(chem.physical_and_invitro.data[
-        this.index,PARAM[!param %in% tolower(c("pKa_Accept", "pKa_Donor", "logMA"))]]), arr.ind = T)
+        this.index,PARAM[!param %in% tolower(ACCEPTABLE.NA.PARAMS)]]), arr.ind = T)
       
       if(length(this.index) >= 1 & length(param) > 1)
       {
@@ -246,9 +274,7 @@ get_physchem_param <- function(
           paste(lapply(unique(missing.param[,1]), 
           function(x) paste0(chem.cas[x], ": ", 
             paste(PARAM[!param %in% 
-              tolower(c("pKa_Accept", 
-                "pKa_Donor", 
-                "logMA"))][
+              tolower(ACCEPTABLE.NA.PARAMS)][
                   missing.param[missing.param[,1] %in% x,2]],
                collapse = ", "))),
             collapse = "\n")))
@@ -262,4 +288,3 @@ get_physchem_param <- function(
     }
   }
 }
-

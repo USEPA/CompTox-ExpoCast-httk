@@ -1,0 +1,75 @@
+"DTXSID","Species","Sex","HalfLifeHours","HlReference","VdLpkgbw","VdReference","Kelimph","ClLphpkgbw"
+"DTXSID8031865","Human","Female",20150,"Bartell et al. 2010, Li et al. 2018, Worley et al. 2017, Xu et al. 2020, Zhang et al. 2013",0.17,"Thompson et al. 2010",3.44e-05,5.848e-06
+"DTXSID8031865","Human","Male",22340,"Bartell et al. 2010, Li et al. 2018, Olsen et al. 2007, Worley et al. 2017, Xu et al. 2020, Zhang et al. 2013",0.17,"Thompson et al. 2010",3.103e-05,5.275e-06
+"DTXSID8031865","Monkey","Female",782.4,"Butenhoff et al. 2004",0.198,"Butenhoff et al. 2004",0.0008859,0.0001754
+"DTXSID8031865","Monkey","Male",492,"Butenhoff et al. 2004",0.181,"Butenhoff et al. 2004",0.001409,0.000255
+"DTXSID8031865","Rat","Female",2.835,"Dzierlenga et al. 2020, Kim et al. 2016, Ohmori et al. 2003, Vanden Heuvel et al. 1991",0.154,"Dzierlenga et al 2020, Kim et al. 2016, Ohmori et al. 2003",0.2445,0.03765
+"DTXSID8031865","Rat","Male",236.5,"Dzierlenga et al. 2020, Kim et al. 2016, Ohmori et al. 2003, Vanden Heuvel et al. 1991",0.113,"Dzierlenga et al 2020, Kim et al. 2016, Ohmori et al. 2003",0.002931,0.0003312
+"DTXSID8031865","Mouse","Female",374.4,"Lou et al. 2009",0.1805,"Lou et al. 2009",0.001851,0.0003341
+"DTXSID8031865","Mouse","Male",520.8,"Lou et al. 2009",0.1805,"Lou et al. 2009",0.001331,0.0002402
+"DTXSID4059916","Human","Female",1728,"Chang et al. 2008",0.205,"Dawson et al. 2023",0.0004011,8.223e-05
+"DTXSID4059916","Human","Male",1728,"Chang et al. 2008",0.205,"Dawson et al. 2023",0.0004011,8.223e-05
+"DTXSID4059916","Monkey","Female",984.2,"Chang et al. 2008",0.443,"Chang et al. 2008",0.0007043,0.000312
+"DTXSID4059916","Monkey","Male",967.7,"Chang et al. 2008",0.526,"Chang et al. 2008",0.0007163,0.0003768
+"DTXSID4059916","Mouse","Female",6.35,"Chang et al. 2008",0.134,"Chang et al. 2008",0.1092,0.01463
+"DTXSID4059916","Mouse","Male",13.34,"Chang et al. 2008",0.195,"Chang et al. 2008",0.05196,0.01013
+"DTXSID4059916","Rat","Female",1.76,"Chang et al. 2008",0.18,"Chang et al. 2008",0.3938,0.07088
+"DTXSID4059916","Rat","Male",9.22,"Chang et al. 2008",0.231,"Chang et al. 2008",0.07518,0.01737
+"DTXSID3031864","Monkey","Female",2640,"Chang et al. 2012",0.274,"Chang et al. 2012",0.0002626,7.195e-05
+"DTXSID3031864","Monkey","Male",3168,"Chang et al. 2012",0.202,"Chang et al. 2012",0.0002188,4.42e-05
+"DTXSID3031864","Mouse","Female",819,"Chang et al. 2012",0.261,"Chang et al. 2012",0.0008463,0.0002209
+"DTXSID3031864","Mouse","Male",950.8,"Chang et al. 2012",0.263,"Chang et al. 2012",0.000729,0.0001917
+"DTXSID3031864","Rat","Female",912,"Chang et al. 2012, Huang et al. 2019a, Kim et al. 2016",0.5535,"Chang et al. 2012, Huang et al. 2019, Kim et al. 2016",0.00076,0.0004207
+"DTXSID3031864","Rat","Male",889.3,"Chang et al. 2012, Huang et al. 2019a, Kim et al. 2016",0.707,"Chang et al. 2012, Huang et al. 2019, Kim et al. 2016",0.0007794,0.000551
+"DTXSID3031864","Human","Female",28910,"Li et al. 2018, Olsen et al. 2007, Worley et al. 2017, Xu et al. 2020, Zhang et al. 2013",0.23,"Thompson et al. 2010",2.398e-05,5.515e-06
+"DTXSID3031864","Human","Male",40300,"Li et al. 2018, Olsen et al. 2007, Worley et al. 2017, Xu et al. 2020, Zhang et al. 2013",0.23,"Thompson et al. 2010",1.72e-05,3.956e-06
+"DTXSID5030030","Monkey","Female",1096,"Chengelis et al. 2009, Olsen et al. 2009",0.255,"Olsen et al. 2009",0.0006324,0.0001613
+"DTXSID5030030","Monkey","Male",1322,"Chengelis et al. 2009, Olsen et al. 2009",0.254,"Olsen et al. 2009",0.0005243,0.0001332
+"DTXSID5030030","Rat","Female",2.4,"Chengelis et al. 2009, Huang et al. 2019a, Olsen et al. 2009",0.3395,"Huang et al. 2019, Olsen et al. 2009",0.2888,0.09805
+"DTXSID5030030","Rat","Male",4.785,"Chengelis et al. 2009, Huang et al. 2019a, Olsen et al. 2009",0.3047,"Huang et al. 2019, Olsen et al. 2009",0.1449,0.04415
+"DTXSID5030030","Mouse","Female",4.5,"Lau et al. 2020",0.2265,"Lau et al. 2020",0.154,0.03488
+"DTXSID5030030","Mouse","Male",5.8,"Lau et al. 2020",0.21,"Lau et al. 2020",0.1195,0.0251
+"DTXSID5030030","Human","Female",311,"Olsen et al. 2009, Xu et al. 2020",0.205,"Dawson et al. 2023",0.002229,0.0004569
+"DTXSID5030030","Human","Male",333.8,"Olsen et al. 2009, Xu et al. 2020",0.205,"Dawson et al. 2023",0.002077,0.0004258
+"DTXSID3031862","Monkey","Female",2.4,"Chengelis et al. 2009",0.205,"Dawson et al. 2023",0.2888,0.0592
+"DTXSID3031862","Monkey","Male",5.3,"Chengelis et al. 2009",0.205,"Dawson et al. 2023",0.1308,0.02681
+"DTXSID3031862","Rat","Female",2.235,"Chengelis et al. 2009, Dzierlenga et al. 2020, Gannon et al. 2011, Kabadi et al. 2018",0.205,"Dawson et al. 2023",0.3101,0.06357
+"DTXSID3031862","Rat","Male",2.5,"Chengelis et al. 2009, Dzierlenga et al. 2020, Gannon et al. 2011, Kabadi et al. 2018",0.205,"Dawson et al. 2023",0.2773,0.05685
+"DTXSID3031862","Human","Female",768,"Russell et al. 2013",0.205,"Dawson et al. 2023",0.0009025,0.000185
+"DTXSID3031862","Human","Male",768,"Russell et al. 2013",0.205,"Dawson et al. 2023",0.0009025,0.000185
+"DTXSID3031860","Rat","Female",20500,"Dzierlenga et al. 2020, Kim et al. 2019, Ohmori et al. 2003",0.178,"Dzierlenga et al 2020, Kim et al. 2019, Ohmori et al. 2003",3.381e-05,6.018e-06
+"DTXSID3031860","Rat","Male",21700,"Dzierlenga et al. 2020, Kim et al. 2019, Ohmori et al. 2003",0.236,"Dzierlenga et al 2020, Kim et al. 2019, Ohmori et al. 2003",3.194e-05,7.538e-06
+"DTXSID3031860","Human","Female",35040,"Zhang et al. 2013",0.205,"Dawson et al. 2023",1.978e-05,4.055e-06
+"DTXSID3031860","Human","Male",62200,"Zhang et al. 2013",0.205,"Dawson et al. 2023",1.114e-05,2.284e-06
+"DTXSID70880215","Monkey","Female",1910,"Gannon et al. 2016",0.205,"Dawson et al. 2023",0.0003629,7.439e-05
+"DTXSID70880215","Monkey","Male",1538,"Gannon et al. 2016",0.205,"Dawson et al. 2023",0.0004507,9.239e-05
+"DTXSID70880215","Mouse","Female",580.8,"Gannon et al. 2016",0.205,"Dawson et al. 2023",0.001193,0.0002446
+"DTXSID70880215","Mouse","Male",885.6,"Gannon et al. 2016",0.205,"Dawson et al. 2023",0.0007827,0.0001605
+"DTXSID70880215","Rat","Female",1080,"Gannon et al. 2016",0.205,"Dawson et al. 2023",0.0006418,0.0001316
+"DTXSID70880215","Rat","Male",1936,"Gannon et al. 2016",0.205,"Dawson et al. 2023",0.000358,7.339e-05
+"DTXSID7040150","Rat","Female",37.44,"Huang et al. 2019, Kim et al. 2016, Sundstrom et al. 2012",0.171,"Huang et al. 2019, Kim et al. 2016, Kim et al. 2018, Sundstrom et al. 2012",0.01851,0.003165
+"DTXSID7040150","Rat","Male",645.6,"Huang et al. 2019, Kim et al. 2016, Sundstrom et al. 2012",0.269,"Huang et al. 2019, Kim et al. 2016, Kim et al. 2018, Sundstrom et al. 2012",0.001074,0.0002889
+"DTXSID7040150","Human","Female",46430,"Li et al. 2018, Worley et al. 2017, Xu et al. 2020, Zhang et al. 2013",0.205,"Dawson et al. 2023",1.493e-05,3.061e-06
+"DTXSID7040150","Human","Male",64820,"Li et al. 2018, Worley et al. 2017, Xu et al. 2020, Zhang et al. 2013",0.205,"Dawson et al. 2023",1.069e-05,2.191e-06
+"DTXSID7040150","Monkey","Female",2088,"Sundstrom et al. 2012",0.147,"Sundstrom et al. 2012",0.000332,4.88e-05
+"DTXSID7040150","Monkey","Male",3384,"Sundstrom et al. 2012",0.287,"Sundstrom et al. 2012",0.0002048,5.878e-05
+"DTXSID7040150","Mouse","Female",619.6,"Sundstrom et al. 2012",0.1215,"Sundstrom et al. 2012",0.001119,0.000136
+"DTXSID7040150","Mouse","Male",701.6,"Sundstrom et al. 2012",0.162,"Sundstrom et al. 2012",0.000988,0.0001601
+"DTXSID7029904","Rat","Female",7.425,"Huang et al. 2019b",0.205,"Dawson et al. 2023",0.09335,0.01914
+"DTXSID7029904","Rat","Male",6.635,"Huang et al. 2019b",0.205,"Dawson et al. 2023",0.1045,0.02142
+"DTXSID1037303","Rat","Female",1.2,"Kabadi et al. 2018, Ohmori et al. 2003",0.2006,"Ohmori et al. 2003",0.5776,0.1159
+"DTXSID1037303","Rat","Male",15.4,"Kabadi et al. 2018, Ohmori et al. 2003",0.1962,"Ohmori et al. 2003",0.04501,0.008831
+"DTXSID1037303","Human","Female",5125,"Xu et al. 2020, Zhang et al. 2013",0.205,"Dawson et al. 2023",0.0001352,2.772e-05
+"DTXSID1037303","Human","Male",4336,"Xu et al. 2020, Zhang et al. 2013",0.205,"Dawson et al. 2023",0.0001599,3.278e-05
+"DTXSID20874028","Rat","Female",62.9,"Kabadi et al. 2020",0.205,"Dawson et al. 2023",0.01102,0.002259
+"DTXSID20874028","Rat","Male",54.6,"Kabadi et al. 2020",0.205,"Dawson et al. 2023",0.0127,0.002604
+"DTXSID8031863","Rat","Female",130.1,"Kim et al. 2019, Ohmori et al. 2003, Tatum-Gibbs et al. 2011",0.04586,"Kim et al. 2019, Ohmori et al. 2003, Tatum-Gibbs et al. 2011",0.005328,0.0002443
+"DTXSID8031863","Rat","Male",837.2,"Kim et al. 2019, Ohmori et al. 2003, Tatum-Gibbs et al. 2011",0.2129,"Kim et al. 2019, Ohmori et al. 2003, Tatum-Gibbs et al. 2011",0.0008279,0.0001763
+"DTXSID8031863","Mouse","Female",1134,"Tatum-Gibbs et al. 2011",0.192,"Tatum-Gibbs et al. 2011",0.0006112,0.0001174
+"DTXSID8031863","Mouse","Male",3149,"Tatum-Gibbs et al. 2011",0.328,"Tatum-Gibbs et al. 2011",0.0002201,7.219e-05
+"DTXSID8031863","Human","Female",14890,"Zhang et al. 2013",0.205,"Dawson et al. 2023",4.655e-05,9.543e-06
+"DTXSID8031863","Human","Male",28030,"Zhang et al. 2013",0.205,"Dawson et al. 2023",2.473e-05,5.07e-06
+"DTXSID60881236","Human","Female",162100,"Shi et al. 2016",0.205,"Dawson et al. 2023",4.276e-06,8.766e-07
+"DTXSID60881236","Human","Male",162100,"Shi et al. 2016",0.205,"Dawson et al. 2023",4.276e-06,8.766e-07
+"DTXSID8062600","Human","Female",5519,"Xu et al. 2020",0.205,"Dawson et al. 2023",0.0001256,2.575e-05
+"DTXSID8062600","Human","Male",5519,"Xu et al. 2020",0.205,"Dawson et al. 2023",0.0001256,2.575e-05

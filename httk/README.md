@@ -1,6 +1,6 @@
-<img src="man/figures/httk.png" align="right" width="33%"/>
-
 # R Package "httk"
+
+<img src="man/figures/httk.png" align="right" width="33%"/>
 
 <!-- badges: start -->
 [![CRAN_Status_Badge](https://www.r-pkg.org/badges/version/httk)](https://cran.r-project.org/package=httk)
@@ -169,17 +169,19 @@ vignette("IntroToHTTK")
 John Wambaugh [wambaugh.john@epa.gov]
 
 ### Lead Software Engineer 
-Sarah Davidson Fritz [DavidsonFritz.Sarah@epa.gov]
+Sarah Davidson-Fritz [DavidsonFritz.Sarah@epa.gov]
 
 ### Model Authors and Function Developers
 Robert Pearce,
 Caroline Ring [Ring.Caroline@epa.gov],
 Greg Honda [honda.gregory@epa.gov], 
 Mark Sfeir, 
-Matt Linakis [MLINAKIS@ramboll.com], 
+Matt Linakis [MLINAKIS@ramboll.com],
 Dustin Kapraun [kapraun.dustin@epa.gov],
-Kimberly Truong [truong.kimberly@epa.gov], and
-Colin Thomson [thomson.colin@epa.gov]
+Kimberly Truong [truong.kimberly@epa.gov],
+Colin Thomson [thomson.colin@epa.gov],
+Annabel Meade [aemeade7@gmail.com], and
+Celia Schacht [Schacht.Celia@epa.gov]
 
 ### Bug-Fixes, Vignette edits, and Parameter Values
 Todor Antonijevic [tantonijevic@toxstrategies.com], 
@@ -192,12 +194,11 @@ Gilberto Padilla Mercado [PadillaMercado.Gilberto@epa.gov],
 Katie Paul Friedman [Paul-Friedman.Katie@epa.gov],
 Nathan Pollesch [pollesch.nathan@epa.gov],
 Meredith Scherer [Scherer.Meredith@epa.gov],
-Celia Schacht [Schacht.Celia@epa.gov],
 Noelle Sinski [Noelle.Sinski@icf.com],
 Nisha Sipes [sipes.nisha@epa.gov],
 James Sluka [jsluka@indiana.edu],  
-Caroline Stevens [Stevens.Caroline@epa.gov]
-Barbara Wetmore [wetmore.barbara@epa.gov],
+Caroline Stevens [Stevens.Caroline@epa.gov],
+Barbara Wetmore [wetmore.barbara@epa.gov], and
 Lily Whipple
 
 ### Statistical Expertise

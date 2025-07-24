@@ -4,7 +4,7 @@ author: "John F. Wambaugh"
 date: "September 25, 2019"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{c) Frank (2018): Neuronal Network IVIVE}
+  %\VignetteIndexEntry{d) Frank (2018): Neuronal Network IVIVE}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

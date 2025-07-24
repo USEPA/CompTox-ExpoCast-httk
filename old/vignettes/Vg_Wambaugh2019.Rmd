@@ -205,7 +205,7 @@ $C_{ss}$ is the steady-state plasma concentration.
 cssfun_u <- function(chemcas, 
                       MW, 
                       hepatic.bioavailability, 
-                      Fgutabs=1,
+                      Fabsgut=1,
                       probs=0.95,
                       minimum.Funbound.plasma=0.0001)
 {

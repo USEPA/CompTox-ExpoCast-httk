@@ -385,6 +385,8 @@ parameterize_steadystate <- function(
                     Clmetabolismc=cl, # L/h/kg
                     Rblood2plasma=Params[["Rblood2plasma"]],
                     BW=BW),
+    species = species,
+    default.to.human = default.to.human,
     restrictive.clearance=restrictive.clearance)
 
   if (is.na(Params[['hepatic.bioavailability']])) browser() 

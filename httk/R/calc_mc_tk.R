@@ -1,9 +1,8 @@
 #' Conduct multiple TK simulations using Monte Carlo
-#' 
-#' @description
-#' This function finds the analytical steady state plasma concentration(from
-#' calc_analytic_css) using a monte carlo simulation (monte_carlo).
-#' 
+#'
+#' @description Solves a model for concentration vs. time predictions using
+#'   Monte Carlo methods
+#'
 #' @details
 #'
 #' The Monte Carlo methods used here were recently updated and described by
@@ -11,141 +10,151 @@
 #'
 #' All arguments after httkpop only apply if httkpop is set to TRUE and species
 #' to "Human".
-#' 
+#'
 #' When species is specified as rabbit, dog, or mouse, the function uses the
-#' appropriate physiological data(volumes and flows) but substitues human
+#' appropriate physiological data(volumes and flows) but substitutes human
 #' fraction unbound, partition coefficients, and intrinsic hepatic clearance.
-#' 
-#' Tissue concentrations are calculated for the pbtk model with oral infusion
-#' dosing.  All tissues other than gut, liver, and lung are the product of the
-#' steady state plasma concentration and the tissue to plasma partition
-#' coefficient.
-#' 
-#' The six sets of plausible \emph{in vitro-in vivo} extrpolation (IVIVE)
-#' assumptions identified by Honda et al. (2019) 
-#' (\doi{10.1371/journal.pone.0217564}) 
+#'
+#'
+#' The six sets of plausible \emph{in vitro-in vivo} extrapolation (IVIVE)
+#' assumptions identified by Honda et al. (2019)
+#' (\doi{10.1371/journal.pone.0217564})
 #' are: \tabular{lrrrr}{
 #' \tab \emph{in vivo} Conc. \tab Metabolic Clearance \tab Bioactive Chemical
-#' Conc. \tab TK Statistic Used* \cr Honda1 \tab Veinous (Plasma) \tab
+#' Conc. \tab TK Statistic Used \cr Honda1 \tab Veinous (Plasma) \tab
 #' Restrictive \tab Free \tab Mean Conc. \cr Honda2 \tab Veinous \tab
 #' Restrictive \tab Free \tab Max Conc. \cr Honda3 \tab Veinous \tab
 #' Non-restrictive \tab Total \tab Mean Conc. \cr Honda4 \tab Veinous \tab
 #' Non-restrictive \tab Total \tab Max Conc. \cr Honda5 \tab Target Tissue \tab
 #' Non-restrictive \tab Total \tab Mean Conc. \cr Honda6 \tab Target Tissue
-#' \tab Non-restrictive \tab Total \tab Max Conc. \cr } *Assumption is
-#' currently ignored because analytical steady-state solutions are currently
-#' used by this function.
-#' 
+#' \tab Non-restrictive \tab Total \tab Max Conc. \cr }
+#'
+#' NOTE: This function, and [create_mc_samples()], calculate oral
+#' bioavailability parameters based on Caco2 data. If you are comparing the
+#' output of this function to the output of [solve_model()], you will need to to
+#' ensure that [solve_model()] also uses Caco2 data, rather than its default
+#' behavior of using *in vivo* oral bioavailability data when available. To do
+#' that, please pass the following argument to [solve_model()]: `Caco2.options =
+#' list(overwrite.invivo = TRUE`.
+#'
+#'
 #' @param chem.cas Either the CAS number, parameters, or the chemical name must
-#' be specified. 
+#'   be specified.
 #'
-#' @param chem.name Either the chemical parameters, name, or the CAS number
-#' must be specified. 
+#' @param chem.name Either the chemical parameters, name, or the CAS number must
+#'   be specified.
 #'
-#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
-#' the chemical must be identified by either CAS, name, or DTXSIDs
+#' @param dtxsid EPA's DSSTox Structure ID
+#'   (\url{https://comptox.epa.gov/dashboard}) the chemical must be identified
+#'   by either CAS, name, or DTXSIDs
 #'
-#' @param parameters Parameters from parameterize_steadystate. Not used with
-#' httkpop model.
+#' @param parameters Parameters from parameterize_MODEL, which must align with
+#'   \code{model}. Not used with httkpop model.
 #'
 #' @param samples Number of samples generated in calculating quantiles.
 #'
 #' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
-#' default "Human").  Species must be set to "Human" to run httkpop model. 
+#'   default "Human").  Species must be set to "Human" to run httkpop model.
 #'
 #' @param suppress.messages Whether or not to suppress output message.
 #'
 #' @param model Model used in calculation: 'pbtk' for the multiple compartment
-#' model,'3compartment' for the three compartment model, '3compartmentss' for
-#' the three compartment steady state model, and '1compartment' for one
-#' compartment model.  This only applies when httkpop=TRUE and species="Human",
-#' otherwise '3compartmentss' is used.
+#'   model,'3compartment' for the three compartment model, '3compartmentss' for
+#'   the three compartment steady state model, and '1compartment' for one
+#'   compartment model.  This only applies when httkpop=TRUE and
+#'   species="Human", otherwise '3compartmentss' is used.
 #'
 #' @param httkpop Whether or not to use population generator and sampler from
-#' httkpop.  This is overwrites censored.params and vary.params and is only for
-#' human physiology.  Species must also be set to 'Human'.
+#'   httkpop.  This is overwrites censored.params and vary.params and is only
+#'   for human physiology.  Species must also be set to 'Human'.
 #'
 #' @param httkpop.dt A data table generated by \code{\link{httkpop_generate}}.
-#' This defaults to NULL, in which case \code{\link{httkpop_generate}} is 
-#' called to generate this table.
+#'   This defaults to NULL, in which case \code{\link{httkpop_generate}} is
+#'   called to generate this table.
 #'
 #' @param invitrouv Logical to indicate whether to include in vitro parameters
-#' in uncertainty and variability analysis
+#'   in uncertainty and variability analysis
 #'
-#' @param calcrb2p Logical determining whether or not to recalculate the 
-#' chemical ratio of blood to plasma
+#' @param calcrb2p Logical determining whether or not to recalculate the
+#'   chemical ratio of blood to plasma
 #'
 #' @param censored.params The parameters listed in censored.params are sampled
-#' from a normal distribution that is censored for values less than the limit
-#' of detection (specified separately for each parameter). This argument should
-#' be a list of sub-lists. Each sublist is named for a parameter in
-#' "parameters" and contains two elements: "CV" (coefficient of variation) and
-#' "LOD" (limit of detection, below which parameter values are censored. New
-#' values are sampled with mean equal to the value in "parameters" and standard
-#' deviation equal to the mean times the CV.  Censored values are sampled on a
-#' uniform distribution between 0 and the limit of detection. Not used with
-#' httkpop model.
+#'   from a normal distribution that is censored for values less than the limit
+#'   of detection (specified separately for each parameter). This argument
+#'   should be a list of sub-lists. Each sublist is named for a parameter in
+#'   "parameters" and contains two elements: "CV" (coefficient of variation) and
+#'   "LOD" (limit of detection, below which parameter values are censored. New
+#'   values are sampled with mean equal to the value in "parameters" and
+#'   standard deviation equal to the mean times the CV.  Censored values are
+#'   sampled on a uniform distribution between 0 and the limit of detection. Not
+#'   used with httkpop model.
 #'
 #' @param vary.params The parameters listed in vary.params are sampled from a
-#' normal distribution that is truncated at zero. This argument should be a
-#' list of coefficients of variation (CV) for the normal distribution. Each
-#' entry in the list is named for a parameter in "parameters". New values are
-#' sampled with mean equal to the value in "parameters" and standard deviation
-#' equal to the mean times the CV. Not used with httkpop model.
+#'   normal distribution that is truncated at zero. This argument should be a
+#'   list of coefficients of variation (CV) for the normal distribution. Each
+#'   entry in the list is named for a parameter in "parameters". New values are
+#'   sampled with mean equal to the value in "parameters" and standard deviation
+#'   equal to the mean times the CV. Not used with httkpop model.
 #'
 #' @param return.samples Whether or not to return the vector containing the
-#' samples from the simulation instead of the selected quantile.
+#'   samples from the simulation instead of the selected quantile.
 #'
 #' @param tissue Desired steady state tissue conentration.
 #'
 #' @param output.units Plasma concentration units, either uM or default mg/L.
 #'
-#' @param solvemodel.arg.list Additional arguments ultimately passed to 
-#' \code{\link{solve_model}}
+#' @param solvemodel.arg.list Additional arguments ultimately passed to
+#'   \code{\link{solve_model}}
 #'
-#' @param Caco2.options A list of options to use when working with Caco2 apical to
-#' basolateral data \code{Caco2.Pab}, default is Caco2.options = list(Caco2.default = 2,
-#' Caco2.Fabs = TRUE, Caco2.Fgut = TRUE, overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the default value for 
-#' Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE uses Caco2.Pab to calculate
-#' fabs.oral, otherwise fabs.oral = \code{Fabs}. Caco2.Fgut = TRUE uses Caco2.Pab to calculate 
-#' fgut.oral, otherwise fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut in vivo values from literature with 
-#' Caco2 derived values if available. keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent) regardless of other settings.
+#' @param Caco2.options A list of options to use when working with Caco2 apical
+#'   to basolateral data \code{Caco2.Pab}, default is Caco2.options =
+#'   list(Caco2.default = 2, Caco2.Fabs = TRUE, Caco2.Fgut = TRUE,
+#'   overwrite.invivo = FALSE, keepit100 = FALSE). Caco2.default sets the
+#'   default value for Caco2.Pab if Caco2.Pab is unavailable. Caco2.Fabs = TRUE
+#'   uses Caco2.Pab to calculate fabs.oral, otherwise fabs.oral = \code{Fabs}.
+#'   Caco2.Fgut = TRUE uses Caco2.Pab to calculate fgut.oral, otherwise
+#'   fgut.oral = \code{Fgut}. overwrite.invivo = TRUE overwrites Fabs and Fgut
+#'   in vivo values from literature with Caco2 derived values if available.
+#'   keepit100 = TRUE overwrites Fabs and Fgut with 1 (i.e. 100 percent)
+#'   regardless of other settings.
 #'
-#' @param invitro.mc.arg.list List of additional parameters passed to 
-#' \code{\link{invitro_mc}}
+#' @param invitro.mc.arg.list List of additional parameters passed to
+#'   \code{\link{invitro_mc}}
 #'
-#' @param httkpop.generate.arg.list Additional parameters passed to 
-#' \code{\link{httkpop_generate}}.
+#' @param httkpop.generate.arg.list Additional parameters passed to
+#'   \code{\link{httkpop_generate}}.
 #'
-#' @param convert.httkpop.arg.list Additional parameters passed to the 
-#' convert_httkpop_* function for the model.
+#' @param convert.httkpop.arg.list Additional parameters passed to the
+#'   convert_httkpop_* function for the model.
 #'
-#' @param parameterize.args.list Additional parameters passed to the 
-#' parameterize_* function for the model.
+#' @param parameterize.args.list Additional parameters passed to the
+#'   parameterize_* function for the model.
+#'   
+#' @param propagate.invitrouv.arg.list List of additional parameters passed to
+#'   \code{\link{create_mc_samples}}.
 #'
-#' @param return.all.sims Logical indicating whether to return the results
-#' of all simulations, in addition to the default toxicokinetic statistics
-#' 
+#' @param return.all.sims Logical indicating whether to return the results of
+#'   all simulations, in addition to the default toxicokinetic statistics
+#'
 #' @seealso \code{\link{create_mc_samples}}
 #'
 #' @author  John Wambaugh
 #'
 #' @keywords Monte-Carlo dynamic simulation
 #'
-#' @return
-#' If return.all.sims == FALSE (default) a list with:
+#' @return If return.all.sims == FALSE (default) a list with:
 #' \item{means}{The mean concentration for each model compartment as a function
 #' of time across the Monte Carlo simulation}
 #' \item{sds}{The standard deviation for each model compartment as a function
 #' of time across the Monte Carlo simulation}
 #'
-#' If return.all.sums == TRUE then a list is returned with:
-#' \item{stats}{The list of means and sds from return.all.sums=FALSE}
-#' \item{sims}{The concentration vs. time results for each compartment for 
+#' If return.all.sums == TRUE then a list is returned with: \item{stats}{The
+#' list of means and sds from return.all.sums=FALSE}
+#' \item{sims}{The concentration vs. time results for each compartment for
 #' every (samples) set of parameters in the Monte Carlo simulation}
 #'
 #' @examples
-#' 
+#'
 #' \donttest{
 #' NSAMP <- 50
 #' chemname="Abamectin"
@@ -165,13 +174,13 @@
 #'                         solvemodel.arg.list = list(
 #'                           times=times))
 #' }
-#' 
-#' set.seed(1234)    
+#'
+#' set.seed(1234)
 #' # well-behaved chemical with a measured Rblood2plasma:
 #' lapply(calc_mc_tk(chem.cas="80-05-7",samples=NSAMP),function(x) x[-2,])
 #' }
 #' @importFrom purrr reduce
-#' @importFrom purrr compact 
+#' @importFrom purrr compact
 #' @export calc_mc_tk
 calc_mc_tk<- function(chem.cas=NULL,
                         chem.name=NULL,
@@ -198,9 +207,18 @@ calc_mc_tk<- function(chem.cas=NULL,
                           method='direct resampling'),
                         convert.httkpop.arg.list=NULL,
                         parameterize.args.list =NULL,
+                      propagate.invitrouv.arg.list = NULL,
                         return.all.sims=FALSE)
 {
-# We need to describe the chemical to be simulated one way or another:
+  #R CMD CHECK throws notes about "no visible binding for global variable", for
+  #each time a data.table column name is used without quotes. To appease R CMD
+  #CHECK, a variable has to be created for each of these column names and set to
+  #NULL. Note that within the data.table, these variables will not be NULL! Yes,
+  #this is pointless and annoying.
+  ID <- NULL
+  #End R CMD CHECK appeasement.
+  
+  # We need to describe the chemical to be simulated one way or another:
   if (is.null(chem.cas) & 
       is.null(chem.name) & 
       is.null(dtxsid) &
@@ -219,6 +237,19 @@ calc_mc_tk<- function(chem.cas=NULL,
   if (is.null(model.list[[model]]$solve.func)) 
     stop(paste("Kinetic model solver not available for model ",model,".",sep="")) 
 
+  # If parameters are supplied, adjusted.Clint and adjusted.Funbound.plasma
+  # must be set to FALSE or else they will be adjusted twice in create_mc_samples()
+  if (!is.null(parameters)) {
+    if (is.null(parameterize.args.list[['adjusted.Clint']])) {
+      parameterize.args.list[['adjusted.Clint']] <- FALSE
+      warning("Because parameters were specified, adjusted.Clint was set to FALSE in parameterize.args.list")
+    }
+    if (is.null(parameterize.args.list[['adjusted.Funbound.plasma']])) {
+      parameterize.args.list[['adjusted.Funbound.plasma']] <- FALSE
+      warning("Because parameters were specified, adjusted.Funbound.plasma was set to FALSE in parameterize.args.list")
+    }
+  }
+  
   #
   #
   # CREATE A TABLE OF PARAMETER VALUES WHERE EACH ROW IS A SEPARATE SET OF 
@@ -247,22 +278,42 @@ calc_mc_tk<- function(chem.cas=NULL,
                             invitro.mc.arg.list=invitro.mc.arg.list,
                             httkpop.generate.arg.list=httkpop.generate.arg.list,
                             convert.httkpop.arg.list=convert.httkpop.arg.list,
-                            parameterize.args.list =parameterize.args.list))))
+                            parameterize.args.list =parameterize.args.list,
+                            propagate.invitrouv.arg.list = propagate.invitrouv.arg.list))))
 
 #
 # HERE LIES THE ACTUAL MONTE CARLO STEP:
 #
-  model.out <- list()
-  for (i in 1:nrow(parameter.dt)) 
-   model.out[[i]] <- do.call(model.list[[model]]$solve.func,
-                             args=purrr::compact(c(list(
-     parameters=as.list(parameter.dt[i,]),
-     suppress.messages=TRUE),
-     solvemodel.arg.list)))
 
-  means <- set_httk_precision(Reduce("+",model.out)/length(model.out))
-  sds <- set_httk_precision((purrr::reduce(model.out,
-    function(x,y) (y-means)^2)/(length(model.out)-1))^(1/2))
+  parameter.dt[, ID := 1:.N]
+  this_solvefun <- model.list[[model]]$solve.func
+  solve_args <- purrr::compact(
+    c(
+      list(
+        species = species,
+        suppress.messages=TRUE),
+      solvemodel.arg.list
+    )
+  )
+  
+  model.out <- parameter.dt[,
+                            as.data.table(
+                              do.call(this_solvefun,
+                                    args=c(list(
+                                      parameters=as.list(.SD)),
+                                      solve_args))
+                              ),
+                            by = ID
+                            ]
+  
+  means <- model.out[, lapply(.SD,
+                              function(x) set_httk_precision(mean(x))
+                              ),
+                              by = time]
+  sds <- model.out[, lapply(.SD,
+                            function(x) set_httk_precision(sd(x))
+                            ),
+                   by = time]
   
   out <- list(means=means,sds=sds)
   if (return.all.sims) out <- list(stats=out,sims=model.out)

@@ -12,6 +12,9 @@
 #' @param dtxsid EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' 
+#' @param species Species desired (either "Rat", "Rabbit", "Dog", "Mouse", or
+#'  default "Human").
+#'  
 #' @param parameters Chemical parameters from parameterize_pbtk (for model = 
 #' 'pbtk'), parameterize_3comp (for model = '3compartment), 
 #' parameterize_1comp(for model = '1compartment') or parameterize_steadystate 
@@ -70,6 +73,7 @@
 calc_analytic_css_1comp <- function(chem.name=NULL,
                                    chem.cas = NULL,
                                    dtxsid = NULL,
+                                   species = 'Human',
                                    parameters=NULL,
                                    dosing=list(daily.dose=1),
                                    hourly.dose = NULL,
@@ -88,6 +92,8 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
      warning("calc_analytic_css_3compss deprecated argument hourly.dose replaced with new argument dose, value given assigned to dose")
      dosing <- list(daily.dose = 24*hourly.dose)
   }
+  
+  parameterize.arg.list <- list(...)
   
 # Load from modelinfo file:
   THIS.MODEL <- "1compartment"
@@ -117,6 +123,7 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
                           args=purrr::compact(c(
                             list(chem.cas=chem.cas,
                                  chem.name=chem.name,
+                                 species = species,
                                  suppress.messages=suppress.messages,
                                  Caco2.options = Caco2.options,
                                  restrictive.clearance = restrictive.clearance
@@ -165,18 +172,40 @@ calc_analytic_css_1comp <- function(chem.name=NULL,
     #data.table/data.frame or list object, however, depending on the source 
     #of the parameters. In calc_mc_css, for example, parameters is received 
     #as a "data.table" object. Screen for processing appropriately.
-    if (any(class(parameters) == "data.table"))
-    {
-      pcs <- predict_partitioning_schmitt(parameters =
-            parameters[, param.names.schmitt[param.names.schmitt %in% 
-                                             names(parameters)], with = F])
-    } else if (is(parameters,"list")) {
-      pcs <- predict_partitioning_schmitt(parameters =
-         parameters[param.names.schmitt[param.names.schmitt %in% 
-                                    names(parameters)]])
+    if (any(class(parameters) == "data.table")){
+      parameters_in <- parameters[, param.names.schmitt[param.names.schmitt %in% 
+                                                          names(parameters)],
+                                  with = FALSE]
+    }else if (is(parameters,"list")){
+      parameters_in <- parameters[param.names.schmitt[param.names.schmitt %in% 
+                                                        names(parameters)]]
     }else stop('httk is only configured to process parameters as objects of 
                class list or class compound data.table/data.frame.')
-      
+    
+    #put together argument list for predict_partitioning_schmitt
+    #use purrr::compact to remove any NULL or empty lists
+    schmitt_args <- purrr::compact(
+      c(list(
+        parameters = parameters_in,
+        species = species,
+        model = THIS.MODEL
+      ),
+      #any additional args specified in ... (captured in parameterize.arg.list)
+      parameterize.arg.list[
+        setdiff(
+          intersect(
+            names(parameterize.arg.list),
+            names(formals(predict_partitioning_schmitt))
+          ),
+          c("parameters", "species", "model")
+        )
+      ]
+      )
+    )
+    
+    pcs <- do.call(what = predict_partitioning_schmitt,
+                   args = schmitt_args)
+    
     if (!paste0('K',tolower(tissue)) %in% 
       substr(names(pcs),1,nchar(names(pcs))-3))
     {

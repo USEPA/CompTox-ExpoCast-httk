@@ -1,0 +1,5 @@
+"Median"	"Min"	"Max"	"RMSLE"
+"Non-PFAS In Vivo Clearance Ratio"	1.9	0.16	42	NA
+"Non-PFAS Default HTTK Clearance Ratio"	2.3	0.092	17	0.7
+"PFAS In Vivo Clearance Ratio"	180	1.5	6400	NA
+"PFAS Default HTTK Clearance Ratio"	2.9	1.5	3	1.9

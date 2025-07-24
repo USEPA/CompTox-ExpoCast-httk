@@ -267,29 +267,6 @@
 #' \insertRef{honda2019using}{httk}
 "well_param"
 
-#' Armitage et al. (2014) Model Inputs from Honda et al. (2019)
-#'
-#' @format A data frame with 53940 rows and 10 variables:
-#' \describe{
-#'   \item{MP}{}
-#'   \item{MW}{}
-#'   \item{casrn}{}
-#'   \item{compound_name}{}
-#'   \item{gkaw}{}
-#'   \item{gkow}{}
-#'   \item{gswat}{}
-#' }
-#' @source \url{https://www.diamondse.info/}
-#'
-#'@keywords data
-#'
-#'@author Greg Honda
-#' @references 
-#' \insertRef{armitage2014application}{httk} 
-#'
-#' \insertRef{honda2019using}{httk}
-"armitage_input"
-
 #' DRUGS|NORMAN: Pharmaceutical List with EU, Swiss, US Consumption Data
 #'
 #' SWISSPHARMA is a list of pharmaceuticals with consumption data from
@@ -1960,3 +1937,149 @@
 #'
 #' \insertRef{Ring2017SEEM}{httk}
 "truong25.seem3"
+
+#' Literature Measurements of In Vitro Cellular and Nominal Concentration 
+#' 
+#' @author Meredith Scherer
+#' @name Scherer2025.IVD
+#' @docType data
+#' @format data.table and data.frame
+'Scherer2025.IVD' 
+
+#' Dimitrijevic et al. (2022)In Vitro Cellular and Nominal Concentration 
+#' 
+#' @author Jon Arnot
+#' @name Dimitrijevic.IVD
+#' @docType data
+#' @format data.table and data.frame
+#' @references
+#' \insertRef{dimitrijevic2022toward}{httk}
+'Dimitrijevic.IVD'
+
+#' ToxCast In Vitro Assay Descriptors
+#' 
+#' @author Madison Feshuk
+#' @name invitro.assay.params
+#' @docType data
+#' @format data.table and data.frame
+'invitro.assay.params'
+
+#' Machine Learning PFAS Half-Life Predictions from Dawson et al. 2023 
+#' 
+#' Dawson et al. (2023) Supplemental Information S3 includes half-life predictions 
+#' for 6603 PFAS, of which 3890 are estimated to be within the applicability
+#' domain (AD) for humans. This machine learning (ML) model predicts PFAS 
+#' half-life as one of four categories. The ML model was trained to a dataset 
+#' of 91 in vivo measured TK half-lives across 11 PFAS, 4 species, and two 
+#' sexes. Predictions were a function of compound-specific physico-chemical 
+#' descriptors, species-specific physiological descriptors, and an indicator 
+#' variable for sex. The kinetics of PFAS are thought to be complicated by 
+#' active transport, both through either proximal tubular resorption (into the 
+#' blood) (Andersen et al. 2006) or secretion (into the urine) 
+#' (Kudo et al. 2002). The ML model uses several species- and structure-derived
+#' surrogates for estimating the likelihood of active PFAS transport. Geometry
+#' of the proximal tubule was a surrogate for transporter expression: since
+#' secretion/resorption transporters line the surface of the proximal tubule,
+#' the amount of surface area provides an upper limit on the amount of
+#' transporter expression. PFAS similarity to three distinct endogenous ligands
+#' was considered as a surrogate for transporter affinity. 
+#' 
+#' The Dawson et al. (2023) half-life categories are:
+#' \tabular{ll}{
+#' \strong{Category} \tab \strong{Range of Half-Lives} \cr
+#'  1 \tab < 12 hours \cr                      
+#'  2 \tab < 1 week \cr                      
+#'  3 \tab < 2 months \cr                      
+#'  4 \tab > 2 months \cr                      
+#'  }
+#'
+#' The data.frame contains the following columns:
+#' \tabular{ll}{
+#' \strong{Column Name} \tab \strong{Description} \cr
+#'  DTXSID \tab CompTox Chemicals Dashboard substance identifier \cr                      
+#'  Species \tab Species for which the prediction was made \cr
+#'  Sex \tab Sex for which the prediction was made \cr
+#'  DosingAdj \tab Route of dose administration -- intravenous, oral, or other \cr
+#'  ClassPredFull \tab The predicted half-life class (category) \cr  
+#'  ClassModDomain \tab AD estimated from chemical classes of training set \cr
+#'  AMAD \tab AD including AD predicted for each model used for descriptors \cr
+#' }
+#' 
+#' @name dawson2023
+#' @docType data
+#' @format data.frame
+#' @keywords data
+#' @references 
+#' \insertRef{dawson2023machine}{httk}
+#'
+#' \insertRef{andersen2006pharmacokinetic}{httk}
+#'
+#' \insertRef{kudo2002sex}{httk}
+"dawson2023"
+
+#' Interspecies In vivo Clearance Data for PFAS
+#' 
+#' If the chemical- and species-specific TK half-life (\eqn{t_{1/2}}) and volume of 
+#' distribution (\eqn{V_{d}}) are known, a whole-body plasma clearance rate can be 
+#' calculated as: \deqn{Cl_{tot} = ln(1/2) / t_{1/2} * V_{d}}
+#' The first term involving the natural logarithm of 1/2 converts half-life (h) 
+#' into an elimination rate (1/h) so that \eqn{Cl_{tot}} has units of 
+#' L/kg bodyweight/h. 
+#' Dawson et al. (2023) reported a table of in vivo PFAS \eqn{t_{1/2}} data for multiple 
+#' species across eleven PFAS. Most of the measured data are for rodents. These
+#'  data result from a series of reviews of the literature by 
+#' Lau et al. (most recently Fenton et al. 2021) that were further revised for
+#' Dawson et al. (2023).
+#' Dawson et al. (2023) Supplemental Information S2.5 compiled \eqn{V_{d}}
+#' values that 
+#' were used here for calculating total clearance. A dataset of 
+#' literature-derived values of \eqn{V_{d}} was compiled starting from 
+#' Pizzurro et al. (2019) Table 2, which compiled 38 observations spanning 
+#' five PFAS chemicals, four species, and both sexes from various literature 
+#' sources. To these we added 24 calculated \eqn{V_{d}} observations in rat for three 
+#' chemicals across a range of doses and routes from Huang et al. (2019). 
+#' Further values for \eqn{V_{d}} were collected from the peer-review literature 
+#' (Dzierlenga et al. 2020; Lau et al. 2020; Lou et al. 2009; Tatum-Gibbs et al. 2011).
+#'  The total data set includes 128 values for \eqn{V_{d}} from 8 PFAS chemicals 
+#' across 4 species. 
+#' A \eqn{Cl_{tot}} was calculated using the above equation for every chemical- and 
+#' species-specific half-life reported in the
+#'  Dawson et al. (2023) supplemental materials. For chemicals without
+#'  species- and compound-specific measurements for \eqn{V_{d}} we used the median
+#'  in vivo measured PFAS Vd of 0.205 L/kg BW.
+#' 
+#' The data.frame contains the following columns:
+#' \tabular{ll}{
+#' \strong{Column Name} \tab \strong{Description} \cr
+#'  DTXSID \tab CompTox Chemicals Dashboard substance identifier \cr                      
+#'  Species \tab Species for which the clearance was calculated \cr
+#'  Sex \tab Sex for which the clearance was calculated \cr
+#'  HalfLifeHours \tab Half-life in hours \cr
+#'  HlReference \tab Reference(s) for half-life \cr  
+#'  VdLpkgbw  \tab Volume of distribution in L/kg body weight \cr
+#'  VdReference \tab Reference for volume of distribution \cr
+#'  Kelimph  \tab Elimination rate in 1/hour \cr
+#'  ClLphpkgbw \tab Total clearance in L/h/kg body weight \cr
+#' }
+#' 
+#' @name pfas.clearance
+#' @docType data
+#' @format data.frame
+#' @keywords data
+#' @references 
+#' \insertRef{dawson2023machine}{httk}
+#'
+#' \insertRef{fenton2021per}{httk}
+#'
+#' \insertRef{pizzurro2019interspecies}{httk}
+#'
+#' \insertRef{huang2019toxicokinetics}{httk}
+#'
+#' \insertRef{dzierlenga2020toxicokinetics}{httk}
+#'
+#' \insertRef{lau2020pharmacokinetic}{httk}
+#'
+#' \insertRef{lou2009modeling}{httk}
+#'
+#' \insertRef{tatum2011comparative}{httk}
+"pfas.clearance"

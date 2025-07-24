@@ -48,6 +48,9 @@
 #' equal to this value (default is 0.0001 -- half the lowest measured Fup in our
 #' dataset).
 #' 
+#' @param pfas.calibration Whether MA for chemicals in class PFAS should be
+#' increased using the regression to the Droge (2019) dataset.
+#' 
 #' @return
 #' \item{Funbound.plasma}{Unbound fraction in plasma, adjusted for lipid binding according to Pearce et al. (2017)}
 #' \item{unadjusted.Funbound.plasma}{measured unbound fraction in plasma (0.005
@@ -109,7 +112,9 @@ parameterize_schmitt <- function(chem.cas=NULL,
                           adjusted.Funbound.plasma=TRUE,
                           suppress.messages=FALSE,
                           class.exclude=TRUE,
-                          minimum.Funbound.plasma=0.0001)
+                          minimum.Funbound.plasma=0.0001,
+                          pfas.calibration=TRUE
+                          )
 {
 #R CMD CHECK throws notes about "no visible binding for global variable", for
 #each time a data.table column name is used without quotes. To appease R CMD
@@ -250,6 +255,7 @@ parameterize_schmitt <- function(chem.cas=NULL,
   if (is.na(Pow))
   {
     Pow <- 10^get_physchem_param("logP",chem.cas=chem.cas)
+    names(Pow) <- NULL
   }   
 
   if (!is.na(pKa_Donor)) if (pKa_Donor == -999)
@@ -284,8 +290,10 @@ parameterize_schmitt <- function(chem.cas=NULL,
       MA <- calc_ma( chem.cas=chem.cas,
             chem.name=chem.name,
             dtxsid=dtxsid,
-            suppress.messages=suppress.messages)
+            suppress.messages=suppress.messages,
+            pfas.calibration=pfas.calibration)
     }
+    names(MA) <- NULL
   }
   
   if (is.na(Fprotein))
@@ -323,11 +331,12 @@ parameterize_schmitt <- function(chem.cas=NULL,
     if (adjusted.Funbound.plasma)
     { 
       # Get the Pearce et al. (2017) lipid binding correction:       
-      fup.adjustment <- calc_fup_correction(fup.point,
+      fup.adjustment <- calc_fup_correction(fup = fup.point,
                                             parameters=parameters,
                                             dtxsid=dtxsid,
                                             chem.name=chem.name,
                                             chem.cas=chem.cas,
+                                            species = species,
                                             default.to.human=default.to.human,
                                             force.human.fup=force.human.fup,
                                             suppress.messages=suppress.messages)

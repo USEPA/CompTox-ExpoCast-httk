@@ -208,8 +208,13 @@ predict_partitioning_schmitt <- function(
       which(tolower(colnames(physiology.data)) == tolower(species))]
   }
   
-  if (!adjusted.Funbound.plasma & user.params == FALSE) 
+  if (!adjusted.Funbound.plasma)
+  {
     parameters$Funbound.plasma <- parameters$unadjusted.Funbound.plasma
+    if (user.params == TRUE & parameters$Funbound.plasma != 
+                              parameters$unadjusted.Funbound.plasma)
+      warning("User provided Funbound.plasma overwritten by unaadjusted.Funbound.plasma")
+  }
 
   if (any(parameters$Funbound.plasma == 0))
     if (tolower(species) == "human" | default.to.human) {

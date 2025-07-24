@@ -73,7 +73,7 @@ Warning messages:
 > out_default_dosing = solve_3comp(chem.name = "bisphenol a",days=2)
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
-AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
+AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.77.
 The model outputs are provided in the following units:
 	umol: Aintestine, Atubules, Ametabolized
 	uM: Cliver, Csyscomp, Cplasma
@@ -107,7 +107,7 @@ Aintestine
 +                                     days=2)
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
-AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.795.
+AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.77.
 The model outputs are provided in the following units:
 	umol: Aintestine, Atubules, Ametabolized
 	uM: Cliver, Csyscomp, Cplasma
@@ -146,11 +146,11 @@ Warning messages:
 1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
   Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
 2: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
+  Membrane affinity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
 3: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
 4: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
-  Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
+  Membrane affinity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
 5: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
   Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
 6: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :

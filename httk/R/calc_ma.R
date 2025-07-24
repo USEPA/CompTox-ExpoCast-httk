@@ -24,8 +24,11 @@
 #' for the model indicated by argument model
 #'
 #' @param suppress.messages Whether or not the output message is suppressed.
+#' 
+#' @param pfas.calibration Whether MA for chemicals in class PFAS should be
+#' increased using the regression to the Droge (2019) dataset.
 #'
-#' @return A numeric fraction unpbound in plasma between zero and one
+#' @return A membrane:unbound fraction in plasma partition coefficient
 #'
 #' @author John Wambaugh 
 #'
@@ -34,7 +37,9 @@
 #' 
 #' \insertRef{yun2013correlation}{httk}
 #'
-#' @keywords in-vitro
+#' \insertRef{droge2019pfasmembraneaffinity}{httk}
+#' 
+#' @keywords parameters
 #'
 #' @export calc_ma
 #'
@@ -43,7 +48,8 @@ calc_ma <- function(
                  chem.name=NULL,
                  dtxsid = NULL,
                  parameters=NULL,
-                 suppress.messages=FALSE
+                 suppress.messages=FALSE,
+                 pfas.calibration=TRUE
                  ) 
 {
 # We need to describe the chemical to be simulated one way or another:
@@ -52,6 +58,24 @@ calc_ma <- function(
       is.null(dtxsid) &
       is.null(parameters)) 
     stop('Parameters, chem.name, chem.cas, or dtxsid must be specified.')
+
+# Look up the chemical name/CAS, depending on what was provided:
+  if (is.null(parameters))
+  {
+    if (any(is.null(chem.cas),is.null(chem.name),is.null(dtxsid)))
+    {
+    out <- get_chem_id(
+            chem.cas=chem.cas,
+            chem.name=chem.name,
+            dtxsid=dtxsid)
+    chem.cas <- out$chem.cas
+    chem.name <- out$chem.name                                
+    dtxsid <- out$dtxsid
+    }
+  } else {
+    # Work with local copy of parameters in function(scoping):
+    if (is.data.table(parameters)) parameters <- copy(parameters) 
+  }
 
   if (is.null(parameters))
   {
@@ -68,9 +92,18 @@ calc_ma <- function(
   }
   
   if (!suppress.messages) warning(
-      "Membrane affintity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.")  
+      "Membrane affinity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.")  
   
   MA <- 10^(1.294 + 0.304 * log10(Pow))
-        
+  
+  # Calibration for PFAS based on Droge (2019) data:
+  if (pfas.calibration & 
+      regexpr("PFAS", get_physchem_param("Chemical.Class",dtxsid=dtxsid))!=-1)
+  {
+    MA <- 10^(-2.59 + 2.61 * log10(MA))
+    if (!suppress.messages) warning(
+      "Membrane affinity for PFAS increased according to regression on Droge (2019) data.")  
+  }
+  
   return(set_httk_precision(MA)) 
 }

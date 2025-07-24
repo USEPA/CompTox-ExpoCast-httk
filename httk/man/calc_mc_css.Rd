@@ -235,9 +235,9 @@ used by this function.
 }
 \examples{
 \donttest{
-# Set the number of samples (NSAMP) low for rapid testing, increase NSAMP 
-# for more stable results. Default value is 1000:
-NSAMP = 10
+# Set the number of samples (NSAMP) to a small value for rapid testing, 
+# increase NSAMP for more stable (reproducible) results. Default value is 1000:
+NSAMP = 100
 
 # Basic in vitro - in vivo extrapolation with httk, convert 3 uM in vitro
 # concentration of chemical with CAS 2451-62-9 to mg/kg/day:
@@ -247,82 +247,106 @@ set.seed(1234)
 set.seed(1234)
 calc_mc_oral_equiv(chem.cas="2451-62-9", conc=3, samples=NSAMP)  
 
- set.seed(1234)
- calc_mc_css(chem.name='Bisphenol A', output.units='uM',
-             samples=NSAMP, return.samples=TRUE)
+# By default human variability is simulated using httk-pop based upon actual
+# individuals from three recent NHANES cohorts (see Breen et al., 2022):
+set.seed(1234)
+calc_mc_css(chem.name='Bisphenol A', output.units='uM',
+            samples=NSAMP, return.samples=TRUE)
 
- set.seed(1234)
- calc_mc_css(chem.name='Bisphenol A', output.units='uM',
-             samples=NSAMP,
-             httkpop.generate.arg.list=list(method='vi'))
+# However, as described in Ring et al. (2017) we can also sample using
+# virtual individuals drawn from distributions determiend from the NHANES
+# cohorts (this is method "vi"):
+set.seed(1234)
+calc_mc_css(chem.name='Bisphenol A', output.units='uM',
+            samples=NSAMP,
+            httkpop.generate.arg.list=list(method='vi'))
                           
- # The following example should result in an error since we do not 
- # estimate tissue partitioning with '3compartmentss'.                         
- set.seed(1234)
- try(calc_mc_css(chem.name='2,4-d', which.quantile=.9,
-             samples=NSAMP,
-             httkpop=FALSE, tissue='heart'))
+# We can also tailor the NHANES cohort to provide variability simulation of 
+# specific populations:
+set.seed(1234)
+calc_mc_css(chem.cas = "80-05-7", 
+            which.quantile = 0.5,
+            output.units = "uM", 
+            samples = NSAMP,
+            httkpop.generate.arg.list=list(method='vi', 
+                                           gendernum=NULL, 
+                                           agelim_years=NULL,
+                                           agelim_months=NULL,
+                                           weight_category = c("Underweight",
+                                                               "Normal",
+                                                               "Overweight",
+                                                               "Obese"
+                                                               )
+                                           )
+            )
+
+# The following example should result in an error since we do not 
+# estimate tissue partitioning with '3compartmentss', which does not have
+# tissues:                         
+set.seed(1234)
+try(calc_mc_css(chem.name='2,4-d', 
+                which.quantile=.9,
+                samples=NSAMP,
+                httkpop=FALSE, 
+                tissue='heart'))
  
 # But heart will work with PBTK, even though it's lumped since we estimate
 # a partition coefficient before lumping:
- set.seed(1234)
- calc_mc_css(chem.name='2,4-d', model='pbtk',
-             samples=NSAMP,
-             which.quantile=.9, httkpop=FALSE, tissue='heart')
+set.seed(1234)
+calc_mc_css(chem.name='2,4-d', model='pbtk',
+            samples=NSAMP,
+            which.quantile=.9, httkpop=FALSE, tissue='heart')
 
- set.seed(1234)
- calc_mc_css(chem.cas = "80-05-7", which.quantile = 0.5,
-             output.units = "uM", samples = NSAMP,
-             httkpop.generate.arg.list=list(method='vi', gendernum=NULL, 
-             agelim_years=NULL, agelim_months=NULL,
-             weight_category = c("Underweight","Normal","Overweight","Obese")))
+# It is also possible to use this function with a vector of model parameters,
+# although you must specify the model to which the parameters correspond:
+params <- parameterize_pbtk(chem.cas="80-05-7")
+set.seed(1234)
+calc_mc_css(parameters=params,model="pbtk", samples=NSAMP)
 
- params <- parameterize_pbtk(chem.cas="80-05-7")
- set.seed(1234)
- calc_mc_css(parameters=params,model="pbtk", samples=NSAMP)
+# By default the standard HTTK Monte Carlo uses httk-pop (Ring et al., 2017):
+set.seed(1234)
+calc_mc_css(chem.cas="90-43-7", model="pbtk", samples=NSAMP)
 
- set.seed(1234)
- # Standard HTTK Monte Carlo 
- calc_mc_css(chem.cas="90-43-7", model="pbtk", samples=NSAMP)
- set.seed(1234)
- # HTTK Monte Carlo with no measurement uncertainty (pre v1.10.0):
- calc_mc_css(chem.cas="90-43-7",
- model="pbtk",
- samples=NSAMP,
- invitro.mc.arg.list = list(
-   adjusted.Funbound.plasma = TRUE,
-   poormetab = TRUE, 
-   fup.censored.dist = FALSE, 
-   fup.lod = 0.01, 
-   fup.meas.cv = 0.0, 
-   clint.meas.cv = 0.0, 
-   fup.pop.cv = 0.3, 
-   clint.pop.cv = 0.3))
+# We can use HTTK Monte Carlo with no measurement uncertainty (this is how 
+# monte carlo was performed before v1.10.0):
+set.seed(1234)
+calc_mc_css(chem.cas="90-43-7",
+            model="pbtk",
+            samples=NSAMP,
+            invitro.mc.arg.list = list(
+            adjusted.Funbound.plasma = TRUE,
+            poormetab = TRUE, 
+            fup.censored.dist = FALSE, 
+            fup.lod = 0.01, 
+            fup.meas.cv = 0.0, 
+            clint.meas.cv = 0.0, 
+            fup.pop.cv = 0.3, 
+            clint.pop.cv = 0.3))
+ 
+# HTTK Monte Carlo with no HTTK-Pop physiological variability):
+set.seed(1234)
+calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE)
 
- # HTTK Monte Carlo with no HTTK-Pop physiological variability):
- set.seed(1234)
- calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,httkpop=FALSE)
+# HTTK Monte Carlo with no in vitro uncertainty and variability):
+set.seed(1234)
+calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=FALSE)
 
- # HTTK Monte Carlo with no in vitro uncertainty and variability):
- set.seed(1234)
- calc_mc_css(chem.cas="90-43-7",model="pbtk",samples=NSAMP,invitrouv=FALSE)
+# HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
+set.seed(1234)
+calc_mc_css(chem.cas="90-43-7" ,model="pbtk",
+            samples=NSAMP, httkpop=FALSE, invitrouv=FALSE)
 
- # HTTK Monte Carlo with no HTTK-Pop and no in vitro uncertainty and variability):
- set.seed(1234)
- calc_mc_css(chem.cas="90-43-7" ,model="pbtk",
-             samples=NSAMP, httkpop=FALSE, invitrouv=FALSE)
+# Should be the same as the mean result:
+calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
 
- # Should be the same as the mean result:
- calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
-
- # HTTK Monte Carlo using basic Monte Carlo sampler:
- set.seed(1234)
- calc_mc_css(chem.cas="90-43-7",
-             model="pbtk",
-             samples=NSAMP,
-             httkpop=FALSE,
-             invitrouv=FALSE,
-             vary.params=list(Pow=0.3))
+# HTTK Monte Carlo using basic Monte Carlo sampler:
+set.seed(1234)
+calc_mc_css(chem.cas="90-43-7",
+            model="pbtk",
+            samples=NSAMP,
+            httkpop=FALSE,
+            invitrouv=FALSE,
+            vary.params=list(Pow=0.3))
  
 # The following will not work because Diquat dibromide monohydrate's 
 # Henry's Law Constant (-3.912) is higher than that of Acetone (~-4.5):
@@ -438,14 +462,15 @@ calc_analytic_css(chem.cas="90-43-7",model="pbtk",output.units="mg/L")
 
 }
 \references{
-Wambaugh, John F., et al. "Toxicokinetic triage for 
-environmental chemicals." Toxicological Sciences 147.1 (2015): 55-67.
+\insertRef{wambaugh2015toxicokinetic}{httk}
 
 \insertRef{ring2017identifying}{httk}
 
 \insertRef{honda2019using}{httk} 
                                                       
 \insertRef{rowland1973clearance}{httk}
+                                                      
+\insertRef{breen2022simulating}{httk}
 }
 \seealso{
 \code{\link{calc_analytic_css}}

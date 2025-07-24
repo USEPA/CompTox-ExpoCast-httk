@@ -1,3 +1,56 @@
+# httk 2.7.0 (2025-07-16)
+This version accompanies the submission of the Meade et al. manuscript 
+"Dermal absorption route and integration into high throughput toxicokinetics modeling (httk)"
+
+This version also accompanies the submission of the Scherer et al. manuscript 
+"Characterizing Accuracy of Model Predictions for Concentration in High Throughput Screening Assays"
+
+This version also accompanies the submission of the Wambaugh et al. manuscript 
+"Applying High Throughput Toxicokinetics (HTTK) to Per- and Polyfluoro Alkyl Substances (PFAS)"
+
+## New Features
+* Added new high throughput PBTK model for dermal exposure 'solve_dermal_pbtk'
+* Added new vignette "Meade (submitted): High Throughput Dermal Exposure Model"
+* Added new chemical-specific in vitro data for Fup and Clint for PFAS measured in [Smeltz et al. (2023)](https://doi.org/10.1021/acs.chemrestox.3c00003)
+* Added new chemical-specific in vitro data for Fup and Clint for PFAS measured in [Kreutz et al. (2023)](https://doi.org/10.3390/toxics11050463)
+* Added new chemical-specific in vitro data for Clint for PFAS measured in [Crizer et al. (2024)](https://doi.org/10.3390/toxics12090672)
+* Added new chemical-specific in vivo Rblood2plasma data for 14 PFAS measured in [Poothong et al. (2017)](https://doi.org/10.1021/acs.est.7b03299)
+* Added new chemical-specific measurements of membrane afinity (logMA) for 10 PFAS measured in [Droge et al. (2019)](https://doi.org/10.1021/acs.est.8b05052)
+* Added new chemical-specific in silico predictions for 4136 PFAS half-life and clearance from [Dawson et al. (2023)](https://doi.org/10.3390/toxics11020098)
+* Added new function `get_2023pfasinfo` to allow easy identification of newly measured PFAS chemicals
+* Added new model '3compartmentss2' that solves for steady-state plasma/blood concentration resulting from elimination by metabolism, renal excretion, and also exhalation since many PFAS have some volatility
+* Added new model 'pfas1compartment' that uses the [Dawson et al. (2023)](https://doi.org/10.3390/toxics11020098) to parameterize an empirical one compartment model for PFAS chemicals -- see `parameterize_pfas1comp`
+* Added new vignette "Wambaugh (Submitted): HTTK for PFAS"
+* Added new in vitro distribution model [Kramer 2010](https://dspace.library.uu.nl/handle/1874/37545) implemented in function `kramer_eval`
+* Added new functions for parameterizing in vitro distribution models: `parameterize_armitage`, `parametierize_kramer`, and `parameterize_IVD`
+* Added new table "invitro.assay.params" describing ToxCast and Tox21 in vitro assays in terms needed to run in vitro distriution models
+* Added new vignette "Scherer (Submitted): In Vitro Distribution"
+* New fraction unbound in plasma (fup) data from [Nicol et al. (2024)](https://doi.org/10.1016/j.tox.2024.153826) have been added for 29 chemicals
+
+## Enhancements
+* Increased efficiency of `get_cheminfo` -- replaced row-wise apply with complete.cases data subsetting. Results in substantial speed increase, especially for Monte Carlo.
+* Increased efficiency of `convert_units` -- now forms matrix of conversion factors all at once rather than building up a data frame row by row. Results in substantial speed increase, especially for Monte Carlo.
+* Monte Carlo in `calc_mc_tk` is now implemented via data.table for efficiency.
+* Css functions (`calc_analytic_css`, `calc_css`, model-specific `calc_analytic_css_MODEL` functions) now accept explicit "species" argument and pass it explicitly to all functions that use a species argument
+*	 `create_mc_samples()` now accepts a named list of arguments to be passed to model-specific function for propagating uncertainty/variability (`propagate_invitrouv_MODEL` functions)
+*	`create_mc_samples`, when firstpass == TRUE, now calls `calc_hep_clearance` with restrictive.clearance as specified in the parameterize.args.list
+* Revised 'calc_ma' to increase membrane affinities for PFAS chemicals ~400x based on regression to data from [Droge et al. (2019)](https://doi.org/10.1021/acs.est.8b05052) (if new argument 'pfas.calibration==TRUE')
+* Can now use 'get_physchem_param' to retrieve "Chemical.Class" (only defined for PFAS to date)
+* Revised documentation for 1compartment model
+* Updated in vivo data from CvTdb (tables chem.invivo.PK.data, chem.invivo.PK.summary.data, and chem.invivo.PK.aggregate.data) to reflect curve fits made with [invivoPKfit](https://CRAN.R-project.org/package=invivoPKfit) used in recently submitted manuscript "Collaborative Evaluation of In Silico Predictions for High Throughput Toxicokinetics"
+* Updated implementation of [Armitage mass balance model to better reflect 2021 enhancements](https://doi.org/10.3390/toxics9110315), changed functions `armitage_estimate_sarea` and `armitage eval`
+
+## Bug fixes
+* Rest-of-body tissue lumping is now correct in `create_mc_samples()` when `httkpop = FALSE`. (Previously, when `httkpop = FALSE`, rest-of-body compartment was incorrectly doubled in volume.)
+* Fixed bug where `create_mc_samples` was using human parameters for lumping non-human species
+* Fixed species argument passing in `parameterize_MODEL` functions and `solve_model` as well as Monte Carlo-related functions: `species` is now correctly passed to all downstream functions
+*  `create_mc_samples()` now varies `Funbound.plasma` correctly if it is specified in argument `vary.params` and`invitrouv = FALSE` (previously, it would be held constant under these circumstances rather than being varied)
+* Fixed sum of squared errors calculation in `calc_mc_tk`
+* A bug has been fixed in `create_mc_samples` that caused arguments to `invitro_mc` supplied in a named list in `invitro.mc.arg.list` to drop their names and be passed out of order. Arguments now retain their names and are passed correctly to `invitro_mc`. (thanks to Tyler LaLonde and Lisa Sweeney)
+* Intrinsic clearance based on microsomes mistakenly labeled as hepatocyte data were removed for four chemicals: Hexobarbital(DTXSID9023122), Nicardipine (DTXSID6023363), Nilvadipine (DTXSID2046624), and 4-Hydroxydiclofenac (DTXSID40214326)
+* Removed data curated by TNO from source "EPA/Hamner" since we already had the primary source -- a few chemicals were reporting f_up = 0.005 which is the assumed value (LOD/2) when there was a non-detect.
+* Fixed bug in `get_physchem_param` where pKa_Accept would not be returned if multiple parameteres were requested at once
+
 # httk 2.6.1 (2025-04-28)
 
 ## Bug fixes
@@ -145,8 +198,8 @@ suggesting refinements and putting up with bugs
 specified by the modelinfo_[MODEL].R file)
 
 # httk 2.3.0 (2023-12-05)
-This version accompanies the submission of the 
-[Honda et al. (2025) manuscript "Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals 
+This version accompanies the submission of manuscript Honda et al. 
+["Impact of Gut Permeability on Estimation of Oral Bioavailability for Chemicals 
 in Commerce and the Environment"](https://doi.org/10.14573/altex.2403271). Find the analysis scripts on 
 [GitHub](https://github.com/USEPA/comptox-expocast-caco2)
 
@@ -182,18 +235,14 @@ permeability for ~10,000 chemicals -- QSPR is optimized to detect low
 permeability chemicals and therefore predicts only three values 
 (low/medium/high permeability)
 * Added new functions `calc_fbio.oral`, `calc_fabs.oral`, and `calc_fgut.oral` 
-for calculating systemic bioavailability as $Fbio = Fabs \times Fgut \times Fhep$ 
+for calculating systemic bioavailability as $F_{bio} = F_{abs} \times F_{gut} \times F_{hep}$ 
 where first-pass hepatic metabolism was already available from 
 `calc_hep_bioavailability`.
 * Changed the name of the variable describing fraction absorbed from the gut
 prior to first-pass hepatic metabolism to $Fabsgut$ to reflect that
-$Fabs$ and $Fgut$ are now modeled separately
-(that is, ***Fabsgut = Fabs \times Fgut***).
-* Integrated $Fabs$ and $Fgut$ into oral exposure for all TK models and 
-for calculating systemic bioavailability as ***Fbio = Fabs * Fgut * Fhep*** 
-where first-pass hepatic metabolism was already available from 
-`calc_hep_bioavailability`.
-* Integrated ***Fabs*** and ***Fgut*** into oral exposure for all TK models and 
+$F_{abs}$ and $F_{gut}$ are now modeled separately
+(that is, $F_{absgut} = F_{abs} \times F_{gut}$).
+* Integrated $F_{abs}$ and $F_{gut}$ into oral exposure for all TK models and 
 integrated into population variability and uncertainty functions within 
 `invitro_uv`
 * Added new function `benchmark_httk` to compare current function of the 
