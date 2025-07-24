@@ -49,7 +49,7 @@ This version also accompanies the submission of the Wambaugh et al. manuscript
 * A bug has been fixed in `create_mc_samples` that caused arguments to `invitro_mc` supplied in a named list in `invitro.mc.arg.list` to drop their names and be passed out of order. Arguments now retain their names and are passed correctly to `invitro_mc`. (thanks to Tyler LaLonde and Lisa Sweeney)
 * Intrinsic clearance based on microsomes mistakenly labeled as hepatocyte data were removed for four chemicals: Hexobarbital(DTXSID9023122), Nicardipine (DTXSID6023363), Nilvadipine (DTXSID2046624), and 4-Hydroxydiclofenac (DTXSID40214326)
 * Removed data curated by TNO from source "EPA/Hamner" since we already had the primary source -- a few chemicals were reporting f_up = 0.005 which is the assumed value (LOD/2) when there was a non-detect.
-* Fixed bug in `get_physchem_param` where pKa_Accept would not be returned if multiple parameteres were requested at once
+* Fixed bug in `get_physchem_param` where pKa_Accept would not be returned if multiple parameters were requested at once
 
 # httk 2.6.1 (2025-04-28)
 
