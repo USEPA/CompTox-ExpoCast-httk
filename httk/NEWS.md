@@ -1,3 +1,8 @@
+# httk 2.7.1 (2025-07-24)
+
+## Bug fixes
+* ODE solver and precision for dermal model tests changed to improve stability across platforms
+
 # httk 2.7.0 (2025-07-16)
 This version accompanies the submission of the Meade et al. manuscript 
 "Dermal absorption route and integration into high throughput toxicokinetics modeling (httk)"
