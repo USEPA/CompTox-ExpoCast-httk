@@ -178,8 +178,11 @@ Greg Honda [honda.gregory@epa.gov],
 Mark Sfeir, 
 Matt Linakis [MLINAKIS@ramboll.com], 
 Dustin Kapraun [kapraun.dustin@epa.gov],
-Kimberly Truong [truong.kimberly@epa.gov], and
-Colin Thomson [thomson.colin@epa.gov]
+Kimberly Truong [truong.kimberly@epa.gov],
+Colin Thomson [thomson.colin@epa.gov],
+Annabel Meade [aemeade7@gmail.com],
+Meredith Scherer [Scherer.Meredith@epa.gov], and
+Celia Schacht [Schacht.Celia@epa.gov]
 
 ### Bug-Fixes Vignette edits, and Parameter Values
 Todor Antonijevic [tantonijevic@toxstrategies.com], 
@@ -191,8 +194,6 @@ Elaina Kenyon [kenyon.elaina@epa.gov],
 Gilberto Padilla Mercado [PadillaMercado.Gilberto@epa.gov],
 Katie Paul Friedman [Paul-Friedman.Katie@epa.gov],
 Nathan Pollesch [pollesch.nathan@epa.gov],
-Meredith Scherer [Scherer.Meredith@epa.gov],
-Celia Schacht [Schacht.Celia@epa.gov],
 Noelle Sinski [Noelle.Sinski@icf.com],
 Nisha Sipes [sipes.nisha@epa.gov],
 James Sluka [jsluka@indiana.edu],  
