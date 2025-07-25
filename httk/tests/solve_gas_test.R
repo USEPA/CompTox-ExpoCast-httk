@@ -8,7 +8,7 @@ library(httk)
 # The following arguments were added: method = "lsode",mf = 10.
 # Rationale: Use of signif is required for the same results on various OS's due
 #   to precision differences.
-signif(head(solve_gas_pbtk(chem.name="pyrene",times=c(0,0.1,0.05),
+signif(head(solve_gas_pbtk(chem.name="pyrene",times=seq(0,0.1,0.01),
                     method = "lsode",mf = 10)),2)
 
 p <- parameterize_gas_pbtk(chem.name="styrene")

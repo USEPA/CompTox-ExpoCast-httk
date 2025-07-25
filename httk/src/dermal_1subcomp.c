@@ -297,9 +297,16 @@ void derivs_dermal_1subcomp (int *neq, double *pdTime, double *y, double *ydot, 
 
   yout[ID_Cskin_exposed] = y[ID_Askin_exposed] / Vskin_exposed ;
 
-  yout[ID_Cvehicle] = (InfiniteDose ? y[ID_Cvehicle_infinite] : ( Vvehicle ? y[ID_Avehicle] / Vvehicle : 0.0 ) ) ;
+  yout[ID_Cvehicle] = (InfiniteDose ? 
+                       y[ID_Cvehicle_infinite] : 
+                       ( Vvehicle ? y[ID_Avehicle] / Vvehicle : 0.0 ) ) ;
 
-  Rin_dermal = (InfiniteDose ? P * SA_exposed * 24 * 0.001 * ( yout[ID_Cvehicle] - yout[ID_Cskin_exposed] / Kskin2vehicle ) : (Vvehicle ? P * SA_exposed * 24 * 0.001 * ( yout[ID_Cvehicle] - yout[ID_Cskin_exposed] / Kskin2vehicle ) : 0.0 ) ) ;
+  Rin_dermal = (yout[ID_Cskin_exposed] / Kskin2vehicle > yout[ID_Cvehicle] ? 
+                 0.0 :
+                 ((InfiniteDose > 0.0) | (Vvehicle > 0.0) ? 
+                   P * SA_exposed * 24 * 0.001 * ( yout[ID_Cvehicle] - yout[ID_Cskin_exposed] / Kskin2vehicle ) : 
+                   0.0)
+                 ) ;
 
   Rin_oral = kgutabs * y[ID_Agutlumen] ;
   

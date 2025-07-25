@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2025-05-01 r88184 ucrt) -- "Unsuffered Consequences"
+R Under development (unstable) (2025-04-18 r88159 ucrt) -- "Unsuffered Consequences"
 Copyright (C) 2025 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
@@ -27,7 +27,7 @@ Type 'q()' to quit R.
 > # The following arguments were added: method = "lsode",mf = 10.
 > # Rationale: Use of signif is required for the same results on various OS's due
 > #   to precision differences.
-> signif(head(solve_gas_pbtk(chem.name="pyrene",times=c(0,0.1,0.05),
+> signif(head(solve_gas_pbtk(chem.name="pyrene",times=seq(0,0.1,0.01),
 +                     method = "lsode",mf = 10)),2)
 None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
 
@@ -41,13 +41,17 @@ The model outputs are provided in the following units:
       time    Cgut  Cliver    Cven   Clung   Cart   Crest Ckidney Cplasma
 [1,] 0e+00 0.00000 0.0e+00 0.0e+00 0.00000 0.0000 0.0e+00  0.0000 0.0e+00
 [2,] 1e-04 0.00046 7.7e-05 1.0e-06 0.00012 0.0058 2.2e-05  0.0018 2.0e-06
-[3,] 5e-02 0.85000 1.5e-01 1.6e-02 0.36000 0.0430 1.1e-01  1.4000 2.1e-02
-[4,] 1e-01 1.20000 2.0e-01 2.5e-02 0.57000 0.0560 2.4e-01  1.8000 3.3e-02
+[3,] 1e-02 0.28000 4.9e-02 6.2e-03 0.08700 0.0300 1.8e-02  0.7500 8.2e-03
+[4,] 2e-02 0.50000 8.6e-02 9.5e-03 0.17000 0.0340 4.0e-02  1.0000 1.3e-02
+[5,] 3e-02 0.65000 1.1e-01 1.2e-02 0.25000 0.0370 6.3e-02  1.2000 1.6e-02
+[6,] 4e-02 0.76000 1.3e-01 1.4e-02 0.31000 0.0400 8.7e-02  1.3000 1.8e-02
      Calvppmv Cendexhppmv Cmixexhppmv   Cmuc Atubules Ametabolized     AUC
-[1,]    0e+00     0.00000        0.30    0.0  0.00000      0.0e+00 0.00000
-[2,]    0e+00     0.00025        0.30    3.7  0.00000      1.0e-06 0.00000
-[3,]    1e-06     0.09600        0.37 1500.0  0.00069      2.1e+00 0.00066
-[4,]    1e-06     0.16000        0.41 2600.0  0.00170      6.3e+00 0.00200
+[1,]    0e+00     0.00000        0.30    0.0  0.00000      0.0e+00 0.0e+00
+[2,]    0e+00     0.00025        0.30    3.7  0.00000      1.0e-06 0.0e+00
+[3,]    1e-06     0.02200        0.32  360.0  0.00010      1.1e-01 4.4e-05
+[4,]    1e-06     0.04300        0.33  690.0  0.00023      4.3e-01 1.5e-04
+[5,]    1e-06     0.06300        0.34 1000.0  0.00037      9.0e-01 2.9e-04
+[6,]    1e-06     0.08000        0.36 1300.0  0.00053      1.5e+00 4.6e-04
 Warning messages:
 1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
   Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
