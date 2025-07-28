@@ -98,7 +98,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
     }
     
     #account for option.plastic and option.bottom
-    tcdata[option.bottom==FALSE, sarea := (4*diam*height)/1e6] %>% #overwrite sarea with the bottom area removed
+    tcdata[option.bottom==FALSE, sarea := (4*diam*height)*convert_units("mm2", "m2")] %>% #overwrite sarea with the bottom area removed
       .[option.plastic==FALSE, sarea := 0] #overwrite sarea to zero
     
   }
