@@ -51,20 +51,18 @@ WHICH.QUANTILES <- c(0.5,0.95)
 SPECIES.LIST <- c("human","rat")
 
 # For which TK models do we want Css predictions:
-MODELS.LIST <- c("3compartmentss","PBTK")
+MODELS.LIST <- c("3compartmentss","PBTK","sumclearancespfas")
+REFERENCE.LIST <- c("https://doi.org/10.1021/acs.estlett.4c00967", # Wambaugh 2025
+                    "https://doi.org/10.18637/jss.v079.i04", # Pearce 2017a
+                    "Wambaugh Submitted")
+names(REFERENCE.LIST) <- MODELS.LIST
 
 # How many processors are available for parallel computing:
 NUM.CPU <- 14
              
 # Add the in silico predictions:
-# Categorical QSPR:
-load_dawson2021()
-# ADmet Predictor:
-load_sipes2017()
-# Machine learning model:
-load_pradeep2020()
-# Caco-2 QSPR:
-load_honda2023()
+QSPR.LIST <- c("load_dawson2021","load_sipes2017","load_pradeep2020","load_honda2023")
+sapply(QSPR.LIST,function(x) do.call(x,args=list()))
  
 # Find all the duplicates:
 # First eliminate NA DTXSIDs (can't do logical tests on them)
@@ -117,9 +115,12 @@ length(dup.chems) == 0
 # Organize HTTK data by species:
 HTTK.data.list <- list()
 all.ids <- NULL
-for (this.species in tolower(SPECIES.LIST))
+for (this.model in tolower(MODELS.LIST))
+  for (this.species in tolower(SPECIES.LIST))
 {
-  HTTK.data.list[[this.species]] <- get_cheminfo(
+  temp <- rbind(
+    HTTK.data.list[[this.species]],
+    get_cheminfo(
     info=c(
       "Compound",
       "CAS",
@@ -128,8 +129,13 @@ for (this.species in tolower(SPECIES.LIST))
       "Funbound.plasma"),
     fup.lod.default = 0,
     median.only=TRUE,
-    species=this.species)
+    model=this.model,
+    species=this.species))
+  HTTK.data.list[[this.species]] <- subset(temp, !duplicated(temp))
+}
 # Create a master list of the chemical DTXSID's:
+for (this.species in tolower(SPECIES.LIST))
+{
   all.ids <- sort(unique(c(all.ids,HTTK.data.list[[this.species]]$DTXSID)))
 }
 
@@ -158,6 +164,7 @@ make.ccd.table <- function(
   HTTK.data.list,
   species.list,
   model.list,
+  reference.list,
   param.list,
   units.list,
   all.ids,
@@ -207,6 +214,7 @@ make.ccd.table <- function(
               HTTK.data.list[["human"]]$DTXSID==this.id,4]
             this.row$Data.Source.Species <- "human"
           } else if (clint.ref == "Sipes 2017") {
+            clint.ref <- "https://doi.org/10.1021/acs.est.7b00650"
             this.row$Predicted <- HTTK.data[HTTK.index,4]
             this.row$Model <- "ADMet"
           } else {
@@ -222,7 +230,8 @@ make.ccd.table <- function(
             this.row$Measured <- HTTK.data.list[["human"]][
               HTTK.data.list[["human"]]$DTXSID==this.id,5]
             this.row$Data.Source.Species <- "human"        
-          } else if (fup.ref == "Sipes 2017") {
+          } else if (fup.ref == "Sipes 2017]") {
+            fup.ref <- "https://doi.org/10.1021/acs.est.7b00650"
             this.row$Predicted <- HTTK.data[HTTK.index,5]
             this.row$Model <- "ADMet"
           } else {
@@ -241,43 +250,54 @@ make.ccd.table <- function(
             if (!inherits(this.vd, "try-error")) { 
               this.row$Predicted <- this.vd
               this.row$Model <- "1compartment"
+              this.row$Reference <- "https://doi.org/10.1007/s10928-017-9548-7"
               dashboard.table <- rbind(dashboard.table, this.row)
             }
           }
   # TK.Half.Life:
         } else if (this.param == "TK.Half.Life") {
-          #check for Fup >0 (can't do Vd otherwise):
-          if (HTTK.data[HTTK.index,5] > 0) {
-            # need cas because of bug with DTXSID's:
-            this.cas <- HTTK.data[HTTK.index,"CAS"]
-            this.tkhalflife <- try(calc_half_life(chem.cas=this.cas,
-                default.to.human=default.to.human,
-                species=this.species))
-            if (!inherits(this.tkhalflife, "try-error")) { 
-              this.row$Model <- "1compartment"
-              this.row$Predicted <- this.tkhalflife
-              dashboard.table <- rbind(dashboard.table, this.row)
+          for (this.model in model.list)
+          {
+            #check for Fup >0 (can't do Vd otherwise):
+            if (HTTK.data[HTTK.index,5] > 0) {
+              # need cas because of bug with DTXSID's:
+              this.cas <- HTTK.data[HTTK.index,"CAS"]
+              this.tkhalflife <- try(calc_half_life(chem.cas=this.cas,
+                  default.to.human=default.to.human,
+                  model=this.model,
+                  species=this.species))
+              if (!inherits(this.tkhalflife, "try-error")) { 
+                this.row$Model <- this.model
+                this.row$Predicted <- this.tkhalflife
+                this.row$Reference <- reference.list[this.model]
+                dashboard.table <- rbind(dashboard.table, this.row)
+              }
             }
           }
   # Days to Css:
         } else if (this.param == "Days.Css") {
-          #check for Fup >0 (can't do pbtk otherwise):
-          if (HTTK.data[HTTK.index,5] > 0) {
-            this.dayscss <- try(calc_css(dtxsid=this.id,
-              species=this.species,
-              default.to.human=default.to.human)$the.day)
-            if (!inherits(this.dayscss, "try-error")) { 
-              this.row$Predicted <- this.dayscss
-              this.row$Model <- "PBTK"
-              dashboard.table <- rbind(dashboard.table, this.row)
+          for (this.model in model.list)
+          {
+            #check for Fup >0 (can't do pbtk otherwise):
+            if (HTTK.data[HTTK.index,5] > 0) {
+              this.dayscss <- try(calc_css(dtxsid=this.id,
+                species=this.species,
+                model=this.model,
+                default.to.human=default.to.human)$the.day)
+              if (!inherits(this.dayscss, "try-error")) { 
+                this.row$Predicted <- this.dayscss
+                this.row$Model <- this.model
+                this.row$Reference <- reference.list[this.model]
+                dashboard.table <- rbind(dashboard.table, this.row)
+              }
             }
           }
   # Css:
         } else if (this.param == "Css") {
           for (this.model in model.list)
           {
-            if (HTTK.data[HTTK.index,5] > 0 | this.model=="3compartmentss") {
-              this.row$Model <- this.model
+            if (HTTK.data[HTTK.index,5] > 0 | this.model=="3compartmentss") 
+            {
               parameterize.args.list = list(
                 default.to.human = default.to.human, 
                 clint.pvalue.threshold = 0.05,
@@ -285,7 +305,7 @@ make.ccd.table <- function(
                 regression = TRUE)
               # For reproducible pseudo-random numbers:
               set.seed(RANDOM.SEED)
-              this.css <-try(calc_mc_css(chem.cas=this.cas,
+              this.css <-try(calc_mc_css(dtxsid=this.id,
                 which.quantile=which.quantiles,
                 samples=num.samples,
                 output.units="mg/L",
@@ -295,8 +315,10 @@ make.ccd.table <- function(
               if (!inherits(this.css, "try-error")) {
                 for (this.quantile in names(this.css))
                 {
+                  this.row$Model <- this.model
                   this.row$Predicted <- this.css[this.quantile]
                   this.row$Percentile <- this.quantile
+                  this.row$Reference <- reference.list[this.model]
                   dashboard.table <- rbind(dashboard.table, this.row)
                 }
               }
@@ -316,8 +338,7 @@ cl <- parallel::makeCluster(detectCores()-1)
 clusterEvalQ(cl, library(httk))
 # Clear memory all cores:
 clusterEvalQ(cl, rm(list=ls()))
-# Load ADMet predicitons:
-clusterEvalQ(cl, load_sipes2017())
+
 # Define the table creator function on all cores:
 clusterExport(cl, "make.ccd.table")
 # Share data with all cores:
@@ -325,27 +346,34 @@ clusterExport(cl, c(
   "HTTK.data.list",
   "SPECIES.LIST",
   "MODELS.LIST",
+  "REFERENCE.LIST",
+  "QSPR.LIST",
   "param.list",
   "units.list",
   "all.ids",
   "RANDOM.SEED",
   "WHICH.QUANTILES",
   "NUM.SAMPLES"))
+# Load QSPR predicitons:
+clusterEvalQ(cl, sapply(QSPR.LIST,function(x) do.call(x,args=list())))
 
 # Create a list with one table per chemical:
-dashboard.list <- clusterApply(cl,all.ids,function(x)
-  make.ccd.table(
-    this.id=x,
-    HTTK.data.list=HTTK.data.list,
-    species.list=SPECIES.LIST,
-    model.list=MODELS.LIST,
-    param.list=param.list,
-    units.list=units.list,
-    all.ids=all.ids,
-    RANDOM.SEED=RANDOM.SEED,
-    which.quantiles=WHICH.QUANTILES,
-    num.samples=NUM.SAMPLES
-    ))
+dashboard.list <- clusterApply(cl,
+                               all.ids,
+                               function(x)
+                                 make.ccd.table(
+                                   this.id=x,
+                                   HTTK.data.list=HTTK.data.list,
+                                   species.list=SPECIES.LIST,
+                                   model.list=MODELS.LIST,
+                                   reference.list=REFERENCE.LIST,
+                                   param.list=param.list,
+                                   units.list=units.list,
+                                   all.ids=all.ids,
+                                   RANDOM.SEED=RANDOM.SEED,
+                                   which.quantiles=WHICH.QUANTILES,
+                                   num.samples=NUM.SAMPLES
+                                   ))
 
 stopCluster(cl)
 # Combine all the individual tables into a single table:
@@ -440,6 +468,10 @@ for (this.parameter in c(
 #
 dashboard.table[is.na(dashboard.table[,"Reference"]), 
                 "Reference"] <- "temp"
+dashboard.table[dashboard.table[,"Reference"]=="Wambaugh et al. (2018)", 
+                "Reference"] <- "https://doi.org/10.1093/toxsci/kfy020"
+dashboard.table[dashboard.table[,"Reference"]=="National Toxicology Program", 
+                "Reference"] <- "https://doi.org/10.1038/s41597-020-0455-1"
 dashboard.table[dashboard.table[,"Reference"]=="Sipes 2017", 
                 "Reference"] <- "https://doi.org/10.1021/acs.est.7b00650"
 dashboard.table[dashboard.table[,"Reference"]=="Wambaugh 2019", 
