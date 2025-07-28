@@ -33,8 +33,8 @@
 #'
 #' @export parameterize_armitage
 
-parameterize_armitage <- function(tcdata = NA,                   #Data.table with casrn
-                                  casrn.vector = NA_character_     #CAS number
+parameterize_armitage <- function(tcdata = NA,                  #Data.table with casrn
+                                  casrn.vector = NA_character_  #CAS number
 )
 {
   #R CMD CHECK throws notes about "no visible binding for global variable", for
@@ -42,7 +42,7 @@ parameterize_armitage <- function(tcdata = NA,                   #Data.table wit
   #CHECK, a variable has to be created for each of these column names and set to
   #NULL. Note that within the data.table, these variables will not be NULL! Yes,
   #this is pointless and annoying.
-  logWSol <- MW <- NULL
+  logWSol <- MW <- gswat_n <- NULL
   #End R CMD CHECK appeasement.         
   
   #### Set tcdata variables ####
@@ -50,11 +50,15 @@ parameterize_armitage <- function(tcdata = NA,                   #Data.table wit
     tcdata <- data.table(casrn = casrn.vector)
   }
   
+  #add gswat_n in as NA so it isn't overwritten if it is user supplied
+  if(!("gswat_n"%in%names(tcdata))){
+    tcdata[,gswat_n:= as.double(NA)]}
+  
   #### Call parameterize_IVD ####
   p_Armitage_output<- parameterize_IVD(tcdata)
   
   # Convert from chem.physical_and_invitro.data units to Armitage model units:
-  p_Armitage_output[, "gswat_n" := logWSol + log10(MW*convert_units("g", "mg"))] # log10 mol/L to log10 mg/L
+  p_Armitage_output[is.na(gswat_n), "gswat_n" := logWSol + log10(MW*convert_units("g", "mg"))] # log10 mol/L to log10 mg/L
   
   return(p_Armitage_output)
 
