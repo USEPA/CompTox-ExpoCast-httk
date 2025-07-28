@@ -1,10 +1,10 @@
-#' Load Caco2 QSPR predictions from Honda et al. 2023
+#' Load Caco2 pereneability QSPR predictions from Honda et al. 2025
 #' 
 #' This function returns an updated version of 
 #' \code{\link{chem.physical_and_invitro.data}}
 #' that includes Caco2 Pab predictions from the Random Forest quantitative 
 #' structure-property relationship (QSPR) models developed and
-#' presented in Honda et al. 2023, included in table \code{\link{honda2023.qspr}}.
+#' presented in Honda et al. 2025, included in table \code{\link{honda2023.qspr}}.
 #' 
 #' Note that because Pab is not required for most HTTK models, changing
 #' the number of chemicals for which a value is available will not change the
@@ -15,7 +15,7 @@
 #' 
 #' @param overwrite Only matters if load.image=FALSE. If overwrite=TRUE then
 #' existing data in chem.physical_and_invitro.data will be replaced by any
-#' prediction in Honda et al. (2023) that is for the same chemical and
+#' prediction in Honda et al. (2025) that is for the same chemical and
 #' property. If overwrite=FALSE (DEFAULT) then new data for the same chemical
 #' and property are ignored.
 #' 
@@ -41,21 +41,25 @@
 #' @examples
 #' 
 #' \donttest{
-#' # For chemicals with Honda et al. (2023) Caco2 Pab QSPR predictions, 
+#' # For chemicals with Honda et al. (2025) Caco2 Pab QSPR predictions, 
 #' # add them to our chemical information wherever measured values are 
 #' # unavailable:
-#' load_honda2023()
+#' load_honda2025()
 #' 
-#' # Or, for chemicals with Honda et al. (2023) QSPR predictions, add them to
+#' # Or, for chemicals with Honda et al. (2025) QSPR predictions, add them to
 #' # our chemical information but overwrite measured values where we had them:
-#' load_honda2023(overwrite=TRUE) 
+#' load_honda2025(overwrite=TRUE) 
 #'
 #' # Now let us reset the chemical data to the initial version:
 #' reset_httk()
 #' }                        
 #' 
+#' @references 
+#' \insertRef{honda2025impact}{httk}
+#'
+#' @export load_honda2025
 #' @export load_honda2023
-load_honda2023 <- function(
+load_honda2025 <- function(
     overwrite=FALSE,
     exclude_oad=TRUE,
     chem_include = NULL,
@@ -83,7 +87,7 @@ load_honda2023 <- function(
     tmp_honda2023 <- httk_chem_subset(tmp_honda2023,chem_include = chem_include)
   }
   
-  cat(paste("Loading Caco2 PAb predictions from Honda et al. (2023) for",
+  cat(paste("Loading Caco2 PAb predictions from Honda et al. (2025) for",
             dim(tmp_honda2023)[1],"chemicals.\n"))
   cat(paste("Existing data are",
             ifelse(overwrite,""," not"),
@@ -98,8 +102,23 @@ load_honda2023 <- function(
 # Confidence intervals were calculated in Honda Vignette 3 from the ranges
 # of the bins in the training set:
                          Caco2.Pab="Pab.Quant.Pred"),
-                       reference = 'HondaUnpublished',
+                       reference = 'Honda 2025',
                        species="Human", 
                        overwrite=overwrite),
          envir=target.env)
+}
+
+#' @describeIn load_honda2025 Load Caco2 pereneability QSPR predictions from Honda et al. 2025
+load_honda2023 <- function(
+    overwrite=FALSE,
+    exclude_oad=TRUE,
+    chem_include = NULL,
+    target.env=.GlobalEnv)
+{
+  cat("Honda et al. manuscript was originally submitted in December 2023 but was published in January 2025.\n")
+  load_honda2025(
+    overwrite=overwrite,
+    exclude_oad=exclude_oad,
+    chem_include = chem_include,
+    target.env=target.env)
 }
