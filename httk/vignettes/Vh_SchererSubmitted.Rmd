@@ -100,7 +100,7 @@ Or, if using RStudio, look for 'Install Packages' under 'Tools' tab.
 # Setup
 #
 #
-#library(httk)        # run Armitage.R and Kramer.R in vitro distribution models
+library(httk)        # run Armitage.R and Kramer.R in vitro distribution models
 library(tidyverse)   # data wrangling
 library(data.table)  # data table functionality
 library(ggplot2)     # plotting
@@ -111,11 +111,6 @@ library(scales)      # required for label_log
 
 #save figures and tables to working directory: yes/no
 save_output = FALSE
-
-#load packages
-library(devtools) # to run httk
-setwd("C:/Users/mscherer/httk-dev") # to load httk
-devtools::load_all("httk") # for unit conversions
 
 #for saving outputs
 data.date <- "16JUL2025"
