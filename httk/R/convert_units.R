@@ -199,7 +199,7 @@ convert_units <- function(input.units = NULL,
   }
   
   # How many unit conversions do we currently have:
-  NUM.CONVERSIONS <- 60
+  NUM.CONVERSIONS <- 62
   
   known_input_units <- vector(mode = "character", length = NUM.CONVERSIONS)
   known_output_units <- vector(mode = "character", length = NUM.CONVERSIONS)
@@ -291,6 +291,10 @@ convert_units <- function(input.units = NULL,
     known_input_units[17] <- 'nm'
     known_output_units[17] <- 'um'
     known_conversions[17] <- 1/10^3
+    
+    known_input_units[62] <- 'mol'
+    known_output_units[62] <- 'umol'
+    known_conversions[62] <- 10^6
     
     known_input_units[18] <- 'nmol/l'
     known_output_units[18] <- 'nm'
@@ -485,6 +489,10 @@ convert_units <- function(input.units = NULL,
     known_input_units[60] <- 'm3'
     known_output_units[60] <- 'l'
     known_conversions[60] <- 1e3
+    
+    known_input_units[61] <- 'mg'
+    known_output_units[61] <- 'kg'
+    known_conversions[61] <- 1e-6
         
     #Use these vectors to construct a matrix of conversion factors:
     #rows are input units, columns are output units
