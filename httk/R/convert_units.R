@@ -199,7 +199,7 @@ convert_units <- function(input.units = NULL,
   }
   
   # How many unit conversions do we currently have:
-  NUM.CONVERSIONS <- 62
+  NUM.CONVERSIONS <- 64
   
   known_input_units <- vector(mode = "character", length = NUM.CONVERSIONS)
   known_output_units <- vector(mode = "character", length = NUM.CONVERSIONS)
@@ -470,6 +470,7 @@ convert_units <- function(input.units = NULL,
     known_output_units[55] <- 'ppmv'
     known_conversions[55] <- 1.225/(this.MW/volidealgas * 10^6)
     
+    # general unit conversions (weight, volume, surface area)
     known_input_units[56] <- 'g'
     known_output_units[56] <- 'mg'
     known_conversions[56] <- 1000
@@ -493,6 +494,17 @@ convert_units <- function(input.units = NULL,
     known_input_units[61] <- 'mg'
     known_output_units[61] <- 'kg'
     known_conversions[61] <- 1e-6
+    
+    #62 is in an earlier section 
+    
+    known_input_units[63] <- 'ul'
+    known_output_units[63] <- 'm3' #cubic meters
+    known_conversions[63] <- 1e-9
+    
+    known_input_units[64] <- 'mm2' #millimeters squared
+    known_output_units[64] <- 'm2' #meters squared
+    known_conversions[64] <- 1e-6
+    
         
     #Use these vectors to construct a matrix of conversion factors:
     #rows are input units, columns are output units
