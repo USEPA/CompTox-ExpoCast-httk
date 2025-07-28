@@ -33,6 +33,7 @@ Authors:
   \item Meredith Scherer \email{Scherer.Meredith@epa.gov} (\href{https://orcid.org/0000-0002-9785-7363}{ORCID})
   \item Annabel Meade \email{aemeade7@gmail.com} (\href{https://orcid.org/0000-0002-5452-8797}{ORCID})
   \item Celia Schacht \email{Schacht.Celia@epa.gov} (\href{https://orcid.org/0000-0002-8131-513X}{ORCID})
+  \item Leonie Lautz \email{leonie.lautz@wur.nl} (\href{https://orcid.org/0000-0003-4648-666X}{ORCID})
 }
 
 Other contributors:
