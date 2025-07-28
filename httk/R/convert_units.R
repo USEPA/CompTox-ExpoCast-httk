@@ -199,7 +199,7 @@ convert_units <- function(input.units = NULL,
   }
   
   # How many unit conversions do we currently have:
-  NUM.CONVERSIONS <- 64
+  NUM.CONVERSIONS <- 65
   
   known_input_units <- vector(mode = "character", length = NUM.CONVERSIONS)
   known_output_units <- vector(mode = "character", length = NUM.CONVERSIONS)
@@ -497,13 +497,17 @@ convert_units <- function(input.units = NULL,
     
     #62 is in an earlier section 
     
-    known_input_units[63] <- 'ul'
-    known_output_units[63] <- 'm3' #cubic meters
-    known_conversions[63] <- 1e-9
+    known_input_units[63] <- 'g'
+    known_output_units[63] <- 'kg'
+    known_conversions[63] <- 1e-3
     
-    known_input_units[64] <- 'mm2' #millimeters squared
-    known_output_units[64] <- 'm2' #meters squared
-    known_conversions[64] <- 1e-6
+    known_input_units[64] <- 'ul'
+    known_output_units[64] <- 'm3' #cubic meters
+    known_conversions[64] <- 1e-9
+    
+    known_input_units[65] <- 'mm2' #millimeters squared
+    known_output_units[65] <- 'm2' #meters squared
+    known_conversions[65] <- 1e-6
     
         
     #Use these vectors to construct a matrix of conversion factors:
