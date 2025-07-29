@@ -26,17 +26,12 @@ write(paste(desctext,
             sep=""),
             file="HTTKHUMAN-desc.txt")
 
-# Load previous predictions:
+#
+#
+# CONFIGURE SESSION
+#
+#
 
-prev.table <- read.csv("Dashboard-HTTK-CssunitsmgpL.txt",sep="\t")
-write.table(
-  prev.table,
-  file=paste(
-    "Dashboard-HTTK-CssunitsmgpL-previous.txt",sep=""),
-  row.names=FALSE,
-  quote=FALSE,
-  sep="\t")
-  
 #setwd("L:/Lab/NCCT_ExpoCast/ExpoCast2019/HTTKDataTable/")
 # Number of samples for Monte Carlo, default is 1000, but this is more stable:
 NUM.SAMPLES <- 1e4
@@ -51,9 +46,13 @@ WHICH.QUANTILES <- c(0.5,0.95)
 SPECIES.LIST <- c("human","rat")
 
 # For which TK models do we want Css predictions:
-MODELS.LIST <- c("3compartmentss","PBTK","sumclearancespfas")
+MODELS.LIST <- c("3compartmentss",
+                 "PBTK",
+                 "sumclearancespfas",
+                 "pfas1compartment")
 REFERENCE.LIST <- c("https://doi.org/10.1021/acs.estlett.4c00967", # Wambaugh 2025
                     "https://doi.org/10.18637/jss.v079.i04", # Pearce 2017a
+                    "Wambaugh Submitted".
                     "Wambaugh Submitted")
 names(REFERENCE.LIST) <- MODELS.LIST
 
@@ -63,7 +62,25 @@ NUM.CPU <- 14
 # Add the in silico predictions:
 QSPR.LIST <- c("load_dawson2021","load_sipes2017","load_pradeep2020","load_honda2023")
 sapply(QSPR.LIST,function(x) do.call(x,args=list()))
- 
+
+#
+#
+# END SESSION CONFIGURATION
+
+#
+
+
+# Load previous predictions:
+
+prev.table <- read.csv("Dashboard-HTTK-CssunitsmgpL.txt",sep="\t")
+write.table(
+  prev.table,
+  file=paste(
+    "Dashboard-HTTK-CssunitsmgpL-previous.txt",sep=""),
+  row.names=FALSE,
+  quote=FALSE,
+  sep="\t")
+  
 # Find all the duplicates:
 # First eliminate NA DTXSIDs (can't do logical tests on them)
 chem.physical_and_invitro.data <- subset(chem.physical_and_invitro.data,
@@ -332,7 +349,7 @@ make.ccd.table <- function(
 }
 
 # Create a multicore cluster:
-cl <- parallel::makeCluster(detectCores()-1)
+cl <- parallel::makeCluster(NUM.CPU)
 
 # Load httk on all cores:
 clusterEvalQ(cl, library(httk))
@@ -374,6 +391,23 @@ dashboard.list <- clusterApply(cl,
                                    which.quantiles=WHICH.QUANTILES,
                                    num.samples=NUM.SAMPLES
                                    ))
+
+# Non-parallel version for testing on a single core:
+#dashboard.list <- lapply(all.ids,
+#                               function(x)
+#                                 make.ccd.table(
+#                                   this.id=x,
+#                                   HTTK.data.list=HTTK.data.list,
+#                                   species.list=SPECIES.LIST,
+#                                   model.list=MODELS.LIST,
+#                                   reference.list=REFERENCE.LIST,
+#                                   param.list=param.list,
+#                                   units.list=units.list,
+#                                   all.ids=all.ids,
+#                                   RANDOM.SEED=RANDOM.SEED,
+#                                   which.quantiles=WHICH.QUANTILES,
+#                                   num.samples=NUM.SAMPLES
+#                                   ))
 
 stopCluster(cl)
 # Combine all the individual tables into a single table:
