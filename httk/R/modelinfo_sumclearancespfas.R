@@ -4,7 +4,7 @@
 THIS.MODEL <- "sumclearancespfas" 
 
 # Description
-model.list[[THIS.MODEL]]$Description <- "Steady-state sum of clerances with PFAS resorption"
+model.list[[THIS.MODEL]]$Description <- "Steady-state sum of clearances with PFAS resorption"
 
 # Reference
 model.list[[THIS.MODEL]]$Reference <- "Wambaugh et al. (submitted)"
