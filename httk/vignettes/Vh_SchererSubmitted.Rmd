@@ -174,7 +174,7 @@ In vitro assay descriptors for the measurements in Supplemental Materials
 Table S2 were added as additional assays into 
 httk:invitro.assay.params using the AENM “IVD” + Author + Year 
 (that is, Smith et al. (2000) would be AENM “IVDSmith2000”.
-```{r, eval = execute.vignette}
+```{r invitrodescriptors, eval = execute.vignette}
 
 ### Create assay_component_endpoint_name columns for assay parameters ###
 
@@ -202,13 +202,13 @@ IVD_Manuscript_data[assay_component_endpoint_name=="IVDMundy2004" |
                         sep = "_")]
 
 #create a copy with the assay parameters for the options table (Table S7)
-options.IVD_Manuscript_data<-copy(IVD_Manuscript_data)
+options.IVD_Manuscript_data<-data.table::copy(IVD_Manuscript_data)
 
 ### Pull in httk assay parameter table ###
-invitro.assay.params <- copy(invitro.assay.params)
+invitro.assay.params <- data.table::copy(invitro.assay.params)
 
 #copy the experimental data frame to pull out the parameter lines
-parameters_only<-copy(IVD_Manuscript_data)
+parameters_only<-data.table::copy(IVD_Manuscript_data)
 
 ### Set up assay parameters to match with invitro.assay.params.RData ###
 
@@ -691,7 +691,7 @@ and the dashed line shows unity.
 original_curated.data.dt <- httk::Dimitrijevic.IVD
 
 #first - run using the default/dashboard values
-default.dt<-copy(original_curated.data.dt %>% 
+default.dt<-data.table::copy(original_curated.data.dt %>% 
                    select(-c( "Arnot_pka", "Arnot_pkb", "log KOW,N", "log KAW,N", 
                               "Predicted_Ccell_µM", "FoA")))
 
@@ -701,7 +701,7 @@ armitageOutput_default.dt <- armitage_eval(tcdata=default.dt,
                                         surface.area.switch = FALSE)
 
 #next- run using curated values (EAS-E Suite)
-curated.data.dt<-copy(original_curated.data.dt)
+curated.data.dt<-data.table::copy(original_curated.data.dt)
 
 #overwrite using curated physchem properties
 curated.data.dt[, pKa_Donor := as.character(Arnot_pka)] %>% #acidic
@@ -827,7 +827,7 @@ range(Kramer.dt$concentration_cells)
 stacked.data<-rbind(Armitage.dt, Kramer.dt, fill=TRUE)
 
 #overpredict or underpredict for each model compared to experimental
-stacked.data_HL<-copy(stacked.data)
+stacked.data_HL<-data.table::copy(stacked.data)
 stacked.data_HL[ccells>CellConcentration_uM, 
                 ARMITAGE_ccellcomp:="ARMITAGE higher"] %>%
   .[ccells<CellConcentration_uM, 
@@ -842,7 +842,7 @@ stacked.data_HL %>% count(ARMITAGE_ccellcomp, KRAMER_ccellcomp)
 #Kramer is pretty even split of over and under predictions
 
 #pick out where armitage prediction or kramer prediction is larger
-sidebyside.data_HL<-copy(combodata)
+sidebyside.data_HL<-data.table::copy(combodata)
 sidebyside.data_HL[ccells>concentration_cells, ARMITAGE:="ARMITAGE higher"] %>%
   .[ccells<concentration_cells, KRAMER:="KRAMER higher"]
 
@@ -856,11 +856,11 @@ sidebyside.data_HL %>% select(ChemicalName.x, ARMITAGE, KRAMER) %>%
 ```
 
 ## Effect of water solubility value for Cyclosporin A
-```{r water_solublity}
+```{r water_solublity, eval = execute.vignette}
 
 #Calculating water solubility using OPERA gswat
 #pull cyc a values from input data
-cycA.dt<-copy(IVD_Manuscript_data %>% 
+cycA.dt<-data.table::copy(IVD_Manuscript_data %>% 
                 dplyr::filter(ChemicalName == "Cyclosporin A"))
 
 #using regular gswat value:
@@ -898,7 +898,7 @@ cycA.dt_rmsle_orig<-round(rmsle((
 
 #Calculating water solubility using experimental gswat
 #pull cyc a values from input data
-cycA.dt<-copy(IVD_Manuscript_data %>% dplyr::filter(ChemicalName == "Cyclosporin A"))
+cycA.dt<-data.table::copy(IVD_Manuscript_data %>% dplyr::filter(ChemicalName == "Cyclosporin A"))
 
 #using measured gswat value: mg/L
 cycA.dt[, gswat_n := log10(0.0073)]
@@ -927,20 +927,20 @@ reporting experimentally measured nominal dose
 ```{r experimental_nomconc, eval = execute.vignette}
 
 #pull observations that did experimentally measure the nominal dose
-#exp_nom.dt<-copy(IVD_Manuscript_data[!(is.na(ExperimentalDose_uM)),]) 
+#exp_nom.dt<-data.table::copy(IVD_Manuscript_data[!(is.na(ExperimentalDose_uM)),]) 
 #6 citations did measure experimental dose
 #42 observations
 
 #BUT - Stadnicka 2014 did not report a nominal dose to begin with, 
 #only the experimentally measured values
-exp_nom.dt<-copy(IVD_Manuscript_data[!(is.na(ExperimentalDose_uM)) &
+exp_nom.dt<-data.table::copy(IVD_Manuscript_data[!(is.na(ExperimentalDose_uM)) &
                                        Citation != "Stadnicka, 2014",]) 
 #unique(exp_nom.dt$Citation)
 #5 citations measured experimental dose AND reported nominal dose
 #27 observations
 
 #run armitage with nomconc as NominalDose_uM.x (not experimentally measured)
-arm_nomconc<-copy(exp_nom.dt[, nomconc := NominalDose_uM])
+arm_nomconc<-data.table::copy(exp_nom.dt[, nomconc := NominalDose_uM])
 
 # run Armitage model, output concentrations in umol/L (e.g. uM)
 armitageOutput_arm_nomconc <- armitage_eval(tcdata=arm_nomconc,
@@ -950,7 +950,7 @@ armitageOutput_arm_nomconc <- armitage_eval(tcdata=arm_nomconc,
                                             restrict.ion.partitioning = TRUE)
 
 #run armitage with nomconc as ExperimentalDose_uM.x (experimentally measured)
-arm_expconc<-copy(exp_nom.dt[, nomconc := ExperimentalDose_uM])
+arm_expconc<-data.table::copy(exp_nom.dt[, nomconc := ExperimentalDose_uM])
 
 armitageOutput_arm_expconc <- armitage_eval(tcdata=arm_expconc, 
                                             surface.area.switch = TRUE,
@@ -984,7 +984,7 @@ from each reference.
 ```{r physchem_data_tableS1, eval = execute.vignette}
 
 #create datatable to hold the info
-table1.dt<-copy(Nominal.dt)
+table1.dt<-data.table::copy(Nominal.dt)
 
 # pull out the columns we need
 data.dt<-table1.dt[, c("Citation", "casrn", "ChemicalName", "IOC_Type", 
@@ -1047,7 +1047,7 @@ if(save_output){
 ```{r assay_descriptors_tableS2, eval = execute.vignette}
 
 #copy table to manipulate
-parameter_table<-copy(Nominal.dt)
+parameter_table<-data.table::copy(Nominal.dt)
 
 table_s2<-parameter_table[, c("Citation", "ChemicalName", "nomconc", 
                               "NominalDose_uM", "v_total", "v_working", 
@@ -1073,10 +1073,10 @@ RMSLE and r^2 for acids and bases.
 ```{r ionization_RMSLE_tableS4, eval = execute.vignette}
 
 #copy for editing
-ionization_rmsle<-copy(stacked.data)
+ionization_rmsle<-data.table::copy(stacked.data)
 
 #calculate RMSLSE and r^2 for each model and ionization type
-ionization_rmsle_output<- copy(ionization_rmsle[label=="Armitage", 
+ionization_rmsle_output<- data.table::copy(ionization_rmsle[label=="Armitage", 
                                                 RMSLE_armitage_ionization:= 
                          rmsle(CellConcentration_uM, ccells), 
                        by = "IOC_Type"] %>% #RMSLE
@@ -1116,7 +1116,7 @@ gkowbins<-stacked.data %>% mutate(LogP_bins =
   labels = c("Hydrophilic", "Moderate Lipophilic", "Lipophilic")))
 
 #calculate rmsle for each model and logP bin combo
-gkowbins_rmsle_output<-suppressWarnings(copy(
+gkowbins_rmsle_output<-suppressWarnings(data.table::copy(
   gkowbins[label == "Armitage", Armitage_RMSLE := rmsle(
   CellConcentration_uM, ccells), by = LogP_bins] %>% 
   .[label == "Kramer", Kramer_RMSLE := rmsle(
@@ -1187,7 +1187,7 @@ each only reflect two data points.
 #Armitage
 
 #copy for editing
-multobs_rmsle_armitage<-copy(as.data.table(Armitage.multobs.dt))
+multobs_rmsle_armitage<-data.table::copy(as.data.table(Armitage.multobs.dt))
 
 #group by chemname, calc RMSLE, r^2, and number of obs
 multobs_rmsle_armitage[, RMSLE_armitage_mult:= 
@@ -1203,7 +1203,7 @@ multobs_rmsle_armitage[, RMSLE_armitage_mult:=
 #repeat for kramer
 
 #copy for editing
-multobs_rmsle_kramer<-copy(as.data.table(Kramer.multobs.dt))
+multobs_rmsle_kramer<-data.table::copy(as.data.table(Kramer.multobs.dt))
 
 #group by chemname, calc RMSLE, r^2, and number of obs
 multobs_rmsle_kramer[, RMSLE_kramer_mult:= 
@@ -1226,7 +1226,7 @@ mult.dt<-merge(multobs_rmsle_armitage[, -c("NominalDose_uM",
                  distinct())
 
 #for higher/lower rmsle comparison
-mult_HL<-copy(mult.dt[RMSLE_kramer_mult>RMSLE_armitage_mult, 
+mult_HL<-data.table::copy(mult.dt[RMSLE_kramer_mult>RMSLE_armitage_mult, 
                       higherorlower:="Kramer higher"] %>% 
   .[RMSLE_kramer_mult<RMSLE_armitage_mult, 
     higherorlower:="kramer lower"])
@@ -1245,7 +1245,7 @@ if(save_output){
 
 ## Table S8:
 Effect of "options" on rmsle in the Armitage model.
-```{r options_tableS8}
+```{r options_tableS8, eval = execute.vignette}
 
 #list of options that can be changed in the armitage model:
 
@@ -1331,7 +1331,7 @@ options.table<-rbind(options.table, c(round(option.kpl_RMSLE, 3),
                                       "option.kpl2=TRUE"))
 
 # run with option.plastic == FALSE (default is true)
-opt.plast_input<- copy(options.IVD_Manuscript_data_2)
+opt.plast_input<- data.table::copy(options.IVD_Manuscript_data_2)
 opt.plast_input[,option.plastic := FALSE]
 
 option.plast <- armitage_eval(tcdata=opt.plast_input,
@@ -1347,7 +1347,7 @@ options.table<-rbind(options.table, c(round(option.plast_RMSLE, 3),
                                       "option.plastic=FALSE"))
 
 # run with option.bottom == FALSE (default is true)
-option.bottom_input<- copy(options.IVD_Manuscript_data_2)
+option.bottom_input<- data.table::copy(options.IVD_Manuscript_data_2)
 option.bottom_input[,option.bottom := FALSE]
 
 option.bottom <- armitage_eval(tcdata=option.bottom_input,
@@ -1393,10 +1393,10 @@ See Figure 5 code above
 ## Table S11:
 Difference in RMSLE between liver and non-liver cells for 
 the Armitage and Kramer models.
-```{r cell_type_tableS11}
+```{r cell_type_tableS11, eval = execute.vignette}
 
 #copy for editing
-celltype_rmsle<-copy(stacked.data)
+celltype_rmsle<-data.table::copy(stacked.data)
 
 #one set doesnt have cell type annotated, add here:
 celltype_rmsle[assay_name == "Tox21 Experiment", cell_type := "MCF-7"]
@@ -1425,7 +1425,7 @@ celltype_rmsle[cell_type == "PRH" |
 celltype_rmsle %>% select(cell_type, cell_type_class) %>% distinct()
 
 #calculate RMSLSE and r^2 for each model and ionization type
-celltype_rmsle_output<- copy(celltype_rmsle[label=="Armitage", 
+celltype_rmsle_output<- data.table::copy(celltype_rmsle[label=="Armitage", 
                                                 RMSLE_armitage_cell_type:= 
                          rmsle(CellConcentration_uM, ccells), 
                        by = "cell_type_class"] %>% #RMSLE
@@ -1464,7 +1464,7 @@ combodata[, RMSLE_nominal_by_chem:= rmsle(CellConcentration_uM.x, nomconc),
           by = "ChemicalName.x"]
 
 #cut down to one observation per chemical
-histo.data<-copy(combodata %>% 
+histo.data<-data.table::copy(combodata %>% 
                    select(ChemicalName.x, RMSLE_armitage_by_chem, 
                           RMSLE_kramer_by_chem, RMSLE_nominal_by_chem) %>% 
                    unique())

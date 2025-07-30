@@ -11,6 +11,15 @@
 # Model identifier for the model.list:
 THIS.MODEL <- "1tri_pbtk"
 
+# Description
+model.list[[THIS.MODEL]]$Description <- "Generic fetal PBTK, first term"
+
+# Reference
+model.list[[THIS.MODEL]]$Reference <- "Truong et al. (2025)"
+
+# DOI
+model.list[[THIS.MODEL]]$DOI <- "https://doi.org/10.1016/j.tox.2025.154157"
+
 # Dose this model work with Monte Carlo parameter sampling?
 model.list[[THIS.MODEL]]$monte.carlo <- FALSE
 

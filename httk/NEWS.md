@@ -3,9 +3,12 @@
 ## Enhancements
 * Monte Carlo switched on for model "sumclearancespfas"
 * `load_honda2023` renamed to `load_honda2025` to reflect publication date of [Honda et al. (2025)](https://doi.org/10.14573/altex.2403271)
+* Additional unit conversions added to `convert_units`
+* Added additional supplementary tables from Scherer et al. (submitted)
 
 ## Bug fixes
 * ODE solver and precision for dermal model tests changed to improve stability across platforms
+* Corrected y-axis units in `solve_model` when plots=TRUE and output.units is specified
 
 # httk 2.7.0 (2025-07-16)
 This version accompanies the submission of the Meade *et al.* manuscript 

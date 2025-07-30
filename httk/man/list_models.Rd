@@ -4,10 +4,13 @@
 \alias{list_models}
 \title{List all available HTTK models}
 \usage{
-list_models()
+list_models(names.only = FALSE)
+}
+\arguments{
+\item{names.only}{If true, only return the model names}
 }
 \value{
-Prints a list of available HTTK models to the screen.
+Describes (or lists) available HTTK models
 }
 \description{
 List all available HTTK models

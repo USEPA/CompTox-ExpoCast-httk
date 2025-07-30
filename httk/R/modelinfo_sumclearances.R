@@ -3,6 +3,15 @@
 # Model identifier for the model.list:
 THIS.MODEL <- "sumclearances" 
 
+# Descritpion
+model.list[[THIS.MODEL]]$Description <- "Steady-state sum of clearances"
+
+# Reference
+model.list[[THIS.MODEL]]$Reference <- "Wambaugh et al. (2025)"
+
+# DOI
+model.list[[THIS.MODEL]]$DOI <- "https://doi.org/10.1021/acs.estlett.4c00967"
+
 # Dose this model work with Monte Carlo parameter sampling?
 model.list[[THIS.MODEL]]$monte.carlo <- TRUE
 

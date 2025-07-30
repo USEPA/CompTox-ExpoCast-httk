@@ -1,5 +1,14 @@
 # Add this model to the list of models:
 
+# Descritpion
+model.list[[THIS.MODEL]]$Description <- "TIn Vitro distribution"
+
+# Reference
+model.list[[THIS.MODEL]]$Reference <- "Armitage et al. (2021)"
+
+# DOI
+model.list[[THIS.MODEL]]$DOI <- "https://doi.org/10.3390/toxics9110315"
+
 # The is the R function for generating model parameters:
 model.list[["armitage"]]$parameterize.func <- "parameterize_armitage"
 
