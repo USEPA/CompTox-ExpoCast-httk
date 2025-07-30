@@ -205,7 +205,10 @@ Lily Whipple
 Woodrow Setzer
 ## License
 
-License: GPL-3 <https://www.gnu.org/licenses/gpl-3.0.en.html>
+License: MIT <https://github.com/USEPA/CompTox-ExpoCast-httk/httk/LICENSE.md>
+
+## Disclaimer
+This software/application was developed by the U.S. Environmental Protection Agency (USEPA). No warranty expressed or implied is made regarding the accuracy or utility of the system, nor shall the act of distribution constitute any such warranty. The USEPA has relinquished control of the information and no longer has responsibility to protect the integrity, confidentiality or availability of the information. Any reference to specific commercial products, processes, or services by service mark, trademark, manufacturer, or otherwise, does not constitute or imply their endorsement, recommendation or favoring by the USEPA. The USEPA seal and logo shall not be used in any manner to imply endorsement of any commercial product or activity by the USEPA or the United States Government.
 
 <img src="httk/man/figures/httk-logo.png" align="center" width="50%"/>
                            
