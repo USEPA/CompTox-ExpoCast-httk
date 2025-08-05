@@ -86,7 +86,7 @@ model is "pbtk").}
 }
 \value{
 \item{frac}{Ratio of the mean concentration on the day steady state is
- reached (baed on doses.per.day) to the analytical Css (based on infusion
+ reached (based on doses.per.day) to the analytical Css (based on infusion
  dosing).} \item{max}{The maximum concentration of the simulation.}
  \item{avg}{The average concentration on the final day of the simulation.}
 \item{the.day}{The day the average concentration comes within 100 * p
