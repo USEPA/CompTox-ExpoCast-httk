@@ -442,8 +442,11 @@ dashboard.table <- as.data.frame(dashboard.table)
 # LOAD INVIVOPKFIT PARAMETERS
 #
 #
-
-ivpkfit <- read.csv("invivoPKfit-params.for.dashboard.txt")
+ivpkfit <- httk::chem.invivo.PK.aggregate.data
+colnames(ivpkfit)[colnames(ivpkfit)=="halflife.tkstats"] <- "Thalf"
+colnames(ivpkfit)[colnames(ivpkfit)=="Css.tkstats"] <- "Css"
+# Convert units from days to hours:
+ivpkfit$Thalf <- signif(ivpkfit$Thalf/24,3)
 
 for (this.parameter in c(
                           "Vdist",

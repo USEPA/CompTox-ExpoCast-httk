@@ -148,8 +148,12 @@ benchmark_httk <- function(
     CAS <- logMA <- Benchmark <- Version <- Value <- NULL
   SLE.AUC <- SLE.Cmax <- SLE.nomc <- SLE.wetmore <- NULL
   ## Call a copy of the data.tables from httk - local copy from the package 
-  chem.ivv.PK.agg <- data.table::copy(httk::chem.invivo.PK.aggregate.data)
-  chem.ivv.PK.sum <- data.table::copy(httk::chem.invivo.PK.summary.data)
+  chem.ivv.PK.agg <- subset(
+    data.table::copy(httk::chem.invivo.PK.aggregate.data),
+    tolower(Media) %in% "plasma")
+  chem.ivv.PK.sum <- subset(
+    data.table::copy(httk::chem.invivo.PK.summary.data),
+    tolower(Media) %in% "plasma")
   ####
   benchmarks <- list()
 

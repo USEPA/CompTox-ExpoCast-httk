@@ -1,11 +1,14 @@
 # httk 2.7.1 (2025-07-24)
 
+This version addresses CRAN errors by making changes to the tests for the dermal PBTK model to ensure better performance across platforms.
+
 ## Enhancements
-* Monte Carlo switched on for model "sumclearancespfas"
+* Monte Carlo enabled for model "sumclearancespfas"
 * `load_honda2023` renamed to `load_honda2025` to reflect publication date of [Honda et al. (2025)](https://doi.org/10.14573/altex.2403271)
 * Additional unit conversions added to `convert_units`
 * Added additional supplementary tables from Scherer et al. (submitted)
 * Expanded `list_models` to provide description, reference, and DOI for models -- modelinfo files now can contain this information
+* Updated in vivo PK data fits from [CvTdb](https://github.com/USEPA/CompTox-PK-CvTdb). Tables `chem.invivo.PK.summary.data` and `chem.invivo.PK.aggregate.data` have more empirical parameters by dose-species-chemical and species-chemical, respectively. Fits made using [invivoPKfit](https://cran.r-project.org/web/packages/invivoPKfit/index.html). Unfortunately table `chem.invivo.PK.data` has been removed because the CvT data are now too large for distribution through CRAN but are still available from [GitHub](https://github.com/USEPA/CompTox-PK-CvTdb).
 
 ## Bug fixes
 * ODE solver and precision for dermal model tests changed to improve stability across platforms
