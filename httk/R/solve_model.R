@@ -964,14 +964,41 @@ specification in compartment_units for model ", model)
     n_monitor_vars = length(monitor.vars)
     plot_units_vector = rep(NA, n_monitor_vars) 
     
-    for (var in 1:n_monitor_vars) {
+    if (!is.null(output.units))
+    {
+      if (length(output.units)==1)
+      {
+        conc.label <- output.units
+      }
+    } else conc.label <- "uM"
+    
+    if (conc.label == "uM")
+    {
+      amount.label <- "umol"
+    } else if (regexpr("/l",tolower(conc.label))!=-1)
+    {
+      amount.label <- gsub("/l","",tolower(conc.label))
+    } else amount.label <- gsub("/kg","",tolower(input.units))
+     
+    for (var in 1:n_monitor_vars) 
+    {
       if (monitor.vars[var] %in% names(compartment_units)) {
         plot_units_vector[var] = compartment_units[[monitor.vars[var]]]
       } else if (firstchar(monitor.vars[var]) == 'A') {
         #other variables that start with 'A' should all be amounts
-        plot_units_vector[var] = "umol"
+        plot_units_vector[var] = amount.label
       } else if (firstchar(monitor.vars[var]) == 'C') {
-        plot_units_vector[var] = "uM"
+        plot_units_vector[var] = conc.label
+      }
+      if (!is.null(output.units))
+      {
+        if (length(output.units)>=1)
+        {
+          if (monitor.vars[var] %in% names(output.units))
+          {
+            plot_units_vector[var] = output.units[[monitor.vars[var]]]
+          }
+        }
       }
     }
     

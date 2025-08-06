@@ -103,7 +103,7 @@ Suggests: knitr, rmarkdown, gplots, scales, EnvStats, MASS,
         RColorBrewer, stringr, reshape, viridis, gmodels, colorspace,
         cowplot, ggrepel, forcats, smatr, gridExtra, readxl, ks,
         testthat, ggpubr, tidyverse
-License: GPL-3
+License: MIT + file LICENSE
 LazyData: true
 LazyDataCompression: xz
 Encoding: UTF-8

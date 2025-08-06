@@ -1,13 +1,25 @@
-# Add this model to the list of models:
+# Add Armitage et al. (2014,2021) in vitro distribution model to the list of models:
+
+# Model identifier for the model.list:
+THIS.MODEL <- "armitage" 
+
+# Descritpion
+model.list[[THIS.MODEL]]$Description <- "In Vitro distribution"
+
+# Reference
+model.list[[THIS.MODEL]]$Reference <- "Armitage et al. (2021)"
+
+# DOI
+model.list[[THIS.MODEL]]$DOI <- "https://doi.org/10.3390/toxics9110315"
 
 # The is the R function for generating model parameters:
-model.list[["armitage"]]$parameterize.func <- "parameterize_armitage"
+model.list[[THIS.MODEL]]$parameterize.func <- "parameterize_armitage"
 
 
 # These are all the parameters returned by the R model parameterization function.
 # Some of these parameters are not directly used to solve the model, but describe
 # how other parameters were calculated:
-model.list[["armitage"]]$param.names <- c(
+model.list[[THIS.MODEL]]$param.names <- c(
   # "Kadipose2pu",
   # "Kbone2pu",
   # "Kbrain2pu",
@@ -34,7 +46,7 @@ model.list[["armitage"]]$param.names <- c(
   "alpha")
 
 #Parameters needed to make a prediction (this is used by get_cheminfo):
-model.list[["armitage"]]$required.params <- c(
+model.list[[THIS.MODEL]]$required.params <- c(
   "MP",
   "logP",
   "logHenry",
@@ -45,7 +57,7 @@ model.list[["armitage"]]$required.params <- c(
   "MW")
 
 #Parameters needed to run parameterize function without a chemical id:
-model.list[["armitage"]]$parameterize_params <- c(
+model.list[[THIS.MODEL]]$parameterize_params <- c(
   "MP",
   "logP",
   "logHenry",
@@ -56,7 +68,7 @@ model.list[["armitage"]]$parameterize_params <- c(
   "MW")
 
 #choose which parameters are not to be Monte Carlo sampled
-model.list[["armitage"]]$noMC.params <- c()
+model.list[[THIS.MODEL]]$noMC.params <- c()
 
 ##Define the parameter names for each model in one place so that all functions can use them:
 #schmitt.specific.names <- c("Kadipose2pu",
@@ -68,7 +80,7 @@ model.list[["armitage"]]$noMC.params <- c()
 #                            "Kspleen2pu") 
 
 # Do we ignore the Fups where the value was below the limit of detection?
-model.list[["armitage"]]$exclude.fup.zero <- TRUE  
+model.list[[THIS.MODEL]]$exclude.fup.zero <- TRUE  
 
 # Filter out compounds belonging to select chemical classes
-model.list[["armitage"]]$chem.class.filt <- c("PFAS")
+model.list[[THIS.MODEL]]$chem.class.filt <- c("PFAS")

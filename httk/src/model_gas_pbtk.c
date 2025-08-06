@@ -329,7 +329,8 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
   yout[ID_Calvppmv] = yout[ID_Calv] * 24.45 ; // umol/L -> ppmv
 
   yout[ID_Cendexh] = ( Qalv * yout[ID_Calv] + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ) / Qalv ;
-
+  yout[ID_Cendexh] = (yout[ID_Cendexh] >= 0.0 ? yout[ID_Cendexh] : 0.0) ;
+   
   yout[ID_Cendexhppmv] = yout[ID_Cendexh] * 24.45 ;  // umol/L -> ppmv
 
   yout[ID_Cmixexh] = 0.7 * yout[ID_Cendexh] + 0.3 * Cinh ;
@@ -337,7 +338,8 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
   yout[ID_Cmixexhppmv] = yout[ID_Cmixexh] * 24.45 ;  // umol/L -> ppmv
 
   yout[ID_Cmuc] = y[ID_Amuc] / Vmuc ;
-
+  yout[ID_Cmuc] = (yout[ID_Cmuc] >= 0.0 ? yout[ID_Cmuc] : 0.0) ;
+  
   ydot[ID_Agutlumen] = - kgutabs * y[ID_Agutlumen] ;
 
   ydot[ID_Agut] = kgutabs * y[ID_Agutlumen] + Qgut * ( yout[ID_Cart] - yout[ID_Cgut] * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma ) ;
@@ -363,7 +365,7 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
   ydot[ID_Ainh] = ( Qalv * (  Cinh - yout[ID_Calv] ) ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - Cinh ) ;
   
   ydot[ID_Aexh] = ( Qalv * yout[ID_Calv] ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ;
-
+               
   ydot[ID_Amuc] = ( kUrt * ( Cinh - ( yout[ID_Cmuc] / Kmuc2air ) ) ) - ( kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ) ;
 
 } /* derivs */

@@ -5,6 +5,15 @@
 # Model identifier for the model.list:
 THIS.MODEL <- "gas_pbtk"
 
+# Descritpion
+model.list[[THIS.MODEL]]$Description <- "Generic PBTK with gas exchange"
+
+# Reference
+model.list[[THIS.MODEL]]$Reference <- "Linakis et al. (2020)"
+
+# DOI
+model.list[[THIS.MODEL]]$DOI <- "https://doi.org/10.1038/s41370-020-0238-y"
+
 # Dose this model work with Monte Carlo parameter sampling?
 model.list[[THIS.MODEL]]$monte.carlo <- TRUE
 

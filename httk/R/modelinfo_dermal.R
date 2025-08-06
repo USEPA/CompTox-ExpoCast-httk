@@ -4,6 +4,15 @@
 # Model identifier for the model.list:
 THIS.MODEL <- "dermal" 
 
+# Descritpion
+model.list[[THIS.MODEL]]$Description <- "Generic PBTK with dermal absorption"
+
+# Reference
+model.list[[THIS.MODEL]]$Reference <- "Meade et al. (submitted)"
+
+# DOI
+model.list[[THIS.MODEL]]$DOI <- NULL
+
 #Analytic expression for steady-state plasma concentration.
 #model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_dermal" 
 

@@ -7,6 +7,15 @@
 # Model identifier for the model.list:
 THIS.MODEL <- "fetal_pbtk" 
 
+# Description
+model.list[[THIS.MODEL]]$Description <- "Generic fetal PBTK, second and third term"
+
+# Reference
+model.list[[THIS.MODEL]]$Reference <- "Kapraun et al. (2022)"
+
+# DOI
+model.list[[THIS.MODEL]]$DOI <- "https://doi.org/10.1016/j.reprotox.2022.09.004"
+
 # Dose this model work with Monte Carlo parameter sampling?
 model.list[[THIS.MODEL]]$monte.carlo <- FALSE
 
