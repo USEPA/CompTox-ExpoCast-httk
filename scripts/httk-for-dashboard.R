@@ -394,7 +394,7 @@ clusterEvalQ(cl, sapply(QSPR.LIST,function(x) do.call(x,args=list())))
 dashboard.list <- ParallelLogger::clusterApply(cl,
                                all.ids,
                                function(x)
-                                 make.ccd.table(
+                                 try(make.ccd.table(
                                    this.id=x,
                                    HTTK.data.list=HTTK.data.list,
                                    species.list=SPECIES.LIST,
@@ -406,7 +406,7 @@ dashboard.list <- ParallelLogger::clusterApply(cl,
                                    RANDOM.SEED=RANDOM.SEED,
                                    which.quantiles=WHICH.QUANTILES,
                                    num.samples=NUM.SAMPLES
-                                   ))
+                                   )))
 
 # Non-parallel version for testing on a single core:
 #dashboard.list <- lapply(all.ids,
