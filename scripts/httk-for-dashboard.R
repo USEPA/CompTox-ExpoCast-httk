@@ -397,7 +397,7 @@ cat(paste0("Building the table of HTTK predictions using ",
 dashboard.list <- ParallelLogger::clusterApply(cl,
                                all.ids,
                                function(x)
-                                 make.ccd.table(
+                                 try(make.ccd.table(
                                    this.id=x,
                                    HTTK.data.list=HTTK.data.list,
                                    species.list=SPECIES.LIST,
@@ -409,7 +409,7 @@ dashboard.list <- ParallelLogger::clusterApply(cl,
                                    RANDOM.SEED=RANDOM.SEED,
                                    which.quantiles=WHICH.QUANTILES,
                                    num.samples=NUM.SAMPLES
-                                   ))
+                                   )))
 
 # Non-parallel version for testing on a single core:
 #dashboard.list <- lapply(all.ids,
@@ -445,8 +445,11 @@ dashboard.table <- as.data.frame(dashboard.table)
 # LOAD INVIVOPKFIT PARAMETERS
 #
 #
-
-ivpkfit <- read.csv("invivoPKfit-params.for.dashboard.txt")
+ivpkfit <- httk::chem.invivo.PK.aggregate.data
+colnames(ivpkfit)[colnames(ivpkfit)=="halflife.tkstats"] <- "Thalf"
+colnames(ivpkfit)[colnames(ivpkfit)=="Css.tkstats"] <- "Css"
+# Convert units from days to hours:
+ivpkfit$Thalf <- signif(ivpkfit$Thalf/24,3)
 
 for (this.parameter in c(
                           "Vdist",
