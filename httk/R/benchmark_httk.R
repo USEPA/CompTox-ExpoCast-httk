@@ -147,6 +147,7 @@ benchmark_httk <- function(
   Compound <- Source <- Reference <- fu <- Exp_PC <- Tissue <- Species <- 
     CAS <- logMA <- Benchmark <- Version <- Value <- NULL
   SLE.AUC <- SLE.Cmax <- SLE.nomc <- SLE.wetmore <- NULL
+  Media <- NULL
   ## Call a copy of the data.tables from httk - local copy from the package 
   chem.ivv.PK.agg <- subset(
     data.table::copy(httk::chem.invivo.PK.aggregate.data),

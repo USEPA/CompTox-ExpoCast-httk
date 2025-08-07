@@ -195,6 +195,7 @@
 #' parameters$Vvehicle <- 1
 #' out <- solve_dermal_pbtk(parameters=parameters)
 #' 
+#' \donttest{
 #' # Dermal is the default route:
 #' head(solve_dermal_pbtk(chem.name="bisphenola"))
 #' head(solve_dermal_pbtk(chem.name="bisphenola", route="dermal"))
@@ -202,6 +203,7 @@
 #' head(solve_dermal_pbtk(chem.name="bisphenola", route="iv"))
 #' # And oral:
 #' head(solve_dermal_pbtk(chem.name="bisphenola", route="oral"))
+#' }
 #'
 #' @export solve_dermal_pbtk
 #' @useDynLib httk
