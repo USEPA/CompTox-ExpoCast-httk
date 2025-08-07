@@ -301,6 +301,14 @@ augment.table <- function(
       }
       ref.name <- paste(this.property,"Reference",sep=".")
       this.table[index,ref.name] <- reference
+    } else if (!is.na(this.table[index,this.property]) | 
+      !overwrite)
+    {
+      warning(paste("Preexisting value found for",
+                    this.CAS,
+                    "property",
+                    this.property,
+                    "and overwrite = FALSE. New value ignored."))
     }
     CHEM.PHYS.COLS <- sort(c(
       CHEM.PHYS.COLS,

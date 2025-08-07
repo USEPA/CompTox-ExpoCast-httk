@@ -64,7 +64,7 @@ export_pbtk_jarnac <- function(initial.amounts=list(Agutlumen=0),
   chem.cas <- out$chem.cas
   chem.name <- out$chem.name
   # Look up species from any arguments passed to parameterize_pbtk:
-  species <- as.list(...)[["species"]]
+  species <- list(...)[["species"]]
   # If they did not set species, default to human:
   if (is.null(species)) species <- "human"
   
