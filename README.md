@@ -178,8 +178,11 @@ Greg Honda [honda.gregory@epa.gov],
 Mark Sfeir, 
 Matt Linakis [MLINAKIS@ramboll.com], 
 Dustin Kapraun [kapraun.dustin@epa.gov],
-Kimberly Truong [truong.kimberly@epa.gov], and
-Colin Thomson [thomson.colin@epa.gov]
+Kimberly Truong [truong.kimberly@epa.gov],
+Colin Thomson [thomson.colin@epa.gov],
+Annabel Meade [aemeade7@gmail.com],
+Meredith Scherer [Scherer.Meredith@epa.gov], and
+Celia Schacht [Schacht.Celia@epa.gov]
 
 ### Bug-Fixes Vignette edits, and Parameter Values
 Todor Antonijevic [tantonijevic@toxstrategies.com], 
@@ -191,8 +194,6 @@ Elaina Kenyon [kenyon.elaina@epa.gov],
 Gilberto Padilla Mercado [PadillaMercado.Gilberto@epa.gov],
 Katie Paul Friedman [Paul-Friedman.Katie@epa.gov],
 Nathan Pollesch [pollesch.nathan@epa.gov],
-Meredith Scherer [Scherer.Meredith@epa.gov],
-Celia Schacht [Schacht.Celia@epa.gov],
 Noelle Sinski [Noelle.Sinski@icf.com],
 Nisha Sipes [sipes.nisha@epa.gov],
 James Sluka [jsluka@indiana.edu],  
@@ -204,7 +205,10 @@ Lily Whipple
 Woodrow Setzer
 ## License
 
-License: GPL-3 <https://www.gnu.org/licenses/gpl-3.0.en.html>
+License: MIT <https://github.com/USEPA/CompTox-ExpoCast-httk/httk/LICENSE.md>
+
+## Disclaimer
+This software/application was developed by the U.S. Environmental Protection Agency (USEPA). No warranty expressed or implied is made regarding the accuracy or utility of the system, nor shall the act of distribution constitute any such warranty. The USEPA has relinquished control of the information and no longer has responsibility to protect the integrity, confidentiality or availability of the information. Any reference to specific commercial products, processes, or services by service mark, trademark, manufacturer, or otherwise, does not constitute or imply their endorsement, recommendation or favoring by the USEPA. The USEPA seal and logo shall not be used in any manner to imply endorsement of any commercial product or activity by the USEPA or the United States Government.
 
 <img src="httk/man/figures/httk-logo.png" align="center" width="50%"/>
                            

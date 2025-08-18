@@ -147,9 +147,13 @@ benchmark_httk <- function(
   Compound <- Source <- Reference <- fu <- Exp_PC <- Tissue <- Species <- 
     CAS <- logMA <- Benchmark <- Version <- Value <- NULL
   SLE.AUC <- SLE.Cmax <- SLE.nomc <- SLE.wetmore <- NULL
+  Media <- NULL
   ## Call a copy of the data.tables from httk - local copy from the package 
   chem.ivv.PK.agg <- data.table::copy(httk::chem.invivo.PK.aggregate.data)
-  chem.ivv.PK.sum <- data.table::copy(httk::chem.invivo.PK.summary.data)
+  # Use only the plasma data for individual dose treatments:
+  chem.ivv.PK.sum <- subset(
+    data.table::copy(httk::chem.invivo.PK.summary.data),
+    tolower(Media) %in% "plasma")
   ####
   benchmarks <- list()
 
@@ -381,14 +385,16 @@ benchmark_httk <- function(
           do.call(calc_analytic_css, calc_analytic_css.args(x)),
             NA))))
             
-    RMSLE.invivocss <- signif(mean(log10(as.numeric(FitData$Css.pred) /
-                              as.numeric(FitData$Css))^2,
+    SLE.invivocss <- log10(as.numeric(FitData$Css.pred) /
+                              as.numeric(FitData$Css))^2
+                         
+    RMSLE.invivocss <- signif(mean(SLE.invivocss[is.finite(SLE.invivocss)],
                          na.rm=TRUE)^(1/2),4) 
     
     FitData2 <- chem.ivv.PK.sum
     if (!("dose" %in% colnames(FitData2))) FitData2$dose <- FitData2$Dose
     if (!("AUC" %in% colnames(FitData2))) FitData2$AUC <- FitData2$AUC_infinity.tkstats*24
-    if (!("peak" %in% colnames(FitData2))) FitData2$peak <- FitData2$Cmax.tkstats
+    if (!("Cmax" %in% colnames(FitData2))) FitData2$Cmax <- FitData2$Cmax.tkstats
     if (!("time" %in% colnames(FitData2))) FitData2$time <- FitData2$halflife.tkstats*4*24 # We want most of the chemical eliminated for AUC-infinity
      # Subset 'FitData2' - exclude Bensulide for poor data in Wambaugh et al. 2018
 #    FitData2 <- subset(chem.ivv.PK.sum,
@@ -411,7 +417,7 @@ benchmark_httk <- function(
               default.to.human=TRUE
               ),
             model="pbtk",
-            days=as.numeric(x[["time"]])/24,
+            days=10,
             daily.dose=NULL,
             doses.per.day=NULL,
             dose=as.numeric(x[["dose"]]),
@@ -430,7 +436,7 @@ benchmark_httk <- function(
               default.to.human=TRUE
               ),
             model="pbtk",
-            days=as.numeric(x[["time"]])/24,
+            days=1,
             daily.dose=as.numeric(x[["dose"]]),
             doses.per.day=1,
             suppress.messages=suppress.messages,
@@ -445,9 +451,9 @@ benchmark_httk <- function(
     FitData2$SLE.Cmax <- log10(as.numeric(FitData2$Pred.Cmax) /
                           as.numeric(FitData2$Cmax))^2
     
-    RMSLE.invivoauc <- signif(sqrt(mean(FitData2$SLE.AUC,
+    RMSLE.invivoauc <- signif(sqrt(mean(FitData2$SLE.AUC[is.finite(FitData2$SLE.AUC)],
                           na.rm=TRUE)),4)
-    RMSLE.invivocmax <- signif(sqrt(mean(FitData2$SLE.Cmax,
+    RMSLE.invivocmax <- signif(sqrt(mean(FitData2$SLE.Cmax[is.finite(FitData2$SLE.Cmax)],
                           na.rm=TRUE)),4)       
      
  # Write out values with more than two orders of magnitude error:

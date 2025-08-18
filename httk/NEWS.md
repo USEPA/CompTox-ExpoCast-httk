@@ -1,42 +1,59 @@
+# httk 2.7.1 (2025-07-24)
+
+This version addresses CRAN errors by making changes to the tests for the dermal PBTK model to ensure better performance across platforms.
+
+## Enhancements
+* Monte Carlo enabled for model "sumclearancespfas"
+* `load_honda2023` renamed to `load_honda2025` to reflect publication date of [Honda et al. (2025)](https://doi.org/10.14573/altex.2403271)
+* Additional unit conversions added to `convert_units`
+* Added additional supplementary tables from Scherer et al. (submitted)
+* Expanded `list_models` to provide description, reference, and DOI for models -- modelinfo files now can contain this information
+* Updated in vivo PK data fits from [CvTdb](https://github.com/USEPA/CompTox-PK-CvTdb). Tables `chem.invivo.PK.summary.data` and `chem.invivo.PK.aggregate.data` have more empirical parameters by dose-species-chemical and species-chemical, respectively. Fits made using [invivoPKfit](https://CRAN.R-project.org/package=invivoPKfit). Unfortunately table `chem.invivo.PK.data` has been removed because the CvT data are now too large for distribution through CRAN but are still available from [GitHub](https://github.com/USEPA/CompTox-PK-CvTdb).
+* Warning message added to `add_chemtable` to indiate when pre-existing data in `chem.phys_and_invitro.data` prevented new data from being added. Set overwrite=TRUE to overwrite pre-existing data. (thank you jessica-ewald)
+
+## Bug fixes
+* ODE solver and precision for dermal model tests changed to improve stability across platforms
+* Corrected y-axis units in `solve_model` when plots=TRUE and output.units is specified
+
 # httk 2.7.0 (2025-07-16)
-This version accompanies the submission of the Meade et al. manuscript 
+This version accompanies the submission of the Meade *et al.* manuscript 
 "Dermal absorption route and integration into high throughput toxicokinetics modeling (httk)"
 
-This version also accompanies the submission of the Scherer et al. manuscript 
+This version also accompanies the submission of the Scherer *et al.* manuscript 
 "Characterizing Accuracy of Model Predictions for Concentration in High Throughput Screening Assays"
 
-This version also accompanies the submission of the Wambaugh et al. manuscript 
+This version also accompanies the submission of the Wambaugh *et al.* manuscript 
 "Applying High Throughput Toxicokinetics (HTTK) to Per- and Polyfluoro Alkyl Substances (PFAS)"
 
 ## New Features
 * Added new high throughput PBTK model for dermal exposure 'solve_dermal_pbtk'
 * Added new vignette "Meade (submitted): High Throughput Dermal Exposure Model"
-* Added new chemical-specific in vitro data for Fup and Clint for PFAS measured in [Smeltz et al. (2023)](https://doi.org/10.1021/acs.chemrestox.3c00003)
-* Added new chemical-specific in vitro data for Fup and Clint for PFAS measured in [Kreutz et al. (2023)](https://doi.org/10.3390/toxics11050463)
-* Added new chemical-specific in vitro data for Clint for PFAS measured in [Crizer et al. (2024)](https://doi.org/10.3390/toxics12090672)
+* Added new chemical-specific *in vitro* data for ***fup*** and ***Clint*** for PFAS measured in [Smeltz et al. (2023)](https://doi.org/10.1021/acs.chemrestox.3c00003)
+* Added new chemical-specific *in vitro* data for ***fup*** and ***Clint*** for PFAS measured in [Kreutz et al. (2023)](https://doi.org/10.3390/toxics11050463)
+* Added new chemical-specific *in vitro* data for ***Clint*** for PFAS measured in [Crizer et al. (2024)](https://doi.org/10.3390/toxics12090672)
 * Added new chemical-specific in vivo Rblood2plasma data for 14 PFAS measured in [Poothong et al. (2017)](https://doi.org/10.1021/acs.est.7b03299)
-* Added new chemical-specific measurements of membrane afinity (logMA) for 10 PFAS measured in [Droge et al. (2019)](https://doi.org/10.1021/acs.est.8b05052)
+* Added new chemical-specific measurements of membrane affinity (logMA) for 10 PFAS measured in [Droge et al. (2019)](https://doi.org/10.1021/acs.est.8b05052)
 * Added new chemical-specific in silico predictions for 4136 PFAS half-life and clearance from [Dawson et al. (2023)](https://doi.org/10.3390/toxics11020098)
 * Added new function `get_2023pfasinfo` to allow easy identification of newly measured PFAS chemicals
 * Added new model '3compartmentss2' that solves for steady-state plasma/blood concentration resulting from elimination by metabolism, renal excretion, and also exhalation since many PFAS have some volatility
 * Added new model 'pfas1compartment' that uses the [Dawson et al. (2023)](https://doi.org/10.3390/toxics11020098) to parameterize an empirical one compartment model for PFAS chemicals -- see `parameterize_pfas1comp`
 * Added new vignette "Wambaugh (Submitted): HTTK for PFAS"
-* Added new in vitro distribution model [Kramer 2010](https://dspace.library.uu.nl/handle/1874/37545) implemented in function `kramer_eval`
-* Added new functions for parameterizing in vitro distribution models: `parameterize_armitage`, `parametierize_kramer`, and `parameterize_IVD`
-* Added new table "invitro.assay.params" describing ToxCast and Tox21 in vitro assays in terms needed to run in vitro distriution models
+* Added new *in vitro* distribution model [Kramer 2010](https://dspace.library.uu.nl/handle/1874/37545) implemented in function `kramer_eval`
+* Added new functions for parameterizing *in vitro* distribution models: `parameterize_armitage`, `parametierize_kramer`, and `parameterize_IVD`
+* Added new table "invitro.assay.params" describing ToxCast and Tox21 *in vitro* assays in terms needed to run *in vitro* distribution models
 * Added new vignette "Scherer (Submitted): In Vitro Distribution"
-* New fraction unbound in plasma (fup) data from [Nicol et al. (2024)](https://doi.org/10.1016/j.tox.2024.153826) have been added for 29 chemicals
+* New fraction unbound in plasma (***fup***) data from [Nicol et al. (2024)](https://doi.org/10.1016/j.tox.2024.153826) have been added for 29 chemicals
 
 ## Enhancements
-* Increased efficiency of `get_cheminfo` -- replaced row-wise apply with complete.cases data subsetting. Results in substantial speed increase, especially for Monte Carlo.
-* Increased efficiency of `convert_units` -- now forms matrix of conversion factors all at once rather than building up a data frame row by row. Results in substantial speed increase, especially for Monte Carlo.
+* Increased efficiency of `get_cheminfo` -- replaced row-wise `apply` with complete.cases data subsetting. This results in a substantial speed increase, especially for Monte Carlo.
+* Increased efficiency of `convert_units` -- now forms matrix of conversion factors all at once rather than building up a data frame row by row. This results in a substantial speed increase, especially for Monte Carlo.
 * Monte Carlo in `calc_mc_tk` is now implemented via data.table for efficiency.
 * Css functions (`calc_analytic_css`, `calc_css`, model-specific `calc_analytic_css_MODEL` functions) now accept explicit "species" argument and pass it explicitly to all functions that use a species argument
 *	 `create_mc_samples()` now accepts a named list of arguments to be passed to model-specific function for propagating uncertainty/variability (`propagate_invitrouv_MODEL` functions)
 *	`create_mc_samples`, when firstpass == TRUE, now calls `calc_hep_clearance` with restrictive.clearance as specified in the parameterize.args.list
 * Revised 'calc_ma' to increase membrane affinities for PFAS chemicals ~400x based on regression to data from [Droge et al. (2019)](https://doi.org/10.1021/acs.est.8b05052) (if new argument 'pfas.calibration==TRUE')
 * Can now use 'get_physchem_param' to retrieve "Chemical.Class" (only defined for PFAS to date)
-* Revised documentation for 1compartment model
+* Revised documentation for model "1compartment"
 * Updated in vivo data from CvTdb (tables chem.invivo.PK.data, chem.invivo.PK.summary.data, and chem.invivo.PK.aggregate.data) to reflect curve fits made with [invivoPKfit](https://CRAN.R-project.org/package=invivoPKfit) used in recently submitted manuscript "Collaborative Evaluation of In Silico Predictions for High Throughput Toxicokinetics"
 * Updated implementation of [Armitage mass balance model to better reflect 2021 enhancements](https://doi.org/10.3390/toxics9110315), changed functions `armitage_estimate_sarea` and `armitage eval`
 
@@ -47,18 +64,18 @@ This version also accompanies the submission of the Wambaugh et al. manuscript
 *  `create_mc_samples()` now varies `Funbound.plasma` correctly if it is specified in argument `vary.params` and`invitrouv = FALSE` (previously, it would be held constant under these circumstances rather than being varied)
 * Fixed sum of squared errors calculation in `calc_mc_tk`
 * A bug has been fixed in `create_mc_samples` that caused arguments to `invitro_mc` supplied in a named list in `invitro.mc.arg.list` to drop their names and be passed out of order. Arguments now retain their names and are passed correctly to `invitro_mc`. (thanks to Tyler LaLonde and Lisa Sweeney)
-* Intrinsic clearance based on microsomes mistakenly labeled as hepatocyte data were removed for four chemicals: Hexobarbital(DTXSID9023122), Nicardipine (DTXSID6023363), Nilvadipine (DTXSID2046624), and 4-Hydroxydiclofenac (DTXSID40214326)
-* Removed data curated by TNO from source "EPA/Hamner" since we already had the primary source -- a few chemicals were reporting f_up = 0.005 which is the assumed value (LOD/2) when there was a non-detect.
-* Fixed bug in `get_physchem_param` where pKa_Accept would not be returned if multiple parameteres were requested at once
+* Intrinsic clearance based on microsomes mistakenly labeled as hepatocyte data were removed for four chemicals: Hexobarbital (DTXSID9023122), Nicardipine (DTXSID6023363), Nilvadipine (DTXSID2046624), and 4-Hydroxydiclofenac (DTXSID40214326)
+* Removed data curated by TNO from source "EPA/Hamner" since we already had the primary source -- a few chemicals were reporting ***fup*** = 0.005 which is the assumed value (LOD/2) when there was a non-detect.
+* Fixed bug in `get_physchem_param` where pKa_Accept would not be returned if multiple parameters were requested at once
 
 # httk 2.6.1 (2025-04-28)
 
 ## Bug fixes
-* Blank values for human Clint in [Woods et al. 2017](https://doi.org/10.1124/dmd.117.077040) were incorrectly being recorded as 0 -- these have been removed, causing eight chemicals to no longer have Css and other predictions
+* Blank values for human ***Clint*** in [Woods et al. 2017](https://doi.org/10.1124/dmd.117.077040) were incorrectly being recorded as 0 -- these have been removed, causing eight chemicals to no longer have Css and other predictions
 * ODE solver for fetal model changed to LSODE to improve stability across platforms
 
 ## Enhancements
-* Added rat and human fup data from [Lynn et al. 2025](https://doi.org/10.1016/j.tiv.2025.106036) 
+* Added rat and human ***fup*** data from [Lynn et al. 2025](https://doi.org/10.1016/j.tiv.2025.106036) 
 * pKa values are now predicted by ChemAxon
 * Refactored Henderson-Hasselbach calculations within `calc_ionization` to be clearer. Expanded documentation for `calc_ionization`. No known change to previously calculated values by that function. Introduced new argument return_charge_matrix which gives a table listing each ionization state to explain how the values in `calc_ionization` are derived.
 * When models (either OPERA or ChemAxon) predict that a chemical does not ionize, that prediction is now stored as a blank space (that is, " ") rather than an "NA". "NA" is intended to indicate that no prediction was available. This change should not impact the function of the code or any predictions, but hopefully clarifies the chemical descriptors.
@@ -113,7 +130,7 @@ and includes new models incorporating inhalation/exhalation ("sumclearances" and
 ## Enhancements
 * New model functions for TK models with inhalation/exhalation: `parameterize_sumclearances`, `parameterize_3comp2`, `solve_3comp2`
 * Separate forcing functions are now declared in init.c for models (such as "gas_pbtk") that use the [deSolve forcing functionality](https://tpetzoldt.github.io/deSolve-forcing/deSolve-forcing.html).
-* Revised init.c file to try to make it more clear that the forcing function handler needs to be defined if forcings are used.
+* Revised init.c file to try to make it clearer that the forcing function handler needs to be defined if forcings are used.
 * Revised examples with respect to adding species 
 * modelinfo_1comp: Adding a Henry's Law Constant threshold to 1-comp model 
 * `parameterize_1comp`: Add calls to `check_model` for models "1compartment" and "3compartmentss", since we use `parameterize_steadystate` to parameterize "1compartment".
@@ -126,7 +143,7 @@ This release accompanies the submission of the
 and includes changes intended to better facilitate development of new HTTK
 models through improved model clarity.
 
-In addition we have incorporated comments received
+In addition, we have incorporated comments received
 on the [Honda et al. (2025) manuscript "Impact of Gut Permeability on Estimation of 
 Oral Bioavailability for Chemicals in Commerce and the Environment"](https://doi.org/10.14573/altex.2403271) 
 provided by reviewers at ALTEX.
@@ -136,9 +153,9 @@ provided by reviewers at ALTEX.
 * Corrected error where non-restrictive clearance option was not working for model pbtk
 * Set restrictive.clearance=TRUE by defailt in `calc_hep_clearance` when model = "unscaled"
 * Corrected compartment names for model "gas_pbk" -- "Calv", "Cendexh", and "Cmixexh" were being returned in ppmv units, while "Calvppmv", "Cendexhppmv", and "Cmixexhppmv" were in uM
-* Calculation of Fabs corrected for non-human species to follow [Yu and Amidon (1999)](https://doi.org/10.1016/s0378-5173(99)00147-7) using small intestine mean residence time and radius. (Thank you ALTEX reviewers)
+* Calculation of ***Fabs*** corrected for non-human species to follow [Yu and Amidon (1999)](https://doi.org/10.1016/s0378-5173(99)00147-7) using small intestine mean residence time and radius. (Thank you ALTEX reviewers)
 * Intestinal flow rate correction to the Qgut model now scales with body weight (rodent Fgut was being predicted way too low) 
-* Corrected units of Peff in calculation of Fabs by `calc_fabs.oral` -- calculations now indicate that more chemicals are poorly absorbed.
+* Corrected units of ***Peff*** in calculation of ***Fabs*** by `calc_fabs.oral` -- calculations now indicate that more chemicals are poorly absorbed.
 * Revised `calc_css` to handle models with no specified analytic solution
 * Revised ionization code in `armitage_eval` so that pka_donor and pka_accept values now correctly used (thank you Meredith Scherer)
 * Corrected bug in `solve_model` when only specific times requesed and plots=TRUE (thank you Kimberly Troung)
@@ -147,7 +164,7 @@ provided by reviewers at ALTEX.
 * Corrected bug in `solve_model` where tsteps was ignored if times were specified
 
 ## Enhancements
-* A physiology data table from 'httkpop_generate' can now be passed to `calc_mc_css` and `calc_mc_tk` (and `calc_mc_css` via ...) so that a consistent population can be used across monte carlo runs. See argument httkpop.dt.
+* A physiology data table from 'httkpop_generate' can now be passed to `calc_mc_css` and `calc_mc_tk` (and `calc_mc_css` via ...) so that a consistent population can be used across Monte Carlo runs. See argument httkpop.dt.
 * Physico-chemical properties are now retrieved from the CompTox Chemicals Dashboard programmatically using [R package ctxR](https://cran.r-project.org/package=ctxR) (Thank you Paul Kruse)
 * `calc_fabs.oral` now calculates oral uptake rate kgutabs using Caco-2 permeability, according to method of [Lennernas (1997)](https://doi.org/10.1111/j.2042-7158.1997.tb06084.x) (Thank you ALTEX reviewers)
 * Revised and changed name of `get_fabsgut` to `get_fbio` and modified function to use `calc_fbio.oral` rather than call oral bioavailability subfunctions directly
@@ -173,7 +190,7 @@ This patch addresses a number of bugs.
 * Argument keepit100 was being improperly ignored by `get_fabsgut`
 * Fixed issue where `create_mc_samples` could not handle argument 
 ***parameters*** being a list (as in, 
-parameters=parameterize_steadstate(chem.name="bisphenola"))
+parameters=parameterize_steadystate(chem.name="bisphenola"))
 * Error messages for `calc_css` now explain that function is only applicable
 to dynamical (time-evolving) models and handles errors with other models
 (such as 3compartmentss) more gracefully
@@ -194,7 +211,7 @@ using CASRN as row names) -- thank you Katie Paul Friedman for suggestion
 * Added Katie Paul Friedman (USEPA) as contributor for long history of 
 suggesting refinements and putting up with bugs
 * Function `solve_model` now gives warnings when ignoring elements of 
-***dosing*** for a given model and route (acceptible dosing.params are now
+***dosing*** for a given model and route (acceptable dosing.params are now
 specified by the modelinfo_[MODEL].R file)
 
 # httk 2.3.0 (2023-12-05)
@@ -207,7 +224,7 @@ in Commerce and the Environment"](https://doi.org/10.14573/altex.2403271). Find 
 * Added parameter ***plasma.vol*** to one compartment model so that Monte Carlo 
 works for non-human species
 * Added default units for ***Aexh*** and ***Ainh*** state variables in 
-***gas_pbtk*** model so that `calc_css` works for accumulative chemcials
+***gas_pbtk*** model so that `calc_css` works for accumulative chemicals
 * Corrected the 
 [Linakis et al. (2020)](https://doi.org/10.1038/s41370-020-0238-y) vignette to 
 reflect that all CvTdb data used there already are in uM
@@ -222,7 +239,7 @@ wherein you could not specify the argument parameters to be a table created by
 * Updated the checks and reported error messages in `get_clint` and 
 `get_invtroPK_param` to be more informative
 * Corrected calculation of mean blood:plasma partition coefficient when 
-measured RBlood2plasma is avaialble
+measured RBlood2plasma is available
 * ***Clint*** and ***fup*** are now adjusted for *in vitro* binding when 
 `invitrouv=FALSE` (thanks cm16120)
 
@@ -239,10 +256,10 @@ for calculating systemic bioavailability as $F_{bio} = F_{abs} \times F_{gut} \t
 where first-pass hepatic metabolism was already available from 
 `calc_hep_bioavailability`.
 * Changed the name of the variable describing fraction absorbed from the gut
-prior to first-pass hepatic metabolism to $Fabsgut$ to reflect that
-$F_{abs}$ and $F_{gut}$ are now modeled separately
-(that is, $F_{absgut} = F_{abs} \times F_{gut}$).
-* Integrated $F_{abs}$ and $F_{gut}$ into oral exposure for all TK models and 
+prior to first-pass hepatic metabolism to ***Fabsgut*** to reflect that
+***Fabs*** and ***Fgut*** are now modeled separately
+(that is, ***Fabsgut = Fabs * Fgut***).
+* Integrated ***Fabs*** and ***Fgut*** into oral exposure for all TK models and 
 integrated into population variability and uncertainty functions within 
 `invitro_uv`
 * Added new function `benchmark_httk` to compare current function of the 
@@ -251,7 +268,7 @@ package against historical performance (stored in data.frame `httk.performance`)
 `calc_tkstats` to allow PBTK model to distribute iv doses
 
 ## Enhancements
-* Added QSPR predictions for Fup and Clint for several thousand chemicals using 
+* Added QSPR predictions for ***fup*** and ***Clint*** for several thousand chemicals using 
 the [Dawson et al. (2020)](https://doi.org/10.1021/acs.est.0c06117) models --
 accessible from `load_dawson2021` (thank you Alex Fisher and Mike Tornero!)
 * Predicted phys-chem properties for most chemicals using 
@@ -263,14 +280,14 @@ base R
 [Pearce et al. (2017)](https://doi.org/10.1007/s10928-017-9548-7) vignette on 
 Evaluation of Tissue Partitioning
 * Revised function `convert_units`, expanding the variety of unit conversions 
-available -- it is critical to distringuish between state of matter 
+available -- it is critical to distinguish between state of matter 
 (liquid vs. gas)
 * Model ***1compartment*** allows volatile chemicals again since clearance is 
 amorphous for that model (likely underestimated without exhalation)
 * Many manuscript references listed in function documentation were converted to 
 a BibTex format from manual insertion of the citations. (thanks Lily Whipple)
 * Updated `get_physchem_param` to be case-insensitive
-* New ***Clint*** and ***Fup*** data curated from literature by 
+* New ***Clint*** and ***fup*** data curated from literature by 
 [ICF](https://www.icf.com/work/environment) from 
 [Black et al. (2021)](https://doi.org/10.1016/j.tox.2021.152819), 
 [Williamson et al. (2020)](https://doi.org/10.1124/dmd.120.000131), 
@@ -293,7 +310,7 @@ occurs in parameterization functions* Added new function
 Todor Antonijevic)
 * Fixed major bug in `calc_ionization` that caused error when argument pH was a 
 vector -- impacts Monte Carlo for ionized compounds
-* Corrected equation tracking amount inhaled in gas pbtk model (thanks Cecilia 
+* Corrected equation tracking amount inhaled in gas PBTK model (thanks Cecilia 
 Tan)
 * Fixed bugs that prevented using Monte Carlo with phys-chem parameters
 * Fixed error for species with missing *in vitro* data (thanks Lu En-Hsuan)
@@ -307,7 +324,7 @@ argument times was specified (thanks Kimberly Truong)
 * Added functions `calc_fup_correction` and `apply_fup_adjustment` to 
 consolidate and make uniform application of the 
 [Pearce et al. (2017)](https://doi.org/10.1007/s10928-017-9548-7) lipid binding 
-adjustment to *in vitro* measured fup
+adjustment to *in vitro* measured ***fup***
 * We now export function `calc_dow` for the distribution coefficient
 * New function `calc_ma` separates membrane affinity calculation from 
 `parameterize_schmitt`
@@ -332,7 +349,7 @@ internally using `do.call` wherever possible to pass arguments
 corresponding equations in 
 [Schmitt (2008)](https://doi.org/10.1016/j.tiv.2007.09.010)
 * Added option `class.exclude` to `get_cheminfo` -- defaults to `TRUE`, but if 
-`FALSE` then chemical classes are not excluded on the basis of specified model
+`FALSE` then chemical classes are not excluded based on specified model
 * Updated various function documentation
 
 # httk 2.2.1 (2022-09-24)
@@ -498,7 +515,7 @@ confidence intervals to be removed for chemical intrinsic hepatic clearance
 (***Clint***) values and fraction unbound in plasma (***fup***) values where 
 they exist (turn on with median.only=TRUE).
 *  Revised `get_cheminfo` to filter volatile compounds using Henry`s law 
-constant for all models, excluding the ***gas_pbtk*** model.
+constant for all models, excluding the "gas_pbtk" model.
 
 ## Bug Fixes 
 * Fixed problems with ***Clint*** values reported from 
@@ -533,7 +550,7 @@ not) better
 * Argument ***info*** for `get_cheminfo` is now case insensitive
 * `add_chemtable` (really internal function `augment.table`) changed to enforce 
 significant figures (default 4)
-* OPERA phys-chem properites provided by CompTox Chemicals Dashboard have been 
+* OPERA phys-chem properties provided by CompTox Chemicals Dashboard have been 
 slightly revised
 * Updated documentation to well parameters for 
 [Armitage et al. (2014)](<https://doi.org/10.1021/es501955g>) model 
@@ -591,7 +608,7 @@ Inhalation Model for Organic
 Chemicals"](https://doi.org/10.1038/s41370-020-0238-y)
 
 ## New Features
-*	New generic inhalation PBPK model ***gas_pbtk***
+*	New generic inhalation PBPK model "gas_pbtk"
 * New chemical specific parameters for volatile chemicals have been added:
   * 43 in human
   * 41 in rat
@@ -659,7 +676,7 @@ substantially revised to accommodate this.
 
 ## Enhancements
 * Added a `minimum.Funbound.plasma` argument since some of the Bayesian estimates 
-are very low and at some point the values seem implausible. A value of 0.0001 
+are very low and at some point, the values seem implausible. A value of 0.0001 
 was selected since it half the lowest reported measured value. Setting 
 `minimum.Funbound.plasma=0` removes this restriction.
 * Monte Carlo coefficient of variation for ***Clint*** and ***fup*** has been 
@@ -673,7 +690,7 @@ most of the new ***fup*** measurements have a lower CV than 0.3.
 * Vignette names have been updated to make the related publication clear
 * All references to ***fub*** (previously "fraction unbound" but confusing with 
 "fraction unbound in blood") have been converted to ***fup*** (the intended 
-"fraction unbpund in plasma") where appropriate.
+"fraction unbound in plasma") where appropriate.
 * Rewrote `calc_analytic_css` to handle all models in the same manner.
 * Changed argument values "mg" and "mol" for ***output.units*** in 
 `calc_mc_oral_equivalent` to "mgpkgpday" and "umolpkgpday". 
@@ -707,7 +724,7 @@ in httk-pop Monte Carlo sampler.
 ## Bug Fixes 
 * Updated tests to reflect correct model predictions.
 * Fixed errors that was causing the ***3compartmentss*** and ***1compartment***
-models to not work with Monte Carlo. (thank you Jo Nyffeler for bug report).
+models to not work with Monte Carlo. (thank you, Jo Nyffeler, for bug report).
 
 # httk 1.9.1 (2019-04-15)
 
@@ -741,7 +758,7 @@ of assumptions identified by
 * Changed all model parameter sets to include physico-chemical properties to 
 better facilitate Monte Carlo analysis
 * Updated `load_sipes2017` to be much faster by loading an image by default
-* Updated help files for Sipes2017 and `load_sipes2017`.
+* Updated help files for `Sipes2017` and `load_sipes2017`.
 * `get_wetmore_X` functions changed to `get_lit_X`
 * `httkpop_bio` exported to user functions 
 (function name since changed to `httkpop_biotophys_default`)
@@ -749,7 +766,7 @@ better facilitate Monte Carlo analysis
 time 0 (thank you Xiaoqing Chang)
 * Added figures to help files of `solve_[MODEL]` functions
 * Added `hematocrit` argument to `calc_rblood2plasma`
-* Changed amounts in model ***1compartment*** to not bescaled by body weight, 
+* Changed amounts in model ***1compartment*** to not be scaled by body weight, 
 added ***BW*** to parameters for that model thank you Tom Moxon)
 * Converted all phys-chem properties except ***pKa*** to values predicted by 
 [OPERA (Mansouri et al., 2018)](https://doi.org/10.1186/s13321-018-0263-1) --
@@ -759,7 +776,7 @@ from OPERA
 * Renamed and added vignettes
 
 ## Bug Fixes 
-* Corrected mistake in `get_cheminfo` help file: `exlude.fub.zero` defaults to 
+* Corrected mistake in `get_cheminfo` help file: `exclude.fub.zero` defaults to 
 `FALSE` for model ***3compartmentss*** and `TRUE` for others
 * Corrected (thank you Jason Phillips), updated, and added ***pKa*** values from 
 [Strope et al. (2018)](<https://doi.org/10.1016/j.scitotenv.2017.09.033>)
@@ -775,7 +792,7 @@ calibration predictions.
 ## New Features
 * Added arguments to multiple functions 
 for whether or not to use new calibration regressions 
-(`regression`) and adjusted ***Funbound.plasma*** (`adjusted.Funbound.plasma`).
+(`regression`) and adjusted ***fup*** (`adjusted.Funbound.plasma`).
 * Hepatic clearance and plasma binding predictions for ~8000 chemicals from 
 Simulations Plus ADMET Predictor used in 
 [Sipes et al. (2017)](<https://doi.org/10.1021/acs.est.7b00650>) is now 
@@ -792,17 +809,17 @@ included as ***Sipes2017*** and can be added with the new function:
   * ***kgutabs*** default changed to 2.18.
 
 ## Enhancements
-* ***Funbound.plasma*** values from 
+* ***fup*** values from 
 [Wetmore et al. 2012](https://doi.org/10.1093/toxsci/kfr254) and 
 [2013](https://doi.org/10.1093/toxsci/kft012) that were previously rounded to 2 
 decimal places are now rounded to 3, resulting in additional compounds with 
-measurable ***Funbound.plasma*** that were otherwise assumed to be below the 
+measurable *** fup *** that were otherwise assumed to be below the 
 limit of detection.
 * ***pKa*** data is now readable when values are separated by a semicolon 
 rather than a comma. These values were previously misread as neutral.
 * Partition coefficients can now be predicted without calculating all of them,
 using the tissues argument.
-* `calc_mc_css` runs faster when not using httkpop and calculating 
+* `calc_mc_css` runs faster when not using httk-pop and calculating 
 ***Rblood2plasma***, now only calculated once.
 * ***chem.lists*** is updated, and `is.pharma` has been added as a function.
 * `calc_analytic_css` does not recalculate all partition coefficients when 
@@ -816,7 +833,7 @@ predictions from OPERA where available.
 ***hepatic.bioavailability*** and ***Fgutabs*** before entering systemic
 circulation.
 * ***kinhabs*** and ***kdermabs***, both of which were unused in the models, are removed.
-* `modelPBTK.c`, the source file for the ***pbtk*** model, now has updated 
+* `modelPBTK.c`, the source file for the model "pbtk", now has updated 
 variable names, and corresponding changes are made in `solve_pbtk`.
 * The time step immediately after addition of dose is added to better capture 
 peak concentration for iv dosing.
@@ -833,7 +850,7 @@ Toxicokinetics"](https://doi.org/10.18637%2Fjss.v079.i04).
 * Corrected intrinsic clearances for (about 10) compounds from 
 [Brown et al. (2007)](https://doi.org/10.1124/dmd.106.011569), 
 * Corrected output message from `calc_mc_css`
-* Corrected ***Funbound.plasma*** used for predicting partitioning into 
+* Corrected ***fup*** used for predicting partitioning into 
 interstitial protein (negligible difference in predictions)
 * Corrected bug in calculating ***Rblood2plasma*** in `calc_mc_css`, and added faster
 method for calculating ***Rblood2plasma*** for `3compartmentss`.
@@ -862,7 +879,7 @@ the old approach
 [Pirovano et al. (2016)](https://doi.org/10.1016/j.etap.2016.01.017), 
 [Gulden et al. (2002)](https://doi.org/10.1016/S0300-483X(02)00085-9)
 * [Tonnelier et al. (2012)](https://doi.org/10.1007/s00204-011-0768-0) 
-***Funbound.plasma*** values of 0.005 changed to 0 in 
+***fup*** values of 0.005 changed to 0 in 
 ***chem.physical_and_invitro.data***
 * New ***tissue.data table*** with 
 [Ruark et al. (2014)](https://doi.org/10.1002/jps.24011) that contains different 
@@ -921,7 +938,7 @@ from ***chem.physical_and_invitro.data***.
 `censored.params` truncated normal distribution.  However, this has no impact 
 on the default case where the limit of detection is .01 the mean .005 because 
 of the small standard deviation size (.0015). Only large coefficients of 
-variation or ***Funbound.plasma*** values close to the limit of detection would 
+variation or ***fup*** values close to the limit of detection would 
 be affected.
 
 # httk 1.4 (2016-02-03)
@@ -935,7 +952,7 @@ vignettes).
 # httk 1.3 (2015-10-14)
 This revision adds ~200 more chemicals (from two recent publications including 
 [Wetmore et al. (2015)](https://doi.org/10.1093/toxsci/kfv171) and make several 
-small changes to improve usability and stability. 
+slight changes to improve usability and stability. 
 
 # httk 1.2 (2015-05-11)
 This version is consistent with a newly submitted article 

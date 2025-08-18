@@ -1,10 +1,16 @@
-# Add the 1compartment model (Pearce et al., 2017) to the list of models:
-#
-# Pearce, Robert G., et al. "Httk: R package for high-throughput 
-# toxicokinetics." Journal of statistical software 79.4 (2017): 1.
+# Add the 1compartment model with PFAS half-lives from Dawson et al. (2023)
 
 # Model identifier for the model.list:
 THIS.MODEL <- "pfas1compartment" 
+
+# Descritpion
+model.list[[THIS.MODEL]]$Description <- "One compartment model with PFAS resorption"
+
+# Reference
+model.list[[THIS.MODEL]]$Reference <- "Wambaugh et al. (submitted)"
+
+# DOI
+model.list[[THIS.MODEL]]$DOI <- NULL
 
 # Dose this model work with Monte Carlo parameter sampling?
 model.list[[THIS.MODEL]]$monte.carlo <- TRUE

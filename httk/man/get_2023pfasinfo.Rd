@@ -59,7 +59,7 @@ data for the model specified by argument "model":
 Compound \tab The preferred name of the chemical compound \tab none \cr 
 CAS \tab The preferred Chemical Abstracts Service Registry Number \tab none \cr  
 DTXSID \tab DSSTox Structure ID 
-(\url{http://comptox.epa.gov/dashboard}) \tab none \cr 
+(\url{https://comptox.epa.gov/dashboard}) \tab none \cr 
 logP \tab The log10 octanol:water partition coefficient\tab log10 unitless ratio \cr 
 MW \tab The chemical compound molecular weight \tab g/mol \cr 
 pKa_Accept \tab The hydrogen acceptor equilibria concentrations 

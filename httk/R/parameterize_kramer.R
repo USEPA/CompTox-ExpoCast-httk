@@ -110,12 +110,12 @@ parameterize_kramer <- function(tcdata = NA,                   #Data.table with 
   #### System specific input parameters ####
   p_Kramer_output[, v_total_m3 := (v_total*convert_units("ul", "m3"))]  %>%   #total volume of each well (m^3) 
     .[, v_working_m3 := (v_working*convert_units("ul", "m3"))] %>%            #filled volume of each well (m^3)
-    .[, v_headspace_m3 := (v_total_m3-v_working_m3)] %>%                     #volume of headspace per well (m^3)
-    .[,conc_BSA := (BSA/1000)*(FBSp/100)] %>%                                #concentration BSA in media (kg/L)
-    .[,conc_cell_mg := (cell_yield/1000000)*prot_conc*0.23/v_working_m3] %>% #concentration cell lipid (mg/m3)
+    .[, v_headspace_m3 := (v_total_m3-v_working_m3)] %>%                      #volume of headspace per well (m^3)
+    .[,conc_BSA := (BSA*convert_units("g", "kg"))*(FBSp/100)] %>%             #concentration BSA in media (kg/L)
+    .[,conc_cell_mg := (cell_yield/1000000)*prot_conc*0.23/v_working_m3] %>%  #concentration cell lipid (mg/m3)
     #0.23 mg lipid per mg protein (estimated by Gülden and Seibert 2002)
-    .[,conc_cell := (conc_cell_mg*convert_units("mg", "kg"))] %>%                #concentration cell lipid (kg/m3)
-    .[,conc_plastic := sarea/v_working_m3]                                   #concentration of plastic (m^2/m^3)
+    .[,conc_cell := (conc_cell_mg*convert_units("mg", "kg"))] %>%             #concentration cell lipid (kg/m3)
+    .[,conc_plastic := sarea/v_working_m3]                                    #concentration of plastic (m^2/m^3)
 
 
   #### Return data table ####

@@ -6,6 +6,15 @@ THIS.MODEL <- "3compartment2"
 # Dose this model work with Monte Carlo parameter sampling?
 model.list[[THIS.MODEL]]$monte.carlo <- TRUE
 
+# Descritpion
+model.list[[THIS.MODEL]]$Description <- "Three compartment physiologically-motivated with inhale/exhale"
+
+# Reference
+model.list[[THIS.MODEL]]$Reference <- "Wambaugh et al. (2025)"
+
+# DOI
+model.list[[THIS.MODEL]]$DOI <- "https://doi.org/10.1021/acs.estlett.4c00967"
+
 # Analytic expression for steady-state plasma concentration to be used by
 # calc_analytic_css:
 model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_3comp2"

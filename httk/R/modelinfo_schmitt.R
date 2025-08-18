@@ -3,6 +3,15 @@
 # Model identifier for the model.list:
 THIS.MODEL <- "schmitt" 
 
+# Descritpion
+model.list[[THIS.MODEL]]$Description <- "Tissue Partitioning"
+
+# Reference
+model.list[[THIS.MODEL]]$Reference <- "Schmitt (2008)"
+
+# DOI
+model.list[[THIS.MODEL]]$DOI <- "https://doi.org/10.1016/j.tiv.2007.09.010"
+
 # Dose this model work with Monte Carlo parameter sampling?
 model.list[[THIS.MODEL]]$monte.carlo <- TRUE
 

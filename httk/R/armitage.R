@@ -98,7 +98,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
     }
     
     #account for option.plastic and option.bottom
-    tcdata[option.bottom==FALSE, sarea := 4*diam*height] %>% #overwrite sarea with the bottom area removed
+    tcdata[option.bottom==FALSE, sarea := (4*diam*height)*convert_units("mm2", "m2")] %>% #overwrite sarea with the bottom area removed
       .[option.plastic==FALSE, sarea := 0] #overwrite sarea to zero
     
   }
@@ -829,7 +829,7 @@ armitage_eval <- function(chem.cas=NULL,
   tcdata[,mtot:= nomconc*Vbm] %>% # amount of umol chemical in the bulk medium in each well
     .[,cwat:=mtot/(DR_kaw*Vair + Vm + DR_kbsa*Valb +
                      P_cells*DR_kow*Vslip + DR_kow*P_dom*f_oc*Vdom + DR_kcw*Vcells +
-                     DR_kpl*sarea*convert_units("m3", "l"))] %>% #calculate freely dissolved aqueous concentration in the test system (umol)
+                     DR_kpl*sarea*convert_units("m3", "l"))] %>% #calculate freely dissolved aqueous concentration in the test system (umol/L)
     #DR_kpl (m3/m2) * sarea (m2) * 1000 (L/m3) =  (L)
     .[cwat>DR_swat,cwat_s:=DR_swat] %>% #if the water solubility is exceeded, we use the water solubility as the dissolved concentration in the water (uM) and the excess is assumed to precipitate, therefore not included in the mass balance 
     .[cwat>DR_swat,csat:=1] %>% # and note that the solution is saturated (1 = true)

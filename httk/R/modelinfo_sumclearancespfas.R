@@ -3,6 +3,18 @@
 # Model identifier for the model.list:
 THIS.MODEL <- "sumclearancespfas" 
 
+# Description
+model.list[[THIS.MODEL]]$Description <- "Steady-state sum of clearances with PFAS resorption"
+
+# Reference
+model.list[[THIS.MODEL]]$Reference <- "Wambaugh et al. (submitted)"
+
+# DOI
+model.list[[THIS.MODEL]]$DOI <- NULL
+
+# Dose this model work with Monte Carlo parameter sampling?
+model.list[[THIS.MODEL]]$monte.carlo <- TRUE
+
 #Analytic expression for steady-state plasma concentration.
 model.list[[THIS.MODEL]]$analytic.css.func <- "calc_analytic_css_sumclearances"
 

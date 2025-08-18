@@ -204,7 +204,6 @@ calc_tkstats(chem.cas = "962-58-3",
 ```
 
 * Using the PBTK solver for a specified chem name 
-
 Note that we use the R built-in function head() to show only the first five rows
 ```{r pbtk_ex, eval = TRUE}
 head(solve_pbtk(chem.name = "bisphenol a", 

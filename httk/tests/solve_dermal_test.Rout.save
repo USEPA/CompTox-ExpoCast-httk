@@ -1,0 +1,216 @@
+
+R Under development (unstable) (2025-04-18 r88159 ucrt) -- "Unsuffered Consequences"
+Copyright (C) 2025 The R Foundation for Statistical Computing
+Platform: x86_64-w64-mingw32/x64
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> # R CMD BATCH --no-timing --no-restore --no-save solve_dermal_test.R solve_dermal_test.Rout
+> 
+> # Get rid of anything in the workspace:
+> rm(list=ls()) 
+> 
+> library(httk)
+> 
+> # Rationale: Use of signif is required for the same results on various OS's due
+> #   to precision differences.
+> signif(head(solve_dermal_pbtk(chem.name="propylparaben")), 
++        2)
+None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
+
+AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.654.
+The model outputs are provided in the following units:
+	umol: Avehicle, Aplasma, Ain, Aexhaled, Atubules, Ametabolized
+	uM: Cgut, Cliver, Cven, Clung, Cart, Crest, Ckidney, Cplasma, Cskin_exposed, Cskin_unexposed, Cvehicle
+	uM*days: AUC
+
+     time Avehicle   Cgut Cliver    Cven   Clung    Cart  Crest Ckidney Cplasma
+[1,] 0.00      390 0.0000 0.0000 0.00000 0.00000 0.00000 0.0000  0.0000  0.0000
+[2,] 0.01      390 0.0028 0.0025 0.00099 0.00073 0.00095 0.0003  0.0057  0.0015
+[3,] 0.02      390 0.0066 0.0090 0.00190 0.00140 0.00180 0.0011  0.0120  0.0028
+[4,] 0.03      390 0.0098 0.0160 0.00260 0.00190 0.00250 0.0023  0.0170  0.0039
+[5,] 0.04      390 0.0120 0.0220 0.00320 0.00240 0.00320 0.0036  0.0210  0.0049
+[6,] 0.05      390 0.0150 0.0270 0.00380 0.00280 0.00380 0.0051  0.0250  0.0058
+     Aplasma Cskin_exposed Cskin_unexposed Cvehicle   Ain Aexhaled Atubules
+[1,]  0.0000          0.00         0.00000       10 0.000        0  0.00000
+[2,]  0.0023          0.31         0.00065       10 0.099        0  0.00006
+[3,]  0.0042          0.45         0.00210       10 0.200        0  0.00025
+[4,]  0.0059          0.50         0.00380       10 0.300        0  0.00054
+[5,]  0.0074          0.53         0.00530       10 0.400        0  0.00093
+[6,]  0.0087          0.54         0.00680       10 0.490        0  0.00140
+     Ametabolized     AUC
+[1,]      0.0e+00 0.0e+00
+[2,]      4.6e-05 7.0e-06
+[3,]      3.9e-04 2.9e-05
+[4,]      1.1e-03 6.3e-05
+[5,]      2.3e-03 1.1e-04
+[6,]      3.8e-03 1.6e-04
+There were 13 warnings (use warnings() to see them)
+> signif(head(solve_dermal_pbtk(chem.cas="94-13-3")), 
++        2)
+None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
+
+AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.654.
+The model outputs are provided in the following units:
+	umol: Avehicle, Aplasma, Ain, Aexhaled, Atubules, Ametabolized
+	uM: Cgut, Cliver, Cven, Clung, Cart, Crest, Ckidney, Cplasma, Cskin_exposed, Cskin_unexposed, Cvehicle
+	uM*days: AUC
+
+     time Avehicle   Cgut Cliver    Cven   Clung    Cart  Crest Ckidney Cplasma
+[1,] 0.00      390 0.0000 0.0000 0.00000 0.00000 0.00000 0.0000  0.0000  0.0000
+[2,] 0.01      390 0.0028 0.0025 0.00099 0.00073 0.00095 0.0003  0.0057  0.0015
+[3,] 0.02      390 0.0066 0.0090 0.00190 0.00140 0.00180 0.0011  0.0120  0.0028
+[4,] 0.03      390 0.0098 0.0160 0.00260 0.00190 0.00250 0.0023  0.0170  0.0039
+[5,] 0.04      390 0.0120 0.0220 0.00320 0.00240 0.00320 0.0036  0.0210  0.0049
+[6,] 0.05      390 0.0150 0.0270 0.00380 0.00280 0.00380 0.0051  0.0250  0.0058
+     Aplasma Cskin_exposed Cskin_unexposed Cvehicle   Ain Aexhaled Atubules
+[1,]  0.0000          0.00         0.00000       10 0.000        0  0.00000
+[2,]  0.0023          0.31         0.00065       10 0.099        0  0.00006
+[3,]  0.0042          0.45         0.00210       10 0.200        0  0.00025
+[4,]  0.0059          0.50         0.00380       10 0.300        0  0.00054
+[5,]  0.0074          0.53         0.00530       10 0.400        0  0.00093
+[6,]  0.0087          0.54         0.00680       10 0.490        0  0.00140
+     Ametabolized     AUC
+[1,]      0.0e+00 0.0e+00
+[2,]      4.6e-05 7.0e-06
+[3,]      3.9e-04 2.9e-05
+[4,]      1.1e-03 6.3e-05
+[5,]      2.3e-03 1.1e-04
+[6,]      3.8e-03 1.6e-04
+There were 13 warnings (use warnings() to see them)
+> 
+> p <- parameterize_dermal_pbtk(chem.name="propylparaben")
+Warning messages:
+1: In apply_clint_adjustment(Clint.point, Fu_hep = Fu_hep, suppress.messages = suppress.messages) :
+  Clint adjusted for in vitro partitioning (Kilford, 2008), see calc_hep_fu.
+2: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+  Membrane affinity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
+3: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
+  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
+4: In parameterize_dermal_pbtk(chem.name = "propylparaben") :
+  Funbound.plasma recalculated with adjustment.  Set adjusted.Funbound.plasma to FALSE to use original value.
+5: In calc_ma(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+  Membrane affinity (MA) predicted with method of Yun and Edginton (2013), see calc_ma.
+6: In apply_fup_adjustment(fup.point, fup.correction = fup.adjustment,  :
+  Fup adjusted for in vivo lipid partitioning (Pearce, 2017), see calc_fup_correction.
+7: In calc_rblood2plasma(chem.cas = chem.cas, species = species, adjusted.Funbound.plasma = adjusted.Funbound.plasma,  :
+  Rblood2plasma has been recalculated.
+8: In available_rblood2plasma(chem.cas = chem.cas, species = species,  :
+  Human Rblood2plasma calculated with calc_rblood2plasma.
+9: In parameterize_dermal_pbtk(chem.name = "propylparaben") :
+  Since parameter Kvehicle2water is null, vehicle containing chemical is assumed to be water.
+10: In get_caco2(chem.cas = chem.cas, chem.name = chem.name, dtxsid = dtxsid,  :
+  Default value of 1.6 used for Caco2 permeability.
+> p <- p[sort(names(p))]
+> # Try to standardize order of variable names
+> for (this.param in 
++      names(p)[order(toupper(names(p)))]) cat(
++      paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
+BW: 70
+Caco2.Pab: 1.6
+Caco2.Pab.dist: NA
+Clint: 50.59
+Clint.dist: NA
+Clmetabolismc: 0.4199
+Fabsgut: 0.64
+Fhep.assay.correction: 0.7511
+Fskin_exposed: 0.1
+Funbound.plasma: 0.04892
+Funbound.plasma.adjustment: 0.6404
+Funbound.plasma.dist: NA
+hematocrit: 0.44
+InfiniteDose: 0
+Kblood2air: 123300000
+Kgut2pu: 55.37
+kgutabs: 2.18
+Kkidney2pu: 90.78
+Kliver2pu: 116.5
+Klung2pu: 9.961
+Krbc2pu: 4.365
+Krest2pu: 38.71
+Kskin2pu: 29.93
+Kskin2vehicle: 5.5
+liver.density: 1.05
+MA: 164.8
+million.cells.per.gliver: 110
+MW: 180.2
+P: 0.02249
+pKa_Accept:  
+pKa_Donor: 8.5
+Pow: 1086
+Qalvc: 18.59
+Qcardiacc: 13.88
+Qgfrc: 0.3099
+Qgutf: 0.2054
+Qkidneyf: 0.2214
+Qliverf: 0.0535
+Qskinf: 0.05359
+Rblood2plasma: 0.654
+skin_depth: 0.118
+totalSA: 18450
+Vartc: 0.03827
+Vgutc: 0.0158
+Vkidneyc: 0.00419
+Vliverc: 0.02448
+Vlungc: 0.007235
+Vrestc: 0.7433
+Vskinc: 0.0332
+Vvenc: 0.03827
+> signif(head(solve_dermal_pbtk(parameters=p)),
++        2)
+None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
+
+AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.654.
+The model outputs are provided in the following units:
+	umol: Avehicle, Aplasma, Ain, Aexhaled, Atubules, Ametabolized
+	uM: Cgut, Cliver, Cven, Clung, Cart, Crest, Ckidney, Cplasma, Cskin_exposed, Cskin_unexposed, Cvehicle
+	uM*days: AUC
+
+     time Avehicle   Cgut Cliver    Cven   Clung    Cart  Crest Ckidney Cplasma
+[1,] 0.00      390 0.0000 0.0000 0.00000 0.00000 0.00000 0.0000  0.0000  0.0000
+[2,] 0.01      390 0.0028 0.0025 0.00099 0.00073 0.00095 0.0003  0.0057  0.0015
+[3,] 0.02      390 0.0066 0.0090 0.00190 0.00140 0.00180 0.0011  0.0120  0.0028
+[4,] 0.03      390 0.0098 0.0160 0.00260 0.00190 0.00250 0.0023  0.0170  0.0039
+[5,] 0.04      390 0.0120 0.0220 0.00320 0.00240 0.00320 0.0036  0.0210  0.0049
+[6,] 0.05      390 0.0150 0.0270 0.00380 0.00280 0.00380 0.0051  0.0250  0.0058
+     Aplasma Cskin_exposed Cskin_unexposed Cvehicle   Ain Aexhaled Atubules
+[1,]  0.0000          0.00         0.00000       10 0.000        0  0.00000
+[2,]  0.0023          0.31         0.00065       10 0.099        0  0.00006
+[3,]  0.0042          0.45         0.00210       10 0.200        0  0.00025
+[4,]  0.0059          0.50         0.00380       10 0.300        0  0.00054
+[5,]  0.0074          0.53         0.00530       10 0.400        0  0.00093
+[6,]  0.0087          0.54         0.00680       10 0.490        0  0.00140
+     Ametabolized     AUC
+[1,]      0.0e+00 0.0e+00
+[2,]      4.6e-05 7.0e-06
+[3,]      3.9e-04 2.9e-05
+[4,]      1.1e-03 6.3e-05
+[5,]      2.3e-03 1.1e-04
+[6,]      3.8e-03 1.6e-04
+Warning messages:
+1: In solve_dermal_pbtk(parameters = p) :
+  If route is not chosen, it is set to dermal by default.
+2: In solve_dermal_pbtk(parameters = p) :
+  Vvehicle not specified, so set to 0.1 L.
+3: In solve_dermal_pbtk(parameters = p) :
+  The initial.dose is automatically set to 1mg/kg.
+4: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+  Rblood2plasma not recalculated. 
+Set recalc.blood2plasma to TRUE if desired.
+5: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
+  Clearance not recalculated. 
+Set recalc.clearance to TRUE if desired.
+> 
+> quit("no")

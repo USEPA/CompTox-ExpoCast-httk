@@ -7,6 +7,15 @@
 # Model identifier for the model.list:
 THIS.MODEL <- "3compartmentss" 
 
+# Descritpion
+model.list[[THIS.MODEL]]$Description <- "Steady-state three compartment"
+
+# Reference
+model.list[[THIS.MODEL]]$Reference <- "Pearce et al. (2017)"
+
+# DOI
+model.list[[THIS.MODEL]]$DOI <- "https://doi.org/10.18637/jss.v079.i04"
+
 # Dose this model work with Monte Carlo parameter sampling?
 model.list[[THIS.MODEL]]$monte.carlo <- TRUE
 

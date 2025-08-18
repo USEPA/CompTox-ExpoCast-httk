@@ -44,7 +44,7 @@ for Funbound.plasma (which impacts partition coefficients) when set to TRUE (Def
 
 \item{fup.lod.default}{Default value used for fraction of unbound plasma for
 chemicals where measured value was below the limit of detection. Default
-value is 0.0005.}
+value is 0.005.}
 
 \item{force.human.clint.fup}{Uses human hepatic intrinsic clearance and fraction
 of unbound plasma in calculation of partition coefficients for rats if true.}
