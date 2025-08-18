@@ -24,7 +24,7 @@ must be specified.}
 
 \item{chem.cas}{Either the chemical name, CAS number, or DTXSID must be specified.}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})}
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})}
 
 \item{time.course}{Time sequence in days. Default is from 0th week of pregnancy to 
 40th, incremented by day.}

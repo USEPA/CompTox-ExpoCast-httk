@@ -8,7 +8,7 @@ This version addresses CRAN errors by making changes to the tests for the dermal
 * Additional unit conversions added to `convert_units`
 * Added additional supplementary tables from Scherer et al. (submitted)
 * Expanded `list_models` to provide description, reference, and DOI for models -- modelinfo files now can contain this information
-* Updated in vivo PK data fits from [CvTdb](https://github.com/USEPA/CompTox-PK-CvTdb). Tables `chem.invivo.PK.summary.data` and `chem.invivo.PK.aggregate.data` have more empirical parameters by dose-species-chemical and species-chemical, respectively. Fits made using [invivoPKfit](https://cran.r-project.org/web/packages/invivoPKfit/index.html). Unfortunately table `chem.invivo.PK.data` has been removed because the CvT data are now too large for distribution through CRAN but are still available from [GitHub](https://github.com/USEPA/CompTox-PK-CvTdb).
+* Updated in vivo PK data fits from [CvTdb](https://github.com/USEPA/CompTox-PK-CvTdb). Tables `chem.invivo.PK.summary.data` and `chem.invivo.PK.aggregate.data` have more empirical parameters by dose-species-chemical and species-chemical, respectively. Fits made using [invivoPKfit](https://CRAN.R-project.org/package=invivoPKfit). Unfortunately table `chem.invivo.PK.data` has been removed because the CvT data are now too large for distribution through CRAN but are still available from [GitHub](https://github.com/USEPA/CompTox-PK-CvTdb).
 * Warning message added to `add_chemtable` to indiate when pre-existing data in `chem.phys_and_invitro.data` prevented new data from being added. Set overwrite=TRUE to overwrite pre-existing data. (thank you jessica-ewald)
 
 ## Bug fixes

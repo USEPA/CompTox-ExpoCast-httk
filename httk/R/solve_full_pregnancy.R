@@ -14,7 +14,7 @@
 #' 
 #' @param chem.cas Either the chemical name, CAS number, or DTXSID must be specified.
 #' 
-#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard}) 
+#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard}) 
 #' 
 #' @param time.course Time sequence in days. Default is from 0th week of pregnancy to 
 #' 40th, incremented by day. 
