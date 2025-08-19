@@ -308,9 +308,13 @@ void derivs_dermal_1subcomp (int *neq, double *pdTime, double *y, double *ydot, 
                    0.0)
                  ) ;
 
-  Rin_oral = kgutabs * y[ID_Agutlumen] ;
+  Rin_oral = (y[ID_Agutlumen] >= 0.0 ?
+              kgutabs * y[ID_Agutlumen] :
+              0.0);
   
-  Rout_exhaled = Qalv * yout[ID_Clung] * Rblood2plasma / ( Klung2pu * Fraction_unbound_plasma * Kblood2air ) ;
+  Rout_exhaled = (yout[ID_Clung] >= 0.0 ?
+                  Qalv * yout[ID_Clung] * Rblood2plasma / ( Klung2pu * Fraction_unbound_plasma * Kblood2air ) :
+                  0.0);
 
   ydot[ID_Avehicle] = - Rin_dermal * (1 - InfiniteDose) ;
 
@@ -330,7 +334,9 @@ void derivs_dermal_1subcomp (int *neq, double *pdTime, double *y, double *ydot, 
 
   ydot[ID_Aven] = ( ( Qliver + Qgut ) * yout[ID_Cliver] / Kliver2pu + Qkidney * yout[ID_Ckidney] / Kkidney2pu + Qrest * yout[ID_Crest] / Krest2pu + Qskin_unexposed * yout[ID_Cskin_unexposed] / Kskin2pu + Qskin_exposed * yout[ID_Cskin_exposed] / Kskin2pu ) * Rblood2plasma / Fraction_unbound_plasma - Qcardiac * yout[ID_Cven] ;
 
-  ydot[ID_Alung] = Qcardiac * ( yout[ID_Cven] - yout[ID_Clung] * Rblood2plasma / Klung2pu / Fraction_unbound_plasma ) - Rout_exhaled ;
+  ydot[ID_Alung] = (yout[ID_Clung] >= 0.0 ?
+                    Qcardiac * ( yout[ID_Cven] - yout[ID_Clung] * Rblood2plasma / Klung2pu / Fraction_unbound_plasma ) - Rout_exhaled :
+                    0.0);
 
   ydot[ID_Aart] = Qcardiac * ( y[ID_Alung] / Vlung * Rblood2plasma / Klung2pu / Fraction_unbound_plasma - y[ID_Aart] / Vart ) ;
 
