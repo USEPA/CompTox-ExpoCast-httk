@@ -24,6 +24,7 @@
 #' \insertRef{breen2022simulating}{httk}
 #'
 #' @examples
+#' \donttest{
 #' Fup.95 <- 0.02
 #' N <- 1000
 #'
@@ -36,6 +37,7 @@
 #'
 #' quantile(rmed0non0u95(200,x.u95=0.005,x.min=10^-4,x.LOD=0.01),c(0.5,0.975))
 #' hist(rmed0non0u95(1000,x.u95=0.005,x.min=10^-4,x.LOD=0.01))
+#' }
 #'
 #' @keywords httk-pop
 #' 

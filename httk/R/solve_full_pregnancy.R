@@ -14,7 +14,7 @@
 #' 
 #' @param chem.cas Either the chemical name, CAS number, or DTXSID must be specified.
 #' 
-#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard}) 
+#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard}) 
 #' 
 #' @param time.course Time sequence in days. Default is from 0th week of pregnancy to 
 #' 40th, incremented by day. 
@@ -55,8 +55,8 @@
 #' @seealso \code{\link{parameterize_fetal_pbtk}}
 #' 
 #' @examples
-#' \donttest{
 #' 
+#' \donttest{
 #' # dosing schedule of 1 mg/kg BW/day for 40 weeks
 #' # return solution by hour
 #' out <- solve_full_pregnancy(chem.name = "fipronil",  

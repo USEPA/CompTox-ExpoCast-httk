@@ -235,6 +235,7 @@
 #'
 #' @examples
 #' 
+#' \donttest{
 #' params <- parameterize_dermal_pbtk(chem.cas="80-05-7")
 #' 
 #' params <- parameterize_dermal_pbtk(chem.cas="80-05-7", model.type="dermal_1subcomp", 
@@ -242,6 +243,7 @@
 #' 
 #' params <- parameterize_dermal_pbtk(chem.cas="80-05-7", model.type="dermal", 
 #' Kvehicle2water = "octanol")
+#' }
 #' 
 #' @export parameterize_dermal_pbtk
 parameterize_dermal_pbtk <- 

@@ -232,10 +232,10 @@
 #' @seealso \code{\link{parameterize_gas_pbtk}}
 #'
 #' @examples
-#' \donttest{
 #' 
 #' solve_gas_pbtk(chem.name = 'pyrene', exp.conc = 1, period = 24, expduration = 24)
 #' 
+#' \donttest{
 #' out <- solve_gas_pbtk(chem.name='pyrene',
 #'                       exp.conc = 0, doses.per.day = 2,
 #'                       daily.dose = 3, input.units = "umol",

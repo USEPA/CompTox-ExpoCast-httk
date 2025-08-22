@@ -46,7 +46,7 @@
 #' @param chem.cas Either the chemical name, CAS number, or the parameters must
 #' be specified.
 #' 
-#' @param dtxsid EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})  
+#' @param dtxsid EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})  
 #' the chemical must be identified by either CAS, name, or DTXSIDs
 #' 
 #' @param times Optional time sequence in days. Dosing sequence begins at the
@@ -157,10 +157,10 @@
 #'
 #' @examples
 #' 
-#' \donttest{
 #' out = solve_fetal_pbtk(chem.name = 'bisphenol a', daily.dose = 1,
 #' doses.per.day = 3)
 #'
+#' \donttest{
 #' # With adjustement to fraction unbound plasma for fetus:
 #' fetal_parms_fup_adjusted <- 
 #'   parameterize_fetal_pbtk(chem.name = "triclosan")

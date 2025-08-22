@@ -50,6 +50,7 @@ New tissues can be added to this table to generate
 their partition coefficients.
 }
 \examples{
+\donttest{
 # We can add thyroid to the tissue data by making a row containing
 # its data, subtracting the volumes and flows from the rest-of-body, 
 # and binding the row to tissue.data. Here we assume it contains the same 
@@ -96,7 +97,7 @@ calc_mc_css(chem.cas="80-05-7",
             parameterize.args.list =list(default.to.human=TRUE),
             suppress.messages=TRUE,
             samples = 100)
-
+}
 }
 \references{
 \insertRef{birnbaum1994physiological}{httk}

@@ -24,7 +24,7 @@ must be specified.}
 
 \item{chem.cas}{Either the chemical name, CAS number, or DTXSID must be specified.}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})}
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})}
 
 \item{time.course}{Time sequence in days. Default is from 0th week of pregnancy to 
 40th, incremented by day.}
@@ -63,8 +63,8 @@ stitching together the 1tri and fetal PBTK models with appropriate initial
 conditions, as described in Truong et al. (TBD).
 }
 \examples{
-\donttest{
 
+\donttest{
 # dosing schedule of 1 mg/kg BW/day for 40 weeks
 # return solution by hour
 out <- solve_full_pregnancy(chem.name = "fipronil",  

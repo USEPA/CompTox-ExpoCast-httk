@@ -50,7 +50,7 @@ must be specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
 
-\item{dtxsid}{EPA's DSSTox Structure ID (\url{http://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs.}
 
 \item{model.type}{Choice of dermal model, either the default "dermal_1subcomp" for
@@ -206,6 +206,8 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 
 # Dermal exposure to default dose
 out <- solve_dermal_pbtk(chem.name="bisphenola")
+
+\donttest{
 # Dermal exposure to 20 mg/L in 0.01 L of octanol with wash-off after 8 hours
 # Since skin permeability happens quickly for bisphenol A, let's only look at 3 days.
 dose.conc <- 2 #mg/L
@@ -245,6 +247,7 @@ head(solve_dermal_pbtk(chem.name="bisphenola", route="dermal"))
 head(solve_dermal_pbtk(chem.name="bisphenola", route="iv"))
 # And oral:
 head(solve_dermal_pbtk(chem.name="bisphenola", route="oral"))
+}
 
 }
 \author{
