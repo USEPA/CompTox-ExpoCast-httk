@@ -58,7 +58,7 @@ REFERENCE.LIST <- c("https://doi.org/10.1021/acs.estlett.4c00967", # Wambaugh 20
 names(REFERENCE.LIST) <- MODELS.LIST
 
 # How many processors are available for parallel computing:
-NUM.CPU <- 7
+NUM.CPU <- 15
              
 # Add the in silico predictions:
 QSPR.LIST <- c("load_dawson2021","load_sipes2017","load_pradeep2020","load_honda2023")
@@ -237,6 +237,8 @@ make.ccd.table <- function(
             paste(stringr::str_to_title(this.row["Data.Source.Species"]),
                   "Clint.Reference",
                   sep=".")])
+          # clint.ref should be a single value, but just in case:
+          clint.ref <- clint.ref[1]
           if (is.na(clint.ref) | inherits(clint.ref, "try-error"))
           {
             this.row$Measured <- HTTK.data[,
@@ -264,6 +266,8 @@ make.ccd.table <- function(
             paste(stringr::str_to_title(this.row["Data.Source.Species"]),
                   "Funbound.plasma.Reference",
                   sep=".")])
+          # fup.ref should be a single value, but just in case:
+          fup.ref <- fup.ref[1]
           if (is.na(fup.ref) | inherits(fup.ref, "try-error")) {
             this.row$Measured <-HTTK.data[,
                                            regexpr("Funbound.plasma",
@@ -391,6 +395,9 @@ clusterEvalQ(cl, sapply(QSPR.LIST,function(x) do.call(x,args=list())))
 
 #all.ids <- c("DTXSID0047379",all.ids[1:20])
 # Create a list with one table per chemical:
+cat(paste0("Building the table of HTTK predictions using ",
+           NUM.CPU,
+           " cores...\n"))
 dashboard.list <- ParallelLogger::clusterApply(cl,
                                all.ids,
                                function(x)
