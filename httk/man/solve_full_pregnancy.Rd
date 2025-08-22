@@ -63,8 +63,8 @@ stitching together the 1tri and fetal PBTK models with appropriate initial
 conditions, as described in Truong et al. (TBD).
 }
 \examples{
-\donttest{
 
+\donttest{
 # dosing schedule of 1 mg/kg BW/day for 40 weeks
 # return solution by hour
 out <- solve_full_pregnancy(chem.name = "fipronil",  

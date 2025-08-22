@@ -581,7 +581,7 @@ SEEM <- read.csv("SupTable-all.chem.preds-2018-11-28.txt",stringsAsFactors=F)
 ```
 
 If you want, you can also download the predictions for specific chemicals from
-the [Comptox Chemicals Dashboard](https://comptox.epa.gov/dashboard/). Be
+the [Comptox Chemicals Dashboard](https://comptox.epa.gov/dashboard). Be
 sure to use Batch Search and select the option for "NHANES/Predicted Exposure".
 You can download the file in a "comma separated values" or ".CSV" format, in 
 which case you use "read.csv". Or you can download an Excel ".xls" file which

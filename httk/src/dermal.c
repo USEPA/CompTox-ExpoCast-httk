@@ -380,7 +380,9 @@ void derivs_dermal (int *neq, double *pdTime, double *y, double *ydot, double *y
 
   ydot[ID_Akidney] = Qkidney * yout[ID_Cart] - Qkidney * yout[ID_Ckidney] / Kkidney2pu * Rblood2plasma / Fraction_unbound_plasma - Qgfr *  Fraction_unbound_plasma / Rblood2plasma * y[ID_Aart] / Vart ;
 
-  ydot[ID_Atubules] = Qgfr *  Fraction_unbound_plasma / Rblood2plasma * y[ID_Aart] / Vart ;
+  ydot[ID_Atubules] = (y[ID_Aart] > 0.0 ?
+                       Qgfr *  Fraction_unbound_plasma / Rblood2plasma * y[ID_Aart] / Vart :
+                       0.0);
 
   ydot[ID_Ametabolized] = Clmetabolism * yout[ID_Cliver] / Kliver2pu ;
 

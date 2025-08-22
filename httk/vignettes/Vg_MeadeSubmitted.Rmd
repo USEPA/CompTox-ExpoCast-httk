@@ -76,7 +76,7 @@ make.plots.2 <- FALSE # change to TRUE to make the plots
 Here, we set our working directory (the location of this file and the necessary data files) and load necessary packages. **Please reset your working directory below to `loc.wd` or the code will produce an error.**
 
 We also set the location of the R package `httk` using the name `loc.httk` so that we can run the functions `modelinfo_dermal.R` and `modelinfo_dermal_1subcomp.R` file later in the code. Note that if you have `run.simulations = FALSE`, the variable `loc.httk` is not used, so you do not need to provide or change it.
-```{r setup, eval = TRUE}
+```{r setup, eval = TRUE, eval = run.simulations}
 # Set working directory
 loc.wd <- "C:/Users/jwambaug/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/Research Projects/DermalTK/vingette"
 #loc.wd <- "/Users/ameade/Library/CloudStorage/GoogleDrive-aemeade7@gmail.com/My Drive/EPA/HTTK-Dermal/HTTK-Dermal-Vignette"

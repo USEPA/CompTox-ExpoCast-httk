@@ -68,9 +68,10 @@ or other type if specified. Based on  Ito and Houston (2004)
 }
 \examples{
 
+\donttest{
 calc_hep_clearance(chem.name="Ibuprofen",hepatic.model='unscaled')
 calc_hep_clearance(chem.name="Ibuprofen",well.stirred.correction=FALSE)
-
+} 
 
 }
 \references{

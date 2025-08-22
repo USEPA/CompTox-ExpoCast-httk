@@ -259,6 +259,7 @@ temp <- armitage_eval(casrn.vector = c("80-05-7", "81-81-2"), this.FBSf = 0.1,
 this.well_number = 384, nomconc = 10)
 print(temp$cfree.invitro)
 
+\donttest{
 # Check to see if we have info on the chemical:
 "793-24-8" \%in\% get_cheminfo()
 
@@ -299,6 +300,7 @@ out <- armitage_eval(
   
 print(out)
 
+}
 }
 \references{
 \insertRef{armitage2014application}{httk}
