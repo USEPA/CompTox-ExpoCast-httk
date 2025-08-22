@@ -1113,6 +1113,7 @@
 #' \insertRef{griffin2008models}{httk} 
 #'
 #' @examples
+#' \donttest{
 #' # We can add a new species (for example, wolverines) by adding new information
 #' # to the physiology.data and tissue.data tables. It can be convenient to start by
 #' # by replicating the data from another species and adjusting as appropriate:
@@ -1143,6 +1144,7 @@
 #'             parameterize.args.list =list(default.to.human=TRUE),
 #'             suppress.messages=TRUE,
 #'             samples = 100)
+#' }
 #'
 #' @keywords data
 "physiology.data"
@@ -1208,6 +1210,7 @@
 #' \insertRef{wambaugh2015toxicokinetic}{httk}
 #'
 #' @examples
+#' \donttest{
 #' # We can add thyroid to the tissue data by making a row containing
 #' # its data, subtracting the volumes and flows from the rest-of-body, 
 #' # and binding the row to tissue.data. Here we assume it contains the same 
@@ -1254,7 +1257,7 @@
 #'             parameterize.args.list =list(default.to.human=TRUE),
 #'             suppress.messages=TRUE,
 #'             samples = 100)
-#'
+#' }
 #' @keywords data
 "tissue.data"
 

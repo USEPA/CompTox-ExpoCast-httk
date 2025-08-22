@@ -163,6 +163,8 @@
 #' 
 #' # Dermal exposure to default dose
 #' out <- solve_dermal_pbtk(chem.name="bisphenola")
+#' 
+#' \donttest{
 #' # Dermal exposure to 20 mg/L in 0.01 L of octanol with wash-off after 8 hours
 #' # Since skin permeability happens quickly for bisphenol A, let's only look at 3 days.
 #' dose.conc <- 2 #mg/L
@@ -195,7 +197,6 @@
 #' parameters$Vvehicle <- 1
 #' out <- solve_dermal_pbtk(parameters=parameters)
 #' 
-#' \donttest{
 #' # Dermal is the default route:
 #' head(solve_dermal_pbtk(chem.name="bisphenola"))
 #' head(solve_dermal_pbtk(chem.name="bisphenola", route="dermal"))

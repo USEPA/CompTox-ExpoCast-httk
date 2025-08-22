@@ -68,8 +68,9 @@
 #' @examples
 #' 
 #' calc_hep_clearance(chem.name="Ibuprofen",hepatic.model='unscaled')
+#' \donttest{
 #' calc_hep_clearance(chem.name="Ibuprofen",well.stirred.correction=FALSE)
-#' 
+#' }
 #' @importFrom purrr compact 
 #' 
 #' @export calc_hep_clearance
@@ -344,9 +345,10 @@ calc_hep_clearance <- function(chem.name=NULL,
 #'
 #' @examples
 #' 
+#' \donttest{
 #' calc_hep_clearance(chem.name="Ibuprofen",hepatic.model='unscaled')
 #' calc_hep_clearance(chem.name="Ibuprofen",well.stirred.correction=FALSE)
-#' 
+#' } 
 #' 
 #' @export calc_hepatic_clearance
 calc_hepatic_clearance <- function(chem.name=NULL,

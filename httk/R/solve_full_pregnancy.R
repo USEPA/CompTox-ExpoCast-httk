@@ -55,7 +55,6 @@
 #' @seealso \code{\link{parameterize_fetal_pbtk}}
 #' 
 #' @examples
-#' \donttest{
 #' 
 #' # dosing schedule of 1 mg/kg BW/day for 40 weeks
 #' # return solution by hour
@@ -64,6 +63,7 @@
 #'                            doses.per.day = 1,
 #'                            time.course = seq(0, 40*7, 1/24))
 #'                    
+#' \donttest{
 #'                                
 #' # return solution in chemical amounts for fetal compartments + placenta
 #' maternal_compts <- c('gutlumen', 'gut', 'liver', 'kidney', 'lung', 'ven', 'art', 
