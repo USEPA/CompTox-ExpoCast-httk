@@ -237,6 +237,8 @@ make.ccd.table <- function(
             paste(stringr::str_to_title(this.row["Data.Source.Species"]),
                   "Clint.Reference",
                   sep=".")])
+          # clint.ref should be a single value, but just in case:
+          clint.ref <- clint.ref[1]
           if (is.na(clint.ref) | inherits(clint.ref, "try-error"))
           {
             this.row$Measured <- HTTK.data[,
@@ -264,6 +266,8 @@ make.ccd.table <- function(
             paste(stringr::str_to_title(this.row["Data.Source.Species"]),
                   "Funbound.plasma.Reference",
                   sep=".")])
+          # fup.ref should be a single value, but just in case:
+          fup.ref <- fup.ref[1]
           if (is.na(fup.ref) | inherits(fup.ref, "try-error")) {
             this.row$Measured <-HTTK.data[,
                                            regexpr("Funbound.plasma",
