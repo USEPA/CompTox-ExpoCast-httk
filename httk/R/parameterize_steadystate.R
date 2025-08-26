@@ -148,7 +148,7 @@
 #' @examples
 #' 
 #'  parameters1 <- parameterize_steadystate(chem.name='Bisphenol-A',species='Rat')
-#' 
+#' \donttest{
 #'  parameters2 <- parameterize_steadystate(chem.cas='80-05-7')
 #' 
 #' # The following will not work because Diquat dibromide monohydrate's 
@@ -159,7 +159,7 @@
 #' # that  Diquat dibromide monohydrate is not too volatile:
 #' parameters3 <- parameterize_steadystate(chem.cas = "6385-62-2",
 #'                                  physchem.exclude = FALSE) 
-#' 
+#' }
 #' @keywords 3compss
 #' 
 #' @export parameterize_steadystate
