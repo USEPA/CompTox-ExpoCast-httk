@@ -57,6 +57,8 @@
 #' @examples
 #' 
 #' \donttest{
+#' library(httk)
+#'
 #' # dosing schedule of 1 mg/kg BW/day for 40 weeks
 #' # return solution by hour
 #' out <- solve_full_pregnancy(chem.name = "fipronil",  
@@ -85,10 +87,6 @@
 #'                                 time.course = seq(0, 40*7, 1), 
 #'                                 track.vars = c(paste0("Cf", fetal_compts), "Cplacenta"))
 #' 
-#' # plot solution based on output 
-#' plt.out <- solve_full_pregnancy(chem.name = "genistein", 
-#'                                 dose = 1, plt = TRUE)
-#'
 #' }
 #' @export solve_full_pregnancy
 #' @importFrom dplyr bind_rows
