@@ -66,10 +66,10 @@ and if `run.simulations = FALSE`, make sure to have the following files in your 
 
 ```{r runchunks, eval = TRUE}
 # Set whether or not the following chunks will be executed (run):
-run.simulations <- TRUE # Change FALSE to TRUE here to make the vignette work
-make.plots <- TRUE # change to TRUE to make the plots
-run.simulations.2 <- TRUE #for second part of vignette
-make.plots.2 <- TRUE # change to TRUE to make the plots
+run.simulations <- FALSE # Change FALSE to TRUE here to make the vignette work
+make.plots <- FALSE # change to TRUE to make the plots
+run.simulations.2 <- FALSE #for second part of vignette
+make.plots.2 <- FALSE # change to TRUE to make the plots
 ```
 
 ### Set working directory and install packages
@@ -1520,86 +1520,4 @@ save.image(paste0(loc.wd,
                       "MeadeWorkspace",
                       Sys.Date(),
                       ".RData"))
-```
-
-```{r PCA_data, eval=make.plots.2}
-cvt.chems <- sort(unique(conc_predictions_meade2023DF$test_substance_dtxsid))
-ivive.chems <- sort(unique(ivive_meade2023$DTXSID))
-all.chems <- sort(unique(c(cvt.chems,ivive.chems)))
-all.chems <- all.chems[all.chems %in% get_cheminfo(info="dtxsid",
-                                                   model="dermal_1subcomp",
-                                                   suppress.messages=TRUE)]
-any(cvt.chems %in% ivive.chems)
-length(cvt.chems)
-length(ivive.chems)
-chem.props <- subset(chem.physical_and_invitro.data, DTXSID %in% all.chems)
-rownames(chem.props) <- chem.props$DTXSID
-chem.props <- chem.props[,c("logHenry","logP","logPwa","logWSol","MP","MW")]
-for (this.chem in rownames(chem.props))
-{
-  p <- parameterize_dermal_pbtk(dtxsid=this.chem,
-                                suppress.messages=TRUE)
-  chem.props[this.chem,c("Rblood2plasma",
-                         "MA",
-                         "Kskin2pu",
-                         "Kskin2vehicle",
-                         "Kblood2air",
-                         "Funbound.plasma",
-                         "Fabsgut",
-                         "Clint")] <- p[
-                           c("Rblood2plasma",
-                             "MA",
-                             "Kskin2pu",
-                             "Kskin2vehicle",
-                             "Kblood2air",
-                             "Funbound.plasma",
-                             "Fabsgut",
-                             "Clint")]
-}
-```
-```{r PCA_table, eval=make.plots.2}
-#library(plotly)
-#library(stats)
-chem.props2 <- chem.props#[,!(colnames(chem.props) %in% "MW")]
-chem.props2$MW <- log10(chem.props2$MW)
-chem.props2$Kblood2air <- log10(chem.props2$Kblood2air)
-chem.props2$MA <- log10(chem.props2$MA)
-chem.props2$MP <- log10(chem.props2$MP+273)
-chem.props2$Kskin2pu <- log10(chem.props2$Kskin2pu)
-chem.props2$Kskin2vehicle <- log10(chem.props2$Kskin2vehicle)
-chem.props2$Rblood2plasma <- log10(chem.props2$Rblood2plasma)
-chem.props2$Clint <- log10(chem.props2$Clint)
-chem.props2$Clint[is.infinite((chem.props2$Clint))] <- -3
-chem.props2 <- chem.props2[apply(chem.props2,
-                                 1,
-                                 function(x) all(!is.na(x))), ]
-chem.props2 <- apply(chem.props2,
-                     2,
-                     function(x) (x - mean(x)/sd(x)))
-prin_comp <- prcomp(chem.props2)
-explained_variance_ratio <- summary(prin_comp)[["importance"]]['Proportion of Variance',]
-chem.props.pca <- as.data.frame(chem.props2 %*% prin_comp$rotation)
-chem.props.pca$CvT <- "None"
-chem.props.pca[rownames(chem.props.pca) %in% cvt.chems,"CvT"] <- "CvT"
-chem.props.pca$IVIVE <- "None"
-chem.props.pca[rownames(chem.props.pca) %in% ivive.chems,"IVIVE"] <- "IVIVE"
-
-pca.fig <- ggplot(data=chem.props.pca) +
-   geom_point(data=subset(chem.props.pca,CvT=="CvT"),
-size=3,
-    aes(
-    x=PC1,
-    y=PC2,
-    shape=IVIVE,
-    color=CvT))+
- geom_point(alpha=0.2,size=3,
-    aes(
-    x=PC1,
-    y=PC2,
-    color=CvT,
-    shape=IVIVE))#+
-   # xlim(-1300,200)+
-    #ylim(-75,25)
-
-print(pca.fig)
 ```
