@@ -173,6 +173,7 @@ load_dawson2021 <- function(
                          Clint = 'QSAR_Clint'),
                        reference = 'Dawson 2021', 
                        species= 'Human', 
-                       overwrite=overwrite),
+                       overwrite=overwrite,
+                       suppress.messages=TRUE),
          envir=target.env)
 }

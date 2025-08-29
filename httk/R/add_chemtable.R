@@ -89,7 +89,8 @@ augment.table <- function(
   overwrite=FALSE,
   sig.fig = 4,
   clint.pvalue.overwrite=TRUE,
-  allow.na=FALSE)
+  allow.na=FALSE,
+  suppress.messages=FALSE)
 {
   # Columns stored in chem.phys_and_invitro.table:
   CHEM.ID.COLS<-c(
@@ -304,7 +305,8 @@ augment.table <- function(
     } else if (!is.na(this.table[index,this.property]) | 
       !overwrite)
     {
-      warning(paste("Preexisting value found for",
+      if (!suppress.messages) 
+        warning(paste("Preexisting value found for",
                     this.CAS,
                     "property",
                     this.property,
@@ -500,7 +502,8 @@ add_chemtable <- function(
   overwrite=FALSE,
   sig.fig = 4,
   clint.pvalue.overwrite=TRUE,
-  allow.na=FALSE)
+  allow.na=FALSE,
+  suppress.messages=FALSE)
 {
 # Trouble with tibls:
   new.table <- as.data.frame(new.table)
@@ -579,7 +582,8 @@ columns in \"data.list\".")
         overwrite=overwrite,
         sig.fig=sig.fig,
         clint.pvalue.overwrite=clint.pvalue.overwrite,
-        allow.na=allow.na)
+        allow.na=allow.na,
+        suppress.messages=suppress.messages)
     }
   }
 

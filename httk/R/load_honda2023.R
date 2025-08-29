@@ -104,7 +104,8 @@ load_honda2025 <- function(
                          Caco2.Pab="Pab.Quant.Pred"),
                        reference = 'Honda 2025',
                        species="Human", 
-                       overwrite=overwrite),
+                       overwrite=overwrite,
+                       suppress.messages=TRUE),
          envir=target.env)
 }
 

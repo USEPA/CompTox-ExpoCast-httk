@@ -148,6 +148,7 @@ load_pradeep2020 <- function(
                          Clint = 'pred_clint_rf'),
                        reference = 'Pradeep 2020', 
                        species= 'Human', 
-                       overwrite=overwrite),
+                       overwrite=overwrite,
+                       suppress.messages=TRUE),
          envir=target.env)
 }
