@@ -112,6 +112,18 @@ RMSLE <- function(tab,colx,coly)
 }
 ```
 
+```{r withinten_function, eval = execute.vignette}
+withinten <- function(tab,colx,coly) 
+{ 
+    tab <- subset(tab, !is.na(colx) & !is.na(coly))
+    return(paste0(
+    dim(subset(tab,abs(log10(tab[,colx]/tab[,coly]))<=1))[1],
+    " out of ",
+    dim(tab)[1],
+    " predictions were within a factor of ten of the observations"))
+}
+```
+
 # Analysis of Crizer et al. (2023) $Cl_{int}$ data
 
 ## Methods
@@ -830,7 +842,7 @@ fig.species.scaling <- ggplot(data=half.lives) +
     colour=Type,
     fill=Type),
     bins=10) +
-  xlab(expression(Human:Rat~t_[1/2]~Ratio)) +
+  xlab(expression(Human:Rat~t[1/2]~Ratio)) +
   scale_x_log10(label=scientific_10)+
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE))+
@@ -1033,7 +1045,7 @@ fig.clml.invivo  <- ggplot(data=subset(cl.table, Class=="PFAS")) +
 #  geom_line(aes(x=logP,y=logPfit1),color="black") + 
 #  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
   ylab("In Vivo Clearance (L/h/kg bw)") + 
-  xlab("Machine Learning Clearance (L/h/kg bw)") +
+  xlab("ML One Comp. Clearance (L/h/kg bw)") +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
    scale_color_viridis(discrete=4)+
@@ -1061,7 +1073,7 @@ fig.ratio.ml  <- ggplot(data=subset(cl.table, Species!="Human" & Class=="PFAS"))
 #  geom_line(aes(x=logP,y=logPfit1),color="black") + 
 #  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
   ylab("In Vivo Observed Clearance Ratio") + 
-  xlab("Machine Learning Predicted Clearance Ratio") +
+  xlab("ML One Comp. Predicted Clearance Ratio") +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
    scale_color_viridis(discrete=3)+
@@ -1364,6 +1376,10 @@ cat(paste0("As shown in panel A of Figure 4, this model does well (RMSLE ",
                  "MachineLearning.Cltot.Lphpkgbw",
                  "ClLphpkgbw"),
            ") at reproducing the data on which it was essentially trained.\n"))
+cat(paste0(withinten(subset(cl.table, Class=="PFAS"),
+                 "MachineLearning.Cltot.Lphpkgbw",
+                 "ClLphpkgbw"),
+           ".\n"))
 
 cat("\nResults: 3.4\n")
 cat(paste0("The overall RMSLE is ",
@@ -1371,10 +1387,17 @@ cat(paste0("The overall RMSLE is ",
                  "HTTKPFAS.Cltot.Lphpkgbw",
                  "ClLphpkgbw"),
            ".\n"))
+cat(paste0(withinten(subset(cl.table, Class=="PFAS"),
+                 "HTTKPFAS.Cltot.Lphpkgbw",
+                 "ClLphpkgbw"),
+           ".\n"))
 cat("\n")
 cat(paste0("HTTK-PFAS clearance ratios are improved, in contrast to Figure 2, with an RMSLE of ",
            RMSLE(subset(cl.table, Species!="Human" & Class=="PFAS"),
                  "TK.Ratio.HTTKPFAS","TK.Ratio.InVivo"),
+           ".\n"))
+cat(paste0(withinten(subset(cl.table, Species!="Human" & Class=="PFAS"),
+                        "TK.Ratio.HTTKPFAS","TK.Ratio.InVivo"),
            ".\n"))
 ```
 
