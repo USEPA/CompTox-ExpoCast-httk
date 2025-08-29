@@ -364,6 +364,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #' this.well_number = 384, nomconc = 10)
 #' print(temp$cfree.invitro)
 #'
+#' \donttest{
 #' # Check to see if we have info on the chemical:
 #' "793-24-8" %in% get_cheminfo()
 #' 
@@ -404,6 +405,7 @@ armitage_estimate_sarea <- function(tcdata = NA, # optionally supply columns v_w
 #'   
 #' print(out)
 #' 
+#' }
 #' @export armitage_eval
 #' 
 

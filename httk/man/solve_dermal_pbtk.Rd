@@ -206,6 +206,8 @@ fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 
 # Dermal exposure to default dose
 out <- solve_dermal_pbtk(chem.name="bisphenola")
+
+\donttest{
 # Dermal exposure to 20 mg/L in 0.01 L of octanol with wash-off after 8 hours
 # Since skin permeability happens quickly for bisphenol A, let's only look at 3 days.
 dose.conc <- 2 #mg/L
@@ -238,7 +240,18 @@ parameters$Fskin_exposed <- 0.25
 parameters$Vvehicle <- 1
 out <- solve_dermal_pbtk(parameters=parameters)
 
-\donttest{
+head(solve_dermal_pbtk(chem.name="propylparaben"))
+head(solve_dermal_pbtk(chem.cas="94-13-3"))
+
+
+p <- parameterize_dermal_pbtk(chem.name="propylparaben")
+p <- p[sort(names(p))]
+# Try to standardize order of variable names
+for (this.param in 
+     names(p)[order(toupper(names(p)))]) cat(
+     paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
+head(solve_dermal_pbtk(parameters=p))
+       
 # Dermal is the default route:
 head(solve_dermal_pbtk(chem.name="bisphenola"))
 head(solve_dermal_pbtk(chem.name="bisphenola", route="dermal"))

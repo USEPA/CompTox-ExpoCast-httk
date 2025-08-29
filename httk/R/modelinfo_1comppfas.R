@@ -185,11 +185,11 @@ model.list[[THIS.MODEL]]$state.vars <- c(
 
 #Parameters needed to make a prediction (this is used by get_cheminfo):
 model.list[[THIS.MODEL]]$required.params <- c(
-  "Clint", 
-  "Funbound.plasma",
-  "Pow",
-  "pKa_Donor",
-  "pKa_Accept",
+#  "Clint", 
+#  "Funbound.plasma",
+#  "Pow",
+#  "pKa_Donor",
+#  "pKa_Accept",
   "MW"
    )
    

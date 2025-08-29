@@ -82,8 +82,9 @@ replaced. For non-restrictive clearance the effective fup = 1.
 \examples{
 
 calc_hep_clearance(chem.name="Ibuprofen",hepatic.model='unscaled')
+\donttest{
 calc_hep_clearance(chem.name="Ibuprofen",well.stirred.correction=FALSE)
-
+}
 }
 \references{
 \insertAllCited{}

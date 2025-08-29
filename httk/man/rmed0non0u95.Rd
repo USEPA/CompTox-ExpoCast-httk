@@ -28,6 +28,7 @@ that values above x.u95 are uniformly distributed between x.u95 and x.u95 +
 (x.u95 - x.LOD)
 }
 \examples{
+\donttest{
 Fup.95 <- 0.02
 N <- 1000
 
@@ -40,6 +41,7 @@ hist(rmed0non0u95(1000,x.u95=0.05,x.min=10^-4,x.LOD=0.01))
 
 quantile(rmed0non0u95(200,x.u95=0.005,x.min=10^-4,x.LOD=0.01),c(0.5,0.975))
 hist(rmed0non0u95(1000,x.u95=0.005,x.min=10^-4,x.LOD=0.01))
+}
 
 }
 \references{

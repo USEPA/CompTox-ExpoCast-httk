@@ -188,10 +188,10 @@ model. However, PFAS chemicals can be included with the argument
 }
 \examples{
 
-\donttest{
 out = solve_fetal_pbtk(chem.name = 'bisphenol a', daily.dose = 1,
 doses.per.day = 3)
 
+\donttest{
 # With adjustement to fraction unbound plasma for fetus:
 fetal_parms_fup_adjusted <- 
   parameterize_fetal_pbtk(chem.name = "triclosan")

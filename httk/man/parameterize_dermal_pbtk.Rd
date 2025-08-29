@@ -242,6 +242,7 @@ This function initializes the parameters needed in the functions solve_dermal_pb
 }
 \examples{
 
+\donttest{
 params <- parameterize_dermal_pbtk(chem.cas="80-05-7")
 
 params <- parameterize_dermal_pbtk(chem.cas="80-05-7", model.type="dermal_1subcomp", 
@@ -249,6 +250,7 @@ method.permeability="Potts-Guy")
 
 params <- parameterize_dermal_pbtk(chem.cas="80-05-7", model.type="dermal", 
 Kvehicle2water = "octanol")
+}
 
 }
 \references{

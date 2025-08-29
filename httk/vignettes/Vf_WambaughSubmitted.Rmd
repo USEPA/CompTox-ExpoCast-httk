@@ -52,7 +52,7 @@ building the package. If you want this vignette to work, you must run all code,
 either by cutting and pasting it into R. Or, if viewing the .RMD file, you can
 either change execute.vignette to TRUE or press "play" (the green arrow) on
 each chunk in RStudio.
-```{r runchunks}
+```{r runchunks, eval = TRUE}
 # Set whether or not the following chunks will be executed (run):
 execute.vignette <- FALSE
 ```
@@ -245,8 +245,8 @@ cat(paste("(intrinsic hepatocyte clearance) in",
 load(paste0(LOC.WD,"Clint-Fup-Values.RData"))
 fig.clint.fup  <- ggplot(data=clint.fup) +
   geom_point(aes(
-    x=Human.Funbound.plasma,
-    y=Human.Clint,
+    x=Human.Funbound.plasma+10^-8,
+    y=Human.Clint+10^-5,
     colour=Chemical.Class,
     shape=Chemical.Class),
     size=POINT.SIZE) +
@@ -262,7 +262,7 @@ print(fig.clint.fup)
 
 fig.fup.hist <- ggplot(data=clint.fup) +
   geom_histogram(aes(
-    x=Human.Funbound.plasma,
+    x=Human.Funbound.plasma+10^-8,
     colour=Chemical.Class,
     fill=Chemical.Class)) +
   xlab(expression(italic("In Vitro")~"Measured f"[up])) +
@@ -830,7 +830,7 @@ fig.species.scaling <- ggplot(data=half.lives) +
     colour=Type,
     fill=Type),
     bins=10) +
-  xlab("Human:Rat PK Half-Life Ratio") +
+  xlab(expression(Human:Rat~t_[1/2]~Ratio)) +
   scale_x_log10(label=scientific_10)+
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE))+

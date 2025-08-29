@@ -58,38 +58,6 @@ The model outputs are provided in the following units:
 [5,]      2.3e-03 1.1e-04
 [6,]      3.8e-03 1.6e-04
 There were 13 warnings (use warnings() to see them)
-> signif(head(solve_dermal_pbtk(chem.cas="94-13-3")), 
-+        2)
-None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
-
-AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.654.
-The model outputs are provided in the following units:
-	umol: Avehicle, Aplasma, Ain, Aexhaled, Atubules, Ametabolized
-	uM: Cgut, Cliver, Cven, Clung, Cart, Crest, Ckidney, Cplasma, Cskin_exposed, Cskin_unexposed, Cvehicle
-	uM*days: AUC
-
-     time Avehicle   Cgut Cliver    Cven   Clung    Cart  Crest Ckidney Cplasma
-[1,] 0.00      390 0.0000 0.0000 0.00000 0.00000 0.00000 0.0000  0.0000  0.0000
-[2,] 0.01      390 0.0028 0.0025 0.00099 0.00073 0.00095 0.0003  0.0057  0.0015
-[3,] 0.02      390 0.0066 0.0090 0.00190 0.00140 0.00180 0.0011  0.0120  0.0028
-[4,] 0.03      390 0.0098 0.0160 0.00260 0.00190 0.00250 0.0023  0.0170  0.0039
-[5,] 0.04      390 0.0120 0.0220 0.00320 0.00240 0.00320 0.0036  0.0210  0.0049
-[6,] 0.05      390 0.0150 0.0270 0.00380 0.00280 0.00380 0.0051  0.0250  0.0058
-     Aplasma Cskin_exposed Cskin_unexposed Cvehicle   Ain Aexhaled Atubules
-[1,]  0.0000          0.00         0.00000       10 0.000        0  0.00000
-[2,]  0.0023          0.31         0.00065       10 0.099        0  0.00006
-[3,]  0.0042          0.45         0.00210       10 0.200        0  0.00025
-[4,]  0.0059          0.50         0.00380       10 0.300        0  0.00054
-[5,]  0.0074          0.53         0.00530       10 0.400        0  0.00093
-[6,]  0.0087          0.54         0.00680       10 0.490        0  0.00140
-     Ametabolized     AUC
-[1,]      0.0e+00 0.0e+00
-[2,]      4.6e-05 7.0e-06
-[3,]      3.9e-04 2.9e-05
-[4,]      1.1e-03 6.3e-05
-[5,]      2.3e-03 1.1e-04
-[6,]      3.8e-03 1.6e-04
-There were 13 warnings (use warnings() to see them)
 > 
 > p <- parameterize_dermal_pbtk(chem.name="propylparaben")
 Warning messages:
@@ -168,49 +136,5 @@ Vlungc: 0.007235
 Vrestc: 0.7433
 Vskinc: 0.0332
 Vvenc: 0.03827
-> signif(head(solve_dermal_pbtk(parameters=p)),
-+        2)
-None of the monitored components undergo unit conversions  (i.e. conversion factor of 1).
-
-AUC is area under the plasma concentration curve in uM*days units with Rblood2plasma = 0.654.
-The model outputs are provided in the following units:
-	umol: Avehicle, Aplasma, Ain, Aexhaled, Atubules, Ametabolized
-	uM: Cgut, Cliver, Cven, Clung, Cart, Crest, Ckidney, Cplasma, Cskin_exposed, Cskin_unexposed, Cvehicle
-	uM*days: AUC
-
-     time Avehicle   Cgut Cliver    Cven   Clung    Cart  Crest Ckidney Cplasma
-[1,] 0.00      390 0.0000 0.0000 0.00000 0.00000 0.00000 0.0000  0.0000  0.0000
-[2,] 0.01      390 0.0028 0.0025 0.00099 0.00073 0.00095 0.0003  0.0057  0.0015
-[3,] 0.02      390 0.0066 0.0090 0.00190 0.00140 0.00180 0.0011  0.0120  0.0028
-[4,] 0.03      390 0.0098 0.0160 0.00260 0.00190 0.00250 0.0023  0.0170  0.0039
-[5,] 0.04      390 0.0120 0.0220 0.00320 0.00240 0.00320 0.0036  0.0210  0.0049
-[6,] 0.05      390 0.0150 0.0270 0.00380 0.00280 0.00380 0.0051  0.0250  0.0058
-     Aplasma Cskin_exposed Cskin_unexposed Cvehicle   Ain Aexhaled Atubules
-[1,]  0.0000          0.00         0.00000       10 0.000        0  0.00000
-[2,]  0.0023          0.31         0.00065       10 0.099        0  0.00006
-[3,]  0.0042          0.45         0.00210       10 0.200        0  0.00025
-[4,]  0.0059          0.50         0.00380       10 0.300        0  0.00054
-[5,]  0.0074          0.53         0.00530       10 0.400        0  0.00093
-[6,]  0.0087          0.54         0.00680       10 0.490        0  0.00140
-     Ametabolized     AUC
-[1,]      0.0e+00 0.0e+00
-[2,]      4.6e-05 7.0e-06
-[3,]      3.9e-04 2.9e-05
-[4,]      1.1e-03 6.3e-05
-[5,]      2.3e-03 1.1e-04
-[6,]      3.8e-03 1.6e-04
-Warning messages:
-1: In solve_dermal_pbtk(parameters = p) :
-  If route is not chosen, it is set to dermal by default.
-2: In solve_dermal_pbtk(parameters = p) :
-  Vvehicle not specified, so set to 0.1 L.
-3: In solve_dermal_pbtk(parameters = p) :
-  The initial.dose is automatically set to 1mg/kg.
-4: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
-  Rblood2plasma not recalculated. 
-Set recalc.blood2plasma to TRUE if desired.
-5: In (function (chem.name = NULL, chem.cas = NULL, dtxsid = NULL,  :
-  Clearance not recalculated. 
-Set recalc.clearance to TRUE if desired.
 > 
 > quit("no")

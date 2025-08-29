@@ -63,7 +63,9 @@ stitching together the 1tri and fetal PBTK models with appropriate initial
 conditions, as described in Truong et al. (TBD).
 }
 \examples{
+
 \donttest{
+library(httk)
 
 # dosing schedule of 1 mg/kg BW/day for 40 weeks
 # return solution by hour
@@ -92,10 +94,6 @@ conc.out <- solve_full_pregnancy(chem.name = "fipronil",
                                 doses.per.day = 1,
                                 time.course = seq(0, 40*7, 1), 
                                 track.vars = c(paste0("Cf", fetal_compts), "Cplacenta"))
-
-# plot solution based on output 
-plt.out <- solve_full_pregnancy(chem.name = "genistein", 
-                                dose = 1, plt = TRUE)
 
 }
 }

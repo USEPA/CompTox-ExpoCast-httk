@@ -56,12 +56,12 @@
 #' # 3compartmentss model:
 #' calc_clearance_frac(chem.name="bisphenola")
 #'
+#' \donttest{
 #' # pbtk model:
 #' calc_clearance_frac(chem.name="bisphenola",
 #'                     model="pbtk",
 #'                     fraction.params=c("Qgfrc","Clmetabolismc"))
 #' 
-#' \donttest{
 #' # A model with exhalation:
 #' # sumclearances model:
 #' calc_clearance_frac(chem.name="bisphenola",

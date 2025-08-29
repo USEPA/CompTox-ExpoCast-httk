@@ -1,3 +1,7 @@
+# httk 2.7.2 (2025-08-28)
+
+This version addresses [deSolve](https://CRAN.R-project.org/package=deSolve) crashes with the dermal and 3comp2 PBTK models. We believe that by failing to set the derivative for a constant term to zero we were introducing a memory leak.
+
 # httk 2.7.1 (2025-07-24)
 
 This version addresses CRAN errors by making changes to the tests for the dermal PBTK model to ensure better performance across platforms.

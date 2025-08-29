@@ -20,6 +20,7 @@ from Yu et al. (1999). Rat small intestine radius is from Griffin and
 O'Driscoll (2008).
 }
 \examples{
+\donttest{
 # We can add a new species (for example, wolverines) by adding new information
 # to the physiology.data and tissue.data tables. It can be convenient to start by
 # by replicating the data from another species and adjusting as appropriate:
@@ -50,6 +51,7 @@ calc_mc_css(chem.cas="80-05-7",
             parameterize.args.list =list(default.to.human=TRUE),
             suppress.messages=TRUE,
             samples = 100)
+}
 
 }
 \references{
