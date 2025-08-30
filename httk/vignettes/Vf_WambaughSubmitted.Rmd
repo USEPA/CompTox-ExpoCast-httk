@@ -982,7 +982,7 @@ human.invivo.hl.fig <- ggplot(data=human.invivo.hl) +
     colour=Status),
     size=2) +
     geom_abline(slope=1,intercept=0,linetype="dashed")+
-  xlab("Machine Learning Half-Life Prediction") +
+  xlab(expression(Machine~Learning~t[1/2]~Prediction))+
   ylab("In Vivo Measurment") +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
@@ -1293,7 +1293,7 @@ fig.css.ml  <- ggplot(data=subset(pfas.httk.table,!is.na(ML.Class))) +
                          " (",
                          mu,
                          "M)"))) + 
-  xlab(expression(paste("Machine Learning",
+  xlab(expression(paste("ML One Comp.",
                          ~C[ss],
                          " (",
                          mu,
@@ -1364,12 +1364,31 @@ cat(paste0("RMSLE is much larger for PFAS (",
            signif(10^ratio.table["Non-PFAS Default HTTK Clearance Ratio","RMSLE"],2),
            "-fold error).\n"))
 
+cat(paste0("HTTK-based predictions of clearance have a root mean squared log10 error of ",
+RMSLE(subset(cl.table, Class=="PFAS"),
+                               "HTTK.Cltot.Lphpkgbw","ClLphpkgbw"),
+" meaning that they are accurate to within a factor of ",
+signif(10^RMSLE(subset(cl.table, Class=="PFAS"),
+                               "HTTK.Cltot.Lphpkgbw","ClLphpkgbw"),
+       2),
+" on average. "))
+cat(paste0(withinten(subset(cl.table, Class=="PFAS"),
+                               "HTTK.Cltot.Lphpkgbw","ClLphpkgbw"),
+           ".\n"))
+
 cat("\nResults: 3.3\n")
-cat(paste0("The ML performs well on the ",
+cat(paste0("The ML model performs well on the ",
            num.novel.pfas.hl, 
            " novel chemicals, with a RMSLE of ",
-            signif(RMSLE.novel,2),
+           RMSLE(hl.novel,
+                 "HL.GeoMean",
+                 "hl.novel$HL.ML"),
            ".\n"))
+cat(paste0(withinten(hl.novel,
+                 "HL.GeoMean",
+                 "hl.novel$HL.ML"),
+           ".\n"))
+
 cat("\n")
 cat(paste0("As shown in panel A of Figure 4, this model does well (RMSLE ",
            RMSLE(cl.table,
