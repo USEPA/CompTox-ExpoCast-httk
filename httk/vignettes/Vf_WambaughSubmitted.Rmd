@@ -944,11 +944,15 @@ fit.known <- lm(log10(HL.GeoMean) ~ log10(HL.ML),
 fit.novel <- lm(log10(HL.GeoMean) ~log10(HL.ML), 
                 data=subset(human.invivo.hl,Status=="Novel"))
 hl.known <- subset(human.invivo.hl,Status=="Known")
-RMSLE.known <- (mean((log10(hl.known$HL.GeoMean) - log10(hl.known$HL.ML))^2,na.rm=TRUE))^(1/2)
+RMSLE.known <- RMSLE(hl.known,
+                 "HL.GeoMean",
+                 "HL.ML")
 agree.known <- sum(hl.known$Agree)/dim(hl.known)[1]
 under.known <- sum(hl.known$Underestimate)/dim(hl.known)[1]
 hl.novel <- subset(human.invivo.hl,Status=="Novel" & !is.na(HL.ML))
-RMSLE.novel <- (mean((log10(hl.novel$HL.GeoMean) - log10(hl.novel$HL.ML))^2,na.rm=TRUE))^(1/2)
+RMSLE.novel <- RMSLE(hl.novel,
+                 "HL.GeoMean",
+                 "HL.ML")
 agree.novel <- sum(hl.novel$Agree)/dim(hl.novel)[1]
 agree.count.novel <- sum(hl.novel$Agree)
 under.novel <- sum(hl.novel$Underestimate)/dim(hl.known)[1]
@@ -991,7 +995,7 @@ human.invivo.hl.fig <- ggplot(data=human.invivo.hl) +
            label = paste("RMSLE for ",
                          num.novel.pfas.hl, 
                          " novel PFAS: ",
-                         signif(RMSLE.novel,2),"\n"#,
+                         RMSLE.novel,"\n"#,
                          #agree.count.novel,
                          #" agree\n",
                          #under.count.novel,
@@ -1382,11 +1386,11 @@ cat(paste0("The ML model performs well on the ",
            " novel chemicals, with a RMSLE of ",
            RMSLE(hl.novel,
                  "HL.GeoMean",
-                 "hl.novel$HL.ML"),
+                 "HL.ML"),
            ".\n"))
 cat(paste0(withinten(hl.novel,
                  "HL.GeoMean",
-                 "hl.novel$HL.ML"),
+                 "HL.ML"),
            ".\n"))
 
 cat("\n")
