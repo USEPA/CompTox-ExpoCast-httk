@@ -199,6 +199,8 @@ void derivs3comp2 (int *neq, double *pdTime, double *y, double *ydot, double *yo
   ydot[ID_Atubules] = Fraction_unbound_plasma / Ratioblood2plasma * Qgfr * yout[ID_Csyscomp] ;
 
   ydot[ID_AUC] = yout[ID_Csyscomp] ;
+  
+  ydot[ID_Cinhppmv] = 0;
 
 } /* derivs */
 

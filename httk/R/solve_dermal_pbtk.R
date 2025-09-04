@@ -197,6 +197,18 @@
 #' parameters$Vvehicle <- 1
 #' out <- solve_dermal_pbtk(parameters=parameters)
 #' 
+#' head(solve_dermal_pbtk(chem.name="propylparaben"))
+#' head(solve_dermal_pbtk(chem.cas="94-13-3"))
+#' 
+#' 
+#' p <- parameterize_dermal_pbtk(chem.name="propylparaben")
+#' p <- p[sort(names(p))]
+#' # Try to standardize order of variable names
+#' for (this.param in 
+#'      names(p)[order(toupper(names(p)))]) cat(
+#'      paste(this.param,": ",p[[this.param]],"\r\n",sep=""))
+#' head(solve_dermal_pbtk(parameters=p))
+#'        
 #' # Dermal is the default route:
 #' head(solve_dermal_pbtk(chem.name="bisphenola"))
 #' head(solve_dermal_pbtk(chem.name="bisphenola", route="dermal"))

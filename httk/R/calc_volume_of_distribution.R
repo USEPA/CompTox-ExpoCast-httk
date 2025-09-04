@@ -61,6 +61,7 @@
 #' @examples
 #' 
 #' calc_vdist(chem.cas="80-05-7")
+#' \donttest{
 #' calc_vdist(chem.name="Bisphenol A")
 #' calc_vdist(chem.name="Bisphenol A",species="Rat")
 #'
@@ -74,7 +75,7 @@
 #' # Should be the same as chemical by name:
 #' calc_vdist(chem.name="propranolol")
 #'
-#' \donttest{
+#'
 #' # Different ways to give the arguments:
 #' calc_vdist(chem.cas="80-05-7")
 #' params <- parameterize_schmitt(chem.name="triclosan")

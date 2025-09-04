@@ -147,6 +147,7 @@ load_sipes2017 <- function(
                          Clint = 'Human.Clint'),
                        reference = 'Sipes 2017', 
                        species= 'Human', 
-                       overwrite=overwrite),
+                       overwrite=overwrite,
+                       suppress.messages=TRUE),
          envir=target.env)
 }

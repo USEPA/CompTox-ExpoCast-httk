@@ -350,6 +350,7 @@ void derivs_dermal (int *neq, double *pdTime, double *y, double *ydot, double *y
 
   Rout_exhaled = Qalv * yout[ID_Clung] * Rblood2plasma / ( Klung2pu * Fraction_unbound_plasma * Kblood2air ) ;
 
+// There are 19 state variables, we need 19 derivatives:
   ydot[ID_Avehicle] = - Rin_dermal * (1-InfiniteDose);
 
   ydot[ID_Ain] = Rin_dermal + Rin_oral ;
@@ -387,7 +388,9 @@ void derivs_dermal (int *neq, double *pdTime, double *y, double *ydot, double *y
   ydot[ID_Ametabolized] = Clmetabolism * yout[ID_Cliver] / Kliver2pu ;
 
   ydot[ID_AUC] = yout[ID_Cven] / Rblood2plasma ;
-
+  
+  ydot[ID_Cvehicle_infinite] = 0.0;  
+  
 } /* derivs */
 
 

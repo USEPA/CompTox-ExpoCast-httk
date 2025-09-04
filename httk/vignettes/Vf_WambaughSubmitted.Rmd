@@ -52,7 +52,7 @@ building the package. If you want this vignette to work, you must run all code,
 either by cutting and pasting it into R. Or, if viewing the .RMD file, you can
 either change execute.vignette to TRUE or press "play" (the green arrow) on
 each chunk in RStudio.
-```{r runchunks}
+```{r runchunks, eval = TRUE}
 # Set whether or not the following chunks will be executed (run):
 execute.vignette <- FALSE
 ```
@@ -109,6 +109,18 @@ scientific_10 <- function(x) {
 RMSLE <- function(tab,colx,coly) 
 { 
     return(signif(mean(log10(tab[,colx]/tab[,coly])^2,na.rm=TRUE)^(1/2),3))
+}
+```
+
+```{r withinten_function, eval = execute.vignette}
+withinten <- function(tab,colx,coly) 
+{ 
+    tab <- subset(tab, !is.na(colx) & !is.na(coly))
+    return(paste0(
+    dim(subset(tab,abs(log10(tab[,colx]/tab[,coly]))<=1))[1],
+    " out of ",
+    dim(tab)[1],
+    " predictions were within a factor of ten of the observations"))
 }
 ```
 
@@ -245,8 +257,8 @@ cat(paste("(intrinsic hepatocyte clearance) in",
 load(paste0(LOC.WD,"Clint-Fup-Values.RData"))
 fig.clint.fup  <- ggplot(data=clint.fup) +
   geom_point(aes(
-    x=Human.Funbound.plasma,
-    y=Human.Clint,
+    x=Human.Funbound.plasma+10^-8,
+    y=Human.Clint+10^-5,
     colour=Chemical.Class,
     shape=Chemical.Class),
     size=POINT.SIZE) +
@@ -262,7 +274,7 @@ print(fig.clint.fup)
 
 fig.fup.hist <- ggplot(data=clint.fup) +
   geom_histogram(aes(
-    x=Human.Funbound.plasma,
+    x=Human.Funbound.plasma+10^-8,
     colour=Chemical.Class,
     fill=Chemical.Class)) +
   xlab(expression(italic("In Vitro")~"Measured f"[up])) +
@@ -830,7 +842,7 @@ fig.species.scaling <- ggplot(data=half.lives) +
     colour=Type,
     fill=Type),
     bins=10) +
-  xlab("Human:Rat PK Half-Life Ratio") +
+  xlab(expression(Human:Rat~t[1/2]~Ratio)) +
   scale_x_log10(label=scientific_10)+
   theme_bw()  +
   theme( text  = element_text(size=FONT.SIZE))+
@@ -932,11 +944,15 @@ fit.known <- lm(log10(HL.GeoMean) ~ log10(HL.ML),
 fit.novel <- lm(log10(HL.GeoMean) ~log10(HL.ML), 
                 data=subset(human.invivo.hl,Status=="Novel"))
 hl.known <- subset(human.invivo.hl,Status=="Known")
-RMSLE.known <- (mean((log10(hl.known$HL.GeoMean) - log10(hl.known$HL.ML))^2,na.rm=TRUE))^(1/2)
+RMSLE.known <- RMSLE(hl.known,
+                 "HL.GeoMean",
+                 "HL.ML")
 agree.known <- sum(hl.known$Agree)/dim(hl.known)[1]
 under.known <- sum(hl.known$Underestimate)/dim(hl.known)[1]
 hl.novel <- subset(human.invivo.hl,Status=="Novel" & !is.na(HL.ML))
-RMSLE.novel <- (mean((log10(hl.novel$HL.GeoMean) - log10(hl.novel$HL.ML))^2,na.rm=TRUE))^(1/2)
+RMSLE.novel <- RMSLE(hl.novel,
+                 "HL.GeoMean",
+                 "HL.ML")
 agree.novel <- sum(hl.novel$Agree)/dim(hl.novel)[1]
 agree.count.novel <- sum(hl.novel$Agree)
 under.novel <- sum(hl.novel$Underestimate)/dim(hl.known)[1]
@@ -970,7 +986,7 @@ human.invivo.hl.fig <- ggplot(data=human.invivo.hl) +
     colour=Status),
     size=2) +
     geom_abline(slope=1,intercept=0,linetype="dashed")+
-  xlab("Machine Learning Half-Life Prediction") +
+  xlab(expression(Machine~Learning~t[1/2]~Prediction))+
   ylab("In Vivo Measurment") +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
@@ -979,7 +995,7 @@ human.invivo.hl.fig <- ggplot(data=human.invivo.hl) +
            label = paste("RMSLE for ",
                          num.novel.pfas.hl, 
                          " novel PFAS: ",
-                         signif(RMSLE.novel,2),"\n"#,
+                         RMSLE.novel,"\n"#,
                          #agree.count.novel,
                          #" agree\n",
                          #under.count.novel,
@@ -1033,7 +1049,7 @@ fig.clml.invivo  <- ggplot(data=subset(cl.table, Class=="PFAS")) +
 #  geom_line(aes(x=logP,y=logPfit1),color="black") + 
 #  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
   ylab("In Vivo Clearance (L/h/kg bw)") + 
-  xlab("Machine Learning Clearance (L/h/kg bw)") +
+  xlab("ML One Comp. Clearance (L/h/kg bw)") +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
    scale_color_viridis(discrete=4)+
@@ -1061,7 +1077,7 @@ fig.ratio.ml  <- ggplot(data=subset(cl.table, Species!="Human" & Class=="PFAS"))
 #  geom_line(aes(x=logP,y=logPfit1),color="black") + 
 #  geom_line(aes(x=logP,y=logPfit2),color="blue",linetype = "dashed") +
   ylab("In Vivo Observed Clearance Ratio") + 
-  xlab("Machine Learning Predicted Clearance Ratio") +
+  xlab("ML One Comp. Predicted Clearance Ratio") +
   scale_x_log10(label=scientific_10)+
   scale_y_log10(label=scientific_10)+
    scale_color_viridis(discrete=3)+
@@ -1281,7 +1297,7 @@ fig.css.ml  <- ggplot(data=subset(pfas.httk.table,!is.na(ML.Class))) +
                          " (",
                          mu,
                          "M)"))) + 
-  xlab(expression(paste("Machine Learning",
+  xlab(expression(paste("ML One Comp.",
                          ~C[ss],
                          " (",
                          mu,
@@ -1352,18 +1368,41 @@ cat(paste0("RMSLE is much larger for PFAS (",
            signif(10^ratio.table["Non-PFAS Default HTTK Clearance Ratio","RMSLE"],2),
            "-fold error).\n"))
 
+cat(paste0("HTTK-based predictions of clearance have a root mean squared log10 error of ",
+RMSLE(subset(cl.table, Class=="PFAS"),
+                               "HTTK.Cltot.Lphpkgbw","ClLphpkgbw"),
+" meaning that they are accurate to within a factor of ",
+signif(10^RMSLE(subset(cl.table, Class=="PFAS"),
+                               "HTTK.Cltot.Lphpkgbw","ClLphpkgbw"),
+       2),
+" on average. "))
+cat(paste0(withinten(subset(cl.table, Class=="PFAS"),
+                               "HTTK.Cltot.Lphpkgbw","ClLphpkgbw"),
+           ".\n"))
+
 cat("\nResults: 3.3\n")
-cat(paste0("The ML performs well on the ",
+cat(paste0("The ML model performs well on the ",
            num.novel.pfas.hl, 
            " novel chemicals, with a RMSLE of ",
-            signif(RMSLE.novel,2),
+           RMSLE(hl.novel,
+                 "HL.GeoMean",
+                 "HL.ML"),
            ".\n"))
+cat(paste0(withinten(hl.novel,
+                 "HL.GeoMean",
+                 "HL.ML"),
+           ".\n"))
+
 cat("\n")
 cat(paste0("As shown in panel A of Figure 4, this model does well (RMSLE ",
            RMSLE(cl.table,
                  "MachineLearning.Cltot.Lphpkgbw",
                  "ClLphpkgbw"),
            ") at reproducing the data on which it was essentially trained.\n"))
+cat(paste0(withinten(subset(cl.table, Class=="PFAS"),
+                 "MachineLearning.Cltot.Lphpkgbw",
+                 "ClLphpkgbw"),
+           ".\n"))
 
 cat("\nResults: 3.4\n")
 cat(paste0("The overall RMSLE is ",
@@ -1371,10 +1410,17 @@ cat(paste0("The overall RMSLE is ",
                  "HTTKPFAS.Cltot.Lphpkgbw",
                  "ClLphpkgbw"),
            ".\n"))
+cat(paste0(withinten(subset(cl.table, Class=="PFAS"),
+                 "HTTKPFAS.Cltot.Lphpkgbw",
+                 "ClLphpkgbw"),
+           ".\n"))
 cat("\n")
 cat(paste0("HTTK-PFAS clearance ratios are improved, in contrast to Figure 2, with an RMSLE of ",
            RMSLE(subset(cl.table, Species!="Human" & Class=="PFAS"),
                  "TK.Ratio.HTTKPFAS","TK.Ratio.InVivo"),
+           ".\n"))
+cat(paste0(withinten(subset(cl.table, Species!="Human" & Class=="PFAS"),
+                        "TK.Ratio.HTTKPFAS","TK.Ratio.InVivo"),
            ".\n"))
 ```
 
