@@ -303,28 +303,46 @@ void getParms_gas_pbtk (double *inParms, double *out, int *nout) {
 void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double *yout, int *ip)
 {
   /* local */ double Cinh;
-
-  Cinh = Cinhppmv / 24.45 ; // ppmv -> umol/L 
-
+  /* local */ double Rin_oral;
+  /* local */ double Rout_gfr;
+  /* local */ double Rout_metabolism;
+  /* local */ double Rin_mucus;
+  /* local */ double Rout_mucus;
+  /* local */ double Rin_alv;
+  /* local */ double Rout_alv;
+  
+  Cinh = Cinhppmv / 24.45 ; // ppmv -> umol/L
+  
+  // OUTPUTS (RHS can contain vector y and parameters):
   yout[ID_Cgut] = y[ID_Agut] / Vgut ;
+  yout[ID_Cgut] = (yout[ID_Cgut] >= 0.0 ? yout[ID_Cgut] : 0.0) ;
 
   yout[ID_Cliver] = y[ID_Aliver] / Vliver ;
+  yout[ID_Cliver] = (yout[ID_Cliver] >= 0.0 ? yout[ID_Cliver] : 0.0) ;
 
   yout[ID_Cven] = y[ID_Aven] / Vven ;
+  yout[ID_Cven] = (yout[ID_Cven] >= 0.0 ? yout[ID_Cven] : 0.0) ;
 
   yout[ID_Clung] = y[ID_Alung] / Vlung ;
+  yout[ID_Clung] = (yout[ID_Clung] >= 0.0 ? yout[ID_Clung] : 0.0) ;
 
   yout[ID_Cart] = y[ID_Aart] / Vart ;
+  yout[ID_Cart] = (yout[ID_Cart] >= 0.0 ? yout[ID_Cart] : 0.0) ;
 
   yout[ID_Crest] = y[ID_Arest] / Vrest ;
+  yout[ID_Crest] = (yout[ID_Crest] >= 0.0 ? yout[ID_Crest] : 0.0) ;
 
   yout[ID_Ckidney] = y[ID_Akidney] / Vkidney ;
+  yout[ID_Ckidney] = (yout[ID_Ckidney] >= 0.0 ? yout[ID_Ckidney] : 0.0) ;
 
   yout[ID_Cplasma] = y[ID_Aven] / Vven / Rblood2plasma ;
+  yout[ID_Cplasma] = (yout[ID_Cplasma] >= 0.0 ? yout[ID_Cplasma] : 0.0) ;
 
   yout[ID_Aplasma] = y[ID_Aven] / Rblood2plasma * ( 1 - hematocrit ) ;
+  yout[ID_Aplasma] = (yout[ID_Aplasma] >= 0.0 ? yout[ID_Aplasma] : 0.0) ;
 
   yout[ID_Calv] = yout[ID_Cart] / Kblood2air ;
+  yout[ID_Calv] = (yout[ID_Calv] >= 0.0 ? yout[ID_Calv] : 0.0) ;
 
   yout[ID_Calvppmv] = yout[ID_Calv] * 24.45 ; // umol/L -> ppmv
 
@@ -332,43 +350,80 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
   yout[ID_Cendexh] = (yout[ID_Cendexh] >= 0.0 ? yout[ID_Cendexh] : 0.0) ;
    
   yout[ID_Cendexhppmv] = yout[ID_Cendexh] * 24.45 ;  // umol/L -> ppmv
+  yout[ID_Cendexhppmv] = (yout[ID_Cendexhppmv] >= 0.0 ? yout[ID_Cendexhppmv] : 0.0) ;
 
   yout[ID_Cmixexh] = 0.7 * yout[ID_Cendexh] + 0.3 * Cinh ;
+  yout[ID_Cmixexh] = (yout[ID_Cmixexh] >= 0.0 ? yout[ID_Cmixexh] : 0.0) ;
 
   yout[ID_Cmixexhppmv] = yout[ID_Cmixexh] * 24.45 ;  // umol/L -> ppmv
+  yout[ID_Cmixexhppmv] = (yout[ID_Cmixexhppmv] >= 0.0 ? yout[ID_Cmixexhppmv] : 0.0) ;
 
   yout[ID_Cmuc] = y[ID_Amuc] / Vmuc ;
   yout[ID_Cmuc] = (yout[ID_Cmuc] >= 0.0 ? yout[ID_Cmuc] : 0.0) ;
   
-  ydot[ID_Agutlumen] = - kgutabs * y[ID_Agutlumen] ;
+  // LOCAL VARIABLES (RHS can contain vector y and parameters):
+  Rin_oral = (y[ID_Agutlumen] > 0.0 ?
+              kgutabs * y[ID_Agutlumen] :
+              0.0);
+  
+  Rout_gfr = (y[ID_Aart] > 0.0 ?
+              Qgfr * Fraction_unbound_plasma / Rblood2plasma * y[ID_Aart] / Vart :
+              0.0); 
 
-  ydot[ID_Agut] = kgutabs * y[ID_Agutlumen] + Qgut * ( yout[ID_Cart] - yout[ID_Cgut] * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma ) ;
+  Rout_metabolism = (yout[ID_Cliver] >= 0.0 ?
+              Clmetabolism * yout[ID_Cliver] / Kliver2pu / Fraction_unbound_plasma :
+              0.0);  
+              
+  Rin_mucus = kUrt * ( Cinh - ( yout[ID_Cmuc] / Kmuc2air ) );
+  Rin_mucus = (Rin_mucus >= 0.0 ?
+              Rin_mucus :
+              0.0); 
+              
+  Rout_mucus = kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ;
+  Rout_mucus = (Rout_mucus >= 0.0 ?
+              Rout_mucus :
+              0.0); 
+              
+  Rin_alv = Qalv * Cinh;
+  Rin_alv = (Rin_alv >= 0.0 ?
+             Rin_alv :
+             0.0);
+             
+  Rout_alv = Qalv * yout[ID_Calv];
+  Rout_alv = (Rout_alv > 0.0 ?
+              Rout_alv :
+              0.0);
+              
+  // DERIVATIVE (one ydot for each element of y, RHS can contain vectors yout, y, and parameters):
+  ydot[ID_Agutlumen] = - Rin_oral ;
 
-  ydot[ID_Aliver] = Qliver * yout[ID_Cart] + Qgut * yout[ID_Cgut] * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma - ( Qliver + Qgut ) * yout[ID_Cliver] / Kliver2pu / Fraction_unbound_plasma * Rblood2plasma - Clmetabolism * yout[ID_Cliver] / Kliver2pu / Fraction_unbound_plasma - Vmax * yout[ID_Cliver] / Kliver2pu / ( Km + yout[ID_Cliver] / Kliver2pu ) ;
+  ydot[ID_Agut] = Rin_oral + Qgut * ( yout[ID_Cart] - yout[ID_Cgut] * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma ) ;
+
+  ydot[ID_Aliver] = Qliver * yout[ID_Cart] + Qgut * yout[ID_Cgut] * Rblood2plasma / Kgut2pu / Fraction_unbound_plasma - ( Qliver + Qgut ) * yout[ID_Cliver] / Kliver2pu / Fraction_unbound_plasma * Rblood2plasma - Rout_metabolism - Vmax * yout[ID_Cliver] / Kliver2pu / ( Km + yout[ID_Cliver] / Kliver2pu ) ;
 
   ydot[ID_Aven] = ( ( Qliver + Qgut ) * yout[ID_Cliver] / Kliver2pu + Qkidney * yout[ID_Ckidney] / Kkidney2pu + Qrest * yout[ID_Crest] / Krest2pu + Qlung * yout[ID_Clung] / Klung2pu ) * Rblood2plasma / Fraction_unbound_plasma - Qcardiac * yout[ID_Cven] ;
 
   ydot[ID_Alung] = Qlung * ( yout[ID_Cart] - yout[ID_Clung] * Rblood2plasma / Klung2pu / Fraction_unbound_plasma ) ;
 
-  ydot[ID_Aart] = ( Qcardiac * ( yout[ID_Cven] - yout[ID_Cart] ) ) + ( Qalv * ( Cinh - yout[ID_Calv] ) ) - ( kUrt * ( Cinh - ( yout[ID_Cmuc] / Kmuc2air ) ) ) ;
+  ydot[ID_Aart] = ( Qcardiac * ( yout[ID_Cven] - yout[ID_Cart] ) ) + ( Rin_alv - Rout_alv ) - Rin_mucus ;
 
   ydot[ID_Arest] = Qrest * ( yout[ID_Cart] - yout[ID_Crest] * Rblood2plasma / Krest2pu / Fraction_unbound_plasma ) ;
 
-  ydot[ID_Akidney] = Qkidney * yout[ID_Cart] - Qkidney * yout[ID_Ckidney] / Kkidney2pu * Rblood2plasma / Fraction_unbound_plasma - Qgfr * yout[ID_Cart] / Rblood2plasma * Fraction_unbound_plasma ;
+  ydot[ID_Akidney] = Qkidney * yout[ID_Cart] - Qkidney * yout[ID_Ckidney] / Kkidney2pu * Rblood2plasma / Fraction_unbound_plasma - Rout_gfr ;
 
-  ydot[ID_Atubules] = Qgfr * yout[ID_Cart] / Rblood2plasma * Fraction_unbound_plasma ;
+  ydot[ID_Atubules] = Rout_gfr ;
 
-  ydot[ID_Ametabolized] = Clmetabolism * yout[ID_Cliver] / Kliver2pu / Fraction_unbound_plasma + Vmax * yout[ID_Cliver] / Kliver2pu / ( Km + yout[ID_Cliver] / Kliver2pu ) ;
+  ydot[ID_Ametabolized] = Rout_metabolism + Vmax * yout[ID_Cliver] / Kliver2pu / ( Km + yout[ID_Cliver] / Kliver2pu ) ;
 
   ydot[ID_AUC] = yout[ID_Cven] / Rblood2plasma ;
 
-  ydot[ID_Ainh] = ( Qalv * (  Cinh - yout[ID_Calv] ) ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - Cinh ) ;
+  ydot[ID_Ainh] = ( Rin_alv - Rout_alv ) - Rin_mucus ;
   
-  ydot[ID_Aexh] = ( Qalv * yout[ID_Calv] ) + kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ;
+  ydot[ID_Aexh] = Rout_alv + Rout_mucus ;
                
-  ydot[ID_Amuc] = ( kUrt * ( Cinh - ( yout[ID_Cmuc] / Kmuc2air ) ) ) - ( kUrt * ( ( yout[ID_Cmuc] / Kmuc2air ) - yout[ID_Calv] ) ) ;
+  ydot[ID_Amuc] = Rin_mucus - Rout_mucus ;
 
-} /* derivs */
+    } /* derivs */
 
 
 /*----- Jacobian calculations: */
