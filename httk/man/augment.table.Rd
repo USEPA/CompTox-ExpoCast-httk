@@ -15,7 +15,8 @@ augment.table(
   overwrite = FALSE,
   sig.fig = 4,
   clint.pvalue.overwrite = TRUE,
-  allow.na = FALSE
+  allow.na = FALSE,
+  suppress.messages = FALSE
 )
 }
 \arguments{
@@ -52,6 +53,8 @@ to TRUE)}
 
 \item{allow.na}{If TRUE (default is FALSE) then NA values are written to the
 table, otherwise they are ignored.}
+
+\item{suppress.messages}{Whether or not the output messages are suppressed.}
 }
 \value{
 \item{data.frame}{A new data.frame containing the data in

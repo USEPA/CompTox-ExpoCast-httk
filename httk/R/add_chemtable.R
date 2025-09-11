@@ -75,6 +75,8 @@ CAS.checksum <- function(CAS.string)
 #' @param allow.na If TRUE (default is FALSE) then NA values are written to the
 #' table, otherwise they are ignored.
 #'
+#' @param suppress.messages Whether or not the output messages are suppressed.
+#'
 #' @return \item{data.frame}{A new data.frame containing the data in
 #' current.table augmented by new.table} 
 #' @author John Wambaugh
@@ -376,6 +378,8 @@ augment.table <- function(
 #' @param allow.na If TRUE (default is FALSE) then NA values are written to the
 #' table, otherwise they are ignored.
 #'
+#' @param suppress.messages Whether or not the output messages are suppressed.
+#' 
 #' @return \item{data.frame}{A new data.frame containing the data in
 #' current.table augmented by new.table} 
 #' @author John Wambaugh
