@@ -12,7 +12,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-*Please send questions to wambaugh.john@epa.gov*
+*Please send questions to wambaugh.research@gmail.com*
 
 from "Characterizing Accuracy of Model Predictions for Chemical 
 Concentration in High Throughput Screening Assays"

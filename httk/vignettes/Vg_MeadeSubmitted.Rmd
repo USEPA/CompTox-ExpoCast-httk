@@ -8,7 +8,7 @@ vignette: >
  %\VignetteEngine{knitr::rmarkdown}
  %\VignetteEncoding{UTF-8}
 ---
-*Please send questions to wambaugh.john@epa.gov or aemeade7@gmail.com*
+*Please send questions to wambaugh.research@gmail.com or aemeade7@gmail.com*
 
 from "Development and analysis of high throughput physiologically based pharmacokinetic/toxicokinetic (PBPK/TK) dermal exposure model"
 

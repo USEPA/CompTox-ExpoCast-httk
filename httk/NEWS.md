@@ -1,3 +1,10 @@
+# httk 2.7.3 (2025-09-11)
+
+## Enhancements
+* C code for gas_pbtk model cleaned up to make solver more stable.
+* Argument suppress.messages added to `add_chemtable` and `augment_table`
+* QSPR loading function (such as `load_sipes2018`) no longer produce endless warnings
+
 # httk 2.7.2 (2025-08-28)
 
 This version addresses [deSolve](https://CRAN.R-project.org/package=deSolve) crashes with the dermal and 3comp2 PBTK models. We believe that by failing to set the derivative for a constant term to zero we were introducing a memory leak.

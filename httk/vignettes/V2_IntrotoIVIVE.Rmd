@@ -8,7 +8,7 @@ vignette: >
  %\VignetteEngine{knitr::rmarkdown}
  %\VignetteEncoding{UTF-8}
 ---
-*Please send questions to wambaugh.john@epa.gov*
+*Please send questions to wambaugh.research@gmail.com*
 
 # Introduction
 Chemical risk assessment depends on knowledge of inherent chemical hazard,

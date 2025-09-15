@@ -75,7 +75,7 @@ directory and then reinstall the package.
 If you have questions, comments, or concerns please contact:
 
 ### Principal Investigator 
-John Wambaugh [wambaugh.john@epa.gov]
+John Wambaugh [wambaugh.research@gmail.com]
 
 ### Lead Software Engineer 
 Sarah E. Davidson-Fritz [davidsonfritz.sarah@epa.gov]

@@ -16,7 +16,7 @@ Journal of Statistical Software 2017 Jul 17; 79(4): 1-26.
 
 https://doi.org/10.18637/jss.v079.i04
 
-*Please send questions to wambaugh.john@epa.gov*
+*Please send questions to wambaugh.research@gmail.com*
 
 ## Abstract
 
