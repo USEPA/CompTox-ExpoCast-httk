@@ -66,33 +66,34 @@ and if `run.simulations = FALSE`, make sure to have the following files in your 
 
 ```{r runchunks, eval = TRUE}
 # Set whether or not the following chunks will be executed (run):
-run.simulations <- FALSE # Change FALSE to TRUE here to make the vignette work
-make.plots <- FALSE # change to TRUE to make the plots
-run.simulations.2 <- FALSE #for second part of vignette
-make.plots.2 <- FALSE # change to TRUE to make the plots
+run.simulations <- TRUE # Change FALSE to TRUE here to make the vignette work
+make.plots <- TRUE # change to TRUE to make the plots
+run.simulations.2 <- TRUE #for second part of vignette
+make.plots.2 <- TRUE # change to TRUE to make the plots
 ```
 
 ### Set working directory and install packages
 Here, we set our working directory (the location of this file and the necessary data files) and load necessary packages. **Please reset your working directory below to `loc.wd` or the code will produce an error.**
 
 We also set the location of the R package `httk` using the name `loc.httk` so that we can run the functions `modelinfo_dermal.R` and `modelinfo_dermal_1subcomp.R` file later in the code. Note that if you have `run.simulations = FALSE`, the variable `loc.httk` is not used, so you do not need to provide or change it.
-```{r setup, eval = TRUE}
+```{r setup, eval = TRUE, eval = run.simulations}
 # Set working directory
-loc.wd <- "C:/Users/jwambaug/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/Research Projects/DermalTK/vingette"
+#loc.wd <- "C:/Users/jwambaug/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/Research Projects/DermalTK/vingette"
+loc.wd = "C:/Users/cschacht/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/CCTE_2023_2024/dermal/Random_files_tokeep/Vignette"
 #loc.wd <- "/Users/ameade/Library/CloudStorage/GoogleDrive-aemeade7@gmail.com/My Drive/EPA/HTTK-Dermal/HTTK-Dermal-Vignette"
 
 #loc.wd = "C:/Users/cschacht/OneDrive - Environmental Protection Agency (EPA)/Profile/Documents/CCTE_2023_2024/dermal/thisone"
 
 # Set location of httk package
 #loc.httk <- "C:/Users/jwambaug/git/httk-dev/httk"
-
+#loc.httk="C:/Users/cschacht/OneDrive - Environmental Protection Agency #(EPA)/Profile/Documents/CCTE_2023_2024/dermal/httk-dev-feature-dermal2@41bec5ca743"
 
 # Load packages
 packages <- c("httk","dplyr",
               "tidyverse","xlsx","Metrics", #for data manipulation
               "ggplot2","ggforce","ggpubr","ggrepel","viridis", #for plotting
               "knitr", "ggpubr","grid","ggh4x","readr","ggforce","knitr","tidyr",
-              "stringr") #to make pretty visual tables
+              "stringr","pracma") #to make pretty visual tables
 
 sapply(packages, require, character.only=TRUE)
 
@@ -686,7 +687,8 @@ for (include.e in exhalation_for_simulation){
 
 Now, if run.simulations = FALSE, we must load data. This load supptab1_meade2023, concentration_data_meade2023, conc_predictions_meade2023DF, conc_predictions_meade2023LIST.
 ```{r load_data, eval=(make.plots & !run.simulations)}
-load(paste0(loc.wd, "/meade2023_Jun_13_2025.Rdata"))
+# load(paste0(loc.wd, "/meade2023_Jun_13_2025.Rdata"))
+load(paste0(loc.wd, "/meade2023_Sep_02_2025.Rdata"))
 ```
 
 ## Step Four: Calculate Root Mean Squared Log10 Errors (RMSLE)
@@ -768,7 +770,7 @@ plot <- ggplot(data=data,aes(x=`Boiling.Point.C`,y=Chemical.RMSLE)) +
         plot.title=element_text(hjust=0.5),
         legend.position="bottom")
 plot
-ggsave(paste(getwd(), "/Figures_May1/BPvsRMSLE_suppl.png",sep=""),
+ggsave(paste(getwd(), "/Figures_August2025/BPvsRMSLE_suppl.png",sep=""),
        width = 20, height = 10, units = "in")
 
 plot2 <- ggplot(data=data,aes(x=`Boiling.Point.C`,y=Chemical.cmax.RMSLE)) +
@@ -793,7 +795,7 @@ plot2 <- ggplot(data=data,aes(x=`Boiling.Point.C`,y=Chemical.cmax.RMSLE)) +
         plot.title=element_text(hjust=0.5),
         legend.position="bottom")
 #annotate_figure(plot2,top=text_grob("Boiling Point vs RMSLE",size=40,face="bold"))
-ggsave(paste(getwd(), "/Figures_May1/BPvsRMSLE_cmax_suppl.png",sep=""),
+ggsave(paste(getwd(), "/Figures_August2025/BPvsRMSLE_cmax_suppl.png",sep=""),
        width = 20, height = 10, units = "in")
 
 
@@ -861,7 +863,7 @@ plot <- ggplot(data=stackExh,aes(x=Boiling.Point.C,y=values)) +
         legend.position="bottom")
 plot
 
-ggsave(paste(getwd(), "/Figures_May1/BP_RMSLE_Exhalation_main.png",sep=""),
+ggsave(paste(getwd(), "/Figures_August2025/BP_RMSLE_Exhalation_main.png",sep=""),
        width = 20, height = 10, units = "in")
 
 # P-values for regression lines
@@ -902,7 +904,7 @@ for(chx in 1:length(chem)){
      theme(legend.position = "bottom")
     
 
-  ggsave(paste(getwd(), "/Figures_May1/cvt_eachchem_by_exhalation_suppl", unique(each.chem$test_substance_dtxsid),".png",sep=""),
+  ggsave(paste(getwd(), "/Figures_August2025/cvt_eachchem_by_exhalation_suppl", unique(each.chem$test_substance_dtxsid),".png",sep=""),
          width = 8, height = 6, units = "in")
 }
   
@@ -939,7 +941,7 @@ for(chx in 1:length(chem)){
                        strip.text=element_text(size=13))
     #theme(legend.position = "bottom")
 
-  ggsave(paste(getwd(), "/Figures_May1/pvo_bydose_suppl", unique(each.chem$test_substance_dtxsid),".png",sep=""),
+  ggsave(paste(getwd(), "/Figures_August2025/pvo_bydose_suppl", unique(each.chem$test_substance_dtxsid),".png",sep=""),
          width = 6, height = 6, units = "in")
   
   
@@ -979,7 +981,7 @@ df.sim.rmsle2=df.new %>% group_by(PREFERRED_NAME, method.name)%>%
     Cmax_RMSLE = rmse(log10(cmax_obs), log10(cmax_pred)))
 
 
-col=c("firebrick", "indianred", "blue4","steelblue1","#2ca25f", "#addd8e")
+col=c("#440154ff","indianred","#2d708eff","steelblue1","#7ad151ff","#fde725ff")
 plot.pvo=ggplot(df.sim.rmsle2, aes(x=conc_normalized, y=Prediction))+
   geom_point(aes( colour=method.name,shape=PREFERRED_NAME), alpha=1,size=2)+
     labs(title=paste0("(A) Concentrations"),
@@ -996,14 +998,16 @@ plot.pvo=ggplot(df.sim.rmsle2, aes(x=conc_normalized, y=Prediction))+
   theme(plot.title=element_text(hjust=0.5),
         text=element_text(size=30))
 
-plot.cmax = ggplot(df.sim.rmsle2, aes(x=cmax_obs, y=cmax_pred))+
+
+noiv=subset(df.sim.rmsle2,!(method.name%in%"IV"))
+plot.cmax = ggplot(noiv, aes(x=cmax_obs, y=cmax_pred))+
   geom_point(aes( colour=method.name,shape=PREFERRED_NAME), alpha=1,size=2)+
     labs(title=paste0("(B) Max Concentrations"),
        y = "Simulated (mg/L)", x="Observed (mg/L)",
        color="Route or\n Method", shape="Chemical")+
   #scale_color_brewer(type="qual",palette="Paired",direction=-1) +
-   scale_colour_manual(values=col)+
-     scale_shape_manual(values=1: length(unique(df.sim.rmsle2$PREFERRED_NAME)))+
+   scale_colour_manual(values=col[-1])+
+     scale_shape_manual(values=1: length(unique(noiv$PREFERRED_NAME)))+
   theme_bw() + 
   scale_x_log10() + scale_y_log10() +
   geom_abline(lty="dashed") +
@@ -1011,8 +1015,9 @@ plot.cmax = ggplot(df.sim.rmsle2, aes(x=cmax_obs, y=cmax_pred))+
   theme(plot.title=element_text(hjust=0.5),
         text=element_text(size=30))
 
+
 ggarrange(plot.pvo, plot.cmax, common.legend=T,legend="right")
-ggsave(paste(getwd(), "/Figures_May1/PvO_main.png",sep=""),
+ggsave(paste(getwd(), "/Figures_Sep2025/PvO_main.png",sep=""),
        width = 20, height = 10, units = "in",dpi=300)
   
  
@@ -1021,8 +1026,31 @@ method.rmsle.only=df.new %>% group_by(PREFERRED_NAME, method.name)%>%
     summarize(RMSLE = rmse(log10(conc_normalized),log10(Prediction)),
            Cmax_RMSLE = rmse(log10(cmax_obs), log10(cmax_pred))) %>%group_by(method.name)%>%summarize(mean(Cmax_RMSLE),
                                                                                                       mean(RMSLE))
+#COMPARE AUCs
+#library("pracma")
 
+df.sim.derm=subset(df.sim.rmsle2,administration_route_normalized=="Dermal")
+auc.df=df.sim.derm %>% group_by(PREFERRED_NAME, method.name,conc_medium_normalized,dose_level_new)%>%
+mutate(auc_observed=trapz(time_hr,conc_normalized), auc_pred=trapz(time_hr,Prediction))
+auc.df=data.frame(auc.df)
 
+auc.pvo=ggplot(auc.df, aes(x=auc_observed, y=auc_pred))+
+  geom_point(aes( colour=method.name,shape=PREFERRED_NAME), alpha=1,size=2)+
+  labs(title="Dermal AUCs - Observed vs. Predicted",
+       y = "Simulated (AUC mg/L-h)", x="Observed (AUC mg/L-h)",
+       color="Route or\n Method",shape="Chemical")+
+  scale_shape_manual(values=1: length(unique(df.sim.rmsle2$PREFERRED_NAME)))+
+  geom_smooth(aes(colour=method.name),method="lm",se=F)+
+  #scale_color_brewer(type="qual",palette="Paired",direction=-1) +
+  scale_colour_manual(values=col)+
+  theme_bw() +
+  scale_x_log10() + scale_y_log10() +
+  geom_abline(lty="dashed") +
+  #coord_fixed(xlim=lims,ylim=lims) +
+  theme(plot.title=element_text(hjust=0.5),
+        text=element_text(size=30))
+ggsave(paste(getwd(), "/Figures_Sep2025/PvO_AUC.png",sep=""),
+       width = 16, height = 10, units = "in",dpi=300)
 
 ```
 
@@ -1068,7 +1096,8 @@ dfmatchE3$PREFERRED_NAME = factor(dfmatchE3$PREFERRED_NAME,
 Generate the plot.
 
 ```{r 1_heatmap, eval=make.plots, fig.height=8, fig.width=11}
-ggplot(dfmatchE3, aes(y=PREFERRED_NAME, x=method.name))+
+dfmatchE4=dfmatchE3[-which(dfmatchE3$method.name=="IV" & dfmatchE3$ind=="Cmax_RMSLE"),] # remove IV CMax
+ggplot(dfmatchE4, aes(y=PREFERRED_NAME, x=method.name))+
   geom_tile(aes(fill=value))+
   #geom_tile(aes(fill=Chemical.Cmax.RMSLE.NE))+
   facet_wrap(~ind)+
@@ -1085,7 +1114,7 @@ ggplot(dfmatchE3, aes(y=PREFERRED_NAME, x=method.name))+
         text=element_text(size=20))+
   geom_tile(data=subset(dfmatchE3, dose_vehicle_normalized==Kvehicle2water & administration_route_normalized=="Dermal"),aes(y=PREFERRED_NAME, x=method.name),
             size=1.5,fill=NA,colour="red" )
-ggsave(paste(getwd(),"/Figures_May1/RMSLE_compare_main.png",sep=""),width=11,height=8,units="in")
+ggsave(paste(getwd(),"/Figures_August2025/RMSLE_compare_main_september.png",sep=""),width=11,height=8,units="in")
 
 ```
 
@@ -1315,7 +1344,7 @@ signif(MW*10^logWSol*1.001142303,4))
 
 ```{r 2_load_without_running, eval = (make.plots.2 & !run.simulations.2), echo=F}
 # load file with ivive_meade2023
-load("meade2023_Jun_20_2025.Rdata")
+load("meade2023_Sep_02_2025.Rdata")
 ```
 
 
@@ -1386,7 +1415,7 @@ plot <- ggplot(data,aes(x=`Equivalent Dose`)) +
   theme_bw() +
   theme(plot.title=element_text(hjust=0.5))
 plot  
-ggsave(paste(getwd(), "/Figures_May1/histogram2.png",sep=""),
+ggsave(paste(getwd(), "/Figures_August2025/histogram2.png",sep=""),
        width = 20, height = 12, units = "cm")
 ```
 
@@ -1449,7 +1478,7 @@ plot <- ggplot(data) +
   theme(plot.title=element_text(hjust=0.5),
         text=element_text(size=20))
 plot  
-ggsave(paste(getwd(), "/Figures_May1/histogram_all_main.png",sep=""),
+ggsave(paste(getwd(), "/Figures_August2025/histogram_all_main.png",sep=""),
        width = 15, height = 10, units = "in")
 
 ```
@@ -1502,14 +1531,14 @@ ggplot(pmat3,aes(x=as.numeric(MW.x),y=as.numeric(Perm)))+
   geom_point()+
   facet_grid(Method~Vehicle,scales="free")+
   labs(x="MW",y="Kp - Permeability")
-ggsave(paste(getwd(), "/Figures_May1/MWvPerm.png",sep=""),
+ggsave(paste(getwd(), "/Figures_August2025/MWvPerm.png",sep=""),
        width = 4, height = 3.5, units = "in")
 
 ggplot(pmat3,aes(x=as.numeric(logP),y=as.numeric(Perm)))+
   geom_point()+
   facet_grid(Method~Vehicle,scales="free")+
   labs(x="log(Kow)",y="Kp- Permeability")
-ggsave(paste(getwd(), "/Figures_May1/logKowvPerm.png",sep=""),
+ggsave(paste(getwd(), "/Figures_August2025/logKowvPerm.png",sep=""),
        width = 4, height = 3.5, units = "in")
 
 
@@ -1520,4 +1549,88 @@ save.image(paste0(loc.wd,
                       "MeadeWorkspace",
                       Sys.Date(),
                       ".RData"))
+```
+
+```{r PCA_data, eval=make.plots.2}
+cvt.chems <- sort(unique(conc_predictions_meade2023DF$test_substance_dtxsid))
+ivive.chems <- sort(unique(ivive_meade2023$DTXSID))
+all.chems <- sort(unique(c(cvt.chems,ivive.chems)))
+all.chems <- all.chems[all.chems %in% get_cheminfo(info="dtxsid",
+                                                   model="dermal_1subcomp",
+                                                   suppress.messages=TRUE)]
+any(cvt.chems %in% ivive.chems)
+length(cvt.chems)
+length(ivive.chems)
+chem.props <- subset(chem.physical_and_invitro.data, DTXSID %in% all.chems)
+rownames(chem.props) <- chem.props$DTXSID
+chem.props <- chem.props[,c("logHenry","logP","logPwa","logWSol","MP","MW")]
+for (this.chem in rownames(chem.props))
+{
+  p <- parameterize_dermal_pbtk(dtxsid=this.chem,
+                                suppress.messages=TRUE)
+  chem.props[this.chem,c("Rblood2plasma",
+                         "MA",
+                         "Kskin2pu",
+                         "Kskin2vehicle",
+                         "Kblood2air",
+                         "Funbound.plasma",
+                         "Fabsgut",
+                         "Clint")] <- p[
+                           c("Rblood2plasma",
+                             "MA",
+                             "Kskin2pu",
+                             "Kskin2vehicle",
+                             "Kblood2air",
+                             "Funbound.plasma",
+                             "Fabsgut",
+                             "Clint")]
+}
+```
+```{r PCA_table, eval=make.plots.2}
+#library(plotly)
+#library(stats)
+chem.props2 <- chem.props#[,!(colnames(chem.props) %in% "MW")]
+chem.props2$MW <- log10(chem.props2$MW)
+chem.props2$Kblood2air <- log10(chem.props2$Kblood2air)
+chem.props2$MA <- log10(chem.props2$MA)
+chem.props2$MP <- log10(chem.props2$MP+273)
+chem.props2$Kskin2pu <- log10(chem.props2$Kskin2pu)
+chem.props2$Kskin2vehicle <- log10(chem.props2$Kskin2vehicle)
+chem.props2$Rblood2plasma <- log10(chem.props2$Rblood2plasma)
+chem.props2$Clint <- log10(chem.props2$Clint)
+chem.props2$Clint[is.infinite((chem.props2$Clint))] <- -3
+chem.props2 <- chem.props2[apply(chem.props2,
+                                 1,
+                                 function(x) all(!is.na(x))), ]
+chem.props2 <- apply(chem.props2,
+                     2,
+                     function(x) (x - mean(x)/sd(x)))
+prin_comp <- prcomp(chem.props2)
+explained_variance_ratio <- summary(prin_comp)[["importance"]]['Proportion of Variance',]
+chem.props.pca <- as.data.frame(chem.props2 %*% prin_comp$rotation)
+chem.props.pca$CvT <- "None"
+chem.props.pca[rownames(chem.props.pca) %in% cvt.chems,"CvT"] <- "CvT"
+chem.props.pca$IVIVE <- "None"
+chem.props.pca[rownames(chem.props.pca) %in% ivive.chems,"IVIVE"] <- "IVIVE"
+
+pca.fig <- ggplot(data=chem.props.pca) +
+   geom_point(data=subset(chem.props.pca,CvT=="CvT"),
+size=3,
+    aes(
+    x=PC1,
+    y=PC2,
+    shape=IVIVE,
+    color=CvT))+
+ geom_point(alpha=0.2,size=3,
+    aes(
+    x=PC1,
+    y=PC2,
+    color=CvT,
+    shape=IVIVE))#+
+   # xlim(-1300,200)+
+    #ylim(-75,25)
+
+print(pca.fig)
+ggsave(paste(getwd(), "/Figures_August2025/pca.png",sep=""),
+       width = 4, height = 3.5, units = "in")
 ```

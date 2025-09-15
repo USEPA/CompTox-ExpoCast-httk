@@ -8,6 +8,7 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+*Please send questions to wambaugh.research@gmail.com*
 
 from "Interpretation of thyroid-relevant bioactivity data for comparison to 
 in vivo exposures: A prioritization approach for putative chemical inhibitors 

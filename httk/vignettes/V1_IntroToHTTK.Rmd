@@ -8,7 +8,7 @@ vignette: >
  %\VignetteEngine{knitr::rmarkdown}
  %\VignetteEncoding{UTF-8}
 ---
-*Please send questions to breen.miyuki@epa.gov*
+*Please send questions to wambaugh.research@gmail.com*
 
 ### Set vignette options
 R package **knitr** generates html and PDF documents from this RMarkdown file,

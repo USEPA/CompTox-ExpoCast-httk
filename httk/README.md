@@ -166,7 +166,7 @@ vignette("IntroToHTTK")
 ## Authors
 
 ### Principal Investigator 
-John Wambaugh [wambaugh.john@epa.gov]
+John Wambaugh [wambaugh.research@gmail.com]
 
 ### Lead Software Engineer 
 Sarah Davidson-Fritz [DavidsonFritz.Sarah@epa.gov]
