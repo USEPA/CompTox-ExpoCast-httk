@@ -48,7 +48,7 @@ must be specified.}
 \item{chem.cas}{Either the chemical name, CAS number, or the parameters must
 be specified.}
 
-\item{dtxsid}{EPA's 'DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
+\item{dtxsid}{EPA's DSSTox Structure ID (\url{https://comptox.epa.gov/dashboard})
 the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{times}{Optional time sequence for specified number of days.  The
@@ -160,14 +160,14 @@ each time point.
 This function solves for the amounts or concentrations of a chemical in
 the blood of three different compartments representing the body.
 The volumes of the three compartments are chemical specific, determined from
-the true tissue volumes multipled by the partition coefficients:
+the true tissue volumes multiplied by the partition coefficients:
 \deqn{V_{pv} = V_{gut}}
 \deqn{V_{liv} = \frac{K_{liv}*f_{up}}{R_{b:p}}V_{liver}}
 \deqn{V_{sc} = \frac{K_{sc}*f_{up}}{R_{b:p}}V_{rest}}
 where "pv" is the portal vein, "liv" is the liver, and "sc" is the systemic
 compartment; V_gut, V_liver, and V_rest are physiological tissue volumes;
-K_x are chemical- and tissue-specific equlibrium partition coefficients 
-between tissue and free chemcial concentration in plasma;
+K_x are chemical- and tissue-specific equilibrium partition coefficients 
+between tissue and free chemical concentration in plasma;
 f_up is the chemical-specific fraction unbound in plasma; and R_b:p is the 
 chemical specific ratio of concentrations in blood:plasma.
 The blood concentrations evolve according to:
@@ -192,13 +192,13 @@ rest-of-body, with the plasma related to the concentration in the blood
 in the systemic compartment by the blood:plasma ratio.
 
 Model Figure 
-\if{html}{\figure{3comp.jpg}{options: width="60\%" alt="Figure: Three
+\if{html}{\figure{3comp.jpg}{options: width=421 alt="Figure: Three
 Compartment Model Schematic"}} 
 \if{latex}{\figure{3comp.pdf}{options: width=12cm alt="Figure: Three Compartment
 Model Schematic"}}
 
 When species is specified as rabbit, dog, or mouse, the function uses the
-appropriate physiological data(volumes and flows) but substitues human
+appropriate physiological data(volumes and flows) but substitutes human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 }
 \examples{

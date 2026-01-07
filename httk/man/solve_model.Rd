@@ -149,7 +149,7 @@ species (either "Rat", "Rabbit", "Dog", "Mouse", or default "Human").
 \details{
 Dosing values with certain acceptable associated input.units (like mg/kg BW)
 are configured to undergo a unit conversion. All model simulations are 
-intended to run with units as specifed by "compartment.units" in the 
+intended to run with units as specified by "compartment.units" in the 
 model.list (as defined by the modelinfo files).
 
 The 'dosing' argument includes all parameters needed to describe exposure
@@ -164,9 +164,9 @@ when oral route is specified).
 AUC is the area under the curve of the plasma concentration.
 
 Model parameters are named according to the following convention:
-\tabular{lrrrr}{
+\tabular{lrrr}{
 prefix \tab suffix \tab Meaning \tab units \cr
-K \tab \tab Partition coefficient for tissue to free plasma \ tab unitless \cr
+K \tab \tab Partition coefficient for tissue to free plasma \tab unitless \cr
 V \tab \tab Volume \tab L \cr
 Q \tab \tab Flow \tab L/h \cr
 k \tab \tab Rate \tab 1/h \cr

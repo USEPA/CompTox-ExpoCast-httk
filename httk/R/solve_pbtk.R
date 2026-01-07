@@ -9,7 +9,7 @@
 #' plasma, the whole plasma concentration is 
 #' \eqn{C_{tissue,plasma} = \frac{1}{f_{up}*K_{tissue2fup}}*C_{tissue}}. 
 #' Note that we use a single, 
-#' constant value of \eqn{f_{up}} across all tissues. Corespondingly the free 
+#' constant value of \eqn{f_{up}} across all tissues. Correspondingly the free 
 #' plasma 
 #' concentration is modeled as 
 #' \eqn{C_{tissue,free plasma} = \frac{1}{K_{tissue2fup}}*C_tissue}. 
@@ -18,10 +18,10 @@
 #' \eqn{C_{x,blood} = \frac{R_{b2p}}{f_{up}*K_{tissue2fup}}*C_{tissue}}, where 
 #' we use a 
 #' single \eqn{R_{b2p}} value throughout the body.
-#' Metabolic clearance is modelled as being from the total plasma 
+#' Metabolic clearance is modeled as being from the total plasma 
 #' concentration here, though it is restricted to the free fraction in 
 #' \code{\link{calc_hep_clearance}} by default. Renal clearance via 
-#' glomerulsr filtration is from the free plasma concentration.
+#' glomerular filtration is from the free plasma concentration.
 #' The compartments used in this model are the gutlumen, gut, liver, kidneys,
 #' veins, arteries, lungs, and the rest of the body.
 #' The extra compartments include the amounts or concentrations metabolized by
@@ -34,7 +34,7 @@
 #' Default NULL value for doses.per.day solves for a single dose.
 #' 
 #' Model Figure 
-#' \if{html}{\figure{pbtk.jpg}{options: width="60\%" alt="Figure: PBTK Model
+#' \if{html}{\figure{pbtk.jpg}{options: width=367 alt="Figure: PBTK Model
 #' Schematic"}}
 #' \if{latex}{\figure{pbtk.pdf}{options: width=12cm alt="Figure: PBTK Model
 #' Schematic"}}

@@ -305,6 +305,7 @@ model.list[[THIS.MODEL]]$routes <- list(
     "dose.type" = "add",
     "dosing.params" = c(
       "initial.dose",
+      "initial.vol",
       "dosing.matrix",
       "forcings")),
   "dermal.washoff" = list(
@@ -312,6 +313,7 @@ model.list[[THIS.MODEL]]$routes <- list(
     "dose.type" = "replace",
     "dosing.params" = c(
       "initial.dose",
+      "initial.vol",
       "dosing.matrix",
       "forcings")),
   "dermal.InfiniteDose" = list( 
@@ -319,6 +321,7 @@ model.list[[THIS.MODEL]]$routes <- list(
     "dose.type" = "replace",
     "dosing.params" = c(
       "initial.dose",
+      "initial.vol",
       "dosing.matrix",
       "forcings"))  
   )

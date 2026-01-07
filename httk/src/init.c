@@ -113,6 +113,15 @@ extern void jacpbtk_lifestage(int *, double *, double *, int *, int *, double *,
 extern void eventpbtk_lifestage(int *, double *, double *);
 extern void rootpbtk_lifestage(int *, double *, double *, int *, double *, double *, int *);
 #
+extern void root_aerosol_pbtk(int *, double *, double *, int *, double *, double *, int *);
+extern void getParms_aerosol_pbtk(double *, double *, int *);
+extern void initmod_aerosol_pbtk(void *);
+extern void initforc_aerosol_pbtk(void *);
+extern void derivs_aerosol_pbtk(int *, double *, double *, double *, double *, int *);
+extern void jac_aerosol_pbtk(int *, double *, double *, int *, int *, double *, int *, double *, int *);
+extern void event_aerosol_pbtk(int *, double *, double *);
+extern void root_aerosol_pbtk(int *, double *, double *, int *, double *, double *, int *);
+#
 static const R_CMethodDef CEntries[] = {
     {"getParmspbtk",       (DL_FUNC) &getParmspbtk,       3},
     {"initmodpbtk", (DL_FUNC) &initmodpbtk, 1},
@@ -208,6 +217,14 @@ static const R_CMethodDef CEntries[] = {
     {"jacpbtk_lifestage", (DL_FUNC) &jacpbtk_lifestage, 9},
     {"eventpbtk_lifestage", (DL_FUNC) &eventpbtk_lifestage, 3},
     {"rootpbtk_lifestage", (DL_FUNC) &rootpbtk_lifestage, 7},
+#
+    {"getParms_aerosol_pbtk", (DL_FUNC) &getParms_aerosol_pbtk, 3},
+    {"initmod_aerosol_pbtk", (DL_FUNC) &initmod_aerosol_pbtk, 1},
+    {"initforc_aerosol_pbtk", (DL_FUNC) &initforc_aerosol_pbtk, 1},
+    {"derivs_aerosol_pbtk", (DL_FUNC) &derivs_aerosol_pbtk, 6},
+    {"jac_aerosol_pbtk", (DL_FUNC) &jac_aerosol_pbtk, 9},
+    {"event_aerosol_pbtk", (DL_FUNC) &event_aerosol_pbtk, 3},
+    {"root_aerosol_pbtk", (DL_FUNC) &root_aerosol_pbtk, 7},
 #
     {NULL, NULL, 0}
 };

@@ -168,12 +168,12 @@ vignette("IntroToHTTK")
 ### Principal Investigator 
 John Wambaugh [wambaugh.research@gmail.com]
 
-### Lead Software Engineer 
-Sarah Davidson-Fritz [DavidsonFritz.Sarah@epa.gov]
+### EPA Lead Developer
+Caroline Ring [Ring.Caroline@epa.gov]
 
 ### Model Authors and Function Developers
 Robert Pearce,
-Caroline Ring [Ring.Caroline@epa.gov],
+Sarah Davidson-Fritz [DavidsonFritz.Sarah@epa.gov]
 Greg Honda [honda.gregory@epa.gov], 
 Mark Sfeir, 
 Matt Linakis [MLINAKIS@ramboll.com],
@@ -189,9 +189,9 @@ Miyuki Breen,
 Shannon Bell [Shannon.bell@inotivco.com], 
 Xiaoqing Chang [Xiaoqing.chang@inotivco.com], 
 Jimena Davis, 
-Elaina Kenyon [kenyon.elaina@epa.gov],
+Elaina Kenyon,
 Gilberto Padilla Mercado [PadillaMercado.Gilberto@epa.gov],
-Katie Paul Friedman [Paul-Friedman.Katie@epa.gov],
+Katie Paul Friedman [Katie.PaulFriedman@UL.org],
 Nathan Pollesch [pollesch.nathan@epa.gov],
 Meredith Scherer [Scherer.Meredith@epa.gov],
 Noelle Sinski [Noelle.Sinski@icf.com],
@@ -202,13 +202,7 @@ Barbara Wetmore [wetmore.barbara@epa.gov], and
 Lily Whipple
 
 ### Statistical Expertise
-Woodrow Setzer [setzer.woodrow@epa.gov]
-
-## License
-
-License: MIT <https://github.com/USEPA/CompTox-ExpoCast-httk/blob/main/httk/LICENSE>
+Woodrow Setzer
 
 ## Disclaimer
-This software/application was developed by the U.S. Environmental Protection Agency (USEPA). No warranty expressed or implied is made regarding the accuracy or utility of the system, nor shall the act of distribution constitute any such warranty. The USEPA has relinquished control of the information and no longer has responsibility to protect the integrity, confidentiality or availability of the information. Any reference to specific commercial products, processes, or services by service mark, trademark, manufacturer, or otherwise, does not constitute or imply their endorsement, recommendation or favoring by the USEPA. The USEPA seal and logo shall not be used in any manner to imply endorsement of any commercial product or activity by the USEPA or the United States Government.
-
-<img src="man/figures/httk-logo.png" align="center" width="50%"/>
+This software/application was initially developed by the U.S. Environmental Protection Agency (USEPA). No warranty expressed or implied is made regarding the accuracy or utility of the system, nor shall the act of distribution constitute any such warranty. The USEPA has relinquished control of the information and no longer has responsibility to protect the integrity, confidentiality or availability of the information. Any reference to specific commercial products, processes, or services by service mark, trademark, manufacturer, or otherwise, does not constitute or imply their endorsement, recommendation or favoring by the USEPA.

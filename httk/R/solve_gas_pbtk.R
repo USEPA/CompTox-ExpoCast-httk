@@ -9,7 +9,7 @@
 #' plasma, the whole plasma concentration is 
 #' \eqn{C_{tissue,plasma} = \frac{1}{f_{up}*K_{tissue2fup}}*C_{tissue}}. 
 #' Note that we use a single, 
-#' constant value of \eqn{f_{up}} across all tissues. Corespondingly the free 
+#' constant value of \eqn{f_{up}} across all tissues. Correspondingly the free 
 #' plasma 
 #' concentration is modeled as 
 #' \eqn{C_{tissue,free plasma} = \frac{1}{K_{tissue2fup}}*C_tissue}. 
@@ -18,7 +18,7 @@
 #' \eqn{C_{x,blood} = \frac{R_{b2p}}{f_{up}*K_{tissue2fup}}*C_{tissue}}, where 
 #' we use a 
 #' single \eqn{R_{b2p}} value throughout the body.
-#' Metabolic clearance is modelled as being from the total plasma 
+#' Metabolic clearance is modeled as being from the total plasma 
 #' concentration here, though it is restricted to the free fraction in 
 #' \code{\link{calc_hep_clearance}} by default. Renal clearance via 
 #' glomerulsr filtration is from the free plasma concentration.
@@ -50,14 +50,14 @@
 #' AUC is the area under the curve of the plasma concentration.
 #' 
 #' Model Figure from \insertCite{linakis2020development}{httk}:
-#' \if{html}{\figure{gaspbtk.jpg}{options: width="100\%" alt="Figure: Gas PBTK 
+#' \if{html}{\figure{gaspbtk.jpg}{options: width=276 alt="Figure: Gas PBTK 
 #' Model Schematic"}}
 #' \if{latex}{\figure{gaspbtk.pdf}{options: width=12cm alt="Figure: Gas PBTK 
 #' Model Schematic"}}
 #' 
-#' Model parameters are named according to the following convention:\tabular{lrrrr}{
-#' prefix \tab suffic \tab Meaning \tab units \cr
-#' K \tab \tab Partition coefficient for tissue to free plasma \ tab unitless \cr
+#' Model parameters are named according to the following convention:\tabular{lrrr}{
+#' prefix \tab suffix \tab Meaning \tab units \cr
+#' K \tab \tab Partition coefficient for tissue to free plasma \tab unitless \cr
 #' V \tab \tab Volume \tab L \cr
 #' Q \tab \tab Flow \tab L/h \cr
 #' k \tab \tab Rate \tab 1/h \cr
@@ -116,8 +116,7 @@
 #' assembling "forcings" data series argument for integrator. Defaults to
 #' units of ppmv.
 #' 
-#' @param period For use in assembling forcing function data series 'forcings'
-#' argument, specified in hours
+#' @param period How often the dosing repeats, specified in days
 #' 
 #' @param exp.duration For use in assembling forcing function data 
 #' series 'forcings' argument, specified in hours
@@ -318,7 +317,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
 {
   
   #Screen against error in user's specification of forcing function timing
-  if (exp.duration > period){
+  if (period > 0 & exp.duration > period){
   stop("Argument 'exp.duration' should be smaller than its subsuming argument,
        'period', which together are set to specify a simple cyclic pattern of 
        inhalation exposure and rest in the default case.")
@@ -386,7 +385,7 @@ solve_gas_pbtk <- function(chem.name = NULL,
   #designed to work together in a very meaningful way
   if (is.null(dosing.matrix) & is.null(doses.per.day) & is.null(forcings))
   {
-    if (exp.duration > period){
+    if (period > 0 & exp.duration > period){
       stop('If not specifying \'dose.matrix\' data series explicitly, 
       additional arguments are needed to generate a \'dose.matrix\' argument
       with a cyclic exposure pattern across the simulation:
@@ -403,8 +402,9 @@ solve_gas_pbtk <- function(chem.name = NULL,
       if (exp.conc == 0) {
         conc.matrix = NULL
       } else if (period == 0) {
-        conc.matrix = matrix(c(exp.start.time,exp.conc), nrow=1)
-        colnames(conc.matrix <- c("times","forcing_values"))
+        conc.matrix = matrix(c(exp.start.time,exp.duration,
+                               exp.conc,0), nrow=2)
+        colnames(conc.matrix) <- c("times","forcing_values")
       } else {
         Nrep <- ceiling((days - exp.start.time)/period) 
         times <- rep(c(exp.start.time, exp.duration), Nrep) + rep(period * (0:(Nrep - 1)), rep(2, Nrep))

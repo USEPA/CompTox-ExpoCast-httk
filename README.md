@@ -138,7 +138,7 @@ write.csv(my_data, file = "my_data.csv")
 #### User Notes
 
 * When using the CAS number as a unique chemical identifier with 'httk'
-functions it is best to type these numbers directly (that is, by hand) into the
+functions it is best to type these numbers directly (i.e. by hand) into the
 console, script, Rmarkdown, etc. to avoid unnecessary error messages. Webpages,
 word documents, and other sources of these CAS numbers may use a
 different character encoding that does not match those used in the 'httk' data
@@ -166,49 +166,47 @@ vignette("IntroToHTTK")
 ## Authors
 
 ### Principal Investigator 
-John Wambaugh [wambaugh.john@epa.gov]
+John Wambaugh [wambaugh.research@gmail.com]
 
-### Lead Software Engineer 
-Sarah Davidson Fritz [DavidsonFritz.Sarah@epa.gov]
+### EPA Lead Developer
+Caroline Ring [Ring.Caroline@epa.gov]
 
 ### Model Authors and Function Developers
 Robert Pearce,
-Caroline Ring [Ring.Caroline@epa.gov],
+Sarah Davidson-Fritz [DavidsonFritz.Sarah@epa.gov]
 Greg Honda [honda.gregory@epa.gov], 
 Mark Sfeir, 
-Matt Linakis [MLINAKIS@ramboll.com], 
+Matt Linakis [MLINAKIS@ramboll.com],
 Dustin Kapraun [kapraun.dustin@epa.gov],
 Kimberly Truong [truong.kimberly@epa.gov],
 Colin Thomson [thomson.colin@epa.gov],
-Annabel Meade [aemeade7@gmail.com],
-Meredith Scherer [Scherer.Meredith@epa.gov], and
+Annabel Meade [aemeade7@gmail.com], and
 Celia Schacht [Schacht.Celia@epa.gov]
 
-### Bug-Fixes Vignette edits, and Parameter Values
+### Bug-Fixes, Vignette edits, and Parameter Values
 Todor Antonijevic [tantonijevic@toxstrategies.com], 
 Miyuki Breen, 
 Shannon Bell [Shannon.bell@inotivco.com], 
 Xiaoqing Chang [Xiaoqing.chang@inotivco.com], 
 Jimena Davis, 
-Elaina Kenyon [kenyon.elaina@epa.gov],
+Elaina Kenyon,
 Gilberto Padilla Mercado [PadillaMercado.Gilberto@epa.gov],
-Katie Paul Friedman [Paul-Friedman.Katie@epa.gov],
+Katie Paul Friedman [Katie.PaulFriedman@UL.org],
 Nathan Pollesch [pollesch.nathan@epa.gov],
+Meredith Scherer [Scherer.Meredith@epa.gov],
 Noelle Sinski [Noelle.Sinski@icf.com],
 Nisha Sipes [sipes.nisha@epa.gov],
 James Sluka [jsluka@indiana.edu],  
-Caroline Stevens [Stevens.Caroline@epa.gov]
-Barbara Wetmore [wetmore.barbara@epa.gov],
+Caroline Stevens [Stevens.Caroline@epa.gov],
+Barbara Wetmore [wetmore.barbara@epa.gov], and
 Lily Whipple
 
 ### Statistical Expertise
 Woodrow Setzer
+
 ## License
 
-License: MIT <https://github.com/USEPA/CompTox-ExpoCast-httk/httk/LICENSE.md>
+License: MIT <https://github.com/ULRI-CIRI/httk-dev/blob/dev/httk/LICENSE>
 
 ## Disclaimer
-This software/application was developed by the U.S. Environmental Protection Agency (USEPA). No warranty expressed or implied is made regarding the accuracy or utility of the system, nor shall the act of distribution constitute any such warranty. The USEPA has relinquished control of the information and no longer has responsibility to protect the integrity, confidentiality or availability of the information. Any reference to specific commercial products, processes, or services by service mark, trademark, manufacturer, or otherwise, does not constitute or imply their endorsement, recommendation or favoring by the USEPA. The USEPA seal and logo shall not be used in any manner to imply endorsement of any commercial product or activity by the USEPA or the United States Government.
-
-<img src="httk/man/figures/httk-logo.png" align="center" width="50%"/>
-                           
+This software/application was initially developed by the U.S. Environmental Protection Agency (USEPA). No warranty expressed or implied is made regarding the accuracy or utility of the system, nor shall the act of distribution constitute any such warranty. The USEPA has relinquished control of the information and no longer has responsibility to protect the integrity, confidentiality or availability of the information. Any reference to specific commercial products, processes, or services by service mark, trademark, manufacturer, or otherwise, does not constitute or imply their endorsement, recommendation or favoring by the USEPA.

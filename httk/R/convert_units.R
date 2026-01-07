@@ -98,6 +98,9 @@ convert_units <- function(input.units = NULL,
                           liquid.density = 1.0, # g/mL
                           state="liquid")
 {
+# If we don't have a volume, give NA's for conversions that require it:
+  if (is.null(vol)) vol <- NA
+  
 # The volume of an ideal gas at this temperature (L/mol)
   volidealgas <- (273.15 + temp)*0.08205
 
@@ -199,7 +202,7 @@ convert_units <- function(input.units = NULL,
   }
   
   # How many unit conversions do we currently have:
-  NUM.CONVERSIONS <- 65
+  NUM.CONVERSIONS <- 66
   
   known_input_units <- vector(mode = "character", length = NUM.CONVERSIONS)
   known_output_units <- vector(mode = "character", length = NUM.CONVERSIONS)
@@ -509,6 +512,9 @@ convert_units <- function(input.units = NULL,
     known_output_units[65] <- 'm2' #meters squared
     known_conversions[65] <- 1e-6
     
+    known_input_units[66] <- 'ppmw'
+    known_output_units[66] <- 'umol'
+    known_conversions[66] <- 10^3/this.MW * liquid.density * vol
         
     #Use these vectors to construct a matrix of conversion factors:
     #rows are input units, columns are output units

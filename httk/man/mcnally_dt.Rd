@@ -3,7 +3,7 @@
 \docType{data}
 \name{mcnally_dt}
 \alias{mcnally_dt}
-\title{Reference tissue masses and flows from tables in McNally et al. 2014.}
+\title{Reference tissue masses and flows from tables in McNally et al. (2014)}
 \format{
 A data.table with variables: \describe{\item{\code{tissue}}{Body
  tissue} \item{\code{gender}}{Gender: Male or Female}
@@ -18,17 +18,18 @@ A data.table with variables: \describe{\item{\code{tissue}}{Body
  \code{flow_ref}/\code{CO_ref}}}
 }
 \source{
-McNally K, Cotton R, Hogg A, Loizou G. "PopGen: A virtual human
- population generator." Toxicology 315, 70-85, 2004.
+\insertRef{mcnally2014popgen}{httk}
 }
 \usage{
 mcnally_dt
 }
 \description{
 Reference tissue masses, flows, and residual variance distributions from
-Tables 1, 4, and 5 of McNally et al. 2014.
+Tables 1, 4, and 5 of McNally et al. 2014 (\doi{https://doi.org/10.1016/j.tox.2013.07.009}).
 }
 \references{
+\insertRef{mcnally2014popgen}{httk}
+
 \insertRef{ring2017identifying}{httk}
 }
 \author{

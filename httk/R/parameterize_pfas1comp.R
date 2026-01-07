@@ -1,7 +1,7 @@
 #' Parameters for a one compartment (empirical) toxicokinetic model for PFAS
 #' 
 #' This function initializes the parameters needed in the function solve_1comp.
-#' The toxiokinetic model is of the form of an
+#' The toxicokinetic model is of the form of an
 #' empirical, single compartment in which all tissues are well mixed. 
 #' The route of exposure can be oral or intravenous. 
 #' For oral exposures a hepatic extraction factor (first-pass 
@@ -16,8 +16,8 @@
 #' There is a single, unspecified route of elimination (clearance). 
 #' Half-life is estimated using the 
 #' Dawson et al. (2023) (\doi{10.3390/toxics11020098}) 
-#' machine learning model for per- and poly-flurinated alkyl substances (PFAS).
-#' In keeping with the findings of that paper, volume of distribtuion is held 
+#' machine learning model for per- and poly-fluorinated alkyl substances (PFAS).
+#' In keeping with the findings of that paper, volume of distribution is held 
 #' fixed at 0.205 L kg/BW. Clearance is calculated as the product of elimination
 #' rate (determined from half-life) and the volume of distribution.
 #' The ratio of chemical concentration in blood to plasma is determined
@@ -99,9 +99,7 @@
 #' @author John Wambaugh 
 #'
 #' @references 
-#' Dawson, Daniel E., et al. "A Machine Learning Model to Estimate 
-#' Toxicokinetic Half-Lives of Per-and Polyfluoro-Alkyl Substances (PFAS) in 
-#' Multiple Species." Toxics 11.2 (2023): 98.
+#' \insertRef{dawson2023machine}{httk}
 #' 
 #' \insertRef{pearce2017httk}{httk}
 #'
@@ -109,12 +107,9 @@
 #'
 #' \insertRef{pearce2017evaluation}{httk}
 #'
-#' Wambaugh, John F., et al. "Evaluating in vitro-in vivo extrapolation of 
-#' toxicokinetics." Toxicological Sciences 163.1 (2018): 152-169.
+#' \insertRef{wambaugh2018evaluating}{httk}
 #'
-#' Poothong, Somrutai, et al. "Distribution of novel and well-known poly-and 
-#' perfluoroalkyl substances (PFASs) in human serum, plasma, and whole blood." 
-#' Environmental Science & Technology 51.22 (2017): 13388-13396.
+#' \insertRef{poothong2017distribution}{httk}
 #'
 #' @keywords Parameter 1compartment PFAS
 #'

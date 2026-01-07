@@ -1,46 +1,82 @@
+#' Test the check digit of a CAS number to confirm validity
+#' 
+#' Chemical abstracts services registry numbers (CAS-RN) include a final digit
+#' as a "checksum" to test for validity (that is, that the number has not been
+#' corrupted). 
+#' 
+#' The check digit (final number) is calculated by working from right to left,
+#' starting with the second to last digit of the CAS-RN. We multiply each digit
+#' by an increasing digit (1, 2, 3...) and sum as we work from right to left.
+#' The check digit should equal the final digit of the sum.
+#' 
+#' @param CAS.string A character string of three numbers separated by two dashes
+#'
+#' @return logical (TRUE if final digit of CAS is consistent with other digits)
+#' 
+#' @author John Wambaugh
+#' 
+#' @export CAS.checksum
 CAS.checksum <- function(CAS.string)
 {
   test.num <- 0
   multiplier <- 1
   if(is.factor(CAS.string)) CAS.string <- as.character(CAS.string)
   for (i in (nchar(CAS.string)-2):1)
-    if (!is.na(as.numeric(substr(CAS.string,i,i))))
+    if (!is.na(suppressWarnings(as.numeric(substr(CAS.string,i,i)))))
     {
-      test.num <- test.num + as.numeric(substr(CAS.string,i,i))*multiplier
+      test.num <- test.num + 
+        suppressWarnings(as.numeric(substr(CAS.string,i,i)))*multiplier
       multiplier <- multiplier + 1
     }
-  if (is.na(test.num%%10 == as.numeric(substr(CAS.string,nchar(CAS.string),nchar(CAS.string))))) return(F)
-  return (test.num%%10 == as.numeric(substr(CAS.string,nchar(CAS.string),nchar(CAS.string))))
+  if (is.na(test.num%%10 == suppressWarnings(as.numeric(substr(CAS.string,
+    nchar(CAS.string),nchar(CAS.string)))))) return(F)
+  return (test.num%%10 == suppressWarnings(as.numeric(substr(CAS.string,
+    nchar(CAS.string),nchar(CAS.string)))))
 }
 
 
-#' Add a paramter value to the chem.physical_and_invitro.data table
+#' Add a parameter value to the chem.physical_and_invitro.data table
 #' 
 #' This internal function is used by \code{\link{add_chemtable}} to add a single 
 #' new parameter to the table of chemical parameters. It should not be typically
 #' used from the command line.
 #' 
-#' @param this.table Object of class data.frame containing one row per chemical,
-#' with each chemical minimally described by a CAS number.
-#' @param data.list This list identifies which properties are to be read from
-#' the table. Each item in the list should point to a column in the table
-#' new.table. Valid names in the list are: 'Compound', 'CAS', 'DSSTox.GSID'
-#' 'SMILES.desalt', 'Reference', 'Species', 'MW', 'logP', 'pKa_Donor',
-#' 'pKa_Accept', 'logMA', 'Clint', 'Clint.pValue', 'Funbound.plasma',
-#' 'Fgutabs', 'Rblood2plasma'.
-#' @param current.table This is the table to which data are being added.
+#' @param this.table Object of class data.frame containing one row per chemical.
+#' 
+#' @param this.CAS The Chemical Abstracts Service registry number (CAS-RN)
+#' correponding to the parameter value
+#'
+#' @param compound.name A name associated with the chemical (defaults to NULL)
+#'
+#' @param this.property The property being added/modified.
+#'
+#' @param value The value being assigned to this.property.
+#'
 #' @param reference This is the reference for the data in the new table. This
 #' may be omitted if a column in data.list gives the reference value for each
 #' chemical.
+#'
 #' @param species This is the species for the data in the new table. This may
 #' be omitted if a column in data.list gives the species value for each
 #' chemical or if the data are not species-specific (e.g., MW).
+#'
 #' @param overwrite If overwrite=TRUE then data in current.table will be
 #' replaced by any data in new.table that is for the same chemical and
 #' property. If overwrite=FALSE (DEFAULT) then new data for the same chemical
 #' and property are ignored.  Funbound.plasma values of 0 (below limit of
 #' detection) are overwritten either way.
 #' 
+#' @param sig.fig Sets the number of significant figures stored (defaults to 4)
+#' 
+#' @param clint.pvalue.overwrite If TRUE then the Cl_int p-value is set to NA 
+#' when the Cl_int value is changed unless a new p-value is provided. (defaults
+#' to TRUE) 
+#' 
+#' @param allow.na If TRUE (default is FALSE) then NA values are written to the
+#' table, otherwise they are ignored.
+#'
+#' @param suppress.messages Whether or not the output messages are suppressed.
+#'
 #' @return \item{data.frame}{A new data.frame containing the data in
 #' current.table augmented by new.table} 
 #' @author John Wambaugh
@@ -52,9 +88,11 @@ augment.table <- function(
   value,
   species=NULL,
   reference,
-  overwrite=F,
+  overwrite=FALSE,
   sig.fig = 4,
-  clint.pvalue.overwrite=T)
+  clint.pvalue.overwrite=TRUE,
+  allow.na=FALSE,
+  suppress.messages=FALSE)
 {
   # Columns stored in chem.phys_and_invitro.table:
   CHEM.ID.COLS<-c(
@@ -104,6 +142,7 @@ augment.table <- function(
     "DTXSID",
     "Formula",
     "Caco2.Pab")
+
   # Many data are converted to numeric,but sometimes we want to preserve strings:
   AS.NUMERIC.EXCEPTIONS <- c(
     "pKa_Donor",
@@ -115,9 +154,9 @@ augment.table <- function(
     "SMILES.desalt",
     "Formula",
     "Caco2.Pab")
-                                
+  
   if (!is.na(value)) if (value == "") value <- NA
-  if (!is.na(value))
+  if (!is.na(value) | allow.na)
   {
     if (tolower(this.property) %in% tolower(COLUMN.CAPITALIZATION.EXCEPTIONS))
     {
@@ -173,7 +212,7 @@ augment.table <- function(
         this.row <- this.table[1,]
         this.row[] <- NA
       } else {
-        this.row <- as.data.frame(compound.name,stringsAsFactors=F)
+        this.row <- as.data.frame(compound.name,stringsAsFactors=FALSE)
         colnames(this.row) <- "Compound"
       }
       this.row[,"Compound"] <- compound.name
@@ -224,7 +263,6 @@ augment.table <- function(
       ref.name <- paste(this.property,"Reference",sep=".")
       this.table[,ref.name] <- NA
     }
-    if (length(this.table[index,this.property])>1) browser()
     if (is.na(this.table[index,this.property]) | 
       overwrite | 
       (this.property == paste(species,'Funbound.plasma',sep=".") & 
@@ -232,18 +270,21 @@ augment.table <- function(
     {
       if (!(this.property.nospecies %in% AS.NUMERIC.EXCEPTIONS))
       {
+    # If it's numeric we want to control sig figs:
         this.table[index,this.property] <- signif(as.numeric(value), sig.fig)
       } else {
-        if (class(this.table[,this.property])!='character')
+    # Otherwise force it to be a character:
+        if (!is.character(this.table[,this.property]))
         {  
           this.table[,this.property] < as.character(this.table[,this.property])
         }
 # Check to see if this is actually a number and we can use sig figs:        
-        if (!is.na(as.numeric(value)))
+        if (!is.na(suppressWarnings(as.numeric(value))))
         {
-          if (as.character(as.numeric(value)) == as.character(value))
+          if (as.character(suppressWarnings(as.numeric(value))) == 
+            as.character(value))
           {
-            value <- signif(as.numeric(value), sig.fig)
+            value <- signif(suppressWarnings(as.numeric(value)), sig.fig)
           }
         }
         this.table[index,this.property] <- as.character(value)
@@ -263,6 +304,15 @@ augment.table <- function(
       }
       ref.name <- paste(this.property,"Reference",sep=".")
       this.table[index,ref.name] <- reference
+    } else if (!is.na(this.table[index,this.property]) | 
+      !overwrite)
+    {
+      if (!suppress.messages) 
+        warning(paste("Preexisting value found for",
+                    this.CAS,
+                    "property",
+                    this.property,
+                    "and overwrite = FALSE. New value ignored."))
     }
     CHEM.PHYS.COLS <- sort(c(
       CHEM.PHYS.COLS,
@@ -295,31 +345,96 @@ augment.table <- function(
 #' 
 #' @param new.table Object of class data.frame containing one row per chemical,
 #' with each chemical minimally described by a CAS number.
+#' 
 #' @param data.list This list identifies which properties are to be read from
 #' the table. Each item in the list should point to a column in the table
 #' new.table. Valid names in the list are: 'Compound', 'CAS', 'DSSTox.GSID'
 #' 'SMILES.desalt', 'Reference', 'Species', 'MW', 'logP', 'pKa_Donor',
 #' 'pKa_Accept', 'logMA', 'Clint', 'Clint.pValue', 'Funbound.plasma',
-#' 'Fgutabs', 'Rblood2plasma'.
+#' 'Fabs', 'Fgut', 'Rblood2plasma'.
+#' 
 #' @param current.table This is the table to which data are being added.
+#' 
 #' @param reference This is the reference for the data in the new table. This
 #' may be omitted if a column in data.list gives the reference value for each
 #' chemical.
+#' 
 #' @param species This is the species for the data in the new table. This may
 #' be omitted if a column in data.list gives the species value for each
 #' chemical or if the data are not species-specific (e.g., MW).
+#' 
 #' @param overwrite If overwrite=TRUE then data in current.table will be
 #' replaced by any data in new.table that is for the same chemical and
 #' property. If overwrite=FALSE (DEFAULT) then new data for the same chemical
 #' and property are ignored.  Funbound.plasma values of 0 (below limit of
 #' detection) are overwritten either way.
+#' 
+#' @param sig.fig Sets the number of significant figures stored (defaults to 4)
+#' 
+#' @param clint.pvalue.overwrite If TRUE then the Cl_int p-value is set to NA 
+#' when the Cl_int value is changed unless a new p-value is provided. (defaults
+#' to TRUE) 
+#'
+#' @param allow.na If TRUE (default is FALSE) then NA values are written to the
+#' table, otherwise they are ignored.
+#'
+#' @param suppress.messages Whether or not the output messages are suppressed.
+#' 
 #' @return \item{data.frame}{A new data.frame containing the data in
 #' current.table augmented by new.table} 
 #' @author John Wambaugh
 #' @examples
 #' 
+#' \donttest{
+#' library(httk)
+#' # Number of chemicals distributed with the package:
+#' num.chems <- length(get_cheminfo())
+#' 
+#' fake <- data.frame(Compound="Tester",
+#'                    CASRN="222-11-1",
+#'                    DTXSID="DTX111222",
+#'                    MW=200,
+#'                    logP=3.5,
+#'                    Fup=0.1,
+#'                    Clint=0.1,
+#'                    Clint.pValue=0.001,stringsAsFactors=FALSE)
+#' 
+#' chem.physical_and_invitro.data <- add_chemtable(
+#'   fake,
+#'   current.table=chem.physical_and_invitro.data,
+#'   data.list=list(
+#'     Compound="Compound",
+#'     CAS="CASRN",
+#'     DTXSID="DTXSID",
+#'     MW="MW",
+#'     logP="logP",
+#'     Funbound.plasma="Fup",
+#'     Clint="Clint",
+#'     Clint.pValue="Clint.pValue"),
+#'   species="Human",
+#'   reference="Fake")
+#' 
+#' calc_css(chem.name="Tester")
+#' 
+#' #load_sipes2017()
+#' 
+#' # We should have the ADMet Predicted chemicals from Sipes et al. (2017),
+#' # this one is a good test since the logP is nearly 10!
+#' #calc_css(chem.cas="26040-51-7")
+#' 
+#' #Let's see how many chemicals we have now with the Sipes (2017) data loaded)=:
+#' #length(get_cheminfo())
+#' 
+#' #Now let's reset
+#' reset_httk()
+#' 
+#' # We should be back to our original number:
+#' num.chems == length(get_cheminfo())
+#' 
+#' # Now add chemicals A, B, and C:
 #' my.new.data <- as.data.frame(c("A","B","C"),stringsAsFactors=FALSE)
-#' my.new.data <- cbind(my.new.data,as.data.frame(c("111-11-2","222-22-0","333-33-5"),
+#' my.new.data <- cbind(my.new.data,as.data.frame(c(
+#'                      "111-11-2","222-22-0","333-33-5"),
 #'                      stringsAsFactors=FALSE))
 #' my.new.data <- cbind(my.new.data,as.data.frame(c("DTX1","DTX2","DTX3"),
 #'                     stringsAsFactors=FALSE))
@@ -330,7 +445,8 @@ augment.table <- function(
 #' colnames(my.new.data) <- c("Name","CASRN","DTXSID","MW","LogP","Fup","CLint")
 #' 
 #' chem.physical_and_invitro.data <- add_chemtable(my.new.data,
-#'                                   current.table=chem.physical_and_invitro.data,
+#'                                   current.table=
+#'                                     chem.physical_and_invitro.data,
 #'                                   data.list=list(
 #'                                   Compound="Name",
 #'                                   CAS="CASRN",
@@ -343,6 +459,42 @@ augment.table <- function(
 #'                                   reference="MyPaper 2015")
 #' parameterize_steadystate(chem.name="C")  
 #' calc_css(chem.name="B")                                
+#'
+#' # Initialize a column describing proton donors ("acids")
+#' my.new.data$pka.a <- NA 
+#' # set chemical C to an acid (pKa_donor = 5):
+#' my.new.data[my.new.data$Name=="C","pka.a"] <- "5"
+#' chem.physical_and_invitro.data <- add_chemtable(my.new.data,
+#'                                   current.table=
+#'                                     chem.physical_and_invitro.data,
+#'                                  data.list=list(
+#'                                  Compound="Name",
+#'                                  CAS="CASRN",
+#'                                  DTXSID="DTXSID",
+#'                                  pKa_Donor="pka.a"),
+#'                                  species="Human",
+#'                                  reference="MyPaper 2015") 
+#'
+#' # Note Rblood2plasma and hepatic bioavailability change (relative to above):
+#' parameterize_steadystate(chem.name="C")  
+#'
+#' # Initialize a column describing proton acceptors ("bases")
+#' my.new.data$pka.b <- NA 
+#' # set chemical B to a base with multiple pka's (pKa_accept = 7 and 8):
+#' my.new.data[my.new.data$Name=="B","pka.b"] <- "7;8"
+#' chem.physical_and_invitro.data <- add_chemtable(my.new.data,
+#'                                   current.table=
+#'                                     chem.physical_and_invitro.data,
+#'                                  data.list=list(
+#'                                  Compound="Name",
+#'                                  CAS="CASRN",
+#'                                  DTXSID="DTXSID",
+#'                                  pKa_Accept="pka.b"),
+#'                                  species="Human",
+#'                                  reference="MyPaper 2015") 
+#' # Note that average and max change (relative to above):
+#' calc_css(chem.name="B")     
+#' }
 #' 
 #' @export add_chemtable
 add_chemtable <- function(
@@ -351,16 +503,25 @@ add_chemtable <- function(
   current.table=NULL, 
   reference=NULL,
   species=NULL, 
-  overwrite=F,
+  overwrite=FALSE,
   sig.fig = 4,
-  clint.pvalue.overwrite=T)
+  clint.pvalue.overwrite=TRUE,
+  allow.na=FALSE,
+  suppress.messages=FALSE)
 {
+# Trouble with tibls:
+  new.table <- as.data.frame(new.table)
+
 # Let's make the capitalization consistent in data.list:
-  exceptions <- c("Clint.pValue","logP","logPwa","logMA","logHenry","logWSol","MP","MW","CAS","CAS.Checksum","pKa_Donor","pKa_Accept","SMILES.desalt","DTXSID","Formula","Caco2.Pab")
+  exceptions <- c("Clint.pValue","logP","logPwa","logMA","logHenry","logWSol",
+    "MP","MW","CAS","CAS.Checksum","pKa_Donor","pKa_Accept","SMILES.desalt",
+    "DTXSID","Formula","Caco2.Pab")
   for (this.name in names(data.list))
   {
-    if (tolower(this.name) %in% tolower(exceptions)) this.name <- exceptions[tolower(exceptions)==tolower(this.name)]
-    else {
+    if (tolower(this.name) %in% tolower(exceptions)) 
+    {
+      this.name <- exceptions[tolower(exceptions)==tolower(this.name)]
+    } else {
       this.name <- tolower(this.name)
       substring(this.name,1,1) <- toupper(substring(this.name,1,1))
     }
@@ -383,7 +544,8 @@ matched to a \"new.table\" column in argument \"data.list\".")
 columns in \"data.list\".")
 
 # Identify which entries in data.list are being added to the table:
-  new.data <- names(data.list)[!(names(data.list) %in% c("CAS","Compound","Reference","Species"))]
+  new.data <- names(data.list)[!(names(data.list) %in% c(
+    "CAS","Compound","Reference","Species"))]
   if (!is.null(reference)) this.reference <- reference
   for (this.row in 1:dim(new.table)[1])
   {
@@ -393,7 +555,10 @@ columns in \"data.list\".")
       this.compound <- tolower(new.table[this.row,data.list[["Compound"]]])
     }
     else this.compound <- NULL
-    if (is.null(reference)) this.reference <- new.table[this.row,data.list[["Reference"]]]
+    if (is.null(reference)) 
+    {
+      this.reference <- new.table[this.row,data.list[["Reference"]]]
+    }
     if (is.null(species))
     {
       if ("Species" %in% names(data.list))
@@ -406,18 +571,23 @@ columns in \"data.list\".")
     }
     for (this.data in new.data)
     {
-      if (!(data.list[[this.data]] %in% colnames(new.table))) stop(paste(data.list[[this.data]],
-        "is not a column in the new table."))
-      current.table <- augment.table(current.table,
-                                     this.CAS,
-                                     this.compound,
-                                     this.property=this.data,
-                                     value=new.table[this.row, data.list[[this.data]]],
-                                     reference=this.reference,
-                                     species=this.species,
-                                     overwrite=overwrite,
-                                     sig.fig=sig.fig,
-                                     clint.pvalue.overwrite=clint.pvalue.overwrite)
+      if (!(data.list[[this.data]] %in% colnames(new.table)))
+      {
+        stop(paste(data.list[[this.data]], "is not a column in the new table."))
+      }
+      current.table <- augment.table(
+        current.table,
+        this.CAS,
+        this.compound,
+        this.property=this.data,
+        value=new.table[this.row, data.list[[this.data]]],
+        reference=this.reference,
+        species=this.species,
+        overwrite=overwrite,
+        sig.fig=sig.fig,
+        clint.pvalue.overwrite=clint.pvalue.overwrite,
+        allow.na=allow.na,
+        suppress.messages=suppress.messages)
     }
   }
 

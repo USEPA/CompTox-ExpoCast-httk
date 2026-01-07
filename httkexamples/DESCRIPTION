@@ -1,0 +1,74 @@
+Package: httkexamples
+Version: 0.0.1
+Date: 2025-12-03
+Title: High-Throughput Toxicokinetics Examples
+Description: High throughput toxicokinetics ("HTTK") is the 
+             combination of 1) chemical-specific in vitro measurements or in
+             silico predictions and 2) generic mathematical models, to
+             predict absorption, distribution, metabolism, and excretion by the
+             body. HTTK methods have been described by Pearce et al. (2017) 
+             (<doi:10.18637/jss.v079.i04>) and Breen et al. (2021) (<doi:10.1080/17425255.2021.1935867>).
+             Here we provide examples (vignettes) applying HTTK to solve various
+             problems in bioinformatics, toxicology, and exposure science.
+             In accordance with Davidson-Fritz et al. (2025) (<doi:10.1371/journal.pone.0321321>),
+             whenever a new HTTK model is developed, the code to generate the 
+             figures evaluating that model is added as a new vignettte.  
+Authors@R: c(
+           person("John", "Wambaugh", email = "john.wambaugh@UL.org", 
+             role = c("aut", "cre"),
+             comment = c(ORCID = "0000-0002-4024-534X")), 
+           person("Robert", "Pearce", role = c("aut"),
+             comment = c(ORCID = "0000-0003-3168-4049")), 
+           person("Caroline", "Ring", email = "Ring.Caroline@epa.gov", 
+             role = c("aut"), comment = c(ORCID = "0000-0002-0463-1251")), 
+           person("Greg", "Honda", email = "honda.gregory@epa.gov", 
+             role = c("aut"), comment = c(ORCID = "0000-0001-7713-9850")), 
+           person("Matt", "Linakis", email = "MLINAKIS@ramboll.com", 
+             role = c("aut"), comment = c(ORCID = "0000-0003-0526-2395")), 
+           person("Dustin", "Kapraun", email = "kapraun.dustin@epa.gov",
+             role = c("aut"), comment = c(ORCID= "0000-0001-5570-6383")),
+           person("Kimberly", "Truong", email = "truong.kimberly@epa.gov", 
+             role = c("aut"), comment = c(ORCID = "0000-0003-1716-1006")), 
+           person("Meredith", "Scherer", email="Scherer.Meredith@epa.gov",
+             role = c("aut"), comment = c(ORCID = "0000-0002-9785-7363")),
+           person("Annabel", "Meade", email = "aemeade7@gmail.com",
+             role = c("aut"), comment = c(ORCID = "0000-0002-5452-8797")),
+           person("Celia", "Schacht", email="Schacht.Celia@epa.gov",
+             role = c("aut"), comment = c(ORCID = "0000-0002-8131-513X")),
+           person("Elaina", "Kenyon",
+             role = c("ctb"), comment = c(ORCID = "0000-0001-8781-2391"))
+           )
+Depends: R (>= 2.10)
+Imports: httk, rmarkdown, knitr, Rdpack
+RdMacros: Rdpack
+Suggests: dplyr, tidyverse, xlsx, Metrics,
+          ggplot2, ggforce, ggpubr, ggrepel, viridis,
+          ggpubr, grid, ggh4x, readr, ggforce, tidyr,
+          stringr, pracma, cgwtools,
+          openxlsx, ggstar, latex2exp,
+          smatr, reshape,
+          gdata,censReg,gmodels,gplots,scales,colorspace,gridExtra,
+          rvcheck
+License: MIT + file LICENSE
+LazyData: true
+LazyDataCompression: xz
+Encoding: UTF-8
+VignetteBuilder: knitr
+RoxygenNote: 7.3.3
+URL: https://chemicalinsights.ul.org/
+NeedsCompilation: no
+Packaged: 2025-01-13 22:14:40 UTC; jwambaug
+Author: John Wambaugh [aut, cre] (<https://orcid.org/0000-0002-4024-534X>),
+  Robert Pearce [aut] (<https://orcid.org/0000-0003-3168-4049>),
+  Caroline Ring [aut] (<https://orcid.org/0000-0002-0463-1251>),
+  Greg Honda [aut] (<https://orcid.org/0000-0001-7713-9850>),
+  Matt Linakis [aut] (<https://orcid.org/0000-0003-0526-2395>),
+  Dustin Kapraun [aut] (<https://orcid.org/0000-0001-5570-6383>),
+  Kimberly Truong [aut] (<https://orcid.org/0000-0003-1716-1006>),
+  Meredith Scherer [aut] (<https://orcid.org/0000-0002-9785-7363>), 
+  Annabel Meade [aut] (<https://orcid.org/0000-0002-5452-8797>),
+  Celia Schacht [aut] (<https://orcid.org/0000-0002-8131-513X>),
+  Elaina Kenyon [ctb] (<https://orcid.org/0000-0001-8781-2391>)
+Maintainer: John Wambaugh <john.wambaugh@UL.org>
+Repository: CRAN
+Date/Publication: 2025-01-14 07:00:02 UTC

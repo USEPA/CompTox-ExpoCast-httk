@@ -405,7 +405,9 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
 
   ydot[ID_Alung] = Qlung * ( yout[ID_Cart] - yout[ID_Clung] * Rblood2plasma / Klung2pu / Fraction_unbound_plasma ) ;
 
-  ydot[ID_Aart] = ( Qcardiac * ( yout[ID_Cven] - yout[ID_Cart] ) ) + ( Rin_alv - Rout_alv ) - Rin_mucus ;
+  ydot[ID_Aart] = (y[ID_Aart] >= 0.0 ?
+                   ( Qcardiac * ( yout[ID_Cven] - yout[ID_Cart] ) ) + ( Rin_alv - Rout_alv ) - Rin_mucus :
+                   0.0);
 
   ydot[ID_Arest] = Qrest * ( yout[ID_Cart] - yout[ID_Crest] * Rblood2plasma / Krest2pu / Fraction_unbound_plasma ) ;
 
@@ -421,8 +423,10 @@ void derivs_gas_pbtk (int *neq, double *pdTime, double *y, double *ydot, double 
   
   ydot[ID_Aexh] = Rout_alv + Rout_mucus ;
                
-  ydot[ID_Amuc] = Rin_mucus - Rout_mucus ;
-
+  ydot[ID_Amuc] = (y[ID_Amuc] >= 0.0 ?
+                   Rin_mucus - Rout_mucus :
+                   0.0);
+  
     } /* derivs */
 
 

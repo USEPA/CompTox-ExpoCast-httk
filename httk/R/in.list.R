@@ -16,10 +16,10 @@
 #' the U.S. EPA to perform additional testing of a subset of Tox21 chemicals.
 #' (Judson et al. 2010)
 #' 
-#' ExpoCast: ExpoCast (Exposure Forecaster) is an U.S. EPA research project to
-#' generate tenetative exposure estimates (e.g., mg/kg BW/day) for thousands of
-#' chemicals that have little other information using models and informatics.
-#' (Wambaugh et al. 2014)
+#' SEEM: Systematic Empirical Evaluation of Models is a consensus exposure
+#' modeling prediction providing a tentative estimate of daily intake rate
+#' in units of mg/kg BW/day for chemicals that may have little 
+#' information on exposure (Ring et al. 2018)
 #' 
 #' NHANES: The U.S. Centers for Disease Control (CDC) National Health and
 #' Nutrition Examination Survery (NHANES) is an on-going survey to characterize
@@ -28,19 +28,27 @@
 #' various samples (blood, serum, urine) of the thousands of surveyed
 #' individuals. (CDC, 2014)
 #' 
-#' @aliases in.list is.nhanes is.nhanes.serum.parent is.nhanes.serum.analyte
-#' is.nhanes.blood.parent is.nhanes.blood.analyte is.nhanes.urine.parent
-#' is.nhanes.urine.analyte is.tox21 is.toxcast is.expocast is.pharma
+#' @aliases in.list is.nhanes is.tox21 is.toxcast is.seem is.pharma is.pfas
+#' 
 #' @seealso \code{\link{is.httk}} for determining inclusion in httk project
-#' @param chem.cas The Chemical Abstracts Service Resgistry Number (CAS-RN)
-#' corresponding to the chemical of interest.
+#' 
+#' @param chem.cas One or more Chemical Abstract Services Registry Numbers (CAS-RN) -- the 
+#' chemical must be identified by either CAS, name, or DTXISD
+#' 
+#' @param chem.name One or more Chemical names (spaces and capitalization ignored) --  the 
+#' chemical must be identified by either CAS, name, or DTXISD
+#' 
+#' @param dtxsid One or more of EPA's DSSTox Structure IDs (\url{https://comptox.epa.gov/dashboard})  
+#' -- the chemical must be identified by either CAS, name, or DTXSIDs
+#' 
 #' @param which.list A character string that can take the following values:
-#' "ToxCast", "Tox21", "ExpoCast", "NHANES", ""NHANES.serum.parent",
-#' "NHANES.serum.analyte","NHANES.blood.parent","NHANES.blood.analyte",
-#' "NHANES.urine.parent","NHANES.urine.analyte"
+#' "ToxCast", "Tox21", "SEEM", "NHANES", "PFAS", "Pharma"
+#' #' 
 #' @return \item{logical}{A Boolean (1/0) value that is TRUE if the chemical is
 #' in the list.}
+#' 
 #' @author John Wambaugh
+#' 
 #' @references Bucher, J. R. (2008). Guest Editorial: NTP: New Initiatives, New
 #' Alignment. Environ Health Perspect 116(1).
 #' 
@@ -73,54 +81,59 @@
 #' for (this.cas in httk.table$CAS[1:5])
 #' {
 #'   this.index <- httk.table$CAS==this.cas
-#'   if (is.nhanes(this.cas)) httk.table[this.index,"NHANES"] <- "Y"
-#'   if (is.tox21(this.cas)) httk.table[this.index,"Tox21"] <- "Y"
-#'   if (is.toxcast(this.cas)) httk.table[this.index,"ToxCast"] <- "Y"
-#'   if (is.expocast(this.cas)) httk.table[this.index,"ExpoCast"] <- "Y"
-#'   if (is.httk(this.cas,model="PBTK")) httk.table[this.index,"PBTK"] <- "Y"
-#'   if (is.httk(this.cas,species="rat")) httk.table[this.index,"Rat"] <- "Y"
+#'   if (is.nhanes(chem.cas=this.cas)) httk.table[this.index,"NHANES"] <- "Y"
+#'   if (is.tox21(chem.cas=this.cas)) httk.table[this.index,"Tox21"] <- "Y"
+#'   if (is.toxcast(chem.cas=this.cas)) httk.table[this.index,"ToxCast"] <- "Y"
+#'   if (is.seem(chem.cas=this.cas)) httk.table[this.index,"ExpoCast"] <- "Y"
+#'   if (is.httk(chem.cas=this.cas,model="PBTK")) httk.table[this.index,"PBTK"] <- "Y"
+#'   if (is.httk(chem.cas=this.cas,species="rat")) httk.table[this.index,"Rat"] <- "Y"
 #' }
 #' }
 #' 
 #' @export in.list
-#' @export is.nhanes.serum.parent
-#' @export is.nhanes.serum.analyte
-#' @export is.nhanes.blood.parent
-#' @export is.nhanes.blood.analyte
-#' @export is.nhanes.urine.parent
-#' @export is.nhanes.urine.analyte
 #' @export is.tox21
 #' @export is.toxcast
-#' @export is.expocast
+#' @export is.seem
+#' @export is.pfas
 #' @export is.nhanes
 #' @export is.pharma
-in.list <- function(chem.cas=NULL,
+in.list <- function(chem.name=NULL,
+                    chem.cas=NULL,
+                    dtxsid=NULL,
                     which.list="ToxCast")
 {
   chem.lists <- chem.lists
   if (!(tolower(which.list) %in% tolower(names(chem.lists))))
     stop(paste("List",which.list,"not in available lists:",
     paste(names(chem.lists),collapse=", ")))
+  
+  if (length(chem.cas)>0) dtxsid <- sapply(chem.cas, 
+                                           function(x) try(get_chem_id(
+                                             chem.cas=x)$dtxsid))
+  if (length(chem.name)>0) dtxsid <- sapply(chem.name, 
+                                            function(x) try(get_chem_id(
+                                              chem.name=x)$dtxsid))
 
-  good.cas <- sapply(chem.cas,function(x) suppressWarnings(CAS.checksum(x)))
-  
-  if (!all(good.cas)) stop (paste("Chemical CAS failed checksum:",
-    chem.cas[!good.cas]))
-  
-  return(chem.cas %in% chem.lists[tolower(names(chem.lists))==tolower(which.list)][[1]][,"CAS"])
+  return(dtxsid %in% chem.lists[[which(tolower(names(chem.lists))==tolower(which.list))]])
 }
 
-is.nhanes.serum.parent <- function(chem.cas) return(in.list(chem.cas=chem.cas,which.list="NHANES.serum.parent"))
-is.nhanes.serum.analyte <- function(chem.cas) return(in.list(chem.cas=chem.cas,which.list="NHANES.serum.analyte"))
-is.nhanes.blood.parent <- function(chem.cas) return(in.list(chem.cas=chem.cas,which.list="NHANES.blood.parent"))
-is.nhanes.blood.analyte <- function(chem.cas) return(in.list(chem.cas=chem.cas,which.list="NHANES.blood.analyte"))
-is.nhanes.urine.parent <- function(chem.cas) return(in.list(chem.cas=chem.cas,which.list="NHANES.urine.parent"))
-is.nhanes.urine.analyte <- function(chem.cas) return(in.list(chem.cas=chem.cas,which.list="NHANES.urine.analyte"))
+#' @describeIn in.list Boolean (yes/no) chemical identity functions
 is.tox21 <- function(chem.cas) return(in.list(chem.cas=chem.cas,which.list="Tox21"))
+
+#' @describeIn in.list Boolean (yes/no) chemical identity functions
 is.toxcast <- function(chem.cas) return(in.list(chem.cas=chem.cas,which.list="ToxCast"))
-is.expocast <- function(chem.cas) return(in.list(chem.cas=chem.cas,which.list="ExpoCast"))
+
+#' @describeIn in.list Boolean (yes/no) chemical identity functions
+is.seem <- function(chem.cas) return(in.list(chem.cas=chem.cas,which.list="SEEM"))
+
+#' @describeIn in.list Boolean (yes/no) chemical identity functions
 is.nhanes <- function(chem.cas) return(in.list(chem.cas=chem.cas,which.list="NHANES"))
+
+#' @describeIn in.list Boolean (yes/no) chemical identity functions
 is.pharma <- function (chem.cas) return(in.list(chem.cas = chem.cas, which.list = "Pharma"))
+
+#' @describeIn in.list Boolean (yes/no) chemical identity functions
+is.pfas <- function(chem.cas) return(in.list(chem.cas=chem.cas,which.list="PFAS"))
 
 
 
@@ -203,12 +216,12 @@ is.pharma <- function (chem.cas) return(in.list(chem.cas = chem.cas, which.list 
 #' for (this.cas in httk.table$CAS[1:5])
 #' {
 #'   this.index <- httk.table$CAS==this.cas
-#'   if (is.nhanes(this.cas)) httk.table[this.index,"NHANES"] <- "Y"
-#'   if (is.tox21(this.cas)) httk.table[this.index,"Tox21"] <- "Y"
-#'   if (is.toxcast(this.cas)) httk.table[this.index,"ToxCast"] <- "Y"
-#'   if (is.expocast(this.cas)) httk.table[this.index,"ExpoCast"] <- "Y"
-#'   if (is.httk(this.cas,model="PBTK")) httk.table[this.index,"PBTK"] <- "Y"
-#'   if (is.httk(this.cas,species="rat")) httk.table[this.index,"Rat"] <- "Y"
+#'   if (is.nhanes(chem.cas=this.cas)) httk.table[this.index,"NHANES"] <- "Y"
+#'   if (is.tox21(chem.cas=this.cas)) httk.table[this.index,"Tox21"] <- "Y"
+#'   if (is.toxcast(chem.cas=this.cas)) httk.table[this.index,"ToxCast"] <- "Y"
+#'   if (is.seem(chem.cas=this.cas)) httk.table[this.index,"ExpoCast"] <- "Y"
+#'   if (is.httk(chem.cas=this.cas,model="PBTK")) httk.table[this.index,"PBTK"] <- "Y"
+#'   if (is.httk(chem.cas=this.cas,species="rat")) httk.table[this.index,"Rat"] <- "Y"
 #' }
 #' }
 #'

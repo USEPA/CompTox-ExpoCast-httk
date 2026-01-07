@@ -178,7 +178,7 @@ uncertainty and variability into IVIVE.
 
 Reverse Dosimetry Toxicodynamic IVIVE
 
-\if{html}{\figure{ivive.png}{options: width="60\%" alt="Reverse Dosimetry Toxicodynamic IVIVE"}}
+\if{html}{\figure{ivive.png}{options: width=600 alt="Reverse Dosimetry Toxicodynamic IVIVE"}}
 \if{latex}{\figure{ivive.pdf}{options: width=12cm alt="Reverse Dosimetry Toxicodynamic IVIVE"}}
 
 Figure from Breen et al. (2021) (\doi{10.1080/17425255.2021.1935867}) shows 

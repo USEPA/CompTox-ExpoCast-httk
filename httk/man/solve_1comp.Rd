@@ -152,7 +152,7 @@ Plasma concentration in compartment x is given by
 }
 \details{
 Model Figure 
-\if{html}{\figure{1comp.png}{options: width="60\%" alt="Figure: One
+\if{html}{\figure{1comp.png}{options: width=372 alt="Figure: One
 Compartment Model Schematic"}}
 \if{latex}{\figure{1comp.pdf}{options: width=12cm alt="Figure: One
 Compartment Model Schematic"}}

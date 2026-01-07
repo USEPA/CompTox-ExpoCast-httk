@@ -149,6 +149,8 @@
 #' columns or rows named "dose" and "time" containing the time and amount, in
 #' mg/kg BW, of each dose.
 #' 
+#' @param period How often the dosing repeats, specified in days
+#'  
 #' @param ... Additional arguments passed to the integrator (\code{\link[deSolve]{ode}}).
 #' 
 #' @return A matrix of class deSolve with a column for time (in days), each
@@ -262,6 +264,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
                     dosing.matrix = NULL, #DERMAL - DOSING
                     washoff = FALSE,
                     InfiniteDose = FALSE,
+                    period=0,
                     ...)
 {
 
@@ -323,6 +326,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
         if(!suppress.messages) warning("When InfiniteDose = TRUE, washoff is ignored, and Vvehicle is set to 0 L and ignored.")
       }
       forcings = cbind(times=start.time, forcing_values = 0)
+      Vvehicle <- 0
       
       # DOSING.DERMAL
       if (!is.null(dosing.dermal)){
@@ -477,6 +481,9 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
 # Put everything into dosing at first:
   dosing <- list(
       initial.dose=initial.dose,
+      # Since the vehicle is not an organ, need to provide an initial volume for
+      # unit conversion of initial dose:
+      initial.vol=Vvehicle,
       dosing.matrix=dosing.matrix,
       forcings=forcings,
       daily.dose = daily.dose,
@@ -508,7 +515,7 @@ solve_dermal_pbtk <- function(chem.name = NULL, #solve_model
     method=method,
     rtol=rtol,
     atol=atol,
-    small.time=1e2,
+    small.time=1e-4,
     recalc.blood2plasma=recalc.blood2plasma,
     recalc.clearance=recalc.clearance,
     adjusted.Funbound.plasma=adjusted.Funbound.plasma,

@@ -1,7 +1,7 @@
 #' Calculate Monte Carlo Oral Equivalent Dose
 #' 
 #' @description
-#' This function converts a chemical plasma concentration to an oral adminstered
+#' This function converts a chemical plasma concentration to an oral administered
 #' equivalent
 #' dose (AED) using a concentration obtained from \code{\link{calc_mc_css}}.  
 #' This function uses reverse dosimetry-based 
@@ -11,7 +11,7 @@
 #' model, and then automatically predict the \emph{in vivo} AED
 #' which would produce a body concentration equal to
 #' the \emph{in vitro} bioactive concentration. This function relies on the
-#' Monte Carlo method (via funcion \code{\link{create_mc_samples}} to simulate
+#' Monte Carlo method (via function \code{\link{create_mc_samples}} to simulate
 #' both uncertainty and variability so that the result is a distribution of
 #' equivalent doses, from which we provide specific quantiles
 #' (specified by \code{which.quantile}), though the full set of predictions can
@@ -27,8 +27,8 @@
 #' distribution (such as the upper 95th percentile) allow incorporation of 
 #' uncertainty and variability into IVIVE.
 #' 
-#' This approach relies on thelinearity
-#' of the models to calculate a scaling factor to relate in vitro
+#' This approach relies on the linearity
+#' of the models to calculate a scaling factor to relate \emph{in vitro}
 #' concentrations (uM) with AED. The scaling factor is the
 #' inverse of the steady-state plasma concentration (Css) predicted
 #' for a 1 mg/kg/day exposure dose rate
@@ -39,7 +39,7 @@
 #' 
 #' Reverse Dosimetry Toxicodynamic IVIVE
 #' 
-#' \if{html}{\figure{ivive.png}{options: width="60\%" alt="Reverse Dosimetry Toxicodynamic IVIVE"}}
+#' \if{html}{\figure{ivive.png}{options: width=600 alt="Reverse Dosimetry Toxicodynamic IVIVE"}}
 #' \if{latex}{\figure{ivive.pdf}{options: width=12cm alt="Reverse Dosimetry Toxicodynamic IVIVE"}}
 #' 
 #' Figure from Breen et al. (2021) (\doi{10.1080/17425255.2021.1935867}) shows 

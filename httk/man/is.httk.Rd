@@ -71,12 +71,12 @@ httk.table[,"PBTK"] <- ""
 for (this.cas in httk.table$CAS[1:5])
 {
   this.index <- httk.table$CAS==this.cas
-  if (is.nhanes(this.cas)) httk.table[this.index,"NHANES"] <- "Y"
-  if (is.tox21(this.cas)) httk.table[this.index,"Tox21"] <- "Y"
-  if (is.toxcast(this.cas)) httk.table[this.index,"ToxCast"] <- "Y"
-  if (is.expocast(this.cas)) httk.table[this.index,"ExpoCast"] <- "Y"
-  if (is.httk(this.cas,model="PBTK")) httk.table[this.index,"PBTK"] <- "Y"
-  if (is.httk(this.cas,species="rat")) httk.table[this.index,"Rat"] <- "Y"
+  if (is.nhanes(chem.cas=this.cas)) httk.table[this.index,"NHANES"] <- "Y"
+  if (is.tox21(chem.cas=this.cas)) httk.table[this.index,"Tox21"] <- "Y"
+  if (is.toxcast(chem.cas=this.cas)) httk.table[this.index,"ToxCast"] <- "Y"
+  if (is.seem(chem.cas=this.cas)) httk.table[this.index,"ExpoCast"] <- "Y"
+  if (is.httk(chem.cas=this.cas,model="PBTK")) httk.table[this.index,"PBTK"] <- "Y"
+  if (is.httk(chem.cas=this.cas,species="rat")) httk.table[this.index,"Rat"] <- "Y"
 }
 }
 

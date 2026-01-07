@@ -62,7 +62,7 @@ The changes in the .c file (when 'forcings' are *not* used) include:
  "Calling R code will ensure that input y has same dimension as yini".
 
 These function names then must also be changed in the corresponding 
-solve_pbtk function, specifically the state and parameter initilaizers as 
+solve_pbtk function, specifically the state and parameter initializers as 
 well as the function calls in the function ode.
 
 Parameter names passed to initparams must match those in .model file.
@@ -76,6 +76,3 @@ If you have questions, comments, or concerns please contact:
 
 ### Principal Investigator 
 John Wambaugh [wambaugh.research@gmail.com]
-
-### Lead Software Engineer 
-Sarah E. Davidson-Fritz [davidsonfritz.sarah@epa.gov]
