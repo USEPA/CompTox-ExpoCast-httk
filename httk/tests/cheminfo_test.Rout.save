@@ -1,5 +1,5 @@
 
-R Under development (unstable) (2025-04-18 r88159 ucrt) -- "Unsuffered Consequences"
+R Under development (unstable) (2025-09-29 r88883 ucrt) -- "Unsuffered Consequences"
 Copyright (C) 2025 The R Foundation for Statistical Computing
 Platform: x86_64-w64-mingw32/x64
 
@@ -177,7 +177,7 @@ For model 3compartmentss each chemical must have non-NA values for:Human.Clint, 
 7: In get_cheminfo(info = "all") :
   Excluding compounds that are categorized in one or more of the following chemical classes: PFAS.
 > length(get_cheminfo(model="schmitt"))
-[1] 1733
+[1] 1731
 Warning messages:
 1: In get_cheminfo(model = "schmitt") :
   Excluding compounds that have one or more needed parameters missing in chem.physical_and_invitro.table.

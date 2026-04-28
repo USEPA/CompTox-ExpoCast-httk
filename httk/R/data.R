@@ -2,10 +2,10 @@
 #sets included in the package.
 
 
-#'Reference tissue masses and flows from tables in McNally et al. 2014.
+#'Reference tissue masses and flows from tables in McNally et al. (2014)
 #'
 #'Reference tissue masses, flows, and residual variance distributions from
-#'Tables 1, 4, and 5 of McNally et al. 2014.
+#'Tables 1, 4, and 5 of McNally et al. 2014 (\doi{https://doi.org/10.1016/j.tox.2013.07.009}).
 #'
 #'@format A data.table with variables: \describe{\item{\code{tissue}}{Body
 #'  tissue} \item{\code{gender}}{Gender: Male or Female}
@@ -18,14 +18,16 @@
 #'  \item{\code{CO_ref}}{Reference cardiac output by gender}
 #'  \item{\code{flow_frac}}{Fraction of CO flowing to each tissue:
 #'  \code{flow_ref}/\code{CO_ref}}}
-#'@source McNally K, Cotton R, Hogg A, Loizou G. "PopGen: A virtual human
-#'  population generator." Toxicology 315, 70-85, 2004.
+#'@source 
+#' \insertRef{mcnally2014popgen}{httk}
 #'@keywords data
 #'@keywords httk-pop
 #'
 #'@author Caroline Ring
 #'
 #' @references 
+#' \insertRef{mcnally2014popgen}{httk}
+#'
 #' \insertRef{ring2017identifying}{httk}
 "mcnally_dt"
 
@@ -267,72 +269,6 @@
 #' \insertRef{honda2019using}{httk}
 "well_param"
 
-#' DRUGS|NORMAN: Pharmaceutical List with EU, Swiss, US Consumption Data
-#'
-#' SWISSPHARMA is a list of pharmaceuticals with consumption data from
-#' Switzerland, France, Germany and the USA, used for a suspect
-#' screening/exposure modelling approach described in
-#' Singer et al 2016, DOI: 10.1021/acs.est.5b03332. The original data is
-#' available on the NORMAN Suspect List Exchange.
-#'
-#'@source \url{https://comptox.epa.gov/dashboard/chemical_lists/swisspharma}
-#'@keywords data
-#'
-#' @references 
-#' \insertRef{wambaugh2019assessing}{httk}
-"pharma"
-
-#' in vitro Toxicokinetic Data from Wambaugh et al. (2019)
-#'
-#' These data are the new HTTK in vitro data for chemicals reported in Wambaugh
-#' et al. (2019) They
-#' are the processed values used to make the figures in that manuscript.
-#' These data summarize the results of Bayesian analysis of the in vitro
-#' toxicokinetic experiments conducted by Cyprotex to characterize fraction
-#' unbound in the presence of pooled human plasma protein and the intrnsic
-#' hepatic clearance of the chemical by pooled human hepatocytes.
-#'
-#' @format A data frame with 496 rows and 17 variables:
-#' \describe{
-#'   \item{Compound}{The name of the chemical}
-#'   \item{CAS}{The Chemical Abstracts Service Registry Number}
-#'   \item{Human.Clint}{Median of Bayesian credible interval for intrinsic
-#' hepatic clearance (uL/min/million hepatocytes)]}
-#'   \item{Human.Clint.pValue}{Probability that there is no clearance}
-#'   \item{Human.Funbound.plasma}{Median of Bayesian credibl interval for
-#' fraction of chemical free in the presence of plasma}
-#'   \item{pKa_Accept}{pH(s) at which hydrogen acceptor sites (if any) are at
-#' equilibrium}
-#'   \item{pKa_Donor}{pH(s) at which hydrogne donor sites (if any) are at
-#' equilibrium}
-#'   \item{DSSTox_Substance_Id}{Identifier for CompTox Chemical Dashboard}
-#'   \item{SMILES}{Simplified Molecular-Input Line-Entry System structure
-#' description}
-#'   \item{Human.Clint.Low95}{Lower 95th percentile of Bayesian credible
-#' interval for intrinsic hepatic clearance (uL/min/million hepatocytes)}
-#'   \item{Human.Clint.High95}{Uppper 95th percentile of Bayesian credible
-#' interval for intrinsic hepatic clearance (uL/min/million hepatocytes)}
-#'   \item{Human.Clint.Point}{Point estimate of intrinsic hepatic clearance
-#' (uL/min/million hepatocytes)}
-#'   \item{Human.Funbound.plasma.Low95}{Lower 95th percentile of Bayesian credible
-#' interval for fraction of chemical free in the presence of plasma}
-#'   \item{Human.Funbound.plasma.High95}{Upper 95th percentile of Bayesian credible
-#' interval for fraction of chemical free in the presence of plasma}
-#'   \item{Human.Funbound.plasma.Point}{Point estimate of the fraction of
-#' chemical free in the presence of plasma}
-#'   \item{MW}{Molecular weight (Daltons)}
-#'   \item{logP}{log base ten of octanol:water partiion coefficient}
-#' }
-#' @source Wambaugh et al. (2019)
-#'
-#'@keywords data
-#'
-#'@author John Wambaugh
-#'
-#' @references 
-#' \insertRef{wambaugh2019assessing}{httk}
-"wambaugh2019"
-
 #' Summary of published toxicokinetic time course experiments
 #'
 #' This data set summarizes the time course data in the chem.invivo.PK.data
@@ -547,148 +483,6 @@
 #' \insertRef{wambaugh2018evaluating}{httk}
 #' @keywords data
 "chem.invivo.PK.aggregate.data"
-
-
-#' Raw Bayesian in vitro Toxicokinetic Data Analysis from Wambaugh et al. (2019)
-#'
-#' These data are the new HTTK in vitro data for chemicals reported in Wambaugh
-#' et al. (2019) They
-#' are the output of different Bayesian models evaluated to compare using a
-#' single protein concentration vs. the new three concentration titration
-#' protocol. These data summarize the results of Bayesian analysis of the in vitro
-#' toxicokinetic experiments conducted by Cyprotex to characterize fraction
-#' unbound in the presence of pooled human plasma protein and the intrnsic
-#' hepatic clearance of the chemical by pooled human hepatocytes.
-#' This file includes replicates (diferent CompoundName id's but same chemical')
-#'
-#' @format A data frame with 530 rows and 28 variables:
-#' \describe{
-#'   \item{DTXSID}{Identifier for CompTox Chemical Dashboard}
-#'   \item{Name}{The name of the chemical}
-#'   \item{CAS}{The Chemical Abstracts Service Registry Number}
-#'   \item{CompoundName}{Sample name provided by EPA to Cyprotex}
-#'   \item{Fup.point}{Point estimate of the fraction of
-#' chemical free in the presence of plasma}
-#'   \item{Base.Fup.Med}{Median of Bayesian credible interval for
-#' fraction of chemical free in the presence of plasma for analysis of 100%
-#' physiological plasma protein data only (base model)}
-#'   \item{Base.Fup.Low}{Lower 95th percentile of Bayesian credible
-#' interval for fraction of chemical free in the presence of plasma for analysis of 100%
-#' physiological plasma protein data only (base model)}
-#'   \item{Base.Fup.High}{Upper 95th percentile of Bayesian credible
-#' interval for fraction of chemical free in the presence of plasma for analysis of 100%
-#' physiological plasma protein data only (base model)}
-#'   \item{Affinity.Fup.Med}{Median of Bayesian credible interval for
-#' fraction of chemical free in the presence of plasma for analysis of protein
-#' titration protocol data (affinity model)}
-#'   \item{Affinity.Fup.Low}{Lower 95th percentile of Bayesian credible
-#' interval for fraction of chemical free in the presence of plasma for analysis of protein
-#' titration protocol data (affinity model)}
-#'   \item{Affinity.Fup.High}{Upper 95th percentile of Bayesian credible
-#' interval for fraction of chemical free in the presence of plasma for analysis of protein
-#' titration protocol data (affinity model)}
-#'   \item{Affinity.Kd.Med}{Median of Bayesian credible interval for
-#' protein binding affinity from analysis of protein
-#' titration protocol data (affinity model)}
-#'   \item{Affinity.Kd.Low}{Lower 95th percentile of Bayesian credible
-#' interval for protein binding affinity from analysis of protein
-#' titration protocol data (affinity model)}
-#'   \item{Affinity.Kd.High}{Upper 95th percentile of Bayesian credible
-#' interval for protein binding affinity from analysis of protein
-#' titration protocol data (affinity model)}
-#'   \item{Decreases.Prob}{Probability that the chemical concentration decreased
-#' systematiclally during hepatic clearance assay.}
-#'   \item{Saturates.Prob}{Probability that the rate of chemical concentration
-#' decrease varied between the 1 and 10 uM hepatic clearance experiments.}
-#'   \item{Slope.1uM.Median}{Estimated slope for chemcial concentration decrease
-#' in the 1 uM hepatic clearance assay.}
-#'   \item{Slope.10uM.Median}{Estimated slope for chemcial concentration decrease
-#' in the 10 uM hepatic clearance assay.}
-#'   \item{CLint.1uM.Median}{Median of Bayesian credible interval for intrinsic
-#' hepatic clearance at 1 uM initital chemical concentration (uL/min/million hepatocytes)]}
-#'   \item{CLint.1uM.Low95th}{Lower 95th percentile of Bayesian credible
-#' interval for intrinsic hepatic clearance at 1 uM initital chemical
-#' concentration (uL/min/million hepatocytes)}
-#'   \item{CLint.1uM.High95th}{Uppper 95th percentile of Bayesian credible
-#' interval for intrinsic hepatic clearance at 1 uM initital chemical
-#' concentration(uL/min/million hepatocytes)}
-#'   \item{CLint.10uM.Median}{Median of Bayesian credible interval for intrinsic
-#' hepatic clearance at 10 uM initital chemical concentration (uL/min/million hepatocytes)]}
-#'   \item{CLint.10uM.Low95th}{Lower 95th percentile of Bayesian credible
-#' interval for intrinsic hepatic clearance at 10 uM initital chemical
-#' concentration (uL/min/million hepatocytes)}
-#'   \item{CLint.10uM.High95th}{Uppper 95th percentile of Bayesian credible
-#' interval for intrinsic hepatic clearance at 10 uM initital chemical
-#' concentration(uL/min/million hepatocytes)}
-#'   \item{CLint.1uM.Point}{Point estimate of intrinsic hepatic clearance
-#' (uL/min/million hepatocytes) for 1 uM initial chemical concentration}
-#'   \item{CLint.10uM.Point}{Point estimate of intrinsic hepatic clearance
-#' (uL/min/million hepatocytes) for 10 uM initial chemical concentration}
-#'   \item{Fit}{Classification of clearance observed}
-#'   \item{SMILES}{Simplified Molecular-Input Line-Entry System structure
-#' description}
-#' }
-#' @source Wambaugh et al. (2019)
-#'
-#'@keywords data
-#'
-#'@author John Wambaugh
-#'
-#' @references 
-#' \insertRef{wambaugh2019assessing}{httk}
-"wambaugh2019.raw"
-
-#' NHANES Chemical Intake Rates for chemicals in Wambaugh et al. (2019)
-#'
-#' These data are a subset of the Bayesian inferrences reported by Ring et al.
-#' (2017) from the U.S. Centers for Disease Control and Prevention (CDC)
-#' National Health and Nutrition Examination Survey (NHANES). They reflect the
-#' populaton median intake rate (mg/kg body weight/day), with uncertainty.
-#'
-#' @format A data frame with 20 rows and 4 variables:
-#' \describe{
-#'   \item{lP}{The median of the Bayesian credible interval for median population
-#' intake rate (mg/kg bodyweight/day)}
-#'   \item{lP.min}{The lower 95th percentile of the Bayesian credible interval for median population
-#' intake rate (mg/kg bodyweight/day)}
-#'   \item{lP.max}{The upper 95th percentile of the Bayesian credible interval for median population
-#' intake rate (mg/kg bodyweight/day)}
-#'   \item{CASRN}{The Chemical Abstracts Service Registry Number}
-#' }
-#' @source Wambaugh et al. (2019)
-#'
-#'@keywords data
-#'
-#'@author John Wambaugh
-#'
-#' @references 
-#' \insertRef{ring2017identifying}{httk}
-#' 
-#' \insertRef{wambaugh2019assessing}{httk}
-"wambaugh2019.nhanes"
-
-#' ExpoCast SEEM3 Consensus Exposure Model Predictions for Chemical Intake Rates
-#'
-#' These data are a subset of the Bayesian inferrences reported by Ring et al.
-#' (2019) for a consensus model of twelve exposue predictors. The predictors
-#' were calibrated based upon their ability to predict intake rates inferred
-# 'from the U.S. Centers for Disease Control and Prevention (CDC)
-#' National Health and Nutrition Examination Survey (NHANES). They reflect the
-#' populaton median intake rate (mg/kg body weight/day), with uncertainty.
-#'
-#' @format A data frame with 385 rows and 38 variables:
-#' @source Wambaugh et al. (2019)
-#'
-#'@keywords data
-#'
-#'@author John Wambaugh
-#'
-#' @references 
-#' \insertRef{Ring2017SEEM}{httk}
-#'
-#' \insertRef{wambaugh2019assessing}{httk}
-"wambaugh2019.seem3"
-
 
 #' Physico-chemical properties and in vitro measurements for toxicokinetics
 #'
@@ -915,168 +709,6 @@
 "chem.physical_and_invitro.data"
 
 
-#' Tox21 2015 Active Hit Calls (EPA)
-#'
-#' The ToxCast and Tox21 research programs employ batteries of high-throughput
-#' assays to assess chemical bioactivity in vitro. Not every chemical is tested
-#' through every assay. Most assays are conducted in concentration response,
-#' and each corresponding assay endpoint is analyzed statistically to determine
-#' if there is a concentration-dependent response or "hit" using the ToxCast
-#' Pipeline.  Most assay endpoint-chemical combinations are non-responsive.
-#' Here, only the hits are treated as potential indicators of bioactivity. This
-#' bioactivity does not have a direct toxicological interpretation. The October
-#' 2015 release (invitrodb_v2) of the ToxCast and Tox21 data were used for this
-#' analysis. This object contains just the chemicals in Wambaugh et al. (2019)
-#' and only the quantiles across all assays for the ACC.
-#'
-#' @name wambaugh2019.tox21
-#' @docType data
-#' @format A data.table with 401 rows and 6 columns
-#' @author John Wambaugh
-#' @references Kavlock, Robert, et al. "Update on EPA's ToxCast program:
-#' providing high-throughput decision support tools for chemical risk
-#' management." Chemical research in toxicology 25.7 (2012): 1287-1302.
-#'
-#' Tice, Raymond R., et al. "Improving the human hazard characterization of
-#' chemicals: a Tox21 update." Environmental health perspectives 121.7 (2013):
-#' 756-765.
-#'
-#' Richard, Ann M., et al. "ToxCast chemical landscape: paving the road to 21st
-#' century toxicology." Chemical research in toxicology 29.8 (2016): 1225-1251.
-#'
-#' Filer, Dayne L., et al. "tcpl: the ToxCast pipeline for high-throughput
-#' screening data." Bioinformatics 33.4 (2016): 618-620.
-#' 
-#' Wambaugh, John F., et al. "Assessing Toxicokinetic Uncertainty and 
-#' Variability in Risk Prioritization." Toxicological Sciences 172.2 (2019): 
-#' 235-251.
-#'
-#' @keywords data
-"wambaugh2019.tox21"
-
-
-
-#' Howgate 2006
-#'
-#' This data set is only used in Vignette 5.
-#'
-#' @docType data
-#' @format A data.table containing 24 rows and 11 columns.
-#' @keywords data
-#' @author Caroline Ring
-#' @references
-#' Howgate, E. M., et al. "Prediction of in vivo drug clearance from in vitro
-#' data. I: impact of inter-individual variability." Xenobiotica 36.6 (2006):
-#' 473-497.
-"howgate"
-
-
-#' Johnson 2006
-#'
-#' This data set is only used in Vignette 5.
-#'
-#' @docType data
-#'
-#' @format A data.table containing 60 rows and 11 columns.
-#'
-#' @author Caroline Ring
-#' @references
-#' Johnson, Trevor N., Amin Rostami-Hodjegan, and Geoffrey T. Tucker.
-#' "Prediction of the clearance of eleven drugs and associated variability in
-#' neonates, infants and children." Clinical pharmacokinetics 45.9 (2006):
-#' 931-956.
-#'
-#' @keywords data
-"johnson"
-
-
-#' Published Pharmacokinetic Parameters from Obach et al. 2008
-#'
-#' This data set is used in Vignette 4 for steady state concentration.
-#'
-#'
-#' @docType data
-#' @format A data.frame containing 670 rows and 8 columns.
-#' @references Obach, R. Scott, Franco Lombardo, and Nigel J. Waters. "Trend
-#' analysis of a database of intravenous pharmacokinetic parameters in humans
-#' for 670 drug compounds." Drug Metabolism and Disposition 36.7 (2008):
-#' 1385-1405.
-#' @keywords data
-"Obach2008"
-
-
-#' NHANES Exposure Data
-#'
-#' This data set is only used in Vignette 6.
-#'
-#' @docType data
-#'
-#' @format A data.table containing 1060 rows and 5 columns.
-#'
-#' @author Caroline Ring
-#'
-#' @references
-#' Wambaugh, John F., et al. "High throughput heuristics for prioritizing human
-#' exposure to environmental chemicals." Environmental science & technology
-#' 48.21 (2014): 12760-12767.
-#'
-#' @keywords data
-"onlyp"
-
-
-
-#' Partition Coefficient Data
-#'
-#' Measured rat in vivo partition coefficients and data for predicting them.
-#'
-#'
-#' @docType data
-#' @format A data.frame.
-#' @author Jimena Davis and Robert Pearce
-#' @references
-#' \insertRef{schmitt2008general}{httk}
-#'
-#' \insertRef{schmitt2008corrigendum}{httk}
-#'
-#' Poulin, P. and F.P. Theil, A priori prediction of tissue: plasma partition
-#' coefficients of drugs to facilitate the use of physiologically based
-#' pharmacokinetic models in drug discovery. Journal of pharmaceutical
-#' sciences, 2000. 89(1): p. 16-35.
-#'
-#' Rodgers, T. and M. Rowland, Physiologically based pharmacokinetic modelling
-#' 2: predicting the tissue distribution of acids, very weak bases, neutrals
-#' and zwitterions. Journal of pharmaceutical sciences, 2006. 95(6): p.
-#' 1238-1257.
-#'
-#' Rodgers, T., D. Leahy, and M. Rowland, Physiologically based pharmacokinetic
-#' modeling 1: predicting the tissue distribution of moderate-to-strong bases.
-#' Journal of pharmaceutical sciences, 2005. 94(6): p. 1259-1276.
-#'
-#' Rodgers, T., D. Leahy, and M. Rowland, Tissue distribution of basic drugs:
-#' Accounting for enantiomeric, compound and regional differences amongst
-#' beta-blocking drugs in rat. Journal of pharmaceutical sciences, 2005. 94(6):
-#' p. 1237-1248.
-#'
-#' Gueorguieva, I., et al., Development of a whole body physiologically based
-#' model to characterise the pharmacokinetics of benzodiazepines. 1: Estimation
-#' of rat tissue-plasma partition ratios. Journal of pharmacokinetics and
-#' pharmacodynamics, 2004. 31(4): p. 269-298.
-#'
-#' Poulin, P., K. Schoenlein, and F.P. Theil, Prediction of adipose tissue:
-#' plasma partition coefficients for structurally unrelated drugs. Journal of
-#' pharmaceutical sciences, 2001. 90(4): p. 436-447.
-#'
-#' Bjorkman, S., Prediction of the volume of distribution of a drug: which
-#' tissue-plasma partition coefficients are needed? Journal of pharmacy and
-#' pharmacology, 2002. 54(9): p. 1237-1245.
-#'
-#' \insertRef{yun2013correlation}{httk}
-#'
-#' Uchimura, T., et al., Prediction of human blood-to-plasma drug concentration
-#' ratio. Biopharmaceutics & drug disposition, 2010. 31(5-6): p. 286-297.
-#' @keywords data
-"pc.data"
-
 
 
 #' Species-specific physiology parameters
@@ -1261,126 +893,6 @@
 #' @keywords data
 "tissue.data"
 
-#' Published toxicokinetic predictions based on in vitro data from Wetmore et
-#' al. 2012.
-#'
-#' This data set overlaps with Wetmore.data and is used only in Vignette 4 for
-#' steady state concentration.
-#'
-#'
-#' @docType data
-#' @format A data.frame containing 13 rows and 15 columns.
-#' @references 
-#' \insertRef{wetmore2012integration}{httk}
-#' @keywords data
-"Wetmore2012"
-
-#' Metabolism data involved in Linakis 2020 vignette analysis.
-#'
-#'
-#' @docType data
-#' @format A data.frame containing x rows and y columns.
-#' @author Matt Linakis
-#'
-#' @source Matt Linakis
-#' @references
-#' \insertRef{linakis2020development}{httk}
-#' @keywords data
-"metabolism_data_Linakis2020"
-
-#' Concentration data involved in Linakis 2020 vignette analysis.
-#'
-#' These rat and human TK concentration vs. time (CvT) data are drawn from
-#' the CvTdb (Sayre et el., 2020). Concentrations have all been converted to
-#' the units of uM. All data are from inhalation studies.
-#'
-#' Abbreviations used for sampling matrix:
-#' BL : blood
-#' EEB : end-exhaled breath
-#' MEB : mixed exhaled breath
-#' VBL : venous blood
-#' ABL : arterial blood
-#' EB : unspecified exhaled breath sample (assumed to be EEB)
-#' PL: plasma
-#' +W with work/exercise
-#'
-#' \tabular{ll}{
-#' \strong{Column Name} \tab \strong{Description} \cr
-#'  PREFERRED_NAME        \tab Substance preferred name \cr                      
-#'  DTXSID     \tab Identifier for CompTox Chemical Dashboard \cr
-#'  CASRN  \tab Chemical abstracts service registration number\cr
-#'  AVERAGE_MASS  \tab Substance molecular weight g/mol \cr
-#'   DOSE DOSE_U   \tab Inhalation exposure concentration in parts per million \cr  
-#'  EXP_LENGTH   \tab Duration of inhalation exposur \cr
-#'   TIME  \tab  Measurment time \cr          
-#'  TIME_U   \tab  Time units for all times reported \cr 
-#'  CONC_SPECIES  \tab Species for study \cr 
-#'  SAMPLING_MATRIX   \tab Matrix analyzed \cr 
-#'  SOURCE_CVT   \tab Data source identifier within CvTdb \cr 
-#'  ORIG_CONC_U   \tab Original reported units for concentration \cr 
-#'  CONCENTRATION   \tab Analyte concentration in uM units\cr 
-#' }
-#'
-#' @docType data
-#' @format A data.frame containing 2142 rows and 16 columns.
-#' @author Matt Linakis
-#' @references 
-#' \insertRef{linakis2020development}{httk}
-#' \insertRef{sayre2020database}{httk}
-#' @source Matt Linakis
-#' @keywords data
-"concentration_data_Linakis2020"
-
-#' Supplementary output from Linakis 2020 vignette analysis.
-#'
-#'
-#' @docType data
-#' @format A data.frame containing x rows and y columns.
-#' @author Matt Linakis
-#' @references 
-#' \insertRef{linakis2020development}{httk}
-#' @source Matt Linakis
-#' @keywords data
-"supptab1_Linakis2020"
-
-#' More supplementary output from Linakis 2020 vignette analysis.
-#'
-#'
-#' @docType data
-#' @format A data.frame containing x rows and y columns.
-#' @author Matt Linakis
-#' @references 
-#' \insertRef{linakis2020development}{httk}
-#' @source Matt Linakis
-#' @keywords data
-"supptab2_Linakis2020"
-
-#' Literature In Vivo Data on Doses Causing Neurological Effects
-#'
-#' Studies were selected from Table 1 in Mundy et al., 2015, as
-#' the studies in that publication were cited as examples of
-#' compounds with evidence for developmental neurotoxicity. There
-#' were sufficient in vitro toxicokinetic data available for this
-#' package for only 6 of the 42 chemicals.
-#'
-#' @docType data
-#'
-#' @format A data.frame containing 14 rows and 16 columns.
-#'
-#' @author Timothy J. Shafer
-#'
-#' @references
-#' Frank, Christopher L., et al. "Defining toxicological tipping points
-#' in neuronal network development." Toxicology and Applied
-#' Pharmacology 354 (2018): 81-93.
-#'
-#' Mundy, William R., et al. "Expanding the test set: Chemicals with
-#' potential to disrupt mammalian brain development." Neurotoxicology
-#' and Teratology 52 (2015): 25-35.
-#'
-#' @keywords data
-"Frank2018invivo"
-
 #' Pearce et al. 2017 data
 #'
 #' This table includes the adjusted and unadjusted regression parameter
@@ -1463,138 +975,7 @@
 #' @keywords data
 "pradeep2020"
 
-#' Aylward et al. 2014
-#' 
-#' Aylward et al. (2014) compiled measurements of the ratio of maternal to fetal 
-#' cord blood chemical concentrations at birth for a range of chemicals with 
-#' environmental routes of exposure, including bromodiphenyl ethers, fluorinated 
-#' compounds, organochlorine pesticides, polyaromatic hydrocarbons, tobacco smoke 
-#' components, and vitamins.
-#' 
-#' @name aylward2014
-#' @aliases Aylward2014
-#' @docType data
-#' @format data.frame
-#' @references
-#' \insertRef{Aylward2014matfet}{httk}
-#' @source
-#' \insertRef{kapraun2022fetalmodel}{httk}
-#' @keywords data
-"aylward2014"
 
-#' AUCs for Pregnant and Non-Pregnant Women
-#' 
-#' Dallmann et al. (2018) includes compiled literature descriptions of 
-#' toxicokinetic summary statistics, including time-integrated plasma 
-#' concentrations (area under the curve or AUC) for drugs administered to a 
-#' sample of subjects including both pregnant and non-pregnant women. The 
-#' circumstances of the dosing varied slightly between drugs and are summarized 
-#' in the table.
-#' 
-#' @name pregnonpregaucs
-#' @aliases pregnonpregaucs
-#' @docType data
-#' @format data.frame
-#' @references
-#' \insertRef{dallmann2018pregpbtk}{httk}
-#' @source
-#' \insertRef{kapraun2022fetalmodel}{httk}
-#' @keywords data
-"pregnonpregaucs"  
-
-#' Partition Coefficients from PK-Sim
-#' 
-#' Dallmann et al. (2018) made use of PK-Sim to predict chemical- and tissue-
-#' specific partition coefficients. The methods include both the default
-#' PK-Sim approach and PK-Sim Standard and Rodgers & Rowland (2006).
-#' 
-#' @name pksim.pcs
-#' @docType data
-#' @format data.frame
-#' @references
-#' \insertRef{dallmann2018pregpbtk}{httk}
-#' @source
-#' \insertRef{kapraun2022fetalmodel}{httk}
-#' @keywords data
-"pksim.pcs"  
-
-#' Fetal Partition Coefficients
-#' 
-#' Partition coefficients were measured for tissues, including placenta, in 
-#' vitro by Csanady et al. (2002) for Bisphenol A and Diadzen. Curley et al. 
-#' (1969) measured the concentration of a variety of pesticides in the cord 
-#' blood of newborns and in the tissues of infants that were stillborn. 
-#' 
-#' Three of the chemicals studied by Curley et al. (1969) were modeled by 
-#' Weijs et al. (2013) using the same partition coefficients for mother and 
-#' fetus. The values used represented "prior knowledge" summarizing the 
-#' available literature. 
-#' 
-#' @name fetalpcs
-#' @aliases fetalPCs
-#' @docType data
-#' @format data.frame
-#' @references
-#' \insertRef{Csanady2002fetalpc}{httk}
-#' \insertRef{Curley1969fetalpc}{httk}
-#' \insertRef{Weijs2013fetalpc}{httk}
-#' @source
-#' \insertRef{kapraun2022fetalmodel}{httk}
-#' @keywords data
-"fetalpcs"
-
-#' Wang et al. 2018
-#' Wang et al. (2018) screened the blood of 75 pregnant women for the presence 
-#' of environmental organic acids (EOAs) and identified mass spectral features 
-#' corresponding to 453 chemical formulae of which 48 could be mapped to likely 
-#' structures. Of the 48 with tentative structures the identity of six were 
-#' confirmed with available chemical standards. 
-#' @name wang2018
-#' @aliases Wang2018
-#' @docType data
-#' @format data.frame
-#' @references
-#' \insertRef{Wang2018matbloodnta}{httk}
-#' @source
-#' \insertRef{kapraun2022fetalmodel}{httk}
-#' @keywords data
-"wang2018"
-
-#' ToxCast Example Data
-#' The main page for the ToxCast data is here:
-#' https://www.epa.gov/comptox-tools/exploring-toxcast-data
-#' Most useful to us is a single file containing all the hits across all chemcials
-#' and assays:
-#' https://clowder.edap-cluster.com/datasets/6364026ee4b04f6bb1409eda?space=62bb560ee4b07abf29f88fef
-#' 
-#' As of November, 2022 the most recent version was 3.5 and was available as an
-#' .Rdata file (invitrodb_3_5_mc5.Rdata)
-#' 
-#'  Unfortunately for this vignette there are too many ToxCast data to fit into a
-#' 5mb R package. So we will subset to just the shemicals for the 
-#' "Intro to IVIVE" vignette and distribute
-#' only those data. In addition, out of 78 columns in the data, we will keep only 
-#' eight.
-#' @name example.toxcast
-#' @docType data
-#' @format data.frame
-#' @keywords data
-"example.toxcast"
-
-#' SEEM Example Data
-#' We can grab SEEM daily intake rate predictions already in RData format from
-#' https://github.com/HumanExposure/SEEM3RPackage/tree/main/SEEM3/data
-#' Download the file Ring2018Preds.RData
-#' 
-#' We do not have the space to distribute all the SEEM predictions within
-#' this R package, but we can give you our "Intro to IVIVE" example chemicals
-#' @name example.seem
-#' @docType data
-#' @format data.frame
-#' @keywords data
-#' @references
-#' \insertRef{Ring2017SEEM}{httk}
-"example.seem"
 
 #' Measured Caco-2 Apical-Basal Permeability Data
 #'
@@ -1706,61 +1087,6 @@
 #' @keywords data
 "sipes2017"
 
-#' ToxCast thyroid-related bioactivity data 
-#'
-#' Truong et al. 2025 uses ToxCast data for 4 thyroid-related assay endpoints
-#' concerning inhibition of deiodinases ("DIO1", "DIO2", "DIO3", and "IYD") and 
-#' identified 120 priority chemicals with activity for at least one deiodinase. 
-#' These 120 chemicals were curated after assessment for target selectivity and 
-#' assay interference. 
-#'
-#' The AC50s (in uM) for each of the 120 chemicals were retrieved from ToxCast 
-#' invitrodb v3.5 and are used in the "Full Human Gestational IVIVE" vignette.
-#' 
-#' @name thyroid.ac50s
-#' @docType data
-#' @format data.table and data.frame
-#' @keywords data
-#' @references 
-#' \insertRef{truong2025fullpregnancy}{httk}
-"thyroid.ac50s"
-
-#' SEEM3 Example Data for Truong et al. 2025 
-#' 
-#' We can grab SEEM daily intake rate predictions already in RData format from
-#' https://github.com/HumanExposure/SEEM3RPackage/blob/main/scripts/
-#' Download the file chem.preds-2018-11-28.RData
-#' 
-#' We do not have the space to distribute all the SEEM predictions within
-#' this R package, but we can give you our "Full Human Gestational IVIVE" example chemicals.
-#' @name truong25.seem3
-#' @docType data
-#' @format data.table and data.frame
-#' @keywords data
-#' @references 
-#' \insertRef{truong2025fullpregnancy}{httk}
-#'
-#' \insertRef{Ring2017SEEM}{httk}
-"truong25.seem3"
-
-#' Literature Measurements of In Vitro Cellular and Nominal Concentration 
-#' 
-#' @author Meredith Scherer
-#' @name Scherer2025.IVD
-#' @docType data
-#' @format data.table and data.frame
-'Scherer2025.IVD' 
-
-#' Dimitrijevic et al. (2022)In Vitro Cellular and Nominal Concentration 
-#' 
-#' @author Jon Arnot
-#' @name Dimitrijevic.IVD
-#' @docType data
-#' @format data.table and data.frame
-#' @references
-#' \insertRef{dimitrijevic2022toward}{httk}
-'Dimitrijevic.IVD'
-
 #' ToxCast In Vitro Assay Descriptors
 #' 
 #' @author Madison Feshuk
@@ -1768,6 +1094,42 @@
 #' @docType data
 #' @format data.table and data.frame
 'invitro.assay.params'
+
+#' ToxCast Example Data
+#' The main page for the ToxCast data is here:
+#' https://www.epa.gov/comptox-tools/exploring-toxcast-data
+#' Most useful to us is a single file containing all the hits across all chemcials
+#' and assays:
+#' https://clowder.edap-cluster.com/datasets/6364026ee4b04f6bb1409eda?space=62bb560ee4b07abf29f88fef
+#' 
+#' As of November, 2022 the most recent version was 3.5 and was available as an
+#' .Rdata file (invitrodb_3_5_mc5.Rdata)
+#' 
+#'  Unfortunately for this vignette there are too many ToxCast data to fit into a
+#' 5mb R package. So we will subset to just the shemicals for the 
+#' "Intro to IVIVE" vignette and distribute
+#' only those data. In addition, out of 78 columns in the data, we will keep only 
+#' eight.
+#' @name example.toxcast
+#' @docType data
+#' @format data.frame
+#' @keywords data
+"example.toxcast"
+
+#' SEEM Example Data
+#' We can grab SEEM daily intake rate predictions already in RData format from
+#' https://github.com/HumanExposure/SEEM3RPackage/tree/main/SEEM3/data
+#' Download the file Ring2018Preds.RData
+#' 
+#' We do not have the space to distribute all the SEEM predictions within
+#' this R package, but we can give you our "Intro to IVIVE" example chemicals
+#' @name example.seem
+#' @docType data
+#' @format data.frame
+#' @keywords data
+#' @references
+#' \insertRef{Ring2017SEEM}{httk}
+"example.seem"
 
 #' Machine Learning PFAS Half-Life Predictions from Dawson et al. 2023 
 #' 
@@ -1814,11 +1176,11 @@
 #' @docType data
 #' @format data.frame
 #' @keywords data
-#' @references 
+#' @references
 #' \insertRef{dawson2023machine}{httk}
-#'
+#' 
 #' \insertRef{andersen2006pharmacokinetic}{httk}
-#'
+#' 
 #' \insertRef{kudo2002sex}{httk}
 "dawson2023"
 

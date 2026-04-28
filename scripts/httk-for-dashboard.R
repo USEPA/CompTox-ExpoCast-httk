@@ -58,7 +58,7 @@ REFERENCE.LIST <- c("https://doi.org/10.1021/acs.estlett.4c00967", # Wambaugh 20
 names(REFERENCE.LIST) <- MODELS.LIST
 
 # How many processors are available for parallel computing:
-NUM.CPU <- 15
+NUM.CPU <- 12
              
 # Add the in silico predictions:
 QSPR.LIST <- c("load_dawson2021","load_sipes2017","load_pradeep2020","load_honda2023")
@@ -131,26 +131,27 @@ dup.chems <- unique(dup.chems,
 length(dup.chems) == 0
 
 # Create one table with all HTTK data to minimize calls to get_cheminfo.
-# Organizez HTTK data by species:
+# Organize HTTK data by species:
 HTTK.data.list <- list()
 all.ids <- NULL
 for (this.model in tolower(MODELS.LIST))
   for (this.species in tolower(SPECIES.LIST))
   {
+# This is a table, not a vector:
     temp <- rbind(
       HTTK.data.list[[this.species]],
       get_cheminfo(
-      info=c(
-        "Compound",
-        "CAS",
-        "DTXSID",
-        "Clint",
-        "Funbound.plasma"),
-      fup.lod.default = 0,
-      median.only=TRUE,
-      species=this.species))
-    # Remove duplicates:
-    HTTK.data.list[[this.species]] <- subset(temp, !duplicated(temp$DTXSID))
+        info=c(
+          "Compound",
+          "CAS",
+          "DTXSID",
+          "Clint",
+          "Funbound.plasma"),
+        fup.lod.default = 0,
+        median.only=TRUE,
+        model=this.model,
+        species=this.species))
+    HTTK.data.list[[this.species]] <- temp[!duplicated(temp$DTXSID), ]
   }
 # Create a master list of the chemical DTXSID's:
 for (this.species in names(HTTK.data.list))
@@ -159,11 +160,9 @@ for (this.species in names(HTTK.data.list))
                            HTTK.data.list[[this.species]]$DTXSID)))
 }
 
-# temporilay make it run fast:
-ivpkfit <- read.csv("invivoPKfit-params.for.dashboard.txt")
+# temporarily make it run fast:
 #short.list <- ivpkfit$Chemical[1:25]
 #all.ids <- all.ids[all.ids %in% short.list]
-
 
 # We want one parameter per line, but the code is pretty different wrt how we
 # retrieve/calculate these values:
@@ -503,14 +502,15 @@ for (this.parameter in c(
         {
           if (!is.na(this.ref))
           {
-            dashboard.row.ref <- dashboard.table$DTXSID==this.chem &
+            dashboard.row.ref <- which(dashboard.table$DTXSID==this.chem &
               tolower(dashboard.table$Species) == tolower(this.species) &
-              tolower(dashboard.table$Parameter) == tolower(param.name)
-              dashboard.table$Reference == this.ref
+              tolower(dashboard.table$Parameter) == tolower(param.name) &
+              dashboard.table$Reference == this.ref)
             dashboard.table[dashboard.row.ref,"Reference"] <- paste(
               this.ref,
               ivpkfit[ivpkfit.row,"Ref"])                                             
-          } else dashboard.table[dashboard.row,"Reference"] <-
+          } else if ("Ref" %in% colnames(ivpkfit))
+            dashboard.table[dashboard.row,"Reference"] <-
             ivpkfit[ivpkfit.row,"Ref"]
           dashboard.table[dashboard.row,"Measured"] <- ivpkfit[ivpkfit.row,
                           this.parameter]
@@ -602,13 +602,13 @@ write.table(
 
 #
 #
-# CREATE FIGURE SHOWNG CHANGE IN MONTE CARLO Css FROM PREVIOUS VERSION
+# CREATE FIGURE SHOWING CHANGE IN MONTE CARLO Css FROM PREVIOUS VERSION
 #
 #
 
 # Columns:
 # DTXSID: Chemical Identifier
-#	Human.Clint, Dashboard field "In Vitro Intrisntic Hepatic Clearance"), uL/min/10^6 hepatocyhtes
+#	Human.Clint, Dashboard field "In Vitro Intrinsic Hepatic Clearance"), uL/min/10^6 hepatocytes
 # Human.Funbound.plasma, Dashboard field "Fraction Unbound in Human Plasma", unitless	
 # Clint.Measured, not currently used, experimentally measured value
 # Funbound.plasma.Measured, not currently used, experimentally measured value	

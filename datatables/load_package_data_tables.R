@@ -1,15 +1,15 @@
 # Get rid of anything in the workspace:
 rm(list=ls()) 
 
-SCRIPT.VERSION <- "feature/PFAS March 2025"
+SCRIPT.VERSION <- "feature/Nov2025"
 
 ## R Packages ##
-library(reshape)
 library(readxl)
 library(dplyr)
 library(magrittr)
 library(stringr)
 library(ctxR)
+library(collapse)
 
 # Useful function from HTTK (don't want to load the whole package since we're 
 # trying to build the package here)
@@ -134,9 +134,9 @@ write.table(tissuevolflowdata,
   row.names=F,
   sep="\t")
   
-tissuecompdata <- set.precision(read_excel(PKandTISSUEDATAFILE,
+tissuecompdata <- set.precision(as.data.frame(read_excel(PKandTISSUEDATAFILE,
   sheet="TissueComp",
-  skip=1))
+  skip=1)))
 tissuecompdata <- subset(tissuecompdata,Species!="")
 tissuecompdata <- subset(tissuecompdata,!is.na(Cells))
 colnames(tissuecompdata) <- c(
@@ -171,10 +171,21 @@ write.table(tissuecompdata,
   row.names=F,
   sep="\t")
   
-tissuedata1 <- melt(tissuecompdata,id.vars=c("Tissue","Species","Reference"))
-tissuedata2 <- melt(tissuevolflowdata[,c("Tissue","Species","Vol (L/kg)","Vol Reference")],id.vars=c("Tissue","Species","Vol Reference"))  
+tissuedata1 <- pivot(tissuecompdata,
+                     ids=c("Tissue","Species","Reference"))
+tissuedata2 <- pivot(tissuevolflowdata[,
+                                       c("Tissue",
+                                         "Species",
+                                         "Vol (L/kg)",
+                                         "Vol Reference")],
+                     ids=c("Tissue","Species","Vol Reference"))  
 colnames(tissuedata2)[3] <- "Reference"
-tissuedata3 <- melt(tissuevolflowdata[,c("Tissue","Species","Flow (mL/min/kg^(3/4))","Flow Reference")],id.vars=c("Tissue","Species","Flow Reference"))  
+tissuedata3 <- pivot(tissuevolflowdata[,
+                                       c("Tissue",
+                                         "Species",
+                                         "Flow (mL/min/kg^(3/4))",
+                                         "Flow Reference")],
+                     ids=c("Tissue","Species","Flow Reference"))  
 colnames(tissuedata3)[3] <- "Reference"
 tissue.data <- rbind(tissuedata1,tissuedata2,tissuedata3)      
 tissue.data$Tissue <- tolower(tissue.data$Tissue)
@@ -1785,7 +1796,7 @@ chem.physical_and_invitro.data <- add_chemtable(
 #PFAS:
 # Identify PFAS chemical class using CCD master list:
 cat("PFAS identification from PFAS8a7v3-2025-04-29.csv\n")
-PFAS <- read.csv("PFAS8a7v3-2025-04-29.csv")
+PFAS <- read.csv("chemicallists/Chemical List PFAS8a7v3-2025-12-04.csv")
 # Remove URLs:
 PFAS$DTXSID <- gsub("https://comptox.epa.gov/dashboard/chemical/details/","",PFAS$DTXSID)
 
@@ -2108,6 +2119,22 @@ dawson.fup.1 <-
   read.csv("Dawson2021/Novel_fup_predictions_with_AD_Main29_descs_from_Opera2.9.csv")
 dawson.fup.2 <- 
   read.csv("Dawson2021/Novel_fup_predictions_with_AD_Trainset29_descs_from_Opera2.9.csv")
+dawson.clint.3 <- 
+  read.csv("Dawson2021/Novel_clint_predictions_with_AD_NewHTTK_November_2025_descs_from_Opera2.9.2.csv")
+dawson.fup.3 <- 
+  read.csv("Dawson2021/Novel_fup_predictions_with_AD_NewHTTK_November_2025_descs_from_Opera2.9.2.csv")
+dawson.3.ident <- read.table("Dawson2021/InhalationIdentities.txt",
+                             sep="\t")
+colnames(dawson.3.ident) <- c("DTXSID","CASRN")
+# Add CAS to dawson 3 data:
+dawson.clint.3 <- merge(dawson.clint.3,
+                        dawson.3.ident[,c("DTXSID","CASRN")],
+                        by.x ="MoleculeID",
+                        by.y="DTXSID")
+dawson.fup.3 <- merge(dawson.fup.3,
+                        dawson.3.ident[,c("DTXSID","CASRN")],
+                        by.x ="MoleculeID",
+                        by.y="DTXSID")
 
 # These chemical DTXSIDs appear to be wrong:
 dawson.clint.1 <- subset(dawson.clint.1,
@@ -2135,6 +2162,15 @@ chem.physical_and_invitro.data <- add_chemtable(subset(dawson.clint.2,CASRN!="")
                                  overwrite=FALSE,
                                  reference="Dawson 2021")                                   
 
+chem.physical_and_invitro.data <- add_chemtable(subset(dawson.clint.3,CASRN!=""),
+                                                current.table = chem.physical_and_invitro.data, 
+                                                data.list = list(Compound='MoleculeID',
+                                                                 CAS = 'CASRN',
+                                                                 DTXSID='MoleculeID',
+                                                                 LogP="LogP_pred"
+                                                ), species="Human",
+                                                overwrite=FALSE,
+                                                reference="Dawson 2021")                                   
 #
 # Create dawson2023 PFAS Half-Life Machine Learning Prediction Table
 #   we add this here because we need phys-chem for these chemicals
@@ -2300,6 +2336,131 @@ chem.physical_and_invitro.data <- add_chemtable(nicol2024,
 #
 
 #
+# Create dawson2021 QSPR predictions table
+#
+
+dawson.clint <- rbind(dawson.clint.1, 
+                      dawson.clint.2,
+                      dawson.clint.3)[, c(
+                        "MoleculeID", "CASRN", 
+                        "ClintPredictBin_MD", 
+                        "ClintPredictBin_SD",
+                        "Outlier")]
+dawson.fup <- rbind(dawson.fup.1, 
+                    dawson.fup.2,
+                    dawson.fup.3)[, c(
+                      "MoleculeID", "CASRN", "Fup.RF.pred", "Outlier")]
+dawson2021_full <- merge(dawson.clint,
+                         dawson.fup,
+                         by="MoleculeID")
+
+dawson.nocas <- subset(dawson2021_full, CASRN.x=="")
+cat("Looking up missing Dawson CASRN by DTXSID with CCD API...\n")
+dawson.newcas <- chemical_equal_batch(word_list=dawson.nocas$MoleculeID)
+# Assign new CAS where we found them:
+for (this.cas in unique(dawson.newcas$casrn))
+  if (!is.na(this.cas))
+  {
+    this.new.index <- which(dawson.newcas$casrn == this.cas)
+    this.main.index <- which(dawson2021_full$MoleculeID == dawson.newcas[this.new.index, "searchValue"])
+    dawson2021_full[this.main.index, "CASRN.x"] <-
+      this.cas
+  }
+# Eliminate Chembl data without other chemical identifiers:
+dawson2021_full <-subset(dawson2021_full,CASRN.x!="")
+
+dawson2021      <- dawson2021_full[,c("CASRN.x",
+                                      "ClintPredictBin_MD", 
+                                      "ClintPredictBin_SD",
+                                      "Outlier.x",
+                                      "Fup.RF.pred",
+                                      "Outlier.y"
+)]
+
+colnames(dawson2021) <- c("CASRN",
+                          "QSAR_Clint","QSAR_Clint_SD","Clint QSAR AD Outlier",
+                          "QSAR_Fup","Fup QSAR AD Outlier")
+
+dawson2021 <- subset(dawson2021,!duplicated(CASRN))
+
+for (this.col in c("QSAR_Clint", "QSAR_Clint_SD", "QSAR_Fup"))
+{
+  dawson2021[,this.col] <- signif(dawson2021[,this.col],3) 
+}
+
+chem.physical_and_invitro.data <- add_chemtable(dawson2021,
+                                                current.table = chem.physical_and_invitro.data, 
+                                                data.list = list(CAS = "CASRN",
+                                                                 MW= "QSAR_Clint_SD"
+                                                ),
+                                                species="Human",
+                                                overwrite=FALSE,
+                                                reference="Dawson 2021 QSPR") 
+#
+# END dawson2021 Creation
+#
+
+
+
+#
+# Create pradeep2020 QSPR predictions table
+#
+## Load in Predictions ##
+# load chem data
+pradeep.chem <- as.data.frame(readxl::read_xlsx(
+  path = "pradeep-Tox21_httk_predictions.xlsx",
+  sheet = 1
+))
+# load clint data
+pradeep.clint <- as.data.frame(readxl::read_xlsx(
+  path = "pradeep-Tox21_httk_predictions.xlsx",
+  sheet = 3
+))
+# rename column name for chemical identifier - DTXSID
+pradeep.clint <- dplyr::rename(
+  pradeep.clint,    # data
+  "DTXSID" = "...1" # new_name = old_name
+)
+# load fup data
+pradeep.fup <- as.data.frame(readxl::read_xlsx(
+  path = "pradeep-Tox21_httk_predictions.xlsx",
+  sheet = 2
+))
+# rename column name for chemical identifier - DTXSID - & Predicted 'Fub' values
+pradeep.fup <- dplyr::rename(
+  pradeep.fup,             # data
+  "DTXSID" = "dsstox_sid" # new_name = old_name
+)
+# join prediction tables by chemical identifier
+pradeep_full <- dplyr::full_join(
+  pradeep.clint, # clint data
+  pradeep.fup,   # fup data
+  by = 'DTXSID'  # chemical ID
+) %>%
+  dplyr::left_join(.,             # clint and fup data
+                   pradeep.chem,  # chemical information data
+                   by = "DTXSID") # chemical ID
+
+pradeep2020 <- dplyr::select(
+  pradeep_full, # data
+  c('DTXSID',"CASRN",'pred_clint_rf','Consensus (SVM,RF)') # vars to keep
+)
+
+chem.physical_and_invitro.data <- add_chemtable(pradeep2020,
+                                                current.table = chem.physical_and_invitro.data, 
+                                                data.list = list(CAS = "CASRN",
+                                                                 DTXSID = "DTXSID",
+                                                                 MW= "pred_clint_rf"
+                                                ),
+                                                species="Human",
+                                                overwrite=FALSE,
+                                                reference="Pradeep 2020 QSPR") #
+# END pradeep2020 Creation
+#
+
+
+
+#
 # STOP TO GET NEW PHYSCHEM
 #
 
@@ -2311,12 +2472,12 @@ CAS.table <- subset(chem.physical_and_invitro.data,is.na(DTXSID))
 cat("Looking up missing DTXSID by CAS with CCD API...\n")
 cheminfo.by.cas <- chemical_equal_batch(word_list=CAS.table$CAS)
 NOCAS.table <- subset(CAS.table,
-                      DTXSID %in% subset(cheminfo.by.cas$valid, is.na(dtxsid))$dtxsid)
+                      DTXSID %in% subset(cheminfo.by.cas, is.na(dtxsid))$dtxsid)
 cat("Looking up missing DTXSID and CAS by Compound Name with CCD API...\n")
 cheminfo.by.name <- chemical_equal_batch(word_list=NOCAS.table$Compound)
 
-cheminfo.by.cas <- subset(cheminfo.by.cas$valid, !is.na(dtxsid))
-cheminfo.by.name <- subset(cheminfo.by.name$valid, !is.na(dtxsid))
+cheminfo.by.cas <- subset(cheminfo.by.cas, !is.na(dtxsid))
+cheminfo.by.name <- subset(cheminfo.by.name, !is.na(dtxsid))
 
 # Clean up cas numbers:
 for (this.cas in cheminfo.by.cas$searchValue)
@@ -2393,7 +2554,7 @@ CCD <- set.precision(CCD)
 # No duplicated values:
 CCD <- subset(CCD, !duplicated(CCD))
 
-chem.physical_and_invitro.data <- add_chemtable(CCD,
+chem.physical_and_invitro.data <- suppressWarnings(add_chemtable(CCD,
   current.table = chem.physical_and_invitro.data,
   data.list=list(
     CAS='casrn',
@@ -2411,8 +2572,10 @@ chem.physical_and_invitro.data <- add_chemtable(CCD,
     MP = "meltingPointDegcOperaPred"
   ),                                                                        
   reference="EPA-CCD-OPERA",
-  overwrite=TRUE)
-
+  overwrite=TRUE
+  )
+  )
+ 
 EPA.ref <- paste('CompTox Dashboard', Sys.Date())
 
 #
@@ -2468,7 +2631,7 @@ chem.physical_and_invitro.data <- add_chemtable(
   overwrite=TRUE)
 
 #
-# Dashboard API is missing predictions for some chemcials, so add these in
+# Dashboard API is missing predictions for some chemicals, so add these in
 # from manual run of OPERA
 #
 OPERA.VERSION <- "2.9"
@@ -2743,126 +2906,56 @@ if (any(duplicated(Wetmore.data))) stop("Duplicate entries in Wetmore.data")
 #
 
 # Read in the Tox21 and ToxCast lists from the Dashboard
-Tox21 <- read.csv("Dashboard-Tox21.tsv",sep="\t")
-ToxCast <- read.csv("Dashboard-Tox21.tsv",sep="\t")
-DrugBank <- read.csv("Dashboard-DrugBank.tsv",sep="\t")
+extract.dtxsid <- function(x)
+{
+  return(gsub("https://comptox.epa.gov/dashboard/chemical/details/",
+                "",
+                x$DTXSID)
+  )
+}
 
-NHANES.serum <- read_excel("ACT-p2m-20150330.xlsx",sheet=1)
-NHANES.blood <- read_excel("ACT-p2m-20150330.xlsx",sheet=2)
-NHANES.urine <- read_excel("ACT-p2m-20150330.xlsx",sheet=3)
+Tox21 <- extract.dtxsid(
+  read.csv("chemicallists/Chemical List TOX21SL-2025-12-04.csv"))
+ToxCast <- extract.dtxsid(
+  read.csv("chemicallists/Chemical List TOXCAST-2025-12-04.csv"))
+Pharma <- extract.dtxsid(
+  read.csv("chemicallists/Chemical List DRUGBANKV2-2025-12-04.csv"))
+SEEM <- read.csv("chemicallists/General-Exposure-Predictions-2022-04-29.txt",sep="\t")$DTXSID
+NHANES <- extract.dtxsid(
+  read.csv("chemicallists/Chemical List NHANES2019-2025-12-04.csv"))
+PFAS <- extract.dtxsid(
+  read.csv("chemicallists/Chemical List PFAS8a7v3-2025-12-04.csv"))
+
+NHANES.serum <- read_excel("chemicallists/ACT-p2m-20150330.xlsx",sheet=1,skip=1)
+NHANES.blood <- read_excel("chemicallists/ACT-p2m-20150330.xlsx",sheet=2,skip=1)
+NHANES.urine <- read_excel("chemicallists/ACT-p2m-20150330.xlsx",sheet=3,skip=1)
+NHANES.CAS <- sort(unique(c(
+  NHANES.serum$CAS...3,
+  NHANES.serum$CAS...6,
+  NHANES.blood$CAS...3,
+  NHANES.blood$CAS...6,
+  NHANES.urine$CAS...3,
+  NHANES.urine$CAS...6
+  )))
+NHANES.dtxsid <-  chemical_equal_batch(word_list=NHANES.CAS)$DTXSID
 
 chem.lists <- list()
-chem.lists[["NHANES.serum.parent"]] <- NHANES.serum[-1,c(1,3)]
-chem.lists[["NHANES.serum.analyte"]] <- NHANES.serum[-1,c(4,6)]
-chem.lists[["NHANES.blood.parent"]] <- NHANES.blood[-1,1:2]
-chem.lists[["NHANES.blood.analyte"]] <- NHANES.blood[-1,3:4]
-chem.lists[["NHANES.urine.parent"]] <- NHANES.urine[-1,1:2]
-chem.lists[["NHANES.urine.analyte"]] <- NHANES.urine[-1,4:5]
-#chem.lists[["EPA.invivo"]] <- EPAinvivo[EPAinvivo[,"In.Vivo.TK.Study.Underway"]=="Y",1:2]
-chem.lists[["Tox21"]] <- Tox21[,c(2:3,1)]
-chem.lists[["ToxCast"]] <- ToxCast[,c(2:3,1)]
-chem.lists[["DrugBank"]] <- DrugBank[,c(2:3,1)]
 
-for(i in 1:length(chem.lists))
-{
-  colnames(chem.lists[[i]]) <- c("Compound","CAS")
-  chem.lists[[i]] <- chem.lists[[i]][!duplicated(chem.lists[[i]]),]
-#  chem.lists[[i]] <- chem.lists[[i]][sapply(chem.lists[[i]][,2],CAS.checksum),]
-}
-chem.lists[["NHANES"]] <- rbind(chem.lists[["NHANES.serum.parent"]],chem.lists[["NHANES.serum.analyte"]],chem.lists[["NHANES.blood.parent"]],chem.lists[["NHANES.blood.analyte"]],chem.lists[["NHANES.urine.parent"]],chem.lists[["NHANES.urine.analyte"]])
-chem.lists[["NHANES"]] <- chem.lists[["NHANES"]][!duplicated(chem.lists[["NHANES"]]$CAS),]
+chem.lists[["Tox21"]] <- Tox21
+chem.lists[["ToxCast"]] <- ToxCast
+chem.lists[["Pharma"]] <- Pharma
+chem.lists[["PFAS"]] <- PFAS
+chem.lists[["SEEM"]] <- subset(
+  SEEM,
+  SEEM %in% chem.physical_and_invitro.data$DTXSID
+  )
+chem.lists[["NHANES"]] <- unique(NHANES,NHANES.dtxsid)
 
 #
 # END chem.lists 
 #
 
 
-#
-# Create dawson2021 QSPR predictions table
-#
-
-dawson.clint <- rbind(dawson.clint.1, dawson.clint.2)[, c(
-                      "MoleculeID", "CASRN", 
-                      "ClintPredictBin_MD", 
-                      "ClintPredictBin_SD",
-                      "Outlier")]
-dawson.fup <- rbind(dawson.fup.1, dawson.fup.2)[, c(
-                      "MoleculeID", "CASRN", "Fup.RF.pred", "Outlier")]
-dawson2021_full <- merge(dawson.clint,dawson.fup,by="MoleculeID")
-
-dawson2021_full <-subset(dawson2021_full,CASRN.x!="")
-
-dawson2021      <- dawson2021_full[,c("CASRN.x",
-                                      "ClintPredictBin_MD", 
-                                      "ClintPredictBin_SD",
-                                      "Outlier.x",
-                                      "Fup.RF.pred",
-                                      "Outlier.y"
-                                      )]
-
-colnames(dawson2021) <- c("CASRN",
-                          "QSAR_Clint","QSAR_Clint_SD","Clint QSAR AD Outlier",
-                          "QSAR_Fup","Fup QSAR AD Outlier")
-
-dawson2021 <- subset(dawson2021,!duplicated(CASRN))
-
-for (this.col in c("QSAR_Clint", "QSAR_Clint_SD", "QSAR_Fup"))
-{
-  dawson2021[,this.col] <- signif(dawson2021[,this.col],3) 
-}
-
-#
-# END dawson2021 Creation
-#
-
-
-
-#
-# Create pradeep2020 QSPR predictions table
-#
-## Load in Predictions ##
-# load chem data
-pradeep.chem <- as.data.frame(readxl::read_xlsx(
-  path = "pradeep-Tox21_httk_predictions.xlsx",
-  sheet = 1
-  ))
-# load clint data
-pradeep.clint <- as.data.frame(readxl::read_xlsx(
-  path = "pradeep-Tox21_httk_predictions.xlsx",
-  sheet = 3
-  ))
-# rename column name for chemical identifier - DTXSID
-pradeep.clint <- dplyr::rename(
-  pradeep.clint,    # data
-  "DTXSID" = "...1" # new_name = old_name
-  )
-# load fup data
-pradeep.fup <- as.data.frame(readxl::read_xlsx(
-  path = "pradeep-Tox21_httk_predictions.xlsx",
-  sheet = 2
-  ))
-# rename column name for chemical identifier - DTXSID - & Predicted 'Fub' values
-pradeep.fup <- dplyr::rename(
-  pradeep.fup,             # data
-  "DTXSID" = "dsstox_sid" # new_name = old_name
-  )
-# join prediction tables by chemical identifier
-pradeep_full <- dplyr::full_join(
-  pradeep.clint, # clint data
-  pradeep.fup,   # fup data
-  by = 'DTXSID'  # chemical ID
-  ) %>%
-  dplyr::left_join(.,             # clint and fup data
-                   pradeep.chem,  # chemical information data
-                   by = "DTXSID") # chemical ID
-
-pradeep2020 <- dplyr::select(
-  pradeep_full, # data
-  c('DTXSID',"CASRN",'pred_clint_rf','Consensus (SVM,RF)') # vars to keep
-  )
-#
-# END pradeep2020 Creation
-#
 
 
 #
@@ -3147,6 +3240,74 @@ save(Wetmore.data,
      compress="xz",
      version=2)
      
+# Create data file for Wambaugh 2025 PFAS vignette:
+huh2011 <- as.data.frame(read_excel("PFAS2025Vignette/Huh-2011-HumanCL.xlsx"))
+wallis2023 <- as.data.frame(read_excel("PFAS2025Vignette/Wallis-2023-PFASHL.xlsx"))
+abraham2024 <- as.data.frame(read_excel("PFAS2025Vignette/Abraham-2024-PFASHL.xlsx"))
+save(huh2011, wallis2023, abraham2024, file="PFAS2025.RData")
+
+# Create data file for Meade 2025 dermal vignette:
+load("DermalVignette/meade2023_Apr_18_2025.RData")
+meade2025 <- supptab1_meade2023
+library(dplyr)
+library(readr)
+load("DermalVignette/CvT_all_tables_2022-08-17.Rdata") 
+  # Load CvT data that is not yet in CvT database (Annabel did this)
+load("DermalVignette/CvT_all_tables_2023-07-05_noSQL.Rdata")
+  #Add cumulative_amount column in SQL DB_series (we don't use any cumulative amounts from SQL data in final results)
+  DB_series <- DB_series %>% mutate(cumulative_amount=NA)
+
+# Bind data sets from database and noSQL collection.
+DB_documents_noSQL<-DB_documents_noSQL[colnames(DB_documents_noSQL) %in% colnames(DB_documents)] #Keep only columns from DB_documents_noSQL that are also found in DB_documents
+DB_documents <- rbind(DB_documents,DB_documents_noSQL)
+DB_studies_noSQL<-DB_studies_noSQL[colnames(DB_studies_noSQL) %in% colnames(DB_studies)]
+DB_studies <- rbind(DB_studies,DB_studies_noSQL)
+DB_chemicals <- rbind(DB_chemicals,DB_chemicals_noSQL)
+DB_subjects <- rbind(DB_subjects,DB_subjects_noSQL)
+DB_series <- rbind(DB_series,DB_series_noSQL)
+DB_conc_time_values_noSQL<-DB_conc_time_values_noSQL[colnames(DB_conc_time_values_noSQL) %in% colnames(DB_conc_time_values)]
+DB_conc_time_values <- rbind(DB_conc_time_values,DB_conc_time_values_noSQL)
+
+# Join necessary DBs: conc_time_values, series, studies, subjects
+df.full <- DB_conc_time_values %>% 
+  left_join(DB_series,by=c("fk_series_id"="id")) %>%
+  left_join(DB_studies,by=c("fk_study_id"="id")) %>%
+  left_join(DB_subjects,by=c("fk_subject_id"="id")) %>%
+  left_join(DB_documents[,c("id","pmid")],by=c("fk_extraction_document_id" = "id")) %>%
+  dplyr::rename(extraction_document_pmid=pmid) %>%
+  select(!(ends_with(".x") | ends_with(".y"))) %>%
+  filter(!is.na(test_substance_dtxsid)) %>% #remove series w/o defined chemicals (Changed from study to series AG)
+  filter( !is.na(conc)) %>% #filter out NA data
+  filter(!is.na(conc_medium_normalized)) %>% #remove series w/o defined medium (i.e., plasma, blood, urine, etc.)
+  filter(test_substance_dtxsid==analyte_dtxsid | is.na(analyte_dtxsid)) #analyte (measured substance) and test substance must be the same
+
+df.full <- distinct(df.full)
+
+# Remove empty cells
+df.full <- type_convert(df.full)
+df.full <- df.full %>% filter(!is.na(conc))
+
+# Get list of chemicals that have dermal data
+df.dermal <- df.full %>% filter(administration_route_normalized=="dermal")
+dermal_dtxsid <- unique(df.dermal$test_substance_dtxsid)
+
+# Only keep data for chemicals that have dermal data
+df <- df.full %>% filter(test_substance_dtxsid %in% dermal_dtxsid) 
+
+load("DermalVignette/toxcast.RData")
+dermal.toxcast <- toxcast.table
+dermalCvT2025 <- df
+
+load("DermalVignette/nonvolatilechems.RData")
+dermal.nonvolatilechems <- chem.list
+
+save(dermalCvT2025, 
+     meade2025,
+     dermal.toxcast,
+     dermal.nonvolatilechems,
+     file="CvTdermal.RData")
+
+            
 ## Session Information ##
 Sys.time() # capture date and time of generating data
 sessionInfo() # capture package information for generating data

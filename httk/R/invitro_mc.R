@@ -617,11 +617,11 @@ invitro_mc <- function(parameters.dt=NULL,
       }
       #Draw Clint from a normal distribution with mean = measured Clint, and
       #coefficient of variation given by clint.pop.cv.
-      parameters.dt[,Clint:=truncnorm::rtruncnorm(n=1,
-                                                  a=0,
-                                                  b=Inf,
-                                                  mean=Clint.mu,
-                                                  sd=clint.pop.cv*Clint.mu)]
+      parameters.dt[Clint>0.0, `:=`(Clint, truncnorm::rtruncnorm(n = 1, 
+                                                        a = 0, b = Inf, 
+                                                        mean = Clint.mu,
+                                                        sd = clint.pop.cv * 
+                                                          Clint.mu))]
     }
   }
     

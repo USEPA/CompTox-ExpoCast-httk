@@ -90,8 +90,7 @@ default 0.}
 assembling "forcings" data series argument for integrator. Defaults to
 units of ppmv.}
 
-\item{period}{For use in assembling forcing function data series 'forcings'
-argument, specified in hours}
+\item{period}{How often the dosing repeats, specified in days}
 
 \item{exp.duration}{For use in assembling forcing function data 
 series 'forcings' argument, specified in hours}
@@ -205,7 +204,7 @@ instantaneous equilibrium between the tissue and the free fraction in
 plasma, the whole plasma concentration is 
 \eqn{C_{tissue,plasma} = \frac{1}{f_{up}*K_{tissue2fup}}*C_{tissue}}. 
 Note that we use a single, 
-constant value of \eqn{f_{up}} across all tissues. Corespondingly the free 
+constant value of \eqn{f_{up}} across all tissues. Correspondingly the free 
 plasma 
 concentration is modeled as 
 \eqn{C_{tissue,free plasma} = \frac{1}{K_{tissue2fup}}*C_tissue}. 
@@ -214,7 +213,7 @@ concentration
 \eqn{C_{x,blood} = \frac{R_{b2p}}{f_{up}*K_{tissue2fup}}*C_{tissue}}, where 
 we use a 
 single \eqn{R_{b2p}} value throughout the body.
-Metabolic clearance is modelled as being from the total plasma 
+Metabolic clearance is modeled as being from the total plasma 
 concentration here, though it is restricted to the free fraction in 
 \code{\link{calc_hep_clearance}} by default. Renal clearance via 
 glomerulsr filtration is from the free plasma concentration.
@@ -247,14 +246,14 @@ the liver and excreted by the kidneys through the tubules.
 AUC is the area under the curve of the plasma concentration.
 
 Model Figure from \insertCite{linakis2020development}{httk}:
-\if{html}{\figure{gaspbtk.jpg}{options: width="100\%" alt="Figure: Gas PBTK 
+\if{html}{\figure{gaspbtk.jpg}{options: width=276 alt="Figure: Gas PBTK 
 Model Schematic"}}
 \if{latex}{\figure{gaspbtk.pdf}{options: width=12cm alt="Figure: Gas PBTK 
 Model Schematic"}}
 
-Model parameters are named according to the following convention:\tabular{lrrrr}{
-prefix \tab suffic \tab Meaning \tab units \cr
-K \tab \tab Partition coefficient for tissue to free plasma \ tab unitless \cr
+Model parameters are named according to the following convention:\tabular{lrrr}{
+prefix \tab suffix \tab Meaning \tab units \cr
+K \tab \tab Partition coefficient for tissue to free plasma \tab unitless \cr
 V \tab \tab Volume \tab L \cr
 Q \tab \tab Flow \tab L/h \cr
 k \tab \tab Rate \tab 1/h \cr

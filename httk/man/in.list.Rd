@@ -3,29 +3,46 @@
 \name{in.list}
 \alias{in.list}
 \alias{is.nhanes}
-\alias{is.nhanes.serum.parent}
-\alias{is.nhanes.serum.analyte}
-\alias{is.nhanes.blood.parent}
-\alias{is.nhanes.blood.analyte}
-\alias{is.nhanes.urine.parent}
-\alias{is.nhanes.urine.analyte}
 \alias{is.tox21}
 \alias{is.toxcast}
-\alias{is.expocast}
+\alias{is.seem}
 \alias{is.pharma}
+\alias{is.pfas}
 \title{Convenience Boolean (yes/no) functions to identify chemical membership in
 several key lists.}
 \usage{
-in.list(chem.cas = NULL, which.list = "ToxCast")
+in.list(
+  chem.name = NULL,
+  chem.cas = NULL,
+  dtxsid = NULL,
+  which.list = "ToxCast"
+)
+
+is.tox21(chem.cas)
+
+is.toxcast(chem.cas)
+
+is.seem(chem.cas)
+
+is.nhanes(chem.cas)
+
+is.pharma(chem.cas)
+
+is.pfas(chem.cas)
 }
 \arguments{
-\item{chem.cas}{The Chemical Abstracts Service Resgistry Number (CAS-RN)
-corresponding to the chemical of interest.}
+\item{chem.name}{One or more Chemical names (spaces and capitalization ignored) --  the 
+chemical must be identified by either CAS, name, or DTXISD}
+
+\item{chem.cas}{One or more Chemical Abstract Services Registry Numbers (CAS-RN) -- the 
+chemical must be identified by either CAS, name, or DTXISD}
+
+\item{dtxsid}{One or more of EPA's DSSTox Structure IDs (\url{https://comptox.epa.gov/dashboard})
+-- the chemical must be identified by either CAS, name, or DTXSIDs}
 
 \item{which.list}{A character string that can take the following values:
-"ToxCast", "Tox21", "ExpoCast", "NHANES", ""NHANES.serum.parent",
-"NHANES.serum.analyte","NHANES.blood.parent","NHANES.blood.analyte",
-"NHANES.urine.parent","NHANES.urine.analyte"}
+"ToxCast", "Tox21", "SEEM", "NHANES", "PFAS", "Pharma"
+#'}
 }
 \value{
 \item{logical}{A Boolean (1/0) value that is TRUE if the chemical is
@@ -48,10 +65,10 @@ ToxCast: The Toxicity Forecaster (ToxCast) is a HTS screening project led by
 the U.S. EPA to perform additional testing of a subset of Tox21 chemicals.
 (Judson et al. 2010)
 
-ExpoCast: ExpoCast (Exposure Forecaster) is an U.S. EPA research project to
-generate tenetative exposure estimates (e.g., mg/kg BW/day) for thousands of
-chemicals that have little other information using models and informatics.
-(Wambaugh et al. 2014)
+SEEM: Systematic Empirical Evaluation of Models is a consensus exposure
+modeling prediction providing a tentative estimate of daily intake rate
+in units of mg/kg BW/day for chemicals that may have little 
+information on exposure (Ring et al. 2018)
 
 NHANES: The U.S. Centers for Disease Control (CDC) National Health and
 Nutrition Examination Survery (NHANES) is an on-going survey to characterize
@@ -60,6 +77,21 @@ set of measurments includes the quantification of xenobiotic chemicals in
 various samples (blood, serum, urine) of the thousands of surveyed
 individuals. (CDC, 2014)
 }
+\section{Functions}{
+\itemize{
+\item \code{is.tox21()}: Boolean (yes/no) chemical identity functions
+
+\item \code{is.toxcast()}: Boolean (yes/no) chemical identity functions
+
+\item \code{is.seem()}: Boolean (yes/no) chemical identity functions
+
+\item \code{is.nhanes()}: Boolean (yes/no) chemical identity functions
+
+\item \code{is.pharma()}: Boolean (yes/no) chemical identity functions
+
+\item \code{is.pfas()}: Boolean (yes/no) chemical identity functions
+
+}}
 \examples{
 
 \donttest{
@@ -76,12 +108,12 @@ httk.table[,"PBTK"] <- ""
 for (this.cas in httk.table$CAS[1:5])
 {
   this.index <- httk.table$CAS==this.cas
-  if (is.nhanes(this.cas)) httk.table[this.index,"NHANES"] <- "Y"
-  if (is.tox21(this.cas)) httk.table[this.index,"Tox21"] <- "Y"
-  if (is.toxcast(this.cas)) httk.table[this.index,"ToxCast"] <- "Y"
-  if (is.expocast(this.cas)) httk.table[this.index,"ExpoCast"] <- "Y"
-  if (is.httk(this.cas,model="PBTK")) httk.table[this.index,"PBTK"] <- "Y"
-  if (is.httk(this.cas,species="rat")) httk.table[this.index,"Rat"] <- "Y"
+  if (is.nhanes(chem.cas=this.cas)) httk.table[this.index,"NHANES"] <- "Y"
+  if (is.tox21(chem.cas=this.cas)) httk.table[this.index,"Tox21"] <- "Y"
+  if (is.toxcast(chem.cas=this.cas)) httk.table[this.index,"ToxCast"] <- "Y"
+  if (is.seem(chem.cas=this.cas)) httk.table[this.index,"ExpoCast"] <- "Y"
+  if (is.httk(chem.cas=this.cas,model="PBTK")) httk.table[this.index,"PBTK"] <- "Y"
+  if (is.httk(chem.cas=this.cas,species="rat")) httk.table[this.index,"Rat"] <- "Y"
 }
 }
 

@@ -155,13 +155,13 @@ in days.
 Default value of NULL for doses.per.day solves for a single dose.
 
 When species is specified as rabbit, dog, or mouse, the function uses the
-appropriate physiological data(volumes and flows) but substitues human
+appropriate physiological data(volumes and flows) but substitutes human
 fraction unbound, partition coefficients, and intrinsic hepatic clearance.
 
 AUC is area under plasma concentration curve.
 
 Model Figure 
-\if{html}{\figure{1comp.png}{options: width="60\%" alt="Figure: One
+\if{html}{\figure{1comp.png}{options: width=372 alt="Figure: One
 Compartment Model Schematic"}}
 \if{latex}{\figure{1comp.pdf}{options: width=12cm alt="Figure: One
 Compartment Model Schematic"}}

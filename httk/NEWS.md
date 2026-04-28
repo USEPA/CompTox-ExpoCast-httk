@@ -1,3 +1,27 @@
+# httk 2.7.4 (2025-12-08)
+
+New version released to address CRAN requirements with respect to figure widths in documentation.
+
+In order to pass CRAN checks, vignettes documenting analyses reported in various publications have been moved to new R package [httkexamples](https://CRAN.R-project.org/package=httkexamples) to decrease size of and check time for the main package.
+
+Changeover at the USEPA has seen most of the research scientists moved from the Office of Research and Development to policy offices. 
+We thank Sarah Davidson-Fritz for four years of excellent work as lead software engineer now that she has transitioned to new duties. 
+Caroline Ring continues to work in a research division, and has taken over as lead EPA developer for httk. 
+John Wambaugh has departed EPA but intends to remain a key developer of this package.
+
+## Enhancements
+* Added Clint and fup predictions generated with [Dawson et al. (2021)](https://doi.org/10.1021/acs.est.0c06117) QSPR model for several thousand volatile organic chemicals (VOCs)
+* New function `httk_vignettes` lists all locally available vignettes. If [httkexamples](https://CRAN.R-project.org/package=httkexamples) is installed, the additional vignettes are listed.
+* Giving argument period=0 to `solve_gas_pbtk` now simulates a single (non-repeating) dose
+* Figure widths in documentation changed to pixels rather than inches for CRAN compliance
+* Chemical lists for function `in.list` updated and DTXSID's added. New list "PFAS" added. List "ExpoCast" renamed to "SEEM" for "systematic empirical evaluation of models". Lists contain subsets of chemical within table chem.phys_and_invitro.data only -- they are not necessarily comprehensive.
+
+## Bug fixes
+* Corrected issue in `invitro_mc` where simulating population variability for Clint = 0.0 led to NA values.
+* Variable small_time changed from incorrect 1e2 to 1e-4 in `solve_dermal_pbtk`.
+* Corrected bug in `solve_dermal_pbtk` wherein ppmv units caused `solve_model` to crash.
+* Code laying out the table describing parameter notations was incorrect in `solve_gas_pbtk` and `solve_model`
+
 # httk 2.7.3 (2025-09-11)
 
 ## Enhancements

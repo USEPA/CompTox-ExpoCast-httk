@@ -10,7 +10,7 @@
 #' 
 #' Dosing values with certain acceptable associated input.units (like mg/kg BW)
 #' are configured to undergo a unit conversion. All model simulations are 
-#' intended to run with units as specifed by "compartment.units" in the 
+#' intended to run with units as specified by "compartment.units" in the 
 #' model.list (as defined by the modelinfo files).
 #' 
 #' The 'dosing' argument includes all parameters needed to describe exposure
@@ -25,9 +25,9 @@
 #' AUC is the area under the curve of the plasma concentration.
 #' 
 #' Model parameters are named according to the following convention:
-#' \tabular{lrrrr}{
+#' \tabular{lrrr}{
 #' prefix \tab suffix \tab Meaning \tab units \cr
-#' K \tab \tab Partition coefficient for tissue to free plasma \ tab unitless \cr
+#' K \tab \tab Partition coefficient for tissue to free plasma \tab unitless \cr
 #' V \tab \tab Volume \tab L \cr
 #' Q \tab \tab Flow \tab L/h \cr
 #' k \tab \tab Rate \tab 1/h \cr
@@ -740,15 +740,32 @@ specification in compartment_units for model ", model)
   #1 mg/kg BW for when no dosing is specified by user.
   if (all(as.logical(lapply(dosing, is.null)))) dosing$initial.dose <- 1 
 
-  #### NEED TO CHECK/POSSIBLY UPDATE!!! ####
-  # volume for the entry tissue
-  # (1) get all tissues with volume from param_names
-  all.tissue.vols <- param_names[grep(param_names,pattern = "^V.+c$")]
-  # (2) get the potential volume tissue string with string update
-  entry.tissue.string <- paste0(stringr::str_replace(dose.var,
-                                                     pattern = "^A|^C",
-                                                     replacement = "V"),"c")  
+  # volume for the entry tissue needed for some conversions:
+  if (!("initial.vol" %in% names(dosing)))
+  {
+    # (1) get all tissues with volume from param_names
+    all.tissue.vols <- param_names[grep(param_names,pattern = "^V.+c$")]
+    # (2) get the potential volume tissue string with string update
+    entry.tissue.string <- paste0(stringr::str_replace(dose.var,
+                                                       pattern = "^A|^C",
+                                                       replacement = "V"),"c")  
+    
+    # (3) Check if the tissue string is in all.tissue.vols,
+    #     yes then get the provided parameter
+    #     no then return null value
+    #   (a) Check if the length of tissues with a volume in the parameter names is 0.
+    if (length(all.tissue.vols)==0) {
+      entry.tissue.vol <- NULL
+    } else if (entry.tissue.string%in%all.tissue.vols) {
+      entry.tissue.vol <- parameters[[entry.tissue.string]]*parameters[["BW"]]
+    } else {
+      entry.tissue.vol <- NULL
+    }
+  } else {
+    entry.tissue.vol <- dosing$initial.vol
+  }
 
+  # Need to know if initial dose conversion is liquid or gas:
   # Check if value "all" is used for a state (that is, all compartments are
   # the same state of matter):
   if (all(tolower(compartment_state[[1]])%in%"all"))
@@ -763,19 +780,7 @@ specification in compartment_units for model ", model)
       stop(paste0("Entry compartment state is not specified in the model.list for ",model,"."))
     }
   }
-  
-  # (3) Check if the tissue string is in all.tissue.vols,
-  #     yes then get the provided parameter
-  #     no then return null value
-  #   (a) Check if the length of tissues with a volume in the parameter names is 0.
-  if (length(all.tissue.vols)==0) {
-    entry.tissue.vol <- NULL
-  } else if (entry.tissue.string%in%all.tissue.vols) {
-    entry.tissue.vol <- parameters[[entry.tissue.string]]*parameters[["BW"]]
-  } else {
-    entry.tissue.vol <- NULL
-  }
-  
+   
   #Assign input.units to new key units variable, intended as post-scaling
   #units that are ready for any necessary conversion
   dosing.units <- input.units

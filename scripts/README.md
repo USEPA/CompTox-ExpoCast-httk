@@ -55,10 +55,4 @@ calculates how many chemicals have measured chemical-specific HTTK data for vari
 If you have questions, comments, or concerns please contact:
 
 ### Principal Investigator 
-John Wambaugh [wambaugh.john@epa.gov]
-
-### Lead Software Engineer 
-Sarah E. Davidson-Fritz [davidsonfritz.sarah@epa.gov]
-
-### CCD Coordinator
-Nisha Sipes [sipes.nisha@epa.gov]
+John Wambaugh [wambaugh.research@gmail.com]

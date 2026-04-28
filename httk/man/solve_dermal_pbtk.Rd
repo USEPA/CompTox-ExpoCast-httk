@@ -40,6 +40,7 @@ solve_dermal_pbtk(
   dosing.matrix = NULL,
   washoff = FALSE,
   InfiniteDose = FALSE,
+  period = 0,
   ...
 )
 }
@@ -148,6 +149,8 @@ by new dose  (i.e., wash-off occurs before new dose is administered). If FALSE
 (default), any chemical left on the skin is added to the new dose.}
 
 \item{InfiniteDose}{Is there so much compound in the vehicle that it does not deplete?}
+
+\item{period}{How often the dosing repeats, specified in days}
 
 \item{...}{Additional arguments passed to the integrator (\code{\link[deSolve]{ode}}).}
 }

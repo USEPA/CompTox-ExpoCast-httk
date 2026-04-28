@@ -3,3 +3,5 @@ vignettes/Linakis2020/
 httk.Rproj
 ^cran-comments\.md$
 ^revdep$
+^.*\.Rproj$
+^\.Rproj\.user$
